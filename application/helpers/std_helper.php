@@ -105,5 +105,23 @@
 		}
 		exit;
 	}
+	
+	function app_access()
+	{
+		$CI 	=& get_instance();
+		$list 	= $CI->config->item('access_ip_list');
+		foreach($list as $ip){
+			if(preg_match('/\.\*$/',$ip)){
+				list($main, $sub) = explode('.*', $ip);
+				if(stripos(get_ip(), $main)!==false){
+					return true;
+				}
+			}
+			if(get_ip()==$ip){
+				return true;
+			}
+		}
+		return false;
+	}
 
 ?>

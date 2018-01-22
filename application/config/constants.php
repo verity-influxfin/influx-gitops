@@ -85,3 +85,8 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 defined('TOKEN_NOT_CORRECT')   OR define('TOKEN_NOT_CORRECT', 200); // token not exit
 defined('INPUT_NOT_CORRECT')   OR define('INPUT_NOT_CORRECT', 201); // input not correct.
+
+defined('SESSION_APP_ADMIN_INFO')     OR define('SESSION_APP_ADMIN_INFO', 'app_admin_info'); //Use in Admin Login
+defined('URL_ADMIN')             OR define('URL_ADMIN', '/admin/'); 
+defined('COOKIES_LOGIN_ADMIN') OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'); //Use in Admin Login Cookies
+defined('COOKIE_EXPIRE')       OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
