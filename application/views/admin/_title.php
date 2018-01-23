@@ -31,7 +31,7 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
-
+	
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                         <ul class="nav" id="side-menu">
@@ -42,21 +42,29 @@
                             <a href="tables.php"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
-                            <a href="forms.php"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                            <a href="forms.php"><i class="fa fa-edit fa-fw"></i> Forms</a>class="active"
                         </li-->
-                        <li class="active">
-                            <a href="#"><i class="fa fa-wrench fa-fw"></i>後台管理員<span class="fa arrow"></span></a>
+                        <li class="<?=isset($menu)&&$menu=="product"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>產品管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?=admin_url('admin/') ?>">管理員列表</a>
+                                    <a href="<?=admin_url('product/') ?>">產品列表</a>
                                 </li>
-                                <li>
-                                    <a href="<?=admin_url('admin/add') ?>">新增管理員</a>
+								<li>
+                                    <a href="<?=admin_url('product/category') ?>">產品分類</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-
+						 <li class="<?=isset($menu)&&$menu=="admin"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-user fa-fw"></i>後台人員管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=admin_url('admin/') ?>">後台管理員</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

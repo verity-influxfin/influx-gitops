@@ -1,8 +1,8 @@
 <?php
 
-class Product_category_model extends MY_Model
+class Product_model extends MY_Model
 {
-	public $_table = 'product_category';
+	public $_table = 'products';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	
@@ -25,15 +25,4 @@ class Product_category_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     } 
-	
-	public function get_name_list(){
-		$data 	= array();
-		$list 	= $this->get_all();
-		if($list){
-			foreach($list as $key => $value){
-				$data[$value->id] = $value->name;
-			}
-		}
-		return $data;
-	}
 }

@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Admin extends MY_Admin_Controller {
 	
+	public $menu = array("menu"=>"admin");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->login_info = check_admin();
@@ -25,16 +27,13 @@ class Admin extends MY_Admin_Controller {
 		$list 		= $this->admin_model->get_all();
 		$name_list	= array();
 		if(!empty($list)){
-			foreach($list as $key => $value){
-				$name_list[$value->id] = $value->name;
-			}
-			$page_data["list"] = $list;
-			$page_data["name_list"] = $name_list;
+			$page_data["list"] 		= $list;
+			$page_data["name_list"] = $this->admin_model->get_name_list();
 		}
 		
 
 		$this->load->view('admin/_header');
-		$this->load->view('admin/_title');
+		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/admins_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
@@ -88,25 +87,31 @@ class Admin extends MY_Admin_Controller {
 	}
 	
 	public function add(){
-		$page_data 	= array();
+		$page_data 	= array("type"=>"add");
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
 			$this->load->view('admin/_header');
-			$this->load->view('admin/_title');
+			$this->load->view('admin/_title',$this->menu);
 			$this->load->view('admin/admins_edit',$page_data);
 			$this->load->view('admin/_footer');
 		}else{
-			$fields 	= [ 'account', 'name', 'phone', 'address', 'email', 'password'];
-			foreach ($fields as $field) {
+			$required_fields 	= [ 'account', 'name', 'phone', 'address', 'email', 'password'];
+			foreach ($required_fields as $field) {
 				if (empty($post[$field])) {
 					alert($field." is empty",admin_url('admin/index'));
 				}else{
 					$data[$field] = $post[$field];
 				}
 			}
+			$fields = ['phone', 'address'];
+			foreach ($fields as $field) {
+				if (isset($post[$field])) {
+					$data[$field] = $post[$field];
+				}
+			}
+			
 			$data["creator_id"] = $this->login_info->id;
-			$data["password"] 	= sha1($data["password"]);
 			$rs = $this->admin_model->insert($data);
 			if($rs){
 				alert("新增成功",admin_url('admin/index'));
@@ -117,21 +122,43 @@ class Admin extends MY_Admin_Controller {
 	}
 	
 	public function edit(){
-		$page_data 	= array();
+		$page_data 	= array("type"=>"edit");
 		$post 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		
 		if(empty($post)){
-			
-			$this->load->view('admin/_header');
-			$this->load->view('admin/_title');
-			$this->load->view('admin/admins_edit',$page_data);
-			$this->load->view('admin/_footer');
+			$id = isset($get["id"])?intval($get["id"]):0;
+			if($id){
+				$admin_info = $this->admin_model->get_by('id', $id);
+				if($admin_info){
+					$page_data['data'] = $admin_info;
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/admins_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert("ERROR , id isn't exist",admin_url('admin/index'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('admin/index'));
+			}
 		}else{
 			if(!empty($post['id'])){
-				$rs = $this->admin_model->updateAccountInfo($post['id'],$post);
+				$fields = ['name', 'phone', 'address', 'password'];
+				foreach ($fields as $field) {
+					if (isset($post[$field])) {
+						$data[$field] = $post[$field];
+					}
+				}
+				if(isset($data['password']) && empty($data['password'])){
+					unset($data['password']);
+				}
+				
+				$rs = $this->admin_model->update($post['id'],$data);
 				if($rs===true){
-					alert("update success",admin_url('admin/index'));
+					alert("更新成功",admin_url('admin/index'));
 				}else{
-					
+					alert("更新失敗，請洽工程師",admin_url('admin/index'));
 				}
 			}else{
 				alert("ERROR , id isn't exist",admin_url('admin/index'));
