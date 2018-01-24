@@ -5,6 +5,10 @@ class Product_category_model extends MY_Model
 	public $_table = 'product_category';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
+	public $status_list   = array(
+		0 =>	"已刪除",
+		1 =>	"正常"
+	);
 	
 	public function __construct()
 	{

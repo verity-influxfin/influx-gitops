@@ -11,6 +11,7 @@ class Admin extends MY_Admin_Controller {
 		parent::__construct();
 		$this->login_info = check_admin();
 		$this->load->model('admin/admin_model');
+		$this->load->model('log/log_adminlogin_model');
 		$this->load->helper('cookie');
 		$this->load->library('encrypt');
 		$method = $this->router->fetch_method();
@@ -68,13 +69,16 @@ class Admin extends MY_Admin_Controller {
 				if(sha1($post['password'])==$admin_info->password){
 					$admin_info = AUTHORIZATION::generateAdminToken($admin_info);
 					admin_login($admin_info);
+					$this->log_adminlogin_model->insert(array("email"=>$post['email'],"status"=>1));
 					redirect(admin_url('AdminDashboard/'), 'refresh');
 					die();
 				}else{
+					$this->log_adminlogin_model->insert(array("email"=>$post['email'],"status"=>0));
 					alert("密碼錯誤",admin_url('admin/login'));
 					die();
 				}
 			}else{
+				$this->log_adminlogin_model->insert(array("email"=>$post['email'],"status"=>0));
 				alert("無此email",admin_url('admin/login'));
 				die();
 			}

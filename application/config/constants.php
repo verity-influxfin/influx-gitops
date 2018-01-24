@@ -83,10 +83,25 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
-defined('TOKEN_NOT_CORRECT')   OR define('TOKEN_NOT_CORRECT', 200); // token not exit
-defined('INPUT_NOT_CORRECT')   OR define('INPUT_NOT_CORRECT', 201); // input not correct.
 
-defined('SESSION_APP_ADMIN_INFO')     OR define('SESSION_APP_ADMIN_INFO', 'app_admin_info'); //Use in Admin Login
-defined('URL_ADMIN')             OR define('URL_ADMIN', '/admin/'); 
-defined('COOKIES_LOGIN_ADMIN') OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'); //Use in Admin Login Cookies
-defined('COOKIE_EXPIRE')       OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
+//ERROR code
+defined('TOKEN_NOT_CORRECT')   	OR define('TOKEN_NOT_CORRECT', 100); // token not exit
+defined('INPUT_NOT_CORRECT')   	OR define('INPUT_NOT_CORRECT', 201); // input not correct.
+defined('USER_EXIST')  			OR define('USER_EXIST', 301); 
+defined('VERIFY_CODE_ERROR')  	OR define('VERIFY_CODE_ERROR', 302); 
+defined('INSERT_ERROR')  		OR define('INSERT_ERROR', 303); 
+
+
+
+defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO', 'app_admin_info'); //Use in Admin Login
+defined('URL_ADMIN')             	OR define('URL_ADMIN', '/admin/'); 
+defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'); //Use in Admin Login Cookies
+defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
+defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932'); //Use in Login Cookies
+defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332'); //Use in Login Cookies
+
+
+//SMS
+defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800);
+defined('SMS_TYPE_REGISTER')     	OR define('SMS_TYPE_REGISTER', 1);
+	

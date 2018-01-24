@@ -1,19 +1,13 @@
 <?php
 
-class User_model extends MY_Model
+class Sms_verify_model extends MY_Model
 {
-	public $_table = 'users';
+	public $_table = 'sms_verify_code';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
-		0 =>	"Â∑≤ÂÅúÊ¨ä",
-		1 =>	"Ê≠£Â∏∏"
-	);
-	
-	public $block_status_list   = array(
-		0 =>	"Ê≠£Â∏∏",
-		1 =>	"‰∫∫Â∑•ÂÅúÊ¨ä",
-		1 =>	"Á≥ªÁµ±ÂÅúÊ¨ä",
+		0 =>	"•º≈Á√“",
+		1 =>	"§w≈Á√“"
 	);
 	
 	public function __construct()
@@ -24,7 +18,6 @@ class User_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-		$data["password"] 	= sha1($data["password"]);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -36,4 +29,6 @@ class User_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+	
+
 }

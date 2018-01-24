@@ -7,54 +7,76 @@ class User extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-
-        $method = $this->router->fetch_method();
+		$this->load->model('user/user_model');
 		
-       $nonAuthMethods = ['register'];
+        $method = $this->router->fetch_method();
+        $nonAuthMethods = ['register','registerphone'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 	= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::generateUserToken($token);
             if (empty($tokenData->id)) {
-				$this->response(['error' => TOKEN_NOT_CORRECT], 401);
+				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
             }
         }
     }
 	
-	/*public function index_get()
-	{
-		echo get_ip();
-		$this->load->model('user/user_model');
-		$rs = $this->user_model->get_all();
-		dump($rs);		
-		$this->load->model('admin/admin_model');
-		$rs = $this->admin_model->get_all();
-		dump($rs);
-		$this->load->model('product/product_category_model');
-		$rs = $this->product_category_model->get_all();
-		dump($rs);
-		echo AUTHORIZATION::generateUserToken(array("toy"=>"test","yayaya"=>"fffffff"));
-		
-	}*/
+
+	public function registerphone_post()
+    {
+
+        $input = $this->input->post();
+		$phone = isset($input["phone"])?trim($input["phone"]):"";
+		if (empty($phone)) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+
+		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+
+		$result = $this->user_model->get_by('phone', $phone);
+        if ($result) {
+			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
+        } else {
+			$this->load->library('sms'); 
+			$this->sms->send_register($phone);
+			$this->response(array('result' => 'SUCCESS'));
+        }
+    }
 	
 	public function register_post()
     {
 
         $input 		= $this->input->post();
 		$data		= array();
-        $fields 	= ['name', 'phone', 'email', 'password', 'birthday', 'phone'];
+        $fields 	= ['phone','password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-                $this->response(['error' => INPUT_NOT_CORRECT], 400);
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
             }else{
 				$data[$field] = $input[$field];
 			}
         }
 
-        $result = $this->user_model->insert($data);
-        if ($result) {
-            $this->response(['result' => '']);
+		$result = $this->user_model->get_by('phone',$data["phone"]);
+		if ($result) {
+			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
-            $this->response(['error' => EXIT_DATABASE], 400);
+			$this->load->library('sms'); 
+			$rs = $this->sms->verify_register($data["phone"],$data["code"]);
+			if($rs){
+				unset($data["code"]);
+				$insert = $this->user_model->insert($data);
+				if($insert){
+					$this->response(array('result' => 'SUCCESS'));
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				}
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			}
+			
         }
+		
     }
 }

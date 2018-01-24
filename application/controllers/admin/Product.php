@@ -11,19 +11,14 @@ class Product extends MY_Admin_Controller {
 		$this->login_info = check_admin();
 		$this->load->model('product/product_model');
 		$this->load->model('product/product_category_model');
-		$this->load->helper('cookie');
-		$method = $this->router->fetch_method();
-		$nonAuthMethods = [];
-        if (!in_array($method, $nonAuthMethods)) {
-			if(empty($this->login_info)){
-				redirect(admin_url('admin/login'), 'refresh');
-			}
+		if(empty($this->login_info)){
+			redirect(admin_url('admin/login'), 'refresh');
         }	
  	}
 	
 	public function index(){
 		$this->load->model('admin/admin_model');
-		$page_data 	= array("menu"=>"product","type"=>"list");
+		$page_data 	= array("type"=>"list");
 		$list 		= $this->product_model->get_all();
 		$name_list	= array();
 		if(!empty($list)){
@@ -39,7 +34,7 @@ class Product extends MY_Admin_Controller {
 	}
 	
 	public function add(){
-		$page_data 	= array("menu"=>"product","type"=>"add");
+		$page_data 	= array("type"=>"add");
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
@@ -75,7 +70,7 @@ class Product extends MY_Admin_Controller {
 	}
 	
 	public function edit(){
-		$page_data 	= array("menu"=>"product","type"=>"edit");
+		$page_data 	= array("type"=>"edit");
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		
@@ -119,7 +114,7 @@ class Product extends MY_Admin_Controller {
 	
 	public function category(){
 		$this->load->model('admin/admin_model');
-		$page_data 	= array("menu"=>"product","type"=>"list");
+		$page_data 	= array("type"=>"list");
 		$list 		= $this->product_category_model->get_all();
 		$name_list	= array();
 		if(!empty($list)){
