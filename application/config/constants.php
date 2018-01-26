@@ -90,6 +90,10 @@ defined('INPUT_NOT_CORRECT')   	OR define('INPUT_NOT_CORRECT', 201); // input no
 defined('USER_EXIST')  			OR define('USER_EXIST', 301); 
 defined('VERIFY_CODE_ERROR')  	OR define('VERIFY_CODE_ERROR', 302); 
 defined('INSERT_ERROR')  		OR define('INSERT_ERROR', 303); 
+defined('USER_NOT_EXIST')  		OR define('USER_NOT_EXIST', 304); 
+defined('PASSWORD_ERROR')  		OR define('PASSWORD_ERROR', 305); 
+defined('ACCESS_TOKEN_ERROR')  		OR define('ACCESS_TOKEN_ERROR', 306); 
+defined('TYPE_WAS_BINDED')  		OR define('TYPE_WAS_BINDED', 307); 
 
 
 
