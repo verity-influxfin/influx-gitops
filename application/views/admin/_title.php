@@ -59,6 +59,21 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+						<li class="<?=isset($menu)&&$menu=="certification"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>認證方式管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
+                                </li> 
+								<li>
+                                    <a href="<?=admin_url('rating/') ?>">評級方式列表</a>
+                                </li>
+                                <li>
+                                    <a href="<?=admin_url('certification/school') ?>">學校列表</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
 						 <li class="<?=isset($menu)&&$menu=="admin"?"active":""; ?>">
                             <a href="#"><i class="fa fa-user fa-fw"></i>後台人員管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

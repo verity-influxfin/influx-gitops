@@ -205,5 +205,49 @@ class Product extends MY_Admin_Controller {
 			}
 		}
 	}
+
+	public function rating_edit(){
+		$page_data 	= array("type"=>"edit");
+		$post 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		
+		if(empty($post)){
+			$this->load->model('platform/rating_model');
+			$rating = $this->rating_model->get_many_by(array("status"=>1));
+			$id 	= isset($get["id"])?intval($get["id"]):0;
+			if($id){
+				$info = $this->product_model->get_by('id', $id);
+				if($info){
+					$page_data['data'] 		= $info;
+					$page_data['rating'] 	= $rating;
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/product_rating_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert("ERROR , id isn't exist",admin_url('product/'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('product/'));
+			}
+		}else{
+			if(!empty($post['id'])){
+				$fields = ['name','description', 'parent_id','status'];
+				foreach ($fields as $field) {
+					if (isset($post[$field])) {
+						$data[$field] = $post[$field];
+					}
+				}
+				$rs = $this->product_category_model->update($post['id'],$data);
+				if($rs===true){
+					alert("更新成功",admin_url('product/'));
+				}else{
+					alert("更新失敗，請洽工程師",admin_url('product/'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('product/'));
+			}
+		}
+	}
 }
 ?>

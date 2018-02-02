@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Facebook{
+class Facebook_lib{
 
 	public $graph_api_url = "https://graph.facebook.com/v2.11/";
 	

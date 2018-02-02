@@ -47,7 +47,7 @@
 											<td><?=isset($value->status)?$value->status:"" ?></td>
 											<td><?=isset($value->block_status)?$value->block_status:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">詳情</a></td> 
+											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">修改</a></td> 
                                         </tr>                                        
 									<?php 
 										}}else{

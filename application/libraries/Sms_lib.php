@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Sms{
+class Sms_lib {
 	
 	public function __construct()
     {

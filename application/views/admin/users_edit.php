@@ -2,15 +2,6 @@
 	<script>
 	
 		function form_onsubmit(){
-			<?if($type=='add'){?>
-				var pwd = $("#pwd").val();
-				var cpwd = $("#confirm_pwd").val();
-				if(pwd != cpwd){
-					alert('Confirm Password is error');
-					$("#confirm_pwd").val("");
-					return false;
-				}
-			<?}?>
 			return true;
 		}
 	</script>
@@ -18,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><?=$type=="edit"?"修改產品資訊":"新增產品" ?></h1>
+                    <h1 class="page-header"><?=$type=="edit"?"修改會員資訊":"新增會員" ?></h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -27,12 +18,16 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						<?=$type=="edit"?"修改產品資訊":"新增產品" ?>
+						<?=$type=="edit"?"修改會員資訊":"新增會員" ?>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form role="form" method="post" onsubmit="return form_onsubmit();" > 
+                                    <form role="form" method="post" onsubmit="return form_onsubmit();" >
+									    <div class="form-group">
+                                            <label>ID</label>
+                                            <p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
+                                        </div>
                                         <div class="form-group">
                                             <label>名稱</label>
                                             <input id="name" name="name" class="form-control" placeholder="Enter Name" value="<?=isset($data->name)?$data->name:"";?>">
@@ -42,39 +37,26 @@
 											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 											<? } ?>
                                         </div>
+										<div class="form-group">
+                                            <label>電話</label>
+                                            <p class="form-control-static"><?=isset($data->phone)?$data->phone:"";?></p>
+                                        </div>
                                         <div class="form-group">
-                                            <label>簡介</label>
-											<textarea id="description" name="description" class="form-control" rows="3"><?=isset($data->description)?$data->description:"";?></textarea>
+                                            <label>別名</label>
+                                            <input id="nickname" name="nickname" class="form-control" placeholder="Enter Nick Name" value="<?=isset($data->nickname)?$data->nickname:"";?>">
                                         </div>
 										<div class="form-group">
-                                            <label>產品縮寫</label> 
-                                            <input id="alias" name="alias" class="form-control" placeholder="Enter Alias" value="<?=isset($data->alias)?$data->alias:"";?>" >
+                                            <label>地址</label>
+                                            <input id="address" name="address" class="form-control" placeholder="Enter Address" value="<?=isset($data->address)?$data->address:"";?>">
                                         </div>
 										<div class="form-group">
-                                            <label>產品分類</label>
-                                            <select class="form-control" id="category" name="category">
-												<? 
-												if(isset($category_list) && !empty($category_list)){
-													foreach($category_list as $key => $value){
-												?>
-                                                <option value="<?=$key; ?>"><?=$value; ?></option>
-												<? }} ?>
-                                            </select>
+                                            <label>Email</label>
+                                            <input id="email" name="email" class="form-control" placeholder="Enter Email" value="<?=isset($data->email)?$data->email:"";?>">
                                         </div>
 										<div class="form-group">
-                                            <label>借款額度</label> 
-                                            <input id="loan_range_s" name="loan_range_s" class="form-control" value="<?=isset($data->loan_range_s)?$data->loan_range_s:"";?>" >
-                                            <input id="loan_range_e" name="loan_range_e" class="form-control" value="<?=isset($data->loan_range_e)?$data->loan_range_e:"";?>" >
+                                            <label>Status</label>
+                                            <input id="status" name="status" class="form-control" placeholder="Enter Status" value="<?=isset($data->status)?$data->status:"";?>">
                                         </div>
-										<div class="form-group">
-                                            <label>年利率下限（%）</label> 
-                                           <input id="interest_rate_s" name="interest_rate_s" class="form-control" value="<?=isset($data->interest_rate_s)?$data->interest_rate_s:"";?>" >
-                                        </div>
-										<div class="form-group">
-                                            <label>年利率下限（%）</label> 
-                                           <input id="interest_rate_e" name="interest_rate_e" class="form-control" value="<?=isset($data->interest_rate_e)?$data->interest_rate_e:"";?>" >
-                                        </div>
-
                                         <button type="submit" class="btn btn-default">Submit Button</button>
                                     </form>
                                 </div>

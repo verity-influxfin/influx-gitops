@@ -23,7 +23,50 @@ class User extends REST_Controller {
         }
     }
 	
+	/**
+     * @apiDefine TokenRequired
+     * @apiHeader {String} request_token (required) Token for api authorization.
+     */ 
+    /**
+     * @apiDefine TokenError
+     * @apiError 100 Token錯誤.
+     * @apiErrorExample {json} 100
+     *     {
+     *       "result": "ERROR",
+     *       "error": "100"
+     *     }
+     */
+    /**
+     * @apiDefine InputError
+     * @apiError 201 欄位錯誤.
+     * @apiErrorExample {json} 201
+     *     {
+     *       "result": "ERROR",
+     *       "error": "201"
+     *     }
+     */
 
+	 /**
+     * @api {post} /user/registerphone 會員 發送驗證簡訊
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *    }
+	 * @apiUse InputError
+     *
+     * @apiError 301 會員已存在
+     * @apiErrorExample {json} 301
+     *     {
+     *       "result": "ERROR",
+     *       "error": "301"
+     *     }
+     *
+     */
+	 
 	public function registerphone_post()
     {
 
@@ -41,12 +84,48 @@ class User extends REST_Controller {
         if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
-			$this->load->library('sms'); 
-			$this->sms->send_register($phone);
+			$this->load->library('sms_lib'); 
+			$this->sms_lib->send_register($phone);
 			$this->response(array('result' => 'SUCCESS'));
         }
     }
 	
+	 /**
+     * @api {post} /user/register 會員 註冊（簡訊驗證）
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} password (required) 設定密碼
+     * @apiParam {String} code (required) 收到的驗證碼
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *    }
+	 * @apiUse InputError
+     *
+     * @apiError 301 會員已存在
+     * @apiErrorExample {json} 301
+     *     {
+     *       "result": "ERROR",
+     *       "error": "301"
+     *     }
+     *
+     * @apiError 302 驗證碼錯誤
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 303 新增時發生錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+     *
+     */
 	public function register_post()
     {
 
@@ -65,8 +144,8 @@ class User extends REST_Controller {
 		if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
-			$this->load->library('sms'); 
-			$rs = $this->sms->verify_register($data["phone"],$data["code"]);
+			$this->load->library('sms_lib'); 
+			$rs = $this->sms_lib->verify_register($data["phone"],$data["code"]);
 			if($rs){
 				unset($data["code"]);
 				$insert = $this->user_model->insert($data);
@@ -82,7 +161,38 @@ class User extends REST_Controller {
         }
 		
     }
-	
+
+	 /**
+     * @api {post} /user/login 會員 用戶登入
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} password (required) 密碼
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
+     *    }
+	 * @apiUse InputError
+     *
+     * @apiError 304 會員不存在
+     * @apiErrorExample {json} 304
+     *     {
+     *       "result": "ERROR",
+     *       "error": "304"
+     *     }
+     *
+     * @apiError 305 密碼錯誤
+     * @apiErrorExample {json} 305
+     *     {
+     *       "result": "ERROR",
+     *       "error": "305"
+     *     }
+     *
+     */
 	public function login_post(){
 
 		$input = $this->input->post(NULL, TRUE);
@@ -115,6 +225,38 @@ class User extends REST_Controller {
 		}
 	}
 	
+	/**
+     * @api {post} /user/sociallogin 會員 第三方登入
+     * @apiGroup User
+     * @apiParam {String} type (required) 登入類型（"facebook"）
+     * @apiParam {String} access_token (required) access_token
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
+     *    }
+     *
+	 * @apiUse InputError
+     * @apiError 304 會員不存在
+     * @apiErrorExample {json} 304
+     *     {
+     *       "result": "ERROR",
+     *       "error": "304"
+     *     }
+     *
+     * @apiError 305 密碼錯誤
+     * @apiErrorExample {json} 305
+     *     {
+     *       "result": "ERROR",
+     *       "error": "305"
+     *     }
+     *
+     */
+	 
 	public function sociallogin_post(){
         $input = $this->input->post(NULL, TRUE);
 		$type  = isset($input['type'])?$input['type']:"";
@@ -133,9 +275,9 @@ class User extends REST_Controller {
         }
 		
 		if($type=="facebook"){
-			$this->load->library('facebook'); 
-			$info = $this->facebook->get_info($input["access_token"]);
-			$user_id  = $this->facebook->login($info);
+			$this->load->library('facebook_lib'); 
+			$info = $this->facebook_lib->get_info($input["access_token"]);
+			$user_id  = $this->facebook_lib->login($info);
 			$account  = isset($info['id'])?$info['id']:"";
 		}
 
@@ -162,6 +304,38 @@ class User extends REST_Controller {
 		}
 	}
 	
+	/**
+     * @api {post} /user/bind 會員 綁定第三方帳號
+     * @apiGroup User
+     * @apiParam {String} type (required) 登入類型（"facebook"）
+     * @apiParam {String} access_token (required) access_token
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
+     *    }
+	 * @apiUse InputError
+	 * @apiUse TokenError
+     *
+     * @apiError 306 access_token錯誤
+     * @apiErrorExample {json} 306
+     *     {
+     *       "result": "ERROR",
+     *       "error": "306"
+     *     }
+     *
+     * @apiError 307 此種類型已綁定過了
+     * @apiErrorExample {json} 307
+     *     {
+     *       "result": "ERROR",
+     *       "error": "307"
+     *     }
+     *
+     */
 	public function bind_post()
     {
         $input = $this->input->post(NULL, TRUE);
@@ -182,17 +356,17 @@ class User extends REST_Controller {
         }
 		
 		if($type=="facebook"){
-			$this->load->library('facebook'); 
-			$meta  = $this->facebook->get_user_meta($this->user_info->id);
+			$this->load->library('facebook_lib'); 
+			$meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
 			if($meta){
 				$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
 			}
 			
-			$debug_token = $this->facebook->debug_token($input["access_token"]);
+			$debug_token = $this->facebook_lib->debug_token($input["access_token"]);
 			if($debug_token){
-				$info = $this->facebook->get_info($input["access_token"]);
+				$info = $this->facebook_lib->get_info($input["access_token"]);
 				if($info){
-					$rs = $this->facebook->bind_user($this->user_info->id,$info);
+					$rs = $this->facebook_lib->bind_user($this->user_info->id,$info);
 					if($rs){
 						$this->response(array('result' => 'SUCCESS'));
 					}else{

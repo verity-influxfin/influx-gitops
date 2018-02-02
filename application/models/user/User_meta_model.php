@@ -2,7 +2,7 @@
 
 class User_meta_model extends MY_Model
 {
-	public $_table = 'users_meta';
+	public $_table = 'user_meta';
 	public $before_create = array( 'before_data_c' );
 
 	public function __construct()

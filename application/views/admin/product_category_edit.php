@@ -2,15 +2,7 @@
 	<script>
 	
 		function form_onsubmit(){
-			<?if($type=='add'){?>
-				var pwd = $("#pwd").val();
-				var cpwd = $("#confirm_pwd").val();
-				if(pwd != cpwd){
-					alert('Confirm Password is error');
-					$("#confirm_pwd").val("");
-					return false;
-				}
-			<?}?>
+
 			return true;
 		}
 	</script>
