@@ -10,12 +10,6 @@ class Rating_model extends MY_Model
 		1 =>	"正常"
 	);
 	
-	public $block_status_list   = array(
-		0 =>	"正常",
-		1 =>	"人工停權",
-		1 =>	"系統停權",
-	);
-	
 	public function __construct()
 	{
 		parent::__construct();

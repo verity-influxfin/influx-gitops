@@ -169,6 +169,7 @@ class User extends REST_Controller {
      * @apiParam {String} password (required) 密碼
      *
      * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} token request_token
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -214,7 +215,7 @@ class User extends REST_Controller {
 				$data->block_status = $user_info->block_status;
 				$token = AUTHORIZATION::generateUserToken($data);
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"status"=>1));
-				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$token) ));
+				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token) ));
 			}else{
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"status"=>0));
 				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
@@ -232,6 +233,7 @@ class User extends REST_Controller {
      * @apiParam {String} access_token (required) access_token
      *
      * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} token request_token
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -376,5 +378,92 @@ class User extends REST_Controller {
 			}
 			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
 		}
+    }
+
+	/**
+     * @api {post} /user/bankaccount 會員 綁定金融帳號
+     * @apiGroup User
+	 * @apiParam {number} bank_code (required) 銀行代碼
+	 * @apiParam {number} bank_account (required) 銀行帳號
+     * @apiParam {file} front_image 金融卡正面照
+     * @apiParam {file} back_image 金融卡背面照
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+     *
+     * @apiError 303 新增時發生錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+     *
+     */
+	public function bankaccount_post()
+    {
+		$this->load->model('user/user_bankaccount_model');
+        $input 		= $this->input->post(NULL, TRUE);
+		$fields 	= ['bank_code','bank_account'];
+		$user_id 	= $this->user_info->id;
+		$param		= array("user_id" => $user_id);
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+            }else{
+				$param[$field] = $input[$field];
+			}
+        }
+		
+		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id));
+		if($bank_account){
+			$this->user_bankaccount_model->update_by(array("user_id"=>$user_id),array("status"=>0));
+		}
+		
+		$insert = $this->user_bankaccount_model->insert($param);
+		if($insert){
+			$this->response(array('result' => 'SUCCESS'));
+		}else{
+			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+		}
+    }
+	
+	 /**
+     * @api {get} /user/bankaccount 會員 取得金融帳號
+     * @apiGroup User
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"user_id": "1",
+     *      	"bank_code": "882",
+     *      	"bank_account": "2147483647"     
+	 *      }
+     *    }
+	 * @apiUse TokenError
+     *
+     */
+	public function bankaccount_get()
+    {
+		$this->load->model('user/user_bankaccount_model');
+		$input 		= $this->input->get();
+		$user_id	= $this->user_info->id;
+		$data		= array();
+		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1 , "user_id"=>$user_id ));
+		if($bank_account){
+			$fields 	= $this->user_bankaccount_model->fields;
+			foreach ($fields as $field) {
+				$data[$field] = $bank_account->$field;
+			}
+		}
+		
+		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
 }

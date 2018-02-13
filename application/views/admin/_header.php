@@ -17,6 +17,10 @@
     <link href="<?=base_url()?>assets/admin/css/plugins/morris.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="<?=base_url()?>assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	
+	<!-- jQuery Version 1.11.0 -->
+    <script src="<?=base_url()?>assets/admin/js/jquery-1.11.0.js"></script>
+
 </head>
 <body>
     <div id="wrapper">

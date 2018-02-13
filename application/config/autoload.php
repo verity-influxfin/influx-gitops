@@ -103,7 +103,7 @@ $autoload['helper'] = array('jwt','url','file','std','authorization');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array("jwt","ip");
+$autoload['config'] = array("jwt","ip","platform");
 
 /*
 | -------------------------------------------------------------------

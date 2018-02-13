@@ -95,6 +95,8 @@ defined('PASSWORD_ERROR')  		OR define('PASSWORD_ERROR', 305);
 defined('ACCESS_TOKEN_ERROR')  		OR define('ACCESS_TOKEN_ERROR', 306); 
 defined('TYPE_WAS_BINDED')  		OR define('TYPE_WAS_BINDED', 307); 
 
+defined('PRODUCT_NOT_EXIST')  		OR define('PRODUCT_NOT_EXIST', 401); 
+
 
 
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO', 'app_admin_info'); //Use in Admin Login

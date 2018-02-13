@@ -2,9 +2,16 @@
 	<script>
 	
 		function form_onsubmit(){
-
 			return true;
 		}
+		
+		$(document).ready(function(){
+			$("#pick_all").click(function(){
+				var pick = $("#pick_all").prop("checked")
+				$(".pick_chekbox").prop("checked", pick);
+			});	
+		});
+
 	</script>
 	
         <div id="page-wrapper">
@@ -30,7 +37,7 @@
 											<table class="table table-striped table-bordered table-hover" id="dataTables-example">
 												<thead>
 													<tr>
-														<th><a href="javascript:void(0);" class="btn btn-default" id="pick_all">全選</a></th>
+														<th><input type="checkbox" id="pick_all" ></th>
 														<th>名稱</th>
 														<th>簡介</th>
 														<th>加權分數</th>
@@ -44,12 +51,14 @@
 															$count++;
 												?>
 													<tr class="<?=$count%2==0?"odd":"even"; ?>">
-														<td><input type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>"> <?=isset($value->id)?$value->id:"" ?></td>
+														<td>
+															<input type="checkbox" class="pick_chekbox" name="rating[<?=isset($value->id)?$value->id:""; ?>]" value="<?=isset($value->id)?$value->id:"" ?>" <?=isset($product_rating[$value->id])&&$product_rating[$value->id]["status"]==1?"checked":""; ?>> <?=isset($value->id)?$value->id:"" ?>
+														</td>
 														<td><?=isset($value->name)?$value->name:"" ?></td>
 														<td><?=isset($value->description)?$value->description:"" ?></td>
-														<td><input type="number" class="form-control" value="0" ></td>
+														<td><input type="number" min="0" max="9" name="rating_value[<?=isset($value->id)?$value->id:""; ?>]" class="form-control" value="<?=isset($product_rating[$value->id])&&$product_rating[$value->id]["value"]?$product_rating[$value->id]["value"]:0; ?>" onKeyUp="if(this.value>9){this.value='9';} return ValidateNumber($(this),value);"></td>
 													</tr>                                        
-												<?php 
+												<?php  
 													}}else{
 												?>
 												<tr class="odd">
