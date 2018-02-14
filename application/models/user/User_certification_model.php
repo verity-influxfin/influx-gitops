@@ -1,11 +1,15 @@
 <?php
 
-class User_bankaccount_model extends MY_Model
+class User_certification_model extends MY_Model
 {
-	public $_table = 'user_bankaccount';
+	public $_table = 'user_certification';
 	public $before_create 	= array( 'before_data_c' );
 	public $before_update 	= array( 'before_data_u' );
-	public $fields			= array("user_id","bank_code","bank_account","front_image","back_image");
+	public $status_list   	= array(
+		0 =>	"待驗證",
+		1 =>	"驗證成功",
+		2 =>	"驗證失敗",
+	);
 	
 	public function __construct()
 	{

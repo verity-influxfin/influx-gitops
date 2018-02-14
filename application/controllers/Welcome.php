@@ -20,10 +20,10 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		echo $this->config->item('jwt_key');
+		//echo $this->config->item('jwt_key');
 		//$this->load->view('welcome_message');
 		
-		$question = array(
+		/*$question = array(
 			1	=> array(
 				"id"		=> "1",
 				"type"		=> "single",
@@ -55,8 +55,7 @@ class Welcome extends CI_Controller {
 					"4"	=> array("option"=>"專業撿到錢","rating"=>"1","next" => "end")
 				)
 			)
-		);
-		
-		dump(json_encode($question)); 
+		);*/
+
 	}
 }

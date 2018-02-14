@@ -38,13 +38,14 @@ class Product extends MY_Admin_Controller {
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
-			$page_data["category_list"] = $this->product_category_model->get_name_list();
+			$page_data["category_list"] 	= $this->product_category_model->get_name_list();
+			$page_data["instalment_list"]	= $this->config->item('instalment');
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
 			$this->load->view('admin/products_edit',$page_data);
 			$this->load->view('admin/_footer');
 		}else{
-			$required_fields 	= [ 'name', 'alias', 'category', 'loan_range_s', 'loan_range_e', 'interest_rate_s', 'interest_rate_e'];
+			$required_fields 	= [ 'name', 'alias', 'category', 'loan_range_s', 'loan_range_e', 'interest_rate_s', 'interest_rate_e','instalment'];
 			foreach ($required_fields as $field) {
 				if (empty($post[$field])) {
 					alert($field." is empty",admin_url('product/index'));
@@ -79,8 +80,10 @@ class Product extends MY_Admin_Controller {
 			if($id){
 				$info = $this->product_model->get_by('id', $id);
 				if($info){
-					$page_data["category_list"] = $this->product_category_model->get_name_list();
-					$page_data['data'] 			= $info;
+					$page_data["category_list"] 	= $this->product_category_model->get_name_list();
+					$page_data['data'] 				= $info;
+					$page_data["instalment_list"]	= $this->config->item('instalment');
+					$page_data['instalment'] 		= json_decode($info->instalment,TRUE);
 					
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
@@ -94,7 +97,7 @@ class Product extends MY_Admin_Controller {
 			}
 		}else{
 			if(!empty($post['id'])){
-				$fields = ['name', 'alias', 'category', 'loan_range_s', 'loan_range_e', 'interest_rate_s', 'interest_rate_e','description', 'parent_id','status'];
+				$fields = ['name', 'alias', 'category', 'loan_range_s', 'loan_range_e', 'interest_rate_s', 'interest_rate_e','description', 'parent_id','instalment','status'];
 				foreach ($fields as $field) {
 					if (isset($post[$field])) {
 						$data[$field] = $post[$field];

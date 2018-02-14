@@ -85,17 +85,19 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 //ERROR code
-defined('TOKEN_NOT_CORRECT')   	OR define('TOKEN_NOT_CORRECT', 100); // token not exit
-defined('INPUT_NOT_CORRECT')   	OR define('INPUT_NOT_CORRECT', 201); // input not correct.
-defined('USER_EXIST')  			OR define('USER_EXIST', 301); 
-defined('VERIFY_CODE_ERROR')  	OR define('VERIFY_CODE_ERROR', 302); 
-defined('INSERT_ERROR')  		OR define('INSERT_ERROR', 303); 
-defined('USER_NOT_EXIST')  		OR define('USER_NOT_EXIST', 304); 
-defined('PASSWORD_ERROR')  		OR define('PASSWORD_ERROR', 305); 
-defined('ACCESS_TOKEN_ERROR')  		OR define('ACCESS_TOKEN_ERROR', 306); 
-defined('TYPE_WAS_BINDED')  		OR define('TYPE_WAS_BINDED', 307); 
-
-defined('PRODUCT_NOT_EXIST')  		OR define('PRODUCT_NOT_EXIST', 401); 
+defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
+defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 201); // input not correct.
+defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
+defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 302); 
+defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 303); 
+defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 304); 
+defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 305); 
+defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 306); 
+defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 307); 
+defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401); 
+defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
+defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
+defined('CERTIFICATION_NEVER_VERIFY') 	OR define('CERTIFICATION_NEVER_VERIFY'	, 503); 
 
 
 
@@ -111,3 +113,7 @@ defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef8317
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800);
 defined('SMS_TYPE_REGISTER')     	OR define('SMS_TYPE_REGISTER', 1);
 	
+//S3
+defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN', 'AKIAJE5RGXS7FXHKSVBA');
+defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN', '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');
+defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p');

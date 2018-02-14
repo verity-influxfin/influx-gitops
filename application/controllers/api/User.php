@@ -408,6 +408,7 @@ class User extends REST_Controller {
 	public function bankaccount_post()
     {
 		$this->load->model('user/user_bankaccount_model');
+		$this->load->library('S3_upload');
         $input 		= $this->input->post(NULL, TRUE);
 		$fields 	= ['bank_code','bank_account'];
 		$user_id 	= $this->user_info->id;
@@ -420,11 +421,18 @@ class User extends REST_Controller {
 			}
         }
 		
+		if(isset($_FILES["front_image"])){
+			$param["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,"bankaccount");
+		}
+		
+		if(isset($_FILES["back_image"])){
+			$param["back_image"] = $this->s3_upload->image($_FILES,"back_image",$user_id,"bankaccount");
+		}
+		
 		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id));
 		if($bank_account){
 			$this->user_bankaccount_model->update_by(array("user_id"=>$user_id),array("status"=>0));
 		}
-		
 		$insert = $this->user_bankaccount_model->insert($param);
 		if($insert){
 			$this->response(array('result' => 'SUCCESS'));
@@ -438,6 +446,9 @@ class User extends REST_Controller {
      * @apiGroup User
      *
      * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} bank_code 銀行代碼
+	 * @apiSuccess {String} bank_account 銀行帳號
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -453,7 +464,6 @@ class User extends REST_Controller {
 	public function bankaccount_get()
     {
 		$this->load->model('user/user_bankaccount_model');
-		$input 		= $this->input->get();
 		$user_id	= $this->user_info->id;
 		$data		= array();
 		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1 , "user_id"=>$user_id ));

@@ -13,6 +13,23 @@
 			<?}?>
 			return true;
 		}
+		
+		$(document).ready(function () {
+			$('.instalment_chk').change(function(){
+				var instalment = "[";
+				$(".instalment_chk").each(function() {
+					if($(this).is(":checked")){
+						if(instalment=="["){
+							instalment = instalment + $(this).val();
+						}else{
+							instalment = instalment + "," + $(this).val();
+						}
+					}
+				});
+				var instalment = instalment + "]";
+				$("#instalment").val(instalment);
+			})
+		});	
 	</script>
 	
         <div id="page-wrapper">
@@ -74,7 +91,20 @@
                                             <label>年利率下限（%）</label> 
                                            <input id="interest_rate_e" name="interest_rate_e" class="form-control" value="<?=isset($data->interest_rate_e)?$data->interest_rate_e:"";?>" >
                                         </div>
-
+										<div class="form-group">
+                                            <label>期數</label>
+											<? 
+											if(isset($instalment_list) && !empty($instalment_list)){
+												foreach($instalment_list as $key => $value){
+											?>
+											<div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="instalment_chk" value="<?=$key ?>" <?=isset($instalment)&& in_array($key,$instalment)?"checked":""?>><?=$value ?>
+                                                </label>
+                                            </div>
+											<? }} ?>
+											<input type="hidden" name="instalment" id="instalment" value="<?=isset($data->instalment)?$data->instalment:"";?>" >
+                                        </div>
                                         <button type="submit" class="btn btn-default">Submit Button</button>
                                     </form>
                                 </div>
