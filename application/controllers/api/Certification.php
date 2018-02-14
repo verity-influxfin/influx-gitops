@@ -77,7 +77,7 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/healthcard 認證 健保卡認證
      * @apiGroup Certification
-     * @apiParam {file} (required) front_image 健保卡正面照
+     * @apiParam {file} front_image (required) 健保卡正面照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
