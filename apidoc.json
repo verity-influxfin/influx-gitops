@@ -5,6 +5,21 @@
 	"title": "P2p lending API Doccument",
 	"url": "http://p2p-api.clockin.com.tw/api",
 	"order": [
-		"User"
+		"User",
+		"PostUserRegisterphone",
+		"PostUserRegister",
+		"PostUserLogin",
+		"GetUserInfo",
+		"PostUserBind",
+		"PostUserSociallogin",
+		"PostUserBankaccount",
+		"GetUserBankaccount",
+		"Certification",
+		"GetCertificationList",
+		"PostCertificationHealthcard",
+		"GetCertificationHealthcard",
+		"Agreement",
+		"GetAgreementList",
+		"GetAgreementInfoAlias"
 	]
 }

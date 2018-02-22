@@ -42,4 +42,11 @@ class Certification_lib{
 		}
 		return false;
 	}
+	
+	public function id_card_verify($user_id,$certification_id){
+		if($user_id && $certification_id){
+			return true;
+		}
+		return false;
+	}
 }

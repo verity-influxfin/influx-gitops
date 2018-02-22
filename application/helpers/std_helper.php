@@ -124,4 +124,31 @@
 		return false;
 	}
 
+	function check_cardid($cardid="") {
+		if(!empty($cardid)){
+			$alphabet =['A'=>'10','B'=>'11','C'=>'12','D'=>'13','E'=>'14','F'=>'15','G'=>'16','H'=>'17','I'=>'34',
+						'J'=>'18','K'=>'19','L'=>'20','M'=>'21','N'=>'22','O'=>'35','P'=>'23','Q'=>'24','R'=>'25',
+						'S'=>'26','T'=>'27','U'=>'28','V'=>'29','W'=>'32','X'=>'30','Y'=>'31','Z'=>'33'];
+			if(strlen($cardid)==10){
+				$alpha = substr($cardid,0,1);
+				$alpha = strtoupper($alpha);
+				if(preg_match("/[A-Za-z]/",$alpha)){
+					$nx 	= $alphabet[$alpha];
+					$total 	= $nx[0] + $nx[1]*9 + substr($cardid,8,1) + substr($cardid,9,1);
+					if(in_array(substr($cardid,1,1),['1','2'])){
+						$i = 8;
+						$j = 1;
+						while($i >= 2){
+							$total 	= $total + (substr($cardid,$j,1) * $i);
+							$j+=1;
+							$i--;	
+						}
+						if( ($total%10) ==0)
+							return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 ?>

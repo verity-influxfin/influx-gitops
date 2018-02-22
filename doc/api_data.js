@@ -1,6 +1,154 @@
 define({ "api": [
   {
     "type": "get",
+    "url": "/agreement/info/{alias}",
+    "title": "協議 協議書",
+    "group": "Agreement",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "alias",
+            "description": "<p>(required) 代號</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Agreement ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>內容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "alias",
+            "description": "<p>代號</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"name\":\"用戶協議\",\n\t\t\t\"content\":\"用戶協議\",\n\t\t\t\"alias\":\"user\",\n\t\t}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Agreement.php",
+    "groupTitle": "Agreement",
+    "name": "GetAgreementInfoAlias",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/agreement/list",
+    "title": "協議 協議列表",
+    "group": "Agreement",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Agreement ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>內容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "alias",
+            "description": "<p>代號</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"用戶協議\",\n\t\t\t\t\"content\":\"用戶協議\",\n\t\t\t\t\"alias\":\"user\",\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"投資人協議\",\n\t\t\t\t\"content\":\"投資人協議\",\n\t\t\t\t\"alias\":\"investor\",\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Agreement.php",
+    "groupTitle": "Agreement",
+    "name": "GetAgreementList"
+  },
+  {
+    "type": "get",
     "url": "/certification/healthcard",
     "title": "認證 健保卡認證資料",
     "group": "Certification",
@@ -111,6 +259,133 @@ define({ "api": [
     "filename": "application/controllers/api/Certification.php",
     "groupTitle": "Certification",
     "name": "GetCertificationHealthcard"
+  },
+  {
+    "type": "get",
+    "url": "/certification/idcard",
+    "title": "認證 實名認證資料",
+    "group": "Certification",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "certification_id",
+            "description": "<p>Certification ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "front_image",
+            "description": "<p>身分證正面照</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "back_image",
+            "description": "<p>身分證背面照</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "person_image",
+            "description": "<p>本人照</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>創建日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "updated_at",
+            "description": "<p>最近更新日期</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"front_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"back_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"person_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "503",
+            "description": "<p>尚未驗證過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "503",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "GetCertificationIdcard"
   },
   {
     "type": "get",
@@ -226,14 +501,14 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "303",
-            "description": "<p>新增時發生錯誤</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "description": "<p>新增時發生錯誤.</p>"
           },
           {
             "group": "Error 4xx",
@@ -255,8 +530,8 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "303",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         },
         {
@@ -275,6 +550,126 @@ define({ "api": [
     "filename": "application/controllers/api/Certification.php",
     "groupTitle": "Certification",
     "name": "PostCertificationHealthcard"
+  },
+  {
+    "type": "post",
+    "url": "/certification/idcard",
+    "title": "認證 實名認證",
+    "group": "Certification",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "front_image",
+            "description": "<p>(required) 身分證正面照</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "back_image",
+            "description": "<p>(required) 身分證背面照</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "person_image",
+            "description": "<p>(required) 本人照</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "PostCertificationIdcard"
   },
   {
     "type": "get",
@@ -678,6 +1073,97 @@ define({ "api": [
     }
   },
   {
+    "type": "get",
+    "url": "/user/info",
+    "title": "會員 個人資訊",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>姓名（空值則代表未完成身份驗證）</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>手機號碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>用戶狀態</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "block_status",
+            "description": "<p>是否為黑名單</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id_number",
+            "description": "<p>身分證字號（空值則代表未完成身份驗證）</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"phone\": \"0912345678\",\n  \t\"status\": \"1\",\n  \t\"id_number\": null,\n  \t\"block_status\": \"0\"     \n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "GetUserInfo",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/user/bankaccount",
     "title": "會員 綁定金融帳號",
@@ -736,20 +1222,24 @@ define({ "api": [
         }
       ]
     },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "PostUserBankaccount",
     "error": {
       "fields": {
         "Error 4xx": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "303",
-            "description": "<p>新增時發生錯誤</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "description": "<p>新增時發生錯誤.</p>"
           },
           {
             "group": "Error 4xx",
@@ -761,8 +1251,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "303",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         },
         {
@@ -776,11 +1266,7 @@ define({ "api": [
           "type": "json"
         }
       ]
-    },
-    "version": "0.0.0",
-    "filename": "application/controllers/api/User.php",
-    "groupTitle": "User",
-    "name": "PostUserBankaccount"
+    }
   },
   {
     "type": "post",
@@ -833,20 +1319,20 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "306",
+            "field": "305",
             "description": "<p>access_token錯誤</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "307",
+            "field": "306",
             "description": "<p>此種類型已綁定過了</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           },
           {
             "group": "Error 4xx",
@@ -858,18 +1344,18 @@ define({ "api": [
       },
       "examples": [
         {
+          "title": "305",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
+          "type": "json"
+        },
+        {
           "title": "306",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
           "type": "json"
         },
         {
-          "title": "307",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         },
         {
@@ -942,37 +1428,37 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "304",
+            "field": "302",
             "description": "<p>會員不存在</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "305",
+            "field": "304",
             "description": "<p>密碼錯誤</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           }
         ]
       },
       "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
           "type": "json"
         },
         {
-          "title": "305",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         }
       ]
@@ -1046,20 +1532,20 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "302",
+            "field": "303",
             "description": "<p>驗證碼錯誤</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "303",
-            "description": "<p>新增時發生錯誤</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "description": "<p>新增時發生錯誤.</p>"
           }
         ]
       },
@@ -1070,13 +1556,13 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "302",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "title": "303",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
           "type": "json"
         },
         {
-          "title": "303",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         },
         {
@@ -1141,8 +1627,8 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           }
         ]
       },
@@ -1153,8 +1639,8 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         }
       ]
@@ -1222,37 +1708,37 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "304",
+            "field": "302",
             "description": "<p>會員不存在</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "305",
+            "field": "304",
             "description": "<p>密碼錯誤</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "201",
-            "description": "<p>欄位錯誤.</p>"
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
           }
         ]
       },
       "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
           "type": "json"
         },
         {
-          "title": "305",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
         }
       ]

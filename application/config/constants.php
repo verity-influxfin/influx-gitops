@@ -84,20 +84,24 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-//ERROR code
+//Error Code
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
-defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 201); // input not correct.
+defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.
+defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201); 
+//User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
-defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 302); 
-defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 303); 
-defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 304); 
-defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 305); 
-defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 306); 
-defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 307); 
+defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
+defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 303); 
+defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304); 
+defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305); 
+defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306); 
+//Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401); 
+//Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
 defined('CERTIFICATION_NEVER_VERIFY') 	OR define('CERTIFICATION_NEVER_VERIFY'	, 503); 
+
 
 
 
@@ -107,6 +111,9 @@ defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
 defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932'); //Use in Login Cookies
 defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332'); //Use in Login Cookies
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'UJdqWlA-ZeSGkpk6lvvTZhu2r05oFeiI'); //Face++ 
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'YapyNRr644ivmNi1iEba5tt9TuuMv0XJ'); //Face++ 
+defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70); //Face++ 
 
 
 //SMS
@@ -117,3 +124,4 @@ defined('SMS_TYPE_REGISTER')     	OR define('SMS_TYPE_REGISTER', 1);
 defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN', 'AKIAJE5RGXS7FXHKSVBA');
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN', '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');
 defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p');
+defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH', 3000);

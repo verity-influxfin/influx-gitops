@@ -55,4 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['admin'] = 'admin/admin/login';
 
-$route['api/product/info/(:num)'] = 'api/product/info/$1';
+$route['api/product/info/(:num)'] 	= 'api/product/info/$1';
+$route['api/agreement/info/(:any)'] = 'api/agreement/info/$1';

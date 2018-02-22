@@ -5,14 +5,29 @@ define({
   "title": "P2p lending API Doccument",
   "url": "http://p2p-api.clockin.com.tw/api",
   "order": [
-    "User"
+    "User",
+    "PostUserRegisterphone",
+    "PostUserRegister",
+    "PostUserLogin",
+    "GetUserInfo",
+    "PostUserBind",
+    "PostUserSociallogin",
+    "PostUserBankaccount",
+    "GetUserBankaccount",
+    "Certification",
+    "GetCertificationList",
+    "PostCertificationHealthcard",
+    "GetCertificationHealthcard",
+    "Agreement",
+    "GetAgreementList",
+    "GetAgreementInfoAlias"
   ],
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-02-14T09:57:17.147Z",
+    "time": "2018-02-22T12:20:17.312Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

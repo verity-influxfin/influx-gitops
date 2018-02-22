@@ -38,14 +38,23 @@ class User extends REST_Controller {
      */
     /**
      * @apiDefine InputError
-     * @apiError 201 欄位錯誤.
+     * @apiError 200 參數錯誤.
+     * @apiErrorExample {json} 200
+     *     {
+     *       "result": "ERROR",
+     *       "error": "200"
+     *     }
+     */
+	 /**
+     * @apiDefine InsertError
+     * @apiError 201 新增時發生錯誤.
      * @apiErrorExample {json} 201
      *     {
      *       "result": "ERROR",
      *       "error": "201"
      *     }
      */
-
+	 
 	 /**
      * @api {post} /user/registerphone 會員 發送驗證簡訊
      * @apiGroup User
@@ -103,6 +112,7 @@ class User extends REST_Controller {
      *      "result": "SUCCESS",
      *    }
 	 * @apiUse InputError
+	 * @apiUse InsertError
      *
      * @apiError 301 會員已存在
      * @apiErrorExample {json} 301
@@ -111,19 +121,13 @@ class User extends REST_Controller {
      *       "error": "301"
      *     }
      *
-     * @apiError 302 驗證碼錯誤
-     * @apiErrorExample {json} 302
-     *     {
-     *       "result": "ERROR",
-     *       "error": "302"
-     *     }
-     *
-     * @apiError 303 新增時發生錯誤
+     * @apiError 303 驗證碼錯誤
      * @apiErrorExample {json} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
+     *
      *
      */
 	public function register_post()
@@ -179,18 +183,18 @@ class User extends REST_Controller {
      *    }
 	 * @apiUse InputError
      *
-     * @apiError 304 會員不存在
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 304 密碼錯誤
      * @apiErrorExample {json} 304
      *     {
      *       "result": "ERROR",
      *       "error": "304"
-     *     }
-     *
-     * @apiError 305 密碼錯誤
-     * @apiErrorExample {json} 305
-     *     {
-     *       "result": "ERROR",
-     *       "error": "305"
      *     }
      *
      */
@@ -213,11 +217,12 @@ class User extends REST_Controller {
 				$data->phone 		= $user_info->phone;
 				$data->status 		= $user_info->status;
 				$data->block_status = $user_info->block_status;
+				$data->id_number 	= isset($user_info->id_number)?$user_info->id_number:"";
 				$token = AUTHORIZATION::generateUserToken($data);
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"status"=>1));
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"user_id"=>$user_info->id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token) ));
 			}else{
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"status"=>0));
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"user_id"=>$user_info->id,"status"=>0));
 				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
 			}
 		}else{
@@ -243,18 +248,18 @@ class User extends REST_Controller {
      *    }
      *
 	 * @apiUse InputError
-     * @apiError 304 會員不存在
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 304 密碼錯誤
      * @apiErrorExample {json} 304
      *     {
      *       "result": "ERROR",
      *       "error": "304"
-     *     }
-     *
-     * @apiError 305 密碼錯誤
-     * @apiErrorExample {json} 305
-     *     {
-     *       "result": "ERROR",
-     *       "error": "305"
      *     }
      *
      */
@@ -293,11 +298,11 @@ class User extends REST_Controller {
 				$data->status 		= $user_info->status;
 				$data->block_status = $user_info->block_status;
 				$token = AUTHORIZATION::generateUserToken($data);
-				$this->log_userlogin_model->insert(array("account"=>$account,"status"=>1));
+				$this->log_userlogin_model->insert(array("account"=>$account,"user_id"=>$user_id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$token) ));
 
 			}else{
-				$this->log_userlogin_model->insert(array("account"=>$account,"status"=>0));
+				$this->log_userlogin_model->insert(array("account"=>$account,"user_id"=>$user_id,"status"=>0));
 				
 			}
 		}else{
@@ -305,6 +310,47 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 		}
 	}
+	
+	 /**
+     * @api {get} /user/info 會員 個人資訊
+     * @apiGroup User
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} id User ID
+	 * @apiSuccess {String} name 姓名（空值則代表未完成身份驗證）
+	 * @apiSuccess {String} phone 手機號碼
+	 * @apiSuccess {String} status 用戶狀態
+	 * @apiSuccess {String} block_status 是否為黑名單
+	 * @apiSuccess {String} id_number 身分證字號（空值則代表未完成身份驗證）
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"id": "1",
+     *      	"name": "",
+     *      	"phone": "0912345678",
+     *      	"status": "1",
+     *      	"id_number": null,
+     *      	"block_status": "0"     
+	 *      }
+     *    }
+	 * @apiUse TokenError
+     *
+     */
+	public function info_get()
+    {
+		$user_id	= $this->user_info->id;
+		$data		= array(
+			"id"			=> $this->user_info->id,
+			"name"			=> $this->user_info->name,
+			"phone"			=> $this->user_info->phone,
+			"status"		=> $this->user_info->status,
+			"block_status"	=> $this->user_info->block_status,
+			"id_number"		=> $this->user_info->id_number
+		);
+
+		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+    }
 	
 	/**
      * @api {post} /user/bind 會員 綁定第三方帳號
@@ -323,18 +369,18 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse TokenError
      *
-     * @apiError 306 access_token錯誤
+     * @apiError 305 access_token錯誤
+     * @apiErrorExample {json} 305
+     *     {
+     *       "result": "ERROR",
+     *       "error": "305"
+     *     }
+     *
+     * @apiError 306 此種類型已綁定過了
      * @apiErrorExample {json} 306
      *     {
      *       "result": "ERROR",
      *       "error": "306"
-     *     }
-     *
-     * @apiError 307 此種類型已綁定過了
-     * @apiErrorExample {json} 307
-     *     {
-     *       "result": "ERROR",
-     *       "error": "307"
      *     }
      *
      */
@@ -395,14 +441,9 @@ class User extends REST_Controller {
      *    }
 	 *
 	 * @apiUse InputError
+	 * @apiUse InsertError
 	 * @apiUse TokenError
      *
-     * @apiError 303 新增時發生錯誤
-     * @apiErrorExample {json} 303
-     *     {
-     *       "result": "ERROR",
-     *       "error": "303"
-     *     }
      *
      */
 	public function bankaccount_post()
@@ -476,4 +517,5 @@ class User extends REST_Controller {
 		
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
+	
 }

@@ -20,6 +20,21 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		$this->load->library('S3_upload');
+		$this->load->library('Faceplusplus_lib');
+		$data = array();
+		if(isset($_FILES["image"]) && !empty($_FILES["image"])){
+			
+			$url = $this->s3_upload->image($_FILES,"image",0,"test");
+			$rs = $this->faceplusplus_lib->detect($url);
+			$data['url'] 	= $url;
+			$data['points'] = $rs;
+			$this->load->view('welcome_message',$data);
+			
+		}else{
+			$this->load->view('welcome_message');
+		}
+		
 		//echo $this->config->item('jwt_key');
 		//$this->load->view('welcome_message');
 		
