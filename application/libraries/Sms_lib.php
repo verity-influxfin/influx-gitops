@@ -2,12 +2,26 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Aws\Sns\SnsClient;
+
 class Sms_lib {
+	
+	private $client;
 	
 	public function __construct()
     {
         $this->CI = &get_instance();
         $this->CI->load->model('user/sms_verify_model');
+		$this->client 	= SnsClient::factory(
+			array(
+				'version' 	=> 'latest',
+				'region'  	=> 'ap-northeast-1',
+				'credentials' => [
+					'key'         => AWS_ACCESS_TOKEN,
+					'secret'      => AWS_SECRET_TOKEN,
+				],
+			)
+		);
     }
 
 	
@@ -22,6 +36,16 @@ class Sms_lib {
 				"expire_time"	=> time()+SMS_EXPIRE_TIME,
 			);
 			$this->CI->sms_verify_model->insert($param);
+			
+			$result = $this->client->publish(
+				array(
+					'Message' 			=> $content,
+					'PhoneNumber' 		=> '+886'.$phone,
+					'MessageAttributes' => array(
+						'AWS.SNS.SMS.SMSType' => array('StringValue' => 'Transactional', 'DataType' => 'String'),
+					)
+				)
+			);
 			return true;
 		}
 		return false;

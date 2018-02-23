@@ -49,4 +49,11 @@ class Certification_lib{
 		}
 		return false;
 	}
+	
+	public function student_verify($user_id,$certification_id){
+		if($user_id && $certification_id){
+			return true;
+		}
+		return false;
+	}
 }

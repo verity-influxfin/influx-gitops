@@ -14,20 +14,29 @@ define({
     "PostUserSociallogin",
     "PostUserBankaccount",
     "GetUserBankaccount",
+    "PostUserContact",
     "Certification",
     "GetCertificationList",
+    "GetCertificationIdcard",
+    "PostCertificationIdcard",
     "PostCertificationHealthcard",
     "GetCertificationHealthcard",
+    "PostCertificationStudent",
+    "GetCertificationStudent",
     "Agreement",
     "GetAgreementList",
-    "GetAgreementInfoAlias"
+    "GetAgreementInfoAlias",
+    "Product",
+    "GetProductCategory",
+    "GetProductList",
+    "GetProductInfoId"
   ],
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-02-22T12:20:17.312Z",
+    "time": "2018-02-23T06:58:21.219Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

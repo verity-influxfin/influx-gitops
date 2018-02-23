@@ -128,8 +128,8 @@ class Certification extends REST_Controller {
 			$content["front_image"] 	= $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
 			$content["back_image"] 		= $this->s3_upload->image($_FILES,"back_image",$user_id,$alias);
 			$content["person_image"] 	= $this->s3_upload->image($_FILES,"person_image",$user_id,$alias);
-			$user_uertification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
-			if($user_uertification){
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
 			}
 			
@@ -267,8 +267,9 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 			}
 
-			$user_uertification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
-			if($user_uertification){
+			//可以不要
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
 			}
 			
@@ -285,6 +286,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
     }
+	
 	/**
      * @api {get} /certification/healthcard 認證 健保卡認證資料
      * @apiGroup Certification
@@ -328,6 +330,140 @@ class Certification extends REST_Controller {
 	public function healthcard_get()
     {
 		$alias 		= "health_card";
+		$certification = $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status){
+			$this->load->library('Certification_lib');
+			$user_id 	= $this->user_info->id;
+			$data		= array();
+			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
+			if($rs){
+				$content = $rs->content;
+				$data = array(
+					"user_id"			=> $rs->user_id,
+					"certification_id"	=> $rs->certification_id,
+					"front_image"		=> $content['front_image'],
+					"status"			=> $rs->status,
+					"created_at"		=> $rs->created_at,
+					"updated_at"		=> $rs->updated_at,
+				);
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {post} /certification/student 認證 學生證認證
+     * @apiGroup Certification
+     * @apiParam {file} front_image (required) 學生證正面照
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function student_post()
+    {
+		$alias 		= "student";
+		$certification = $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$content	= array();
+			$param		= array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification->id,
+			);
+			if(isset($_FILES["front_image"]) && !empty($_FILES["front_image"])){
+				$content["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			}
+
+			//可以不要
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			$param['content'] = json_encode($content);
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+				$this->load->library('Certification_lib');
+				//TODO 串接學生證認證去給status
+				$this->certification_lib->student_verify($user_id,$certification->id);
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {get} /certification/student 認證 學生證認證資料
+     * @apiGroup Certification
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {String} front_image 學生證正面照
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {String} updated_at 最近更新日期
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"user_id": "1",
+     *      	"certification_id": "3",
+     *      	"front_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
+     *      	"status": "0",     
+     *      	"created_at": "1518598432",     
+     *      	"updated_at": "1518598432"     
+	 *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 503 尚未驗證過
+     * @apiErrorExample {json} 503
+     *     {
+     *       "result": "ERROR",
+     *       "error": "503"
+     *     }
+     */
+	public function student_get()
+    {
+		$alias 		= "student";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
 			$this->load->library('Certification_lib');

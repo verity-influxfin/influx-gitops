@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+
+
 class Welcome extends CI_Controller {
 
 	/**
@@ -20,7 +23,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->library('S3_upload');
+		/*$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');
 		$data = array();
 		if(isset($_FILES["image"]) && !empty($_FILES["image"])){
@@ -33,7 +36,7 @@ class Welcome extends CI_Controller {
 			
 		}else{
 			$this->load->view('welcome_message');
-		}
+		}*/
 		
 		//echo $this->config->item('jwt_key');
 		//$this->load->view('welcome_message');

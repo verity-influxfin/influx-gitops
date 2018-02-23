@@ -20,8 +20,12 @@ class S3_upload {
         $this->CI 		= &get_instance();
 		$this->client 	= S3Client::factory(
 			array(
-				'key' 		=> AWS_ACCESS_TOKEN,
-				'secret'	=> AWS_SECRET_TOKEN,
+				'version' 	=> 'latest',
+				'region'  	=> 'ap-northeast-1',
+				'credentials' => [
+					'key'         => AWS_ACCESS_TOKEN,
+					'secret'      => AWS_SECRET_TOKEN,
+				],
 			)
 		);
     }

@@ -518,4 +518,54 @@ class User extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
 	
+	/**
+     * @api {post} /user/contact 會員 投訴與建議
+     * @apiGroup User
+	 * @apiParam {String} content (required) 內容
+     * @apiParam {file} image1 附圖1
+     * @apiParam {file} image2 附圖2
+     * @apiParam {file} image3 附圖3
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     *
+     */
+	public function contact_post()
+    {
+		$this->load->model('user/user_contact_model');
+		$this->load->library('S3_upload');
+        $input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$param		= array("user_id" => $user_id);
+		if (empty($input['content'])) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}else{
+			$param['content'] = $input['content'];
+		}
+		
+		$image		= array();
+		$fields 	= ['image1','image2','image3'];
+		foreach ($fields as $field) {
+            if(isset($_FILES[$field]) && !empty($_FILES[$field])){
+				$image[$field] = $this->s3_upload->image($_FILES,$field,$user_id,"contact");
+			}else{
+				$image[$field] = "";
+			}
+        }
+		$param['image'] = json_encode($image);
+		$insert = $this->user_contact_model->insert($param);
+		if($insert){
+			$this->response(array('result' => 'SUCCESS'));
+		}else{
+			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+		}
+    }
 }
