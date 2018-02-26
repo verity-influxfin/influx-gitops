@@ -19,8 +19,8 @@
 		
 		"Certification",
 		"GetCertificationList",
-		"GetCertificationIdcard",
 		"PostCertificationIdcard",
+		"GetCertificationIdcard",
 		"PostCertificationHealthcard",
 		"GetCertificationHealthcard",
 		"PostCertificationStudent",
@@ -29,6 +29,12 @@
 		"Agreement",
 		"GetAgreementList",
 		"GetAgreementInfoAlias",
+
+		"Notification",
+		"GetNotificationList",
+		"GetNotificationInfoId",
+		"GetNotificationReadall",
+
 		
 		"Product",
 		"GetProductCategory",

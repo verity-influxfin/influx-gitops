@@ -77,6 +77,12 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/idcard 認證 實名認證
      * @apiGroup Certification
+     * @apiParam {String} name (required) 姓名
+     * @apiParam {String} id_number (required) 身分證字號
+     * @apiParam {String} id_card_date (required) 發證日期(民國) ex:1060707
+     * @apiParam {String} id_card_place (required) 發證地點
+     * @apiParam {String} birthday (required) 生日(民國) ex:1020101
+     * @apiParam {String} address (required) 地址
      * @apiParam {file} front_image (required) 身分證正面照
      * @apiParam {file} back_image (required) 身分證背面照
      * @apiParam {file} person_image (required) 本人照
@@ -105,6 +111,13 @@ class Certification extends REST_Controller {
      *       "error": "502"
      *     }
 	 *
+     * @apiError 504 身分證字號格式錯誤
+     * @apiErrorExample {json} 504
+     *     {
+     *       "result": "ERROR",
+     *       "error": "504"
+     *     }
+	 *
      */
 	public function idcard_post()
     {
@@ -118,21 +131,44 @@ class Certification extends REST_Controller {
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification->id,
 			);
-			$fields 	= ['front_image','back_image','person_image'];
-			foreach ($fields as $field) {
-				if (!isset($_FILES[$field]) || empty($_FILES[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-				}
-			}
-		
-			$content["front_image"] 	= $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
-			$content["back_image"] 		= $this->s3_upload->image($_FILES,"back_image",$user_id,$alias);
-			$content["person_image"] 	= $this->s3_upload->image($_FILES,"person_image",$user_id,$alias);
+			
+			//是否驗證過
 			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
 			if($user_certification){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
 			}
 			
+			//必填欄位
+			$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address'];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}else{
+					$content[$field] = $input[$field];
+				}
+			}
+			
+			//檢查身分證字號
+			$id_check = check_cardid($input['id_number']);
+			if(!$id_check){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_IDNUMBER_ERROR ));
+			}
+			
+			//上傳檔案欄位
+			$file_fields 	= ['front_image','back_image','person_image'];
+			foreach ($file_fields as $field) {
+				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					if($image){
+						$content[$field] = $image;
+					}else{
+						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					}
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}
+			}
+
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -154,6 +190,12 @@ class Certification extends REST_Controller {
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {String} name (required) 姓名
+     * @apiSuccess {String} id_number (required) 身分證字號
+     * @apiSuccess {String} id_card_date (required) 發證日期(民國) ex:1060707
+     * @apiSuccess {String} id_card_place (required) 發證地點
+     * @apiSuccess {String} birthday (required) 生日(民國) ex:1020101
+     * @apiSuccess {String} address (required) 地址
 	 * @apiSuccess {String} front_image 身分證正面照
 	 * @apiSuccess {String} back_image 身分證背面照
 	 * @apiSuccess {String} person_image 本人照
@@ -171,7 +213,13 @@ class Certification extends REST_Controller {
      *      	"person_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
      *      	"status": "0",     
      *      	"created_at": "1518598432",     
-     *      	"updated_at": "1518598432"     
+     *      	"updated_at": "1518598432",     
+     *      	"name": "toy",
+     *      	"id_number": "G121111111",
+     *      	"id_card_date": "1060707",
+     *      	"id_card_place": "北市",
+     *      	"birthday": "1020101",
+     *      	"address": "全家就是我家"
 	 *      }
      *    }
 	 *
@@ -205,13 +253,16 @@ class Certification extends REST_Controller {
 				$data = array(
 					"user_id"			=> $rs->user_id,
 					"certification_id"	=> $rs->certification_id,
-					"front_image"		=> $content['front_image'],
-					"back_image"		=> $content['back_image'],
-					"person_image"		=> $content['person_image'],
 					"status"			=> $rs->status,
 					"created_at"		=> $rs->created_at,
 					"updated_at"		=> $rs->updated_at,
 				);
+				$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address','front_image','back_image','person_image'];
+				foreach ($fields as $field) {
+					if (isset($content[$field]) && !empty($content[$field])) {
+						$data[$field] = $content[$field];
+					}
+				}
 				$this->response(array('result' => 'SUCCESS',"data" => $data));
 			}
 			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
@@ -261,16 +312,18 @@ class Certification extends REST_Controller {
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification->id,
 			);
+			
+			//是否驗證過
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			//上傳檔案
 			if(isset($_FILES["front_image"]) && !empty($_FILES["front_image"])){
 				$content["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-			}
-
-			//可以不要
-			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
-			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			$param['content'] = json_encode($content);
@@ -356,7 +409,11 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/student 認證 學生證認證
      * @apiGroup Certification
+	 * @apiParam {String} school (required) 學校名稱
+	 * @apiParam {String} department (required) 系所
+	 * @apiParam {String} student_id (required) 學號
      * @apiParam {file} front_image (required) 學生證正面照
+     * @apiParam {file} back_image (required) 學生證背面照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -395,16 +452,36 @@ class Certification extends REST_Controller {
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification->id,
 			);
-			if(isset($_FILES["front_image"]) && !empty($_FILES["front_image"])){
-				$content["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
-			}else{
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-			}
-
-			//可以不要
+			
+			//是否驗證過
 			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
 			if($user_certification){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			//必填欄位
+			$fields 	= ['school','department','student_id'];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}else{
+					$content[$field] = $input[$field];
+				}
+			}
+
+			//上傳檔案欄位
+			$file_fields 	= ['front_image','back_image'];
+			foreach ($file_fields as $field) {
+				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					if($image){
+						$content[$field] = $image;
+					}else{
+						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					}
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}
 			}
 			
 			$param['content'] = json_encode($content);
@@ -429,6 +506,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} front_image 學生證正面照
+	 * @apiSuccess {String} back_image 學生證背面照
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
@@ -438,7 +516,11 @@ class Certification extends REST_Controller {
      *      "data": {
      *      	"user_id": "1",
      *      	"certification_id": "3",
+     *      	"school": "國立宜蘭大學",
+     *      	"department": "電機工程學系",
+     *      	"student_id": "1496B032",
      *      	"front_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
+     *      	"back_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
      *      	"status": "0",     
      *      	"created_at": "1518598432",     
      *      	"updated_at": "1518598432"     
@@ -475,11 +557,16 @@ class Certification extends REST_Controller {
 				$data = array(
 					"user_id"			=> $rs->user_id,
 					"certification_id"	=> $rs->certification_id,
-					"front_image"		=> $content['front_image'],
 					"status"			=> $rs->status,
 					"created_at"		=> $rs->created_at,
 					"updated_at"		=> $rs->updated_at,
 				);
+				$fields 	= ['school','department','student_id','front_image','back_image'];
+				foreach ($fields as $field) {
+					if (isset($content[$field]) && !empty($content[$field])) {
+						$data[$field] = $content[$field];
+					}
+				}
 				$this->response(array('result' => 'SUCCESS',"data" => $data));
 			}
 			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));

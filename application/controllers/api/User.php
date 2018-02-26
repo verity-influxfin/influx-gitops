@@ -105,6 +105,7 @@ class User extends REST_Controller {
      * @apiParam {String} phone (required) 手機號碼
      * @apiParam {String} password (required) 設定密碼
      * @apiParam {String} code (required) 收到的驗證碼
+     * @apiParam {String} investor 1:投資端 0:借款端 default:0
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -133,7 +134,7 @@ class User extends REST_Controller {
 	public function register_post()
     {
 
-		$input = $this->input->post(NULL, TRUE);
+		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
         $fields 	= ['phone','password','code'];
         foreach ($fields as $field) {
@@ -144,6 +145,12 @@ class User extends REST_Controller {
 			}
         }
 
+		if(isset($input['investor']) && $input['investor']){
+			$data['investor_status'] = 1;
+		}else{
+			$data['status'] = 1;
+		}
+		
 		$result = $this->user_model->get_by('phone',$data["phone"]);
 		if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
@@ -161,9 +168,7 @@ class User extends REST_Controller {
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
 			}
-			
         }
-		
     }
 
 	 /**
@@ -171,13 +176,16 @@ class User extends REST_Controller {
      * @apiGroup User
      * @apiParam {String} phone (required) 手機號碼
      * @apiParam {String} password (required) 密碼
+	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} token request_token
+	 * @apiSuccess {number} first_time 是否首次本端
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
+	 *			"first_time": 1,
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
      *      }
      *    }
@@ -207,26 +215,39 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
             }
         }
-
-		$user_info = $this->user_model->get_by('phone', $input['phone']);	
+		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
 			if(sha1($input['password'])==$user_info->password){
-				$data = new stdClass();
+				$data 		= new stdClass();
+				$first_time = 0;
+				if($investor==1 && $user_info->investor_status==0){
+					$user_info->investor_status = 1;
+					$this->user_model->update($user_info->id,array("investor_status"=>1));
+					$first_time = 1;
+				}else if($investor==0 && $user_info->status==0){
+					$user_info->status = 1;
+					$this->user_model->update($user_info->id,array("status"=>1));
+					$first_time = 1;
+				}
+				
 				$data->id 			= $user_info->id;
 				$data->name 		= isset($user_info->name)?$user_info->name:"";
 				$data->phone 		= $user_info->phone;
 				$data->status 		= $user_info->status;
+				$data->investor_status 	= $user_info->investor_status;
 				$data->block_status = $user_info->block_status;
+				$data->investor 	= $investor;
 				$data->id_number 	= isset($user_info->id_number)?$user_info->id_number:"";
 				$token = AUTHORIZATION::generateUserToken($data);
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"user_id"=>$user_info->id,"status"=>1));
-				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token) ));
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
+				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token,"first_time"=>$first_time) ));
 			}else{
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"user_id"=>$user_info->id,"status"=>0));
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"user_id"=>$user_info->id,"status"=>0));
 				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
 			}
 		}else{
-			$this->log_userlogin_model->insert(array("account"=>$input['phone'],"status"=>0));
+			$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"status"=>0));
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 		}
 	}
@@ -236,13 +257,16 @@ class User extends REST_Controller {
      * @apiGroup User
      * @apiParam {String} type (required) 登入類型（"facebook"）
      * @apiParam {String} access_token (required) access_token
+	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} token request_token
+	 * @apiSuccess {number} first_time 是否首次本端
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
+	 *			"first_time": 1,
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
      *      }
      *    }
@@ -265,8 +289,9 @@ class User extends REST_Controller {
      */
 	 
 	public function sociallogin_post(){
-        $input = $this->input->post(NULL, TRUE);
-		$type  = isset($input['type'])?$input['type']:"";
+        $input 		= $this->input->post(NULL, TRUE);
+		$type  		= isset($input['type'])?$input['type']:"";
+		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
 		switch ($type){
 			case "facebook":
 				$fields = ['access_token'];
@@ -291,22 +316,32 @@ class User extends REST_Controller {
 		if($user_id && $account){
 			$user_info = $this->user_model->get($user_id);	
 			if($user_info){
-				$data = new stdClass();
+				$data 		= new stdClass();
+				$first_time = 0;
+				if($investor==1 && $user_info->investor_status==0){
+					$user_info->investor_status = 1;
+					$this->user_model->update($user_info->id,array("investor_status"=>1));
+					$first_time = 1;
+				}else if($investor==0 && $user_info->status==0){
+					$user_info->status = 1;
+					$this->user_model->update($user_info->id,array("status"=>1));
+					$first_time = 1;
+				}
 				$data->id 			= $user_info->id;
 				$data->name 		= isset($user_info->name)?$user_info->name:"";
 				$data->phone 		= $user_info->phone;
 				$data->status 		= $user_info->status;
 				$data->block_status = $user_info->block_status;
 				$token = AUTHORIZATION::generateUserToken($data);
-				$this->log_userlogin_model->insert(array("account"=>$account,"user_id"=>$user_id,"status"=>1));
+				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$token) ));
 
 			}else{
-				$this->log_userlogin_model->insert(array("account"=>$account,"user_id"=>$user_id,"status"=>0));
+				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>0));
 				
 			}
 		}else{
-			$this->log_userlogin_model->insert(array("account"=>$account,"status"=>1));
+			$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"status"=>0));
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 		}
 	}
@@ -322,6 +357,7 @@ class User extends REST_Controller {
 	 * @apiSuccess {String} status 用戶狀態
 	 * @apiSuccess {String} block_status 是否為黑名單
 	 * @apiSuccess {String} id_number 身分證字號（空值則代表未完成身份驗證）
+	 * @apiSuccess {String} investor 1:投資端 0:借款端
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -331,6 +367,7 @@ class User extends REST_Controller {
      *      	"phone": "0912345678",
      *      	"status": "1",
      *      	"id_number": null,
+     *      	"investor": 1,
      *      	"block_status": "0"     
 	 *      }
      *    }
@@ -346,7 +383,8 @@ class User extends REST_Controller {
 			"phone"			=> $this->user_info->phone,
 			"status"		=> $this->user_info->status,
 			"block_status"	=> $this->user_info->block_status,
-			"id_number"		=> $this->user_info->id_number
+			"id_number"		=> $this->user_info->id_number,
+			"investor"		=> $this->user_info->investor
 		);
 
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
@@ -451,9 +489,9 @@ class User extends REST_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->library('S3_upload');
         $input 		= $this->input->post(NULL, TRUE);
-		$fields 	= ['bank_code','bank_account'];
 		$user_id 	= $this->user_info->id;
 		$param		= array("user_id" => $user_id);
+		$fields 	= ['bank_code','bank_account'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));

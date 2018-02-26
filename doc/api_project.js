@@ -17,8 +17,8 @@ define({
     "PostUserContact",
     "Certification",
     "GetCertificationList",
-    "GetCertificationIdcard",
     "PostCertificationIdcard",
+    "GetCertificationIdcard",
     "PostCertificationHealthcard",
     "GetCertificationHealthcard",
     "PostCertificationStudent",
@@ -26,6 +26,10 @@ define({
     "Agreement",
     "GetAgreementList",
     "GetAgreementInfoAlias",
+    "Notification",
+    "GetNotificationList",
+    "GetNotificationInfoId",
+    "GetNotificationReadall",
     "Product",
     "GetProductCategory",
     "GetProductList",
@@ -36,7 +40,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-02-23T06:58:21.219Z",
+    "time": "2018-02-26T11:05:35.252Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

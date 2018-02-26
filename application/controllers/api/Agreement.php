@@ -94,7 +94,12 @@ class Agreement extends REST_Controller {
      * 		}
      * }
 	 *
-	 * @apiUse InputError
+     * @apiError 701 此協議書不存在
+     * @apiErrorExample {json} 701
+     *     {
+     *       "result": "ERROR",
+     *       "error": "701"
+     *     }
      */
 	public function info_get($alias)
     {
