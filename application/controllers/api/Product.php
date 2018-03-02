@@ -24,7 +24,7 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /product/category 貸款產品 取得分類列表
+     * @api {get} /product/category 借款方產品 取得分類列表
      * @apiGroup Product
      *
      * @apiSuccess {json} result SUCCESS
@@ -75,7 +75,7 @@ class Product extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
     }
 	/**
-     * @api {get} /product/list 貸款產品 取得產品列表
+     * @api {get} /product/list 借款方產品 取得產品列表
      * @apiGroup Product
 	 * @apiParam {number} category 產品分類ID
      *
@@ -85,6 +85,13 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} parent_id 父層產品
 	 * @apiSuccess {String} rank 排序
+	 * @apiSuccess {json} instalment 可申請期數
+	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
+	 * @apiSuccess {String} loan_range_e 最高借款額度(元)
+	 * @apiSuccess {String} interest_rate_s 年利率下限(%)
+	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
+	 * @apiSuccess {String} charge_platform 平台服務費(%)
+	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
 	 * @apiSuccess {json} category 分類資訊
      * @apiSuccessExample {json} SUCCESS
      * {
@@ -95,7 +102,14 @@ class Product extends REST_Controller {
      * 				"name": "學生區",
      * 				"description": "學生區啊啊啊啊啊啊啊",
      * 				"parent_id": "0",
-     * 				"rank": "0"
+     * 				"rank": "0",
+     * 				"loan_range_s":"12222",
+     * 				"loan_range_e":"14333333",
+     * 				"interest_rate_s":"12",
+     * 				"interest_rate_e":"14",
+     * 				"charge_platform":"0",
+     * 				"charge_platform_min":"0",
+	 * 				"instalment": "[3,6,12,18]"
      * 			},
      * 			"list":[
      * 			{
@@ -103,7 +117,14 @@ class Product extends REST_Controller {
      * 				"name":"學生區",
      * 				"description":"學生區",
      * 				"parent_id":"0",
-     * 				"rank":"0"
+     * 				"rank":"0",
+     * 				"loan_range_s":"12222",
+     * 				"loan_range_e":"14333333",
+     * 				"interest_rate_s":"12",
+     * 				"interest_rate_e":"14",
+     * 				"charge_platform":"0",
+     * 				"charge_platform_min":"0",
+	 * 				"instalment": "[3,6,12,18]"
      * 			}
      * 			]
      * 		}
@@ -134,14 +155,21 @@ class Product extends REST_Controller {
 		if(!empty($product_list)){
 			foreach($product_list as $key => $value){
 				$list[] = array(
-					"id" 			=> $value->id,
-					"name" 			=> $value->name,
-					"description" 	=> $value->description,
-					"alias" 		=> $value->alias,
-					"category"		=> $value->category,
-					"parent_id"		=> $value->parent_id,
-					"rank"			=> $value->rank,
-					"status"		=> $value->status,
+					"id" 				=> $value->id,
+					"name" 				=> $value->name,
+					"description" 		=> $value->description,
+					"alias" 			=> $value->alias,
+					"category"			=> $value->category,
+					"parent_id"			=> $value->parent_id,
+					"rank"				=> $value->rank,
+					"status"			=> $value->status,
+					"loan_range_s"		=> $value->loan_range_s,
+					"loan_range_e"		=> $value->loan_range_e,
+					"interest_rate_s"	=> $value->interest_rate_s,
+					"interest_rate_e"	=> $value->interest_rate_e,
+					"charge_platform"		=> $value->charge_platform,
+					"charge_platform_min"	=> $value->charge_platform_min,
+					"instalment"			=> $value->instalment,
 				);
 			}
 		}
@@ -150,7 +178,7 @@ class Product extends REST_Controller {
     }
 
 	/**
-     * @api {get} /product/info/{ID} 貸款產品 取得產品資訊
+     * @api {get} /product/info/{ID} 借款方產品 取得產品資訊
      * @apiGroup Product
 	 * @apiParam {number} ID 產品ID
      *
@@ -172,6 +200,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} charge_sub_loan 轉貸服務費(%)
 	 * @apiSuccess {String} charge_prepayment 提還手續費(%)
 	 * @apiSuccess {json} ratings 評級方式資訊
+	 * @apiSuccess {json} instalment 可申請期數
      * @apiSuccessExample {json} SUCCESS
      * {
      * 		"result":"SUCCESS",
@@ -194,7 +223,8 @@ class Product extends REST_Controller {
      * 				"charge_overdue":"0",
      * 				"charge_sub_loan":"0",
      * 				"charge_prepayment":"0",
-     * 				"ratings":"{"1":{"id":"1","status":1,"value":0},"2":{"id":"2","status":1,"value":"123"},"3":{"id":"3","status":1,"value":0}}"
+     * 				"ratings":"{"1":{"id":"1","status":1,"value":0},"2":{"id":"2","status":1,"value":"123"},"3":{"id":"3","status":1,"value":0}}",
+	 * 				"instalment": "[3,6,12,18]"
      * 			}
      * 		}
      * }
@@ -230,7 +260,8 @@ class Product extends REST_Controller {
 					"charge_overdue"		=> $product->charge_overdue,
 					"charge_sub_loan"		=> $product->charge_sub_loan,
 					"charge_prepayment"		=> $product->charge_prepayment,
-					"ratings"				=> $product->	ratings,
+					"ratings"				=> $product->ratings,
+					"instalment"			=> $product->instalment,
 				);
 				$this->response(array('result' => 'SUCCESS',"data" => $data ));
 			}
@@ -238,4 +269,100 @@ class Product extends REST_Controller {
 		$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
     }
 	
+	/**
+     * @api {post} /product/apply 借款方產品 申請借款
+     * @apiGroup Product
+	 * @apiParam {number} product_id (required) 產品ID
+     * @apiParam {number} amount (required) 借款金額
+     * @apiParam {number} instalment (required) 申請期數
+	 * 
+	 * 
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     * @apiError 504 身分證字號格式錯誤
+     * @apiErrorExample {json} 504
+     *     {
+     *       "result": "ERROR",
+     *       "error": "504"
+     *     }
+	 *
+     */
+	public function apply_post()
+    {
+
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$param		= array("user_id"=> $user_id);
+		
+		//必填欄位
+		$fields 	= ['product_id','amount','instalment'];
+		foreach ($fields as $field) {
+			$input[$field] = intval($input[$field]);
+			if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			}else{
+				$param[$field] = $input[$field];
+			}
+		}
+		
+		$product = $this->product_model->get($input['product_id']);
+		if($product && $product->status == 1 ){
+			$product->instalment = json_decode($product->instalment,TRUE);
+			if(!in_array($input['instalment'],$product->instalment)){
+				$this->response(array('result' => 'ERROR',"error" => PRODUCT_INSTALMENT_ERROR ));
+			}
+			
+			if($input['amount']<$product->loan_range_s || $input['amount']>$product->loan_range_e){
+				$this->response(array('result' => 'ERROR',"error" => PRODUCT_AMOUNT_RANGE ));
+			}
+
+			$this->load->model('user/user_model');
+			$this->load->model('user/user_bankaccount_model');
+			$user_info = $this->user_model->get($user_id);	
+			if($user_info){
+				//檢查身分證字號 NOT_VERIFIED
+				if(empty($user_info->id_number) || !check_cardid($user_info->id_number)){
+					$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				}
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			}
+			
+			//檢查金融卡綁定 NO_BANK_ACCOUNT
+			$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id ));
+			if(!$bank_account){
+				$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+			}
+			
+			if($insert){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
+		}
+		
+		$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
+    }
 }

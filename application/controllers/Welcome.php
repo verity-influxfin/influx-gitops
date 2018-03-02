@@ -23,6 +23,10 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		$this->load->library('Payment_lib');
+		$this->payment_lib->insert_cathay_info();
+
+		
 		/*$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');
 		$data = array();

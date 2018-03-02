@@ -12,6 +12,7 @@ class Sms_lib {
     {
         $this->CI = &get_instance();
         $this->CI->load->model('user/sms_verify_model');
+		$this->CI->load->model('log/log_sns_model');
 		$this->client 	= SnsClient::factory(
 			array(
 				'version' 	=> 'latest',
@@ -36,16 +37,19 @@ class Sms_lib {
 				"expire_time"	=> time()+SMS_EXPIRE_TIME,
 			);
 			$this->CI->sms_verify_model->insert($param);
-			
-			$result = $this->client->publish(
-				array(
-					'Message' 			=> $content,
-					'PhoneNumber' 		=> '+886'.$phone,
-					'MessageAttributes' => array(
-						'AWS.SNS.SMS.SMSType' => array('StringValue' => 'Transactional', 'DataType' => 'String'),
+			$data = array(
+					'Message' 					=> $content,
+					'PhoneNumber' 				=> '+886'.$phone,
+					'MessageAttributes' 		=> array(
+						'AWS.SNS.SMS.SMSType' 	=> array('StringValue' => 'Transactional', 'DataType' => 'String'),
 					)
-				)
-			);
+				);
+			$result = $this->client->publish($data);
+			$this->CI->log_sns_model->insert(array(
+				"type" 		=> "sms",
+				"request"	=> json_encode($data),
+				"response"	=> json_encode($result->toArray())
+			));
 			return true;
 		}
 		return false;
@@ -68,5 +72,6 @@ class Sms_lib {
 		}
 		return false;
 	}
+
 	
 }

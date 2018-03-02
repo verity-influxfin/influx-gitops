@@ -88,6 +88,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
 defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.
 defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201); 
+defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒實名認證
+defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -96,12 +98,15 @@ defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304);
 defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305); 
 defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306); 
 //Product Error Code
-defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401); 
+defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
+defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
+defined('PRODUCT_INSTALMENT_ERROR')  	OR define('PRODUCT_INSTALMENT_ERROR'	, 403); 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
 defined('CERTIFICATION_NEVER_VERIFY') 	OR define('CERTIFICATION_NEVER_VERIFY'	, 503); 
 defined('CERTIFICATION_IDNUMBER_ERROR') OR define('CERTIFICATION_IDNUMBER_ERROR', 504); 
+defined('CERTIFICATION_IDNUMBER_EXIST') OR define('CERTIFICATION_IDNUMBER_EXIST', 505); 
 //Notification Error Code
 defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601); 
 //Agreement Error Code
@@ -120,6 +125,14 @@ defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'UJdqWlA-ZeSGkpk
 defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'YapyNRr644ivmNi1iEba5tt9TuuMv0XJ'); //Face++ 
 defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70); //Face++ 
 
+
+//Cathay 國泰世華
+defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL', 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
+defined('CATHAY_CUST_ID')     		OR define('CATHAY_CUST_ID', '68566881');
+defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME', 'toychen');
+defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD', 'fable1234');
+defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO', '015035006475');
+defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
 
 //SMS
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800);

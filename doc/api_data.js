@@ -1278,7 +1278,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/category",
-    "title": "貸款產品 取得分類列表",
+    "title": "借款方產品 取得分類列表",
     "group": "Product",
     "success": {
       "fields": {
@@ -1343,7 +1343,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/info/{ID}",
-    "title": "貸款產品 取得產品資訊",
+    "title": "借款方產品 取得產品資訊",
     "group": "Product",
     "parameter": {
       "fields": {
@@ -1486,13 +1486,20 @@ define({ "api": [
             "optional": false,
             "field": "ratings",
             "description": "<p>評級方式資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>可申請期數</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"charge_overdue\":\"0\",\n\t\t\t\t\"charge_sub_loan\":\"0\",\n\t\t\t\t\"charge_prepayment\":\"0\",\n\t\t\t\t\"ratings\":\"{\"1\":{\"id\":\"1\",\"status\":1,\"value\":0},\"2\":{\"id\":\"2\",\"status\":1,\"value\":\"123\"},\"3\":{\"id\":\"3\",\"status\":1,\"value\":0}}\"\n\t\t\t}\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"charge_overdue\":\"0\",\n\t\t\t\t\"charge_sub_loan\":\"0\",\n\t\t\t\t\"charge_prepayment\":\"0\",\n\t\t\t\t\"ratings\":\"{\"1\":{\"id\":\"1\",\"status\":1,\"value\":0},\"2\":{\"id\":\"2\",\"status\":1,\"value\":\"123\"},\"3\":{\"id\":\"3\",\"status\":1,\"value\":0}}\",\n\t\t\t\t\"instalment\": \"[3,6,12,18]\"\n\t\t\t}\n\t\t}\n}",
           "type": "json"
         }
       ]
@@ -1524,7 +1531,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/product/list",
-    "title": "貸款產品 取得產品列表",
+    "title": "借款方產品 取得產品列表",
     "group": "Product",
     "parameter": {
       "fields": {
@@ -1588,6 +1595,55 @@ define({ "api": [
             "group": "Success 200",
             "type": "json",
             "optional": false,
+            "field": "instalment",
+            "description": "<p>可申請期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "loan_range_s",
+            "description": "<p>最低借款額度(元)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "loan_range_e",
+            "description": "<p>最高借款額度(元)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "interest_rate_s",
+            "description": "<p>年利率下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "interest_rate_e",
+            "description": "<p>年利率上限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "charge_platform",
+            "description": "<p>平台服務費(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "charge_platform_min",
+            "description": "<p>平台最低服務費(元)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
             "field": "category",
             "description": "<p>分類資訊</p>"
           }
@@ -1596,7 +1652,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"category\": {\n\t\t\t\t\"id\": \"1\",\n\t\t\t\t\"name\": \"學生區\",\n\t\t\t\t\"description\": \"學生區啊啊啊啊啊啊啊\",\n\t\t\t\t\"parent_id\": \"0\",\n\t\t\t\t\"rank\": \"0\"\n\t\t\t},\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\"\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"category\": {\n\t\t\t\t\"id\": \"1\",\n\t\t\t\t\"name\": \"學生區\",\n\t\t\t\t\"description\": \"學生區啊啊啊啊啊啊啊\",\n\t\t\t\t\"parent_id\": \"0\",\n\t\t\t\t\"rank\": \"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": \"[3,6,12,18]\"\n\t\t\t},\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": \"[3,6,12,18]\"\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
           "type": "json"
         }
       ]
@@ -2252,7 +2308,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
           "type": "json"
         }
       ]

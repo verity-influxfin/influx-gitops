@@ -111,6 +111,9 @@ class User extends REST_Controller {
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
      *    }
 	 * @apiUse InputError
 	 * @apiUse InsertError
@@ -146,11 +149,14 @@ class User extends REST_Controller {
         }
 
 		if(isset($input['investor']) && $input['investor']){
-			$data['investor_status'] = 1;
+			$status = 0;
+			$data['investor_status'] = $investor_status = 1;;
 		}else{
-			$data['status'] = 1;
+			$investor_status = 0;
+			$data['status'] = $status = 1;
 		}
 		
+		$data['my_promote_code'] = $this->get_promote_code();
 		$result = $this->user_model->get_by('phone',$data["phone"]);
 		if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
@@ -161,7 +167,18 @@ class User extends REST_Controller {
 				unset($data["code"]);
 				$insert = $this->user_model->insert($data);
 				if($insert){
-					$this->response(array('result' => 'SUCCESS'));
+					$token = new stdClass();
+					$token->id 				= $insert;
+					$token->name 			= "";
+					$token->phone 			= $data["phone"];
+					$token->status 			= $status;
+					$token->investor_status = $investor_status;
+					$token->block_status 	= 0;
+					$token->investor 		= $investor_status;
+					$token->id_number 		= "";
+					$token->my_promote_code = $data['my_promote_code'];
+					$request_token = AUTHORIZATION::generateUserToken($token);
+					$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token,"first_time"=>1)));
 				}else{
 					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 				}
@@ -231,14 +248,15 @@ class User extends REST_Controller {
 					$first_time = 1;
 				}
 				
-				$data->id 			= $user_info->id;
-				$data->name 		= isset($user_info->name)?$user_info->name:"";
-				$data->phone 		= $user_info->phone;
-				$data->status 		= $user_info->status;
+				$data->id 				= $user_info->id;
+				$data->name 			= isset($user_info->name)?$user_info->name:"";
+				$data->phone 			= $user_info->phone;
+				$data->status 			= $user_info->status;
 				$data->investor_status 	= $user_info->investor_status;
-				$data->block_status = $user_info->block_status;
-				$data->investor 	= $investor;
-				$data->id_number 	= isset($user_info->id_number)?$user_info->id_number:"";
+				$data->block_status 	= $user_info->block_status;
+				$data->investor 		= $investor;
+				$data->id_number 		= isset($user_info->id_number)?$user_info->id_number:"";
+				$data->my_promote_code 	= $user_info->my_promote_code;
 				$token = AUTHORIZATION::generateUserToken($data);
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token,"first_time"=>$first_time) ));
@@ -327,18 +345,22 @@ class User extends REST_Controller {
 					$this->user_model->update($user_info->id,array("status"=>1));
 					$first_time = 1;
 				}
-				$data->id 			= $user_info->id;
-				$data->name 		= isset($user_info->name)?$user_info->name:"";
-				$data->phone 		= $user_info->phone;
-				$data->status 		= $user_info->status;
-				$data->block_status = $user_info->block_status;
+				$data->id 				= $user_info->id;
+				$data->name 			= isset($user_info->name)?$user_info->name:"";
+				$data->phone 			= $user_info->phone;
+				$data->status 			= $user_info->status;
+				$data->block_status 	= $user_info->block_status;
+				$data->investor_status 	= $user_info->investor_status;
+				$data->investor 		= $investor;
+				$data->id_number 		= isset($user_info->id_number)?$user_info->id_number:"";
+				$data->my_promote_code 	= $user_info->my_promote_code;
 				$token = AUTHORIZATION::generateUserToken($data);
 				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$token) ));
 
 			}else{
 				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>0));
-				
+				$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 			}
 		}else{
 			$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"status"=>0));
@@ -384,7 +406,8 @@ class User extends REST_Controller {
 			"status"		=> $this->user_info->status,
 			"block_status"	=> $this->user_info->block_status,
 			"id_number"		=> $this->user_info->id_number,
-			"investor"		=> $this->user_info->investor
+			"investor"		=> $this->user_info->investor,
+			"my_promote_code"	=> $this->user_info->my_promote_code
 		);
 
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
@@ -606,4 +629,14 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 		}
     }
+	
+	function get_promote_code(){
+		$code = make_promote_code();
+		$result = $this->user_model->get_by('my_promote_code',$code);
+		if ($result) {
+			return $this->get_promote_code();
+		}else{
+			return $code;
+		}
+	}
 }

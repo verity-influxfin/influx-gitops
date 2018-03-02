@@ -153,7 +153,13 @@ class Certification extends REST_Controller {
 			if(!$id_check){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_IDNUMBER_ERROR ));
 			}
-			
+						
+			//檢查身分證字號
+			$id_number_used = $this->user_model->get_by(array("id_number"=>$input['id_number']));
+			if($id_number_used){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_IDNUMBER_EXIST ));
+			}
+
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image','person_image'];
 			foreach ($file_fields as $field) {
