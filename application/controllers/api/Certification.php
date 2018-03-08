@@ -11,9 +11,10 @@ class Certification extends REST_Controller {
         parent::__construct();
 		$this->load->model('platform/certification_model');
 		$this->load->model('user/user_certification_model');
+		$this->load->model('user/user_model');
 		$this->load->library('S3_upload');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list'];
+        $nonAuthMethods = [];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -33,6 +34,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} alias 代號
+	 * @apiSuccess {number} user_status 用戶認證狀態：0:未完成 1:已完成
 
      * @apiSuccessExample {json} SUCCESS
      * {
@@ -44,22 +46,26 @@ class Certification extends REST_Controller {
      * 				"name":"身分證認證",
      * 				"description":"身分證認證",
      * 				"alias":"id_card",
+     * 				"user_status":1,
      * 			},
      * 			{
      * 				"id":"2",
      * 				"name":"健保卡認證",
      * 				"description":"健保卡認證",
-     * 				"alias":"health_card",
+     * 				"user_status":1,
      * 			}
      * 			]
      * 		}
      * }
+	 *
+	 * @apiUse TokenError
      */
 	 
 	public function list_get()
     {
-		$certification_list 	= $this->certification_model->get_many_by(array("status"=>1));
-		$list					= array();
+		$this->load->library('Certification_lib');
+		$user_id 			= $this->user_info->id;
+		$certification_list	= $this->certification_lib->get_status($user_id);
 		if(!empty($certification_list)){
 			foreach($certification_list as $key => $value){
 				$list[] = array(
@@ -67,6 +73,7 @@ class Certification extends REST_Controller {
 					"name" 			=> $value->name,
 					"description" 	=> $value->description,
 					"alias" 		=> $value->alias,
+					"user_status" 	=> $value->user_status,
 				);
 			}
 		}
@@ -178,9 +185,6 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->load->library('Certification_lib');
-				//TODO 串接身分證識別去給status
-				$this->certification_lib->id_card_verify($user_id,$certification->id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -335,9 +339,6 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->load->library('Certification_lib');
-				//TODO 串接健保卡識別去給status
-				$this->certification_lib->health_card_verify($user_id,$certification->id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -493,9 +494,6 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->load->library('Certification_lib');
-				//TODO 串接學生證認證去給status
-				$this->certification_lib->student_verify($user_id,$certification->id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));

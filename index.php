@@ -89,6 +89,9 @@ switch (ENVIRONMENT)
 		exit(1); // EXIT_ERROR
 }
 
+//set time zone
+date_default_timezone_set("Asia/Taipei");
+
 /*
  *---------------------------------------------------------------
  * SYSTEM DIRECTORY NAME

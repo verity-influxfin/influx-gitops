@@ -1,8 +1,8 @@
 <?php
 
-class Target_model extends MY_Model
+class Frozen_amount_model extends MY_Model
 {
-	public $_table = 'targets';
+	public $_table = 'frozen_amount';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 

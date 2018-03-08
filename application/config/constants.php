@@ -88,7 +88,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
 defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.
 defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201); 
-defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒實名認證
+defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認證
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
@@ -100,7 +100,9 @@ defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306);
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
 defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
-defined('PRODUCT_INSTALMENT_ERROR')  	OR define('PRODUCT_INSTALMENT_ERROR'	, 403); 
+defined('PRODUCT_INSTALMENT_ERROR')  	OR define('PRODUCT_INSTALMENT_ERROR'	, 403);
+defined('APPLY_NOT_EXIST')  			OR define('APPLY_NOT_EXIST'				, 404);
+defined('APPLY_NO_PERMISSION')  		OR define('APPLY_NO_PERMISSION'			, 405);
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 

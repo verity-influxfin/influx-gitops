@@ -551,13 +551,17 @@ class User extends REST_Controller {
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account 銀行帳號
+	 * @apiSuccess {String} front_image 金融卡正面照
+     * @apiSuccess {String} back_image 金融卡背面照
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
      *      	"user_id": "1",
      *      	"bank_code": "882",
-     *      	"bank_account": "2147483647"     
+     *      	"bank_account": "2147483647",     
+     *      	"front_image": "xxxxxxxxxxxxxxxxxx",    
+     *      	"back_image": "xxxxxxxxxxxxxxxxxx"     
 	 *      }
      *    }
 	 * @apiUse TokenError

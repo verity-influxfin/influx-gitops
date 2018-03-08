@@ -45,6 +45,7 @@ class Facebook_lib{
 	}
 	
 	public function bind_user( $user_id="",$info = array() ){
+		$this->CI->load->model('user/user_meta_model');
 		if(!empty($user_id)){
 			if(isset($info["id"]) && $info["id"]){
 				$info["name"] 	= isset($info["name"])?$info["name"]:"";

@@ -60,7 +60,7 @@
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="certification"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>認證方式管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-table fa-fw"></i>認證管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
@@ -70,7 +70,10 @@
                                 </li>
                                 <li>
                                     <a href="<?=admin_url('certification/school') ?>">學校列表</a>
-                                </li>                               
+                                </li>     
+                                <li>
+                                    <a href="<?=admin_url('certification/user_certification_list') ?>">會員申請認證</a>
+                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

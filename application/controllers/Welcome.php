@@ -25,7 +25,9 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->library('Payment_lib');
 		$this->payment_lib->insert_cathay_info();
-
+		
+		$this->load->library('Transaction_lib');
+		$this->transaction_lib->approve_target(1);
 		
 		/*$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');

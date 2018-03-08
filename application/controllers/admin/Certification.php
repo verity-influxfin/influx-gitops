@@ -10,6 +10,9 @@ class Certification extends MY_Admin_Controller {
 		parent::__construct();
 		$this->login_info = check_admin();
 		$this->load->model('platform/certification_model');
+		$this->load->model('user/user_certification_model');
+		$this->load->model('user/user_meta_model');
+		$this->load->model('user/user_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');
         }	
@@ -109,6 +112,86 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
+	public function user_certification_list(){
+		$this->load->model('admin/admin_model');
+		$page_data 			= array("type"=>"list");
+		$certification 		= $this->certification_model->get_all();
+		$list				= $this->user_certification_model->get_all();
+		$certification_list = array();
+		foreach($certification as $key => $value){
+			$certification_list[$value->id] = $value->name;
+		}
+		if(!empty($list)){
+			$page_data["list"] 				= $list;
+			$page_data["certification_list"] = $certification_list;
+			$page_data["status_list"] 		= $this->user_certification_model->status_list;
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/user_certification_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	public function user_certification_edit(){
+		$page_data 	= array();
+		$post 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		
+		if(empty($post)){
+			$id = isset($get["id"])?intval($get["id"]):0;
+			if($id){
+				$info = $this->user_certification_model->get($id);
+				if($info){
+					$certification 		= $this->certification_model->get_all();
+					$certification_list = array();
+					foreach($certification as $key => $value){
+						$certification_list[$value->id] = $value->name;
+					}
+					$page_data['certification_list'] 	= $certification_list;
+					$page_data['data'] 					= $info;
+					$page_data['content'] 				= json_decode($info->content,true);
+					$page_data["status_list"] 			= $this->user_certification_model->status_list;
+					
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/user_certification_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+			}
+		}else{
+			if(!empty($post['id'])){
+				$info = $this->user_certification_model->get($post['id']);
+				if($info){
+					if($info->status=="1"){
+						alert("更新成功",admin_url('certification/user_certification_list'));
+					}else{
+						
+						if($post['status']=="1"){
+							$this->load->library('Certification_lib');
+							$this->certification_lib->set_success($post['id']);
+						}
+						
+						$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
+						if($rs===true){
+							alert("更新成功",admin_url('certification/user_certification_list'));
+						}else{
+							alert("更新失敗，請洽工程師",admin_url('certification/user_certification_list'));
+						}
+					}
+				}else{
+					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+			}
+		}
+	}
+	
 	public function school(){
 		
 		$rs = file_get_contents(base_url()."assets/school.json");

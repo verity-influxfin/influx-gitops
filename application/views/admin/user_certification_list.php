@@ -19,13 +19,11 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>代號</th>
-                                            <th>名稱</th>
-                                            <th>簡介</th>
+                                            <th>User</th>
+                                            <th>認證方式</th>
                                             <th>狀態</th>
-                                            <th>創建日期</th>
-                                            <th>創建者</th>
-                                            <!--th>修改</th-->
+                                            <th>申請日期</th>
+                                            <th>查看訊息</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -37,13 +35,11 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
-                                            <td><?=isset($value->alias)?$value->alias:"" ?></td>
-                                            <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->description)?$value->description:"" ?></td>
-											<td><?=isset($value->status)?$value->status:"" ?></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
+											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
-											<!--td><a href="<?=admin_url('certification/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td--> 
+											<td><a href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">查看訊息</a></td> 
                                         </tr>                                        
 									<?php 
 										}}
