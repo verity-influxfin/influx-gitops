@@ -358,10 +358,10 @@ class Product extends REST_Controller {
 		//必填欄位
 		$fields 	= ['product_id','amount','instalment'];
 		foreach ($fields as $field) {
-			$input[$field] = intval($input[$field]);
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 			}else{
+				$input[$field] = intval($input[$field]);
 				$param[$field] = $input[$field];
 			}
 		}
@@ -427,9 +427,8 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} total_interest 總利息
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 5:已結案 9:申請失敗
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
-
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -565,7 +564,20 @@ class Product extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
-     *
+	 *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {json} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+	 *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {json} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
      */
 	public function applyinfo_get($target_id)
     {
@@ -605,6 +617,95 @@ class Product extends REST_Controller {
 			);
 			
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+    }
+	
+	/**
+     * @api {post} /product/applyedit 借款方產品 申請借款修改
+     * @apiGroup Product
+	 * @apiParam {number} id (required) Targets ID
+	 * @apiParam {number} action (required) 動作 contract：確認合約 cancel：取消申請
+	 * 
+	 * 
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+     *
+	 *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {json} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+	 *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {json} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+	 *
+     * @apiError 406 此動作不存在
+     * @apiErrorExample {json} 406
+     *     {
+     *       "result": "ERROR",
+     *       "error": "406"
+     *     }
+	 *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {json} 406
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+	 *
+     */
+	public function applyedit_post()
+    {
+
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$param		= array("user_id"=> $user_id);
+		
+		//必填欄位
+		$fields 	= ['id','action'];
+		foreach ($fields as $field) {
+			if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			}
+		}
+
+		$targets 	= $this->target_model->get($input['id']);
+		if(!empty($targets)){
+			if($targets->user_id != $user_id){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+			}
+			
+			if(!in_array($input['action'],array("contract","cancel"))){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_ACTION_ERROR ));
+			}
+			
+			if($input['action']=="contract"){
+				if($targets->status == 1){
+					$rs = $this->target_model->update($targets->id,array("status"=>2));
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				}
+			}else if($input['action']=="cancel"){
+				if($targets->status == 0 || $targets->status == 1 ){
+					$rs = $this->target_model->update($targets->id,array("status"=>8));
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				}
+			}
+			$this->response(array('result' => 'SUCCESS'));
 		}
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }

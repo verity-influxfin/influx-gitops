@@ -23,11 +23,53 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->library('Payment_lib');
+		$amount 	= 10000;//額度
+		$rate		= 4.4;
+		$instalment = 12;
+		$mrate 	 	= $rate/1200;
+		$mtotal		= 1+$mrate;
+		$minterest 	= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1);
+		$minterest	= round($minterest,2);
+		echo '<span>本金：'.$amount.'</span><br>';
+		echo '<span>年利率：'.$rate.'%</span><br>';
+		echo '<span>每期應繳：'.$minterest.'</span>';
+		echo '<table style="width:50%;text-align: center;"><tr><th>期數</th><th>本金</th><th>利息</th><th>本息合計</th></tr>';
+		$t_amount = $t_interest = $t_min = 0;
+		for($i=1;$i<=$instalment;$i++){
+			
+			$mamount 	= $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
+			$interest	= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1) - $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
+			$interest 	= round($interest,0);
+			$mamount	= ceil($minterest)-$interest;
+			if($i==$instalment){
+				$mamount = $amount-$t_amount;
+			}
+			
+			$min		= $mamount+$interest;
+			$t_interest	= $t_interest+$interest;
+			$t_amount	= $t_amount+$mamount;
+			$t_min		= $t_min+$min;
+			
+			echo "<tr>";
+			echo "<td>".$i."</td>";
+			echo "<td>".$mamount."</td>";
+			echo "<td>".$interest."</td>";
+			echo "<td>".$min."</td>";
+			echo "</tr>";
+		}
+			echo "<td>合計</td>";
+			echo "<td>".$t_amount."</td>";
+			echo "<td>".$t_interest."</td>";
+			echo "<td>".$t_min."</td>";
+			echo "</tr>";
+		echo '</table>';
+		/*$this->load->library('Payment_lib');
 		$this->payment_lib->insert_cathay_info();
 		
-		$this->load->library('Transaction_lib');
-		$this->transaction_lib->approve_target(1);
+		$this->load->library('Target_lib');
+		$rs = $this->target_lib->approve_target(1);
+		dump($rs);*/
+		
 		
 		/*$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');
@@ -47,39 +89,6 @@ class Welcome extends CI_Controller {
 		//echo $this->config->item('jwt_key');
 		//$this->load->view('welcome_message');
 		
-		/*$question = array(
-			1	=> array(
-				"id"		=> "1",
-				"type"		=> "single",
-				"question" 	=> "是否為在校學生？",
-				"select"	=> array(
-					"1"	=> array("option"=>"是","rating"=>"1","next" => "2"),
-					"2"	=> array("option"=>"否","rating"=>"0","next" => "3"), 
-				)
-			),
-			2	=> array(
-				"id"		=> "2",
-				"type"		=> "single",
-				"question" 	=> "請點擊選擇您的學歷",
-				"select"	=> array(
-					"1"	=> array("option"=>"大學在讀","rating"=>"1","next" => "3"),
-					"2"	=> array("option"=>"研究所在讀","rating"=>"2","next" => "3"), 
-					"3"	=> array("option"=>"博士在讀","rating"=>"3","next" => "3"), 
-					"4"	=> array("option"=>"專科在讀","rating"=>"4","next" => "3"), 
-				)
-			),
-			3	=> array(
-				"id"		=> "3",
-				"type"		=> "multiple",
-				"question" 	=> "目前收入來源",
-				"select"	=> array(
-					"1"	=> array("option"=>"打工","rating"=>"1","next" => "end"),
-					"2"	=> array("option"=>"投資","rating"=>"1","next" => "end"),
-					"3"	=> array("option"=>"家中資助","rating"=>"1","next" => "end"),
-					"4"	=> array("option"=>"專業撿到錢","rating"=>"1","next" => "end")
-				)
-			)
-		);*/
 
 	}
 }

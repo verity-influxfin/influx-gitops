@@ -5,7 +5,16 @@ class Target_model extends MY_Model
 	public $_table = 'targets';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
-
+	public $status_list   = array(
+		0 =>	"待核可",
+		1 =>	"待簽約",
+		2 =>	"待借款",
+		3 =>	"待放款（結標）",
+		4 =>	"還款中",
+		8 =>	"已取消",
+		9 =>	"申請失敗",
+		10 =>	"已結案",
+	);
 	
 	public function __construct()
 	{

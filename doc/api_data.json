@@ -1437,13 +1437,21 @@
         }
       ]
     },
-    "version": "0.0.0",
-    "filename": "application/controllers/api/Product.php",
-    "groupTitle": "Product",
-    "name": "GetProductApplyinfoId",
     "error": {
       "fields": {
         "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>此申請不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "405",
+            "description": "<p>對此申請無權限</p>"
+          },
           {
             "group": "Error 4xx",
             "optional": false,
@@ -1454,12 +1462,26 @@
       },
       "examples": [
         {
+          "title": "404",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "405",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+          "type": "json"
+        },
+        {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
           "type": "json"
         }
       ]
-    }
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Product.php",
+    "groupTitle": "Product",
+    "name": "GetProductApplyinfoId"
   },
   {
     "type": "get",
@@ -1551,7 +1573,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 5:已結案 9:申請失敗</p>"
+            "description": "<p>狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案</p>"
           },
           {
             "group": "Success 200",
@@ -2151,6 +2173,130 @@
     "filename": "application/controllers/api/Product.php",
     "groupTitle": "Product",
     "name": "PostProductApply"
+  },
+  {
+    "type": "post",
+    "url": "/product/applyedit",
+    "title": "借款方產品 申請借款修改",
+    "group": "Product",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>(required) Targets ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "action",
+            "description": "<p>(required) 動作 contract：確認合約 cancel：取消申請</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>此申請不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "405",
+            "description": "<p>對此申請無權限</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "406",
+            "description": "<p>此動作不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "407",
+            "description": "<p>目前狀態無法完成此動作</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "404",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "405",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "406",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"406\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "406",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Product.php",
+    "groupTitle": "Product",
+    "name": "PostProductApplyedit"
   },
   {
     "type": "get",
