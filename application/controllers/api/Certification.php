@@ -34,7 +34,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} alias 代號
-	 * @apiSuccess {number} user_status 用戶認證狀態：0:未完成 1:已完成
+	 * @apiSuccess {number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
 
      * @apiSuccessExample {json} SUCCESS
      * {
@@ -80,7 +80,6 @@ class Certification extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
     }
 
-	
 	/**
      * @api {post} /certification/idcard 認證 實名認證
      * @apiGroup Certification
@@ -417,8 +416,10 @@ class Certification extends REST_Controller {
      * @api {post} /certification/student 認證 學生證認證
      * @apiGroup Certification
 	 * @apiParam {String} school (required) 學校名稱
+	 * @apiParam {String} system 學制 0:大學 1:碩士 2:博士 default:0
 	 * @apiParam {String} department (required) 系所
 	 * @apiParam {String} student_id (required) 學號
+	 * @apiParam {String} email (required) 校內Email
      * @apiParam {file} front_image (required) 學生證正面照
      * @apiParam {file} back_image (required) 學生證背面照
      *
@@ -446,6 +447,13 @@ class Certification extends REST_Controller {
      *       "error": "502"
      *     }
 	 *
+     * @apiError 204 Email格式錯誤
+     * @apiErrorExample {json} 204
+     *     {
+     *       "result": "ERROR",
+     *       "error": "204"
+     *     }
+	 *
      */
 	public function student_post()
     {
@@ -467,7 +475,7 @@ class Certification extends REST_Controller {
 			}
 			
 			//必填欄位
-			$fields 	= ['school','department','student_id'];
+			$fields 	= ['school','department','student_id','email'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
@@ -475,7 +483,12 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+			$content['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$this->response(array('result' => 'ERROR',"error" => INVALID_EMAIL_FORMAT ));
+			}
+			
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
@@ -509,6 +522,11 @@ class Certification extends REST_Controller {
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {String} school 學校名稱
+	 * @apiSuccess {String} system 學制 0:大學 1:碩士 2:博士
+	 * @apiSuccess {String} department 系所
+	 * @apiSuccess {String} student_id 學號
+	 * @apiSuccess {String} email 校內Email
 	 * @apiSuccess {String} front_image 學生證正面照
 	 * @apiSuccess {String} back_image 學生證背面照
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
@@ -525,6 +543,8 @@ class Certification extends REST_Controller {
      *      	"student_id": "1496B032",
      *      	"front_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
      *      	"back_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
+     *      	"email": "xxxxx@xxx.edu.com.tw",     
+     *      	"system": "0",     
      *      	"status": "0",     
      *      	"created_at": "1518598432",     
      *      	"updated_at": "1518598432"     
@@ -565,7 +585,175 @@ class Certification extends REST_Controller {
 					"created_at"		=> $rs->created_at,
 					"updated_at"		=> $rs->updated_at,
 				);
-				$fields 	= ['school','department','student_id','front_image','back_image'];
+				$fields 	= ['school','department','student_id','system','email','front_image','back_image'];
+				foreach ($fields as $field) {
+					if (isset($content[$field]) && !empty($content[$field])) {
+						$data[$field] = $content[$field];
+					}
+				}
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {post} /certification/debitcard 認證 金融卡認證
+     * @apiGroup Certification
+	 * @apiParam {String} bank_code (required) 銀行代碼三碼
+	 * @apiParam {String} branch_code (required) 分支機構代號四碼
+	 * @apiParam {String} bank_account (required) 銀行帳號
+     * @apiParam {file} front_image (required) 金融卡正面照
+     * @apiParam {file} back_image (required) 金融卡背面照
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function debitcard_post()
+    {
+		$alias 		= "debit_card";
+		$certification = $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$content	= array();
+			$param		= array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification->id,
+			);
+			
+			//是否驗證過
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			//必填欄位
+			$fields 	= ['bank_code','branch_code','bank_account'];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}else{
+					$content[$field] = $input[$field];
+				}
+			}
+			
+			//上傳檔案欄位
+			$file_fields 	= ['front_image','back_image'];
+			foreach ($file_fields as $field) {
+				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					if($image){
+						$content[$field] = $image;
+					}else{
+						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					}
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}
+			}
+			
+			$param['content'] = json_encode($content);
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {get} /certification/debitcard 認證 金融卡驗證資料
+     * @apiGroup Certification
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {String} bank_code 銀行代碼三碼
+	 * @apiSuccess {String} branch_code 分支機構代號四碼
+	 * @apiSuccess {String} bank_account 銀行帳號
+	 * @apiSuccess {String} front_image 金融卡正面照
+	 * @apiSuccess {String} back_image 金融卡背面照
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {String} updated_at 最近更新日期
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"user_id": "1",
+     *      	"certification_id": "4",
+     *      	"bank_code": "822",
+     *      	"branch_code": "1234",
+     *      	"bank_account": "149612222032",
+     *      	"front_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
+     *      	"back_image": "https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg",    
+     *      	"status": "0",     
+     *      	"created_at": "1518598432",     
+     *      	"updated_at": "1518598432"     
+	 *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 503 尚未驗證過
+     * @apiErrorExample {json} 503
+     *     {
+     *       "result": "ERROR",
+     *       "error": "503"
+     *     }
+     */
+	public function debitcard_get()
+    {
+		$alias 			= "debit_card";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status){
+			$this->load->library('Certification_lib');
+			$user_id 	= $this->user_info->id;
+			$data		= array();
+			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
+			if($rs){
+				$content = $rs->content;
+				$data = array(
+					"user_id"			=> $rs->user_id,
+					"certification_id"	=> $rs->certification_id,
+					"status"			=> $rs->status,
+					"created_at"		=> $rs->created_at,
+					"updated_at"		=> $rs->updated_at,
+				);
+				$fields 	= ['bank_code','branch_code','bank_account','front_image','back_image'];
 				foreach ($fields as $field) {
 					if (isset($content[$field]) && !empty($content[$field])) {
 						$data[$field] = $content[$field];

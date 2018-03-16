@@ -16,6 +16,27 @@ class Target_model extends MY_Model
 		10 =>	"已結案",
 	);
 	
+	public $detail_fields  = array(
+		"id",
+		"product_id",
+		"user_id",
+		"amount",
+		"loan_amount",
+		"interest_rate",
+		"total_interest",
+		"instalment",
+		"bank_code",
+		"branch_code",
+		"bank_account",
+		"virtual_account",
+		"contract",
+		"remark",
+		"delay",
+		"status",
+		"created_at",
+		"updated_at"
+	);
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -35,4 +56,5 @@ class Target_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
 }

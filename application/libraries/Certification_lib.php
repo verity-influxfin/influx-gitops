@@ -113,7 +113,8 @@ class Certification_lib{
 			}
 
 			if($rs){
-				$birthday = trim($content["birthday"]);
+				$birthday 	= trim($content["birthday"]);
+				$sex		= substr($content["id_number"],1,1)==1?"M":"F";
 				if(strlen($birthday)==7 || strlen($birthday)==6){
 					$birthday = $birthday + 19110000;
 					$birthday = date("Y-m-d",strtotime($birthday));
@@ -122,6 +123,7 @@ class Certification_lib{
 				
 				$user_info = array(
 					"name"			=> $content["name"],
+					"sex"			=> $sex,
 					"id_number"		=> $content["id_number"],
 					"id_card_date"	=> $content["id_card_date"],
 					"id_card_place"	=> $content["id_card_place"],
@@ -142,9 +144,11 @@ class Certification_lib{
 		if($info){
 			$content 	= $info->content;
 			$data 		= array(
-				"student_status"			=> 1,
+				"student_status"		=> 1,
 				"school_name"			=> $content["school"],
+				"school_system"			=> $content["system"],
 				"school_department"		=> $content["department"],
+				"school_email"			=> $content["email"],
 				"student_id"			=> $content["student_id"],
 				"student_card_front"	=> $content["front_image"],
 				"student_card_back"		=> $content["back_image"],
@@ -178,24 +182,54 @@ class Certification_lib{
 		return false;
 	}
 	
+	private function debit_card_success($info){
+		if($info){
+			$this->CI->load->model('user/user_bankaccount_model');
+			$content 	= $info->content;
+			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "debit_card_status"));
+			if(!$exist){
+				$param = array(
+					"user_id"		=> $info->user_id,
+					"meta_key" 		=> 'debit_card_status',
+					"meta_value"	=> 1
+				);
+				$rs  = $this->CI->user_meta_model->insert($param);
+			}
+		
+			$user_info = array(
+				"user_id"		=> $info->user_id,
+				"bank_code"		=> $content["bank_code"],
+				"branch_code"	=> $content["branch_code"],
+				"bank_account"	=> $content["bank_account"],
+				"front_image"	=> $content["front_image"],
+				"back_image"	=> $content["back_image"],
+			);
+			
+			$rs = $this->CI->user_bankaccount_model->insert($user_info);
+			if($rs){
+				$this->CI->user_certification_model->update($info->id,array("status"=>1));
+				return true;
+			}else{
+				$this->CI->user_certification_model->update($info->id,array("status"=>2,"remark"=>"exist"));
+			}
+		}
+		return false;
+	}
+	
 	public function get_status($user_id){
 		if($user_id){
 			$certification_list = $this->CI->certification_model->get_many_by(array("status"=>1));
 			foreach($certification_list as $key => $value){
-				$alias[] = $value->alias."_status";
-			}
-			$data  = $this->CI->user_meta_model->get_many_by(array("user_id"=>$user_id,"meta_key"=>$alias));
-			foreach($certification_list as $key => $value){
-				$alias  = $value->alias."_status";
-				$status = 0;
-				if(!empty($data)){
-					foreach($data as $k => $v){
-						if($alias == $v->meta_key && $v->meta_value){
-							$status = 1;
-						}
-					}
+				$param = array(
+					"user_id"			=> $user_id,
+					"certification_id"	=> $value->id
+				);
+				$user_certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
+				if($user_certification){
+					$value->user_status = $user_certification->status;
+				}else{
+					$value->user_status = null;
 				}
-				$value->user_status = $status;
 				$certification_list[$key] = $value;
 			}
 			return $certification_list;

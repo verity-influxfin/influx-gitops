@@ -29,7 +29,7 @@ class User extends REST_Controller {
      */ 
     /**
      * @apiDefine TokenError
-     * @apiError 100 Token錯誤.
+     * @apiError 100 Token錯誤
      * @apiErrorExample {json} 100
      *     {
      *       "result": "ERROR",
@@ -38,7 +38,7 @@ class User extends REST_Controller {
      */
     /**
      * @apiDefine InputError
-     * @apiError 200 參數錯誤.
+     * @apiError 200 參數錯誤
      * @apiErrorExample {json} 200
      *     {
      *       "result": "ERROR",
@@ -47,11 +47,20 @@ class User extends REST_Controller {
      */
 	 /**
      * @apiDefine InsertError
-     * @apiError 201 新增時發生錯誤.
+     * @apiError 201 新增時發生錯誤
      * @apiErrorExample {json} 201
      *     {
      *       "result": "ERROR",
      *       "error": "201"
+     *     }
+     */
+	 /**
+     * @apiDefine NotInvestor
+     * @apiError 205 身份非放款端
+     * @apiErrorExample {json} 205
+     *     {
+     *       "result": "ERROR",
+     *       "error": "205"
      *     }
      */
 	 
@@ -486,101 +495,52 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
 		}
     }
-
+	
 	/**
-     * @api {post} /user/bankaccount 會員 綁定金融帳號
+     * @api {post} /user/editpw 會員 修改密碼
      * @apiGroup User
-	 * @apiParam {number} bank_code (required) 銀行代碼
-	 * @apiParam {number} bank_account (required) 銀行帳號
-     * @apiParam {file} front_image 金融卡正面照
-     * @apiParam {file} back_image 金融卡背面照
+     * @apiParam {String} password (required) 設定密碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
-	 *
 	 * @apiUse InputError
 	 * @apiUse InsertError
-	 * @apiUse TokenError
-     *
-     *
+     * @apiError 302 會員不存在
+	 *
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
      */
-	public function bankaccount_post()
+	public function editpw_post()
     {
-		$this->load->model('user/user_bankaccount_model');
-		$this->load->library('S3_upload');
-        $input 		= $this->input->post(NULL, TRUE);
+		$input 		= $this->input->post(NULL, TRUE);
+		$data		= array();
 		$user_id 	= $this->user_info->id;
-		$param		= array("user_id" => $user_id);
-		$fields 	= ['bank_code','bank_account'];
+        $fields 	= ['password'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
             }else{
-				$param[$field] = $input[$field];
+				$data[$field] = $input[$field];
 			}
         }
 		
-		if(isset($_FILES["front_image"])){
-			$param["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,"bankaccount");
-		}
-		
-		if(isset($_FILES["back_image"])){
-			$param["back_image"] = $this->s3_upload->image($_FILES,"back_image",$user_id,"bankaccount");
-		}
-		
-		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id));
-		if($bank_account){
-			$this->user_bankaccount_model->update_by(array("user_id"=>$user_id),array("status"=>0));
-		}
-		$insert = $this->user_bankaccount_model->insert($param);
-		if($insert){
-			$this->response(array('result' => 'SUCCESS'));
-		}else{
-			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
-		}
-    }
-	
-	 /**
-     * @api {get} /user/bankaccount 會員 取得金融帳號
-     * @apiGroup User
-     *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} bank_code 銀行代碼
-	 * @apiSuccess {String} bank_account 銀行帳號
-	 * @apiSuccess {String} front_image 金融卡正面照
-     * @apiSuccess {String} back_image 金融卡背面照
-     * @apiSuccessExample {json} SUCCESS
-     *    {
-     *      "result": "SUCCESS",
-     *      "data": {
-     *      	"user_id": "1",
-     *      	"bank_code": "882",
-     *      	"bank_account": "2147483647",     
-     *      	"front_image": "xxxxxxxxxxxxxxxxxx",    
-     *      	"back_image": "xxxxxxxxxxxxxxxxxx"     
-	 *      }
-     *    }
-	 * @apiUse TokenError
-     *
-     */
-	public function bankaccount_get()
-    {
-		$this->load->model('user/user_bankaccount_model');
-		$user_id	= $this->user_info->id;
-		$data		= array();
-		$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1 , "user_id"=>$user_id ));
-		if($bank_account){
-			$fields 	= $this->user_bankaccount_model->fields;
-			foreach ($fields as $field) {
-				$data[$field] = $bank_account->$field;
+		$result = $this->user_model->get($this->user_info->id);
+		if ($result) {
+			$rs = $this->user_model->update($this->user_info->id,$data);
+			if($rs){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 			}
-		}
-		
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+        } else {
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+        }
     }
 	
 	/**

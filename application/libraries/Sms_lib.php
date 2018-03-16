@@ -24,7 +24,25 @@ class Sms_lib {
 			)
 		);
     }
-
+	
+	public function test($phone=""){
+		if(!empty($phone)){
+			$content = "P2P認證簡訊，您的驗證碼為，請注意有效時間為30分鐘以內";
+			$data = array(
+					'Message' 					=> $content,
+					'PhoneNumber' 				=> '+886'.substr($phone,1,9),
+					'MessageAttributes' 		=> array(
+						'AWS.SNS.SMS.SMSType' 	=> array('StringValue' => 'Transactional', 'DataType' => 'String'),
+					)
+				);
+				dump($data);
+			$result = $this->client->publish($data);
+			dump($result);die();
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public function send_register($phone=""){
 		if(!empty($phone)){

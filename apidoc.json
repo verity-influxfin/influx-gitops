@@ -26,6 +26,16 @@
 		"PostCertificationStudent",
 		"GetCertificationStudent",
 		
+		"Product",
+		"GetProductCategory",
+		"GetProductList",
+		"GetProductInfoId",
+		"PostProductApply",
+		"GetProductSigningId",
+		"GetProductCancelId",
+		"GetProductApplylist",
+		"GetProductApplyinfoId",
+		
 		"Agreement",
 		"GetAgreementList",
 		"GetAgreementInfoAlias",
@@ -33,12 +43,9 @@
 		"Notification",
 		"GetNotificationList",
 		"GetNotificationInfoId",
-		"GetNotificationReadall",
+		"GetNotificationReadall"
+
 
 		
-		"Product",
-		"GetProductCategory",
-		"GetProductList",
-		"GetProductInfoId"
 	]
 }

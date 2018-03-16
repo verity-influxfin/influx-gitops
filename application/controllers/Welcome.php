@@ -23,7 +23,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$amount 	= 10000;//額度
+		/*$amount 	= 10000;//額度
 		$rate		= 4.4;
 		$instalment = 12;
 		$mrate 	 	= $rate/1200;
@@ -62,10 +62,12 @@ class Welcome extends CI_Controller {
 			echo "<td>".$t_interest."</td>";
 			echo "<td>".$t_min."</td>";
 			echo "</tr>";
-		echo '</table>';
-		/*$this->load->library('Payment_lib');
+		echo '</table>'; */
+		//$this->load->library('Sms_lib');
+		//$this->sms_lib->test('0977249516');
+		$this->load->library('Payment_lib');
 		$this->payment_lib->insert_cathay_info();
-		
+		/*
 		$this->load->library('Target_lib');
 		$rs = $this->target_lib->approve_target(1);
 		dump($rs);*/
@@ -74,14 +76,23 @@ class Welcome extends CI_Controller {
 		/*$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');
 		$data = array();
+
+		
+		$card_token = "654f6e80fc834acb57036f388bfece55";
+		$face_token = "2e3b21a904be20ceba99c473f4d1e9a8";
+		$rs = $this->faceplusplus_lib->token_compare($card_token,$face_token);
+		dump($rs);
+		
+		$face_token = "e1bd223b8b84503805b3ef1bca7f76e0";
+		$rs = $this->faceplusplus_lib->token_compare($card_token,$face_token);
+		dump($rs);
+		
 		if(isset($_FILES["image"]) && !empty($_FILES["image"])){
-			
+			$url = $this->s3_upload->image($_FILES,"image2",0,"test");
+			dump($url);
 			$url = $this->s3_upload->image($_FILES,"image",0,"test");
-			$rs = $this->faceplusplus_lib->detect($url);
-			$data['url'] 	= $url;
-			$data['points'] = $rs;
-			$this->load->view('welcome_message',$data);
-			
+			dump($url);		
+$this->load->view('welcome_message');			
 		}else{
 			$this->load->view('welcome_message');
 		}*/

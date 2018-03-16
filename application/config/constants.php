@@ -90,6 +90,8 @@ defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // inp
 defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201); 
 defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認證
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
+defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //Email
+defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入投資端
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -105,6 +107,7 @@ defined('APPLY_NOT_EXIST')  			OR define('APPLY_NOT_EXIST'				, 404);
 defined('APPLY_NO_PERMISSION')  		OR define('APPLY_NO_PERMISSION'			, 405);
 defined('APPLY_ACTION_ERROR')  			OR define('APPLY_ACTION_ERROR'			, 406);
 defined('APPLY_STATUS_ERROR')  			OR define('APPLY_STATUS_ERROR'			, 407);
+defined('APPLY_EXIST')  				OR define('APPLY_EXIST'					, 408);
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
@@ -115,6 +118,9 @@ defined('CERTIFICATION_IDNUMBER_EXIST') OR define('CERTIFICATION_IDNUMBER_EXIST'
 defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601); 
 //Agreement Error Code
 defined('AGREEMENT_NOT_EXIST') 			OR define('AGREEMENT_NOT_EXIST'			, 701); 
+//Target Error Code
+defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801); 
+defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802); 
 
 
 
@@ -128,6 +134,7 @@ defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef8317
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'UJdqWlA-ZeSGkpk6lvvTZhu2r05oFeiI'); //Face++ 
 defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'YapyNRr644ivmNi1iEba5tt9TuuMv0XJ'); //Face++ 
 defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70); //Face++ 
+defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最小投資額 
 
 
 //Cathay 國泰世華

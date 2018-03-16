@@ -173,10 +173,11 @@ class Certification extends MY_Admin_Controller {
 						
 						if($post['status']=="1"){
 							$this->load->library('Certification_lib');
-							$this->certification_lib->set_success($post['id']);
+							$rs = $this->certification_lib->set_success($post['id']);
+						}else{
+							$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
 						}
-						
-						$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
+
 						if($rs===true){
 							alert("更新成功",admin_url('certification/user_certification_list'));
 						}else{
