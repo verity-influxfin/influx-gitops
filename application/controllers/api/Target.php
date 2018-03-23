@@ -82,7 +82,9 @@ class Target extends REST_Controller {
 		$data	= array();
 		$list	= array();
 		$where	= array( "status" => 2 );
-		$target_list 	= $this->target_model->get_many_by($where);
+		$instalment_list 	= $this->config->item('instalment');
+		$repayment_type 	= $this->config->item('repayment_type');
+		$target_list 		= $this->target_model->get_many_by($where);
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
 				$product_info = $this->product_model->get($value->product_id);
@@ -102,8 +104,11 @@ class Target extends REST_Controller {
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
 					"total_interest" 	=> $value->total_interest?$value->total_interest:"",
-					"instalment" 		=> $value->instalment,
+					"instalment" 		=> $instalment_list[$value->instalment],
+					"repayment" 		=> $repayment_type[$value->repayment],
+					"contract" 			=> $value->contract,
 					"remark" 			=> $value->remark,
+					"delay" 			=> $value->delay,
 					"status" 			=> $value->status,
 					"created_at" 		=> $value->created_at,
 				);
@@ -148,11 +153,17 @@ class Target extends REST_Controller {
      * 			},
      * 			"user_id":"1",
      * 			"amount":"5000",
-     * 			"loan_amount":"5000",
-     * 			"interest_rate":"12",
-     * 			"total_interest":"150",
-     * 			"instalment":"3",
+     * 			"loan_amount":"4000",
+     * 			"interest_rate":"18",
+     * 			"total_interest":"11111",
+     * 			"instalment":"3期",
+     * 			"repayment":"等額本息",
+     * 			"bank_code":"222",
+     * 			"branch_code":"5245",
+     * 			"bank_account":"111111111111",
+     * 			"virtual_account":"1111111111111111",
      * 			"remark":"",
+     * 			"delay":"0",
      * 			"status":"2",
      * 			"created_at":"1520421572"
      * 		}
@@ -168,11 +179,13 @@ class Target extends REST_Controller {
 	 
 	public function info_get($target_id)
     {
-		$input 		= $this->input->get(NULL, TRUE);
-		$targets 	= $this->target_model->get($target_id);
-		if(!empty($targets) && $targets->status==2){
+		$input 				= $this->input->get(NULL, TRUE);
+		$target 			= $this->target_model->get($target_id);
+		$instalment_list 	= $this->config->item('instalment');
+		$repayment_type 	= $this->config->item('repayment_type');
+		if(!empty($target) && $target->status==2){
 			
-			$product_info = $this->product_model->get($targets->product_id);
+			$product_info = $this->product_model->get($target->product_id);
 			$product = array(
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,
@@ -180,31 +193,30 @@ class Target extends REST_Controller {
 				"alias"			=> $product_info->alias,
 			);
 			
-			$data = array(
-				"id" 				=> $targets->id,
-				"product_id" 		=> $targets->product_id,
-				"product" 			=> $product,
-				"user_id" 			=> $targets->user_id,
-				"amount" 			=> $targets->amount,
-				"loan_amount" 		=> $targets->loan_amount?$targets->loan_amount:"",
-				"interest_rate" 	=> $targets->interest_rate?$targets->interest_rate:"",
-				"total_interest" 	=> $targets->total_interest?$targets->total_interest:"",
-				"instalment" 		=> $targets->instalment,
-				"remark" 			=> $targets->remark,
-				"status" 			=> $targets->status,
-				"created_at" 		=> $targets->created_at,
-			);
-			
+			$fields = $this->target_model->detail_fields;
+			foreach($fields as $field){
+				$data[$field] = isset($target->$field)?$target->$field:"";
+				if($field=="instalment"){
+					$data[$field] = $instalment_list[$target->$field];
+				}
+				
+				if($field=="repayment"){
+					$data[$field] = $repayment_type[$target->$field];
+				}
+			}
+			$data["product"] = $product;
+
+
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
 		}
 		$this->response(array('result' => 'ERROR',"error" => TARGET_NOT_EXIST ));
     }
 	
 	/**
-     * @api {post} /target/apply 出借方 申請投資
+     * @api {post} /target/apply 出借方 申請出借
      * @apiGroup Target
 	 * @apiParam {number} target_id (required) 產品ID
-     * @apiParam {number} amount (required) 借款金額
+     * @apiParam {number} amount (required) 出借金額
 	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -225,11 +237,18 @@ class Target extends REST_Controller {
      *       "error": "801"
      *     }
 	 *
-     * @apiError 802 投資金額過高或過低
+     * @apiError 802 金額過高或過低
      * @apiErrorExample {json} 802
      *     {
      *       "result": "ERROR",
      *       "error": "802"
+     *     }
+	 *
+     * @apiError 803 金額須為全額或千的倍數
+     * @apiErrorExample {json} 803
+     *     {
+     *       "result": "ERROR",
+     *       "error": "803"
      *     }
 	 *
      * @apiError 302 會員不存在
@@ -275,10 +294,14 @@ class Target extends REST_Controller {
 		$target = $this->target_model->get($input['target_id']);
 		if($target && $target->status == 2 ){
 			
-			if( $input['amount'] > $target->loan_amount || $input['amount']<TARGET_AMOUNT_MIN ){
+			if( $input['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_RANGE ));
 			}
 
+			/*if( $input['amount'] != $target->loan_amount && $input['amount']<TARGET_AMOUNT_MIN ){
+				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_LIMIT ));
+			}*/
+			
 			$this->load->model('user/user_model');
 			$this->load->model('user/user_bankaccount_model');
 			
@@ -288,7 +311,7 @@ class Target extends REST_Controller {
 				$this->load->library('Certification_lib');
 				$certification_list	= $this->certification_lib->get_status($user_id);
 				foreach($certification_list as $key => $value){
-					if($value->alias=='id_card' && $value->user_status!=1){
+					if( $value->alias=='id_card' && $value->user_status!=1 ){
 						$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
 					}
 				}

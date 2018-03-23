@@ -16,6 +16,20 @@ class User_model extends MY_Model
 		1 =>	"系統停權",
 	);
 	
+	public $token_fields  = array(
+		"id",
+		"name",
+		"sex",
+		"id_number",
+		"phone",
+		"status",
+		"investor_status",
+		"block_status",
+		"my_promote_code",
+		"created_at",
+		"updated_at"
+	);
+	
 	public function __construct()
 	{
 		parent::__construct();

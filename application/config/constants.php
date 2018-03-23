@@ -92,6 +92,7 @@ defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認�
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
 defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //Email
 defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入投資端
+defined('FACE_ERROR')  					OR define('FACE_ERROR'					, 206); //人臉辨識錯誤
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -99,6 +100,7 @@ defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 303);
 defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304); 
 defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305); 
 defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306); 
+defined('VERIFY_CODE_BUSY')  			OR define('VERIFY_CODE_BUSY'			, 307); //SMS太頻繁
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
 defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
@@ -131,8 +133,8 @@ defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
 defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932'); //Use in Login Cookies
 defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332'); //Use in Login Cookies
-defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'UJdqWlA-ZeSGkpk6lvvTZhu2r05oFeiI'); //Face++ 
-defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'YapyNRr644ivmNi1iEba5tt9TuuMv0XJ'); //Face++ 
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf'); //Face++ 
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4'); //Face++ 
 defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70); //Face++ 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最小投資額 
 
@@ -147,8 +149,12 @@ defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
 
 //SMS
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800);
-defined('SMS_TYPE_REGISTER')     	OR define('SMS_TYPE_REGISTER', 1);
-	
+defined('SMS_LIMIT_TIME')      		OR define('SMS_LIMIT_TIME', 180);
+
+//EVER8D
+defined('EVER8D_UID')      			OR define('EVER8D_UID', '0977249516');
+defined('EVER8D_PWD')     			OR define('EVER8D_PWD', 'n7xg');
+
 //S3
 defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN', 'AKIAJE5RGXS7FXHKSVBA');
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN', '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');

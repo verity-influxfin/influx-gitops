@@ -13,8 +13,11 @@
 		"GetUserInfo",
 		"PostUserBind",
 		"PostUserSociallogin",
-		"PostUserBankaccount",
-		"GetUserBankaccount",
+		"GetUserEditpwphone",
+		"PostUserEditpw",
+		"PostUserSmsloginphone",
+		"PostUserSmslogin",
+		"PostUserForgotpw",
 		"PostUserContact",
 		
 		"Certification",

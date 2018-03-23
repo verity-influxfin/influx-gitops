@@ -25,6 +25,7 @@ class Target_model extends MY_Model
 		"interest_rate",
 		"total_interest",
 		"instalment",
+		"repayment",
 		"bank_code",
 		"branch_code",
 		"bank_account",

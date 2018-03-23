@@ -106,5 +106,19 @@ class Payment_lib{
 		}
 		return false;
 	}
+	
+	
+	public function handle_payment($num=20){ 
+		
+
+		//$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
+		$payments = $this->CI->payment_model->get_many_by(array("status"=>2));
+		if($payments && !empty($payments)){
+			foreach($payments as $key => $value){
+				dump($value);
+			}
+		}
+		return false;
+	}
 
 }

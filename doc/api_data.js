@@ -1731,6 +1731,20 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "repayment",
+            "description": "<p>還款方式</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "repayment_plan",
+            "description": "<p>還款計畫</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "bank_code",
             "description": "<p>借款人收款銀行代碼</p>"
           },
@@ -1788,7 +1802,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"product_id\":\"2\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"interest_rate\":\"\",\n\t\t\t\"total_interest\":\"\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"bank_code\":\"\",\n\t\t\t\"branch_code\":\"\",\n\t\t\t\"bank_account\":\"\",\n\t\t\t\"virtual_account\":\"\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\"\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"product_id\":\"2\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"interest_rate\":\"\",\n\t\t\t\"total_interest\":\"\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"bank_code\":\"\",\n\t\t\t\"branch_code\":\"\",\n\t\t\t\"bank_account\":\"\",\n\t\t\t\"virtual_account\":\"\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\"\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -1921,6 +1935,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "repayment",
+            "description": "<p>還款方式</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "remark",
             "description": "<p>備註</p>"
           },
@@ -1950,7 +1971,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"0,\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"0,\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -2310,13 +2331,20 @@ define({ "api": [
             "optional": false,
             "field": "target",
             "description": "<p>申請資訊（未簽約）</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "credit",
+            "description": "<p>信用評分</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"bank_code\":\"\",\n\t\t\t\t\"branch_code\":\"\",\n\t\t\t\t\"bank_account\":\"\",\n\t\t\t\t\"virtual_account\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"charge_overdue\":\"0\",\n\t\t\t\t\"charge_sub_loan\":\"0\",\n\t\t\t\t\"charge_prepayment\":\"0\",\n\t\t\t\t\"certifications\":[{\"id\":\"1\",\"name\":\"身分證認證\",\"description\":\"身分證認證\",\"alias\":\"id_card\",\"user_status\":1},{\"id\":\"2\",\"name\":\"學生證認證\",\"description\":\"學生證認證\",\"alias\":\"student\",\"user_status\":1}],\n\t\t\t\t\"instalment\": [3,6,12,18]\n\t\t\t}\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"bank_code\":\"\",\n\t\t\t\t\"branch_code\":\"\",\n\t\t\t\t\"bank_account\":\"\",\n\t\t\t\t\"virtual_account\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"charge_overdue\":\"0\",\n\t\t\t\t\"charge_sub_loan\":\"0\",\n\t\t\t\t\"charge_prepayment\":\"0\",\n\t\t\t\t\"certifications\":[{\"id\":\"1\",\"name\":\"身分證認證\",\"description\":\"身分證認證\",\"alias\":\"id_card\",\"user_status\":1},{\"id\":\"2\",\"name\":\"學生證認證\",\"description\":\"學生證認證\",\"alias\":\"student\",\"user_status\":1}],\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
           "type": "json"
         }
       ]
@@ -2439,6 +2467,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "repayment",
+            "description": "<p>可選還款方式</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "loan_range_s",
@@ -2498,7 +2533,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"category\": {\n\t\t\t\t\"id\": \"1\",\n\t\t\t\t\"name\": \"學生區\",\n\t\t\t\t\"description\": \"學生區啊啊啊啊啊啊啊\",\n\t\t\t\t\"parent_id\": \"0\",\n\t\t\t\t\"rank\": \"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": \"[3,6,12,18]\"\n\t\t\t},\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": \"[3,6,12,18]\",\n\t\t\t\t\"target\":{\n\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\t\"status\":\"0\",\n\t\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"category\": {\n\t\t\t\t\"id\": \"1\",\n\t\t\t\t\"name\": \"學生區\",\n\t\t\t\t\"description\": \"學生區啊啊啊啊啊啊啊\",\n\t\t\t\t\"parent_id\": \"0\",\n\t\t\t\t\"rank\": \"0\"\n\t\t\t},\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"alias\":\"FA\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"category\":\"1\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t\t\"target\":{\n\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\t\"status\":\"0\",\n\t\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
           "type": "json"
         }
       ]
@@ -2507,167 +2542,6 @@ define({ "api": [
     "filename": "application/controllers/api/Product.php",
     "groupTitle": "Product",
     "name": "GetProductList"
-  },
-  {
-    "type": "get",
-    "url": "/product/signing/{ID}",
-    "title": "借款方 申請簽約",
-    "group": "Product",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "number",
-            "optional": false,
-            "field": "ID",
-            "description": "<p>Targets ID</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "json",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "401",
-            "description": "<p>產品不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "404",
-            "description": "<p>此申請不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "405",
-            "description": "<p>對此申請無權限</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "407",
-            "description": "<p>目前狀態無法完成此動作</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "302",
-            "description": "<p>會員不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "202",
-            "description": "<p>未通過所需的驗證</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "203",
-            "description": "<p>未綁定金融帳號</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "200",
-            "description": "<p>參數錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "201",
-            "description": "<p>新增時發生錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "401",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "404",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "405",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "406",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "302",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "202",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "203",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "200",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "application/controllers/api/Product.php",
-    "groupTitle": "Product",
-    "name": "GetProductSigningId"
   },
   {
     "type": "post",
@@ -2697,6 +2571,27 @@ define({ "api": [
             "optional": false,
             "field": "instalment",
             "description": "<p>(required) 申請期數</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "emergency_contact",
+            "description": "<p>(required) 緊急聯絡人</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "emergency_phone",
+            "description": "<p>(required) 緊急聯絡人電話</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "emergency_relationship",
+            "description": "<p>(required) 緊急聯絡人關係</p>"
           }
         ]
       }
@@ -2810,6 +2705,185 @@ define({ "api": [
     "filename": "application/controllers/api/Product.php",
     "groupTitle": "Product",
     "name": "PostProductApply"
+  },
+  {
+    "type": "post",
+    "url": "/product/signing",
+    "title": "借款方 申請簽約",
+    "group": "Product",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "target_id",
+            "description": "<p>(required) 產品ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "person_image",
+            "description": "<p>(required) 本人照</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "401",
+            "description": "<p>產品不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>此申請不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "405",
+            "description": "<p>對此申請無權限</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "407",
+            "description": "<p>目前狀態無法完成此動作</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "202",
+            "description": "<p>未通過所需的驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "203",
+            "description": "<p>未綁定金融帳號</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "206",
+            "description": "<p>人臉辨識不通過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "401",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "404",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "405",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "406",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "202",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "203",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "206",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"206\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Product.php",
+    "groupTitle": "Product",
+    "name": "PostProductSigning"
   },
   {
     "type": "get",
@@ -3257,7 +3331,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"product_id\":\"2\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"5000\",\n\t\t\t\"interest_rate\":\"12\",\n\t\t\t\"total_interest\":\"150\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\":\"2\",\n\t\t\t\"created_at\":\"1520421572\"\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"product_id\":\"2\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"4000\",\n\t\t\t\"interest_rate\":\"18\",\n\t\t\t\"total_interest\":\"11111\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"bank_code\":\"222\",\n\t\t\t\"branch_code\":\"5245\",\n\t\t\t\"bank_account\":\"111111111111\",\n\t\t\t\"virtual_account\":\"1111111111111111\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"2\",\n\t\t\t\"created_at\":\"1520421572\"\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -3403,7 +3477,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/target/apply",
-    "title": "出借方 申請投資",
+    "title": "出借方 申請出借",
     "group": "Target",
     "parameter": {
       "fields": {
@@ -3420,7 +3494,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "amount",
-            "description": "<p>(required) 借款金額</p>"
+            "description": "<p>(required) 出借金額</p>"
           }
         ]
       }
@@ -3458,7 +3532,13 @@ define({ "api": [
             "group": "Error 4xx",
             "optional": false,
             "field": "802",
-            "description": "<p>投資金額過高或過低</p>"
+            "description": "<p>金額過高或過低</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "803",
+            "description": "<p>金額須為全額或千的倍數</p>"
           },
           {
             "group": "Error 4xx",
@@ -3513,6 +3593,11 @@ define({ "api": [
         {
           "title": "802",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"802\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "803",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"803\"\n}",
           "type": "json"
         },
         {
@@ -3680,6 +3765,66 @@ define({ "api": [
     "filename": "application/controllers/api/Target.php",
     "groupTitle": "Target",
     "name": "PostTargetApplyedit"
+  },
+  {
+    "type": "get",
+    "url": "/user/editpwphone",
+    "title": "會員 發送驗證簡訊 （修改密碼）",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "307",
+            "description": "<p>發送簡訊間隔過短</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "307",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "GetUserEditpwphone"
   },
   {
     "type": "get",
@@ -3999,7 +4144,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "password",
-            "description": "<p>(required) 設定密碼</p>"
+            "description": "<p>(required) 原密碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "new_password",
+            "description": "<p>(required) 新密碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>(required) 簡訊驗證碼</p>"
           }
         ]
       }
@@ -4036,6 +4195,18 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "303",
+            "description": "<p>驗證碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "304",
+            "description": "<p>密碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -4054,6 +4225,16 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "303",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "304",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+          "type": "json"
+        },
+        {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
@@ -4069,6 +4250,129 @@ define({ "api": [
     "filename": "application/controllers/api/User.php",
     "groupTitle": "User",
     "name": "PostUserEditpw"
+  },
+  {
+    "type": "post",
+    "url": "/user/forgotpw",
+    "title": "會員 忘記密碼",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>(required) 手機號碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>(required) 簡訊驗證碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "new_password",
+            "description": "<p>(required) 新密碼</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>request_token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "first_time",
+            "description": "<p>是否首次本端</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n\t\t\t\"first_time\": 1,\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n     }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "303",
+            "description": "<p>驗證碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "303",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "PostUserForgotpw"
   },
   {
     "type": "post",
@@ -4185,7 +4489,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/user/register",
-    "title": "會員 註冊（簡訊驗證）",
+    "title": "會員 註冊",
     "group": "User",
     "parameter": {
       "fields": {
@@ -4209,7 +4513,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 收到的驗證碼</p>"
+            "description": "<p>(required) 簡訊驗證碼</p>"
           },
           {
             "group": "Parameter",
@@ -4301,7 +4605,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/user/registerphone",
-    "title": "會員 發送驗證簡訊",
+    "title": "會員 發送驗證簡訊 (註冊)",
     "group": "User",
     "parameter": {
       "fields": {
@@ -4348,6 +4652,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "307",
+            "description": "<p>發送簡訊間隔過短</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           }
@@ -4357,6 +4667,11 @@ define({ "api": [
         {
           "title": "301",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"301\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "307",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
           "type": "json"
         },
         {
@@ -4370,6 +4685,202 @@ define({ "api": [
     "filename": "application/controllers/api/User.php",
     "groupTitle": "User",
     "name": "PostUserRegisterphone"
+  },
+  {
+    "type": "post",
+    "url": "/user/smslogin",
+    "title": "會員 簡訊登入",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>(required) 手機號碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>(required) 簡訊驗證碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "investor",
+            "description": "<p>1:投資端 0:借款端 default:0</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>request_token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "first_time",
+            "description": "<p>是否首次本端</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n\t\t\t\"first_time\": 1,\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n     }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "303",
+            "description": "<p>驗證碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "303",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "PostUserSmslogin"
+  },
+  {
+    "type": "post",
+    "url": "/user/smsloginphone",
+    "title": "會員 發送驗證簡訊 （簡訊登入/忘記密碼）",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>(required) 手機號碼</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "307",
+            "description": "<p>發送簡訊間隔過短</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "307",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "PostUserSmsloginphone"
   },
   {
     "type": "post",

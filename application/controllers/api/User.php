@@ -11,8 +11,9 @@ class User extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('log/log_userlogin_model');
+		$this->load->library('sms_lib'); 
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -64,8 +65,8 @@ class User extends REST_Controller {
      *     }
      */
 	 
-	 /**
-     * @api {post} /user/registerphone 會員 發送驗證簡訊
+	/**
+     * @api {post} /user/registerphone 會員 發送驗證簡訊 (註冊)
      * @apiGroup User
      * @apiParam {String} phone (required) 手機號碼
      *
@@ -82,6 +83,13 @@ class User extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "301"
      *     }
+	 *
+     * @apiError 307 發送簡訊間隔過短
+     * @apiErrorExample {json} 307
+     *     {
+     *       "result": "ERROR",
+     *       "error": "307"
+     *     }
      *
      */
 	 
@@ -97,23 +105,28 @@ class User extends REST_Controller {
 		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
 			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 		}
-
+		
+		$code = $this->sms_lib->get_code($phone);
+		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
+			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+		}
+		
 		$result = $this->user_model->get_by('phone', $phone);
         if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
-			$this->load->library('sms_lib'); 
 			$this->sms_lib->send_register($phone);
 			$this->response(array('result' => 'SUCCESS'));
         }
     }
+
 	
 	 /**
-     * @api {post} /user/register 會員 註冊（簡訊驗證）
+     * @api {post} /user/register 會員 註冊
      * @apiGroup User
      * @apiParam {String} phone (required) 手機號碼
      * @apiParam {String} password (required) 設定密碼
-     * @apiParam {String} code (required) 收到的驗證碼
+     * @apiParam {String} code (required) 簡訊驗證碼
      * @apiParam {String} investor 1:投資端 0:借款端 default:0
      *
      * @apiSuccess {json} result SUCCESS
@@ -158,11 +171,11 @@ class User extends REST_Controller {
         }
 
 		if(isset($input['investor']) && $input['investor']){
-			$status = 0;
-			$data['investor_status'] = $investor_status = 1;;
+			$data['status'] 			= 0;
+			$data['investor_status'] 	= 1;;
 		}else{
-			$investor_status = 0;
-			$data['status'] = $status = 1;
+			$data['investor_status'] 	= 0;
+			$data['status'] 			= 1;
 		}
 		
 		$data['my_promote_code'] = $this->get_promote_code();
@@ -170,24 +183,24 @@ class User extends REST_Controller {
 		if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
-			$this->load->library('sms_lib'); 
-			$rs = $this->sms_lib->verify_register($data["phone"],$data["code"]);
+			$rs = $this->sms_lib->verify_code($data["phone"],$data["code"]);
 			if($rs){
 				unset($data["code"]);
 				$insert = $this->user_model->insert($data);
 				if($insert){
-					$token = new stdClass();
-					$token->id 				= $insert;
-					$token->name 			= "";
-					$token->phone 			= $data["phone"];
-					$token->status 			= $status;
-					$token->investor_status = $investor_status;
-					$token->block_status 	= 0;
-					$token->investor 		= $investor_status;
-					$token->id_number 		= "";
-					$token->my_promote_code = $data['my_promote_code'];
-					$request_token = AUTHORIZATION::generateUserToken($token);
-					$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token,"first_time"=>1)));
+					$user_info 	= $this->user_model->get($insert);
+					if($user_info){
+						$token 				= new stdClass();
+						$token->investor 	= $data['investor_status'];
+						$fields 			= $this->user_model->token_fields;
+						foreach($fields as $key => $field){
+							$token->$field = $user_info->$field?$user_info->$field:"";
+						}	
+						$request_token = AUTHORIZATION::generateUserToken($token);
+						$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token,"first_time"=>1)));
+					}else{
+						$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+					}
 				}else{
 					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 				}
@@ -256,16 +269,13 @@ class User extends REST_Controller {
 					$this->user_model->update($user_info->id,array("status"=>1));
 					$first_time = 1;
 				}
-				
-				$data->id 				= $user_info->id;
-				$data->name 			= isset($user_info->name)?$user_info->name:"";
-				$data->phone 			= $user_info->phone;
-				$data->status 			= $user_info->status;
-				$data->investor_status 	= $user_info->investor_status;
-				$data->block_status 	= $user_info->block_status;
+
 				$data->investor 		= $investor;
-				$data->id_number 		= isset($user_info->id_number)?$user_info->id_number:"";
-				$data->my_promote_code 	= $user_info->my_promote_code;
+				$fields = $this->user_model->token_fields;
+				foreach($fields as $key => $field){
+					$data->$field = $user_info->$field?$user_info->$field:"";
+				}
+
 				$token = AUTHORIZATION::generateUserToken($data);
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token,"first_time"=>$first_time) ));
@@ -354,15 +364,14 @@ class User extends REST_Controller {
 					$this->user_model->update($user_info->id,array("status"=>1));
 					$first_time = 1;
 				}
-				$data->id 				= $user_info->id;
-				$data->name 			= isset($user_info->name)?$user_info->name:"";
-				$data->phone 			= $user_info->phone;
-				$data->status 			= $user_info->status;
-				$data->block_status 	= $user_info->block_status;
-				$data->investor_status 	= $user_info->investor_status;
-				$data->investor 		= $investor;
-				$data->id_number 		= isset($user_info->id_number)?$user_info->id_number:"";
-				$data->my_promote_code 	= $user_info->my_promote_code;
+				
+				$data->investor = $investor;
+				
+				$fields = $this->user_model->token_fields;
+				foreach($fields as $key => $field){
+					$data->$field = $user_info->$field?$user_info->$field:"";
+				}
+				
 				$token = AUTHORIZATION::generateUserToken($data);
 				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>1));
 				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$token) ));
@@ -373,6 +382,204 @@ class User extends REST_Controller {
 			}
 		}else{
 			$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"status"=>0));
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+		}
+	}
+	
+	/**
+     * @api {post} /user/smsloginphone 會員 發送驗證簡訊 （簡訊登入/忘記密碼）
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *    }
+	 *
+	 * @apiUse InputError
+	 *
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 307 發送簡訊間隔過短
+     * @apiErrorExample {json} 307
+     *     {
+     *       "result": "ERROR",
+     *       "error": "307"
+     *     }
+     *
+     */
+	 
+	public function smsloginphone_post()
+    {
+
+        $input = $this->input->post(NULL, TRUE);
+		$phone = isset($input["phone"])?trim($input["phone"]):"";
+		if (empty($phone)) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+
+		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+
+		$code = $this->sms_lib->get_code($phone);
+		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
+			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+		}
+		
+		$result = $this->user_model->get_by('phone', $phone);
+        if ($result) {
+			$this->sms_lib->send_verify_code($result->id,$phone);
+			$this->response(array('result' => 'SUCCESS'));
+        } else {
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+        }
+    }
+	
+	 /**
+     * @api {post} /user/smslogin 會員 簡訊登入
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} code (required) 簡訊驗證碼
+	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} token request_token
+	 * @apiSuccess {number} first_time 是否首次本端
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+	 *			"first_time": 1,
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
+     *    }
+	 * @apiUse InputError
+     *
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 303 驗證碼錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+     *
+     */
+	public function smslogin_post(){
+
+		$input = $this->input->post(NULL, TRUE);
+        $fields 	= ['phone','code'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+            }
+        }
+		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
+		if($user_info){
+			$rs = $this->sms_lib->verify_code($user_info->phone,$input["code"]);
+			if($rs){
+				$data 		= new stdClass();
+				$first_time = 0;
+				if($investor==1 && $user_info->investor_status==0){
+					$user_info->investor_status = 1;
+					$this->user_model->update($user_info->id,array("investor_status"=>1));
+					$first_time = 1;
+				}else if($investor==0 && $user_info->status==0){
+					$user_info->status = 1;
+					$this->user_model->update($user_info->id,array("status"=>1));
+					$first_time = 1;
+				}
+
+				$data->investor 		= $investor;
+				$fields = $this->user_model->token_fields;
+				foreach($fields as $key => $field){
+					$data->$field = $user_info->$field?$user_info->$field:"";
+				}
+				$token = AUTHORIZATION::generateUserToken($data);
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
+				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $token,"first_time"=>$first_time) ));
+			}else{
+				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"user_id"=>$user_info->id,"status"=>0));
+				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			}
+		}else{
+			$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"status"=>0));
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+		}
+	}
+	
+	 /**
+     * @api {post} /user/forgotpw 會員 忘記密碼
+     * @apiGroup User
+     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} code (required) 簡訊驗證碼
+	 * @apiParam {String} new_password (required) 新密碼
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} token request_token
+	 * @apiSuccess {number} first_time 是否首次本端
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+	 *			"first_time": 1,
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
+     *      }
+     *    }
+	 * @apiUse InputError
+     * @apiUse InsertError
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 303 驗證碼錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+     *
+     */
+	public function forgotpw_post(){
+
+		$input = $this->input->post(NULL, TRUE);
+        $fields 	= ['phone','code','new_password'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+            }
+        }
+
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
+		if($user_info){
+			$rs = $this->sms_lib->verify_code($user_info->phone,$input["code"]);
+			if($rs){
+				$res = $this->user_model->update($user_info->id,array("password"=>$input['new_password']));
+				if($res){
+					$this->response(array('result' => 'SUCCESS'));
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR));
+				}
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			}
+		}else{
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 		}
 	}
@@ -408,17 +615,11 @@ class User extends REST_Controller {
 	public function info_get()
     {
 		$user_id	= $this->user_info->id;
-		$data		= array(
-			"id"			=> $this->user_info->id,
-			"name"			=> $this->user_info->name,
-			"phone"			=> $this->user_info->phone,
-			"status"		=> $this->user_info->status,
-			"block_status"	=> $this->user_info->block_status,
-			"id_number"		=> $this->user_info->id_number,
-			"investor"		=> $this->user_info->investor,
-			"my_promote_code"	=> $this->user_info->my_promote_code
-		);
-
+		$fields = $this->user_model->token_fields;
+		foreach($fields as $key => $field){
+			$data[$field] = $this->user_info->$field?$this->user_info->$field:"";
+		}
+		$data["investor"] = $this->user_info->investor;
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
 	
@@ -497,9 +698,50 @@ class User extends REST_Controller {
     }
 	
 	/**
+     * @api {get} /user/editpwphone 會員 發送驗證簡訊 （修改密碼）
+     * @apiGroup User
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *    }
+	 *
+	 * @apiUse TokenError
+     *
+     * @apiError 307 發送簡訊間隔過短
+     * @apiErrorExample {json} 307
+     *     {
+     *       "result": "ERROR",
+     *       "error": "307"
+     *     }
+     *
+     */
+	 
+	public function editpwphone_get()
+    {
+        $input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$phone 		= $this->user_info->phone;
+		if (empty($phone)) {
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+		}
+
+		$code = $this->sms_lib->get_code($phone);
+		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
+			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+		}
+		
+		$this->sms_lib->send_verify_code($user_id,$phone);
+		$this->response(array('result' => 'SUCCESS'));
+    }
+	
+	/**
      * @api {post} /user/editpw 會員 修改密碼
      * @apiGroup User
-     * @apiParam {String} password (required) 設定密碼
+     * @apiParam {String} password (required) 原密碼
+     * @apiParam {String} new_password (required) 新密碼
+     * @apiParam {String} code (required) 簡訊驗證碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -508,20 +750,35 @@ class User extends REST_Controller {
      *    }
 	 * @apiUse InputError
 	 * @apiUse InsertError
-     * @apiError 302 會員不存在
 	 *
+     * @apiError 302 會員不存在
      * @apiErrorExample {json} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
+     *
+     * @apiError 303 驗證碼錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+	 *
+	 * @apiError 304 密碼錯誤
+     * @apiErrorExample {json} 304
+     *     {
+     *       "result": "ERROR",
+     *       "error": "304"
+     *     }
+	 *
      */
 	public function editpw_post()
     {
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
 		$user_id 	= $this->user_info->id;
-        $fields 	= ['password'];
+        $fields 	= ['password','new_password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
@@ -530,14 +787,24 @@ class User extends REST_Controller {
 			}
         }
 		
-		$result = $this->user_model->get($this->user_info->id);
-		if ($result) {
-			$rs = $this->user_model->update($this->user_info->id,$data);
-			if($rs){
+		$user_info = $this->user_model->get($this->user_info->id);
+		if ($user_info) {
+			if(sha1($input['password'])!=$user_info->password){
+				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
+			}
+			
+			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
+			if(!$rs){
+				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			}
+			
+			$res = $this->user_model->update($user_info->id,array("password"=>$data['new_password']));
+			if($res){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 			}
+
         } else {
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
         }

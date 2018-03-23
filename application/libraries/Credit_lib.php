@@ -20,6 +20,14 @@ class Credit_lib{
     }
 	
 	//取得信用評分
+	public function get_credit(){
+		if($this->user_id && $this->product_id){
+			return array("level"=>1,"points"=>1905,"created_at"=>1521459613);
+		}
+		return false;
+	}
+	
+	//取得信用評分
 	public function get_credit_points(){
 		if($this->user_id && $this->product_id){
 			return 200;

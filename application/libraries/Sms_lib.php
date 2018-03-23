@@ -13,70 +13,47 @@ class Sms_lib {
         $this->CI = &get_instance();
         $this->CI->load->model('user/sms_verify_model');
 		$this->CI->load->model('log/log_sns_model');
-		$this->client 	= SnsClient::factory(
-			array(
-				'version' 	=> 'latest',
-				'region'  	=> 'ap-northeast-1',
-				'credentials' => [
-					'key'         => AWS_ACCESS_TOKEN,
-					'secret'      => AWS_SECRET_TOKEN,
-				],
-			)
-		);
     }
-	
-	public function test($phone=""){
-		if(!empty($phone)){
-			$content = "P2P認證簡訊，您的驗證碼為，請注意有效時間為30分鐘以內";
-			$data = array(
-					'Message' 					=> $content,
-					'PhoneNumber' 				=> '+886'.substr($phone,1,9),
-					'MessageAttributes' 		=> array(
-						'AWS.SNS.SMS.SMSType' 	=> array('StringValue' => 'Transactional', 'DataType' => 'String'),
-					)
-				);
-				dump($data);
-			$result = $this->client->publish($data);
-			dump($result);die();
-			return true;
-		}
-		return false;
-	}
-	
 	
 	public function send_register($phone=""){
 		if(!empty($phone)){
-			$code	 = rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9);
-			$content = "P2P認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$code	 = rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
+			$content = "掌中ATM，會員註冊簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
 			$param = array(
-				"type" 			=> SMS_TYPE_REGISTER,
+				"type" 			=> 'register',
 				"phone"			=> $phone,
 				"code"			=> $code,
 				"expire_time"	=> time()+SMS_EXPIRE_TIME,
 			);
-			$this->CI->sms_verify_model->insert($param);
-			$data = array(
-					'Message' 					=> $content,
-					'PhoneNumber' 				=> '+886'.$phone,
-					'MessageAttributes' 		=> array(
-						'AWS.SNS.SMS.SMSType' 	=> array('StringValue' => 'Transactional', 'DataType' => 'String'),
-					)
-				);
-			$result = $this->client->publish($data);
-			$this->CI->log_sns_model->insert(array(
-				"type" 		=> "sms",
-				"request"	=> json_encode($data),
-				"response"	=> json_encode($result->toArray())
-			));
-			return true;
+			$rs = $this->CI->sms_verify_model->insert($param);
+			if($rs){
+				return $this->send('register',0,$phone,$content);
+			}
 		}
 		return false;
 	}
 
-	public function verify_register($phone="",$code=""){
+	public function send_verify_code($user_id,$phone=""){
+		if(!empty($phone)){
+			$code	 = rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
+			$content = "掌中ATM，認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$param = array(
+				"type" 			=> 'verify',
+				"phone"			=> $phone,
+				"code"			=> $code,
+				"expire_time"	=> time()+SMS_EXPIRE_TIME,
+			);
+			$rs = $this->CI->sms_verify_model->insert($param);
+			if($rs){
+				return $this->send('register',$user_id,$phone,$content);
+			}
+		}
+		return false;
+	}
+	
+	public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){
 			$param = array(
-				"type" 			=> SMS_TYPE_REGISTER,
 				"phone"			=> $phone,
 				"status"		=> 0,
 			);
@@ -90,6 +67,48 @@ class Sms_lib {
 		}
 		return false;
 	}
+	
+	public function get_code($phone=""){
+		if(!empty($phone)){
+			$rs = $this->CI->sms_verify_model->order_by("expire_time","desc")->get_by(array("phone"=>$phone));
+			if($rs){
+				$data = array(
+					"phone"			=> $rs->phone,
+					"code"			=> $rs->code,
+					"expire_time"	=> $rs->expire_time,
+					"status"		=> $rs->status,
+					"created_at"	=> $rs->created_at,
+				);
+				return $data;
+			}
+		}
+		return false;
+	}
 
+	private function send($type,$user_id,$phone,$content){
+		
+		$data = array(
+			"UID"	=> EVER8D_UID,
+			"PWD"	=> EVER8D_PWD,
+			"msg"	=> $content,
+			"DEST"	=> $phone,
+		);
+		
+		$rs = curl_get("https://oms.every8d.com/API21/HTTP/sendSMS.ashx",$data);
+		if(substr($rs,0,1) == "-"){
+			$status = 0;
+		} else {
+			$status	= 1;
+		}
+		
+		$rs = $this->CI->log_sns_model->insert(array(
+			"type" 		=> $type,
+			"user_id"	=> $user_id,
+			"phone"		=> $phone,
+			"response"	=> $rs,
+			"status" 	=> $status
+		));
+		return $status?true:false;
+	}
 	
 }
