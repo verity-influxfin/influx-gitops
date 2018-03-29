@@ -15,9 +15,23 @@ class Target_model extends MY_Model
 		9 =>	"申請失敗",
 		10 =>	"已結案",
 	);
+	public $simple_fields  = array(
+		"id",
+		"target_no",
+		"product_id",
+		"user_id",
+		"amount",
+		"loan_amount",
+		"interest_rate",
+		"instalment",
+		"delay",
+		"status",
+		"created_at",
+	);
 	
 	public $detail_fields  = array(
 		"id",
+		"target_no",
 		"product_id",
 		"user_id",
 		"amount",

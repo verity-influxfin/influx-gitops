@@ -6,9 +6,10 @@ class User_certification_model extends MY_Model
 	public $before_create 	= array( 'before_data_c' );
 	public $before_update 	= array( 'before_data_u' );
 	public $status_list   	= array(
-		0 =>	"待驗證",
-		1 =>	"驗證成功",
-		2 =>	"驗證失敗",
+		0 => "待驗證" ,
+		1 => "驗證成功" ,
+		2 => "驗證失敗" ,
+		3 => "待人工審核" ,
 	);
 	
 	public function __construct()

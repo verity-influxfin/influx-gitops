@@ -10,13 +10,13 @@ class Rating_lib{
         $this->CI = &get_instance();
     }
 	
-	public function School(){
+	public function school_name(){
 		return true;
 	}
 
 	
-	public function student_card(){
+	public function school_department(){
 		return true;
 	}
-	
+
 }

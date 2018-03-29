@@ -152,6 +152,19 @@
 		return false;
 	}
 	
+	function bankaccount_substr($bank_account){
+		$bank_account = trim($bank_account);
+		$len 		 = strlen($bank_account);
+		if($len>=14){
+			$bank_code 		= substr($bank_account,0,3);
+			$bank_account	= substr($bank_account,3,$len-3);
+			return array("bank_code"=>$bank_code,"bank_account"=>intval($bank_account));
+		}else{
+			return array("bank_code"=>"","bank_account"=>intval($bank_account));
+		}
+		
+	}
+	
 	function make_promote_code() {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$rand = $code[rand(0,25)]

@@ -74,26 +74,48 @@ class Welcome extends CI_Controller {
 	
 	
 	function test(){
-		$amount 	= 3000;//額度
-		$rate		= 11.5;
-		$instalment = 15;
-		$mrate 	 	= $rate/1200;
-		$mtotal		= 1+$mrate;
+		$amount 	= $samount = intval($_GET['amount']);//額度
+		$rate		= $_GET['rate'];
+		$instalment = intval($_GET['instalment']);//期數
+		$date 		= $_GET['date'];//起始日
+		$mrate 	 	= $rate/1200;//月利率
+		$mtotal		= 1+$mrate;// 1+月利率
 		$minterest 	= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1);
-		$minterest	= round($minterest,2);
-		echo '<span>本金：'.$amount.'</span><br>';
+		$minterest	= ceil($minterest);
+		$leapyear	= FALSE;
+		$ldate 		= $date;
+		for($i=1;$i<=$instalment;$i++){
+			$ldate = date("Y-m-d",strtotime($ldate." + 1 month"));
+			if(date("L",strtotime($ldate))=="1"){
+				$sdate = date("Y-m-d",strtotime($ldate." - 1 month"));
+				$vdate = date("Y",strtotime($ldate)).'-02-29';
+				if($sdate<=$vdate && $ldate>=$vdate){
+					$leapyear = TRUE;
+				}
+			}
+		}
+		
+		$leap 		= $leapyear?"有":"無";
+		$total_days = $leapyear?366:365;
+		echo '<span>本金：'.$samount.'</span><br>';
 		echo '<span>年利率：'.$rate.'%</span><br>';
-		echo '<span>每期應繳：'.$minterest.'</span>';
-		echo '<table style="width:50%;text-align: center;"><tr><th>期數</th><th>本金</th><th>利息</th><th>本息合計</th></tr>';
+		echo '<span>每期應繳：'.$minterest.'</span><br>';
+		echo '<span>Day0：'.$date.'</span><br>';
+		echo '<span>有無需考慮閏年：'.$leap.'</span><br>';
+		echo '<table style="width:50%;text-align: center;"><tr><th>期數</th><th>還款日</th><th>日數</th><th>期初本金餘額</th><th>還款本金</th><th>還款利息</th><th>還款合計</th></tr>';
 		$t_amount = $t_interest = $t_min = 0;
 		for($i=1;$i<=$instalment;$i++){
+			$odate 	= $date;
+			$date 	= date("Y-m-d",strtotime($date." + 1 month"));
+			$days  	= floor((strtotime($date) - strtotime($odate))/(60*60*24));//天數
+			$mrate 	= $rate/100/$total_days*$days;//月利率
+			$interest	= $amount*$mrate;
+			$interest 	= round($interest,0);//利息
 			
-			$mamount 	= $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
-			$interest	= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1) - $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
-			$interest 	= round($interest,0);
-			$mamount	= ceil($minterest)-$interest;
+			$mamount	= $minterest-$interest;
+			
 			if($i==$instalment){
-				$mamount = $amount-$t_amount;
+				$mamount = $samount-$t_amount;//最後一期本金
 			}
 			
 			$min		= $mamount+$interest;
@@ -103,12 +125,19 @@ class Welcome extends CI_Controller {
 			
 			echo "<tr>";
 			echo "<td>".$i."</td>";
+			echo "<td>".$date."</td>";
+			echo "<td>".$days."</td>";
+			echo "<td>".$amount."</td>";
 			echo "<td>".$mamount."</td>";
 			echo "<td>".$interest."</td>";
 			echo "<td>".$min."</td>";
 			echo "</tr>";
+			$amount 	= $amount - $mamount;
 		}
 			echo "<td>合計</td>";
+			echo "<td></td>";
+			echo "<td></td>";
+			echo "<td></td>";
 			echo "<td>".$t_amount."</td>";
 			echo "<td>".$t_interest."</td>";
 			echo "<td>".$t_min."</td>";
@@ -156,4 +185,15 @@ class Welcome extends CI_Controller {
 		return false;
 	}
 
+	function transaction(){
+		
+		$this->load->library('Transaction_lib');
+		$rs = $this->transaction_lib->get_virtual_funds('56639121797381');
+		dump($rs);
+
+	}
+	
+	function testfblogin(){
+		$this->load->view('admin/grid');
+	}
 }

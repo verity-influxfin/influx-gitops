@@ -36,6 +36,7 @@ class Target extends REST_Controller {
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
+	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
@@ -45,7 +46,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} total_interest 總利息
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -54,6 +55,7 @@ class Target extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"id":"1",
+     * 				"target_no": "1803269743",
      * 				"product_id":"2",
      * 				"product":{
      * 					"id":"2",
@@ -81,7 +83,7 @@ class Target extends REST_Controller {
 		$input 	= $this->input->get();
 		$data	= array();
 		$list	= array();
-		$where	= array( "status" => 2 );
+		$where	= array( "status" => 3 );
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
 		$target_list 		= $this->target_model->get_many_by($where);
@@ -97,6 +99,7 @@ class Target extends REST_Controller {
 				
 				$list[] = array(
 					"id" 				=> $value->id,
+					"target_no" 		=> $value->target_no,
 					"product_id" 		=> $value->product_id,
 					"product" 			=> $product,
 					"user_id" 			=> $value->user_id,
@@ -125,6 +128,7 @@ class Target extends REST_Controller {
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Target ID
+	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
@@ -136,7 +140,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} bank_account 借款人收款帳號
 	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 5:已結案 9:申請失敗
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
 
      * @apiSuccessExample {json} SUCCESS
@@ -144,6 +148,7 @@ class Target extends REST_Controller {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"id":"1",
+     * 			"target_no": "1803269743",
      * 			"product_id":"2",
      * 			"product":{
      * 				"id":"2",
@@ -183,7 +188,7 @@ class Target extends REST_Controller {
 		$target 			= $this->target_model->get($target_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		if(!empty($target) && $target->status==2){
+		if(!empty($target) && $target->status==3){
 			
 			$product_info = $this->product_model->get($target->product_id);
 			$product = array(
@@ -351,7 +356,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} total_interest 總利息
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -545,92 +550,4 @@ class Target extends REST_Controller {
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }
 	
-	/**
-     * @api {post} /target/applyedit 出借方 申請紀錄修改
-     * @apiGroup Target
-	 * @apiParam {number} id (required) Targets ID
-	 * @apiParam {number} action (required) 動作 contract：確認合約 cancel：取消申請
-	 * 
-	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
-     *    {
-     *      "result": "SUCCESS"
-     *    }
-	 *
-	 * @apiUse InputError
-	 * @apiUse TokenError
-     *
-	 *
-     * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
-     *     {
-     *       "result": "ERROR",
-     *       "error": "404"
-     *     }
-	 *
-     * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
-     *     {
-     *       "result": "ERROR",
-     *       "error": "405"
-     *     }
-	 *
-     * @apiError 406 此動作不存在
-     * @apiErrorExample {json} 406
-     *     {
-     *       "result": "ERROR",
-     *       "error": "406"
-     *     }
-	 *
-     * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 406
-     *     {
-     *       "result": "ERROR",
-     *       "error": "407"
-     *     }
-	 *
-     */
-	public function applyedit_post()
-    {
-
-		$input 		= $this->input->post(NULL, TRUE);
-		$user_id 	= $this->user_info->id;
-		$param		= array("user_id"=> $user_id);
-		
-		//必填欄位
-		$fields 	= ['id','action'];
-		foreach ($fields as $field) {
-			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-			}
-		}
-
-		$targets 	= $this->target_model->get($input['id']);
-		if(!empty($targets)){
-			if($targets->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
-			}
-			
-			if(!in_array($input['action'],array("contract","cancel"))){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_ACTION_ERROR ));
-			}
-			
-			if($input['action']=="contract"){
-				if($targets->status == 1){
-					$rs = $this->target_model->update($targets->id,array("status"=>2));
-				}else{
-					$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
-				}
-			}else if($input['action']=="cancel"){
-				if(in_array($targets->status,array(0,1,2))){
-					$rs = $this->target_model->update($targets->id,array("status"=>8));
-				}else{
-					$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
-				}
-			}
-			$this->response(array('result' => 'SUCCESS'));
-		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
-    }
 }

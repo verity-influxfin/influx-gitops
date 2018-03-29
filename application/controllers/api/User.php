@@ -529,15 +529,9 @@ class User extends REST_Controller {
 	 * @apiParam {String} new_password (required) 新密碼
      *
      * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} token request_token
-	 * @apiSuccess {number} first_time 是否首次本端
      * @apiSuccessExample {json} SUCCESS
      *    {
-     *      "result": "SUCCESS",
-     *      "data": {
-	 *			"first_time": 1,
-     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE"
-     *      }
+     *      "result": "SUCCESS"
      *    }
 	 * @apiUse InputError
      * @apiUse InsertError
@@ -861,7 +855,7 @@ class User extends REST_Controller {
 		}
     }
 	
-	function get_promote_code(){
+	private function get_promote_code(){
 		$code = make_promote_code();
 		$result = $this->user_model->get_by('my_promote_code',$code);
 		if ($result) {

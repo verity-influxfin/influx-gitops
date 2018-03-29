@@ -9,6 +9,8 @@ class Payment_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/payment_model');
+		$this->CI->load->model('user/user_bankaccount_model');
+		$this->CI->load->model('user/virtual_account_model');
     }
 	
 	public function insert_cathay_info($date=""){
@@ -109,16 +111,54 @@ class Payment_lib{
 	
 	
 	public function handle_payment($num=20){ 
-		
-
-		//$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
+		$count = 0;
+		$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
 		$payments = $this->CI->payment_model->get_many_by(array("status"=>2));
 		if($payments && !empty($payments)){
 			foreach($payments as $key => $value){
-				dump($value);
+				if($value->amount>0){
+					$rs = $this->receipt($value);
+				}else{
+					$rs = $this->expense($value);
+				}
+				$count++;
 			}
+			return $count;
 		}
 		return false;
 	}
 
+	//入帳處理
+	private function receipt($value){
+		
+		if(!empty($value->virtual_account)){
+			$bank_code 	= $bank_account = "";
+			$bank 		= bankaccount_substr($value->bank_acc);
+			if($bank['bank_code']==$value->bank_id){
+				$bank_code 		= $bank['bank_code'];
+				$bank_account 	= $bank['bank_account'];
+			}else{
+				$bank_code 		= $value->bank_id;
+				$bank_account 	= $value->bank_acc;
+			}
+			
+			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
+			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("bank_code"=>$bank_code,"bank_account"=>$bank_account));
+			if($virtual_account && $user_bankaccount){
+				if($virtual_account->user_id == $user_bankaccount->user_id){
+					$this->CI->load->library('Transaction_lib');
+					$this->CI->transaction_lib->recharge($value->id);
+					return true;
+				}
+			}
+		}
+		$this->CI->payment_model->update($value->id,array("status"=>3));
+		return false;
+	}
+	
+	//出帳處理
+	private function expense($value){
+		$this->CI->payment_model->update($value->id,array("status"=>0));
+		return false;
+	}
 }

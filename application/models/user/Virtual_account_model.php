@@ -1,8 +1,8 @@
 <?php
 
-class Virtual_passbook_model extends MY_Model
+class Virtual_account_model extends MY_Model
 {
-	public $_table = 'virtual_passbook';
+	public $_table = 'virtual_account';
 	public $before_create = array( 'before_data_c' );
 //	public $before_update = array( 'before_data_u' );
 
@@ -10,7 +10,7 @@ class Virtual_passbook_model extends MY_Model
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_database = $this->load->database('transaction',TRUE);
+		$this->_database = $this->load->database('default',TRUE);
  	}
 	
 	protected function before_data_c($data)

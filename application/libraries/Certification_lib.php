@@ -10,6 +10,7 @@ class Certification_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('platform/certification_model');
 		$this->CI->load->model('user/user_certification_model');
+		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->model('user/user_meta_model');
 		$this->CI->load->model('user/user_model');
     }
@@ -37,6 +38,22 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->CI->certification_model->get($info->certification_id);
 				$method			= $certification->alias.'_success';
+				if(method_exists($this, $method)){
+					$rs = $this->$method($info);
+					return $rs;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function verify($id){
+		if($id){
+			$info = $this->CI->user_certification_model->get($id);
+			if($info && $info->status != 1){
+				$info->content 	= json_decode($info->content,true);
+				$certification 	= $this->CI->certification_model->get($info->certification_id);
+				$method			= $certification->alias.'_verify';
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					return $rs;
@@ -113,24 +130,40 @@ class Certification_lib{
 			}
 
 			if($rs){
-				$birthday 	= trim($content["birthday"]);
-				$sex		= substr($content["id_number"],1,1)==1?"M":"F";
-				if(strlen($birthday)==7 || strlen($birthday)==6){
-					$birthday = $birthday + 19110000;
-					$birthday = date("Y-m-d",strtotime($birthday));
+				
+
+				if($exist){
+					$user_info = array(
+						"name"				=> $content["name"],
+						"id_card_date"		=> $content["id_card_date"],
+						"id_card_place"		=> $content["id_card_place"],
+						"address"			=> $content["address"],
+					);
+				}else{
+					$birthday 	= trim($content["birthday"]);
+					$sex		= substr($content["id_number"],1,1)==1?"M":"F";
+					if(strlen($birthday)==7 || strlen($birthday)==6){
+						$birthday = $birthday + 19110000;
+						$birthday = date("Y-m-d",strtotime($birthday));
+						
+					}
+					$user_info = array(
+						"name"				=> $content["name"],
+						"sex"				=> $sex,
+						"id_number"			=> $content["id_number"],
+						"id_card_date"		=> $content["id_card_date"],
+						"id_card_place"		=> $content["id_card_place"],
+						"address"			=> $content["address"],
+						"birthday"			=> $birthday,
+					);
 					
+					$virtual_data = array(
+						"user_id"			=> $info->user_id,				
+						"virtual_account"	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.substr($content["id_number"],1,9),
+					);
+					$this->CI->virtual_account_model->insert($virtual_data);
 				}
-				
-				$user_info = array(
-					"name"			=> $content["name"],
-					"sex"			=> $sex,
-					"id_number"		=> $content["id_number"],
-					"id_card_date"	=> $content["id_card_date"],
-					"id_card_place"	=> $content["id_card_place"],
-					"address"		=> $content["address"],
-					"birthday"		=> $birthday,
-				);
-				
+
 				$this->CI->user_model->update_many($info->user_id,$user_info);
 				$this->CI->user_certification_model->update($info->id,array("status"=>1));
 				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
@@ -200,7 +233,7 @@ class Certification_lib{
 				"user_id"		=> $info->user_id,
 				"bank_code"		=> $content["bank_code"],
 				"branch_code"	=> $content["branch_code"],
-				"bank_account"	=> $content["bank_account"],
+				"bank_account"	=> intval($content["bank_account"]),
 				"front_image"	=> $content["front_image"],
 				"back_image"	=> $content["back_image"],
 			);
@@ -236,4 +269,22 @@ class Certification_lib{
 		}
 		return false;
 	}
+	
+	public function get_alias_status($user_id,$alias=""){
+		if($user_id && !empty($alias)){
+			$certification = $this->CI->certification_model->get_by(array("status"=>1,"alias"=>$alias));
+			$param = array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification->id
+			);
+			$user_certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
+			if($user_certification){
+				return $user_certification->status;
+			}else{
+				return null;
+			}
+		}
+		return false;
+	}
+	
 }

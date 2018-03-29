@@ -29,9 +29,17 @@ class Cron extends CI_Controller {
 
 	public function handle_payment()
 	{
-
-		$ids 		= $this->payment_lib->handle_payment();
-
+		$start_time = time();
+		$count 		= $this->payment_lib->handle_payment();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "handle_payment",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
 		die("KO");
 	}
 }

@@ -148,6 +148,7 @@ class Product extends REST_Controller {
 	 * 				],
 	 * 				"target":{
      * 					"id":"1",
+     * 					"target_no": "1803269743",
      * 					"amount":"5000",
      * 					"loan_amount":"",
      * 					"status":"0",
@@ -189,6 +190,7 @@ class Product extends REST_Controller {
 					$targets = $this->target_model->get_by(array("status <="=>1,"user_id"=>$this->user_info->id,"product_id"=>$value->id));
 					if($targets){
 						$target['id'] 			= $targets->id;
+						$target['target_no'] 	= $targets->target_no;
 						$target['status'] 		= $targets->status;
 						$target['amount'] 		= $targets->amount;
 						$target['loan_amount'] 	= $targets->loan_amount;
@@ -263,6 +265,7 @@ class Product extends REST_Controller {
      * 		"data":{
      * 			"target":{
      * 				"id":"1",
+     * 				"target_no": "1803269743",
      * 				"product_id":"2",
      * 				"user_id":"1",
      * 				"amount":"5000",
@@ -523,11 +526,16 @@ class Product extends REST_Controller {
 			if($target){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_EXIST ));
 			}
-			
+			$param["target_no"] = $this->get_target_no();
 			$insert = $this->target_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
+				$param["target_no"] = $this->get_target_no();
+				$insert = $this->target_model->insert($param);
+				if($insert){
+					$this->response(array('result' => 'SUCCESS'));
+				}
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 			}
 		}
@@ -691,6 +699,7 @@ class Product extends REST_Controller {
 	 * 
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
+	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
@@ -702,7 +711,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -711,6 +720,7 @@ class Product extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"id":"1",
+     * 				"target_no": "1803269743",
      * 				"product_id":"2",
      * 				"product":{
      * 					"id":"2",
@@ -732,6 +742,7 @@ class Product extends REST_Controller {
      * 			},
      * 			{
      * 				"id":"2",
+     * 				"target_no": "1803269713",
      * 				"product_id":"2",
      * 				"product":{
      * 					"id":"2",
@@ -766,7 +777,7 @@ class Product extends REST_Controller {
 		$targets 			= $this->target_model->get_many_by($param);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		
+		$list				= array();
 		if(!empty($targets)){
 			foreach($targets as $key => $value){
 				$product_info = $this->product_model->get($value->product_id);
@@ -779,6 +790,7 @@ class Product extends REST_Controller {
 				
 				$list[] = array(
 					"id" 				=> $value->id,
+					"target_no" 		=> $value->target_no,
 					"product_id" 		=> $value->product_id,
 					"product" 			=> $product,
 					"user_id" 			=> $value->user_id,
@@ -806,6 +818,7 @@ class Product extends REST_Controller {
 	 * 
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Target ID
+	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
@@ -822,7 +835,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2: 待借款 3:待放款（結標）4:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
 
      * @apiSuccessExample {json} SUCCESS
@@ -830,6 +843,7 @@ class Product extends REST_Controller {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"id":"1",
+     * 			"target_no": "1803269743",
      * 			"product_id":"2",
      * 			"product":{
      * 				"id":"2",
@@ -878,6 +892,7 @@ class Product extends REST_Controller {
 		$target 			= $this->target_model->get($target_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
+		$data				= array();
 		if(!empty($target)){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
@@ -967,4 +982,14 @@ class Product extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }
+	
+	private function get_target_no(){
+		$code = date("ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$result = $this->target_model->get_by('target_no',$code);
+		if ($result) {
+			return $this->get_target_no();
+		}else{
+			return $code;
+		}
+	}
 }

@@ -125,19 +125,27 @@ defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801);
 defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802); 
 
 
-
-
+//Admin
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO', 'app_admin_info'); //Use in Admin Login
 defined('URL_ADMIN')             	OR define('URL_ADMIN', '/admin/'); 
 defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN', 'admin_cookie'); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE', 1800); //Use in Login Cookies
-defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932'); //Use in Login Cookies
-defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332'); //Use in Login Cookies
-defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf'); //Face++ 
-defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4'); //Face++ 
-defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70); //Face++ 
-defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最小投資額 
 
+
+defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最小投資額 
+defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE', '9'); //最小投資額 virtual_account
+
+//SOURCE recharge
+defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE', '1');
+
+//Facebook
+defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932');
+defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332');
+
+//曠視
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4');
+defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70);
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL', 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
@@ -146,9 +154,10 @@ defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME', 'toychen')
 defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD', 'fable1234');
 defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO', '015035006475');
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
+defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE', '013');
 
 //SMS
-defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800);
+defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800); 
 defined('SMS_LIMIT_TIME')      		OR define('SMS_LIMIT_TIME', 180);
 
 //EVER8D
@@ -160,3 +169,8 @@ defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN', 'AKIAJE5RGXS7FXHK
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN', 'IZrsdCC1b+CIWHplyWmwDJV/j47z5qtXBCLRP7wz');
 defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH', 3000);
+
+//SMTP
+defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT', 'info@mix-with.com');
+defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD', '6vW9$n2C');
+defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME', '普匯金融科技');
