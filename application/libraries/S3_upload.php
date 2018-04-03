@@ -111,6 +111,18 @@ class S3_upload {
 		
 		return false;
     }
+	
+	public function image_list ()
+    {
+		$result = $this->client->listObjects(array('Bucket' => S3_BUCKET));
+		foreach ($result['Contents'] as $object) {
+			
+			$url = $this->client->getObjectUrl(S3_BUCKET,$object['Key']);
+			
+			echo "<img src='".$url."' width=100>".$url . "<br>";
+		}
+		
+	}
 }
 
 ?>

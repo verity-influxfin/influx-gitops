@@ -201,20 +201,6 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "front_image",
-            "description": "<p>金融卡正面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "back_image",
-            "description": "<p>金融卡背面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
             "field": "status",
             "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
           },
@@ -237,7 +223,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"4\",\n  \t\"bank_code\": \"822\",\n  \t\"branch_code\": \"1234\",\n  \t\"bank_account\": \"149612222032\",\n  \t\"front_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"back_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"4\",\n  \t\"bank_code\": \"822\",\n  \t\"branch_code\": \"1234\",\n  \t\"bank_account\": \"149612222032\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
           "type": "json"
         }
       ]
@@ -290,6 +276,176 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/certification/email",
+    "title": "認證 常用郵箱",
+    "group": "Certification",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"email\": \"XXX\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "503",
+            "description": "<p>尚未驗證過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "503",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "GetCertificationEmail"
+  },
+  {
+    "type": "get",
+    "url": "/certification/emergency",
+    "title": "認證 緊急聯絡人",
+    "group": "Certification",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>緊急聯絡人姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>緊急聯絡人電話</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "relationship",
+            "description": "<p>緊急聯絡人關係</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"name\": \"XXX\",\n  \t\"phone\": \"0912345678\",\n  \t\"relationship\": \"配偶\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "503",
+            "description": "<p>尚未驗證過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "503",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "GetCertificationEmergency"
+  },
+  {
+    "type": "get",
     "url": "/certification/healthcard",
     "title": "認證 健保卡認證資料",
     "group": "Certification",
@@ -321,13 +477,6 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "front_image",
-            "description": "<p>健保卡正面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
             "field": "status",
             "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
           },
@@ -350,7 +499,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"front_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
           "type": "json"
         }
       ]
@@ -476,27 +625,6 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "front_image",
-            "description": "<p>身分證正面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "back_image",
-            "description": "<p>身分證背面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "person_image",
-            "description": "<p>本人照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
             "field": "status",
             "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
           },
@@ -519,7 +647,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"front_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"back_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"person_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",     \n  \t\"name\": \"toy\",\n  \t\"id_number\": \"G121111111\",\n  \t\"id_card_date\": \"1060707\",\n  \t\"id_card_place\": \"北市\",\n  \t\"birthday\": \"1020101\",\n  \t\"address\": \"全家就是我家\"\n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",     \n  \t\"name\": \"toy\",\n  \t\"id_number\": \"G121111111\",\n  \t\"id_card_date\": \"1060707\",\n  \t\"id_card_place\": \"北市\",\n  \t\"birthday\": \"1020101\",\n  \t\"address\": \"全家就是我家\"\n  }\n}",
           "type": "json"
         }
       ]
@@ -758,7 +886,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"school\": \"國立宜蘭大學\",\n  \t\"department\": \"電機工程學系\",\n  \t\"student_id\": \"1496B032\",\n  \t\"front_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"back_image\": \"https://influxp2p.s3.amazonaws.com/dev/image/img15185984312.jpg\",    \n  \t\"email\": \"xxxxx@xxx.edu.com.tw\",     \n  \t\"system\": \"0\",     \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"school\": \"國立宜蘭大學\",\n  \t\"department\": \"電機工程學系\",\n  \t\"student_id\": \"1496B032\", \n  \t\"email\": \"xxxxx@xxx.edu.com.tw\",     \n  \t\"system\": \"0\",     \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
           "type": "json"
         }
       ]
@@ -942,6 +1070,243 @@ define({ "api": [
     "filename": "application/controllers/api/Certification.php",
     "groupTitle": "Certification",
     "name": "PostCertificationDebitcard"
+  },
+  {
+    "type": "post",
+    "url": "/certification/email",
+    "title": "認證 常用郵箱",
+    "group": "Certification",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>(required) Email</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "204",
+            "description": "<p>Email格式錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "204",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "PostCertificationEmail"
+  },
+  {
+    "type": "post",
+    "url": "/certification/emergency",
+    "title": "認證 緊急聯絡人",
+    "group": "Certification",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>(required) 緊急聯絡人姓名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>(required) 緊急聯絡人電話</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "relationship",
+            "description": "<p>(required) 緊急聯絡人關係</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "PostCertificationEmergency"
   },
   {
     "type": "post",
@@ -1255,6 +1620,13 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
+            "field": "grade",
+            "description": "<p>(required) 年級</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
             "field": "student_id",
             "description": "<p>(required) 學號</p>"
           },
@@ -1263,7 +1635,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>(required) 校內Email</p>"
+            "description": "<p>(required) 校內電子信箱</p>"
           },
           {
             "group": "Parameter",
@@ -1380,6 +1752,104 @@ define({ "api": [
     "filename": "application/controllers/api/Certification.php",
     "groupTitle": "Certification",
     "name": "PostCertificationStudent"
+  },
+  {
+    "type": "post",
+    "url": "/certification/verifyemail",
+    "title": "認證 認證Email(學生、常用郵件)",
+    "group": "Certification",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>(required) 認證Type</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>(required) Email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>(required) 認證Code</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "204",
+            "description": "<p>Email格式錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "303",
+            "description": "<p>驗證碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "204",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "303",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/Certification.php",
+    "groupTitle": "Certification",
+    "name": "PostCertificationVerifyemail"
   },
   {
     "type": "get",
@@ -2585,27 +3055,6 @@ define({ "api": [
             "optional": false,
             "field": "instalment",
             "description": "<p>(required) 申請期數</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "emergency_contact",
-            "description": "<p>(required) 緊急聯絡人</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "emergency_phone",
-            "description": "<p>(required) 緊急聯絡人電話</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "emergency_relationship",
-            "description": "<p>(required) 緊急聯絡人關係</p>"
           }
         ]
       }
@@ -3672,6 +4121,55 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/user/chagetoken",
+    "title": "會員 交換Token",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n  \t\"expiry_time\": \"1522673418\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "application/controllers/api/User.php",
+    "groupTitle": "User",
+    "name": "GetUserChagetoken",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/user/editpwphone",
     "title": "會員 發送驗證簡訊 （修改密碼）",
     "group": "User",
@@ -3793,13 +4291,27 @@ define({ "api": [
             "optional": false,
             "field": "investor",
             "description": "<p>1:投資端 0:借款端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "my_promote_code",
+            "description": "<p>推廣碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"phone\": \"0912345678\",\n  \t\"status\": \"1\",\n  \t\"id_number\": null,\n  \t\"investor\": 1,\n  \t\"block_status\": \"0\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"phone\": \"0912345678\",\n  \t\"status\": \"1\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"investor\": 1,\n  \t\"block_status\": \"0\"     \n  \t\"created_at\": \"1522651818\"     \n  \t\"updated_at\": \"1522653939\"     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
           "type": "json"
         }
       ]
@@ -3841,7 +4353,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;）</p>"
+            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;）</p>"
           },
           {
             "group": "Parameter",
@@ -3868,7 +4380,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
           "type": "json"
         }
       ]
@@ -3887,6 +4399,18 @@ define({ "api": [
             "optional": false,
             "field": "306",
             "description": "<p>此種類型已綁定過了</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "308",
+            "description": "<p>此FB帳號已綁定過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "309",
+            "description": "<p>此IG帳號已綁定過</p>"
           },
           {
             "group": "Error 4xx",
@@ -3911,6 +4435,16 @@ define({ "api": [
         {
           "title": "306",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "308",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "309",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
           "type": "json"
         },
         {
@@ -4119,6 +4653,12 @@ define({ "api": [
             "optional": false,
             "field": "201",
             "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
           }
         ]
       },
@@ -4146,6 +4686,11 @@ define({ "api": [
         {
           "title": "201",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
           "type": "json"
         }
       ]
@@ -4319,13 +4864,20 @@ define({ "api": [
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n\t\t\t\"first_time\": 1,\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
           "type": "json"
         }
       ]
@@ -4411,6 +4963,13 @@ define({ "api": [
             "optional": false,
             "field": "investor",
             "description": "<p>1:投資端 0:借款端 default:0</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "promote_code",
+            "description": "<p>邀請碼</p>"
           }
         ]
       }
@@ -4424,13 +4983,34 @@ define({ "api": [
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>request_token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "first_time",
+            "description": "<p>是否首次本端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
           "type": "json"
         }
       ]
@@ -4631,13 +5211,20 @@ define({ "api": [
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n\t\t\t\"first_time\": 1,\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
           "type": "json"
         }
       ]
@@ -4785,7 +5372,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;）</p>"
+            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;）</p>"
           },
           {
             "group": "Parameter",
@@ -4827,13 +5414,20 @@ define({ "api": [
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n\t\t\t\"first_time\": 1,\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
           "type": "json"
         }
       ]

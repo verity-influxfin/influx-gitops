@@ -17,14 +17,23 @@ class Product extends REST_Controller {
 		$this->load->library('Target_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['category'];
-        if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
-            $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
-			$nonCheckMethods = ['list'];
-            if ((empty($tokenData->id) || empty($tokenData->phone)) && !in_array($method, $nonCheckMethods)) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
-            }
-			$this->user_info = $tokenData;
+		if (!in_array($method, $nonAuthMethods)) {
+            $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
+			$nonCheckMethods 	= ['list'];
+			if(!in_array($method, $nonCheckMethods)){
+				if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
+					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				}
+			
+				$this->user_info = $this->user_model->get($tokenData->id);
+				if($tokenData->auth_otp != $this->user_info->auth_otp){
+					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				}
+				
+				$this->user_info->investor 		= $tokenData->investor;
+				$this->user_info->expiry_time 	= $tokenData->expiry_time;
+			}
         }
     }
 	
@@ -441,10 +450,6 @@ class Product extends REST_Controller {
 	 * @apiParam {number} product_id (required) 產品ID
      * @apiParam {number} amount (required) 借款金額
      * @apiParam {number} instalment (required) 申請期數
-     * @apiParam {String} emergency_contact (required) 緊急聯絡人
-     * @apiParam {String} emergency_phone (required) 緊急聯絡人電話
-     * @apiParam {String} emergency_relationship (required) 緊急聯絡人關係
-	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -498,16 +503,6 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 			}else{
 				$param[$field] = intval($input[$field]);
-			}
-		}
-
-		//必填欄位
-		$fields 	= ['emergency_contact','emergency_phone','emergency_relationship'];
-		foreach ($fields as $field) {
-			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-			}else{
-				$param[$field] = trim($input[$field]);
 			}
 		}
 

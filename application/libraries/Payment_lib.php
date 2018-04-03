@@ -13,7 +13,7 @@ class Payment_lib{
 		$this->CI->load->model('user/virtual_account_model');
     }
 	
-	public function insert_cathay_info($date=""){
+	public function script_get_cathay_info($date=""){
 		if(empty($date)){
 			$date = date("Ymd");
 		}
@@ -110,7 +110,7 @@ class Payment_lib{
 	}
 	
 	
-	public function handle_payment($num=20){ 
+	public function script_handle_payment($num=20){ 
 		$count = 0;
 		$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
 		$payments = $this->CI->payment_model->get_many_by(array("status"=>2));

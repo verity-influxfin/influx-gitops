@@ -164,6 +164,11 @@
 		}
 		
 	}
+
+	function get_rand_token(){
+		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
+		
+	}
 	
 	function make_promote_code() {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

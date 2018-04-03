@@ -16,16 +16,24 @@ class Target extends REST_Controller {
 		$this->load->model('transaction/investment_model');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list','info'];
-        if (!in_array($method, $nonAuthMethods)) {
+		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
-			if($tokenData->investor!=1){
-				$this->response(array('result' => 'ERROR',"error" => NOT_INVERTOR ));
-			}
-            if (empty($tokenData->id) || empty($tokenData->phone)) {
+            if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
             }
-			$this->user_info = $tokenData;
+			
+			if($tokenData->investor != 1){
+				$this->response(array('result' => 'ERROR',"error" => NOT_INVERTOR ));
+			}
+			
+			$this->user_info = $this->user_model->get($tokenData->id);
+			if($tokenData->auth_otp != $this->user_info->auth_otp){
+				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+			}
+			
+			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
 	

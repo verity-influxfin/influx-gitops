@@ -101,6 +101,8 @@ defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304);
 defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305); 
 defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306); 
 defined('VERIFY_CODE_BUSY')  			OR define('VERIFY_CODE_BUSY'			, 307); //SMS太頻繁
+defined('FBID_EXIST')  					OR define('FBID_EXIST'					, 308);
+defined('IGID_EXIST')  					OR define('IGID_EXIST'					, 309);
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
 defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
@@ -134,13 +136,38 @@ defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE', 1800); //Use in Logi
 
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最小投資額 
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE', '9'); //最小投資額 virtual_account
+defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY', 21600); //request_token時效
+defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY', 10800); //換request_token時效
 
-//SOURCE recharge
-defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE', '1');
+//SOURCE
+defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
+defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
+defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
+defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應付借款本金
+defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
+defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應付借款利息
+defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
+defined('SOURCE_AR_FEES')       	OR define('SOURCE_AR_FEES'			, '21');//應付平台服務費
+defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '22');//平台服務費
+defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '23');//應付轉貸手續費
+defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '24');//轉貸手續費
+defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '25');//應付提還手續費
+defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '26');//提還手續費
+defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '27');//應付提領手續費
+defined('SOURCE_WITHDRAW_FEE')      OR define('SOURCE_WITHDRAW_FEE'		, '28');//提領手續費
+defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '96');//應付違約金
+defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '97');//違約金
+defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '98');//應付延滯息
+defined('SOURCE_DELAYINTEREST')     OR define('SOURCE_DELAYINTEREST'	, '99');//延滯息
+
 
 //Facebook
-defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID', '999193623552932');
-defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET', 'ee8fef831790d13600db848492bac332');
+defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, '2023445087921828');
+defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, '0b494064ae77ae04d9fcb343f294b98c');
+
+//Instagram
+defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, '622ba30fa4524019a3b36fccd862b764');
+defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, '851c4c9b2622438cad669b0d12ce4709');
 
 //曠視
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');
@@ -155,6 +182,9 @@ defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD', 'fable1234
 defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO', '015035006475');
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
 defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE', '013');
+
+//OCR 
+defined('OCR_API_URL')      		OR define('OCR_API_URL', 'http://13.230.227.104:8888/cxfServerX/ImgReconCard?wsdl'); 
 
 //SMS
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME', 1800); 
@@ -171,6 +201,6 @@ defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH', 3000);
 
 //SMTP
-defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT', 'info@mix-with.com');
-defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD', '6vW9$n2C');
+defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT', 'service@influxfin.com');
+defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD', 'fable1234');
 defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME', '普匯金融科技');

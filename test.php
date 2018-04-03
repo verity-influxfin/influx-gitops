@@ -1,5 +1,4 @@
 <?php
-
 	if($_GET['code']){
 		$data = array(
 			"client_id"		=> "622ba30fa4524019a3b36fccd862b764",
@@ -10,19 +9,25 @@
 		);
 		$rs = curl_get("https://api.instagram.com/oauth/access_token",$data);
 		$rs = json_decode($rs,TRUE);
-		$res = curl_get("https://api.instagram.com/v1/users/484699703/media/recent?access_token=".$rs['access_token']);
+		var_dump($rs);die();
+		$res = curl_get("https://api.instagram.com/v1/users/self/?access_token=".$rs['access_token']);
 		$res = json_decode($res,TRUE);
+		echo "<pre>";
+		var_dump($res);die();
+		/*$res = curl_get("https://api.instagram.com/v1/users/484699703/media/recent?access_token=".$rs['access_token']);
+		$res = json_decode($res,TRUE);
+		var_dump($rs);
 		if($res){
 			foreach($res['data'] as $key=>$value) {
 				echo "<span>文章：".$value['caption']['text']."</span><br>";
 				echo "<span>讚數：".$value['likes']['count']."</span><br>";
 				echo '<img src="'.$value['images']['standard_resolution']['url'].'" alt="" height="200" width="200"><br><br>';
 			}
-		}
+		}*/
 		
 	}else{
 		$url = "https://api.instagram.com/oauth/authorize/?client_id=622ba30fa4524019a3b36fccd862b764&redirect_uri=".urlencode("http://p2p-api.clockin.com.tw/test.php")."&response_type=code";
-		var_dump($url);
+		//$url = "https://api.instagram.com/oauth/authorize/?client_id=622ba30fa4524019a3b36fccd862b764&redirect_uri=".urlencode("http://p2p-api.clockin.com.tw/test.php")."&response_type=token";
 		header('Location: '.$url);
 	}
 
@@ -40,4 +45,5 @@
 		curl_close($curl);
 		return $rs;
 	}
+
 ?>

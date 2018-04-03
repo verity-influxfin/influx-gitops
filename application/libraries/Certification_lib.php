@@ -182,6 +182,7 @@ class Certification_lib{
 				"school_system"			=> $content["system"],
 				"school_department"		=> $content["department"],
 				"school_email"			=> $content["email"],
+				"school_grade"			=> $content["grade"],
 				"student_id"			=> $content["student_id"],
 				"student_card_front"	=> $content["front_image"],
 				"student_card_back"		=> $content["back_image"],
@@ -244,6 +245,81 @@ class Certification_lib{
 				return true;
 			}else{
 				$this->CI->user_certification_model->update($info->id,array("status"=>2,"remark"=>"exist"));
+			}
+		}
+		return false;
+	}
+	
+	private function emergency_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				"emergency_status"			=> 1,
+				"emergency_name"			=> $content["name"],
+				"emergency_phone"			=> $content["phone"],
+				"emergency_relationship"	=> $content["relationship"],
+			);
+			
+			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "emergency_status"));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+						"meta_value"	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
+				$this->CI->user_certification_model->update($info->id,array("status"=>1));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private function email_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				"email_status"	=> 1,
+			);
+			
+			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "email_status"));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+						"meta_value"	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param); 
+			}
+
+			if($rs){
+				$this->CI->user_model->update($info->user_id,array("email"=> $content["email"]));
+				$this->CI->user_certification_model->update($info->id,array("status"=>1));
+				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
+				return true;
 			}
 		}
 		return false;

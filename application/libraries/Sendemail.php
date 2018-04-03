@@ -9,6 +9,7 @@ class Sendemail
     function __construct()
     {
         $this->CI = &get_instance();
+		$this->CI->load->model('user/email_verify_model');
 		$this->CI->load->library('email');
         $this->config = array(
 			'protocol'		=> 'smtp',
@@ -24,8 +25,70 @@ class Sendemail
 		);
     }
 
+	public function send_verify_school($certification_id,$email=""){
+		if($certification_id && !empty($email)){
+			$type	 = 'school';
+			$code	 = md5($email.time());
+			$link    = "http://www.influxfin.com?type=$type&email=".urlencode($email)."&code=".$code;
+			$content = "手機ATM，學生 Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
+			$subject = "手機ATM，學生 Email會員認證";
+			$param = array(
+				"certification_id"	=> $certification_id,
+				"type" 			=> $type,
+				"email"			=> $email,
+				"code"			=> $code,
+			);
+			$rs = $this->CI->email_verify_model->insert($param);
+			if($rs){
+				return $this->send($email,$subject,$content);
+			}
+		}
+		return false;
+	}
+
+	public function send_verify_email($certification_id,$email=""){
+		if($certification_id && !empty($email)){
+			$type	 = 'email';
+			$code	 = md5($email.time());
+			$link    = "http://www.influxfin.com?type=$type&email=".urlencode($email)."&code=".$code;
+			$content = "手機ATM，Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
+			$subject = "手機ATM，Email會員認證";
+			$param = array(
+				"certification_id"	=> $certification_id,
+				"type" 			=> $type,
+				"email"			=> $email,
+				"code"			=> $code,
+			);
+			$rs = $this->CI->email_verify_model->insert($param);
+			if($rs){
+				return $this->send($email,$subject,$content);
+			}
+		}
+		return false;
+	}
 	
-    public function send_test($email,$subject,$content)
+	public function verify_code($type="",$email="",$code=""){
+		if(!empty($type) && !empty($email) && !empty($code)){
+			
+			$param = array(
+				"type"		=> $type,
+				"email"		=> $email,
+				"status"	=> 0,
+				"code"		=> $code
+			);
+			
+			$rs = $this->CI->email_verify_model->get_by($param);
+			if($rs){
+				$this->CI->email_verify_model->update($rs->id,array("status"=>1));
+				$this->CI->load->library('Certification_lib');
+				$this->CI->certification_lib->set_success($rs->certification_id);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+    private function send($email,$subject,$content)
     {
 		$this->CI->email->initialize($this->config);
 		$this->CI->email->clear();

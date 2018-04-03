@@ -14,7 +14,7 @@ class Cron extends CI_Controller {
 	public function cathay()
 	{
 		$start_time = time();
-		$ids 		= $this->payment_lib->insert_cathay_info();
+		$ids 		= $this->payment_lib->script_get_cathay_info();
 		$num		= $ids?count($ids):0;
 		$end_time 	= time();
 		$data		= array(
@@ -30,7 +30,7 @@ class Cron extends CI_Controller {
 	public function handle_payment()
 	{
 		$start_time = time();
-		$count 		= $this->payment_lib->handle_payment();
+		$count 		= $this->payment_lib->script_handle_payment();
 		$num		= $count?intval($count):0;
 		$end_time 	= time();
 		$data		= array(

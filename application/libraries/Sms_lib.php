@@ -17,8 +17,8 @@ class Sms_lib {
 	
 	public function send_register($phone=""){
 		if(!empty($phone)){
-			$code	 = rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
-			$content = "掌中ATM，會員註冊簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$code	 = get_rand_token();
+			$content = "手機ATM，會員註冊簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
 			$param = array(
 				"type" 			=> 'register',
 				"phone"			=> $phone,
@@ -35,8 +35,8 @@ class Sms_lib {
 
 	public function send_verify_code($user_id,$phone=""){
 		if(!empty($phone)){
-			$code	 = rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
-			$content = "掌中ATM，認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$code	 = get_rand_token();
+			$content = "手機ATM，認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
 			$param = array(
 				"type" 			=> 'verify',
 				"phone"			=> $phone,
