@@ -170,6 +170,14 @@
 		
 	}
 	
+	function display_image($url){
+		if($url){
+			$file_content =  base64_encode(file_get_contents( $url ));
+			return 'data:image/png;base64,'.$file_content;
+		}
+		return false;
+	}
+	
 	function make_promote_code() {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$rand = $code[rand(0,25)]

@@ -10,6 +10,7 @@ class Agreement extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('platform/agreement_model');
+		$this->load->model('user/user_model');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list','info'];
 		if (!in_array($method, $nonAuthMethods)) {

@@ -138,23 +138,23 @@ defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最�
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE', '9'); //最小投資額 virtual_account
 defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY', 21600); //request_token時效
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY', 10800); //換request_token時效
+defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //換request_token時效
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
 defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
 defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
+defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費
 defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應付借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應付借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
-defined('SOURCE_AR_FEES')       	OR define('SOURCE_AR_FEES'			, '21');//應付平台服務費
-defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '22');//平台服務費
-defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '23');//應付轉貸手續費
-defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '24');//轉貸手續費
-defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '25');//應付提還手續費
-defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '26');//提還手續費
-defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '27');//應付提領手續費
-defined('SOURCE_WITHDRAW_FEE')      OR define('SOURCE_WITHDRAW_FEE'		, '28');//提領手續費
+defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '21');//應付轉貸手續費
+defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '22');//轉貸手續費
+defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '23');//應付提還手續費
+defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '24');//提還手續費
+defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '25');//應付提領手續費
+defined('SOURCE_WITHDRAW_FEE')      OR define('SOURCE_WITHDRAW_FEE'		, '26');//提領手續費
 defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '96');//應付違約金
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '97');//違約金
 defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '98');//應付延滯息
@@ -172,7 +172,6 @@ defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, '851c4
 //曠視
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');
 defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET', 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4');
-defined('FACEPLUSPLUS_POINTS')      OR define('FACEPLUSPLUS_POINTS', 70);
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL', 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
@@ -182,6 +181,7 @@ defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD', 'fable1234
 defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO', '015035006475');
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
 defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE', '013');
+defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE', '0154');
 
 //OCR 
 defined('OCR_API_URL')      		OR define('OCR_API_URL', 'http://13.230.227.104:8888/cxfServerX/ImgReconCard?wsdl'); 
@@ -197,7 +197,7 @@ defined('EVER8D_PWD')     			OR define('EVER8D_PWD', 'n7xg');
 //S3
 defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN', 'AKIAJE5RGXS7FXHKSVBA');
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN', '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');
-defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p');
+defined('S3_BUCKET')     			OR define('S3_BUCKET', 'influxp2p-personal');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH', 3000);
 
 //SMTP

@@ -4,6 +4,7 @@ class User_meta_model extends MY_Model
 {
 	public $_table = 'user_meta';
 	public $before_create = array( 'before_data_c' );
+	public $before_update = array( 'before_data_u' );
 
 	public function __construct()
 	{

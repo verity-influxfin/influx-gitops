@@ -9,9 +9,10 @@ class Faceplusplus_lib{
 	public function __construct()
     {
         $this->CI = &get_instance();
+		$this->CI->load->model('log/log_faceplusplus_model');
     }
 	
-	public function url_detect($image=""){
+	public function url_detect($image="",$user_id=0){
 		if(!empty($image)){
 			$file_content = base64_encode( file_get_contents( $image ) );
 			$url 		= $this->api_url."detect";
@@ -23,8 +24,15 @@ class Faceplusplus_lib{
 			);
 			
 			$rs 		= curl_get($url,$data);
+			$log_data	= array(
+				"type"		=> "detect",
+				"user_id"	=> $user_id,
+				"response"	=> $rs,
+				"request"	=> $image,
+			);
+			$this->CI->log_faceplusplus_model->insert($log_data);
+
 			$rs			= json_decode($rs,TRUE);
-			
 			if($rs && isset($rs["image_id"]) && count($rs['faces'])==2){
 				$face1 		= $rs['faces'][0]["face_token"];
 				$face2 		= $rs['faces'][1]["face_token"];
@@ -35,7 +43,7 @@ class Faceplusplus_lib{
 		return FALSE;
 	}
 
-	public function get_face_token($image=""){
+	public function get_face_token($image="",$user_id=0){
 		if(!empty($image)){
 			$file_content = base64_encode( file_get_contents( $image ) );
 			$url 		= $this->api_url."detect";
@@ -47,8 +55,15 @@ class Faceplusplus_lib{
 			);
 			
 			$rs 		= curl_get($url,$data);
-			$rs			= json_decode($rs,TRUE);
+			$log_data	= array(
+				"type"		=> "detect",
+				"user_id"	=> $user_id,
+				"response"	=> $rs,
+				"request"	=> $image,
+			);
+			$this->CI->log_faceplusplus_model->insert($log_data);
 			
+			$rs			= json_decode($rs,TRUE);
 			if($rs && isset($rs["image_id"]) && count($rs['faces'])>0){
 				$token 		= array();
 				foreach($rs['faces'] as $key => $value){
@@ -61,7 +76,7 @@ class Faceplusplus_lib{
 		return FALSE;
 	}
 	
-	public function url_compare($face1="",$face2=""){
+	public function url_compare($face1="",$face2="",$user_id=0){
 		if(!empty($face1) && !empty($face2)){
 			
 			$url 		= $this->api_url."compare";
@@ -73,16 +88,23 @@ class Faceplusplus_lib{
 			);
 			
 			$rs 		= curl_get($url,$data);
+			$log_data	= array(
+				"type"		=> "compare",
+				"user_id"	=> $user_id,
+				"response"	=> $rs,
+				"request"	=> json_encode($data),
+			);
+			$this->CI->log_faceplusplus_model->insert($log_data);
+			
 			$rs			= json_decode($rs,TRUE);
 			if($rs && isset($rs["confidence"])){
-				$compare = $rs["confidence"]>=FACEPLUSPLUS_POINTS?TRUE:FALSE;
 				return $rs["confidence"];
 			}
 		}
 		return FALSE;
 	}
 	
-	public function token_compare($face1="",$face2=""){
+	public function token_compare($face1="",$face2="",$user_id=0){
 		if(!empty($face1) && !empty($face2)){
 			
 			$url 		= $this->api_url."compare";
@@ -94,9 +116,16 @@ class Faceplusplus_lib{
 			);
 			
 			$rs 		= curl_get($url,$data);
+			$log_data	= array(
+				"type"		=> "compare",
+				"user_id"	=> $user_id,
+				"response"	=> $rs,
+				"request"	=> json_encode($data),
+			);
+			$this->CI->log_faceplusplus_model->insert($log_data);
+			
 			$rs			= json_decode($rs,TRUE);
 			if($rs && isset($rs["confidence"])){
-				$compare = $rs["confidence"]>=FACEPLUSPLUS_POINTS?TRUE:FALSE;
 				return $rs["confidence"];
 			}
 		}

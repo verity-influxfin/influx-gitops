@@ -7,14 +7,23 @@ define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
 	
-	
+	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date="",$repayment_type=1){
+		if($amount && $instalment && $rate && $repayment_type){
+			$date 	= empty($date)?date("Y-m-d"):$date;
+			$method	= 'amortization_schedule_'.$repayment_type;
+			if(method_exists($this, $method)){
+				$rs = $this->$method($amount,$instalment,$rate,$date);
+				return $rs;
+			}
+		}
+		return false;
+	}
 
-	//取得攤還表
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date=""){
-		if($amount && $instalment && $rate){
-			
-			$date 			= empty($date)?date("Y-m-d"):$date;
-			$total_payment 	= $this->PMT($rate,$instalment,$amount);
+	//取得攤還表 - 等額本息
+	private function amortization_schedule_1($amount,$instalment,$rate,$date){
+
+		$total_payment 		= $this->PMT($rate,$instalment,$amount);
+		if($total_payment){
 			$xirr_dates		= array($date);
 			$xirr_value		= array($amount*(-1));
 			//驗證閏年
@@ -35,7 +44,11 @@ class Financial_lib{
 			for( $i=1; $i <= $instalment; $i++ ){
 				$odate 		= $date;
 				//還款日
-				$date 		= date("Y-m-d",strtotime($date." + 1 month"));
+				$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+				if($i==1 && $odate > date("Y-m-",strtotime($odate)).REPAYMENT_DAY){
+					$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+				}
+				
 				//本期日數
 				$days  		= floor((strtotime($date) - strtotime($odate))/(60*60*24));
 				//本期利息 = 年利率/年日數*本期日數=本期利率
@@ -78,8 +91,76 @@ class Financial_lib{
 		}
 		return false;
 	}
+	
+	//取得攤還表 - 先息後本
+	private function amortization_schedule_2($amount,$instalment,$rate,$date){
 
-	public function leap_year($date="",$instalment=0){
+		$xirr_dates		= array($date);
+		$xirr_value		= array($amount*(-1));
+		//驗證閏年
+		$leap_year	= $this->leap_year($date,$instalment);
+		$year_days = $leap_year?366:365;//今年日數
+		$schedule	= array(
+			"amount"		=> $amount,
+			"instalment"	=> $instalment,
+			"rate"			=> $rate,
+			"date"			=> $date,
+			"total_payment"	=> "",
+			"leap_year"		=> $leap_year,
+			"year_days"		=> $year_days
+		);
+		
+		$list 		= array();
+		$t_amount 	= $t_interest = $t_min = 0;
+		for( $i=1; $i <= $instalment; $i++ ){
+			$odate 		= $date;
+			//還款日
+			$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+			if($i==1 && $odate > date("Y-m-",strtotime($odate)).REPAYMENT_DAY){
+				$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+			}
+			//本期日數
+			$days  		= floor((strtotime($date) - strtotime($odate))/(60*60*24));
+			//本期利息 = 年利率/年日數*本期日數=本期利率
+			$interest 	= round( $amount * $rate / 100 * $days / $year_days ,0);
+			//本期本金
+			$principal	= 0;
+			
+			//最後一期本金
+			if($i==$instalment){
+				$principal = $schedule['amount'] - $t_amount;
+			}
+			
+			$total_payment = $interest + $principal;
+			$t_interest	+= $interest;
+			$t_amount	+= $principal;
+			$t_min		+= $interest + $principal;
+			
+			$list[$i] = array(	
+				"instalment"			=> $i,
+				"repayment_date"		=> $date,
+				"days"					=> $days,
+				"remaining_principal"	=> $amount,
+				"principal"				=> $principal,
+				"interest"				=> $interest,
+				"total_payment"			=> $total_payment,
+			);	
+			$xirr_dates[] = $date;
+			$xirr_value[] = $total_payment;
+			$amount = $amount - $principal;
+		}
+		
+		$schedule['XIRR']		= $this->XIRR($xirr_value,$xirr_dates);
+		$schedule['schedule'] 	= $list;
+		$schedule['total'] 		= array(
+			"principal"		=> $t_amount,
+			"interest"		=> $t_interest,
+			"total_payment"	=> $t_min,
+		);
+		return $schedule;
+	}
+	
+	private function leap_year($date="",$instalment=0){
 		if($date && $instalment){
 			//驗證閏年
 			$leap_year	= FALSE;
@@ -98,7 +179,7 @@ class Financial_lib{
 		return false;
 	}
 	
-	public function PMT($rate=0,$instalment=0,$amount=0)
+	private function PMT($rate=0,$instalment=0,$amount=0)
 	{
 		if($amount && $instalment && $rate){
 			$mrate 	 		= $rate/1200;//月利率
@@ -110,7 +191,7 @@ class Financial_lib{
 		return false;
 	}
 	
-	public function XNPV($rate, $values, $dates)
+	private function XNPV($rate, $values, $dates)
 	{
 		if ((!is_array($values)) || (!is_array($dates))) return null;
 		if (count($values) != count($dates)) return null;
@@ -123,7 +204,7 @@ class Financial_lib{
 		return is_finite($xnpv) ? $xnpv: false ;
 	}
 
-	public function XIRR($values, $dates, $guess = 0.1)
+	private function XIRR($values, $dates, $guess = 0.1)
 	{
 		if ((!is_array($values)) && (!is_array($dates))) return false;
 		if (count($values) != count($dates)) return false;

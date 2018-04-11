@@ -9,6 +9,7 @@ class Target extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
+		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
 		$this->load->model('product/product_category_model');
 		$this->load->model('platform/certification_model');
@@ -315,7 +316,6 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_LIMIT ));
 			}*/
 			
-			$this->load->model('user/user_model');
 			$this->load->model('user/user_bankaccount_model');
 			
 			$user_info = $this->user_model->get($user_id);	

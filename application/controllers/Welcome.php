@@ -80,7 +80,7 @@ class Welcome extends CI_Controller {
 		$rate		= $_GET['rate'];
 		$instalment = intval($_GET['instalment']);//期數
 		$date 		= $_GET['date'];//起始日
-		$schedule 	= $this->financial_lib->get_amortization_schedule($amount,$instalment,$rate,$date);
+		$schedule 	= $this->financial_lib->get_amortization_schedule($amount,$instalment,$rate,$date,1); 
 		echo '<span>本金：'		.$schedule['amount'].'</span><br>';
 		echo '<span>年利率：'		.$schedule['rate'].'%</span><br>';
 		echo '<span>每期應繳：'	.$schedule['total_payment'].'</span><br>';
@@ -111,10 +111,18 @@ class Welcome extends CI_Controller {
 		
 	}
 
-	function transaction(){
+	/*function transaction(){
 		$this->load->library('Transaction_lib');
-		$rs = $this->transaction_lib->lending_success(1);
+		$rs = $this->transaction_lib->check_bidding(1);
 		dump($rs);
+	}*/
+
+	function transaction(){
+		//$this->load->library('Passbook_lib');
+		//$rs = $this->passbook_lib->external(74); 
+		//dump($rs);
+		$this->load->library('Certification_lib'); 
+		$rs = $this->certification_lib->idcard_verify(31); 
 	}
 	
 	function allimage(){

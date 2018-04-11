@@ -47,16 +47,43 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function verify($id){
+	public function idcard_verify($id){
 		if($id){
+			$this->CI->load->library('Ocr_lib');
+			$this->CI->load->library('Faceplusplus_lib');
+			
 			$info = $this->CI->user_certification_model->get($id);
-			if($info && $info->status != 1){
+			if($info && $info->status ==0 ){
 				$info->content 	= json_decode($info->content,true);
-				$certification 	= $this->CI->certification_model->get($info->certification_id);
-				$method			= $certification->alias.'_verify';
-				if(method_exists($this, $method)){
-					$rs = $this->$method($info);
-					return $rs;
+				$content		= $info->content;
+				$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
+				if($ocr && $content['name']==$ocr['name'] && $content['id_number']==$ocr['id_number']){
+					$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image']);
+					$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image']);
+					$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
+					$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
+					$answer			= array();
+					if($person_count==2 && $front_count==1){
+						foreach($person_token as $token){
+							$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0]);
+						}
+						if(count($answer)==2){
+							if($answer[0]>$answer[1]){
+								$tmp 		= $answer[0];
+								$answer[0] 	= $answer[1];
+								$answer[1] 	= $tmp;
+							}
+							if($answer[0]>=60 && $answer[1]>=90){
+								$this->set_success($id);
+							}else{
+								$this->CI->user_certification_model->update($id,array("remark"=>"Face points ".json_encode($answer),"status"=>3));
+							}
+						}
+					}else{
+						$this->CI->user_certification_model->update($id,array("remark"=>"Face count error","status"=>3));
+					}
+				}else{
+					$this->CI->user_certification_model->update($id,array("remark"=>"OCR error","status"=>2));
 				}
 			}
 		}
@@ -186,6 +213,8 @@ class Certification_lib{
 				"student_id"			=> $content["student_id"],
 				"student_card_front"	=> $content["front_image"],
 				"student_card_back"		=> $content["back_image"],
+				"student_sip_account"	=> $content["sip_account"],
+				"student_sip_password"	=> $content["sip_password"],
 			);
 			
 			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "student_status"));
@@ -319,6 +348,80 @@ class Certification_lib{
 				$this->CI->user_model->update($info->user_id,array("email"=> $content["email"]));
 				$this->CI->user_certification_model->update($info->id,array("status"=>1));
 				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private function financial_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				"financial_status"		=> 1,
+				"financial_income"		=> $content["parttime"]+$content["allowance"]+$content["scholarship"]+$content["other_income"],
+				"financial_expense"		=> $content["restaurant"]+$content["transportation"]+$content["entertainment"]+$content["other_expense"],
+				"financial_creditcard"	=> $content["creditcard_image"],
+				"financial_passbook"	=> $content["passbook_image"],
+			);
+
+			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "financial_status"));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+						"meta_value"	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
+				$this->CI->user_certification_model->update($info->id,array("status"=>1));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private function social_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				"social_status"		=> 1,
+			);
+
+			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "social_status"));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						"user_id"		=> $info->user_id,
+						"meta_key" 		=> $key,
+						"meta_value"	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
+				$this->CI->user_certification_model->update($info->id,array("status"=>1));
 				return true;
 			}
 		}

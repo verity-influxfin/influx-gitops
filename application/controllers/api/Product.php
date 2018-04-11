@@ -9,6 +9,7 @@ class Product extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
+		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
 		$this->load->model('product/product_category_model');
 		$this->load->model('platform/certification_model');
@@ -21,7 +22,9 @@ class Product extends REST_Controller {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
 			$nonCheckMethods 	= ['list'];
-			if(!in_array($method, $nonCheckMethods)){
+			if(in_array($method, $nonCheckMethods) && empty($token)){
+				$this->user_info = array();
+			}else{
 				if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
 				}
@@ -161,6 +164,7 @@ class Product extends REST_Controller {
      * 					"amount":"5000",
      * 					"loan_amount":"",
      * 					"status":"0",
+     * 					"instalment":"3期",
      * 					"created_at":"1520421572"
      * 				}
      * 			}
@@ -204,6 +208,7 @@ class Product extends REST_Controller {
 						$target['amount'] 		= $targets->amount;
 						$target['loan_amount'] 	= $targets->loan_amount;
 						$target['created_at'] 	= $targets->created_at;
+						$target['instalment'] 	= $instalment_list[$targets->instalment];
 					}
 				}
 				
@@ -452,9 +457,11 @@ class Product extends REST_Controller {
      * @apiParam {number} instalment (required) 申請期數
 	 * 
      * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {String} target_id Targets ID
      * @apiSuccessExample {json} SUCCESS
      *    {
-     *      "result": "SUCCESS"
+     *      "result": "SUCCESS",
+     *      "target_id": "1",
      *    }
 	 *
 	 * @apiUse InputError
@@ -529,7 +536,7 @@ class Product extends REST_Controller {
 				$param["target_no"] = $this->get_target_no();
 				$insert = $this->target_model->insert($param);
 				if($insert){
-					$this->response(array('result' => 'SUCCESS'));
+					$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
 				}
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 			}
@@ -540,7 +547,7 @@ class Product extends REST_Controller {
 	/**
      * @api {post} /product/signing 借款方 申請簽約
      * @apiGroup Product
-	 * @apiParam {number} target_id (required) 產品ID
+	 * @apiParam {number} target_id (required) Targets ID
 	 * @apiParam {file} person_image (required) 本人照
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -613,7 +620,6 @@ class Product extends REST_Controller {
 	public function signing_post()
     {
 		$this->load->library('S3_upload');
-		$this->load->model('user/user_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->library('Certification_lib');
 		$input 		= $this->input->post(NULL, TRUE);

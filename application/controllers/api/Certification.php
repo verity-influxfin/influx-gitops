@@ -13,6 +13,7 @@ class Certification extends REST_Controller {
 		$this->load->model('user/user_certification_model');
 		$this->load->model('user/user_model');
 		$this->load->library('S3_upload');
+		$this->load->library('Certification_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ["verifyemail"];
 		if (!in_array($method, $nonAuthMethods)) {
@@ -28,6 +29,7 @@ class Certification extends REST_Controller {
 			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
+
         }
     }
 	
@@ -69,7 +71,6 @@ class Certification extends REST_Controller {
 	 
 	public function list_get()
     {
-		$this->load->library('Certification_lib');
 		$user_id 			= $this->user_info->id;
 		$certification_list	= $this->certification_lib->get_status($user_id);
 		if(!empty($certification_list)){
@@ -128,6 +129,13 @@ class Certification extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "504"
+     *     }
+	 *
+     * @apiError 505 身分證字號已存在
+     * @apiErrorExample {json} 505
+     *     {
+     *       "result": "ERROR",
+     *       "error": "505"
      *     }
 	 *
      */
@@ -190,6 +198,7 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+				$this->certification_lib->idcard_verify($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -253,7 +262,6 @@ class Certification extends REST_Controller {
 		$alias 		= "id_card";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
@@ -338,6 +346,7 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -389,7 +398,6 @@ class Certification extends REST_Controller {
 		$alias 		= "health_card";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
@@ -418,6 +426,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {String} grade (required) 年級
 	 * @apiParam {String} student_id (required) 學號
 	 * @apiParam {String} email (required) 校內電子信箱
+	 * @apiParam {String} sip_account SIP帳號
+	 * @apiParam {String} sip_password SIP密碼
      * @apiParam {file} front_image (required) 學生證正面照
      * @apiParam {file} back_image (required) 學生證背面照
      *
@@ -481,7 +491,9 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
-			$content['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+			$content['system'] 			= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+			$content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
+			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
 
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!=".edu.tw") {
 				$this->response(array('result' => 'ERROR',"error" => INVALID_EMAIL_FORMAT ));
@@ -525,6 +537,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} school 學校名稱
 	 * @apiSuccess {String} system 學制 0:大學 1:碩士 2:博士
 	 * @apiSuccess {String} department 系所
+	 * @apiSuccess {String} grade 年級
 	 * @apiSuccess {String} student_id 學號
 	 * @apiSuccess {String} email 校內Email
 	 * @apiSuccess {String} front_image 學生證正面照
@@ -540,6 +553,7 @@ class Certification extends REST_Controller {
      *      	"certification_id": "3",
      *      	"school": "國立宜蘭大學",
      *      	"department": "電機工程學系",
+     *      	"grade": "1",
      *      	"student_id": "1496B032", 
      *      	"email": "xxxxx@xxx.edu.com.tw",     
      *      	"system": "0",     
@@ -570,7 +584,6 @@ class Certification extends REST_Controller {
 		$alias 		= "student";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
@@ -583,7 +596,7 @@ class Certification extends REST_Controller {
 					"created_at"		=> $rs->created_at,
 					"updated_at"		=> $rs->updated_at,
 				);
-				$fields 	= ['school','department','student_id','system','email'];
+				$fields 	= ['school','department','student_id','system','email','grade'];
 				foreach ($fields as $field) {
 					if (isset($content[$field]) && !empty($content[$field])) {
 						$data[$field] = $content[$field];
@@ -677,6 +690,7 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -691,6 +705,7 @@ class Certification extends REST_Controller {
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} user_name User 姓名
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} bank_code 銀行代碼三碼
 	 * @apiSuccess {String} branch_code 分支機構代號四碼
@@ -734,14 +749,15 @@ class Certification extends REST_Controller {
 		$alias 			= "debit_card";
 		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
+			$user_name 	= $this->user_info->name;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
 			if($rs){
 				$content = $rs->content;
 				$data = array(
 					"user_id"			=> $rs->user_id,
+					"user_name"			=> $user_name,
 					"certification_id"	=> $rs->certification_id,
 					"status"			=> $rs->status,
 					"created_at"		=> $rs->created_at,
@@ -827,7 +843,6 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->load->library('Certification_lib');
 				$this->certification_lib->set_success($insert);
 				
 				$this->response(array('result' => 'SUCCESS'));
@@ -839,7 +854,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/emergency 認證 緊急聯絡人
+     * @api {get} /certification/emergency 認證 緊急聯絡人資料
      * @apiGroup Certification
      *
      * @apiSuccess {json} result SUCCESS
@@ -882,7 +897,6 @@ class Certification extends REST_Controller {
 		$alias 		= "emergency";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
@@ -991,7 +1005,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/email 認證 常用郵箱
+     * @api {get} /certification/email 認證 常用郵箱資料
      * @apiGroup Certification
      *
      * @apiSuccess {json} result SUCCESS
@@ -1030,7 +1044,6 @@ class Certification extends REST_Controller {
 		$alias 		= "email";
 		$certification = $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
-			$this->load->library('Certification_lib');
 			$user_id 	= $this->user_info->id;
 			$data		= array();
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
@@ -1109,5 +1122,332 @@ class Certification extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
 		}
 
+    }
+	
+		/**
+     * @api {post} /certification/financial 認證 財務訊息認證
+     * @apiGroup Certification
+	 * @apiParam {Number} parttime 打工收入
+	 * @apiParam {Number} allowance 零用錢收入
+	 * @apiParam {Number} scholarship 獎學金收入
+	 * @apiParam {Number} other_income 其他收入
+	 * @apiParam {Number} restaurant 餐飲支出
+	 * @apiParam {Number} transportation 交通支出
+	 * @apiParam {Number} entertainment 娛樂支出
+	 * @apiParam {Number} other_expense 其他支出
+     * @apiParam {file} creditcard_image 信用卡帳單照
+     * @apiParam {file} passbook_image 存摺內頁照
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function financial_post()
+    {
+		$alias 			= "financial";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$content	= array();
+			$param		= array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification->id,
+			);
+			 
+			//是否驗證過
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			//必填欄位
+			$fields 	= ['parttime','allowance','scholarship','other_income','restaurant','transportation','entertainment','other_expense'];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$content[$field] = 0;
+				}else{
+					$content[$field] = intval($input[$field]);
+				}
+			}
+			
+			//上傳檔案欄位
+			$file_fields 	= ['creditcard_image','passbook_image'];
+			foreach ($file_fields as $field) {
+				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					if($image){
+						$content[$field] = $image;
+					}else{
+						$content[$field] = "";
+					}
+				}else{
+					$content[$field] = "";
+				}
+			}
+			
+			$param['content'] = json_encode($content);
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+				$this->certification_lib->set_success($insert);
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {get} /certification/financial 認證 財務訊息認證資料
+     * @apiGroup Certification
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {Number} parttime 打工收入
+	 * @apiSuccess {Number} allowance 零用錢收入
+	 * @apiSuccess {Number} scholarship 獎學金收入
+	 * @apiSuccess {Number} other_income 其他收入
+	 * @apiSuccess {Number} restaurant 餐飲支出
+	 * @apiSuccess {Number} transportation 交通支出
+	 * @apiSuccess {Number} entertainment 娛樂支出
+	 * @apiSuccess {Number} other_expense 其他支出
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {String} updated_at 最近更新日期
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"user_id": "1",
+     *      	"certification_id": "8",
+     *      	"status": "0",     
+     *      	"created_at": "1518598432",     
+     *      	"updated_at": "1518598432",
+     *      	"parttime": 100,
+     *      	"allowance": 200,
+     *      	"scholarship": 300,
+     *      	"other_income": 400,
+     *      	"restaurant": 0,
+     *      	"transportation": 1,
+     *      	"entertainment": 2,
+     *      	"other_expense": 3     
+	 *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 503 尚未驗證過
+     * @apiErrorExample {json} 503
+     *     {
+     *       "result": "ERROR",
+     *       "error": "503"
+     *     }
+     */
+	public function financial_get()
+    {
+		$alias 			= "financial";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status){
+			$user_id 	= $this->user_info->id;
+			$data		= array();
+			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
+			if($rs){
+				$content = $rs->content;
+				$data = array(
+					"user_id"			=> $rs->user_id,
+					"certification_id"	=> $rs->certification_id,
+					"status"			=> $rs->status,
+					"created_at"		=> $rs->created_at,
+					"updated_at"		=> $rs->updated_at,
+				);
+				$fields = ['parttime','allowance','scholarship','other_income','restaurant','transportation','entertainment','other_expense'];
+				foreach ($fields as $field) {
+					if (isset($content[$field])) {
+						$data[$field] = $content[$field];
+					}
+				}
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {post} /certification/social 認證 社交認證
+     * @apiGroup Certification
+     * @apiParam {String} type (required) 認證類型（"facebook","instagram"）
+     * @apiParam {String} access_token (required) access_token
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function social_post()
+    {
+		$alias 			= "social";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$content	= array();
+			$param		= array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification->id,
+			);
+			 
+			//是否驗證過
+			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
+			if($user_certification){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+			}
+			
+			//必填欄位
+			$fields 	= ['type','access_token'];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}else{
+					$content[$field] = $input[$field];
+				}
+			}
+			
+			$param['content'] = json_encode($content);
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+    }
+	
+	/**
+     * @api {get} /certification/social 認證 社交認證資料
+     * @apiGroup Certification
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} user_id User ID
+	 * @apiSuccess {String} certification_id Certification ID
+	 * @apiSuccess {String} type 認證類型
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {String} updated_at 最近更新日期
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"user_id": "1",
+     *      	"certification_id": "8",
+     *      	"status": "0",     
+     *      	"created_at": "1518598432",     
+     *      	"updated_at": "1518598432",
+     *      	"parttime": 100,
+     *      	"allowance": 200,
+     *      	"scholarship": 300,
+     *      	"other_income": 400,
+     *      	"restaurant": 0,
+     *      	"transportation": 1,
+     *      	"entertainment": 2,
+     *      	"other_expense": 3     
+	 *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {json} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 503 尚未驗證過
+     * @apiErrorExample {json} 503
+     *     {
+     *       "result": "ERROR",
+     *       "error": "503"
+     *     }
+     */
+	public function social_get()
+    {
+		$alias 			= "social";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
+		if($certification && $certification->status){
+			$user_id 	= $this->user_info->id;
+			$data		= array();
+			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
+			if($rs){
+				$content = $rs->content;
+				$data = array(
+					"user_id"			=> $rs->user_id,
+					"certification_id"	=> $rs->certification_id,
+					"status"			=> $rs->status,
+					"created_at"		=> $rs->created_at,
+					"updated_at"		=> $rs->updated_at,
+				);
+				$fields = ['type'];
+				foreach ($fields as $field) {
+					if (isset($content[$field])) {
+						$data[$field] = $content[$field];
+					}
+				}
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
     }
 }

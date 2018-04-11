@@ -47,7 +47,7 @@ class Transaction_lib{
 								"virtual_account"	=> $payment->virtual_account,
 								"transaction_id"	=> $transaction_id,
 								"amount"			=> intval($payment->amount),
-								"remark"			=> $payment->tx_datetime.' paymentID:'.$payment_id,
+								"remark"			=> 'paymentID:'.$payment_id,
 								"tx_datetime"		=> $payment->tx_datetime,
 							);
 							$virtual_passbook = $this->CI->virtual_passbook_model->insert($passbook);
@@ -60,16 +60,26 @@ class Transaction_lib{
 		return false;
 	}
 	
+	//扣款
+	public function charge($transaction_id){
+		
+	
+	}
+	
 	//取得資金資料
 	public function get_virtual_funds($virtual_account=""){
 		if($virtual_account){
 			$total  = 0;
 			$frozen = 0;
+			$last_recharge_date	= "";
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array("virtual_account"=>$virtual_account));
 			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array("virtual_account"=>$virtual_account,"status"=>1));
 			if($virtual_passbook){
 				foreach($virtual_passbook as $key => $value){
 					$total = $total + intval($value->amount);
+					if($value->tx_datetime > $last_recharge_date){
+						$last_recharge_date = $value->tx_datetime;
+					}
 				}
 			}
 			
@@ -79,70 +89,112 @@ class Transaction_lib{
 				}
 			}
 			
-			return array("total"=>$total,"frozen"=>$frozen);
+			return array("total"=>$total,"last_recharge_date"=>$last_recharge_date,"frozen"=>$frozen);
 		}
 		return false;
 	}
 
 	
-	//凍結投資款項
-	function frozen($target_id){
-		if($target_id){
-			$target = $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 3){
-				$investments = $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>0,"frozen_status"=>0));
-				if($investments){
-					dump($investments);
-					foreach($investments as $key => $value){
-						//$virtual_account = $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
-						
+	//判斷結標或凍結投資款項
+	function check_bidding($target){
+		if( $target && $target->id && $target->status == 3){
+			$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1")));
+			if($investments){
+				$amount = 0;
+				foreach($investments as $key => $value){
+					if($value->status ==1 && $value->frozen_status==1){
+						$amount += $value->amount;
 					}
+				}
+
+				if($amount >= $target->loan_amount){
+					//結標
+					$rs = $this->CI->target_model->update($target->id,array("status"=>4));
+					$rs = true;
+					if($rs){
+						$total = 0;
+						$ended = true;
+						foreach($investments as $key => $value){
+							if($value->status ==1 && $value->frozen_status==1){
+								$total += $value->amount;
+								$param 	= array(); 
+								if($total < $target->loan_amount && $ended){
+									$param = array("loan_amount"=>$value->amount,"status"=>2);
+								}else if($total>=$target->loan_amount && $ended){
+									$param = array("loan_amount"=>$value->amount+$target->loan_amount-$total,"status"=>2); 
+									$ended = false;
+								}else{
+									$param = array("status"=>9);
+								}
+							}else{
+								$param = array("status"=>9);
+							}
+							$this->CI->investment_model->update($value->id,$param);
+						}
+						return true;
+					}
+				}else{
+					//凍結款項
+					foreach($investments as $key => $value){
+						if($value->status ==0 && $value->frozen_status==0){
+							$virtual_account = $this->CI->virtual_account_model->get_by(array("type"=>"0","user_id"=>$value->user_id));
+							if($virtual_account){
+								$funds = $this->get_virtual_funds($virtual_account->virtual_account);
+								$total = $funds["total"] - $funds["frozen"];
+								if(intval($total)-intval($value->amount)>0){
+									$last_recharge_date = strtotime($funds['last_recharge_date']);
+									$tx_datetime = $last_recharge_date < $value->created_at?$value->created_at:$last_recharge_date;
+									$tx_datetime = date("Y-m-d H:i:s",$tx_datetime);
+									$param = array(
+										"investment_id"		=> $value->id,
+										"virtual_account"	=> $virtual_account->virtual_account,
+										"amount"			=> intval($value->amount),
+										"tx_datetime"		=> $tx_datetime,
+									);
+									$rs = $this->CI->frozen_amount_model->insert($param);
+									if($rs){
+										$this->CI->investment_model->update($value->id,array("frozen_status"=>1,"status"=>1,"tx_datetime"=>$tx_datetime));
+									}
+								}
+							}
+						}
+					}
+					return true;
 				}
 			}
 		}
 		return false;
 	}
-
 	
-	//判斷結標
-	function check_bidding($target_id){
+	//放款
+	function lending($target_id){
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 3){
-				$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id));
+			if( $target && $target->status == 4 && $target->loan_status == 2){
+				$investments = $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1));
 				if($investments){
-					$amount = 0;
+					$transaction = array();
 					foreach($investments as $key => $value){
-						if($value->status ==1 && $value->frozen_status==1){
-							$amount += $value->amount;
-						}
+						$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
+						$transaction[]	= array(
+							"source"			=> SOURCE_LENDING,
+							"user_from"			=> $value->user_id,
+							"bank_code_from"	=> CATHAY_BANK_CODE,
+							"bank_account_from"	=> $virtual_account->virtual_account,
+							"amount"			=> intval($value->loan_amount),
+							"target_id"			=> $target->id,
+							"instalment_no"		=> 0,
+							"user_to"			=> $target->user_id,
+							"bank_code_to"		=> $target->bank_code,
+							"bank_account_to"	=> $target->bank_account,
+						);
 					}
- 
-					if($amount >= $target->loan_amount){
-						$rs = $this->CI->target_model->update($target_id,array("status"=>4));
-						$rs = true;
-						if($rs){
-							$total = 0;
-							$ended = true;
-							foreach($investments as $key => $value){
-								if($value->status ==1 && $value->frozen_status==1){
-									$total += $value->amount;
-									$param 	= array(); 
-									if($total < $target->loan_amount && $ended){
-										$param = array("loan_amount"=>$value->amount,"status"=>2);
-									}else if($total>=$target->loan_amount && $ended){
-										$param = array("loan_amount"=>$value->amount+$target->loan_amount-$total,"status"=>2); 
-										$ended = false;
-									}else{
-										$param = array("status"=>9);
-									}
-								}else{
-									$param = array("status"=>9);
-								}
-								$this->CI->investment_model->update($value->id,$param);
-							}
-							return true;
-						}
+					
+					$rs  = $this->CI->transaction_model->insert_many($transaction);
+					if($rs && count($rs)==count($transaction)){
+						$this->CI->target_model->update($target_id,array("status"=>5));
+						$this->CI->investment_model->update_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1),array("status"=>3));
+						return true;
 					}
 				}
 			}
@@ -160,7 +212,7 @@ class Transaction_lib{
 					$transaction = array();
 					foreach($investments as $key => $value){
 						$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
-						$amortization_schedule 	= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date);
+						$amortization_schedule 	= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
 						if($amortization_schedule && $amortization_schedule["amount"]==$value->loan_amount){
 							foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
 								$transaction[]	= array(
@@ -202,6 +254,35 @@ class Transaction_lib{
 					}
 				}
 			}
+		}
+		return false;
+	}
+	
+	//取得還款狀態
+	function get_repayment_info($target){
+		if( $target && $target->id){
+			$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1")));
+			if($investments){
+
+			}
+		}
+		return false;
+	}
+	
+	
+	public function script_check_bidding(){ 
+		$this->CI->target_model->update_by(array("status"=>3,"script_status"=>0),array("script_status"=>3));
+		$targets = $this->CI->target_model->get_many_by(array("script_status"=>3));
+		if($targets && !empty($targets)){
+			$count = 0;
+			foreach($targets as $key => $value){
+				$rs = $this->check_bidding($value);
+				if($rs){
+					$count++;
+				}
+				$this->CI->target_model->update($value->id,array("script_status"=>0));
+			}
+			return $count;
 		}
 		return false;
 	}

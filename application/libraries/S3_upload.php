@@ -18,6 +18,7 @@ class S3_upload {
     public function __construct()
     {
         $this->CI 		= &get_instance();
+		$this->CI->load->model('log/log_image_model');
 		$this->client 	= S3Client::factory(
 			array(
 				'version' 	=> 'latest',
@@ -30,12 +31,13 @@ class S3_upload {
 		);
     }
 
-    public function image ($files,$name="image",$user_id="",$type="")
+    public function image ($files,$name="image",$user_id="",$type="test")
     {
 		if (isset($files[$name]) && $files[$name]) {
 			
 			if(isset($this->image_type[$files[$name]['type']])){
 				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
+				$exif = json_decode(json_encode($exif),true);
 				$fileType = $this->image_type[$files[$name]['type']];
 				if($fileType == ".jpg"){
 					$src = imagecreatefromjpeg($files[$name]['tmp_name']);
@@ -81,13 +83,11 @@ class S3_upload {
 				ob_end_clean();
 				$result = $this->client->putObject(array(
 					'Bucket' 		=> S3_BUCKET,
-					'Key'    		=> 'dev/image/'.'img'.time().rand(1,9).'.jpg',
-					'Body'   	=> $image_data,
-					'ACL'    		=> 'public-read'
+					'Key'    		=> $type.'/'.'img'.time().rand(1,9).'.jpg',
+					'Body'   		=> $image_data
 				));
 
 				if(isset($result['ObjectURL'])){
-					$this->CI->load->model('log/log_image_model');
 					$data = array(
 						"type"		=> $type,
 						"user_id"	=> $user_id,
@@ -104,7 +104,6 @@ class S3_upload {
 			}else{
 				$this->error = '只支援jpg gif png 圖檔';
 			}
-			
         }else{
 			$this->error = "No file.";
 		}
@@ -116,10 +115,9 @@ class S3_upload {
     {
 		$result = $this->client->listObjects(array('Bucket' => S3_BUCKET));
 		foreach ($result['Contents'] as $object) {
-			
 			$url = $this->client->getObjectUrl(S3_BUCKET,$object['Key']);
-			
-			echo "<img src='".$url."' width=100>".$url . "<br>";
+			$file_content =  base64_encode(file_get_contents( $url ));
+			echo "<img src='data:image/png;base64,".$file_content."' width=100>".$url . "<br>";
 		}
 		
 	}
