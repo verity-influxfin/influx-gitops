@@ -103,6 +103,7 @@ defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306);
 defined('VERIFY_CODE_BUSY')  			OR define('VERIFY_CODE_BUSY'			, 307); //SMS太頻繁
 defined('FBID_EXIST')  					OR define('FBID_EXIST'					, 308);
 defined('IGID_EXIST')  					OR define('IGID_EXIST'					, 309);
+defined('LINEID_EXIST')  				OR define('LINEID_EXIST'				, 310);
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
 defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
@@ -139,6 +140,9 @@ defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE', '9'); //�
 defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY', 21600); //request_token時效
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY', 10800); //換request_token時效
 defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //換request_token時效
+defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES', 3); //平台手續費%
+defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN', 500); //最低平台手續費
+
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
@@ -168,6 +172,10 @@ defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, '0b494064
 //Instagram
 defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, '622ba30fa4524019a3b36fccd862b764');
 defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, '851c4c9b2622438cad669b0d12ce4709');
+
+//Line
+defined('LINE_CHANNEL_ID')     	 	OR define('LINE_CHANNEL_ID'			, '1508139296');
+defined('LINE_CHANNEL_SECRET')  	OR define('LINE_CHANNEL_SECRET'		, '7f57ae86e8ff067d9e11248b2a75973e');
 
 //曠視
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY', 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');

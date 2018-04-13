@@ -118,21 +118,13 @@ class Welcome extends CI_Controller {
 	}*/
 
 	function transaction(){
-		//$this->load->library('Passbook_lib');
-		//$rs = $this->passbook_lib->external(74); 
-		//dump($rs);
-		$this->load->library('Certification_lib'); 
-		$rs = $this->certification_lib->idcard_verify(31); 
+		$this->load->library('Target_lib'); 
+		$rs = $this->target_lib->approve_target(2); 
 	}
 	
 	function allimage(){
 		$this->load->library('S3_upload');
 		$this->s3_upload->image_list();
-	}
-
-	function sendemail(){
-		$this->load->library('Sendemail');
-		$this->sendemail->send_test("toy.chen@fable.com.tw","test","ttttttttttttttttttt<br>pppppppppp");
 	}
 	
 	function testfblogin(){

@@ -3372,27 +3372,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "charge_overdue",
-            "description": "<p>逾期管理費(%/天)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "charge_sub_loan",
-            "description": "<p>轉貸服務費(%)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "charge_prepayment",
-            "description": "<p>提還手續費(%)</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "json",
             "optional": false,
             "field": "certifications",
@@ -3424,7 +3403,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"bank_code\":\"\",\n\t\t\t\t\"branch_code\":\"\",\n\t\t\t\t\"bank_account\":\"\",\n\t\t\t\t\"virtual_account\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"charge_overdue\":\"0\",\n\t\t\t\t\"charge_sub_loan\":\"0\",\n\t\t\t\t\"charge_prepayment\":\"0\",\n\t\t\t\t\"certifications\":[{\"id\":\"1\",\"name\":\"身分證認證\",\"description\":\"身分證認證\",\"alias\":\"id_card\",\"user_status\":1},{\"id\":\"2\",\"name\":\"學生證認證\",\"description\":\"學生證認證\",\"alias\":\"student\",\"user_status\":1}],\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"total_interest\":\"\",\n\t\t\t\t\"instalment\":\"3\",\n\t\t\t\t\"bank_code\":\"\",\n\t\t\t\t\"branch_code\":\"\",\n\t\t\t\t\"bank_account\":\"\",\n\t\t\t\t\"virtual_account\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"alias\":\"FT\",\n\t\t\t\t\"category\":\"3\",\n\t\t\t\t\"parent_id\":\"0\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"certifications\":[{\"id\":\"1\",\"name\":\"身分證認證\",\"description\":\"身分證認證\",\"alias\":\"id_card\",\"user_status\":1},{\"id\":\"2\",\"name\":\"學生證認證\",\"description\":\"學生證認證\",\"alias\":\"student\",\"user_status\":1}],\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
           "type": "json"
         }
       ]
@@ -4417,6 +4396,18 @@ define({ "api": [
             "optional": false,
             "field": "801",
             "description": "<p>標的不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "205",
+            "description": "<p>身份非放款端</p>"
           }
         ]
       },
@@ -4424,6 +4415,16 @@ define({ "api": [
         {
           "title": "801",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "205",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
           "type": "json"
         }
       ]
@@ -4956,7 +4957,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;）</p>"
+            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;,&quot;line&quot;）</p>"
           },
           {
             "group": "Parameter",
@@ -5018,6 +5019,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "310",
+            "description": "<p>此LINE帳號已綁定過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -5048,6 +5055,11 @@ define({ "api": [
         {
           "title": "309",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "310",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
           "type": "json"
         },
         {
@@ -5762,7 +5774,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/user/smslogin",
-    "title": "會員 簡訊登入",
+    "title": "會員 簡訊登入(暫不開放)",
     "group": "User",
     "parameter": {
       "fields": {
@@ -5975,7 +5987,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;）</p>"
+            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;,&quot;line&quot;）</p>"
           },
           {
             "group": "Parameter",

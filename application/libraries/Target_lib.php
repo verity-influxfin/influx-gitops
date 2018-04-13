@@ -16,10 +16,12 @@ class Target_lib{
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if(!empty($target) && $target->status=="0"){
+				
 				$user_id 	= $target->user_id;
 				$product_id = $target->product_id;
 				$this->CI->load->library('credit_lib',array("user_id"=>$user_id,"product_id"=>$product_id));
 				if($this->CI->credit_lib->check_credit_amount()){
+					
 					$loan_amount 	= $this->CI->credit_lib->get_credit_amount();
 					$interest_rate 	= $this->CI->credit_lib->get_interest_rate();
 					if($loan_amount > $target->amount){

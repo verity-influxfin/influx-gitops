@@ -235,8 +235,8 @@ class Product extends REST_Controller {
 					"loan_range_e"			=> $value->loan_range_e,
 					"interest_rate_s"		=> $value->interest_rate_s,
 					"interest_rate_e"		=> $value->interest_rate_e,
-					"charge_platform"		=> $value->charge_platform,
-					"charge_platform_min"	=> $value->charge_platform_min,
+					"charge_platform"		=> PLATFORM_FEES,
+					"charge_platform_min"	=> PLATFORM_FEES_MIN,
 					"instalment"			=> $instalment,
 					"repayment"				=> $repayment,
 					"target"				=> $target,
@@ -266,9 +266,6 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {String} charge_overdue 逾期管理費(%/天)	
-	 * @apiSuccess {String} charge_sub_loan 轉貸服務費(%)
-	 * @apiSuccess {String} charge_prepayment 提還手續費(%)
 	 * @apiSuccess {json} certifications 需完成的認證列表
 	 * @apiSuccess {json} instalment 可申請期數
 	 * @apiSuccess {json} target 申請資訊（未簽約）
@@ -314,11 +311,8 @@ class Product extends REST_Controller {
      * 				"loan_range_e":"14333333",
      * 				"interest_rate_s":"12",
      * 				"interest_rate_e":"14",
-     * 				"charge_platform":"0",
+	 * 				"charge_platform":"0",
      * 				"charge_platform_min":"0",
-     * 				"charge_overdue":"0",
-     * 				"charge_sub_loan":"0",
-     * 				"charge_prepayment":"0",
      * 				"certifications":[{"id":"1","name":"身分證認證","description":"身分證認證","alias":"id_card","user_status":1},{"id":"2","name":"學生證認證","description":"學生證認證","alias":"student","user_status":1}],
 	 * 				"instalment": [
 	  * 				{
@@ -434,11 +428,8 @@ class Product extends REST_Controller {
 					"loan_range_e"			=> $product->loan_range_e,
 					"interest_rate_s"		=> $product->interest_rate_s,
 					"interest_rate_e"		=> $product->interest_rate_e,
-					"charge_platform"		=> $product->charge_platform,
-					"charge_platform_min"	=> $product->charge_platform_min,
-					"charge_overdue"		=> $product->charge_overdue,
-					"charge_sub_loan"		=> $product->charge_sub_loan,
-					"charge_prepayment"		=> $product->charge_prepayment,
+					"charge_platform"		=> PLATFORM_FEES,
+					"charge_platform_min"	=> PLATFORM_FEES_MIN,
 					"certifications"		=> $certification,
 					"instalment"			=> $instalment,
 					"repayment"				=> $repayment,

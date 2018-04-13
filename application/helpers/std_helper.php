@@ -63,15 +63,21 @@
 	}
 
 
-	function curl_get($url,$data = array()) {
+	function curl_get($url,$data = array(),$header = array()) {
 		$curl = curl_init($url); 
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2); 
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果 
+		
 		if(!empty($data)) {
 			curl_setopt($curl, CURLOPT_POST, 1); 
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data); 
 		}
+		
+		if(!empty($header)) {
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+		}
+		
 		$rs = curl_exec($curl); 
 		curl_close($curl);
 		return $rs;

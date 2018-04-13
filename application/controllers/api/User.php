@@ -304,7 +304,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/sociallogin 會員 第三方登入
      * @apiGroup User
-     * @apiParam {String} type (required) 登入類型（"facebook","instagram"）
+     * @apiParam {String} type (required) 登入類型（"facebook","instagram","line"）
      * @apiParam {String} access_token (required) access_token
 	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
      *
@@ -350,6 +350,9 @@ class User extends REST_Controller {
 			case "instagram":
 				$fields = ['access_token'];
 				break;  
+			case "line":
+				$fields = ['access_token'];
+				break;  
 			default:
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 		}
@@ -362,16 +365,23 @@ class User extends REST_Controller {
 		
 		if($type=="facebook"){
 			$this->load->library('facebook_lib'); 
-			$info = $this->facebook_lib->get_info($input["access_token"]);
-			$user_id  = $this->facebook_lib->login($info);
-			$account  = isset($info['id'])?$info['id']:"";
+			$info	 	= $this->facebook_lib->get_info($input["access_token"]);
+			$user_id  	= $this->facebook_lib->login($info);
+			$account  	= isset($info['id'])?$info['id']:"";
 		}
 
 		if($type=="instagram"){
 			$this->load->library('instagram_lib'); 
-			$info = $this->instagram_lib->get_info($input["access_token"]);
-			$user_id  = $this->instagram_lib->login($info);
-			$account  = isset($info['id'])?$info['id']:"";
+			$info 		= $this->instagram_lib->get_info($input["access_token"]);
+			$user_id  	= $this->instagram_lib->login($info);
+			$account  	= isset($info['id'])?$info['id']:"";
+		}
+		
+		if($type=="line"){
+			$this->load->library('line_lib'); 
+			$info 		= $this->line_lib->get_info($input["access_token"]);
+			$user_id  	= $this->line_lib->login($info);
+			$account  	= isset($info['id'])?$info['id']:"";
 		}
 		
 		if($user_id && $account){
@@ -467,7 +477,7 @@ class User extends REST_Controller {
     }
 	
 	 /**
-     * @api {post} /user/smslogin 會員 簡訊登入
+     * @api {post} /user/smslogin 會員 簡訊登入(暫不開放)
      * @apiGroup User
      * @apiParam {String} phone (required) 手機號碼
      * @apiParam {String} code (required) 簡訊驗證碼
@@ -504,7 +514,9 @@ class User extends REST_Controller {
      *
      */
 	public function smslogin_post(){
-
+		//暫不開放
+		$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		
 		$input = $this->input->post(NULL, TRUE);
         $fields 	= ['phone','code'];
         foreach ($fields as $field) {
@@ -657,7 +669,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/bind 會員 綁定第三方帳號
      * @apiGroup User
-     * @apiParam {String} type (required) 登入類型（"facebook","instagram"）
+     * @apiParam {String} type (required) 登入類型（"facebook","instagram","line"）
      * @apiParam {String} access_token (required) access_token
      *
      * @apiSuccess {json} result SUCCESS
@@ -695,6 +707,13 @@ class User extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "309"
      *     }
+	 *
+     * @apiError 310 此LINE帳號已綁定過
+     * @apiErrorExample {json} 310
+     *     {
+     *       "result": "ERROR",
+     *       "error": "310"
+     *     }
      *
      */
 	public function bind_post()
@@ -707,6 +726,9 @@ class User extends REST_Controller {
 				$fields = ['access_token'];
 				break; 
 			case "instagram":
+				$fields = ['access_token'];
+				break; 
+			case "line":
 				$fields = ['access_token'];
 				break;  
 			default:
@@ -766,6 +788,34 @@ class User extends REST_Controller {
 						$this->response(array('result' => 'SUCCESS'));
 					}else{
 						$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+					}
+				}
+			}
+			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
+		}
+		
+		if($type=="line"){
+			$this->load->library('line_lib'); 
+			
+			$meta  = $this->line_lib->get_user_meta($this->user_info->id);
+			if($meta){
+				$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+			}
+			
+			$debug_token = $this->line_lib->debug_token($input["access_token"]);
+			if($debug_token){
+				$info 			= $this->line_lib->get_info($input["access_token"]);
+				if($info){
+					$user_id 	= $this->line_lib->login($info);
+					if($user_id){
+						$this->response(array('result' => 'ERROR',"error" => LINEID_EXIST ));
+					}else{
+						$rs 	= $this->line_lib->bind_user($this->user_info->id,$info);
+						if($rs){
+							$this->response(array('result' => 'SUCCESS'));
+						}else{
+							$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+						}
 					}
 				}
 			}

@@ -16,7 +16,7 @@ class Target extends REST_Controller {
 		$this->load->model('transaction/target_model');
 		$this->load->model('transaction/investment_model');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list','info'];
+        $nonAuthMethods = ['list'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -183,6 +183,8 @@ class Target extends REST_Controller {
      * 		}
      *    }
 	 *
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
 	 * @apiError 801 標的不存在
      * @apiErrorExample {json} 801
      *     {
