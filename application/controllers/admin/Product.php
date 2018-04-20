@@ -209,7 +209,7 @@ class Product extends MY_Admin_Controller {
 		}
 	}
 
-	public function rating_edit(){
+	/*public function rating_edit(){
 		$page_data 	= array("type"=>"edit");
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
@@ -258,6 +258,6 @@ class Product extends MY_Admin_Controller {
 				alert("ERROR , id isn't exist",admin_url('product/'));
 			}
 		}
-	}
+	}*/
 }
 ?>

@@ -70,7 +70,7 @@ class Payment_lib{
 						$amount = $amount*-1;
 					}
 					$virtual_account = "";
-					if(strlen($value['MEMO1'])==14 && substr($value['MEMO1'],0,4)==CATHAY_VIRTUAL_CODE){
+					if(is_virtual_account($value['MEMO1'])){
 						$virtual_account = $value['MEMO1'];
 					}
 					

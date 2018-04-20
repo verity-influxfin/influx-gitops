@@ -118,8 +118,8 @@ class Welcome extends CI_Controller {
 	}*/
 
 	function transaction(){
-		$this->load->library('Target_lib'); 
-		$rs = $this->target_lib->approve_target(2); 
+		$this->load->library('Transaction_lib'); 
+		$rs = $this->transaction_lib->lending_success(1); 
 	}
 	
 	function allimage(){

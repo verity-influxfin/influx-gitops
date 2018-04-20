@@ -8,13 +8,15 @@ class Target_model extends MY_Model
 	public $status_list   = array(
 		0 =>	"待核可",
 		1 =>	"待簽約",
-		2 =>	"待借款",
-		3 =>	"待放款（結標）",
-		4 =>	"還款中",
+		2 =>	"待驗證",
+		3 =>	"待出借",
+		4 =>	"待放款（結標）",
+		5 =>	"還款中",
 		8 =>	"已取消",
 		9 =>	"申請失敗",
 		10 =>	"已結案",
 	);
+	
 	public $simple_fields  = array(
 		"id",
 		"target_no",
@@ -37,7 +39,6 @@ class Target_model extends MY_Model
 		"amount",
 		"loan_amount",
 		"interest_rate",
-		"total_interest",
 		"instalment",
 		"repayment",
 		"bank_code",

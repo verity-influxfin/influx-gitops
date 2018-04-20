@@ -230,7 +230,6 @@ class Product extends REST_Controller {
 					"category"				=> $value->category,
 					"parent_id"				=> $value->parent_id,
 					"rank"					=> $value->rank,
-					//"status"				=> $value->status,
 					"loan_range_s"			=> $value->loan_range_s,
 					"loan_range_e"			=> $value->loan_range_e,
 					"interest_rate_s"		=> $value->interest_rate_s,
@@ -266,38 +265,12 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {json} certifications 需完成的認證列表
 	 * @apiSuccess {json} instalment 可申請期數
-	 * @apiSuccess {json} target 申請資訊（未簽約）
-	 * @apiSuccess {json} credit 信用評分
+	 * @apiSuccess {json} repayment 還款方式
      * @apiSuccessExample {json} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"target":{
-     * 				"id":"1",
-     * 				"target_no": "1803269743",
-     * 				"product_id":"2",
-     * 				"user_id":"1",
-     * 				"amount":"5000",
-     * 				"loan_amount":"",
-     * 				"interest_rate":"",
-     * 				"total_interest":"",
-     * 				"instalment":"3",
-     * 				"bank_code":"",
-     * 				"branch_code":"",
-     * 				"bank_account":"",
-     * 				"virtual_account":"",
-     * 				"remark":"",
-     * 				"delay":"0",
-     * 				"status":"0",
-     * 				"created_at":"1520421572"
-     * 			}
-     * 			"credit":{
-     * 				"level":"1",
-     * 				"points":"1985",
-     * 				"created_at":"1520421572"
-     * 			}
      * 			"product":
      * 			{
      * 				"id":"1",
@@ -313,7 +286,6 @@ class Product extends REST_Controller {
      * 				"interest_rate_e":"14",
 	 * 				"charge_platform":"0",
      * 				"charge_platform_min":"0",
-     * 				"certifications":[{"id":"1","name":"身分證認證","description":"身分證認證","alias":"id_card","user_status":1},{"id":"2","name":"學生證認證","description":"學生證認證","alias":"student","user_status":1}],
 	 * 				"instalment": [
 	  * 				{
      * 				      "name": "3期",
@@ -365,45 +337,6 @@ class Product extends REST_Controller {
 			$repayment_type = $this->config->item('repayment_type');
 			if($product && $product->status == 1 ){
 				$product->certifications 	= json_decode($product->certifications,TRUE);
-				$certification				= array();
-				$certification_list			= $this->certification_lib->get_status($user_id);
-				if(!empty($certification_list)){
-					foreach($certification_list as $key => $value){
-						if(in_array($value->id,$product->certifications)){
-							$certification[] = array(
-								"id" 			=> $value->id,
-								"name" 			=> $value->name,
-								"description" 	=> $value->description,
-								"alias" 		=> $value->alias,
-								"user_status" 	=> $value->user_status,
-							);
-						}
-					}
-				}
-				
-				$target = $this->target_model->get_by(array("status <="=>1,"user_id"=>$user_id,"product_id"=>$product->id));
-				if($target){
-					$fields = $this->target_model->detail_fields;
-					foreach($fields as $field){
-						$data['target'][$field] = isset($target->$field)?$target->$field:"";
-						if($field=="instalment"){
-							$data['target'][$field] = $instalment_list[$target->$field];
-						}
-						
-						if($field=="repayment"){
-							$data['target'][$field] = $repayment_type[$target->$field];
-						}
-					}
-					$data['target']['repayment_plan'] = $this->target_lib->get_repayment_plan($target->loan_amount,$target->interest_rate,$target->instalment);
-				}
-				
-				$this->load->library('credit_lib',array("user_id"=>$user_id,"product_id"=>$product->id));
-				$credit = $this->credit_lib->get_credit();
-				if($credit){
-					$data['credit'] = $credit;
-				}else{
-					$data['credit'] = array();
-				}
 				
 				$instalment = json_decode($product->instalment,TRUE);
 				foreach($instalment as $k => $v){
@@ -415,7 +348,6 @@ class Product extends REST_Controller {
 					$repayment[$k] = array("name"=>$repayment_type[$v],"value"=>$v);
 				}
 				
-			
 				$data['product'] = array(
 					"id" 					=> $product->id,
 					"name" 					=> $product->name,
@@ -430,10 +362,10 @@ class Product extends REST_Controller {
 					"interest_rate_e"		=> $product->interest_rate_e,
 					"charge_platform"		=> PLATFORM_FEES,
 					"charge_platform_min"	=> PLATFORM_FEES_MIN,
-					"certifications"		=> $certification,
 					"instalment"			=> $instalment,
 					"repayment"				=> $repayment,
 				);
+				
 				$this->response(array('result' => 'SUCCESS',"data" => $data ));
 			}
 		}
@@ -522,7 +454,7 @@ class Product extends REST_Controller {
 			$param["target_no"] = $this->get_target_no();
 			$insert = $this->target_model->insert($param);
 			if($insert){
-				$this->response(array('result' => 'SUCCESS'));
+				$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
 			}else{
 				$param["target_no"] = $this->get_target_no();
 				$insert = $this->target_model->insert($param);
@@ -695,10 +627,9 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} product_id Product ID
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} amount 申請額度
-	 * @apiSuccess {String} loan_amount 核可額度
-	 * @apiSuccess {String} interest_rate 核可利率
-	 * @apiSuccess {String} total_interest 總利息
+	 * @apiSuccess {String} amount 申請金額
+	 * @apiSuccess {String} loan_amount 核准金額
+	 * @apiSuccess {String} interest_rate 年化利率
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} remark 備註
@@ -724,7 +655,6 @@ class Product extends REST_Controller {
      * 				"amount":"5000",
      * 				"loan_amount":"",
      * 				"interest_rate":"0,
-     * 				"total_interest":"",
      * 				"instalment":"3期",
      * 				"repayment":"等額本息",
      * 				"remark":"",
@@ -746,7 +676,6 @@ class Product extends REST_Controller {
      * 				"amount":"5000",
      * 				"loan_amount":"",
      * 				"interest_rate":"",
-     * 				"total_interest":"",
      * 				"instalment":"3期",
      * 				"repayment":"等額本息",
      * 				"remark":"",
@@ -789,11 +718,10 @@ class Product extends REST_Controller {
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
-					"total_interest" 	=> $value->total_interest?$value->total_interest:"",
 					"instalment" 		=> $instalment_list[$value->instalment],
 					"repayment" 		=> $repayment_type[$value->repayment],
 					"contract" 			=> $value->contract,
-					"remark" 			=> $value->remark,
+					"remark" 			=> $value->remark, 
 					"delay" 			=> $value->delay,
 					"status" 			=> $value->status,
 					"created_at" 		=> $value->created_at,
@@ -812,42 +740,60 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} id Target ID
 	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
-	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} amount 申請額度
-	 * @apiSuccess {String} loan_amount 核可額度
+	 * @apiSuccess {String} amount 申請金額
+	 * @apiSuccess {String} loan_amount 核准金額
 	 * @apiSuccess {String} interest_rate 核可利率
-	 * @apiSuccess {String} total_interest 總利息
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} repayment_plan 還款計畫
 	 * @apiSuccess {String} bank_code 借款人收款銀行代碼
 	 * @apiSuccess {String} branch_code 借款人收款分行代碼
 	 * @apiSuccess {String} bank_account 借款人收款帳號
 	 * @apiSuccess {String} virtual_account 還款虛擬帳號
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
-
+	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {json} certification 認證完成資訊(簽約後不出現)
+	 * @apiSuccess {json} credit 信用資訊
+	 * @apiSuccess {String} credit.level 信用指數
+	 * @apiSuccess {String} credit.points 信用分數
+	 * @apiSuccess {String} credit.amount 總信用額度
+	 * @apiSuccess {String} credit.created_at 核准日期
+	 * @apiSuccess {json} amortization_schedule 預計還款計畫(簽約後不出現)
+	 * @apiSuccess {String} amortization_schedule.amount 借款金額
+	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
+	 * @apiSuccess {String} amortization_schedule.rate 年利率
+	 * @apiSuccess {String} amortization_schedule.date 起始時間
+	 * @apiSuccess {String} amortization_schedule.total_payment 每月還款金額
+	 * @apiSuccess {String} amortization_schedule.leap_year 是否為閏年
+	 * @apiSuccess {String} amortization_schedule.year_days 本年日數
+	 * @apiSuccess {String} amortization_schedule.XIRR XIRR
+	 * @apiSuccess {String} amortization_schedule.schedule 還款計畫
+	 * @apiSuccess {String} amortization_schedule.schedule.instalment 第幾期
+	 * @apiSuccess {String} amortization_schedule.schedule.repayment_date 還款日
+	 * @apiSuccess {String} amortization_schedule.schedule.days 本期日數
+	 * @apiSuccess {String} amortization_schedule.schedule.remaining_principal 剩餘本金
+	 * @apiSuccess {String} amortization_schedule.schedule.principal 還款本金
+	 * @apiSuccess {String} amortization_schedule.schedule.interest 還款利息
+	 * @apiSuccess {String} amortization_schedule.schedule.total_payment 本期還款金額
+	 * @apiSuccess {String} amortization_schedule.total 還款總計
+	 * @apiSuccess {String} amortization_schedule.total.principal 本金
+	 * @apiSuccess {String} amortization_schedule.total.interest 利息
+	 * @apiSuccess {String} amortization_schedule.total.total_payment 加總
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"id":"1",
      * 			"target_no": "1803269743",
-     * 			"product_id":"2",
-     * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸",
-     * 				"description":"輕鬆學貸",
-     * 				"alias":"FA"
-     * 			},
+     * 			"product_id":"1",
      * 			"user_id":"1",
      * 			"amount":"5000",
-     * 			"loan_amount":"",
-     * 			"interest_rate":"",
-     * 			"total_interest":"",
+     * 			"loan_amount":"12000",
+     * 			"interest_rate":"9",
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
      * 			"bank_code":"",
@@ -857,7 +803,79 @@ class Product extends REST_Controller {
      * 			"remark":"",
      * 			"delay":"0",
      * 			"status":"0",
-     * 			"created_at":"1520421572"
+     * 			"created_at":"1520421572",
+     * 			"product":{
+     * 				"id":"2",
+     * 				"name":"輕鬆學貸",
+     * 				"description":"輕鬆學貸",
+     * 				"alias":"FA"
+     * 			},
+	 * 			"credit":{
+     * 				"level":"1",
+     * 				"points":"1985",
+     * 				"amount":"45000",
+     * 				"created_at":"1520421572"
+     * 			},
+     *	         "certification": [
+     *           	{
+     *           	     "id": "1",
+     *           	     "name": "身分證認證",
+     *           	     "description": "身分證認證",
+     *           	     "alias": "id_card",
+     *            	    "user_status": "1"
+     *           	},
+     *           	{
+     *           	    "id": "2",
+     *            	    "name": "學生證認證",
+     *           	    "description": "學生證認證",
+     *            	   "alias": "student",
+     *            	   "user_status": "1"
+     *           	}
+     *           ],
+  	 *       "amortization_schedule": {
+  	 *           "amount": "12000",
+  	 *           "instalment": "6",
+  	 *           "rate": "9",
+  	 *           "date": "2018-04-17",
+  	 *           "total_payment": 2053,
+  	 *           "leap_year": false,
+  	 *           "year_days": 365,
+  	 *           "XIRR": 0.0939,
+  	 *           "schedule": {
+ 	 *                "1": {
+   	 *                  "instalment": 1,
+   	 *                  "repayment_date": "2018-06-10",
+   	 *                  "days": 54,
+   	 *                  "remaining_principal": "12000",
+   	 *                  "principal": 1893,
+   	 *                  "interest": 160,
+   	 *                  "total_payment": 2053
+   	 *              },
+   	 *              "2": {
+  	 *                   "instalment": 2,
+   	 *                  "repayment_date": "2018-07-10",
+   	 *                  "days": 30,
+  	 *                   "remaining_principal": 10107,
+  	 *                   "principal": 1978,
+  	 *                   "interest": 75,
+ 	 *                    "total_payment": 2053
+  	 *               },
+   	 *              "3": {
+ 	 *                    "instalment": 3,
+ 	 *                    "repayment_date": "2018-08-10",
+ 	 *                    "days": 31,
+ 	 *                    "remaining_principal": 8129,
+  	 *                   "principal": 1991,
+  	 *                   "interest": 62,
+ 	 *                    "total_payment": 2053
+ 	 *                }
+ 	 *            },
+  	 *           "total": {
+ 	 *                "principal": 12000,
+ 	 *                "interest": 391,
+ 	 *                "total_payment": 12391
+	 *            }
+	 *        }
      * 		}
      *    }
 	 *
@@ -897,6 +915,37 @@ class Product extends REST_Controller {
 				"description"	=> $product_info->description,
 				"alias"			=> $product_info->alias,
 			);
+			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
+			$certification					= array();
+			if($target->status<=1){
+				$certification_list			= $this->certification_lib->get_status($user_id);
+				if(!empty($certification_list)){
+					foreach($certification_list as $key => $value){
+						if(in_array($value->id,$product_info->certifications)){
+							$certification[] = array(
+								"id" 			=> $value->id,
+								"name" 			=> $value->name,
+								"description" 	=> $value->description,
+								"alias" 		=> $value->alias,
+								"user_status" 	=> $value->user_status,
+							);
+						}
+					}
+				}
+			}
+			
+			$amortization_schedule = array();
+			if($target->status==1){
+				$this->load->library('Financial_lib');
+				$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
+			}
+			
+			$this->load->library('credit_lib');
+			$credit_info 	= $this->credit_lib->get_credit($user_id,$product_info->id); 
+			$credit			= array();
+			if($credit_info){
+				$credit = $credit_info;
+			}
 			
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
@@ -909,8 +958,11 @@ class Product extends REST_Controller {
 					$data[$field] = $repayment_type[$target->$field];
 				}
 			}
-			$data["repayment_plan"] = $this->target_lib->get_repayment_plan($target->loan_amount,$target->interest_rate,$target->instalment);
-			$data["product"] = $product;
+
+			$data["credit"] 				= $credit;
+			$data["product"] 				= $product;
+			$data["certification"] 			= $certification;
+			$data["amortization_schedule"] 	= $amortization_schedule;
 
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
 		}

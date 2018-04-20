@@ -142,6 +142,7 @@ defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY', 10800); 
 defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //換request_token時效
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES', 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN', 500); //最低平台手續費
+defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 
 
 //SOURCE
@@ -186,10 +187,10 @@ defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL', 'https://www.global
 defined('CATHAY_CUST_ID')     		OR define('CATHAY_CUST_ID', '68566881');
 defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME', 'toychen');
 defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD', 'fable1234');
-defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO', '015035006475');
-defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE', '5663');
-defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE', '013');
-defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE', '0154');
+defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'	, '015035006475');
+defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'	, '5663');
+defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'	, '013');
+defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'	, '0154');
 
 //OCR 
 defined('OCR_API_URL')      		OR define('OCR_API_URL', 'http://13.230.227.104:8888/cxfServerX/ImgReconCard?wsdl'); 

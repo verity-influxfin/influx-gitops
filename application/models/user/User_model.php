@@ -50,6 +50,10 @@ class User_model extends MY_Model
 			$data["password"] 	= sha1($data["password"]);
 		}
 		
+		if(isset($data["transaction_password"]) && !empty($data["transaction_password"])){
+			$data["transaction_password"] 	= sha1($data["transaction_password"]);
+		}
+		
         $data['updated_at'] = time();
         $data['updated_ip'] = get_ip();
         return $data;

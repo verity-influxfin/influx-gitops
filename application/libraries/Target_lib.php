@@ -9,39 +9,44 @@ class Target_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/target_model');
+		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');
     }
 	
-	public function approve_target($target_id=""){
-		if($target_id){
-			$target = $this->CI->target_model->get($target_id);
-			if(!empty($target) && $target->status=="0"){
-				
-				$user_id 	= $target->user_id;
-				$product_id = $target->product_id;
-				$this->CI->load->library('credit_lib',array("user_id"=>$user_id,"product_id"=>$product_id));
-				if($this->CI->credit_lib->check_credit_amount()){
-					
-					$loan_amount 	= $this->CI->credit_lib->get_credit_amount();
-					$interest_rate 	= $this->CI->credit_lib->get_interest_rate();
-					if($loan_amount > $target->amount){
-						$loan_amount = $target->amount;
-					}
-					$total_interest = $this->get_total_interest($loan_amount,$interest_rate,$target->instalment);
+	public function approve_target($target = array()){
+		
+		if(!empty($target) && $target->status=="0"){
+			$user_id 	= $target->user_id;
+			$product_id = $target->product_id;
+			$this->CI->load->library('credit_lib');
+			$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
+			
+			if(!$credit){
+				$rs 	= $this->CI->credit_lib->approve_credit($user_id,$product_id);
+				if($rs)
+					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
+			}
+			if($credit){
+				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment);
+				if($interest_rate){
+					$loan_amount 	= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
+					$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
+					$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
 					$contract 		= $this->get_target_contract($loan_amount,$interest_rate);
 					$bank_account 	= $this->CI->user_bankaccount_model->get_by(array("status"=>1 , "user_id"=>$user_id ));
 					if($bank_account){
 						$param = array(
-							"loan_amount"	=> $loan_amount,
-							"interest_rate"	=> $interest_rate, 
-							"bank_code"		=> $bank_account->bank_code,
-							"branch_code"	=> $bank_account->branch_code,
-							"bank_account"	=> $bank_account->bank_account,
-							"total_interest"=> intval($total_interest),
-							"contract"		=> $contract,
-							"status"		=> "1",
+							"loan_amount"		=> $loan_amount,
+							"platform_fee"		=> $platform_fee,
+							"interest_rate"		=> $interest_rate, 
+							"bank_code"			=> $bank_account->bank_code,
+							"branch_code"		=> $bank_account->branch_code,
+							"bank_account"		=> $bank_account->bank_account,
+							"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
+							"contract"			=> $contract,
+							"status"			=> "1",
 						);
-						$rs = $this->CI->target_model->update($target_id,$param);
+						$rs = $this->CI->target_model->update($target->id,$param);
 						return $rs;
 					}
 				}
@@ -49,50 +54,43 @@ class Target_lib{
 		}
 		return false;
 	}
-
-	public function get_repayment_plan($amount,$rate,$instalment){
-		$repayment_plan = array();
-		if($amount && $rate && $instalment){
-			$mrate 	 		= $rate/1200;
-			$mtotal			= 1+$mrate;
-			$minterest 		= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1);
-			$minterest		= round($minterest,2);
-			$t_amount 		= $t_interest = $t_min = 0;
-			for($i=1;$i<=$instalment;$i++){
-				$mamount 	= $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
-				$interest	= $amount*$mrate*pow($mtotal,$instalment)/(pow($mtotal,$instalment)-1) - $amount*$mrate*pow($mtotal,$i-1)/(pow($mtotal,$instalment)-1);
-				$interest 	= round($interest,0);
-				$mamount	= ceil($minterest)-$interest;
-				if($i==$instalment){
-					$mamount = $amount-$t_amount;
-				}
-				
-				$min		= $mamount+$interest;
-				$t_interest	= $t_interest+$interest;
-				$t_amount	= $t_amount+$mamount;
-				$t_min		= $t_min+$min;
-				
-				$repayment_plan[$i] = array(
-					"instalment"	=> $i,
-					"amount"		=> $min,
-					"principal"		=> $mamount,
-					"interest"		=> $interest
-				);
-			}
-				$repayment_plan["total"] = array(
-					"amount"		=> $t_min,
-					"principal"		=> $t_amount,
-					"interest"		=> $t_interest
-				);
-		}
-		return $repayment_plan;
-	}
-	
-	private function get_total_interest($amount,$rate,$instalment){
-		return round($amount*$rate*$instalment/1200,0);
-	}
-	
+ 
 	private function get_target_contract($amount,$rate){
 		return "我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！";
+	}
+	
+	//審核額度
+	public function script_approve_target(){
+		$this->CI->target_model->update_by(array("status"=>0,"script_status"=>0),array("script_status"=>1));
+		$targets 	= $this->CI->target_model->get_many_by(array("script_status"=>1));
+		$list 		= array();
+		if($targets && !empty($targets)){
+			$this->CI->load->library('Certification_lib');
+			$count = 0;
+			foreach($targets as $key => $value){
+				$list[$value->product_id][$value->id] = $value;
+			}
+			
+			foreach($list as $product_id => $targets){
+				$product 				= $this->CI->product_model->get($product_id);
+				$product_certification 	= json_decode($product->certifications,true);
+				foreach($targets as $target_id => $value){
+					$certification 	= $this->CI->certification_lib->get_meta_status($value->user_id);
+					$finish		 	= true;
+					foreach($product_certification as $certification_id){
+						if($certification[$certification_id]!="1"){
+							$finish	= false;
+						}
+					}
+					if($finish){
+						$count++;
+						$this->approve_target($value);
+					}
+					$this->CI->target_model->update($value->id,array("script_status"=>0));
+				}
+			}
+			return $count;
+		}
+		return false;
 	}
 }

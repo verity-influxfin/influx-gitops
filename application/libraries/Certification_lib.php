@@ -90,42 +90,6 @@ class Certification_lib{
 		return false;
 	}
 	
-	private function health_card_success($info){
-		if($info){
-			$content 	= $info->content;
-			$data 		= array(
-				"health_card_status"	=> 1,
-				"health_card_front"		=> $content["front_image"]
-			);
-			
-			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "health_card_status"));
-			if($exist){
-				foreach($data as $key => $value){
-					$param = array(
-						"user_id"		=> $info->user_id,
-						"meta_key" 		=> $key,
-					);
-					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
-				}
-			}else{
-				foreach($data as $key => $value){
-					$param[] = array(
-						"user_id"		=> $info->user_id,
-						"meta_key" 		=> $key,
-						"meta_value"	=> $value
-					);
-				}
-				$rs  = $this->CI->user_meta_model->insert_many($param);
-			}
-			if($rs){
-				$this->CI->user_certification_model->update_by(array("user_id"=> $info->user_id,"certification_id"=>$info->certification_id,"status"=>0),array("status"=>2));
-				$this->CI->user_certification_model->update($info->id,array("status"=>1));
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	private function id_card_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -134,6 +98,7 @@ class Certification_lib{
 				"id_card_front"		=> $content["front_image"],
 				"id_card_back"		=> $content["back_image"],
 				"id_card_person"	=> $content["person_image"],
+				"health_card_front"	=> $content["healthcard_image"],
 			);
 			
 			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "id_card_status"));
@@ -428,9 +393,13 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function get_status($user_id){
+	public function get_status($user_id,$investor=0){
 		if($user_id){
-			$certification_list = $this->CI->certification_model->get_many_by(array("status"=>1));
+			$where = array("status"=>1);
+			if($investor){
+				$where = array("status"=>1,"alias"=>array("id_card","debit_card","email","emergency"));
+			}
+			$certification_list = $this->CI->certification_model->get_many_by($where);
 			foreach($certification_list as $key => $value){
 				$param = array(
 					"user_id"			=> $user_id,
@@ -445,6 +414,33 @@ class Certification_lib{
 				$certification_list[$key] = $value;
 			}
 			return $certification_list;
+		}
+		return false;
+	}
+	
+	public function get_meta_status($user_id){
+		if($user_id){
+			$status_list 		= array();
+			$certification_list = $this->CI->certification_model->get_many_by(array("status"=>1));
+			if($certification_list){
+				$list = array();
+				foreach($certification_list as $key => $value){
+					$status_list[] = $value->alias.'_status';
+				}
+				$user_meta = $this->CI->user_meta_model->get_many_by(array("user_id"=>$user_id , "meta_key" => $status_list));
+				$user_status = array();
+				if($user_meta){
+					foreach($user_meta as $key => $value){
+						$user_status[$value->meta_key] = $value->meta_value;
+					}
+				}
+				
+				foreach($certification_list as $key => $value){
+					$k = $value->alias.'_status';
+					$list[$value->id] = isset($user_status[$k])&&$user_status[$k]?$user_status[$k]:0;
+				}
+				return $list;
+			}
 		}
 		return false;
 	}

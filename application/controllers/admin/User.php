@@ -10,6 +10,7 @@ class User extends MY_Admin_Controller {
 		parent::__construct();
 		$this->login_info = check_admin();
 		$this->load->model('user/user_model');
+		$this->load->model('user/user_meta_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');
         }
@@ -39,9 +40,18 @@ class User extends MY_Admin_Controller {
 		if(empty($post)){
 			$id = isset($get["id"])?intval($get["id"]):0;
 			if($id){
-				$info = $this->user_model->get_by('id', $id);
+				$info = $this->user_model->get($id);
+				$meta_data = array();
+				$meta = $this->user_meta_model->get_many_by(array("user_id"=>$id));
+				if($meta){
+					foreach($meta as $key => $value){
+						$meta_data[$value->meta_key] = $value->meta_value;
+					}
+				}
 				if($info){
 					$page_data['data'] 			= $info;
+					$page_data['meta'] 			= $meta_data;
+					$page_data['meta_fields'] 	= $this->config->item('user_meta_fields');
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/users_edit',$page_data);

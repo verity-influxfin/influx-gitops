@@ -43,7 +43,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} alias 代號
 	 * @apiSuccess {number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
-
+	 * 
      * @apiSuccessExample {json} SUCCESS
      * {
      * 		"result":"SUCCESS",
@@ -72,7 +72,7 @@ class Certification extends REST_Controller {
 	public function list_get()
     {
 		$user_id 			= $this->user_info->id;
-		$certification_list	= $this->certification_lib->get_status($user_id);
+		$certification_list	= $this->certification_lib->get_status($user_id,$this->user_info->investor);
 		if(!empty($certification_list)){
 			foreach($certification_list as $key => $value){
 				$list[] = array(
@@ -99,6 +99,7 @@ class Certification extends REST_Controller {
      * @apiParam {file} front_image (required) 身分證正面照
      * @apiParam {file} back_image (required) 身分證背面照
      * @apiParam {file} person_image (required) 本人照
+     * @apiParam {file} healthcard_image (required) 健保卡照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -181,7 +182,7 @@ class Certification extends REST_Controller {
 			}
 
 			//上傳檔案欄位
-			$file_fields 	= ['front_image','back_image','person_image'];
+			$file_fields 	= ['front_image','back_image','person_image','healthcard_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
 					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
@@ -280,136 +281,6 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
-			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
-		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
-    }
-	
-	/**
-     * @api {post} /certification/healthcard 認證 健保卡認證
-     * @apiGroup Certification
-     * @apiParam {file} front_image (required) 健保卡正面照
-     *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
-     *    {
-     *      "result": "SUCCESS"
-     *    }
-	 *
-	 * @apiUse InputError
-	 * @apiUse InsertError
-	 * @apiUse TokenError
-     *
-     * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
-     *     {
-     *       "result": "ERROR",
-     *       "error": "501"
-     *     }
-	 *
-     * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
-     *     {
-     *       "result": "ERROR",
-     *       "error": "502"
-     *     }
-	 *
-     */
-	public function healthcard_post()
-    {
-		$alias 		= "health_card";
-		$certification = $this->certification_model->get_by(array("alias"=>$alias));
-		if($certification && $certification->status==1){
-			$input 		= $this->input->post(NULL, TRUE);
-			$user_id 	= $this->user_info->id;
-			$content	= array();
-			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification->id,
-			);
-			
-			//是否驗證過
-			$user_certification = $this->user_certification_model->get_by(array("certification_id"=>$certification->id,"status"=>1,"user_id"=>$user_id));
-			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
-			}
-			
-			//上傳檔案
-			if(isset($_FILES["front_image"]) && !empty($_FILES["front_image"])){
-				$content["front_image"] = $this->s3_upload->image($_FILES,"front_image",$user_id,$alias);
-			}else{
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-			}
-			
-			$param['content'] = json_encode($content);
-			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-				$this->certification_lib->set_success($insert);
-				$this->response(array('result' => 'SUCCESS'));
-			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
-			}
-		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
-    }
-	
-	/**
-     * @api {get} /certification/healthcard 認證 健保卡認證資料
-     * @apiGroup Certification
-     *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} certification_id Certification ID
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
-	 * @apiSuccess {String} created_at 創建日期
-	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
-     *    {
-     *      "result": "SUCCESS",
-     *      "data": {
-     *      	"user_id": "1",
-     *      	"certification_id": "3",
-     *      	"status": "0",     
-     *      	"created_at": "1518598432",     
-     *      	"updated_at": "1518598432"     
-	 *      }
-     *    }
-	 *
-	 * @apiUse TokenError
-     *
-     * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
-     *     {
-     *       "result": "ERROR",
-     *       "error": "501"
-     *     }
-	 *
-     * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
-     *     {
-     *       "result": "ERROR",
-     *       "error": "503"
-     *     }
-     */
-	public function healthcard_get()
-    {
-		$alias 		= "health_card";
-		$certification = $this->certification_model->get_by(array("alias"=>$alias));
-		if($certification && $certification->status){
-			$user_id 	= $this->user_info->id;
-			$data		= array();
-			$rs			= $this->certification_lib->get_certification_info($user_id,$certification->id);
-			if($rs){
-				$content = $rs->content;
-				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
-				);
 				$this->response(array('result' => 'SUCCESS',"data" => $data));
 			}
 			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
@@ -598,7 +469,7 @@ class Certification extends REST_Controller {
 				);
 				$fields 	= ['school','department','student_id','system','email','grade'];
 				foreach ($fields as $field) {
-					if (isset($content[$field]) && !empty($content[$field])) {
+					if (isset($content[$field])) {
 						$data[$field] = $content[$field];
 					}
 				}

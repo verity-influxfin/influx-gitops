@@ -17,6 +17,7 @@ class Transaction_lib{
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Financial_lib');
+		$this->CI->load->library('Passbook_lib');
     }
 
 	//儲值
@@ -43,14 +44,7 @@ class Transaction_lib{
 						);
 						$transaction_id = $this->CI->transaction_model->insert($transaction);
 						if($transaction_id){
-							$passbook = array(
-								"virtual_account"	=> $payment->virtual_account,
-								"transaction_id"	=> $transaction_id,
-								"amount"			=> intval($payment->amount),
-								"remark"			=> 'paymentID:'.$payment_id,
-								"tx_datetime"		=> $payment->tx_datetime,
-							);
-							$virtual_passbook = $this->CI->virtual_passbook_model->insert($passbook);
+							$virtual_passbook = $this->CI->passbook_lib->recharge($transaction_id,$payment->tx_datetime);
 							return $virtual_passbook;
 						}
 					}
@@ -109,7 +103,7 @@ class Transaction_lib{
 
 				if($amount >= $target->loan_amount){
 					//結標
-					$rs = $this->CI->target_model->update($target->id,array("status"=>4));
+					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
 					$rs = true;
 					if($rs){
 						$total = 0;
@@ -166,93 +160,100 @@ class Transaction_lib{
 		return false;
 	}
 	
-	//放款
-	function lending($target_id){
-		if($target_id){
-			$target = $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 4 && $target->loan_status == 2){
-				$investments = $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1));
-				if($investments){
-					$transaction = array();
-					foreach($investments as $key => $value){
-						$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
-						$transaction[]	= array(
-							"source"			=> SOURCE_LENDING,
-							"user_from"			=> $value->user_id,
-							"bank_code_from"	=> CATHAY_BANK_CODE,
-							"bank_account_from"	=> $virtual_account->virtual_account,
-							"amount"			=> intval($value->loan_amount),
-							"target_id"			=> $target->id,
-							"instalment_no"		=> 0,
-							"user_to"			=> $target->user_id,
-							"bank_code_to"		=> $target->bank_code,
-							"bank_account_to"	=> $target->bank_account,
-						);
-					}
-					
-					$rs  = $this->CI->transaction_model->insert_many($transaction);
-					if($rs && count($rs)==count($transaction)){
-						$this->CI->target_model->update($target_id,array("status"=>5));
-						$this->CI->investment_model->update_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1),array("status"=>3));
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 	//放款成功
 	function lending_success($target_id,$date=""){
+		$date = $date?$date:date("Y-m-d");
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 4 ){
-				$investments = $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1));
-				if($investments){
-					$transaction = array();
-					foreach($investments as $key => $value){
-						$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
-						$amortization_schedule 	= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
-						if($amortization_schedule && $amortization_schedule["amount"]==$value->loan_amount){
-							foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
-								$transaction[]	= array(
-									"source"			=> SOURCE_AR_PRINCIPAL,
-									"user_from"			=> $target->user_id,
-									"bank_code_from"	=> CATHAY_BANK_CODE,
-									"bank_account_from"	=> $target->virtual_account,
-									"amount"			=> intval($payment['principal']),
-									"target_id"			=> $target->id,
-									"instalment_no"		=> $instalment_no,
-									"user_to"			=> $value->user_id,
-									"bank_code_to"		=> CATHAY_BANK_CODE,
-									"bank_account_to"	=> $virtual_account->virtual_account,
-									"limit_date"		=> $payment['repayment_date'],
-								);
-								
-								$transaction[]	= array(
-									"source"			=> SOURCE_AR_INTEREST,
-									"user_from"			=> $target->user_id,
-									"bank_code_from"	=> CATHAY_BANK_CODE,
-									"bank_account_from"	=> $target->virtual_account,
-									"amount"			=> intval($payment['interest']),
-									"target_id"			=> $target->id,
-									"instalment_no"		=> $instalment_no,
-									"user_to"			=> $value->user_id,
-									"bank_code_to"		=> CATHAY_BANK_CODE,
-									"bank_account_to"	=> $virtual_account->virtual_account,
-									"limit_date"		=> $payment['repayment_date'],
-								);
+			if( $target && $target->status == 4 && $target->loan_status == 1){
+				//手續費
+				$transaction_fee	= array(
+					"source"			=> SOURCE_FEES,
+					"user_from"			=> $target->user_id,
+					"bank_code_from"	=> $target->bank_code,
+					"bank_account_from"	=> $target->bank_account,
+					"amount"			=> intval($target->platform_fee),
+					"target_id"			=> $target->id,
+					"instalment_no"		=> 0,
+					"user_to"			=> 0,
+					"bank_code_to"		=> CATHAY_BANK_CODE,
+					"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+				);
+				
+				$fee_transaction_id  = $this->CI->transaction_model->insert($transaction_fee);
+				if($fee_transaction_id){
+					$this->CI->passbook_lib->platform_fee($fee_transaction_id);
+					$investment_ids = array();
+					$investments 	= $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1));
+					if($investments){
+						
+						//攤還表
+						$transaction 	= array();
+						foreach($investments as $key => $value){
+							$investment_ids[]		= $value->id;
+							$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
+							
+							$transaction_lending	= array(
+								"source"			=> SOURCE_LENDING,
+								"user_from"			=> $value->user_id,
+								"bank_code_from"	=> CATHAY_BANK_CODE,
+								"bank_account_from"	=> $virtual_account->virtual_account,
+								"amount"			=> intval($value->loan_amount),
+								"target_id"			=> $target->id,
+								"instalment_no"		=> 0,
+								"user_to"			=> $target->user_id,
+								"bank_code_to"		=> $target->bank_code,
+								"bank_account_to"	=> $target->bank_account,
+							);
+							
+							$lending_transaction_id  	= $this->CI->transaction_model->insert($transaction_lending);
+							if($lending_transaction_id){
+								$this->CI->passbook_lib->lending($lending_transaction_id); 
+								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
+								if($amortization_schedule){
+									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
+										$transaction[]	= array(
+											"source"			=> SOURCE_AR_PRINCIPAL,
+											"user_from"			=> $target->user_id,
+											"bank_code_from"	=> CATHAY_BANK_CODE,
+											"bank_account_from"	=> $target->virtual_account,
+											"amount"			=> intval($payment['principal']),
+											"target_id"			=> $target->id,
+											"instalment_no"		=> $instalment_no,
+											"user_to"			=> $value->user_id,
+											"bank_code_to"		=> CATHAY_BANK_CODE,
+											"bank_account_to"	=> $virtual_account->virtual_account,
+											"limit_date"		=> $payment['repayment_date'],
+										);
+										
+										$transaction[]	= array(
+											"source"			=> SOURCE_AR_INTEREST,
+											"user_from"			=> $target->user_id,
+											"bank_code_from"	=> CATHAY_BANK_CODE,
+											"bank_account_from"	=> $target->virtual_account,
+											"amount"			=> intval($payment['interest']),
+											"target_id"			=> $target->id,
+											"instalment_no"		=> $instalment_no,
+											"user_to"			=> $value->user_id,
+											"bank_code_to"		=> CATHAY_BANK_CODE,
+											"bank_account_to"	=> $virtual_account->virtual_account,
+											"limit_date"		=> $payment['repayment_date'],
+										);
+									}
+								}
 							}
 						}
-					}
-					
-					$rs  = $this->CI->transaction_model->insert_many($transaction);
-					if($rs && count($rs)==count($transaction)){
-						$this->CI->target_model->update($target_id,array("status"=>5));
-						$this->CI->investment_model->update_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1),array("status"=>3));
-						return true;
+						
+						$rs  = $this->CI->transaction_model->insert_many($transaction);
+						if($rs && count($rs)==count($transaction)){
+							$this->CI->target_model->update($target_id,array("status"=>5));
+							$this->CI->target_model->update($target_id,array("status"=>5));
+							$this->CI->investment_model->update_by(array("id"=>$investment_ids),array("status"=>3));
+							return true;
+						}
 					}
 				}
+
 			}
 		}
 		return false;

@@ -20,11 +20,11 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>姓名</th>
-                                            <th>別名</th>
                                             <th>電話</th>
-                                            <th>地址</th>
+                                            <th>性別</th>
                                             <th>Email</th>
-                                            <th>狀態</th>
+                                            <th>借款端帳號</th>
+                                            <th>出借帳號</th>
                                             <th>是否封鎖</th>
                                             <th>創建日期</th>
                                             <th>修改</th>
@@ -40,12 +40,12 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->nickname)?$value->nickname:"" ?></td>
                                             <td><?=isset($value->phone)?$value->phone:"" ?></td>
-                                            <td><?=isset($value->address)?$value->address:"" ?></td>
+                                            <td><?=isset($value->sex)?$value->sex:"" ?></td>
                                             <td><?=isset($value->email)?$value->email:"" ?></td>
-											<td><?=isset($value->status)?$value->status:"" ?></td>
-											<td><?=isset($value->block_status)?$value->block_status:"" ?></td>
+											<td><?=isset($value->status)&&$value->status?"正常":"未申請" ?></td>
+											<td><?=isset($value->investor_status)&&$value->investor_status?"正常":"未申請" ?></td>
+											<td><?=isset($value->block_status)&&$value->block_status?"封鎖":"否" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">修改</a></td> 
                                         </tr>                                        

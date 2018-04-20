@@ -177,7 +177,7 @@
 	}
 	
 	function display_image($url){
-		if($url){
+		if($url && stristr($url, 'https')!=false){
 			$file_content =  base64_encode(file_get_contents( $url ));
 			return 'data:image/png;base64,'.$file_content;
 		}
@@ -203,4 +203,14 @@
 		);
 		return $d;
 	}
+	
+	function is_virtual_account($account){
+		if($account){
+			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE){
+				return true;
+			}
+		}
+		return false;
+	}
+
 ?>

@@ -308,7 +308,7 @@ class Target extends REST_Controller {
 		}
 
 		$target = $this->target_model->get($input['target_id']);
-		if($target && $target->status == 2 ){
+		if($target && $target->status == 3 ){
 			
 			if( $input['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_RANGE ));
@@ -335,7 +335,7 @@ class Target extends REST_Controller {
 			}
 			
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
-			$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id ));
+			$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id,"verify"=>1));
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
 			}

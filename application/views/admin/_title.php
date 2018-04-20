@@ -49,6 +49,15 @@
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
+                        </li>
+						<li class="<?=isset($menu)&&$menu=="target"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>標的管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=admin_url('target/') ?>">標的列表</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
                         </li>                        
 						<li class="<?=isset($menu)&&$menu=="user"?"active":""; ?>">
                             <a href="#"><i class="fa fa-table fa-fw"></i>會員管理<span class="fa arrow"></span></a>
@@ -56,6 +65,9 @@
                                 <li>
                                     <a href="<?=admin_url('user/') ?>">會員列表</a>
                                 </li>
+								<li>
+                                    <a href="<?=admin_url('certification/user_certification_list') ?>">會員申請認證</a>
+                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -71,9 +83,6 @@
                                 <li>
                                     <a href="<?=admin_url('certification/school') ?>">學校列表</a>
                                 </li>     
-                                <li>
-                                    <a href="<?=admin_url('certification/user_certification_list') ?>">會員申請認證</a>
-                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

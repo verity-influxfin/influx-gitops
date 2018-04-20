@@ -824,7 +824,7 @@ class User extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /user/editpwphone 會員 發送驗證簡訊 （修改密碼）
+     * @api {get} /user/editpwphone 會員 發送驗證簡訊 （修改密碼、交易密碼）
      * @apiGroup User
      *
      * @apiSuccess {json} result SUCCESS
@@ -916,7 +916,7 @@ class User extends REST_Controller {
 		
 		$user_info = $this->user_info;
 		if ($user_info) {
-			if(sha1($input['password'])!=$user_info->password){
+			if(sha1($data['password'])!=$user_info->password){
 				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
 			}
 			
@@ -932,6 +932,86 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 			}
 
+        } else {
+			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+        }
+    }
+	
+	/**
+     * @api {post} /user/edittpw 會員 設置交易密碼
+     * @apiGroup User
+     * @apiParam {String} new_password (required) 新密碼
+     * @apiParam {String} code (required) 簡訊驗證碼
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 *
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+     *
+     * @apiError 303 驗證碼錯誤
+     * @apiErrorExample {json} 303
+     *     {
+     *       "result": "ERROR",
+     *       "error": "303"
+     *     }
+	 *
+	 * @apiError 304 密碼錯誤
+     * @apiErrorExample {json} 304
+     *     {
+     *       "result": "ERROR",
+     *       "error": "304"
+     *     }
+	 *
+     */
+	public function edittpw_post()
+    {
+		$input 		= $this->input->post(NULL, TRUE);
+		$data		= array();
+		$user_info 	= $this->user_info;
+		if(empty($user_info->transaction_password)){
+			$fields 	= ['new_password','code'];
+		}else{
+			//$fields 	= ['password','new_password','code'];
+			$fields 	= ['new_password','code'];
+		}
+       
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+            }else{
+				$data[$field] = $input[$field];
+			}
+        }
+		
+		if ($user_info) {
+			/*if(!empty($user_info->transaction_password)){
+				if(sha1($data['password'])!=$user_info->transaction_password){
+					$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
+				}
+			}*/ 
+			
+			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
+			if(!$rs){
+				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			}
+			
+			$res = $this->user_model->update($user_info->id,array("transaction_password"=>$data['new_password']));
+			if($res){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			}
         } else {
 			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
         }
