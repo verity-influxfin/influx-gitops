@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/REST_Controller.php');
 
-class Product extends REST_Controller {
+class Recoveries extends REST_Controller {
 
 	public $user_info;
 	
@@ -74,7 +74,7 @@ class Product extends REST_Controller {
      * }
      */
 	 
-	public function category_get()
+	public function dashboard_get()
     {
 		$category_list 	= $this->product_category_model->get_many_by(array("status"=>1));
 		$list			= array();
@@ -330,7 +330,7 @@ class Product extends REST_Controller {
 	public function info_get($id)
     {
 		if($id){
-			$data			= array();
+			$data			= array('target'=>array());
 			$product 		= $this->product_model->get(intval($id));
 			$user_id 		= $this->user_info->id;
 			$instalment_list= $this->config->item('instalment');
@@ -378,7 +378,6 @@ class Product extends REST_Controller {
 	 * @apiParam {number} product_id (required) 產品ID
      * @apiParam {number} amount (required) 借款金額
      * @apiParam {number} instalment (required) 申請期數
-	 * @apiParam {String} promote_code 邀請碼
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
@@ -436,7 +435,7 @@ class Product extends REST_Controller {
 				$param[$field] = intval($input[$field]);
 			}
 		}
-		$param["promote_code"] = isset($input['promote_code'])?$input['promote_code']:"";
+
 		$product = $this->product_model->get($input['product_id']);
 		if($product && $product->status == 1 ){
 			$product->instalment 		= json_decode($product->instalment,TRUE);
@@ -512,6 +511,13 @@ class Product extends REST_Controller {
      *       "error": "407"
      *     }
 	 *
+     * @apiError 302 會員不存在
+     * @apiErrorExample {json} 302
+     *     {
+     *       "result": "ERROR",
+     *       "error": "302"
+     *     }
+	 *
      * @apiError 202 未通過所需的驗證
      * @apiErrorExample {json} 202
      *     {
@@ -578,23 +584,23 @@ class Product extends REST_Controller {
 			$product = $this->product_model->get($targets->product_id);
 			if($product && $product->status == 1 ){
 
-				//檢查認證 NOT_VERIFIED
-				$product->certifications 	= json_decode($product->certifications,TRUE);
-				$certification_list	= $this->certification_lib->get_status($user_id);
-				foreach($certification_list as $key => $value){
-					if(in_array($value->id,$product->certifications) && $value->user_status!=1){
-						$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				$user_info = $this->user_model->get($user_id);	
+				if($user_info){
+					//檢查認證 NOT_VERIFIED
+					$product->certifications 	= json_decode($product->certifications,TRUE);
+					$certification_list	= $this->certification_lib->get_status($user_id);
+					foreach($certification_list as $key => $value){
+						if(in_array($value->id,$product->certifications) && $value->user_status!=1){
+							$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+						}
 					}
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
 				}
-
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
 				$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id ));
-				if($bank_account){
-					if($bank_account->verify==0){
-						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
-					}
-				}else{
+				if(!$bank_account){
 					$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
 				}
 				
@@ -891,7 +897,6 @@ class Product extends REST_Controller {
      */
 	public function applyinfo_get($target_id)
     {
-		$this->load->library('credit_lib');
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
@@ -935,6 +940,7 @@ class Product extends REST_Controller {
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
 			}
 			
+			$this->load->library('credit_lib');
 			$credit_info 	= $this->credit_lib->get_credit($user_id,$product_info->id); 
 			$credit			= array();
 			if($credit_info){

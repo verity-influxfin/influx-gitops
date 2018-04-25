@@ -60,3 +60,4 @@ $route['api/product/applyinfo/(:num)'] 	= 'api/product/applyinfo/$1';
 $route['api/product/cancel/(:num)'] 	= 'api/product/cancel/$1';
 $route['api/agreement/info/(:any)'] 	= 'api/agreement/info/$1';
 $route['api/notitication/info/(:num)'] 	= 'api/notitication/info/$1';
+$route['api/repayment/info/(:num)'] 	= 'api/repayment/info/$1';

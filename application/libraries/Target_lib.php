@@ -11,6 +11,7 @@ class Target_lib{
 		$this->CI->load->model('transaction/target_model');
 		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');
+		$this->CI->load->model('user/virtual_account_model');
     }
 	
 	public function approve_target($target = array()){
@@ -33,22 +34,24 @@ class Target_lib{
 					$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
 					$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
 					$contract 		= $this->get_target_contract($loan_amount,$interest_rate);
-					$bank_account 	= $this->CI->user_bankaccount_model->get_by(array("status"=>1 , "user_id"=>$user_id ));
-					if($bank_account){
-						$param = array(
-							"loan_amount"		=> $loan_amount,
-							"platform_fee"		=> $platform_fee,
-							"interest_rate"		=> $interest_rate, 
-							"bank_code"			=> $bank_account->bank_code,
-							"branch_code"		=> $bank_account->branch_code,
-							"bank_account"		=> $bank_account->bank_account,
-							"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
-							"contract"			=> $contract,
-							"status"			=> "1",
+					$param = array(
+						"loan_amount"		=> $loan_amount,
+						"platform_fee"		=> $platform_fee,
+						"interest_rate"		=> $interest_rate, 
+						"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
+						"contract"			=> $contract,
+						"status"			=> "1",
+					);
+					$rs = $this->CI->target_model->update($target->id,$param);
+					if($rs){
+						$virtual_data = array(
+							"user_id"			=> $user_id,				
+							"virtual_account"	=> $param['virtual_account'],
+							"type"				=> 1,
 						);
-						$rs = $this->CI->target_model->update($target->id,$param);
-						return $rs;
+						$this->CI->virtual_account_model->insert($virtual_data);
 					}
+					return $rs;
 				}
 			}
 		}

@@ -64,11 +64,20 @@ class User extends REST_Controller {
      */
 	 /**
      * @apiDefine NotInvestor
-     * @apiError 205 身份非放款端
+     * @apiError 205 非出借端登入
      * @apiErrorExample {json} 205
      *     {
      *       "result": "ERROR",
      *       "error": "205"
+     *     }
+     */
+	 /**
+	 * @apiDefine IsInvestor
+     * @apiError 207 非借款端登入
+     * @apiErrorExample {json} 207
+     *     {
+     *       "result": "ERROR",
+     *       "error": "207"
      *     }
      */
 	 
@@ -1096,6 +1105,45 @@ class User extends REST_Controller {
 		}else{
 			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 		}
+    }
+	
+	/**
+     * @api {post} /user/promote 會員 推薦有獎
+     * @apiGroup User
+     *
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} promote_code 推廣邀請碼
+	 * @apiSuccess {String} promote_url 推廣連結
+	 * @apiSuccess {String} promote_qrcode 推廣QR code
+	 * @apiSuccess {json} bonus_list 獎勵列表(規劃中)
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"promote_code": "D221BL0K",
+     *      	"promote_url": "http://dev.influxfin.com?promote_code=D221BL0K",
+     *      	"promote_qrcode": "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200",
+     *      	"bonus_list": []
+     *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+     * 
+     */
+	public function promote_get()
+    {
+		$user_id 		= $this->user_info->id;
+		$promote_code	= $this->user_info->my_promote_code;
+		$url 			= BORROW_URL.'?promote_code='.$promote_code;
+		$qrcode			= "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+		$data			= array(
+			"promote_code"	=> $promote_code,
+			"promote_url"	=> $url,
+			"promote_qrcode"=> $qrcode,
+			"bonus_list"	=> array()
+		);
+
+		$this->response(array('result' => 'SUCCESS','data'=>$data));
     }
 	
 	private function get_promote_code(){

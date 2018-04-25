@@ -212,5 +212,9 @@
 		}
 		return false;
 	}
+	
+	function get_age($date) {
+		return intval(date('Y', time() - strtotime($date))) - 1970;
+	}
 
 ?>

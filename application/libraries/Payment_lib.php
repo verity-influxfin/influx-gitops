@@ -143,7 +143,7 @@ class Payment_lib{
 			}
 			
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
-			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("bank_code"=>$bank_code,"bank_account"=>$bank_account));
+			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("bank_code"=>$bank_code,"bank_account"=>$bank_account,"status"=>1,"verify"=>1));
 			if($virtual_account && $user_bankaccount){
 				if($virtual_account->user_id == $user_bankaccount->user_id){
 					$this->CI->load->library('Transaction_lib');

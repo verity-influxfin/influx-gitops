@@ -123,6 +123,9 @@ class Transaction_lib{
 							}else{
 								$param = array("status"=>9);
 							}
+							if($param["status"]==9){
+								$this->CI->frozen_amount_model->update_by(array("investment_id"=>$value->id),array("status"=>0));
+							}
 							$this->CI->investment_model->update($value->id,$param);
 						}
 						return true;
@@ -166,12 +169,13 @@ class Transaction_lib{
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 4 && $target->loan_status == 1){
+				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("user_id"=>$target->user_id,"status"=>1,"verify"=>1));
 				//手續費
 				$transaction_fee	= array(
 					"source"			=> SOURCE_FEES,
 					"user_from"			=> $target->user_id,
-					"bank_code_from"	=> $target->bank_code,
-					"bank_account_from"	=> $target->bank_account,
+					"bank_code_from"	=> $user_bankaccount->bank_code,
+					"bank_account_from"	=> $user_bankaccount->bank_account,
 					"amount"			=> intval($target->platform_fee),
 					"target_id"			=> $target->id,
 					"instalment_no"		=> 0,
@@ -202,8 +206,8 @@ class Transaction_lib{
 								"target_id"			=> $target->id,
 								"instalment_no"		=> 0,
 								"user_to"			=> $target->user_id,
-								"bank_code_to"		=> $target->bank_code,
-								"bank_account_to"	=> $target->bank_account,
+								"bank_code_to"		=> $user_bankaccount->bank_code,
+								"bank_account_to"	=> $user_bankaccount->bank_account,
 							);
 							
 							$lending_transaction_id  	= $this->CI->transaction_model->insert($transaction_lending);
@@ -249,29 +253,29 @@ class Transaction_lib{
 							$this->CI->target_model->update($target_id,array("status"=>5));
 							$this->CI->target_model->update($target_id,array("status"=>5));
 							$this->CI->investment_model->update_by(array("id"=>$investment_ids),array("status"=>3));
+							$this->CI->frozen_amount_model->update_by(array("investment_id"=>$investment_ids),array("status"=>0));
 							return true;
 						}
 					}
 				}
-
 			}
 		}
 		return false;
 	}
 	
-	//取得還款狀態
-	function get_repayment_info($target){
+	//取得最近還款
+	function get_next_repayment($target){
 		if( $target && $target->id){
-			$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1")));
-			if($investments){
-
+			$transactions = $this->CI->transaction_model->order_by("limit_date","asc")->get_by(array("source"=>array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST),"target_id"=>$target->id,"status"=>"1"));
+			if($transactions){
+				dump($transaction);
 			}
 		}
 		return false;
 	}
 	
 	
-	public function script_check_bidding(){ 
+	public function script_check_bidding(){
 		$this->CI->target_model->update_by(array("status"=>3,"script_status"=>0),array("script_status"=>3));
 		$targets = $this->CI->target_model->get_many_by(array("script_status"=>3));
 		if($targets && !empty($targets)){

@@ -91,8 +91,10 @@ defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201);
 defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認證
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
 defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //Email
-defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入投資端
+defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入出借端
 defined('FACE_ERROR')  					OR define('FACE_ERROR'					, 206); //人臉辨識錯誤
+defined('IS_INVERTOR')  				OR define('IS_INVERTOR'					, 207); //請登入借款端
+
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -126,6 +128,7 @@ defined('AGREEMENT_NOT_EXIST') 			OR define('AGREEMENT_NOT_EXIST'			, 701);
 //Target Error Code
 defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801); 
 defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802); 
+defined('TARGET_APPLY_EXIST')  			OR define('TARGET_APPLY_EXIST'			, 803);
 
 
 //Admin
@@ -143,6 +146,8 @@ defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //換request_token
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES', 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN', 500); //最低平台手續費
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
+defined('LENDING_URL') 				OR define('LENDING_URL', 'http://dev-lend.influxfin.com'); //
+defined('BORROW_URL') 				OR define('BORROW_URL', 'http://dev.influxfin.com'); //
 
 
 //SOURCE
@@ -150,19 +155,19 @@ defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
 defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
 defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
 defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費
-defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應付借款本金
+defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應收借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
-defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應付借款利息
+defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
-defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '21');//應付轉貸手續費
+defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '21');//應收轉貸手續費
 defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '22');//轉貸手續費
-defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '23');//應付提還手續費
+defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '23');//應收提還手續費
 defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '24');//提還手續費
-defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '25');//應付提領手續費
+defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '25');//應收提領手續費
 defined('SOURCE_WITHDRAW_FEE')      OR define('SOURCE_WITHDRAW_FEE'		, '26');//提領手續費
-defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '96');//應付違約金
+defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '96');//應收違約金
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '97');//違約金
-defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '98');//應付延滯息
+defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '98');//應收延滯息
 defined('SOURCE_DELAYINTEREST')     OR define('SOURCE_DELAYINTEREST'	, '99');//延滯息
 
 
@@ -191,6 +196,8 @@ defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'	, '015035006475'
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'	, '5663');
 defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'	, '013');
 defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'	, '0154');
+defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BANK_NAME'	, '國泰世華商業銀行');
+defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_NAME'	, '信義分行');
 
 //OCR 
 defined('OCR_API_URL')      		OR define('OCR_API_URL', 'http://13.230.227.104:8888/cxfServerX/ImgReconCard?wsdl'); 

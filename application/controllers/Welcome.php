@@ -119,7 +119,8 @@ class Welcome extends CI_Controller {
 
 	function transaction(){
 		$this->load->library('Transaction_lib'); 
-		$rs = $this->transaction_lib->lending_success(1); 
+		$rs = $this->transaction_lib->lending_success(21); 
+		dump($rs);
 	}
 	
 	function allimage(){

@@ -29,7 +29,7 @@ class Sendemail
 		if($certification_id && !empty($email)){
 			$type	 = 'school';
 			$code	 = md5($email.time());
-			$link    = "http://www.influxfin.com?type=$type&email=".urlencode($email)."&code=".$code;
+			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
 			$content = "手機ATM，學生 Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
 			$subject = "手機ATM，學生 Email會員認證";
 			$param = array(
@@ -50,7 +50,7 @@ class Sendemail
 		if($certification_id && !empty($email)){
 			$type	 = 'email';
 			$code	 = md5($email.time());
-			$link    = "http://www.influxfin.com?type=$type&email=".urlencode($email)."&code=".$code;
+			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
 			$content = "手機ATM，Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
 			$subject = "手機ATM，Email會員認證";
 			$param = array(
