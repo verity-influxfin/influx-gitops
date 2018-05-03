@@ -24,6 +24,7 @@ class Instagram_lib{
 				$data["username"] 		= $rs["data"]['username'];
 				$data["name"] 			= isset($rs["data"]['name'])?$rs["data"]['name']:"";
 				$data["counts"] 		= isset($rs["data"]['counts'])?$rs["data"]['counts']:"";
+				$data["picture"] 		= isset($rs["profile_picture"])?$rs["profile_picture"]:"";
 				$data["access_token"] 	= $access_token;
 				return $data;
 			}

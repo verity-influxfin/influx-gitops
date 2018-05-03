@@ -19,12 +19,11 @@ class User_model extends MY_Model
 	public $token_fields  = array(
 		"id",
 		"name",
+		"picture",
+		"nickname",
 		"sex",
 		"id_number",
 		"phone",
-		"status",
-		"investor_status",
-		"block_status",
 		"my_promote_code",
 		"created_at",
 		"updated_at"

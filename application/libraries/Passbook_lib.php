@@ -20,7 +20,7 @@ class Passbook_lib{
 			$where 		= array(
 				"id"				=> $transaction_id, 
 	 			"source"			=> $source,
-				"status"			=> 1,
+				"status !="			=> 0,
 				"passbook_status"	=> 0
 			);
 			$rs = $this->CI->transaction_model->update_by($where,array("passbook_status"=>2));
@@ -53,7 +53,7 @@ class Passbook_lib{
 			$where 		= array(
 				"id"				=> $transaction_id, 
 	 			"source"			=> $source,
-				"status"			=> 1,
+				"status !="			=> 0,
 				"passbook_status"	=> 0
 			);
 			$rs = $this->CI->transaction_model->update_by($where,array("passbook_status"=>2));
@@ -86,7 +86,7 @@ class Passbook_lib{
 			$where 		= array(
 				"id"				=> $transaction_id, 
 				"source"			=> $source,
-				"status"			=> 1,
+				"status !="			=> 0,
 				"passbook_status"	=> 0
 			);
 			$rs = $this->CI->transaction_model->update_by($where,array("passbook_status"=>2));
@@ -129,7 +129,7 @@ class Passbook_lib{
 			$where 		= array(
 				"id"				=> $transaction_id, 
 				"source"			=> $source,
-				"status"			=> 1,
+				"status !="			=> 0,
 				"passbook_status"	=> 0
 			);
 			$rs = $this->CI->transaction_model->update_by($where,array("passbook_status"=>2));

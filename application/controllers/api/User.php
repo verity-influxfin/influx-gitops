@@ -127,7 +127,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
 		}
 		
-		$result = $this->user_model->get_by('phone', $phone);
+		$toresult = $this->user_model->get_by('phone', $phone);
         if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
@@ -136,7 +136,6 @@ class User extends REST_Controller {
         }
     }
 
-	
 	 /**
      * @api {post} /user/register 會員 註冊
      * @apiGroup User
@@ -486,92 +485,6 @@ class User extends REST_Controller {
     }
 	
 	 /**
-     * @api {post} /user/smslogin 會員 簡訊登入(暫不開放)
-     * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
-     * @apiParam {String} code (required) 簡訊驗證碼
-	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
-     *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} token request_token
-	 * @apiSuccess {number} first_time 是否首次本端
-	 * @apiSuccess {String} expiry_time token時效
-     * @apiSuccessExample {json} SUCCESS
-     *    {
-     *      "result": "SUCCESS",
-     *      "data": {
-     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
-     *      	"expiry_time": "1522673418",
-	 * 			"first_time":1		
-     *      }
-     *    }
-	 * @apiUse InputError
-     *
-     * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
-     *     {
-     *       "result": "ERROR",
-     *       "error": "302"
-     *     }
-     *
-     * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
-     *     {
-     *       "result": "ERROR",
-     *       "error": "303"
-     *     }
-     *
-     */
-	public function smslogin_post(){
-		//暫不開放
-		$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-		
-		$input = $this->input->post(NULL, TRUE);
-        $fields 	= ['phone','code'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
-            }
-        }
-		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
-		if($user_info){
-			$rs = $this->sms_lib->verify_code($user_info->phone,$input["code"]);
-			if($rs){
-				$token 		= new stdClass();
-				$first_time = 0;
-				if($investor==1 && $user_info->investor_status==0){
-					$user_info->investor_status = 1;
-					$this->user_model->update($user_info->id,array("investor_status"=>1));
-					$first_time = 1;
-				}else if($investor==0 && $user_info->status==0){
-					$user_info->status = 1;
-					$this->user_model->update($user_info->id,array("status"=>1));
-					$first_time = 1;
-				}
-
-				$token->investor 	= $investor;
-				$token->id			= $user_info->id;
-				$token->phone		= $user_info->phone;
-				$token->auth_otp	= get_rand_token();
-				$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
-
-				$request_token = AUTHORIZATION::generateUserToken($token);
-				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
-				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$request_token,"expiry_time"=>$token->expiry_time,"first_time"=>$first_time) ));
-
-			}else{
-				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"user_id"=>$user_info->id,"status"=>0));
-				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
-			}
-		}else{
-			$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"status"=>0));
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
-		}
-	}
-	
-	 /**
      * @api {post} /user/forgotpw 會員 忘記密碼
      * @apiGroup User
      * @apiParam {String} phone (required) 手機號碼
@@ -634,11 +547,12 @@ class User extends REST_Controller {
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id User ID
-	 * @apiSuccess {String} name 姓名（空值則代表未完成身份驗證）
+	 * @apiSuccess {String} name 姓名
+	 * @apiSuccess {String} picture 照片
+	 * @apiSuccess {String} nickname 暱稱
+	 * @apiSuccess {String} sex 性別
 	 * @apiSuccess {String} phone 手機號碼
-	 * @apiSuccess {String} status 用戶狀態
-	 * @apiSuccess {String} block_status 是否為黑名單
-	 * @apiSuccess {String} id_number 身分證字號（空值則代表未完成身份驗證）
+	 * @apiSuccess {String} id_number 身分證字號
 	 * @apiSuccess {String} investor 1:投資端 0:借款端
 	 * @apiSuccess {String} my_promote_code 推廣碼
 	 * @apiSuccess {String} expiry_time token時效
@@ -648,13 +562,13 @@ class User extends REST_Controller {
      *      "data": {
      *      	"id": "1",
      *      	"name": "",
+     *      	"picture": "https://graph.facebook.com/2495004840516393/picture?type=large",
+     *      	"nickname": "陳霈",
      *      	"phone": "0912345678",
-     *      	"status": "1",
      *      	"investor_status": "1",
      *      	"my_promote_code": "9JJ12CQ5",
      *      	"id_number": null,
-     *      	"investor": 1,
-     *      	"block_status": "0"     
+     *      	"investor": 1,  
      *      	"created_at": "1522651818"     
      *      	"updated_at": "1522653939"     
      *      	"expiry_time": "1522675539"     
@@ -768,6 +682,7 @@ class User extends REST_Controller {
 					}else{
 						$rs 		= $this->facebook_lib->bind_user($this->user_info->id,$info);
 						if($rs){
+							$this->set_nickname($info);
 							$this->response(array('result' => 'SUCCESS'));
 						}else{
 							$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
@@ -794,6 +709,7 @@ class User extends REST_Controller {
 				}else{
 					$rs 	= $this->instagram_lib->bind_user($this->user_info->id,$info);
 					if($rs){
+						$this->set_nickname($info);
 						$this->response(array('result' => 'SUCCESS'));
 					}else{
 						$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
@@ -821,6 +737,7 @@ class User extends REST_Controller {
 					}else{
 						$rs 	= $this->line_lib->bind_user($this->user_info->id,$info);
 						if($rs){
+							$this->set_nickname($info);
 							$this->response(array('result' => 'SUCCESS'));
 						}else{
 							$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
@@ -831,6 +748,17 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
 		}
     }
+	
+	private function set_nickname($info){
+		if($this->user_info->nickname=="" && $info['name']){
+			$this->user_model->update($this->user_info->id,array("nickname"=>$info['name']));
+		}
+		
+		if($this->user_info->picture=="" && $info['picture']){
+			$this->user_model->update($this->user_info->id,array("picture"=>$info['picture']));
+		}
+		return true;
+	}
 	
 	/**
      * @api {get} /user/editpwphone 會員 發送驗證簡訊 （修改密碼、交易密碼）
@@ -851,7 +779,7 @@ class User extends REST_Controller {
      *       "error": "307"
      *     }
      *
-     */
+    */
 	 
 	public function editpwphone_get()
     {
@@ -991,7 +919,6 @@ class User extends REST_Controller {
 		if(empty($user_info->transaction_password)){
 			$fields 	= ['new_password','code'];
 		}else{
-			//$fields 	= ['password','new_password','code'];
 			$fields 	= ['new_password','code'];
 		}
        
@@ -1004,11 +931,6 @@ class User extends REST_Controller {
         }
 		
 		if ($user_info) {
-			/*if(!empty($user_info->transaction_password)){
-				if(sha1($data['password'])!=$user_info->transaction_password){
-					$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
-				}
-			}*/ 
 			
 			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
 			if(!$rs){

@@ -13,13 +13,16 @@ class Certification_lib{
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->model('user/user_meta_model');
 		$this->CI->load->model('user/user_model');
+		$this->CI->load->library('Notification_lib');
     }
 	
-	public function get_certification_info($user_id,$certification_id){
+	public function get_certification_info($user_id,$certification_id,$investor=0){
 		if($user_id && $certification_id){
 			$param = array(
 				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id
+				"certification_id"	=> $certification_id,
+				"investor"			=> $investor,
+				"expire_time >="	=> time(),
 			);
 			$certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
 			
@@ -40,6 +43,12 @@ class Certification_lib{
 				$method			= $certification->alias.'_success';
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
+					if($rs){
+						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,1);
+					}else{
+						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,2);
+					}
+					
 					return $rs;
 				}
 			}
@@ -54,9 +63,10 @@ class Certification_lib{
 			
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status ==0 ){
-				$info->content 	= json_decode($info->content,true);
-				$content		= $info->content;
-				$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
+				$info->content 		= json_decode($info->content,true);
+				$content			= $info->content;
+				//$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
+				$ocr = false;
 				if($ocr && $content['name']==$ocr['name'] && $content['id_number']==$ocr['id_number']){
 					$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image']);
 					$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image']);
@@ -122,8 +132,6 @@ class Certification_lib{
 			}
 
 			if($rs){
-				
-
 				if($exist){
 					$user_info = array(
 						"name"				=> $content["name"],
@@ -150,6 +158,7 @@ class Certification_lib{
 					);
 					
 					$virtual_data = array(
+						"investor"			=> 1,
 						"user_id"			=> $info->user_id,				
 						"virtual_account"	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.substr($content["id_number"],1,9),
 					);
@@ -180,6 +189,7 @@ class Certification_lib{
 				"student_card_back"		=> $content["back_image"],
 				"student_sip_account"	=> $content["sip_account"],
 				"student_sip_password"	=> $content["sip_password"],
+				"transcript_front"		=> $content["transcript_image"],
 			);
 			
 			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "student_status"));
@@ -226,12 +236,17 @@ class Certification_lib{
 		
 			$user_info = array(
 				"user_id"		=> $info->user_id,
+				"investor"		=> $info->investor,
 				"bank_code"		=> $content["bank_code"],
 				"branch_code"	=> $content["branch_code"],
 				"bank_account"	=> intval($content["bank_account"]),
 				"front_image"	=> $content["front_image"],
 				"back_image"	=> $content["back_image"],
 			);
+			
+			if($info->investor){
+				$user_info['verify'] = 2;
+			}
 			
 			$rs = $this->CI->user_bankaccount_model->insert($user_info);
 			if($rs){
@@ -395,69 +410,25 @@ class Certification_lib{
 	
 	public function get_status($user_id,$investor=0){
 		if($user_id){
-			$where = array("status"=>1);
 			if($investor){
 				$where = array("status"=>1,"alias"=>array("id_card","debit_card","email","emergency"));
+			}else{
+				$where = array("status"=>1);
 			}
+
 			$certification_list = $this->CI->certification_model->get_many_by($where);
 			foreach($certification_list as $key => $value){
-				$param = array(
-					"user_id"			=> $user_id,
-					"certification_id"	=> $value->id
-				);
-				$user_certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
+				
+				$user_certification = $this->get_certification_info($user_id,$value->id,$investor);
 				if($user_certification){
 					$value->user_status = $user_certification->status;
 				}else{
 					$value->user_status = null;
 				}
+				
 				$certification_list[$key] = $value;
 			}
 			return $certification_list;
-		}
-		return false;
-	}
-	
-	public function get_meta_status($user_id){
-		if($user_id){
-			$status_list 		= array();
-			$certification_list = $this->CI->certification_model->get_many_by(array("status"=>1));
-			if($certification_list){
-				$list = array();
-				foreach($certification_list as $key => $value){
-					$status_list[] = $value->alias.'_status';
-				}
-				$user_meta = $this->CI->user_meta_model->get_many_by(array("user_id"=>$user_id , "meta_key" => $status_list));
-				$user_status = array();
-				if($user_meta){
-					foreach($user_meta as $key => $value){
-						$user_status[$value->meta_key] = $value->meta_value;
-					}
-				}
-				
-				foreach($certification_list as $key => $value){
-					$k = $value->alias.'_status';
-					$list[$value->id] = isset($user_status[$k])&&$user_status[$k]?$user_status[$k]:0;
-				}
-				return $list;
-			}
-		}
-		return false;
-	}
-	
-	public function get_alias_status($user_id,$alias=""){
-		if($user_id && !empty($alias)){
-			$certification = $this->CI->certification_model->get_by(array("status"=>1,"alias"=>$alias));
-			$param = array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification->id
-			);
-			$user_certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
-			if($user_certification){
-				return $user_certification->status;
-			}else{
-				return null;
-			}
 		}
 		return false;
 	}

@@ -118,8 +118,11 @@ class Welcome extends CI_Controller {
 	}*/
 
 	function transaction(){
+		dump(investor_virtual_account("56631100254956"));die();
+		$this->load->model('transaction/target_model');
 		$this->load->library('Transaction_lib'); 
-		$rs = $this->transaction_lib->lending_success(21); 
+		//$target = $this->target_model->get(21);
+		$rs = $this->transaction_lib->lending_success(29); 
 		dump($rs);
 	}
 	

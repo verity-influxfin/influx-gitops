@@ -33,7 +33,7 @@
 											<div class="form-group">
 												<label><?=$key; ?></label>
 												<? if(substr($key,-5,5)=="image"){?>
-												<img src="<?=display_image($value)?>" height="300" width="auto">
+												<img src="<?=$value?>" height="300" width="auto">
 												<? }else{?>
 												<p><?=$value?></p>
 												<? }?>

@@ -11,7 +11,6 @@ class Repayment extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
-		$this->load->model('product/product_category_model');
 		$this->load->model('platform/certification_model');
 		$this->load->model('transaction/target_model');
 		$this->load->model('transaction/investment_model');
@@ -25,6 +24,7 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
             }
 			
+			//只限借款人
 			if($tokenData->investor != 0){
 				$this->response(array('result' => 'ERROR',"error" => IS_INVERTOR ));
 			}

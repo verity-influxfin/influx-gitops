@@ -94,6 +94,7 @@ defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //E
 defined('NOT_INVERTOR')  				OR define('NOT_INVERTOR'				, 205); //請登入出借端
 defined('FACE_ERROR')  					OR define('FACE_ERROR'					, 206); //人臉辨識錯誤
 defined('IS_INVERTOR')  				OR define('IS_INVERTOR'					, 207); //請登入借款端
+defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿20歲
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
@@ -129,6 +130,7 @@ defined('AGREEMENT_NOT_EXIST') 			OR define('AGREEMENT_NOT_EXIST'			, 701);
 defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801); 
 defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802); 
 defined('TARGET_APPLY_EXIST')  			OR define('TARGET_APPLY_EXIST'			, 803);
+defined('TARGET_SAME_USER')  			OR define('TARGET_SAME_USER'			, 804);
 
 
 //Admin
@@ -142,29 +144,29 @@ defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN', 1000); //最�
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE', '9'); //最小投資額 virtual_account
 defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY', 21600); //request_token時效
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY', 10800); //換request_token時效
-defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //換request_token時效
+defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY', 10); //固定還款日
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES', 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN', 500); //最低平台手續費
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('LENDING_URL') 				OR define('LENDING_URL', 'http://dev-lend.influxfin.com'); //
 defined('BORROW_URL') 				OR define('BORROW_URL', 'http://dev.influxfin.com'); //
 
-
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
 defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
 defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
 defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費
+
 defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應收借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
-defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '21');//應收轉貸手續費
+
+defined('SOURCE_AR_TRANLOAN_FEE')   OR define('SOURCE_AR_TRANLOAN_FEE'	, '21');//應收轉貸手續費  1%
 defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '22');//轉貸手續費
-defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '23');//應收提還手續費
+defined('SOURCE_AR_PREPAYMENT_FEE') OR define('SOURCE_AR_PREPAYMENT_FEE', '23');//應收提還手續費  1%
 defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '24');//提還手續費
-defined('SOURCE_AR_WITHDRAW_FEE')   OR define('SOURCE_AR_WITHDRAW_FEE'	, '25');//應收提領手續費
-defined('SOURCE_WITHDRAW_FEE')      OR define('SOURCE_WITHDRAW_FEE'		, '26');//提領手續費
+
 defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '96');//應收違約金
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '97');//違約金
 defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '98');//應收延滯息
@@ -172,8 +174,8 @@ defined('SOURCE_DELAYINTEREST')     OR define('SOURCE_DELAYINTEREST'	, '99');//�
 
 
 //Facebook
-defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, '2023445087921828');
-defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, '0b494064ae77ae04d9fcb343f294b98c');
+defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, '2066969360226590');
+defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, 'd8ed8469f718c53e9e93cdb6a99e1e0b');
 
 //Instagram
 defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, '622ba30fa4524019a3b36fccd862b764');

@@ -35,9 +35,11 @@ class Facebook_lib{
 			$rs 		= curl_get($url);
 			$rs			= json_decode($rs,TRUE);
 			if(isset($rs["id"]) && $rs["id"]){
-				$data["id"] 	= $rs["id"];
-				$data["name"] 	= isset($rs["name"])?$rs["name"]:"";
-				$data["email"] 	= isset($rs["email"])?$rs["email"]:"";
+				$data["id"] 			= $rs["id"];
+				$data["name"] 			= isset($rs["name"])?$rs["name"]:"";
+				$data["email"] 			= isset($rs["email"])?$rs["email"]:"";
+				$data["picture"] 		= "https://graph.facebook.com/".$data["id"]."/picture?type=large";
+				$data["access_token"] 	= $access_token;
 				return $data;
 			}
 		}
@@ -50,8 +52,9 @@ class Facebook_lib{
 			if(isset($info["id"]) && $info["id"]){
 				$info["name"] 	= isset($info["name"])?$info["name"]:"";
 				$param = array(
-					array("user_id"=>$user_id , "meta_key" => "fb_id" 	, "meta_value"=> $info["id"]),
-					array("user_id"=>$user_id , "meta_key" => "fb_name" , "meta_value"=> $info["name"]),
+					array("user_id"=>$user_id , "meta_key" => "fb_id" 			, "meta_value"=> $info["id"]),
+					array("user_id"=>$user_id , "meta_key" => "fb_name" 		, "meta_value"=> $info["name"]),
+					array("user_id"=>$user_id , "meta_key" => "fb_access_token" , "meta_value"=> $info["access_token"]),
 				);
 				$rs 	= $this->CI->user_meta_model->insert_many($param);
 				if($rs){

@@ -36,6 +36,7 @@ class Line_lib{
 			if(isset($rs["userId"]) && $rs["userId"]){
 				$data["id"] 			= $rs["userId"];
 				$data["username"] 		= $rs["displayName"];
+				$data["name"] 			= $rs["displayName"];
 				$data["picture"] 		= $rs["pictureUrl"];
 				$data["access_token"] 	= $access_token;
 				return $data;

@@ -11,13 +11,12 @@ class Product extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
-		$this->load->model('product/product_category_model');
 		$this->load->model('platform/certification_model');
 		$this->load->model('transaction/target_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['category'];
+        $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
@@ -34,67 +33,21 @@ class Product extends REST_Controller {
 					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
 				}
 				
+				//只限借款人
+				if($tokenData->investor != 0){
+					$this->response(array('result' => 'ERROR',"error" => IS_INVERTOR ));
+				}
+				
 				$this->user_info->investor 		= $tokenData->investor;
 				$this->user_info->expiry_time 	= $tokenData->expiry_time;
 			}
         }
     }
+
 	
-	/**
-     * @api {get} /product/category 借款方 取得產品分類列表
-     * @apiGroup Product
-     *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} id Product ID
-	 * @apiSuccess {String} name 名稱
-	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} parent_id 父層級
-	 * @apiSuccess {String} rank 排序
-     * @apiSuccessExample {json} SUCCESS
-     * {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"list":[
-     * 			{
-     * 				"id":"1",
-     * 				"name":"學生區",
-     * 				"description":"學生區",
-     * 				"parent_id":"0",
-     * 				"rank":"0"
-     * 			},
-     * 			{
-     * 				"id":"2",
-     * 				"name":"房屋方案",
-     * 				"description":"房屋方案",
-     * 				"parent_id":"0",
-     * 				"rank":"0"
-     * 			}
-     * 			]
-     * 		}
-     * }
-     */
-	 
-	public function category_get()
-    {
-		$category_list 	= $this->product_category_model->get_many_by(array("status"=>1));
-		$list			= array();
-		if(!empty($category_list)){
-			foreach($category_list as $key => $value){
-				$list[] = array(
-					"id" 			=> $value->id,
-					"name" 			=> $value->name,
-					"description" 	=> $value->description,
-					"parent_id" 	=> $value->parent_id,
-					"rank"			=> $value->rank,
-				);
-			}
-		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
-    }
 	/**
      * @api {get} /product/list 借款方 取得產品列表
      * @apiGroup Product
-	 * @apiParam {number} category 產品分類ID
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Product ID
@@ -110,27 +63,17 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {json} category 分類資訊
 	 * @apiSuccess {json} target 申請資訊（未簽約）
+	 * @apiSuccess {json} certification 認證完成資訊
      * @apiSuccessExample {json} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"category": {
-     * 				"id": "1",
-     * 				"name": "學生區",
-     * 				"description": "學生區啊啊啊啊啊啊啊",
-     * 				"parent_id": "0",
-     * 				"rank": "0"
-     * 			},
      * 			"list":[
      * 			{
      * 				"id":"1",
      * 				"name":"學生區",
-     * 				"alias":"FA",
      * 				"description":"學生區",
-     * 				"category":"1",
-     * 				"parent_id":"0",
      * 				"rank":"0",
      * 				"loan_range_s":"12222",
      * 				"loan_range_e":"14333333",
@@ -181,24 +124,17 @@ class Product extends REST_Controller {
 		$data			= array();
 		$list			= array();
 		$where			= array( "status" => 1 );
-		if(isset($input['category']) && intval($input['category'])){
-			$where['category'] = intval($input['category']);
-			$category 	= $this->product_category_model->get(intval($input['category']));
-			if($category){
-				$data['category'] = array(
-					"id" 			=> $category->id,
-					"name" 			=> $category->name,
-					"description" 	=> $category->description,
-					"parent_id" 	=> $category->parent_id,
-					"rank"			=> $category->rank,
-				);
-			}
+	
+		$product_list 	= $this->product_model->get_many_by($where);
+		if(isset($this->user_info->id) && $this->user_info->id){
+			$certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
 		}
 		
-		$product_list 	= $this->product_model->get_many_by($where);
 		if(!empty($product_list)){
 			foreach($product_list as $key => $value){
-				$target = array();
+				$target 				= array();
+				$certification 			= array();
+				$value->certifications 	= json_decode($value->certifications,true);
 				if(isset($this->user_info->id) && $this->user_info->id){
 					$targets = $this->target_model->get_by(array("status <="=>1,"user_id"=>$this->user_info->id,"product_id"=>$value->id));
 					if($targets){
@@ -209,9 +145,23 @@ class Product extends REST_Controller {
 						$target['loan_amount'] 	= $targets->loan_amount;
 						$target['created_at'] 	= $targets->created_at;
 						$target['instalment'] 	= $instalment_list[$targets->instalment];
+						
+						if(!empty($certification_list)){
+							foreach($certification_list as $k => $v){
+								if(in_array($v->id,$value->certifications)){
+									$certification[] = array(
+										"id" 			=> $v->id,
+										"name" 			=> $v->name,
+										"description" 	=> $v->description,
+										"alias" 		=> $v->alias,
+										"user_status" 	=> $v->user_status,
+									);
+								}
+							}
+						}
 					}
 				}
-				
+
 				$instalment = json_decode($value->instalment,TRUE);
 				foreach($instalment as $k => $v){
 					$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
@@ -226,9 +176,6 @@ class Product extends REST_Controller {
 					"id" 					=> $value->id,
 					"name" 					=> $value->name,
 					"description" 			=> $value->description,
-					"alias" 				=> $value->alias,
-					"category"				=> $value->category,
-					"parent_id"				=> $value->parent_id,
 					"rank"					=> $value->rank,
 					"loan_range_s"			=> $value->loan_range_s,
 					"loan_range_e"			=> $value->loan_range_e,
@@ -239,6 +186,7 @@ class Product extends REST_Controller {
 					"instalment"			=> $instalment,
 					"repayment"				=> $repayment,
 					"target"				=> $target,
+					"certification"			=> $certification,
 				);
 			}
 		}
@@ -255,9 +203,6 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} id Product ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} alias 產品
-	 * @apiSuccess {String} category 分類ID
-	 * @apiSuccess {String} parent_id 父層產品
 	 * @apiSuccess {String} rank 排序
 	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
 	 * @apiSuccess {String} loan_range_e 最高借款額度(元)
@@ -276,9 +221,6 @@ class Product extends REST_Controller {
      * 				"id":"1",
      * 				"name":"學生區",
      * 				"description":"學生區",
-     * 				"alias":"FT",
-     * 				"category":"3",
-     * 				"parent_id":"0",
      * 				"rank":"0",
      * 				"loan_range_s":"12222",
      * 				"loan_range_e":"14333333",
@@ -311,6 +253,7 @@ class Product extends REST_Controller {
      * }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
 	 *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {json} 401
@@ -352,9 +295,6 @@ class Product extends REST_Controller {
 					"id" 					=> $product->id,
 					"name" 					=> $product->name,
 					"description" 			=> $product->description,
-					"alias" 				=> $product->alias,
-					"category"				=> $product->category,
-					"parent_id"				=> $product->parent_id,
 					"rank"					=> $product->rank,
 					"loan_range_s"			=> $product->loan_range_s,
 					"loan_range_e"			=> $product->loan_range_e,
@@ -391,6 +331,7 @@ class Product extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {json} 401
@@ -483,6 +424,7 @@ class Product extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {json} 401
@@ -533,6 +475,13 @@ class Product extends REST_Controller {
      *       "error": "206"
      *     }
 	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {json} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
      */
 	public function signing_post()
     {
@@ -541,6 +490,7 @@ class Product extends REST_Controller {
 		$this->load->library('Certification_lib');
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
 		$param		= array("status"=>2);
 		
 		//必填欄位
@@ -580,13 +530,16 @@ class Product extends REST_Controller {
 
 				//檢查認證 NOT_VERIFIED
 				$product->certifications 	= json_decode($product->certifications,TRUE);
-				$certification_list	= $this->certification_lib->get_status($user_id);
+				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
 					if(in_array($value->id,$product->certifications) && $value->user_status!=1){
 						$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
 					}
 				}
-
+				
+				if(get_age($this->user_info->birthday) < 20){
+					$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+				}
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
 				$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id ));
@@ -682,12 +635,14 @@ class Product extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
      *
      */
 	public function applylist_get()
     {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
+		$investor 			= $this->user_info->investor;
 		$param				= array( "user_id"=> $user_id);
 		$targets 			= $this->target_model->get_many_by($param);
 		$instalment_list 	= $this->config->item('instalment');
@@ -750,7 +705,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
-	 * @apiSuccess {json} certification 認證完成資訊(簽約後不出現)
+	 * @apiSuccess {json} certification 認證完成資訊
 	 * @apiSuccess {json} credit 信用資訊
 	 * @apiSuccess {String} credit.level 信用指數
 	 * @apiSuccess {String} credit.points 信用分數
@@ -874,6 +829,7 @@ class Product extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
@@ -894,6 +850,7 @@ class Product extends REST_Controller {
 		$this->load->library('credit_lib');
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
+		$investor 			= $this->user_info->investor;
 		$target 			= $this->target_model->get($target_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
@@ -908,23 +865,20 @@ class Product extends REST_Controller {
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,
 				"description"	=> $product_info->description,
-				"alias"			=> $product_info->alias,
 			);
 			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
-			if($target->status<=1){
-				$certification_list			= $this->certification_lib->get_status($user_id);
-				if(!empty($certification_list)){
-					foreach($certification_list as $key => $value){
-						if(in_array($value->id,$product_info->certifications)){
-							$certification[] = array(
-								"id" 			=> $value->id,
-								"name" 			=> $value->name,
-								"description" 	=> $value->description,
-								"alias" 		=> $value->alias,
-								"user_status" 	=> $value->user_status,
-							);
-						}
+			$certification_list				= $this->certification_lib->get_status($user_id,$investor);
+			if(!empty($certification_list)){
+				foreach($certification_list as $key => $value){
+					if(in_array($value->id,$product_info->certifications)){
+						$certification[] = array(
+							"id" 			=> $value->id,
+							"name" 			=> $value->name,
+							"description" 	=> $value->description,
+							"alias" 		=> $value->alias,
+							"user_status" 	=> $value->user_status,
+						);
 					}
 				}
 			}
@@ -976,6 +930,7 @@ class Product extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse IsInvestor
      *
 	 *
      * @apiError 404 此申請不存在

@@ -20,8 +20,11 @@ class User_certification_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-        $data['created_at'] = $data['updated_at'] = time();
-        $data['created_ip'] = $data['updated_ip'] = get_ip();
+        $data['created_at'] 	= $data['updated_at'] = time();
+		if(!isset($data['expire_time'])){
+			$data['expire_time'] 	= strtotime("+6 months", $data['created_at']);
+		}
+        $data['created_ip'] 	= $data['updated_ip'] = get_ip();
         return $data;
     }
 	

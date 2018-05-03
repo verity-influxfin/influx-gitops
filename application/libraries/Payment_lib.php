@@ -11,6 +11,7 @@ class Payment_lib{
 		$this->CI->load->model('transaction/payment_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
+		$this->CI->load->library('Transaction_lib');
     }
 	
 	public function script_get_cathay_info($date=""){
@@ -143,10 +144,10 @@ class Payment_lib{
 			}
 			
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
-			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("bank_code"=>$bank_code,"bank_account"=>$bank_account,"status"=>1,"verify"=>1));
+			$investor			= investor_virtual_account($value->virtual_account)?1:0;
+			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("investor"=>$investor,"bank_code"=>$bank_code,"bank_account"=>$bank_account,"status"=>1,"verify"=>1));
 			if($virtual_account && $user_bankaccount){
 				if($virtual_account->user_id == $user_bankaccount->user_id){
-					$this->CI->load->library('Transaction_lib');
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				}

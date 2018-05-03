@@ -45,7 +45,7 @@
 								if(!empty($info)){
 									foreach($info as $key => $value){
 										if(in_array($key,$image)){
-											$value = "<img src='".display_image($value)."' style='max-width:200px;width:50%'>";
+											$value = "<img src='".$value."' style='max-width:200px;width:50%'>";
 										}
 								?>
 								<div class="form-group">

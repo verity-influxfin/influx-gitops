@@ -21,7 +21,7 @@ class Transaction_lib{
     }
 
 	//儲值
-	public function recharge($payment_id){
+	public function recharge($payment_id=0){
 		if($payment_id){
 			$payment 	= $this->CI->payment_model->get($payment_id);
 			if($payment->status != "1" && $payment->amount > 0  && !empty($payment->virtual_account)){
@@ -41,6 +41,7 @@ class Transaction_lib{
 							"user_to"			=> $user_account->user_id,
 							"bank_code_to"		=> CATHAY_BANK_CODE,
 							"bank_account_to"	=> $payment->virtual_account,
+							"status"			=> 2
 						);
 						$transaction_id = $this->CI->transaction_model->insert($transaction);
 						if($transaction_id){
@@ -55,9 +56,19 @@ class Transaction_lib{
 	}
 	
 	//扣款
-	public function charge($transaction_id){
+	public function charge($target){
+		if($target->status==5){
+			$where = array(
+				
+			);
+			$transactions = $this->CI->transaction_model->get_many_by();
+			
+			
+		}
+		$sort = array(SOURCE_AR_DAMAGE,SOURCE_AR_DELAYINTEREST,SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST);
 		
-	
+		//應收違約金,應收延滯息,應收借款本金,應收借款利息
+
 	}
 	
 	//取得資金資料
@@ -182,6 +193,7 @@ class Transaction_lib{
 					"user_to"			=> 0,
 					"bank_code_to"		=> CATHAY_BANK_CODE,
 					"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+					"status"			=> 2
 				);
 				
 				$fee_transaction_id  = $this->CI->transaction_model->insert($transaction_fee);
@@ -190,13 +202,11 @@ class Transaction_lib{
 					$investment_ids = array();
 					$investments 	= $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>2,"loan_amount >"=>0,"frozen_status"=>1));
 					if($investments){
-						
-						//攤還表
+
 						$transaction 	= array();
 						foreach($investments as $key => $value){
 							$investment_ids[]		= $value->id;
 							$virtual_account 		= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"type"=>0));
-							
 							$transaction_lending	= array(
 								"source"			=> SOURCE_LENDING,
 								"user_from"			=> $value->user_id,
@@ -208,11 +218,13 @@ class Transaction_lib{
 								"user_to"			=> $target->user_id,
 								"bank_code_to"		=> $user_bankaccount->bank_code,
 								"bank_account_to"	=> $user_bankaccount->bank_account,
+								"status"			=> 2
 							);
-							
+							//放款
 							$lending_transaction_id  	= $this->CI->transaction_model->insert($transaction_lending);
 							if($lending_transaction_id){
 								$this->CI->passbook_lib->lending($lending_transaction_id); 
+								//攤還表
 								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
 								if($amortization_schedule){
 									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
@@ -251,7 +263,6 @@ class Transaction_lib{
 						$rs  = $this->CI->transaction_model->insert_many($transaction);
 						if($rs && count($rs)==count($transaction)){
 							$this->CI->target_model->update($target_id,array("status"=>5));
-							$this->CI->target_model->update($target_id,array("status"=>5));
 							$this->CI->investment_model->update_by(array("id"=>$investment_ids),array("status"=>3));
 							$this->CI->frozen_amount_model->update_by(array("investment_id"=>$investment_ids),array("status"=>0));
 							return true;
@@ -262,19 +273,7 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
-	//取得最近還款
-	function get_next_repayment($target){
-		if( $target && $target->id){
-			$transactions = $this->CI->transaction_model->order_by("limit_date","asc")->get_by(array("source"=>array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST),"target_id"=>$target->id,"status"=>"1"));
-			if($transactions){
-				dump($transaction);
-			}
-		}
-		return false;
-	}
-	
-	
+		
 	public function script_check_bidding(){
 		$this->CI->target_model->update_by(array("status"=>3,"script_status"=>0),array("script_status"=>3));
 		$targets = $this->CI->target_model->get_many_by(array("script_status"=>3));
