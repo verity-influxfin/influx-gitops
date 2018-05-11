@@ -35,6 +35,9 @@ define({
     "GetProductCancelId",
     "GetProductApplylist",
     "GetProductApplyinfoId",
+    "Repayment",
+    "Target",
+    "Recoveries",
     "Agreement",
     "GetAgreementList",
     "GetAgreementInfoAlias",
@@ -48,7 +51,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-05-03T09:42:05.480Z",
+    "time": "2018-05-11T10:25:00.232Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

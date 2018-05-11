@@ -45,11 +45,14 @@ class Target extends REST_Controller {
 	/**
      * @api {get} /target/list 出借方 取得標的列表
      * @apiGroup Target
+	 * @apiParam {String} orderby 排序值 credit_level(default)、instalment、interest_rate
+	 * @apiParam {String} sort 降序/升序 desc/asc(default)
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 標的號
 	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {String} credit_level 信用指數
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} loan_amount 核准金額
@@ -58,6 +61,8 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
+	 * @apiSuccess {String} expire_time 流標時間
+	 * @apiSuccess {String} invested 目前投標量
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
@@ -68,23 +73,21 @@ class Target extends REST_Controller {
      * 			{
      * 				"id":"1",
      * 				"target_no": "1803269743",
-     * 				"product_id":"2",
      * 				"product":{
      * 					"id":"2",
      * 					"name":"輕鬆學貸"
      * 				},
-	 * 				"credit":{
-     * 					"level":"1",
-     * 					"points":"1985",
-     * 					"amount":"45000",
-     * 					"created_at":"1520421572"
-     * 				},
+	 * 				"credit_level":"4",
      * 				"user_id":"1",
      * 				"loan_amount":"5000",
      * 				"interest_rate":"12",
      * 				"instalment":"3期",
      * 				"repayment":"等額本息",
-     * 				"status":"2",
+     * 				"delay": "0",
+     * 				"delay_days": "0",
+     * 				"expire_time": "1525449600",
+     * 				"invested": "50000",
+     * 				"status":"3",
      * 				"created_at":"1520421572"
      * 			}
      * 			]
@@ -98,10 +101,12 @@ class Target extends REST_Controller {
 		$input 	= $this->input->get();
 		$data	= array();
 		$list	= array();
-		$where	= array( "status" => 3 );
+		$where	= array( "status" => 4 );
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		$target_list 		= $this->target_model->get_many_by($where);
+		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array("credit_level","instalment","interest_rate"))?$input['orderby']:"credit_level";
+		$sort				= isset($input['sort'])&&in_array($input['sort'],array("desc","asc"))?$input['sort']:"asc";
+		$target_list 		= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
 
 		if(!empty($target_list)){
 			$product_list = array();
@@ -115,7 +120,6 @@ class Target extends REST_Controller {
 				}
 			}
 
-				
 			foreach($target_list as $key => $value){
 				$list[] = array(
 					"id" 				=> $value->id,
@@ -129,6 +133,8 @@ class Target extends REST_Controller {
 					"repayment" 		=> $repayment_type[$value->repayment],
 					"delay" 			=> $value->delay,
 					"delay_days" 		=> $value->delay_days,
+					"expire_time" 		=> $value->expire_time,
+					"invested" 			=> $value->invested,
 					"status" 			=> $value->status,
 					"created_at" 		=> $value->created_at,
 				);
@@ -146,8 +152,6 @@ class Target extends REST_Controller {
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Target ID
 	 * @apiSuccess {String} target_no 標的號
-	 * @apiSuccess {String} product_id Product ID
-	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} loan_amount 借款金額
 	 * @apiSuccess {String} credit_level 信用指數
@@ -157,12 +161,15 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
-	 * @apiSuccess {String} bank_account 借款人收款帳號
+	 * @apiSuccess {String} expire_time 流標時間
+	 * @apiSuccess {String} invested 目前投標量
 	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} certification 借款人認證完成資訊(
+	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {String} product.name 產品名稱
+	 * @apiSuccess {json} certification 借款人認證完成資訊
 	 * @apiSuccess {json} user 借款人基本資訊
 	 * @apiSuccess {String} user.name 姓名
 	 * @apiSuccess {String} user.age 年齡
@@ -196,20 +203,18 @@ class Target extends REST_Controller {
      * 		"data":{
      * 			"id":"1",
      * 			"target_no": "1803269743",
-     * 			"product_id":"1",
      * 			"user_id":"1",
-     * 			"amount":"5000",
      * 			"loan_amount":"12000",
+	 * 			"credit_level":"4",
      * 			"interest_rate":"9",
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
-     * 			"bank_code":"",
-     * 			"branch_code":"",
-     * 			"bank_account":"",
-     * 			"virtual_account":"",
      * 			"remark":"",
-     * 			"delay":"0",
-     * 			"status":"0",
+     * 			"delay": "0",
+     * 			"delay_days": "0",
+     * 			"expire_time": "1525449600",
+     * 			"invested": "50000",
+     * 			"status":"4",
      * 			"created_at":"1520421572",
      * 			"product":{
      * 				"id":"2",
@@ -369,10 +374,13 @@ class Target extends REST_Controller {
 				"loan_amount" 		=> $target->loan_amount,
 				"credit_level" 		=> $target->credit_level,
 				"interest_rate" 	=> $target->interest_rate,
+				"remark" 			=> $target->remark,
 				"instalment" 		=> $instalment_list[$target->instalment],
 				"repayment" 		=> $repayment_type[$target->repayment],
 				"delay" 			=> $target->delay,
 				"delay_days" 		=> $target->delay_days,
+				"expire_time" 		=> $target->expire_time,
+				"invested" 			=> $target->invested,
 				"status" 			=> $target->status,
 				"created_at" 		=> $target->created_at,
 			);
@@ -433,13 +441,6 @@ class Target extends REST_Controller {
      *       "error": "804"
      *     }
 	 *
-     * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
-     *     {
-     *       "result": "ERROR",
-     *       "error": "302"
-     *     }
-	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
      * @apiErrorExample {json} 202
      *     {
@@ -459,6 +460,13 @@ class Target extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {json} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
      *     }
 	 *
      */
@@ -484,7 +492,7 @@ class Target extends REST_Controller {
 		$target = $this->target_model->get($input['target_id']);
 		if($target && $target->status == 3 ){
 			
-			if( $input['amount'] > $target->loan_amount ){
+			if( $input['amount'] < TARGET_AMOUNT_MIN || $input['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_RANGE ));
 			}
 
@@ -504,7 +512,6 @@ class Target extends REST_Controller {
 			
 
 			//檢查認證 NOT_VERIFIED
-			$this->load->library('Certification_lib');
 			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 			foreach($certification_list as $key => $value){
 				if( $value->alias=='id_card' && $value->user_status!=1 ){
@@ -517,7 +524,11 @@ class Target extends REST_Controller {
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
 			}
-
+			
+			if($this->user_info->transaction_password==""){
+				$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+			}
+			
 			$insert = $this->investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -535,12 +546,32 @@ class Target extends REST_Controller {
 	 * 
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
-	 * @apiSuccess {json} product 產品資訊
-	 * @apiSuccess {json} target 標的資訊
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
+	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {String} product.name 產品名稱
+	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {String} target.target_no 案號
+	 * @apiSuccess {String} target.expire_time 流標時間
+	 * @apiSuccess {String} target.invested 目前投標量
+	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
+	 * @apiSuccess {String} bank_account.branch_code 分行代碼
+	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
+	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
+	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
+	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
+	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
+	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
+	 * @apiSuccess {json} funds 可用資金
+	 * @apiSuccess {String} funds.total 可用資金
+	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入時間
+	 * @apiSuccess {String} funds.frozen 待交易資金
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -548,7 +579,11 @@ class Target extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"id":"1",
-     * 				"product":{
+     * 				"amount":"5000",
+     * 				"loan_amount":"",
+     * 				"status":"3",
+     * 				"created_at":"1520421572",
+	 * 				"product":{
      * 					"id":"2",
      * 					"name":"輕鬆學貸",
      * 					"description":"輕鬆學貸",
@@ -557,29 +592,109 @@ class Target extends REST_Controller {
      * 				"target": {
      * 					"id": "19",
      * 					"target_no": "1804233189",
-     * 					"instalment": "3期",
-     * 					"repayment": "等額本息",
+     * 					"invested": "5000",
+     * 					"expire_time": "123456789",
      * 					"delay": "0",
-     * 					"status": "3"
-     * 				},
-     * 				"amount":"5000",
-     * 				"loan_amount":"",
-     * 				"status":"0",
-     * 				"created_at":"1520421572"
+     * 					"status": "5"
+     * 				}
      * 			}
-     * 			]
+     * 			],
+     * 	        "bank_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "1234",
+     * 	            "bank_account": "12345678910"
+     * 	        },
+     * 	        "virtual_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "0154",
+     * 	            "bank_name": "國泰世華商業銀行",
+     * 	            "branch_name": "信義分行",
+     * 	            "virtual_account": "56639100000001"
+     * 	        },
+     * 	        "funds": {
+     * 	            "total": 500,
+     * 	            "last_recharge_date": "2018-05-03 19:15:42",
+     * 	            "frozen": 0
+     * 	        }
      * 		}
      *    }
 	 *
 	 * @apiUse TokenError
-     *
+	 * @apiUse NotInvestor
+	 *
+     * @apiError 202 未通過所需的驗證(實名驗證)
+     * @apiErrorExample {json} 202
+     *     {
+     *       "result": "ERROR",
+     *       "error": "202"
+     *     }
+	 *
+     * @apiError 203 金融帳號驗證尚未通過
+     * @apiErrorExample {json} 203
+     *     {
+     *       "result": "ERROR",
+     *       "error": "203"
+     *     }
+	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {json} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {json} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
+     *     }
      */
 	public function applylist_get()
     {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
+		$investor 			= $this->user_info->investor;
+	
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+		}
+
+		//檢查認證 NOT_VERIFIED
+		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
+		foreach($certification_list as $key => $value){
+			if( $value->alias=='id_card' && $value->user_status!=1 ){
+				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+			}
+		}
+			
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if(!$user_bankaccount){
+			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+		}
+		
+		if($this->user_info->transaction_password==""){
+			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+		}
+		
+		$this->load->model('user/virtual_account_model');
+		$this->load->model('user/user_bankaccount_model');
+		$this->load->library('Transaction_lib');
+		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
+		$virtual_account	= array(
+			"bank_code"			=> CATHAY_BANK_CODE,
+			"branch_code"		=> CATHAY_BRANCH_CODE,
+			"bank_name"			=> CATHAY_BANK_NAME,
+			"branch_name"		=> CATHAY_BRANCH_NAME,
+			"virtual_account"	=> $virtual->virtual_account,
+		);
+		$bank_account 		= array(
+			"bank_code"		=> $user_bankaccount->bank_code,
+			"branch_code"	=> $user_bankaccount->branch_code,
+			"bank_account"	=> $user_bankaccount->bank_account,
+		);
+		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		$param				= array( "user_id"=> $user_id);
 		$investments		= $this->investment_model->get_many_by($param);
 		$list				= array();
@@ -590,8 +705,8 @@ class Target extends REST_Controller {
 				$target = array(
 					"id"			=> $target_info->id,
 					"target_no"		=> $target_info->target_no,
-					"instalment" 	=> $instalment_list[$target_info->instalment],
-					"repayment" 	=> $repayment_type[$target_info->repayment],
+					"invested"		=> $target_info->invested,
+					"expire_time"	=> $target_info->expire_time,
 					"delay"			=> $target_info->delay,
 					"status"		=> $target_info->status,
 				);
@@ -604,16 +719,16 @@ class Target extends REST_Controller {
 				
 				$list[] = array(
 					"id" 				=> $value->id,
-					"product" 			=> $product,
-					"target" 			=> $target,
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"status" 			=> $value->status,
 					"created_at" 		=> $value->created_at,
+					"product" 			=> $product,
+					"target" 			=> $target,
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list,"bank_account"=>$bank_account,"virtual_account"=>$virtual_account,"funds"=>$funds) ));
     }
  
 }

@@ -39,6 +39,9 @@
 		"GetProductApplylist",
 		"GetProductApplyinfoId",
 		
+		"Repayment",
+		"Target",
+		"Recoveries",
 		"Agreement",
 		"GetAgreementList",
 		"GetAgreementInfoAlias",
@@ -48,7 +51,5 @@
 		"GetNotificationInfoId",
 		"GetNotificationReadall"
 
-
-		
 	]
 }

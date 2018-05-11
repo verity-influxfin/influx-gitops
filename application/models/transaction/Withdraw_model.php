@@ -1,12 +1,11 @@
 <?php
 
-class Credit_model extends MY_Model
+class Withdraw_model extends MY_Model
 {
-	public $_table = 'credits';
+	public $_table = 'withdraw';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 
-	
 	public function __construct()
 	{
 		parent::__construct();
@@ -15,9 +14,8 @@ class Credit_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-        $data['created_at'] 	= $data['updated_at'] = time();
-        $data['created_ip'] 	= $data['updated_ip'] = get_ip();
-		$data['expire_time'] 	= strtotime("+2 months", $data['created_at']);
+        $data['created_at'] = $data['updated_at'] = time();
+        $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
     }
 	
@@ -27,4 +25,5 @@ class Credit_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
 }

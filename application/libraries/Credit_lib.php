@@ -96,11 +96,12 @@ class Credit_lib{
 	public function get_credit($user_id,$product_id){
 		if($user_id && $product_id){
 			$param = array(
-				"user_id"		=> $user_id,
-				"product_id"	=> $product_id,
+				"user_id"			=> $user_id,
+				"product_id"		=> $product_id,
+				"expire_time >="	=> time(),
 			);
-			$data = array();
-			$rs = $this->CI->credit_model->order_by("created_at","desc")->get_by($param);
+			$data 	= array();
+			$rs 	= $this->CI->credit_model->order_by("created_at","desc")->get_by($param);
 			if($rs){
 				$data = array(
 					"level"		=> $rs->level,

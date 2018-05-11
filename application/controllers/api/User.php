@@ -127,7 +127,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
 		}
 		
-		$toresult = $this->user_model->get_by('phone', $phone);
+		$result = $this->user_model->get_by('phone', $phone);
         if ($result) {
 			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
         } else {
@@ -212,12 +212,12 @@ class User extends REST_Controller {
 				$insert = $this->user_model->insert($data);
 				if($insert){
 					$token 				= new stdClass();
-					$token->investor 	= $data['investor_status'];
 					$token->id			= $insert;
 					$token->phone		= $data["phone"];
 					$token->auth_otp	= $data["auth_otp"];
 					$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
-					$request_token = AUTHORIZATION::generateUserToken($token);
+					$token->investor 	= $data["investor_status"];
+					$request_token 		= AUTHORIZATION::generateUserToken($token);
 					$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token, "expiry_time"=>$token->expiry_time ,"first_time"=>1)));
 				}else{
 					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -290,11 +290,11 @@ class User extends REST_Controller {
 					$first_time = 1;
 				}
 
-				$token->investor 	= $investor;
 				$token->id			= $user_info->id;
 				$token->phone		= $user_info->phone;
 				$token->auth_otp	= get_rand_token();
 				$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
+				$token->investor 	= $investor;
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
@@ -411,7 +411,7 @@ class User extends REST_Controller {
 				$token->id			= $user_info->id;
 				$token->phone		= $user_info->phone;
 				$token->auth_otp	= get_rand_token();
-				$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
+				$token->expiry_time	= time() + REQUEST_TOKEN_EXPIRY;
 
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
@@ -569,8 +569,8 @@ class User extends REST_Controller {
      *      	"my_promote_code": "9JJ12CQ5",
      *      	"id_number": null,
      *      	"investor": 1,  
-     *      	"created_at": "1522651818"     
-     *      	"updated_at": "1522653939"     
+     *      	"created_at": "1522651818",     
+     *      	"updated_at": "1522653939",     
      *      	"expiry_time": "1522675539"     
 	 *      }
      *    }
@@ -1030,7 +1030,7 @@ class User extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /user/promote 會員 推薦有獎
+     * @api {get} /user/promote 會員 推薦有獎
      * @apiGroup User
      *
      * @apiSuccess {json} result SUCCESS

@@ -77,21 +77,9 @@
                                 <li>
                                     <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
                                 </li> 
-								<li>
-                                    <a href="<?=admin_url('rating/') ?>">評級方式列表</a>
-                                </li>
                                 <li>
                                     <a href="<?=admin_url('certification/school') ?>">學校列表</a>
                                 </li>     
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-						<li class="<?=isset($menu)&&$menu=="questionnaire"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>問卷管理<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="<?=admin_url('questionnaire/') ?>">問卷列表</a>
-                                </li>                         
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

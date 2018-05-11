@@ -164,4 +164,26 @@ class Passbook_lib{
 		return false;
 	}
 	
+	//取得資金資料
+	public function get_passbook_list($virtual_account=""){
+		$list = array();
+		if($virtual_account){
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by("tx_datetime,created_at","asc")->get_many_by(array("virtual_account"=>$virtual_account));
+			if($virtual_passbook){
+				$total 	= 0;
+				foreach($virtual_passbook as $key => $value){
+					$total	+= $value->amount;
+					$list[] = array(
+						"amount" 		=> $value->amount,
+						"bank_amount"	=> $total,
+						"remark"		=> $value->remark,
+						"tx_datetime"	=> $value->tx_datetime,
+						"created_at"	=> $value->created_at,
+					);
+				}
+			}
+		}
+		return $list;
+	}
+	
 }

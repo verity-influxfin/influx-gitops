@@ -385,7 +385,7 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
-			if($input['amount']<$product->loan_range_s || $input['amount']>$product->loan_range_e){
+			if($input['amount'] < $product->loan_range_s || $input['amount'] > $product->loan_range_e){
 				$this->response(array('result' => 'ERROR',"error" => PRODUCT_AMOUNT_RANGE ));
 			}
 
@@ -576,6 +576,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} amount 申請金額
 	 * @apiSuccess {String} loan_amount 核准金額
+	 * @apiSuccess {String} platform_fee 平台服務費
 	 * @apiSuccess {String} interest_rate 年化利率
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
@@ -601,6 +602,7 @@ class Product extends REST_Controller {
      * 				"user_id":"1",
      * 				"amount":"5000",
      * 				"loan_amount":"",
+     * 				"platform_fee":"",
      * 				"interest_rate":"0,
      * 				"instalment":"3期",
      * 				"repayment":"等額本息",
@@ -622,6 +624,7 @@ class Product extends REST_Controller {
      * 				"user_id":"1",
      * 				"amount":"5000",
      * 				"loan_amount":"",
+     * 				"platform_fee":"",
      * 				"interest_rate":"",
      * 				"instalment":"3期",
      * 				"repayment":"等額本息",
@@ -654,8 +657,6 @@ class Product extends REST_Controller {
 				$product = array(
 					"id"			=> $product_info->id,
 					"name"			=> $product_info->name,
-					"description"	=> $product_info->description,
-					"alias"			=> $product_info->alias,
 				);
 				
 				$list[] = array(
@@ -666,6 +667,7 @@ class Product extends REST_Controller {
 					"user_id" 			=> $value->user_id,
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
+					"platform_fee" 		=> $value->platform_fee?$value->platform_fee:"",
 					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
 					"instalment" 		=> $instalment_list[$value->instalment],
 					"repayment" 		=> $repayment_type[$value->repayment],
@@ -692,13 +694,10 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} amount 申請金額
 	 * @apiSuccess {String} loan_amount 核准金額
+	 * @apiSuccess {String} platform_fee 平台服務費
 	 * @apiSuccess {String} interest_rate 核可利率
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} bank_code 借款人收款銀行代碼
-	 * @apiSuccess {String} branch_code 借款人收款分行代碼
-	 * @apiSuccess {String} bank_account 借款人收款帳號
-	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
@@ -742,13 +741,10 @@ class Product extends REST_Controller {
      * 			"user_id":"1",
      * 			"amount":"5000",
      * 			"loan_amount":"12000",
+     * 			"platform_fee":"1500",
      * 			"interest_rate":"9",
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
-     * 			"bank_code":"",
-     * 			"branch_code":"",
-     * 			"bank_account":"",
-     * 			"virtual_account":"",
      * 			"remark":"",
      * 			"delay":"0",
      * 			"status":"0",

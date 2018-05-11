@@ -9,6 +9,7 @@ class Target_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/target_model');
+		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
@@ -117,5 +118,124 @@ class Target_lib{
 			return $count;
 		}
 		return false;
+	}
+	
+	//借款端還款計畫
+	public function get_amortization_table($target=array()){
+		
+		$xirr_dates		= array();
+		$xirr_value		= array();
+		$schedule		= array(
+			"amount"		=> $target->loan_amount,
+			"instalment"	=> $target->instalment,
+			"rate"			=> $target->interest_rate,
+			"total_payment"	=> 0,
+			"date"			=> "",
+		);
+		$transactions 	= $this->CI->transaction_model->get_many_by(array(	"target_id" => $target->id));
+		$list = array();
+		
+		if($transactions){
+			foreach($transactions as $key => $value){
+				if($value->instalment_no && !isset($list[$value->instalment_no])){
+					$list[$value->instalment_no] = array(
+						"instalment"		=> $value->instalment_no,
+						"total_payment"		=> 0,
+						"interest"			=> 0,
+						"principal"			=> 0,
+						"repayment"			=> 0,
+						"repayment_date"	=> $value->limit_date
+					);
+				}
+				switch ($value->source) {
+					case SOURCE_LENDING: 
+						$schedule["date"] 	= $value->entering_date;
+						break;
+					case SOURCE_AR_PRINCIPAL: 
+						$list[$value->instalment_no]['principal'] += $value->amount;
+						$schedule["total_payment"] += $value->amount;
+						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
+						break;
+					case SOURCE_AR_INTEREST:
+						$list[$value->instalment_no]['interest'] += $value->amount;
+						$schedule["total_payment"] += $value->amount;
+						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
+						break;					
+					case SOURCE_PRINCIPAL: 
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;					
+					case SOURCE_INTEREST: 
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;
+					default:
+						break;
+				}
+				if($value->instalment_no){
+					$list[$value->instalment_no]['total_payment'] = $list[$value->instalment_no]['interest'] + $list[$value->instalment_no]['principal'];
+				}
+			}
+		}
+		$schedule['list'] = $list;
+		return $schedule;
+	}
+	
+	//出借端回款計畫
+	public function get_investment_amortization_table($target=array(),$investment=array()){
+		
+		$xirr_dates		= array();
+		$xirr_value		= array();
+		$schedule		= array(
+			"amount"		=> $investment->loan_amount,
+			"instalment"	=> $target->instalment,
+			"rate"			=> $target->interest_rate,
+			"total_payment"	=> 0,
+			"date"			=> "",
+		);
+		$users			= array($target->user_id,$investment->user_id);
+		$transactions 	= $this->CI->transaction_model->get_many_by(array(	"target_id" => $target->id,"user_from"=>$users,"user_to"=>$users));
+		$list = array();
+		
+		if($transactions){
+			foreach($transactions as $key => $value){
+				if($value->instalment_no && !isset($list[$value->instalment_no])){
+					$list[$value->instalment_no] = array(
+						"instalment"		=> $value->instalment_no,
+						"total_payment"		=> 0,
+						"interest"			=> 0,
+						"principal"			=> 0,
+						"repayment"			=> 0,
+						"repayment_date"	=> $value->limit_date
+					);
+				}
+				switch ($value->source) {
+					case SOURCE_LENDING: 
+						$schedule["date"] 	= $value->entering_date;
+						break;
+					case SOURCE_AR_PRINCIPAL: 
+						$list[$value->instalment_no]['principal'] += $value->amount;
+						$schedule["total_payment"] += $value->amount;
+						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
+						break;
+					case SOURCE_AR_INTEREST:
+						$list[$value->instalment_no]['interest'] += $value->amount;
+						$schedule["total_payment"] += $value->amount;
+						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
+						break;					
+					case SOURCE_PRINCIPAL: 
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;					
+					case SOURCE_INTEREST: 
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;
+					default:
+						break;
+				}
+				if($value->instalment_no){
+					$list[$value->instalment_no]['total_payment'] = $list[$value->instalment_no]['interest'] + $list[$value->instalment_no]['principal'];
+				}
+			}
+		}
+		$schedule['list'] = $list;
+		return $schedule;
 	}
 }
