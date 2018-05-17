@@ -16,6 +16,7 @@ class Repayment extends REST_Controller {
 		$this->load->model('transaction/investment_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Target_lib');
+		$this->load->library('Prepayment_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
@@ -228,8 +229,8 @@ class Repayment extends REST_Controller {
 				
 				$product_info 	= $this->product_model->get($value->product_id);
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					"id"				=> $product_info->id,
+					"name"				=> $product_info->name,
 				);
 				
 				$virtual_account	= array(
@@ -282,12 +283,18 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
+	 * @apiSuccess {String} remaining_principal 剩餘本金
+	 * @apiSuccess {String} remaining_instalment 剩餘期數
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
+	 * @apiSuccess {json} fees 費用資料
+	 * @apiSuccess {String} fees.sub_loan_fees 轉換產品手續費%
+	 * @apiSuccess {String} fees.liquidated_damages 違約金(提前還款)%
 	 * @apiSuccess {json} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
+	 * @apiSuccess {String} next_repayment.list 明細
 	 * @apiSuccess {json} virtual_account 還款專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
@@ -321,20 +328,44 @@ class Repayment extends REST_Controller {
      * 			"interest_rate":"9",
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
-     * 			"bank_code":"",
-     * 			"branch_code":"",
-     * 			"bank_account":"",
-     * 			"virtual_account":"",
      * 			"remark":"",
      * 			"delay":"0",
      * 			"status":"0",
      * 			"created_at":"1520421572",
-     * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸",
-     * 				"description":"輕鬆學貸",
-     * 				"alias":"FA"
-     * 			},
+     * 			"remaining_principal":"50000",
+     * 			"remaining_instalment":"3",
+     * 		"product":{
+     * 			"id":"2",
+     * 			"name":"輕鬆學貸",
+     * 			"description":"輕鬆學貸",
+     * 			"alias":"FA"
+     * 		},
+	 * 	     "fees": {
+     * 	         "sub_loan_fees": "1",
+     * 	         "liquidated_damages": "2"
+     * 	     },
+	 * 	     "next_repayment": {
+     * 	         "date": "2018-06-10",
+     * 	         "instalment": "1",
+     * 	         "amount": "16890",
+     * 	         "list": {
+     * 	             "11": {
+     * 	                 "amount": 16539,
+     * 	                 "source_name": "應付借款本金"
+     * 	             },
+     * 	             "13": {
+     * 	                 "amount": 351,
+     * 	                 "source_name": "應付借款利息"
+     * 	             }
+     * 	         }
+     * 	     },
+	 * 	     "virtual_account": {
+     * 	         "bank_code": "013",
+     * 	         "branch_code": "0154",
+     * 	         "bank_name": "國泰世華商業銀行",
+     * 	         "branch_name": "信義分行",
+     * 	         "virtual_account": "56631803269743"
+     * 	     },
   	 *       "amortization_schedule": {
   	 *           "amount": "12000",
   	 *           "instalment": "3",
@@ -342,8 +373,8 @@ class Repayment extends REST_Controller {
   	 *           "date": "2018-04-17",
   	 *           "total_payment": 2053,
   	 *           "schedule": {
- 	 *                "1": {
-   	 *                  "instalment": 1,
+ 	 *              "1": {
+   	 *                 	"instalment": 1,
    	 *                  "repayment_date": "2018-06-10",
    	 *                  "repayment": 0,
    	 *                  "principal": 1893,
@@ -365,8 +396,8 @@ class Repayment extends REST_Controller {
   	 *                    "principal": 1991,
   	 *                    "interest": 62,
  	 *                    "total_payment": 2053
- 	 *                }
- 	 *            }
+ 	 *               }
+ 	 *           }
 	 *        }
      * 		}
      *    }
@@ -395,6 +426,7 @@ class Repayment extends REST_Controller {
 		$target 			= $this->target_model->get($target_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
+		$transaction_source = $this->config->item('transaction_source');
 		$data				= array();
 		if(!empty($target) && in_array($target->status,array(5,10))){
 			if($target->user_id != $user_id){
@@ -414,14 +446,23 @@ class Repayment extends REST_Controller {
 				"branch_name"		=> CATHAY_BRANCH_NAME,
 				"virtual_account"	=> $target->virtual_account,
 			);
-				
+			
 			$next_repayment = array(
 				"date" 			=> "",
 				"instalment"	=> "",
 				"amount"		=> 0,
+				"list"			=> array(),
 			);
 			
-			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target->id,"user_from"=>$user_id));
+			$fees = array(
+				//"debt_transfer_fees" => DEBT_TRANSFER_FEES,
+				"sub_loan_fees"		 => SUB_LOAN_FEES,
+				"liquidated_damages" => LIQUIDATED_DAMAGES
+			);
+			
+			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target->id,"user_from"=>$user_id,"status"=>array(1,2)));
+			$remaining_principal = 0;
+			
 			if($transaction){
 				$first = true;
 				foreach($transaction as $k => $v){
@@ -434,9 +475,21 @@ class Repayment extends REST_Controller {
 					if($v->limit_date && $v->limit_date == $next_repayment["date"]){
 						$next_repayment["amount"] += $v->amount;
 					}
+					
+					if($v->instalment_no == $next_repayment["instalment"]){
+						$next_repayment["list"][$v->source]["amount"] += $v->amount;
+						$next_repayment["list"][$v->source]["source_name"] = $transaction_source[$v->source];
+					}
+					
+					if($v->source == SOURCE_AR_PRINCIPAL){
+						$remaining_principal += $v->amount;
+					}
+					if($v->source == SOURCE_PRINCIPAL){
+						$remaining_principal -= $v->amount;
+					}
 				}
 			}
-				
+
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
 				$data[$field] = isset($target->$field)?$target->$field:"";
@@ -449,9 +502,12 @@ class Repayment extends REST_Controller {
 				}
 			}
 
+			$data["remaining_principal"] 	= $remaining_principal;
+			$data["remaining_instalment"] 	= $next_repayment["instalment"]?intval($target->instalment - $next_repayment["instalment"])+1:0;
 			$data["product"] 		 		= $product;
 			$data["virtual_account"] 		= $virtual_account;
 			$data["next_repayment"] 		= $next_repayment;
+			$data["fees"] 					= $fees;
 			$data["amortization_schedule"] 	= $this->target_lib->get_amortization_table($target);
 
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
@@ -461,7 +517,7 @@ class Repayment extends REST_Controller {
 	
 	/**
      * @api {get} /repayment/prepayment/{ID} 借款方 提前還款資訊
-     * @apiGroup Repayment
+      * @apiGroup Repayment
 	 * @apiParam {number} ID Targets ID
 	 * 
 	 * @apiSuccess {json} result SUCCESS
@@ -473,17 +529,18 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} interest_rate 年化利率
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} next_repayment 最近一期應還款
-	 * @apiSuccess {String} next_repayment.date 還款日
-	 * @apiSuccess {String} next_repayment.instalment 期數
-	 * @apiSuccess {String} next_repayment.amount 金額
+	 * @apiSuccess {json} prepayment 提前還款資訊
+	 * @apiSuccess {String} prepayment.remaining_principal 剩餘本金
+	 * @apiSuccess {String} prepayment.remaining_instalment 剩餘期數
+	 * @apiSuccess {String} prepayment.settlement_date 結息日
+	 * @apiSuccess {String} prepayment.liquidated_damages 違約金（提環手續費）
+	 * @apiSuccess {String} prepayment.delay_interest_payable 應付延滯息
+	 * @apiSuccess {String} prepayment.interest_payable 應付利息
+	 * @apiSuccess {String} prepayment.total 合計
 	 * @apiSuccess {json} virtual_account 還款專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
@@ -501,22 +558,28 @@ class Repayment extends REST_Controller {
      * 			"amount":"5000",
      * 			"loan_amount":"12000",
      * 			"interest_rate":"9",
-     * 			"instalment":"3期",
+     * 			"instalment":"3",
      * 			"repayment":"等額本息",
-     * 			"bank_code":"",
-     * 			"branch_code":"",
-     * 			"bank_account":"",
-     * 			"virtual_account":"",
-     * 			"remark":"",
      * 			"delay":"0",
+     * 			"delay_days":"0",
      * 			"status":"0",
      * 			"created_at":"1520421572",
-     * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸",
-     * 				"description":"輕鬆學貸",
-     * 				"alias":"FA"
-     * 			}
+	 * 	     "prepayment": {
+     * 	         "remaining_principal": "50000",
+     * 	         "remaining_instalment": "3",
+     * 	         "settlement_date": "2018-05-19",
+     * 	         "liquidated_damages": "1000",
+     * 	         "delay_interest_payable": "0",
+     * 	         "interest_payable": "450",
+     * 	         "total": "51450"
+     * 	     },
+	 * 	     "virtual_account": {
+     * 	         "bank_code": "013",
+     * 	         "branch_code": "0154",
+     * 	         "bank_name": "國泰世華商業銀行",
+     * 	         "branch_name": "信義分行",
+     * 	         "virtual_account": "56631803269743"
+     * 	     }
      * 		}
      *    }
 	 *
@@ -542,8 +605,10 @@ class Repayment extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
+		$instalment_list 	= $this->config->item('instalment');
+		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
-		if(!empty($target) && $target->status==5){
+		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
 			}
@@ -555,35 +620,73 @@ class Repayment extends REST_Controller {
 				"branch_name"		=> CATHAY_BRANCH_NAME,
 				"virtual_account"	=> $target->virtual_account,
 			);
-				
-			$next_repayment = array(
-				"date" 			=> "",
-				"instalment"	=> "",
-				"amount"		=> 0,
-			);
-			
-			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target->id,"user_from"=>$user_id));
-			if($transaction){
-				$first = true;
-				foreach($transaction as $k => $v){
-					if($first && $v->status==1){
-						$next_repayment["date"] 		= $v->limit_date;
-						$next_repayment["instalment"] 	= $v->instalment_no;
-						$first = false;
-					}
+		
+			$fields = $this->target_model->simple_fields;
+			foreach($fields as $field){
+				$data[$field] = isset($target->$field)?$target->$field:"";
 
-					if($v->limit_date && $v->limit_date == $next_repayment["date"]){
-						$next_repayment["amount"] += $v->amount;
-					}
+				if($field=="repayment"){
+					$data[$field] = $repayment_type[$target->$field];
 				}
 			}
 
-
-			$data["product"] 		 	= $product;
+			$data["prepayment"] 		= $this->prepayment_lib->get_prepayment_info($target);
 			$data["virtual_account"] 	= $virtual_account;
-			$data["next_repayment"] 	= $next_repayment;
+
 
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+    }
+	
+	/**
+     * @api {post} /repayment/prepayment/{ID} 借款方 申請提前還款
+     * @apiGroup Repayment
+	 * @apiParam {number} ID Targets ID
+	 * 
+	 * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS"
+     *    }
+	 *
+	 * @apiUse IsInvestor
+	 * @apiUse TokenError
+	 *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {json} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+	 *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {json} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+     */
+	public function prepayment_post($target_id)
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$target 			= $this->target_model->get($target_id);
+		if(!empty($target) && $target->status == 5 ){
+			if($target->user_id != $user_id){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+			}
+
+			$prepayment 	= $this->prepayment_lib->get_prepayment_info($target);
+			if($prepayment){
+				$param = array(
+					"target_id"			=> $target_id,
+					"settlement_date"	=> $prepayment["settlement_date"],
+					"expire_time"		=> $prepayment["settlement_date"]." "
+				);
+				
+				$this->response(array('result' => 'SUCCESS'));
+			}
 		}
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }

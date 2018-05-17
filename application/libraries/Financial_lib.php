@@ -50,7 +50,7 @@ class Financial_lib{
 				}
 				
 				//本期日數
-				$days  		= floor((strtotime($date) - strtotime($odate))/(60*60*24));
+				$days  		= get_range_days($date,$odate);
 				//本期利息 = 年利率/年日數*本期日數=本期利率
 				$interest 	= round( $amount * $rate / 100 * $days / $year_days ,0);
 				//本期本金
@@ -160,7 +160,7 @@ class Financial_lib{
 		return $schedule;
 	}
 	
-	private function leap_year($date="",$instalment=0){
+	public function leap_year($date="",$instalment=0){
 		if($date && $instalment){
 			//驗證閏年
 			$leap_year	= FALSE;
@@ -169,7 +169,7 @@ class Financial_lib{
 				$date 	= date("Y-m-d",strtotime($date." + 1 month"));
 				if(date("L",strtotime($sdate))=="1" || date("L",strtotime($date))=="1"){
 					$cdate = date("Y",strtotime($date)).'-02-29';
-					if($sdate<=$cdate && $date>=$cdate){
+					if( $sdate <= $cdate && $date >= $cdate ){
 						$leap_year = TRUE;
 					}
 				}

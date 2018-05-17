@@ -10,7 +10,6 @@ class Product extends MY_Admin_Controller {
 		parent::__construct();
 		$this->login_info = check_admin();
 		$this->load->model('product/product_model');
-		$this->load->model('product/product_category_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');
         }	
@@ -24,7 +23,6 @@ class Product extends MY_Admin_Controller {
 		if(!empty($list)){
 			$page_data["list"] 			= $list;
 			$page_data["name_list"] 	= $this->admin_model->get_name_list();
-			$page_data["category_list"] = $this->product_category_model->get_name_list();
 		}
 
 		$this->load->view('admin/_header');
@@ -38,7 +36,6 @@ class Product extends MY_Admin_Controller {
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
-			$page_data["category_list"] 	= $this->product_category_model->get_name_list();
 			$page_data["instalment_list"]	= $this->config->item('instalment');
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
@@ -80,7 +77,6 @@ class Product extends MY_Admin_Controller {
 			if($id){
 				$info = $this->product_model->get_by('id', $id);
 				if($info){
-					$page_data["category_list"] 	= $this->product_category_model->get_name_list();
 					$page_data['data'] 				= $info;
 					$page_data["instalment_list"]	= $this->config->item('instalment');
 					$page_data['instalment'] 		= json_decode($info->instalment,TRUE);

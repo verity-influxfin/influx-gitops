@@ -218,4 +218,8 @@
 		return intval(date('Y', time() - strtotime($date))) - 1970;
 	}
 
+	function get_range_days($sdate,$edate) {
+		return intval(floor((strtotime($edate) - strtotime($sdate))/(60*60*24)));
+	}
+	
 ?>

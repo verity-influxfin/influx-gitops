@@ -65,26 +65,26 @@ class Recoveries extends REST_Controller {
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 				"remaining_principal": "50000",
-     * 				"interest": "0",
-     * 				"accounts_receivable": "50751",
-     * 				"interest_receivable": "751",
-     * 				"other_income": "0",
-     * 				"principal_level": {
-     * 				    "1": 0,
-     * 				    "2": 500,
-     * 				    "3": 0,
-     * 				    "4": 50000,
-     * 				    "5": 0,
-     * 				    "6": 0,
-     * 				    "7": 0,
-     * 				    "8": 0,
-     * 				},
-     * 				"funds": {
-     * 				    "total": 500,
-     * 				    "last_recharge_date": "2018-05-03 19:15:42",
-     * 				    "frozen": 0
-     * 				}
+     * 			"remaining_principal": "50000",
+     * 			"interest": "0",
+     * 			"accounts_receivable": "50751",
+     * 			"interest_receivable": "751",
+     * 			"other_income": "0",
+     * 			"principal_level": {
+     * 				  "1": 0,
+     * 				  "2": 500,
+     * 				  "3": 0,
+     * 				  "4": 50000,
+     * 				  "5": 0,
+     * 				  "6": 0,
+     * 				  "7": 0,
+     * 				  "8": 0,
+     * 			},
+     * 			"funds": {
+     * 				 "total": 500,
+     * 				 "last_recharge_date": "2018-05-03 19:15:42",
+     * 				 "frozen": 0
+     * 			}
      * 		}
      *    }
 	 *
@@ -104,6 +104,7 @@ class Recoveries extends REST_Controller {
 		$other_income			= 0;
 		$credit_level 			= $this->config->item('credit_level');
 		$principal_level		= array();
+		$funds					= array("total"=>0,"last_recharge_date"=>"","frozen"=>0);
 		if($credit_level){
 			foreach($credit_level as $level => $value){
 				$principal_level[$level] = 0;
@@ -113,13 +114,14 @@ class Recoveries extends REST_Controller {
 		$user					= array();
 		$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("user_to"=>$user_id,"status"=>array(1,2)));
 		if($transaction){
-			$target_ids 	= array();
-			$target_level 	= array();
+			$target_ids 		= array();
+			$target_level 		= array();
 			foreach($transaction as $key => $value){
 				if($value->target_id && !in_array($value->target_id,$target_ids)){
 					$target_ids[] = $value->target_id;
 				}
 			}
+			
 			if(!empty($target_ids)){
 				$targets = $this->target_model->get_many($target_ids);
 				foreach($targets as $key => $value){
@@ -148,7 +150,9 @@ class Recoveries extends REST_Controller {
 			}
 		}
 		$virtual_account = $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
-		$funds 			 = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+		if($virtual_account){
+			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+		}
 		$data			 = array(
 			"remaining_principal"	=> $remaining_principal,
 			"interest"				=> $interest,
@@ -555,6 +559,7 @@ class Recoveries extends REST_Controller {
      * @apiSuccess {String} remark 備註
      * @apiSuccess {String} tx_datetime 交易時間
      * @apiSuccess {String} created_at 入帳時間
+     * @apiSuccess {String} action debit:資產增加 credit:資產減少
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -566,6 +571,7 @@ class Recoveries extends REST_Controller {
      * 				"remark":"source:3",
      * 				"tx_datetime":"2018-05-08 15:38:07",
      * 				"created_at":"1520421572"
+     * 				"action":"debit"
      * 			},
      * 			{
      * 				"amount":"-50000",
@@ -573,6 +579,7 @@ class Recoveries extends REST_Controller {
      * 				"remark":"source:3",
      * 				"tx_datetime":"2018-04-20 17:55:51",
      * 				"created_at":"1520421572"
+     * 				"action":"credit"
      * 			}
      * 			]
      * 		}
@@ -624,6 +631,130 @@ class Recoveries extends REST_Controller {
     }
 	
 	/**
+     * @api {post} /recoveries/pretransfer 出借方 我要轉讓
+     * @apiGroup Recoveries
+     * @apiParam {String} ids (required) Investments IDs (1,3,10,21)
+	 * 
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {String} total_principal 轉讓本金
+     * @apiSuccess {String} total_fee 預計轉讓費用
+     * @apiSuccess {String} max_instalment 最大剩餘期數
+     * @apiSuccess {String} min_instalment 最小剩餘期數
+     * @apiSuccess {String} debt_transfer_contract 轉讓合約
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      	"data": {
+     *              "total_principal": 50000,
+     *              "total_fee": 250,
+     *              "max_instalment": 3,
+     *              "min_instalment": 3
+     *              "debt_transfer_contract": "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"
+     *          }
+     *    }
+	 * 
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+     *
+     * @apiError 807 此申請狀態不符
+     * @apiErrorExample {json} 806
+     *     {
+     *       "result": "ERROR",
+     *       "error": "807"
+     *     }
+     *
+     * @apiError 806 此申請不存在
+     * @apiErrorExample {json} 806
+     *     {
+     *       "result": "ERROR",
+     *       "error": "806"
+     *     }
+	 *
+     * @apiError 805 對此申請無權限
+     * @apiErrorExample {json} 805
+     *     {
+     *       "result": "ERROR",
+     *       "error": "805"
+     *     }
+     */
+	public function pretransfer_post()
+    {
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+		$ids		= array();
+		//必填欄位
+		if (empty($input['ids'])) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+		
+		$ids 	= explode(",",$input['ids']);
+		$count 	= count($ids);
+		if(!empty($ids)){
+			foreach($ids as $key => $id){
+				$id = intval($id);
+				if(empty($id)){
+					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				}
+			}
+		}else{
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+		
+		$investments = $this->investment_model->get_many($ids);
+
+		if(count($investments)==count($ids)){
+			$total_principal = 0;
+			$total_fee		 = 0;
+			$max_instalment	 = 0;
+			$min_instalment	 = 0;
+			foreach( $investments as $key => $value ){
+				if($value->user_id != $user_id){
+					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
+				}
+				if($value->status != 3){
+					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
+				}
+			}
+			foreach( $investments as $key => $value ){
+				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$value->target_id,"user_to"=>$user_id,"status"=>array(1,2)));
+				if($transaction){
+					$instalment 		= 0;
+					$instalment_paid 	= 0;
+					foreach($transaction as $k => $v){
+						if($v->source == SOURCE_AR_PRINCIPAL){
+							$total_principal += $v->amount;
+							$instalment		 = $v->instalment_no;
+						}
+						if($v->source == SOURCE_PRINCIPAL){
+							$total_principal -= $v->amount;
+							$instalment_paid = $v->instalment_no;
+						}
+					}
+					$instalment = $instalment - $instalment_paid;
+					if($max_instalment<$instalment){
+						$max_instalment = $instalment;
+					}
+					if($min_instalment>$instalment || $min_instalment==0){
+						$min_instalment = $instalment;
+					}
+				}
+			}
+			$total_fee = round($total_principal*DEBT_TRANSFER_FEES,0);
+			$data = array(
+				"total_principal"	=> $total_principal,
+				"total_fee"			=> $total_fee,
+				"max_instalment"	=> $max_instalment,
+				"min_instalment"	=> $min_instalment,
+				"debt_transfer_contract" => "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約",
+			);
+			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NOT_EXIST ));
+    }
+	
+	/**
      * @api {post} /recoveries/transfer 出借方 轉讓申請
      * @apiGroup Recoveries
      * @apiParam {String} ids (required) Investments IDs (1,3,10,21)
@@ -637,6 +768,13 @@ class Recoveries extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse TokenError
 	 * @apiUse NotInvestor
+     *
+     * @apiError 807 此申請狀態不符
+     * @apiErrorExample {json} 806
+     *     {
+     *       "result": "ERROR",
+     *       "error": "807"
+     *     }
      *
      * @apiError 806 此申請不存在
      * @apiErrorExample {json} 806
@@ -676,14 +814,17 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$investments = $this->investment_model->get_many($ids);
-		if(count($investments)!=count($ids)){
+		if(count($investments)==count($ids)){
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
 					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
 				}
+				if($value->status != 3){
+					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
+				}
 			}
-			
+			$this->response(array('result' => 'SUCCESS'));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NOT_EXIST ));
     }
 }

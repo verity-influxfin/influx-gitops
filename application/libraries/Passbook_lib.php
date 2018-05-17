@@ -179,6 +179,7 @@ class Passbook_lib{
 						"remark"		=> $value->remark,
 						"tx_datetime"	=> $value->tx_datetime,
 						"created_at"	=> $value->created_at,
+						"action"		=> $value->amount>0?"debit":"credit",
 					);
 				}
 			}

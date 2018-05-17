@@ -41,7 +41,16 @@
 		
 		"Repayment",
 		"Target",
+		
 		"Recoveries",
+		"GetRecoveriesDashboard",
+		"GetRecoveriesList",
+		"GetRecoveriesInfoId",
+		"GetRecoveriesPassbook",
+		"PostRecoveriesWithdraw",
+		"PostRecoveriesPretransfer",
+		"PostRecoveriesTransfer",
+		
 		"Agreement",
 		"GetAgreementList",
 		"GetAgreementInfoAlias",

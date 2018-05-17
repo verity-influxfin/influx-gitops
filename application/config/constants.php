@@ -136,7 +136,7 @@ defined('TARGET_APPLY_EXIST')  			OR define('TARGET_APPLY_EXIST'			, 803);
 defined('TARGET_SAME_USER')  			OR define('TARGET_SAME_USER'			, 804);
 defined('TARGET_APPLY_NO_PERMISSION')  	OR define('TARGET_APPLY_NO_PERMISSION'	, 805);
 defined('TARGET_APPLY_NOT_EXIST')  		OR define('TARGET_APPLY_NOT_EXIST'		, 806);
-
+defined('TARGET_APPLY_STATUS_ERROR')  	OR define('TARGET_APPLY_STATUS_ERROR'	, 807);
 
 //Admin
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, 'app_admin_info'); //Use in Admin Login
@@ -151,6 +151,9 @@ defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY'	, 21600); /
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY'	, 10800); //換request_token時效
 defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY'			, 10); //固定還款日
 defined('CLOSING_TIME')   			OR define('CLOSING_TIME'			, '12:00:00'); //關帳時間
+defined('DEBT_TRANSFER_FEES')   	OR define('DEBT_TRANSFER_FEES'		, 0.5); //債轉手續費%
+defined('SUB_LOAN_FEES')   			OR define('SUB_LOAN_FEES'			, 1); //轉貸手續費%
+defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 2); //違約金%
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
@@ -162,10 +165,9 @@ defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
 defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
 defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
 defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費
-defined('SOURCE_TRANLOAN_FEE')      OR define('SOURCE_TRANLOAN_FEE'		, '5');//轉換產品手續費
-defined('SOURCE_PREPAYMENT_FEE')    OR define('SOURCE_PREPAYMENT_FEE'	, '6');//提前還款手續費
-defined('SOURCE_TRANSFER_FEE')    	OR define('SOURCE_TRANSFER_FEE'		, '7');//債權轉讓手續費
-defined('SOURCE_PREPAYMENT_ALLOWANCE') OR define('SOURCE_PREPAYMENT_ALLOWANCE'	, '8');//提還補貼金
+defined('SOURCE_SUBLOAN_FEE')      	OR define('SOURCE_SUBLOAN_FEE'		, '5');//轉換產品手續費
+defined('SOURCE_TRANSFER_FEE')    	OR define('SOURCE_TRANSFER_FEE'		, '6');//債權轉讓手續費
+defined('SOURCE_PREPAYMENT_ALLOWANCE') OR define('SOURCE_PREPAYMENT_ALLOWANCE'	, '7');//提還補貼金
 defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應收借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息

@@ -101,7 +101,7 @@ class Target extends REST_Controller {
 		$input 	= $this->input->get();
 		$data	= array();
 		$list	= array();
-		$where	= array( "status" => 4 );
+		$where	= array( "status" => 3 );
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
 		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array("credit_level","instalment","interest_rate"))?$input['orderby']:"credit_level";
@@ -548,16 +548,17 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
-	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {json} target 標的資訊
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {String} target.loan_amount 標的金額
 	 * @apiSuccess {String} target.target_no 案號
 	 * @apiSuccess {String} target.expire_time 流標時間
 	 * @apiSuccess {String} target.invested 目前投標量
-	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {json} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
@@ -704,6 +705,7 @@ class Target extends REST_Controller {
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
 					"id"			=> $target_info->id,
+					"loan_amount"		=> $target_info->loan_amount,
 					"target_no"		=> $target_info->target_no,
 					"invested"		=> $target_info->invested,
 					"expire_time"	=> $target_info->expire_time,

@@ -27,6 +27,7 @@ class Target_model extends MY_Model
 		"platform_fee",
 		"interest_rate",
 		"instalment",
+		"repayment",
 		"delay",
 		"delay_days",
 		"status",

@@ -13,7 +13,7 @@ class User extends REST_Controller {
 		$this->load->model('log/log_userlogin_model');
 		$this->load->library('sms_lib'); 
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -554,6 +554,7 @@ class User extends REST_Controller {
 	 * @apiSuccess {String} phone 手機號碼
 	 * @apiSuccess {String} id_number 身分證字號
 	 * @apiSuccess {String} investor 1:投資端 0:借款端
+	 * @apiSuccess {String} transaction_password 是否設置交易密碼
 	 * @apiSuccess {String} my_promote_code 推廣碼
 	 * @apiSuccess {String} expiry_time token時效
      * @apiSuccessExample {json} SUCCESS
@@ -568,6 +569,7 @@ class User extends REST_Controller {
      *      	"investor_status": "1",
      *      	"my_promote_code": "9JJ12CQ5",
      *      	"id_number": null,
+     *      	"transaction_password": true,
      *      	"investor": 1,  
      *      	"created_at": "1522651818",     
      *      	"updated_at": "1522653939",     
@@ -584,6 +586,7 @@ class User extends REST_Controller {
 		foreach($fields as $key => $field){
 			$data[$field] = $this->user_info->$field?$this->user_info->$field:"";
 		}
+		$data["transaction_password"] = empty($this->user_info->transaction_password)?false:true;
 		$data["investor"] 		= $this->user_info->investor;
 		$data["expiry_time"] 	= $this->user_info->expiry_time;
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
@@ -1027,6 +1030,44 @@ class User extends REST_Controller {
 		}else{
 			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
 		}
+    }
+	
+	/**
+     * @api {post} /user/credittest 會員 測一測
+     * @apiGroup User
+	 * @apiParam {String} school (required) 學校名稱
+	 * @apiParam {String} system 學制 0:大學 1:碩士 2:博士 default:0
+	 * @apiParam {String} department (required) 系所
+	 * @apiParam {String} grade (required) 年級
+     *
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {String} amount 可貸款額度
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+	 *		"data":{
+	 *			"amount": 50000
+	 *		}
+     *    }
+	 *
+	 * @apiUse InputError
+     * 
+     */
+	public function credittest_post()
+    {
+        $input 	= $this->input->post(NULL, TRUE);
+		$data 	= array("amount"=>50000); 
+		//必填欄位
+		$fields 	= ['school','department','grade'];
+		foreach ($fields as $field) {
+			if (empty($input[$field])) {
+				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			}
+		}
+		
+		$input['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+		
+		$this->response(array('result' => 'SUCCESS','data'=> $data));
     }
 	
 	/**

@@ -38,6 +38,13 @@ define({
     "Repayment",
     "Target",
     "Recoveries",
+    "GetRecoveriesDashboard",
+    "GetRecoveriesList",
+    "GetRecoveriesInfoId",
+    "GetRecoveriesPassbook",
+    "PostRecoveriesWithdraw",
+    "PostRecoveriesPretransfer",
+    "PostRecoveriesTransfer",
     "Agreement",
     "GetAgreementList",
     "GetAgreementInfoAlias",
@@ -51,7 +58,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-05-11T10:25:00.232Z",
+    "time": "2018-05-17T10:39:56.931Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

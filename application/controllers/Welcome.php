@@ -126,9 +126,9 @@ class Welcome extends CI_Controller {
 	
 	function target(){
 		$this->load->model('transaction/target_model');
-		$this->load->library('Target_lib'); 
+		$this->load->library('Prepayment_lib'); 
 		$target = $this->target_model->get(1);
-		$rs = $this->target_lib->get_amortization_table($target); 
+		$rs = $this->prepayment_lib->get_prepayment_info($target); 
 		dump($rs);
 	}
 	
@@ -137,7 +137,7 @@ class Welcome extends CI_Controller {
 		$this->s3_upload->image_list();
 	}
 	
-	function testfblogin(){
-		$this->load->view('admin/grid');
+	function recharge(){
+
 	}
 }
