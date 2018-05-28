@@ -7,7 +7,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">P2P Lending</a>
+                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">P2P Lending</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -44,9 +44,6 @@
                                 <li>
                                     <a href="<?=admin_url('product/') ?>">產品列表</a>
                                 </li>
-								<li>
-                                    <a href="<?=admin_url('product/category') ?>">產品分類</a>
-                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -77,9 +74,6 @@
                                 <li>
                                     <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
                                 </li> 
-                                <li>
-                                    <a href="<?=admin_url('certification/school') ?>">學校列表</a>
-                                </li>     
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -89,6 +83,18 @@
                                 <li>
                                     <a href="<?=admin_url('admin/') ?>">後台管理員</a>
                                 </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+						<li class="<?=isset($menu)&&$menu=="test"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>測試工具<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=admin_url('TestScript/') ?>">申貸流程</a>
+                                </li>
+								<li>
+                                    <a href="<?=admin_url('TestScript/payment') ?>">匯款工具</a>
+                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

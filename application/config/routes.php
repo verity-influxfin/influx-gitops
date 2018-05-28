@@ -60,6 +60,12 @@ $route['api/product/applyinfo/(:num)'] 		= 'api/product/applyinfo/$1';
 $route['api/product/cancel/(:num)'] 		= 'api/product/cancel/$1';
 $route['api/agreement/info/(:any)'] 		= 'api/agreement/info/$1';
 $route['api/notitication/info/(:num)'] 		= 'api/notitication/info/$1';
+
 $route['api/repayment/info/(:num)'] 		= 'api/repayment/info/$1';
 $route['api/repayment/prepayment/(:num)'] 	= 'api/repayment/prepayment/$1';
+
+$route['api/subloan/applyinfo/(:num)'] 	= 'api/subloan/applyinfo/$1';
+$route['api/subloan/cancel/(:num)'] 	= 'api/subloan/cancel/$1';
+$route['api/subloan/preapply/(:num)'] 	= 'api/subloan/preapply/$1';
+
 $route['api/recoveries/info/(:num)'] 		= 'api/recoveries/info/$1';

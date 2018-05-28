@@ -119,6 +119,7 @@ defined('APPLY_NO_PERMISSION')  		OR define('APPLY_NO_PERMISSION'			, 405);
 defined('APPLY_ACTION_ERROR')  			OR define('APPLY_ACTION_ERROR'			, 406);
 defined('APPLY_STATUS_ERROR')  			OR define('APPLY_STATUS_ERROR'			, 407);
 defined('APPLY_EXIST')  				OR define('APPLY_EXIST'					, 408);
+defined('PRODUCT_REPAYMENT_ERROR')  	OR define('PRODUCT_REPAYMENT_ERROR'		, 409);
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
@@ -137,6 +138,13 @@ defined('TARGET_SAME_USER')  			OR define('TARGET_SAME_USER'			, 804);
 defined('TARGET_APPLY_NO_PERMISSION')  	OR define('TARGET_APPLY_NO_PERMISSION'	, 805);
 defined('TARGET_APPLY_NOT_EXIST')  		OR define('TARGET_APPLY_NOT_EXIST'		, 806);
 defined('TARGET_APPLY_STATUS_ERROR')  	OR define('TARGET_APPLY_STATUS_ERROR'	, 807);
+defined('TRANSFER_EXIST') 				OR define('TRANSFER_EXIST'				, 808); 
+//Repayment Error Code
+defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
+defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 
+defined('TARGET_HAD_SUBSTATUS') 		OR define('TARGET_HAD_SUBSTATUS'		, 903); 
+defined('TARGET_SUBLOAN_NOT_EXIST') 	OR define('TARGET_SUBLOAN_NOT_EXIST'	, 904); 
+
 
 //Admin
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, 'app_admin_info'); //Use in Admin Login

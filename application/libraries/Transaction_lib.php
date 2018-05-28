@@ -93,78 +93,36 @@ class Transaction_lib{
 	//扣款
 	public function charge($target){
 		if($target->status==5){
-			$funds = $this->get_virtual_funds($target->virtual_account);
-			//應收違約金,應收延滯息,應收借款本金,應收借款利息
+			$funds 			= $this->get_virtual_funds($target->virtual_account);
 			$where 			= array("target_id"=>$target->id,"status"=>array(1,2));
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by($where);
 			if($transaction){
-				$settlement_date 	= time()>strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+2 day')):date("Y-m-d",strtotime('+1 day'));
-				$data = array(
-					"remaining_principal"	=> 0,
-					"remaining_instalment"	=> 0,
-					"settlement_date"		=> $settlement_date,//結帳日
-					"liquidated_damages"	=> 0,
-					"delay_interest_payable"=> 0,
-					"interest_payable"		=> array(),
-				);
 				$instalment 			= 0;
 				$remaining_principal	= array();
 				$day0					= "";
 				$last_settlement_date 	= "";
 				foreach($transaction as $key => $value){
-					
-					if($value->source == SOURCE_LENDING){
-						$last_settlement_date = $day0 = $value->entering_date;
+					switch($value->source){
+						case SOURCE_LENDING: 
+							break;
+						case SOURCE_AR_PRINCIPAL: 
+							break;
+						case SOURCE_PRINCIPAL: 
+							break;
+						case SOURCE_AR_INTEREST: 
+							break;
+						case SOURCE_INTEREST: 
+							break;
+						case SOURCE_AR_DAMAGE: 
+							break;
+						case SOURCE_DAMAGE: 
+							break;
+						case SOURCE_AR_DELAYINTEREST: 
+							break;
+						case SOURCE_DELAYINTEREST: 
+							break;
 					}
-					
-					if($value->source == SOURCE_AR_PRINCIPAL){
-						if(!isset($remaining_principal[$value->user_to])){
-							$remaining_principal[$value->user_to] = 0;
-						}
-						$data["remaining_principal"] 			+= $value->amount;
-						$remaining_principal[$value->user_to]	+= $value->amount;
-						if($value->status==2){
-							$instalment = $value->instalment_no;
-						}
-					}
-					
-					if($value->source == SOURCE_PRINCIPAL){
-						$data["remaining_principal"] 			-= $value->amount;
-						$remaining_principal[$value->user_to]	-= $value->amount;
-					}
-
-					if($value->source == SOURCE_AR_INTEREST && $value->limit_date <= $settlement_date){
-						$data["interest_payable"] 	+= $value->amount;
-						$last_settlement_date		= $value->limit_date;
-					}
-
-					if($value->source == SOURCE_INTEREST){
-						$data["interest_payable"] -= $value->amount;
-					}
-					
-					if($value->source == SOURCE_AR_DAMAGE){
-						$data["liquidated_damages"] += $value->amount;
-					}
-
-					if($value->source == SOURCE_DAMAGE){
-						$data["liquidated_damages"] -= $value->amount;
-					}
-
-					if($value->source == SOURCE_AR_DELAYINTEREST){
-						$data["delay_interest"] += $value->amount;
-					}
-
-					if($value->source == SOURCE_DELAYINTEREST){
-						$data["delay_interest"] -= $value->amount;
-					}
-				}
-				
-				$data["liquidated_damages"] 	= $data["liquidated_damages"]>0?$data["liquidated_damages"]:round($data["remaining_principal"]*LIQUIDATED_DAMAGES/100,0);
-				$data["remaining_instalment"] 	= $target->instalment - $instalment;
-				$days  							= get_range_days($last_settlement_date,$settlement_date);
-				dump($days);
-				dump($data);
-				dump($remaining_principal);
+				} 
 			}
 		}
 	}
@@ -336,6 +294,7 @@ class Transaction_lib{
 								"bank_account_from"	=> $virtual_account->virtual_account,
 								"amount"			=> intval($value->loan_amount),
 								"target_id"			=> $target->id,
+								"investment_id"		=> $value->id,
 								"instalment_no"		=> 0,
 								"user_to"			=> $target->user_id,
 								"bank_code_to"		=> $user_bankaccount->bank_code,
@@ -360,6 +319,7 @@ class Transaction_lib{
 											"bank_account_from"	=> $target->virtual_account,
 											"amount"			=> intval($payment['principal']),
 											"target_id"			=> $target->id,
+											"investment_id"		=> $value->id,
 											"instalment_no"		=> $instalment_no,
 											"user_to"			=> $value->user_id,
 											"bank_code_to"		=> CATHAY_BANK_CODE,
@@ -375,6 +335,7 @@ class Transaction_lib{
 											"bank_account_from"	=> $target->virtual_account,
 											"amount"			=> intval($payment['interest']),
 											"target_id"			=> $target->id,
+											"investment_id"		=> $value->id,
 											"instalment_no"		=> $instalment_no,
 											"user_to"			=> $value->user_id,
 											"bank_code_to"		=> CATHAY_BANK_CODE,

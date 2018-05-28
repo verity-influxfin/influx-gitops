@@ -1,19 +1,11 @@
 <?php
 
-class Investment_model extends MY_Model
+class Subloan_model extends MY_Model
 {
-	public $_table = 'investments';
+	public $_table = 'subloan';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
-	public $status_list   = array(
-		0 =>	"待付款",
-		1 =>	"待結標(款項已移至待交易)",
-		2 =>	"待放款(已結標)",
-		3 =>	"還款中",
-		8 =>	"已取消",
-		9 =>	"已流標",
-		10 =>	"已結案",
-	);
+
 	
 	public function __construct()
 	{
@@ -23,8 +15,8 @@ class Investment_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-        $data['created_at'] = $data['updated_at'] = time();
-        $data['created_ip'] = $data['updated_ip'] = get_ip();
+        $data['created_at'] 	= $data['updated_at'] = time();
+        $data['created_ip'] 	= $data['updated_ip'] = get_ip();
         return $data;
     }
 	

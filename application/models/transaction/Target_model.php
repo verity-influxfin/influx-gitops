@@ -31,6 +31,7 @@ class Target_model extends MY_Model
 		"delay",
 		"delay_days",
 		"status",
+		"sub_status",
 		"created_at",
 	);
 	
@@ -50,6 +51,7 @@ class Target_model extends MY_Model
 		"delay",
 		"delay_days",
 		"status",
+		"sub_status",
 		"created_at",
 		"updated_at"
 	);

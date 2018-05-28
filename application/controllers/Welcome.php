@@ -120,15 +120,16 @@ class Welcome extends CI_Controller {
 	function transaction(){
 		$this->load->model('transaction/target_model');
 		$this->load->library('Transaction_lib'); 
-		$rs = $this->transaction_lib->lending_success(1); 
+		$rs = $this->transaction_lib->lending_success(12); 
 		dump($rs);
 	}
 	
 	function target(){
 		$this->load->model('transaction/target_model');
-		$this->load->library('Prepayment_lib'); 
+		$this->load->library('Subloan_lib'); 
 		$target = $this->target_model->get(1);
-		$rs = $this->prepayment_lib->get_prepayment_info($target); 
+		$rs = $this->subloan_lib->get_subloan($target); 
+		$rs = $this->subloan_lib->cancel_subloan($rs); 
 		dump($rs);
 	}
 	

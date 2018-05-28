@@ -19,6 +19,7 @@ class Recoveries extends REST_Controller {
 		$this->load->library('Certification_lib');
 		$this->load->library('Transaction_lib'); 
 		$this->load->library('Target_lib'); 
+		$this->load->library('Transfer_lib'); 
 		$this->load->library('Passbook_lib'); 
 		
         $method = $this->router->fetch_method();
@@ -173,6 +174,11 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments
+	 * @apiSuccess {String} transfer_amount 債權轉讓本金
+	 * @apiSuccess {String} transfer_fee 債權轉讓手續費
+	 * @apiSuccess {String} transfer_contract 債權轉讓合約
+	 * @apiSuccess {String} transfer_at 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -182,6 +188,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} target.delay_days 逾期天數
 	 * @apiSuccess {String} target.target_no 案號
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {json} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
@@ -196,6 +203,11 @@ class Recoveries extends REST_Controller {
      * 				"amount":"50000",
      * 				"loan_amount":"",
      * 				"status":"3",
+     * 				"transfer_status":"0",
+     * 				"transfer_fee":"0",
+     * 				"transfer_amount":"0",
+     * 				"transfer_contract":"",
+     * 				"transfer_at":"0",
      * 				"created_at":"1520421572",
 	 * 				"product":{
      * 					"id":"2",
@@ -207,7 +219,8 @@ class Recoveries extends REST_Controller {
      * 					"credit_level": "4",
      * 					"delay": "0",
      * 					"delay_days": "0",
-     * 					"status": "5"
+     * 					"status": "5",
+     * 					"sub_status": "0",
      * 				},
 	 * 	        	"next_repayment": {
      * 	            	"date": "2018-06-10",
@@ -238,10 +251,11 @@ class Recoveries extends REST_Controller {
 				$target = array(
 					"id"			=> $target_info->id,
 					"target_no"		=> $target_info->target_no,
-					"credit_level"		=> $target_info->credit_level,
+					"credit_level"	=> $target_info->credit_level,
 					"delay"			=> $target_info->delay,
 					"delay_days"	=> $target_info->delay_days,
 					"status"		=> $target_info->status,
+					"sub_status"	=> $target_info->sub_status,
 				);
 				
 				$next_repayment = array(
@@ -268,14 +282,19 @@ class Recoveries extends REST_Controller {
 				
 				$product_info = $this->product_model->get($target_info->product_id);
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					"id"				=> $product_info->id,
+					"name"				=> $product_info->name,
 				);
 				
 				$list[] = array(          
 					"id" 				=> $value->id,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"status" 			=> $value->status,
+					"transfer_status" 	=> $value->transfer_status,
+					"transfer_fee" 		=> $value->transfer_fee,
+					"transfer_amount" 	=> $value->transfer_amount,
+					"transfer_contract" => $value->transfer_contract,
+					"transfer_at" 		=> $value->transfer_at,
 					"created_at" 		=> $value->created_at,
 					"product" 			=> $product,
 					"target" 			=> $target,
@@ -296,6 +315,11 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments
+	 * @apiSuccess {String} transfer_amount 債權轉讓本金
+	 * @apiSuccess {String} transfer_fee 債權轉讓手續費
+	 * @apiSuccess {String} transfer_contract 債權轉讓合約
+	 * @apiSuccess {String} transfer_at 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -307,6 +331,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} target.instalment 期數
 	 * @apiSuccess {String} target.repayment 還款方式
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {json} amortization_schedule 回款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
@@ -329,6 +354,11 @@ class Recoveries extends REST_Controller {
      * 			"amount":"50000",
      * 			"loan_amount":"",
      * 			"status":"3",
+	  * 		"transfer_status":"0",
+     * 			"transfer_fee":"0",
+     * 			"transfer_amount":"0",
+     * 			"transfer_contract":"",
+     * 			"transfer_at":"0",
      * 			"created_at":"1520421572",
 	 * 			"product":{
      * 				"id":"2",
@@ -350,7 +380,7 @@ class Recoveries extends REST_Controller {
   	 *           	"rate": "9",
   	 *           	"date": "2018-04-17",
   	 *           	"total_payment": 2053,
-  	 *           	"schedule": {
+  	 *           	"list": {
  	 *              "1": {
    	 *                  "instalment": 1,
    	 *                  "repayment_date": "2018-06-10",
@@ -417,6 +447,7 @@ class Recoveries extends REST_Controller {
 				"delay"			=> $target_info->delay,
 				"delay_days"	=> $target_info->delay_days,
 				"status"		=> $target_info->status,
+				"sub_status"	=> $target_info->sub_status,
 				"instalment" 	=> $instalment_list[$target_info->instalment],
 				"repayment" 	=> $repayment_type[$target_info->repayment],
 			);
@@ -442,6 +473,11 @@ class Recoveries extends REST_Controller {
 				"loan_amount" 			=> $investment->loan_amount?$investment->loan_amount:"",
 				"contract" 				=> $investment->contract,
 				"status" 				=> $investment->status,
+				"transfer_status" 		=> $investment->transfer_status,
+				"transfer_fee" 			=> $investment->transfer_fee,
+				"transfer_amount" 		=> $investment->transfer_amount,
+				"transfer_contract" 	=> $investment->transfer_contract,
+				"transfer_at" 			=> $investment->transfer_at,
 				"created_at" 			=> $investment->created_at,
 				"product" 				=> $product,
 				"target" 				=> $target,
@@ -640,7 +676,7 @@ class Recoveries extends REST_Controller {
      * @apiSuccess {String} total_fee 預計轉讓費用
      * @apiSuccess {String} max_instalment 最大剩餘期數
      * @apiSuccess {String} min_instalment 最小剩餘期數
-     * @apiSuccess {String} debt_transfer_contract 轉讓合約
+     * @apiSuccess {json} debt_transfer_contract 轉讓合約(多份)
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -648,8 +684,8 @@ class Recoveries extends REST_Controller {
      *              "total_principal": 50000,
      *              "total_fee": 250,
      *              "max_instalment": 3,
-     *              "min_instalment": 3
-     *              "debt_transfer_contract": "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"
+     *              "min_instalment": 3,
+     *              "debt_transfer_contract": ["我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"]
      *          }
      *    }
 	 * 
@@ -658,7 +694,7 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符
-     * @apiErrorExample {json} 806
+     * @apiErrorExample {json} 807
      *     {
      *       "result": "ERROR",
      *       "error": "807"
@@ -676,6 +712,13 @@ class Recoveries extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "805"
+     *     }
+	 *
+     * @apiError 808 已申請過債權轉出
+     * @apiErrorExample {json} 808
+     *     {
+     *       "result": "ERROR",
+     *       "error": "808"
      *     }
      */
 	public function pretransfer_post()
@@ -705,10 +748,11 @@ class Recoveries extends REST_Controller {
 		$investments = $this->investment_model->get_many($ids);
 
 		if(count($investments)==count($ids)){
-			$total_principal = 0;
-			$total_fee		 = 0;
-			$max_instalment	 = 0;
-			$min_instalment	 = 0;
+			$total_principal 		= 0;
+			$total_fee		 		= 0;
+			$max_instalment	 		= 0;
+			$min_instalment	 		= 0;
+			$debt_transfer_contract = array();
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
 					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
@@ -716,38 +760,31 @@ class Recoveries extends REST_Controller {
 				if($value->status != 3){
 					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
 				}
+				if($value->transfer_status != 0){
+					$this->response(array('result' => 'ERROR',"error" => TRANSFER_EXIST ));
+				}
 			}
 			foreach( $investments as $key => $value ){
-				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$value->target_id,"user_to"=>$user_id,"status"=>array(1,2)));
-				if($transaction){
-					$instalment 		= 0;
-					$instalment_paid 	= 0;
-					foreach($transaction as $k => $v){
-						if($v->source == SOURCE_AR_PRINCIPAL){
-							$total_principal += $v->amount;
-							$instalment		 = $v->instalment_no;
-						}
-						if($v->source == SOURCE_PRINCIPAL){
-							$total_principal -= $v->amount;
-							$instalment_paid = $v->instalment_no;
-						}
+				$info = $this->transfer_lib->get_pretransfer_info($value);
+				if($info){
+					$total_principal 	+= $info["principal"];
+					$total_fee 			+= $info["fee"];
+					$debt_transfer_contract[] = $info["debt_transfer_contract"];
+					if($max_instalment < $info["instalment"]){
+						$max_instalment = $info["instalment"];
 					}
-					$instalment = $instalment - $instalment_paid;
-					if($max_instalment<$instalment){
-						$max_instalment = $instalment;
-					}
-					if($min_instalment>$instalment || $min_instalment==0){
-						$min_instalment = $instalment;
+					if($min_instalment > $info["instalment"] || $min_instalment==0){
+						$min_instalment = $info["instalment"];
 					}
 				}
 			}
-			$total_fee = round($total_principal*DEBT_TRANSFER_FEES,0);
+
 			$data = array(
-				"total_principal"	=> $total_principal,
-				"total_fee"			=> $total_fee,
-				"max_instalment"	=> $max_instalment,
-				"min_instalment"	=> $min_instalment,
-				"debt_transfer_contract" => "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約",
+				"total_principal"			=> $total_principal,
+				"total_fee"					=> $total_fee,
+				"max_instalment"			=> $max_instalment,
+				"min_instalment"			=> $min_instalment,
+				"debt_transfer_contract" 	=> $debt_transfer_contract,
 			);
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));
 		}
@@ -770,7 +807,7 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符
-     * @apiErrorExample {json} 806
+     * @apiErrorExample {json} 807
      *     {
      *       "result": "ERROR",
      *       "error": "807"
@@ -788,6 +825,13 @@ class Recoveries extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "805"
+     *     }
+	 *
+     * @apiError 808 已申請過債權轉出
+     * @apiErrorExample {json} 808
+     *     {
+     *       "result": "ERROR",
+     *       "error": "808"
      *     }
      */
 	public function transfer_post()
@@ -822,6 +866,10 @@ class Recoveries extends REST_Controller {
 				if($value->status != 3){
 					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
 				}
+				if($value->transfer_status != 0){
+					$this->response(array('result' => 'ERROR',"error" => TRANSFER_EXIST ));
+				}
+				$rs = $this->transfer_lib->apply_transfer($value);
 			}
 			$this->response(array('result' => 'SUCCESS'));
 		}

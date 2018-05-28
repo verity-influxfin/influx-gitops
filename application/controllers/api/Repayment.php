@@ -140,6 +140,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
@@ -172,6 +173,7 @@ class Repayment extends REST_Controller {
      * 				"delay":"0",
      * 				"delay_days":"0",
      * 				"status":"5",
+     * 				"sub_status":"0",
      * 				"created_at":"1520421572",
 	 * 	        	"next_repayment": {
      * 	            	"date": "2018-06-10",
@@ -255,6 +257,7 @@ class Repayment extends REST_Controller {
 					"delay" 			=> $value->delay,
 					"delay_days" 		=> $value->delay_days,
 					"status" 			=> $value->status,
+					"sub_status" 		=> $value->sub_status,
 					"created_at" 		=> $value->created_at,
 					"next_repayment" 	=> $next_repayment,
 					"virtual_account"	=> $virtual_account,
@@ -282,6 +285,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {String} remaining_principal 剩餘本金
 	 * @apiSuccess {String} remaining_instalment 剩餘期數
@@ -307,14 +311,17 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.rate 年利率
 	 * @apiSuccess {String} amortization_schedule.date 起始時間
 	 * @apiSuccess {String} amortization_schedule.total_payment 每月還款金額
-	 * @apiSuccess {String} amortization_schedule.schedule 還款計畫
-	 * @apiSuccess {String} amortization_schedule.schedule.instalment 第幾期
-	 * @apiSuccess {String} amortization_schedule.schedule.repayment_date 還款日
-	 * @apiSuccess {String} amortization_schedule.schedule.days 本期日數
-	 * @apiSuccess {String} amortization_schedule.schedule.principal 還款本金
-	 * @apiSuccess {String} amortization_schedule.schedule.interest 還款利息
-	 * @apiSuccess {String} amortization_schedule.schedule.total_payment 本期還款金額
-	 * @apiSuccess {String} amortization_schedule.schedule.repayment 已還款金額
+	 * @apiSuccess {String} amortization_schedule.sub_loan_fees 轉貸手續費用
+	 * @apiSuccess {String} amortization_schedule.platform_fees 平台服務費用
+	 * @apiSuccess {String} amortization_schedule.list 還款計畫
+	 * @apiSuccess {String} amortization_schedule.list.instalment 第幾期
+	 * @apiSuccess {String} amortization_schedule.list.repayment_date 還款日
+	 * @apiSuccess {String} amortization_schedule.list.principal 還款本金
+	 * @apiSuccess {String} amortization_schedule.list.interest 還款利息
+	 * @apiSuccess {String} amortization_schedule.list.total_payment 本期還款金額
+	 * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
+	 * @apiSuccess {String} amortization_schedule.list.delay_interest 延滯息
+	 * @apiSuccess {String} amortization_schedule.list.liquidated_damages 違約金（提還費）
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -331,6 +338,7 @@ class Repayment extends REST_Controller {
      * 			"remark":"",
      * 			"delay":"0",
      * 			"status":"0",
+     * 			"sub_status":"0",
      * 			"created_at":"1520421572",
      * 			"remaining_principal":"50000",
      * 			"remaining_instalment":"3",
@@ -372,6 +380,8 @@ class Repayment extends REST_Controller {
   	 *           "rate": "9",
   	 *           "date": "2018-04-17",
   	 *           "total_payment": 2053,
+  	 *           "sub_loan_fees": 0,
+  	 *           "platform_fees": 1500,
   	 *           "schedule": {
  	 *              "1": {
    	 *                 	"instalment": 1,
@@ -379,7 +389,9 @@ class Repayment extends REST_Controller {
    	 *                  "repayment": 0,
    	 *                  "principal": 1893,
    	 *                  "interest": 160,
-   	 *                  "total_payment": 2053
+   	 *                  "total_payment": 2053,
+   	 *                  "delay_interest": 0,
+   	 *                  "liquidated_damages": 0
    	 *              },
    	 *              "2": {
   	 *                   "instalment": 2,
@@ -387,15 +399,19 @@ class Repayment extends REST_Controller {
    	 *                   "repayment": 0,
   	 *                   "principal": 1978,
   	 *                   "interest": 75,
- 	 *                   "total_payment": 2053
+ 	 *                   "total_payment": 2053,
+   	 *                   "delay_interest": 0,
+   	 *                   "liquidated_damages": 0
   	 *               },
    	 *              "3": {
- 	 *                    "instalment": 3,
- 	 *                    "repayment_date": "2018-08-10",
- 	 *                    "repayment": 0,
-  	 *                    "principal": 1991,
-  	 *                    "interest": 62,
- 	 *                    "total_payment": 2053
+ 	 *                   "instalment": 3,
+ 	 *                   "repayment_date": "2018-08-10",
+ 	 *                   "repayment": 0,
+  	 *                   "principal": 1991,
+  	 *                   "interest": 62,
+ 	 *                   "total_payment": 2053,
+   	 *                   "delay_interest": 0,
+   	 *                   "liquidated_damages": 0
  	 *               }
  	 *           }
 	 *        }
@@ -477,6 +493,9 @@ class Repayment extends REST_Controller {
 					}
 					
 					if($v->instalment_no == $next_repayment["instalment"]){
+						if(!isset($next_repayment["list"][$v->source]["amount"])){
+							$next_repayment["list"][$v->source]["amount"] = 0;
+						}
 						$next_repayment["list"][$v->source]["amount"] += $v->amount;
 						$next_repayment["list"][$v->source]["source_name"] = $transaction_source[$v->source];
 					}
@@ -532,12 +551,13 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} prepayment 提前還款資訊
 	 * @apiSuccess {String} prepayment.remaining_principal 剩餘本金
 	 * @apiSuccess {String} prepayment.remaining_instalment 剩餘期數
 	 * @apiSuccess {String} prepayment.settlement_date 結息日
-	 * @apiSuccess {String} prepayment.liquidated_damages 違約金（提環手續費）
+	 * @apiSuccess {String} prepayment.liquidated_damages 違約金（提還費）
 	 * @apiSuccess {String} prepayment.delay_interest_payable 應付延滯息
 	 * @apiSuccess {String} prepayment.interest_payable 應付利息
 	 * @apiSuccess {String} prepayment.total 合計
@@ -666,6 +686,13 @@ class Repayment extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
+	 *
+     * @apiError 903 已申請提前還款或轉換產品
+     * @apiErrorExample {json} 903
+     *     {
+     *       "result": "ERROR",
+     *       "error": "903"
+     *     }
      */
 	public function prepayment_post($target_id)
     {
@@ -676,18 +703,18 @@ class Repayment extends REST_Controller {
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
 			}
-
+			
+			if($target->sub_status != 0){
+				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
+			}
+			
 			$prepayment 	= $this->prepayment_lib->get_prepayment_info($target);
 			if($prepayment){
-				$param = array(
-					"target_id"			=> $target_id,
-					"settlement_date"	=> $prepayment["settlement_date"],
-					"expire_time"		=> $prepayment["settlement_date"]." "
-				);
-				
+				$rs 		= $this->prepayment_lib->apply_prepayment($target);
 				$this->response(array('result' => 'SUCCESS'));
 			}
 		}
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }
+
 }

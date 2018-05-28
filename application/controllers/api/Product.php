@@ -82,21 +82,21 @@ class Product extends REST_Controller {
      * 				"charge_platform":"0",
      * 				"charge_platform_min":"0",
 	 * 				"instalment": [
-	  * 				{
+	 * 					{
      * 				      "name": "3期",
      * 				      "value": 3
      * 				    },
-	  * 				{
+	 * 					{
      * 				      "name": "12期",
      * 				      "value": 12
      * 				    },
-	  * 				{
+	 * 					{
      * 				      "name": "24期",
      * 				      "value": 24
      * 				    },
 	 * 				],
 	 * 				"repayment": [
-	  * 				{
+	 * 					{
      * 				      "name": "等額本息",
      * 				      "value": 1
      * 				    }
@@ -448,7 +448,7 @@ class Product extends REST_Controller {
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 406
+     * @apiErrorExample {json} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
@@ -583,6 +583,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -609,6 +610,7 @@ class Product extends REST_Controller {
      * 				"remark":"",
      * 				"delay":"0",
      * 				"status":"0",
+     * 				"sub_status":"0",
      * 				"created_at":"1520421572"
      * 			},
      * 			{
@@ -631,6 +633,7 @@ class Product extends REST_Controller {
      * 				"remark":"",
      * 				"delay":"0",
      * 				"status":"0",
+     * 				"sub_status":"0",
      * 				"created_at":"1520421572"
      * 			}
      * 			]
@@ -675,6 +678,7 @@ class Product extends REST_Controller {
 					"remark" 			=> $value->remark, 
 					"delay" 			=> $value->delay,
 					"status" 			=> $value->status,
+					"sub_status" 		=> $value->sub_status,
 					"created_at" 		=> $value->created_at,
 				);
 			}
@@ -702,6 +706,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {json} certification 認證完成資訊
@@ -748,6 +753,7 @@ class Product extends REST_Controller {
      * 			"remark":"",
      * 			"delay":"0",
      * 			"status":"0",
+     * 			"sub_status":"0",
      * 			"created_at":"1520421572",
      * 			"product":{
      * 				"id":"2",
@@ -944,7 +950,7 @@ class Product extends REST_Controller {
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 406
+     * @apiErrorExample {json} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"

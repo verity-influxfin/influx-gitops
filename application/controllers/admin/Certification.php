@@ -192,31 +192,6 @@ class Certification extends MY_Admin_Controller {
 			}
 		}
 	}
-	
-	public function school(){
-		
-		$rs = file_get_contents(base_url()."assets/school.json");
-		$data = json_decode($rs,TRUE);
-		if(!empty($data)){
-			unset($data[0],$data[1]); 
-			$list = array();
-			foreach($data as $key => $value){
-				$list[] = (object) array(
-				'id' 		=> $value["106學年度大專校院名錄"],
-				'name' 		=> $value[1],
-				'public' 	=> $value[2],
-				'city' 		=> $value[3],
-				'address' 	=> $value[4],
-				'phone' 	=> $value[5],
-				'url' 		=> $value[6],
-				);
-			}
-			$page_data["list"] = $list;
-		}
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/school_list',$page_data);
-		$this->load->view('admin/_footer');
-	}
+
 }
 ?>

@@ -20,8 +20,6 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>名稱</th>
-                                            <th>產品縮寫</th>
-                                            <th>產品分類</th>
                                             <th>借款額度</th>
                                             <th>年利率下限（%）</th>
 											<th>年利率上限（%）</th>
@@ -42,8 +40,6 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->alias)?$value->alias:"" ?></td>
-                                            <td><?=isset($category_list[$value->category])?$category_list[$value->category]:"" ?></td>
 											<td><?=isset($value->loan_range_s)?$value->loan_range_s:"" ?> - <?=isset($value->loan_range_e)?$value->loan_range_e:"" ?></td>
 											<td><?=isset($value->interest_rate_s)?$value->interest_rate_s:"" ?></td>
 											<td><?=isset($value->interest_rate_e)?$value->interest_rate_e:"" ?></td>

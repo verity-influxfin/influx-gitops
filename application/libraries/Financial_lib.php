@@ -50,7 +50,7 @@ class Financial_lib{
 				}
 				
 				//本期日數
-				$days  		= get_range_days($date,$odate);
+				$days  		= get_range_days($odate,$date);
 				//本期利息 = 年利率/年日數*本期日數=本期利率
 				$interest 	= round( $amount * $rate / 100 * $days / $year_days ,0);
 				//本期本金
@@ -79,7 +79,7 @@ class Financial_lib{
 				$xirr_value[] = $total_payment;
 				$amount = $amount - $principal;
 			}
-			
+
 			$schedule['XIRR']		= $this->XIRR($xirr_value,$xirr_dates);
 			$schedule['schedule'] 	= $list;
 			$schedule['total'] 		= array(
@@ -120,7 +120,7 @@ class Financial_lib{
 				$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
 			}
 			//本期日數
-			$days  		= floor((strtotime($date) - strtotime($odate))/(60*60*24));
+			$days  		= get_range_days($odate,$date);
 			//本期利息 = 年利率/年日數*本期日數=本期利率
 			$interest 	= round( $amount * $rate / 100 * $days / $year_days ,0);
 			//本期本金

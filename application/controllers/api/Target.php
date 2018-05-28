@@ -18,7 +18,7 @@ class Target extends REST_Controller {
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list'];
+        $nonAuthMethods = ['list' ,'info'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -64,6 +64,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {String} invested 目前投標量
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -136,6 +137,7 @@ class Target extends REST_Controller {
 					"expire_time" 		=> $value->expire_time,
 					"invested" 			=> $value->invested,
 					"status" 			=> $value->status,
+					"sub_status" 		=> $value->sub_status,
 					"created_at" 		=> $value->created_at,
 				);
 			}
@@ -166,6 +168,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -215,6 +218,7 @@ class Target extends REST_Controller {
      * 			"expire_time": "1525449600",
      * 			"invested": "50000",
      * 			"status":"4",
+     * 			"sub_status":"0",
      * 			"created_at":"1520421572",
      * 			"product":{
      * 				"id":"2",
@@ -304,7 +308,7 @@ class Target extends REST_Controller {
 		$this->load->library('Financial_lib');
 		$this->load->library('credit_lib');
 		$input 				= $this->input->get(NULL, TRUE);
-		$user_id 			= $this->user_info->id;
+		//$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
@@ -382,6 +386,7 @@ class Target extends REST_Controller {
 				"expire_time" 		=> $target->expire_time,
 				"invested" 			=> $target->invested,
 				"status" 			=> $target->status,
+				"sub_status" 		=> $target->sub_status,
 				"created_at" 		=> $target->created_at,
 			);
 
@@ -549,6 +554,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
 	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -559,6 +565,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} target.expire_time 流標時間
 	 * @apiSuccess {String} target.invested 目前投標量
 	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {json} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
@@ -583,6 +590,7 @@ class Target extends REST_Controller {
      * 				"amount":"5000",
      * 				"loan_amount":"",
      * 				"status":"3",
+     * 				"transfer_status":"0",
      * 				"created_at":"1520421572",
 	 * 				"product":{
      * 					"id":"2",
@@ -711,6 +719,7 @@ class Target extends REST_Controller {
 					"expire_time"	=> $target_info->expire_time,
 					"delay"			=> $target_info->delay,
 					"status"		=> $target_info->status,
+					"sub_status"	=> $target_info->sub_status,
 				);
 				
 				$product_info = $this->product_model->get($target_info->product_id);
@@ -724,6 +733,7 @@ class Target extends REST_Controller {
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"status" 			=> $value->status,
+					"transfer_status" 	=> $value->transfer_status,
 					"created_at" 		=> $value->created_at,
 					"product" 			=> $product,
 					"target" 			=> $target,
