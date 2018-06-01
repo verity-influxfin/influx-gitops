@@ -306,7 +306,6 @@ class Target extends REST_Controller {
 	public function info_get($target_id)
     {
 		$this->load->library('Financial_lib');
-		$this->load->library('credit_lib');
 		$input 				= $this->input->get(NULL, TRUE);
 		//$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
@@ -339,22 +338,6 @@ class Target extends REST_Controller {
 
 			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
 		
-			$user_info 	= $this->user_model->get($target->user_id); 
-			$user		= array();
-			if($user_info){
-				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."XX";
-				$age  		= get_age($user_info->birthday);
-				$user_meta 	= $this->user_meta_model->get_by(array("user_id"=>$target->user_id,"meta_key"=>"school_name"));
-				$school_name= $user_meta?$user_meta->meta_value:"";
-				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5)."XXXXX":"";
-				$user = array(
-					"name" 			=> $name,
-					"age"			=> $age,
-					"school_name"	=> $school_name,
-					"id_number"		=> $id_number,
-				);
-			}
-			
 			$user_info 	= $this->user_model->get($target->user_id); 
 			$user		= array();
 			if($user_info){

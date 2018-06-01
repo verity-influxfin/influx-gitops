@@ -46,7 +46,7 @@ class TestScript extends MY_Admin_Controller
             "userBankAccountList" 	=> $userBankAccountList,
             "paymentList" 			=> $paymentList,
 			"payment_status"		=> $this->payment_model->status_list,
-			"bankaccount_verify"	=> array("1"=>"驗證成功","2"=>"待驗證","3"=>"已發送"),
+			"bankaccount_verify"	=> array("0"=>"未驗證","1"=>"驗證成功","2"=>"待驗證","3"=>"已發送"),
         ];
 
         $this->load->view("admin/_header");

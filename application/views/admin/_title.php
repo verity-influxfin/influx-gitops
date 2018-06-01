@@ -86,6 +86,15 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>協議書管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=admin_url('Agreement/') ?>">協議書</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
 						<li class="<?=isset($menu)&&$menu=="test"?"active":""; ?>">
                             <a href="#"><i class="fa fa-table fa-fw"></i>測試工具<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

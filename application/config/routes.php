@@ -69,3 +69,4 @@ $route['api/subloan/cancel/(:num)'] 	= 'api/subloan/cancel/$1';
 $route['api/subloan/preapply/(:num)'] 	= 'api/subloan/preapply/$1';
 
 $route['api/recoveries/info/(:num)'] 		= 'api/recoveries/info/$1';
+$route['api/transfer/info/(:num)'] 			= 'api/transfer/info/$1';

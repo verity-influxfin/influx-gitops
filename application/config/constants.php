@@ -139,6 +139,8 @@ defined('TARGET_APPLY_NO_PERMISSION')  	OR define('TARGET_APPLY_NO_PERMISSION'	,
 defined('TARGET_APPLY_NOT_EXIST')  		OR define('TARGET_APPLY_NOT_EXIST'		, 806);
 defined('TARGET_APPLY_STATUS_ERROR')  	OR define('TARGET_APPLY_STATUS_ERROR'	, 807);
 defined('TRANSFER_EXIST') 				OR define('TRANSFER_EXIST'				, 808); 
+defined('TRANSFER_NOT_EXIST') 			OR define('TRANSFER_NOT_EXIST'			, 809); 
+defined('TRANSFER_APPLY_EXIST')  		OR define('TRANSFER_APPLY_EXIST'		, 810);
 //Repayment Error Code
 defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
 defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 

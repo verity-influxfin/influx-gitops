@@ -2,7 +2,7 @@
 
 class Transfer_model extends MY_Model
 {
-	public $_table = 'debt_transfer';
+	public $_table = 'transfers';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 

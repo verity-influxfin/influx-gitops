@@ -52,61 +52,50 @@ class Transfer_lib{
 		if($investment && $investment->status==3){
 			$info  = $this->get_pretransfer_info($investment);
 			if($info){
-				$param = array(
+				$investment_param = array(
 					"transfer_status"		=> 1,
-					"transfer_expire_time"	=> strtotime("+2 days", time()),
-					"transfer_amount"		=> $info["principal"],
-					"transfer_fee"			=> $info["fee"],
-					"transfer_launch_times"	=> 1,
-					"transfer_contract"		=> $info["debt_transfer_contract"],
 				);
-				$rs = $this->CI->investment_model->update($investment->id,$param);
-				return $rs;
-			}
-		}
-		return false;
-	}
-
-	public function signing_subloan($subloan,$data){
-
-		if($subloan && $subloan->status==0){
-			$target = $this->CI->target_model->get($subloan->new_target_id);
-			if($target && $target->status==1){
-				$param = array(
-					"person_image"	=> $data["person_image"],
-					"status"		=> 2
-				);
-				$rs = $this->CI->target_model->update($target->id,$param);
+				$rs = $this->CI->investment_model->update($investment->id,$investment_param);
 				if($rs){
-					$this->CI->subloan_model->update($subloan->id,array("status"=>1));
-					return $rs;
+					$param = array(
+						"target_id"				=> $investment->target_id,
+						"investment_id"			=> $investment->id,
+						"transfer_fee"			=> $info["fee"],
+						"amount"				=> $info["principal"],
+						"instalment"			=> $info["instalment"],
+						"expire_time"			=> strtotime("+2 days", time()),
+						"launch_times"			=> 1,
+						"contract"				=> $info["debt_transfer_contract"],
+					);
+					$res = $this->CI->transfer_model->insert($param);
+					return $res;
 				}
 			}
 		}
 		return false;
 	}
-	
-	public function get_subloan($target){
-		if($target){
-			$where 		= array("status !="=>8,"target_id"=>$target->id);
-			$subloan	= $this->CI->subloan_model->get_by($where);
-			if($subloan){
-				return $subloan;
-			}
-		}
-		return false;
-	}
-	
-	public function cancel_subloan($subloan){
-		if($subloan && $subloan->status==0){
-			$rs = $this->CI->subloan_model->update($subloan->id,array("status"=>8));
-			if($rs){
-				$this->CI->target_model->update($subloan->target_id,array("sub_status"=>0));
-				$this->CI->target_model->update($subloan->new_target_id,array("status"=>8));
-				return $rs;
-			}
-		}
-		return false;
-	}
 
+	public function get_transfer_list(){
+		$list 	= array();
+		$where 	= array(
+			"status" => 0
+		);
+		$rs = $this->CI->transfer_model->get_many_by($where);
+		if($rs){
+			$list = $rs;
+		}
+		return $list;
+	}
+	
+
+	public function get_transfer($id){
+		
+		if($id){
+			$transfer = $this->CI->transfer_model->get($id);
+			return $transfer;
+		}
+		return false;
+		
+	}
+	
 }

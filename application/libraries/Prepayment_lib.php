@@ -214,7 +214,7 @@ class Prepayment_lib{
 				"settlement_date"	=> $info["settlement_date"],
 				"amount"			=> $info["total"]
 			);
-			$rs = $this->CI->subloan_model->insert($param);
+			$rs = $this->CI->prepayment_model->insert($param);
 			if($rs){
 				$this->CI->target_model->update($target->id,array("sub_status"=>3));
 				return $rs;

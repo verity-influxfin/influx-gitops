@@ -21,6 +21,7 @@
 	<!-- jQuery Version 1.11.0 -->
     <script src="<?=base_url()?>assets/admin/js/jquery-1.11.0.js"></script>
 
+	<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
 </head>
 <body>
     <div id="wrapper">

@@ -172,8 +172,8 @@
 	}
 
 	function get_rand_token(){
-		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
-		
+		//return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
+		return '000000';
 	}
 	
 	function make_promote_code() {
