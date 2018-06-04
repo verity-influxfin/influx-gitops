@@ -12,8 +12,8 @@ class Repayment extends REST_Controller {
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
 		$this->load->model('platform/certification_model');
-		$this->load->model('transaction/target_model');
-		$this->load->model('transaction/investment_model');
+		$this->load->model('loan/target_model');
+		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Target_lib');
 		$this->load->library('Prepayment_lib');

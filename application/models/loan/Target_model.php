@@ -59,7 +59,7 @@ class Target_model extends MY_Model
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_database = $this->load->database('transaction',TRUE);
+		$this->_database = $this->load->database('loan',TRUE);
  	}
 	
 	protected function before_data_c($data)

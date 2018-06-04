@@ -8,7 +8,7 @@ class Target_lib{
 	public function __construct()
     {
         $this->CI = &get_instance();
-		$this->CI->load->model('transaction/target_model');
+		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');

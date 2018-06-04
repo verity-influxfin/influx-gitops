@@ -9,9 +9,9 @@ class Transaction_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('transaction/target_model');
+		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('transaction/payment_model');
-		$this->CI->load->model('transaction/investment_model');
+		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/virtual_passbook_model');
 		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->model('transaction/withdraw_model');
@@ -31,17 +31,14 @@ class Transaction_lib{
 					$user_account = $this->CI->virtual_account_model->get_by(array("virtual_account"=>$payment->virtual_account));
 					if($user_account){
 						$bank 			= bankaccount_substr($payment->bank_acc);
-						$bank_code		= $bank['bank_code'];
 						$bank_account	= $bank['bank_account'];
 						$transaction	= array(
 							"source"			=> SOURCE_RECHARGE,
 							"entering_date"		=> date("Y-m-d"),
 							"user_from"			=> $user_account->user_id,
-							"bank_code_from"	=> $bank_code,
 							"bank_account_from"	=> $bank_account,
 							"amount"			=> intval($payment->amount),
 							"user_to"			=> $user_account->user_id,
-							"bank_code_to"		=> CATHAY_BANK_CODE,
 							"bank_account_to"	=> $payment->virtual_account,
 							"status"			=> 2
 						);
@@ -265,13 +262,11 @@ class Transaction_lib{
 					"source"			=> SOURCE_FEES,
 					"entering_date"		=> $date,
 					"user_from"			=> $target->user_id,
-					"bank_code_from"	=> $user_bankaccount->bank_code,
 					"bank_account_from"	=> $user_bankaccount->bank_account,
 					"amount"			=> intval($target->platform_fee),
 					"target_id"			=> $target->id,
 					"instalment_no"		=> 0,
 					"user_to"			=> 0,
-					"bank_code_to"		=> CATHAY_BANK_CODE,
 					"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
 					"status"			=> 2
 				);
@@ -290,14 +285,12 @@ class Transaction_lib{
 								"source"			=> SOURCE_LENDING,
 								"entering_date"		=> $date,
 								"user_from"			=> $value->user_id,
-								"bank_code_from"	=> CATHAY_BANK_CODE,
 								"bank_account_from"	=> $virtual_account->virtual_account,
 								"amount"			=> intval($value->loan_amount),
 								"target_id"			=> $target->id,
 								"investment_id"		=> $value->id,
 								"instalment_no"		=> 0,
 								"user_to"			=> $target->user_id,
-								"bank_code_to"		=> $user_bankaccount->bank_code,
 								"bank_account_to"	=> $user_bankaccount->bank_account,
 								"status"			=> 2
 							);
@@ -315,14 +308,12 @@ class Transaction_lib{
 											"source"			=> SOURCE_AR_PRINCIPAL,
 											"entering_date"		=> $date,
 											"user_from"			=> $target->user_id,
-											"bank_code_from"	=> CATHAY_BANK_CODE,
 											"bank_account_from"	=> $target->virtual_account,
 											"amount"			=> intval($payment['principal']),
 											"target_id"			=> $target->id,
 											"investment_id"		=> $value->id,
 											"instalment_no"		=> $instalment_no,
 											"user_to"			=> $value->user_id,
-											"bank_code_to"		=> CATHAY_BANK_CODE,
 											"bank_account_to"	=> $virtual_account->virtual_account,
 											"limit_date"		=> $payment['repayment_date'],
 										);
@@ -331,14 +322,12 @@ class Transaction_lib{
 											"source"			=> SOURCE_AR_INTEREST,
 											"entering_date"		=> $date,
 											"user_from"			=> $target->user_id,
-											"bank_code_from"	=> CATHAY_BANK_CODE,
 											"bank_account_from"	=> $target->virtual_account,
 											"amount"			=> intval($payment['interest']),
 											"target_id"			=> $target->id,
 											"investment_id"		=> $value->id,
 											"instalment_no"		=> $instalment_no,
 											"user_to"			=> $value->user_id,
-											"bank_code_to"		=> CATHAY_BANK_CODE,
 											"bank_account_to"	=> $virtual_account->virtual_account,
 											"limit_date"		=> $payment['repayment_date'],
 										);

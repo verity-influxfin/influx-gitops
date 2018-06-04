@@ -11,9 +11,8 @@ class Subloan extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
-		$this->load->model('transaction/target_model');
-		$this->load->model('transaction/investment_model');
-		$this->load->model('transaction/transaction_model');
+		$this->load->model('loan/target_model');
+		$this->load->model('loan/investment_model');
 		$this->load->library('Subloan_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];

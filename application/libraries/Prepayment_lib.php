@@ -9,8 +9,8 @@ class Prepayment_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('transaction/target_model');
-		$this->CI->load->model('transaction/prepayment_model');
+		$this->CI->load->model('loan/target_model');
+		$this->CI->load->model('loan/prepayment_model');
 		$this->CI->load->library('Financial_lib');
     }
 

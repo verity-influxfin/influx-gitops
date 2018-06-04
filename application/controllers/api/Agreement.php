@@ -64,15 +64,15 @@ class Agreement extends REST_Controller {
 	 
 	public function list_get()
     {
-		$agreement_list 	= $this->agreement_model->get_many_by(array("status"=>1));
-		$list					= array();
+		$agreement_list = $this->agreement_model->get_many_by(array("status"=>1));
+		$list			= array();
 		if(!empty($agreement_list)){
 			foreach($agreement_list as $key => $value){
 				$list[] = array(
-					"id" 			=> $value->id,
-					"name" 			=> $value->name,
+					"id" 		=> $value->id,
+					"name" 		=> $value->name,
 					"content" 	=> $value->content,
-					"alias" 		=> $value->alias,
+					"alias" 	=> $value->alias,
 				);
 			}
 		}

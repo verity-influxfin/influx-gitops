@@ -12,11 +12,14 @@ class Target extends REST_Controller {
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
 		$this->load->model('platform/certification_model');
-		$this->load->model('transaction/target_model');
-		$this->load->model('transaction/investment_model');
+		$this->load->model('loan/target_model');
+		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_bankaccount_model');
+		$this->load->model('user/virtual_account_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
+		$this->load->library('Transaction_lib');
+		$this->load->library('Financial_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list' ,'info'];
 		if (!in_array($method, $nonAuthMethods)) {
@@ -305,7 +308,6 @@ class Target extends REST_Controller {
 	 
 	public function info_get($target_id)
     {
-		$this->load->library('Financial_lib');
 		$input 				= $this->input->get(NULL, TRUE);
 		//$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
@@ -670,9 +672,7 @@ class Target extends REST_Controller {
 			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
 		}
 		
-		$this->load->model('user/virtual_account_model');
-		$this->load->model('user/user_bankaccount_model');
-		$this->load->library('Transaction_lib');
+
 		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
 		$virtual_account	= array(
 			"bank_code"			=> CATHAY_BANK_CODE,

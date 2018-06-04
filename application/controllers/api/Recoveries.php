@@ -13,8 +13,8 @@ class Recoveries extends REST_Controller {
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('product/product_model');
-		$this->load->model('transaction/target_model');
-		$this->load->model('transaction/investment_model');
+		$this->load->model('loan/target_model');
+		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Transaction_lib'); 

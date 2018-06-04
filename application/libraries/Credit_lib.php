@@ -10,7 +10,7 @@ class Credit_lib{
 	public function __construct()
     {
         $this->CI = &get_instance();
-		$this->CI->load->model('transaction/credit_model');
+		$this->CI->load->model('loan/credit_model');
 		$this->CI->load->model('user/user_meta_model');
 		$this->CI->load->model('user/user_model');
     }
