@@ -145,7 +145,14 @@ class Payment_lib{
 			
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
 			$investor			= investor_virtual_account($value->virtual_account)?1:0;
-			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(array("investor"=>$investor,"bank_code"=>$bank_code,"bank_account"=>$bank_account,"status"=>1,"verify"=>1));
+			$where				= array(
+				"investor"		=> $investor,
+				"bank_code"		=> $bank_code,
+				"bank_account"	=> $bank_account,
+				"status"		=> 1,
+				"verify"		=> 1
+			);
+			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 			if($virtual_account && $user_bankaccount){
 				if($virtual_account->user_id == $user_bankaccount->user_id){
 					$this->CI->transaction_lib->recharge($value->id);

@@ -9,8 +9,8 @@ class TestScript extends MY_Admin_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("transaction/target_model");
-        $this->load->model("transaction/investment_model");
+        $this->load->model("loan/target_model");
+        $this->load->model("loan/investment_model");
         $this->load->model("transaction/payment_model");
         $this->load->model("user/virtual_account_model");
         $this->load->model("user/user_bankaccount_model");
@@ -97,9 +97,7 @@ class TestScript extends MY_Admin_Controller
         $targetId = $this->input->post("target_id");
 
 		$where = ["id" => $targetId, "status" => 4];
-        $param = [
-			"loan_status"	=> 1
-		];
+        $param = ["loan_status"	=> 1 ];
 		 $this->target_model->update_by($where, $param);
         // TODO: 攤還資料未新增，未切換至status 5
         $this->transaction_lib->lending_success($targetId);
@@ -116,35 +114,35 @@ class TestScript extends MY_Admin_Controller
         // status=0
         // amount正數為入帳receipt()，負數為出帳expense()
         // virtual_account, bank_id ,bank_code, bank_account為有效值才可入帳
-        $bankAccountNo = "015035006475";
-        $amount = $this->input->post("amount");
+        $bankAccountNo 	= "015035006475";
+        $amount 		= $this->input->post("amount");
         $virtualAccount = $this->input->post("virtual_account");
-        $bankCode = $this->input->post("bank_code");
-        $bankAccount = $this->input->post("bank_account");
+        $bankCode 		= $this->input->post("bank_code");
+        $bankAccount 	= $this->input->post("bank_account");
 
         $txDatetime = date("Y-m-d H:i:s", strtotime("now"));
-        $txSeqNo = rand(10000, 99999);
-        $txIdNo = rand(1000, 9999);
-        $txMach = "0999";
-        $txSpec = "網銀轉帳";
+        $txSeqNo	= rand(10000, 99999);
+        $txIdNo 	= rand(1000, 9999);
+        $txMach 	= "0999";
+        $txSpec 	= "網銀轉帳";
         $bankAmount = 0;
-        $bankId = $bankCode;
-        $accName = "金普匯";
-        $bankAcc = $bankCode . $bankAccount;
+        $bankId 	= $bankCode;
+        $accName 	= "金普匯";
+        $bankAcc 	= $bankCode . $bankAccount;
 
         $param = [
-            "tx_datetime" => $txDatetime,
-            "bankaccount_no" => $bankAccountNo,
-            "amount" => $amount,
-            "virtual_account" => $virtualAccount,
-            "tx_seq_no" => $txSeqNo,
-            "tx_id_no" => $txIdNo,
-            "tx_mach" => $txMach,
-            "tx_spec" => $txSpec,
-            "bank_amount" => $bankAmount,
-            "bank_id" => $bankId,
-            "acc_name" => $accName,
-            "bank_acc" => $bankAcc,
+            "tx_datetime" 		=> $txDatetime,
+            "bankaccount_no" 	=> $bankAccountNo,
+            "amount" 			=> $amount,
+            "virtual_account" 	=> $virtualAccount,
+            "tx_seq_no" 		=> $txSeqNo,
+            "tx_id_no" 			=> $txIdNo,
+            "tx_mach" 			=> $txMach,
+            "tx_spec" 			=> $txSpec,
+            "bank_amount" 		=> $bankAmount,
+            "bank_id" 			=> $bankId,
+            "acc_name" 			=> $accName,
+            "bank_acc" 			=> $bankAcc,
         ];
         $this->payment_model->insert($param);
 

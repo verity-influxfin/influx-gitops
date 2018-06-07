@@ -78,7 +78,8 @@ class Welcome extends CI_Controller {
 		$rate		= $_GET['rate'];
 		$instalment = intval($_GET['instalment']);//期數
 		$date 		= $_GET['date'];//起始日
-		$schedule 	= $this->financial_lib->get_amortization_schedule($amount,$instalment,$rate,$date,1); 
+		$repayment	= isset($_GET['repayment'])?intval($_GET['repayment']):1;//起始日
+		$schedule 	= $this->financial_lib->get_amortization_schedule($amount,$instalment,$rate,$date,$repayment); 
 		echo '<span>本金：'		.$schedule['amount'].'</span><br>';
 		echo '<span>年利率：'		.$schedule['rate'].'%</span><br>';
 		echo '<span>每期應繳：'	.$schedule['total_payment'].'</span><br>';

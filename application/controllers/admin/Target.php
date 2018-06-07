@@ -9,7 +9,7 @@ class Target extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->login_info = check_admin();
-		$this->load->model('transaction/target_model');
+		$this->load->model('loan/target_model');
 		$this->load->model('product/product_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');

@@ -166,6 +166,7 @@ defined('SUB_LOAN_FEES')   			OR define('SUB_LOAN_FEES'			, 1); //轉貸手續�
 defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 2); //違約金%
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
+defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('LENDING_URL') 				OR define('LENDING_URL'				, 'http://dev-lend.influxfin.com'); //
 defined('BORROW_URL') 				OR define('BORROW_URL'				, 'http://dev.influxfin.com'); //
@@ -177,7 +178,9 @@ defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
 defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費
 defined('SOURCE_SUBLOAN_FEE')      	OR define('SOURCE_SUBLOAN_FEE'		, '5');//轉換產品手續費
 defined('SOURCE_TRANSFER_FEE')    	OR define('SOURCE_TRANSFER_FEE'		, '6');//債權轉讓手續費
-defined('SOURCE_PREPAYMENT_ALLOWANCE') OR define('SOURCE_PREPAYMENT_ALLOWANCE'	, '7');//提還補貼金
+defined('SOURCE_PREPAYMENT_ALLOWANCE') OR define('SOURCE_PREPAYMENT_ALLOWANCE'	, '7');//提還補償金
+defined('SOURCE_PREPAYMENT_DAMAGE') OR define('SOURCE_PREPAYMENT_DAMAGE', '8');//提還違約金
+defined('SOURCE_AR_FEES') 			OR define('SOURCE_AR_FEES'			, '9');//應收平台服務費
 defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應收借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息

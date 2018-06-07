@@ -198,6 +198,7 @@
 	
 	function is_virtual_account($account){
 		if($account){
+			$account = trim($account);
 			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE){
 				return true;
 			}
@@ -220,6 +221,11 @@
 
 	function get_range_days($sdate,$edate) {
 		return intval(floor((strtotime($edate) - strtotime($sdate))/(60*60*24)));
+	}
+
+	function get_entering_date() {
+		$entering_date 	= time() > strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+1 day')):date("Y-m-d");
+		return $entering_date;
 	}
 	
 ?>
