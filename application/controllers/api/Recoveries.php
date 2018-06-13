@@ -174,11 +174,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
-	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments
-	 * @apiSuccess {String} transfer_amount 債權轉讓本金
-	 * @apiSuccess {String} transfer_fee 債權轉讓手續費
-	 * @apiSuccess {String} transfer_contract 債權轉讓合約
-	 * @apiSuccess {String} transfer_at 債權轉讓日期
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -291,10 +287,6 @@ class Recoveries extends REST_Controller {
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
 					"status" 			=> $value->status,
 					"transfer_status" 	=> $value->transfer_status,
-					"transfer_fee" 		=> $value->transfer_fee,
-					"transfer_amount" 	=> $value->transfer_amount,
-					"transfer_contract" => $value->transfer_contract,
-					"transfer_at" 		=> $value->transfer_at,
 					"created_at" 		=> $value->created_at,
 					"product" 			=> $product,
 					"target" 			=> $target,
@@ -315,11 +307,12 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
-	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments
-	 * @apiSuccess {String} transfer_amount 債權轉讓本金
-	 * @apiSuccess {String} transfer_fee 債權轉讓手續費
-	 * @apiSuccess {String} transfer_contract 債權轉讓合約
-	 * @apiSuccess {String} transfer_at 債權轉讓日期
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
+	 * @apiSuccess {json} transfer 債轉資訊
+	 * @apiSuccess {String} transfer.amount 債權轉讓本金
+	 * @apiSuccess {String} transfer.transfer_fee 債權轉讓手續費
+	 * @apiSuccess {String} transfer.contract 債權轉讓合約
+	 * @apiSuccess {String} transfer.transfer_at 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -354,12 +347,14 @@ class Recoveries extends REST_Controller {
      * 			"amount":"50000",
      * 			"loan_amount":"",
      * 			"status":"3",
-	  * 		"transfer_status":"0",
-     * 			"transfer_fee":"0",
-     * 			"transfer_amount":"0",
-     * 			"transfer_contract":"",
-     * 			"transfer_at":"0",
+	  * 		"transfer_status":"1",
      * 			"created_at":"1520421572",
+	 * 			"transfer":{
+     * 				"amount":"5000",
+     * 				"transfer_fee":"25"
+     * 				"contract":"我是合約，我是合約"
+     * 				"transfer_at":"0"
+     * 			},
 	 * 			"product":{
      * 				"id":"2",
      * 				"name":"輕鬆學貸"
@@ -467,18 +462,29 @@ class Recoveries extends REST_Controller {
 				"id"	=> $product_info->id,
 				"name"	=> $product_info->name,
 			);
-
+			
+			$transfer 		= array();
+			if($investment->transfer_status!=0){
+				$transfer_info = $this->transfer_lib->get_transfer_investments($investment->id);
+				if($transfer_info){
+					$transfer = array(
+						"transfer_fee"	=> $transfer_info->transfer_fee,
+						"amount"		=> $transfer_info->amount,
+						"contract"		=> $transfer_info->contract,
+						"transfer_at"	=> $transfer_info->transfer_at,
+					);
+				}
+			}
+			
+			
 			$data = array(
 				"id" 					=> $investment->id,
 				"loan_amount" 			=> $investment->loan_amount?$investment->loan_amount:"",
 				"contract" 				=> $investment->contract,
 				"status" 				=> $investment->status,
 				"transfer_status" 		=> $investment->transfer_status,
-				"transfer_fee" 			=> $investment->transfer_fee,
-				"transfer_amount" 		=> $investment->transfer_amount,
-				"transfer_contract" 	=> $investment->transfer_contract,
-				"transfer_at" 			=> $investment->transfer_at,
 				"created_at" 			=> $investment->created_at,
+				"transfer" 				=> $transfer,
 				"product" 				=> $product,
 				"target" 				=> $target,
 				"amortization_schedule" => $this->target_lib->get_investment_amortization_table($target_info,$investment),

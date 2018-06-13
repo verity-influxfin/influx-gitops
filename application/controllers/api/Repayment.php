@@ -93,7 +93,12 @@ class Repayment extends REST_Controller {
 		$remaining_principal 	= 0;
 		$next_repayment			= 0;
 		$user					= array();
-		$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("user_from"=>$user_id,"status"=>"1"));
+		$transaction 			= $this->transaction_model->order_by("limit_date","asc")->get_many_by(array(
+			"user_from"	=> $user_id,
+			"status"	=> "1",
+			"source" 	=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST,SOURCE_AR_DAMAGE,SOURCE_AR_DELAYINTEREST), 
+		));
+		
 		if($transaction){
 			$first = true;
 			foreach($transaction as $key => $value){
@@ -117,7 +122,12 @@ class Repayment extends REST_Controller {
 			$user[$field] = $this->user_info->$field?$this->user_info->$field:"";
 		}
 		
-		$data	= array("remaining_principal"=>$remaining_principal,"next_repayment"=>$next_repayment,"user"=>$user);
+		$data	= array(
+			"remaining_principal"	=> $remaining_principal,
+			"next_repayment"		=> $next_repayment,
+			"user"					=> $user,
+		);
+		
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
 	
@@ -200,7 +210,10 @@ class Repayment extends REST_Controller {
     {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
-		$param				= array( "user_id"=> $user_id,"status"=>array(5,10));
+		$param				= array(
+			"user_id"	=> $user_id,
+			"status"	=> array(5,10)
+		);
 		$targets 			= $this->target_model->get_many_by($param);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
@@ -213,7 +226,12 @@ class Repayment extends REST_Controller {
 					"amount"		=> 0,
 				);
 
-				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$value->id,"user_from"=>$user_id,"status"=>"1"));
+				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array(
+					"target_id"	=> $value->id,
+					"user_from"	=> $user_id,
+					"status"	=> "1"
+				));
+				
 				if($transaction){
 					$first = true;
 					foreach($transaction as $k => $v){
@@ -445,6 +463,7 @@ class Repayment extends REST_Controller {
 		$transaction_source = $this->config->item('transaction_source');
 		$data				= array();
 		if(!empty($target) && in_array($target->status,array(5,10))){
+			
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
 			}

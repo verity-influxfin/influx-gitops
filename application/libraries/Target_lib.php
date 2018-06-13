@@ -9,11 +9,14 @@ class Target_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/target_model');
+		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
+		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->library('credit_lib');
+		$this->CI->load->library('Transaction_lib');
     }
 	
 	//核可額度利率
@@ -80,6 +83,100 @@ class Target_lib{
 		return false;
 	}
 
+	//判斷流標或結標或凍結投資款項
+	function check_bidding($target){
+		if( $target && $target->id && $target->status == 3){
+			$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1")));
+			if($investments){
+				$amount = 0;
+				foreach($investments as $key => $value){
+					if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
+						$amount += $value->amount;
+					}
+				}
+				//更新invested
+				$this->CI->target_model->update($target->id,array("invested"=>$amount));
+				if($amount >= $target->loan_amount){
+					//結標
+					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
+					if($rs){
+						$total = 0;
+						$ended = true;
+						foreach($investments as $key => $value){
+							$param = array("status"=>9);
+							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
+								$total += $value->amount;
+								if($total < $target->loan_amount && $ended){
+									$loan_amount 	= $value->amount;
+									$param 			= array("loan_amount"=> $loan_amount ,"status"=>2);
+								}else if($total >= $target->loan_amount && $ended){
+									$loan_amount 	= $value->amount + $target->loan_amount - $total;
+									$param 			= array("loan_amount"=> $loan_amount ,"status"=>2); 
+									$ended 			= false;
+								}else{
+									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
+								}
+							}
+							$this->CI->investment_model->update($value->id,$param);
+						}
+						return true;
+					}
+				}else{
+					if($target->expire_time < time()){
+						//流標
+						$this->CI->target_model->update($target->id,array(
+							"launch_times"	=> $target->launch_times + 1,
+							"expire_time"	=> strtotime("+2 days", $target->expire_time)
+						));
+						foreach($investments as $key => $value){
+							$this->CI->investment_model->update($value->id,array("status"=>9));
+							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
+								$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
+							}
+						}
+					}else{
+						//凍結款項
+						foreach($investments as $key => $value){
+							if($value->status ==0 && $value->frozen_status==0){
+								$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$value->user_id));
+								if($virtual_account){
+									$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
+									$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+									$total = $funds["total"] - $funds["frozen"];
+									if(intval($total)-intval($value->amount)>=0){
+										$last_recharge_date = strtotime($funds['last_recharge_date']);
+										$tx_datetime = $last_recharge_date < $value->created_at?$value->created_at:$last_recharge_date;
+										$tx_datetime = date("Y-m-d H:i:s",$tx_datetime);
+										$param = array(
+											"virtual_account"	=> $virtual_account->virtual_account,
+											"amount"			=> intval($value->amount),
+											"tx_datetime"		=> $tx_datetime,
+										);
+										$rs = $this->CI->frozen_amount_model->insert($param);
+										if($rs){
+											$this->CI->investment_model->update($value->id,array("frozen_status"=>1,"frozen_id"=>$rs,"status"=>1,"tx_datetime"=>$tx_datetime));
+										}
+									}
+									$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>1));
+								}
+							}
+						}
+					}
+					return true;
+				}
+			}else{
+				if($target->expire_time < time()){
+					$this->CI->target_model->update($target->id,array(
+						"launch_times"	=> $target->launch_times + 1,
+						"expire_time"	=> strtotime("+2 days", $target->expire_time)
+					));
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function add_subloan_target($target,$subloan){
 		
 			$user_id 		= $target->user_id;
@@ -134,41 +231,6 @@ class Target_lib{
 		return "我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！";
 	}
 	
-	//審核額度
-	public function script_approve_target(){
-		$rs = $this->CI->target_model->update_by(array("status"=>0,"script_status"=>0),array("script_status"=>1));
-		$targets 	= $this->CI->target_model->get_many_by(array("script_status"=>1));
-		$list 		= array();
-		if($targets && !empty($targets)){
-			$this->CI->load->library('Certification_lib');
-			$count = 0;
-			foreach($targets as $key => $value){
-				$list[$value->product_id][$value->id] = $value;
-			}
-			
-			foreach($list as $product_id => $targets){
-				$product 				= $this->CI->product_model->get($product_id);
-				$product_certification 	= json_decode($product->certifications,true);
-				foreach($targets as $target_id => $value){
-					$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0);
-					$finish		 	= true;
-					foreach($certifications as $certification){
-						if(in_array($certification->id,$product_certification) && $certification->user_status !="1"){
-							$finish	= false;
-						}
-					}
-
-					if($finish){
-						$count++;
-						$this->approve_target($value);
-					}
-					$this->CI->target_model->update($value->id,array("script_status"=>0));
-				}
-			}
-			return $count;
-		}
-		return false;
-	}
 	
 	//借款端還款計畫
 	public function get_amortization_table($target=array()){
@@ -183,7 +245,10 @@ class Target_lib{
 			"platform_fees"	=> 0,
 			"list"			=> array(),
 		);
-		$transactions 	= $this->CI->transaction_model->get_many_by(array("target_id" => $target->id,"status !=" => 0));
+		$transactions 	= $this->CI->transaction_model->get_many_by(array(
+			"target_id" => $target->id,
+			"status !=" => 0
+		));
 		$list = array();
 		
 		if($transactions){
@@ -247,7 +312,6 @@ class Target_lib{
 						}
 						break;
 				}
-
 			}
 		}
 		$schedule['list'] = $list;
@@ -312,6 +376,71 @@ class Target_lib{
 		}
 		$schedule['list'] = $list;
 		return $schedule;
+	}
+	
+	public function script_check_bidding(){
+		$script  	= 3;
+		$count 		= 0;
+		$ids		= array();
+		$targets 	= $this->CI->target_model->get_many_by(array("status"=>3,"script_status"=>0));
+		if($targets && !empty($targets)){
+			foreach($targets as $key => $value){
+				$ids[] = $value->id;
+			}
+			$update_rs 	= $this->CI->target_model->update_many($ids,array("script_status"=>$script));
+			if($update_rs){
+				foreach($targets as $key => $value){
+					$check = $this->check_bidding($value);
+					if($check){
+						$count++;
+					}
+					$this->CI->target_model->update($value->id,array("script_status"=>0));
+				}
+			}
+		}
+		return $count;
+	}
+	
+	//審核額度
+	public function script_approve_target(){
+		
+		$this->CI->load->library('Certification_lib');
+		$targets 	= $this->CI->target_model->get_many_by(array("status"=>0,"script_status"=>0));
+		$list 		= array();
+		$ids		= array();
+		$script  	= 1;
+		$count 		= 0;
+		if($targets && !empty($targets)){
+			foreach($targets as $key => $value){
+				$list[$value->product_id][$value->id] = $value;
+				$ids[] = $value->id;
+			}
+			
+			$rs = $this->CI->target_model->update_many($ids,array("script_status"=>$script));
+			if($rs){
+				foreach($list as $product_id => $targets){
+					$product 				= $this->CI->product_model->get($product_id);
+					$product_certification 	= json_decode($product->certifications,true);
+					foreach($targets as $target_id => $value){
+						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0);
+						$finish		 	= true;
+						foreach($certifications as $certification){
+							if(in_array($certification->id,$product_certification) && $certification->user_status !="1"){
+								$finish	= false;
+							}
+						}
+
+						if($finish){
+							$count++;
+							$this->approve_target($value);
+						}
+						$this->CI->target_model->update($value->id,array("script_status"=>0));
+					}
+				}
+				return $count;
+			}
+		}
+		return false;
 	}
 	
 	private function get_target_no(){

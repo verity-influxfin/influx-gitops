@@ -10,6 +10,7 @@ class Cron extends CI_Controller {
         $this->load->model('log/log_script_model');
 		$this->load->library('Transaction_lib'); 
 		$this->load->library('Target_lib'); 
+		$this->load->library('Transfer_lib'); 
 		$this->load->library('Payment_lib'); 
     }
 	
@@ -48,7 +49,7 @@ class Cron extends CI_Controller {
 	public function check_bidding()
 	{
 		$start_time = time();
-		$count 		= $this->transaction_lib->script_check_bidding();
+		$count 		= $this->target_lib->script_check_bidding();
 		$num		= $count?intval($count):0;
 		$end_time 	= time();
 		$data		= array(
@@ -69,6 +70,22 @@ class Cron extends CI_Controller {
 		$end_time 	= time();
 		$data		= array(
 			"script_name"	=> "approve_target",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
+	
+	public function check_transfer_bidding()
+	{
+		$start_time = time();
+		$count 		= $this->transfer_lib->script_check_bidding();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "check_transfer_bidding",
 			"num"			=> $num,
 			"start_time"	=> $start_time,
 			"end_time"		=> $end_time

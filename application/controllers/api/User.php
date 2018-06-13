@@ -215,7 +215,7 @@ class User extends REST_Controller {
 					$token->id			= $insert;
 					$token->phone		= $data["phone"];
 					$token->auth_otp	= $data["auth_otp"];
-					$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
+					$token->expiry_time	= time() + REQUEST_TOKEN_EXPIRY;
 					$token->investor 	= $data["investor_status"];
 					$request_token 		= AUTHORIZATION::generateUserToken($token);
 					$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token, "expiry_time"=>$token->expiry_time ,"first_time"=>1)));

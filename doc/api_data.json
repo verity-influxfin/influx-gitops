@@ -4058,34 +4058,41 @@
             "type": "String",
             "optional": false,
             "field": "transfer_status",
-            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments</p>"
+            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "transfer",
+            "description": "<p>債轉資訊</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "transfer_amount",
+            "field": "transfer.amount",
             "description": "<p>債權轉讓本金</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "transfer_fee",
+            "field": "transfer.transfer_fee",
             "description": "<p>債權轉讓手續費</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "transfer_contract",
+            "field": "transfer.contract",
             "description": "<p>債權轉讓合約</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "transfer_at",
+            "field": "transfer.transfer_at",
             "description": "<p>債權轉讓日期</p>"
           },
           {
@@ -4275,7 +4282,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\"transfer_status\":\"0\",\n\t\t\t\"transfer_fee\":\"0\",\n\t\t\t\"transfer_amount\":\"0\",\n\t\t\t\"transfer_contract\":\"\",\n\t\t\t\"transfer_at\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"repayment\": 0,\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                  \"repayment_date\": \"2018-07-10\",\n                  \"repayment\": 0,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                  \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"repayment\": 0,\n                   \"principal\": 1991,\n                   \"interest\": 62,\n                   \"total_payment\": 2053\n              }\n           }\n       \t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\"\n\t\t\t\t\"contract\":\"我是合約，我是合約\"\n\t\t\t\t\"transfer_at\":\"0\"\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"repayment\": 0,\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                  \"repayment_date\": \"2018-07-10\",\n                  \"repayment\": 0,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                  \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"repayment\": 0,\n                   \"principal\": 1991,\n                   \"interest\": 62,\n                   \"total_payment\": 2053\n              }\n           }\n       \t}\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -4378,35 +4385,7 @@
             "type": "String",
             "optional": false,
             "field": "transfer_status",
-            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功 8:債轉的investments</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_amount",
-            "description": "<p>債權轉讓本金</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_fee",
-            "description": "<p>債權轉讓手續費</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_contract",
-            "description": "<p>債權轉讓合約</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_at",
-            "description": "<p>債權轉讓日期</p>"
+            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
           },
           {
             "group": "Success 200",

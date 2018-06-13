@@ -446,7 +446,6 @@ class Transfer extends REST_Controller {
 			if($transfer_investment){
 				$this->response(array('result' => 'ERROR',"error" => TRANSFER_APPLY_EXIST ));
 			}
-			
 
 			//檢查認證 NOT_VERIFIED
 			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
