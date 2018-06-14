@@ -1,9 +1,9 @@
 define({
-  "name": "P2p lending API Doccument",
+  "name": "手機ATM API Doccument",
   "version": "0.0.0",
-  "description": "P2p lending 前台 API，先做登入，若會員不存在則進行註冊流程<br>其他 API 皆需於 header 帶入 request_token",
-  "title": "P2p lending API Doccument",
-  "url": "http://p2p-api.clockin.com.tw/api",
+  "description": "手機ATM API，先做登入，若會員不存在則進行註冊流程<br>其他 API 皆需於 header 帶入 request_token",
+  "title": "手機ATM API Doccument",
+  "url": "https://api.influxfin.com/api",
   "order": [
     "User",
     "PostUserRegisterphone",
@@ -58,7 +58,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-06-13T14:17:10.960Z",
+    "time": "2018-06-14T02:14:38.676Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

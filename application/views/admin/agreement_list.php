@@ -4,7 +4,7 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <a href="agreement/editAgreement">
+            <a href="<?=admin_url('agreement/editAgreement') ?>">
                 <button class="btn btn-primary">新增</button>
             </a>
         </div>

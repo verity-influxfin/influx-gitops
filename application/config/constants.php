@@ -168,8 +168,8 @@ defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續�
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
-defined('LENDING_URL') 				OR define('LENDING_URL'				, 'http://dev-lend.influxfin.com'); //
-defined('BORROW_URL') 				OR define('BORROW_URL'				, 'http://dev.influxfin.com'); //
+defined('LENDING_URL') 				OR define('LENDING_URL'				, 'https://lend.influxfin.com');
+defined('BORROW_URL') 				OR define('BORROW_URL'				, 'https://borrow.influxfin.com');
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值

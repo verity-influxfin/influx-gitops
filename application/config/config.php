@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://p2p-api.clockin.com.tw';
+$config['base_url'] = 'https://api.influxfin.com/';
 
 /*
 |--------------------------------------------------------------------------
