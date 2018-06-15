@@ -75,6 +75,7 @@ class Prepayment_lib{
 				$year_days = $leap_year?366:365;//今年日數
 				if($remaining_principal){
 					foreach($remaining_principal as $k => $v){
+						$data["remaining_principal"] += $v;
 						if(!isset($interest_payable[$k])){
 							$interest_payable[$k] = 0;
 						}
@@ -85,7 +86,8 @@ class Prepayment_lib{
 					}
 					
 				}
-				$data["total"] = $data["remaining_principal"] + $data["interest_payable"];
+				$data["liquidated_damages"] = round($data["remaining_principal"]*LIQUIDATED_DAMAGES/100,0);
+				$data["total"] 				= $data["remaining_principal"] + $data["interest_payable"] + $data["liquidated_damages"];
 				return $data;
 			}
 		}

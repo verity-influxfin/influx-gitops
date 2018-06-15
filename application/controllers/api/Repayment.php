@@ -310,7 +310,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {json} fees 費用資料
-	 * @apiSuccess {String} fees.sub_loan_fees 轉換產品手續費%
+	 * @apiSuccess {String} fees.sub_loan_fees 產品轉換手續費%
 	 * @apiSuccess {String} fees.liquidated_damages 違約金(提前還款)%
 	 * @apiSuccess {json} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
@@ -706,7 +706,7 @@ class Repayment extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
-     * @apiError 903 已申請提前還款或轉換產品
+     * @apiError 903 已申請提前還款或產品轉換
      * @apiErrorExample {json} 903
      *     {
      *       "result": "ERROR",

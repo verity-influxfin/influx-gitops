@@ -36,10 +36,10 @@ class AUTHORIZATION
         $CI 	=& get_instance();
 		$data 	= new stdClass;
 		if(!empty($token)){
-			$data 		= AUTHORIZATION::validateAdminToken($token);
+			$data 	= AUTHORIZATION::validateAdminToken($token);
 		}
         return $data;
-    }	
+    }
 	
 	public static function validateAdminCookieToken($token ="") {
         $CI =& get_instance();

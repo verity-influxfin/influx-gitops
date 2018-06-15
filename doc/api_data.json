@@ -1204,6 +1204,24 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "506",
+            "description": "<p>銀行代碼長度錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "507",
+            "description": "<p>分支機構代號長度錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "508",
+            "description": "<p>銀行帳號長度錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -1230,6 +1248,21 @@
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "506",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"506\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "507",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"507\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "508",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"508\"\n}",
           "type": "json"
         },
         {
@@ -5419,7 +5452,7 @@
             "type": "String",
             "optional": false,
             "field": "fees.sub_loan_fees",
-            "description": "<p>轉換產品手續費%</p>"
+            "description": "<p>產品轉換手續費%</p>"
           },
           {
             "group": "Success 200",
@@ -6274,7 +6307,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "903",
-            "description": "<p>已申請提前還款或轉換產品</p>"
+            "description": "<p>已申請提前還款或產品轉換</p>"
           },
           {
             "group": "Error 4xx",
@@ -6326,7 +6359,7 @@
   {
     "type": "get",
     "url": "/subloan/applyinfo/{ID}",
-    "title": "借款方 轉換產品紀錄資訊",
+    "title": "借款方 產品轉換紀錄資訊",
     "group": "Subloan",
     "parameter": {
       "fields": {
@@ -6363,7 +6396,7 @@
             "type": "String",
             "optional": false,
             "field": "amount",
-            "description": "<p>轉換產品金額</p>"
+            "description": "<p>產品轉換金額</p>"
           },
           {
             "group": "Success 200",
@@ -6391,7 +6424,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>轉換產品狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗</p>"
+            "description": "<p>產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗</p>"
           },
           {
             "group": "Success 200",
@@ -6405,7 +6438,7 @@
             "type": "json",
             "optional": false,
             "field": "subloan_target",
-            "description": "<p>轉換產品產生的Target</p>"
+            "description": "<p>產品轉換產生的Target</p>"
           },
           {
             "group": "Success 200",
@@ -6695,7 +6728,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "904",
-            "description": "<p>尚未申請轉換產品</p>"
+            "description": "<p>尚未申請產品轉換</p>"
           },
           {
             "group": "Error 4xx",
@@ -6747,7 +6780,7 @@
   {
     "type": "get",
     "url": "/subloan/cancel/{ID}",
-    "title": "借款方 取消轉換產品",
+    "title": "借款方 取消產品轉換",
     "group": "Subloan",
     "parameter": {
       "fields": {
@@ -6807,7 +6840,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "904",
-            "description": "<p>尚未申請轉換產品</p>"
+            "description": "<p>尚未申請產品轉換</p>"
           },
           {
             "group": "Error 4xx",
@@ -6875,7 +6908,7 @@
   {
     "type": "get",
     "url": "/subloan/preapply/{ID}",
-    "title": "借款方 轉換產品前資訊",
+    "title": "借款方 產品轉換前資訊",
     "group": "Subloan",
     "parameter": {
       "fields": {
@@ -6950,7 +6983,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "903",
-            "description": "<p>已申請提前還款或轉換產品</p>"
+            "description": "<p>已申請提前還款或產品轉換</p>"
           },
           {
             "group": "Error 4xx",
@@ -7002,7 +7035,7 @@
   {
     "type": "post",
     "url": "/subloan/apply/",
-    "title": "借款方 轉換產品申請",
+    "title": "借款方 產品轉換申請",
     "group": "Subloan",
     "parameter": {
       "fields": {
@@ -7088,7 +7121,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "903",
-            "description": "<p>已申請提前還款或轉換產品</p>"
+            "description": "<p>已申請提前還款或產品轉換</p>"
           },
           {
             "group": "Error 4xx",
@@ -7166,7 +7199,7 @@
   {
     "type": "post",
     "url": "/subloan/signing",
-    "title": "借款方 轉換產品簽約",
+    "title": "借款方 產品轉換簽約",
     "group": "Subloan",
     "parameter": {
       "fields": {
@@ -7239,7 +7272,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "904",
-            "description": "<p>尚未申請轉換產品</p>"
+            "description": "<p>尚未申請產品轉換</p>"
           },
           {
             "group": "Error 4xx",

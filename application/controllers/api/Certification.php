@@ -543,6 +543,27 @@ class Certification extends REST_Controller {
      *       "error": "502"
      *     }
 	 *
+     * @apiError 506 銀行代碼長度錯誤
+     * @apiErrorExample {json} 506
+     *     {
+     *       "result": "ERROR",
+     *       "error": "506"
+     *     }
+	 *
+     * @apiError 507 分支機構代號長度錯誤
+     * @apiErrorExample {json} 507
+     *     {
+     *       "result": "ERROR",
+     *       "error": "507"
+     *     }
+	 *
+     * @apiError 508 銀行帳號長度錯誤
+     * @apiErrorExample {json} 508
+     *     {
+     *       "result": "ERROR",
+     *       "error": "508"
+     *     }
+	 *
      */
 	public function debitcard_post()
     {
@@ -557,7 +578,7 @@ class Certification extends REST_Controller {
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification->id,
 				"investor"			=> $investor,
-				"expire_time"		=> 2147483647,
+				"expire_time"		=> time(),
 			);
 			
 			//是否驗證過
@@ -579,8 +600,18 @@ class Certification extends REST_Controller {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 				}else{
-					$content[$field] = $input[$field];
+					$content[$field] = trim($input[$field]);
 				}
+			}
+			
+			if(strlen($content['bank_code'])!=3){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_CODE_ERROR ));
+			}
+			if(strlen($content['branch_code'])!=4){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BRANCH_CODE_ERROR ));
+			}
+			if(strlen($content['bank_account'])<10){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
 			
 			//上傳檔案欄位
@@ -762,11 +793,10 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 			}
 		
-			$param['content'] = json_encode($content);
-			$insert = $this->user_certification_model->insert($param);
+			$param['content'] 	= json_encode($content);
+			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
 				$this->certification_lib->set_success($insert);
-				
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
@@ -974,8 +1004,8 @@ class Certification extends REST_Controller {
      */
 	public function email_get()
     {
-		$alias 		= "email";
-		$certification = $this->certification_model->get_by(array("alias"=>$alias));
+		$alias 			= "email";
+		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;

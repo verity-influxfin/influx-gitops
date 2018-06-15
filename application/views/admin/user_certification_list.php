@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">認證方式列表</h1>
+                    <h1 class="page-header">會員認證申請</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

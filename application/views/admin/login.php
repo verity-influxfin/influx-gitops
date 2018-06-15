@@ -23,7 +23,6 @@
 	<script>
 	
 		function form_onsubmit(){
-
 			return true;
 		}
 	</script>

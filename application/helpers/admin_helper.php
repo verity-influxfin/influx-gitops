@@ -22,11 +22,11 @@ if (!function_exists('admin_url')) {
 
 
 if (!function_exists('admin_login')) {
-	function admin_login($data = array()) {
+	function admin_login($token = "") {
 		$CI =& get_instance();
         $CI->load->library('session');
-    	$CI->session->set_userdata(SESSION_APP_ADMIN_INFO,$data);
-		return $data;
+    	$CI->session->set_userdata(SESSION_APP_ADMIN_INFO,$token);
+		return $token;
 	}
 }
 

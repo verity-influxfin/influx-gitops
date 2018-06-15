@@ -142,7 +142,7 @@ class Payment_lib{
 				$bank_code 		= $value->bank_id;
 				$bank_account 	= $value->bank_acc;
 			}
-			
+
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
 			$investor			= investor_virtual_account($value->virtual_account)?1:0;
 			$where				= array(

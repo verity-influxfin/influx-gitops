@@ -72,11 +72,11 @@
                             <fieldset>
                                 <div class="form-group">
 									<span>證件照</span>
-                                    <input class="form-control" name="image" type="file" >
+                                    <input class="form-control" name="image" type="file" accept="image/*" capture>
                                 </div>
                                 <div class="form-group">
 									<span>個人與證件自拍</span>
-                                    <input class="form-control" name="image2" type="file" >
+                                    <input class="form-control" name="image2" type="file" accept="image/*" capture> 
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
                                 <button type="submit" class="btn btn-lg btn-success btn-block">送出</a>

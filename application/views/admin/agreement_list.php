@@ -1,6 +1,6 @@
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">條款</h1>
+        <h1 class="page-header">協議書</h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -11,10 +11,10 @@
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
-                <th>id</th>
-                <th>alias</th>
-                <th>name</th>
-                <th>updated_at</th>
+                <th>ID</th>
+                <th>代號</th>
+                <th>名稱</th>
+                <th>最後更新時間</th>
                 <th>修改</th>
                 <th>刪除</th>
             </tr>

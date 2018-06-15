@@ -40,7 +40,7 @@ class Subloan extends REST_Controller {
 
 	
 	/**
-     * @api {get} /subloan/preapply/{ID} 借款方 轉換產品前資訊
+     * @api {get} /subloan/preapply/{ID} 借款方 產品轉換前資訊
       * @apiGroup Subloan
 	 * @apiParam {number} ID Targets ID
 	 * 
@@ -105,7 +105,7 @@ class Subloan extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
-     * @apiError 903 已申請提前還款或轉換產品
+     * @apiError 903 已申請提前還款或產品轉換
      * @apiErrorExample {json} 903
      *     {
      *       "result": "ERROR",
@@ -153,7 +153,7 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /subloan/apply/ 借款方 轉換產品申請
+     * @api {post} /subloan/apply/ 借款方 產品轉換申請
      * @apiGroup Subloan
 	 * @apiParam {number} target_id (required) Target ID
 	 * @apiParam {number} instalment (required) 申請期數
@@ -205,7 +205,7 @@ class Subloan extends REST_Controller {
      *       "error": "409"
      *     }
 	 *
-     * @apiError 903 已申請提前還款或轉換產品
+     * @apiError 903 已申請提前還款或產品轉換
      * @apiErrorExample {json} 903
      *     {
      *       "result": "ERROR",
@@ -263,19 +263,19 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /subloan/applyinfo/{ID} 借款方 轉換產品紀錄資訊
+     * @api {get} /subloan/applyinfo/{ID} 借款方 產品轉換紀錄資訊
      * @apiGroup Subloan
 	 * @apiParam {number} ID Targets ID
 	 * 
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} target_id Target ID
-	 * @apiSuccess {String} amount 轉換產品金額
+	 * @apiSuccess {String} amount 產品轉換金額
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} settlement_date 結息日
-	 * @apiSuccess {String} status 轉換產品狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗	
+	 * @apiSuccess {String} status 產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗	
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} subloan_target 轉換產品產生的Target
+	 * @apiSuccess {json} subloan_target 產品轉換產生的Target
 	 * @apiSuccess {String} subloan_target.id Target ID
 	 * @apiSuccess {String} subloan_target.target_no 案號
 	 * @apiSuccess {String} subloan_target.product_id Product ID
@@ -405,7 +405,7 @@ class Subloan extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
-     * @apiError 904 尚未申請轉換產品
+     * @apiError 904 尚未申請產品轉換
      * @apiErrorExample {json} 904
      *     {
      *       "result": "ERROR",
@@ -468,7 +468,7 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /subloan/signing 借款方 轉換產品簽約
+     * @api {post} /subloan/signing 借款方 產品轉換簽約
      * @apiGroup Subloan
 	 * @apiParam {number} target_id (required) Targets ID
 	 * @apiParam {file} person_image (required) 本人照
@@ -512,7 +512,7 @@ class Subloan extends REST_Controller {
      *       "error": "206"
      *     }
 	 *
-     * @apiError 904 尚未申請轉換產品
+     * @apiError 904 尚未申請產品轉換
      * @apiErrorExample {json} 904
      *     {
      *       "result": "ERROR",
@@ -581,7 +581,7 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /subloan/cancel/{ID} 借款方 取消轉換產品
+     * @api {get} /subloan/cancel/{ID} 借款方 取消產品轉換
      * @apiGroup Subloan
 	 * @apiParam {number} id (required) Targets ID
 	 * 
@@ -617,7 +617,7 @@ class Subloan extends REST_Controller {
      *       "error": "407"
      *     }
 	 *
-     * @apiError 904 尚未申請轉換產品
+     * @apiError 904 尚未申請產品轉換
      * @apiErrorExample {json} 904
      *     {
      *       "result": "ERROR",

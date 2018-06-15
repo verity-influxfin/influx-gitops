@@ -57,15 +57,7 @@
                             <!-- /.nav-second-level -->
                         </li>                        
 						<li class="<?=isset($menu)&&$menu=="user"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>會員管理<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="<?=admin_url('user/') ?>">會員列表</a>
-                                </li>
-								<li>
-                                    <a href="<?=admin_url('certification/user_certification_list') ?>">會員申請認證</a>
-                                </li> 
-                            </ul>
+                            <a href="<?=admin_url('user/') ?>"><i class="fa fa-table fa-fw"></i>會員管理</a>
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="certification"?"active":""; ?>">
@@ -74,20 +66,26 @@
                                 <li>
                                     <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
                                 </li> 
+								<li>
+                                    <a href="<?=admin_url('certification/user_certification_list') ?>">會員認證申請</a>
+                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
 						 <li class="<?=isset($menu)&&$menu=="admin"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-user fa-fw"></i>後台人員管理<span class="fa arrow"></span></a>
+                            <a href="<?=admin_url('admin/') ?>"><i class="fa fa-user fa-fw"></i>後台人員管理</a>
+                        </li>
+						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
+                            <a href="#"><i class="fa fa-table fa-fw"></i>合作夥伴專區<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?=admin_url('admin/') ?>">後台管理員</a>
+                                    <a href="<?=admin_url('Partner/') ?>">合作商列表</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>協議書管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-table fa-fw"></i>平台文件管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('Agreement/') ?>">協議書</a>

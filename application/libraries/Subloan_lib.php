@@ -16,8 +16,8 @@ class Subloan_lib{
     }
 /*
 	public function get_prepayment_info($target=array()){
-		if($target->status == 5){
-			$where 			= array("target_id"=>$target->id,"status"=>array(1,2));
+		if($target->status == 5 && $target->delay == 1 && $target->delay_days > 7){
+			$where 			= array("target_id" => $target->id ,"status" => array(1,2) );
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by($where);
 			if($transaction){
 				$settlement_date 	= time()>strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+3 day')):date("Y-m-d",strtotime('+2 day'));

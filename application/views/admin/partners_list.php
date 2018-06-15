@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">後台管理員</h1>
+                    <h1 class="page-header">合作商管理</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('admin/add') ?>" class="btn btn-default float-right ">新增管理員</a>
+							<a href="<?=admin_url('partner/add') ?>" class="btn btn-default float-right ">新增合作商</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -19,12 +19,10 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>帳號</th>
-                                            <th>角色</th>
-                                            <th>姓名</th>
-                                            <th>電話</th>
-                                            <th>地址</th>
-                                            <th>Email</th>
+                                            <th>負責業務</th>
+                                            <th>上層公司名稱</th>
+                                            <th>公司名稱</th>
+                                            <th>負責人姓名</th>
                                             <th>QR code</th>
                                             <th>創建者</th>
                                             <th>修改</th>
@@ -39,15 +37,13 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
-                                            <td><?=isset($value->account)?$value->account:"" ?></td>
-                                            <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
+                                            <td><?=$value->admin_id&&isset($name_list[$value->admin_id])?$name_list[$value->admin_id]:"" ?></td>
+											<td><?=$value->parent_id&&isset($partner_name[$value->parent_id])?$partner_name[$value->parent_id]:"" ?></td>
+                                            <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->phone)?$value->phone:"" ?></td>
-                                            <td><?=isset($value->birthday)?$value->birthday:"" ?></td>
-                                            <td><?=isset($value->email)?$value->email:"" ?></td>
                                             <td><img src="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" /></td>
                                             <td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
-											<td><a href="<?=admin_url('admin/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
+											<td><a href="<?=admin_url('partner/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
                                         </tr>                                        
 									<?php 
 										}}else{

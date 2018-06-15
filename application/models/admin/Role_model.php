@@ -1,8 +1,8 @@
 <?php
 
-class Admin_model extends MY_Model
+class Role_model extends MY_Model
 {
-	public $_table = 'admins';
+	public $_table = 'roles';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
@@ -33,7 +33,7 @@ class Admin_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
-	
+
 	public function get_name_list(){
 		$data 	= array();
 		$list 	= $this->get_all();

@@ -1,19 +1,19 @@
 <?php
 
-class Admin_model extends MY_Model
+class Partner_model extends MY_Model
 {
-	public $_table = 'admins';
+	public $_table = 'partners';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
-		0 =>	"å·²åˆªé™¤",
-		1 =>	"æ­£å¸¸"
+		0 =>	"¤w§R°£",
+		1 =>	"¥¿±`"
 	);
 	
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_database = $this->load->database('admin',TRUE);
+		$this->_database = $this->load->database('partner',TRUE);
  	}
 	
 	protected function before_data_c($data)
@@ -40,7 +40,7 @@ class Admin_model extends MY_Model
 		if($list){
 			foreach($list as $key => $value){
 				if($value->status ==1 )
-					$data[$value->id] = $value->name;
+					$data[$value->id] = $value->company;
 			}
 		}
 		return $data;
