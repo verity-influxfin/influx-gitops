@@ -11,6 +11,8 @@ class User extends MY_Admin_Controller {
 		$this->login_info = check_admin();
 		$this->load->model('user/user_model');
 		$this->load->model('user/user_meta_model');
+		$this->load->model('user/user_bankaccount_model');
+		$this->load->model('platform/certification_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');
         }
@@ -18,8 +20,8 @@ class User extends MY_Admin_Controller {
 	
 	public function index(){
 		
-		$page_data 	= array("type"=>"list");
-		$list 		= $this->user_model->get_all();
+		$page_data 			= array("type"=>"list");
+		$list 				= $this->user_model->get_all();
 		$name_list	= array();
 		if(!empty($list)){
 			$page_data["list"] = $list;
@@ -40,18 +42,34 @@ class User extends MY_Admin_Controller {
 		if(empty($post)){
 			$id = isset($get["id"])?intval($get["id"]):0;
 			if($id){
-				$info = $this->user_model->get($id);
-				$meta_data = array();
-				$meta = $this->user_meta_model->get_many_by(array("user_id"=>$id));
+				$certification 		= $this->certification_model->get_all();
+				$certification_list = array();
+				if($certification){
+					foreach($certification as $key => $value){
+						$certification_list[$value->alias] = $value->name;
+					}
+				}
+				
+				$meta_data 			= array();
+				$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$id));
 				if($meta){
 					foreach($meta as $key => $value){
 						$meta_data[$value->meta_key] = $value->meta_value;
 					}
 				}
+				
+				$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$id));
+				
+				$info = $this->user_model->get($id);
 				if($info){
-					$page_data['data'] 			= $info;
-					$page_data['meta'] 			= $meta_data;
-					$page_data['meta_fields'] 	= $this->config->item('user_meta_fields');
+					$page_data['data'] 					= $info;
+					$page_data['meta'] 					= $meta_data;
+					$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
+					$page_data['meta_images'] 			= $this->config->item('user_meta_images');
+					$page_data['certification_list'] 	= $certification_list;
+					$page_data['bank_account'] 			= $bank_account;
+					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
+					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/users_edit',$page_data);

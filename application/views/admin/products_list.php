@@ -43,7 +43,7 @@
 											<td><?=isset($value->loan_range_s)?$value->loan_range_s:"" ?> - <?=isset($value->loan_range_e)?$value->loan_range_e:"" ?></td>
 											<td><?=isset($value->interest_rate_s)?$value->interest_rate_s:"" ?></td>
 											<td><?=isset($value->interest_rate_e)?$value->interest_rate_e:"" ?></td>
-											<td><?=isset($value->status)?$value->status:"" ?></td>
+											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
 											<!--td><a href="<?=admin_url('product/rating_edit')."?id=".$value->id ?>" class="btn btn-default">設定</a></td--> 

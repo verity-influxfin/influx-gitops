@@ -7,6 +7,19 @@ class User_bankaccount_model extends MY_Model
 	public $before_update 	= array( 'before_data_u' );
 	public $fields			= array("user_id","bank_code","bank_account","front_image","back_image");
 	
+	public $investor_list  	= array(
+		0 =>	"借款端",
+		1 =>	"投資端",
+	);
+	
+	public $verify_list  	= array(
+		0 =>	"未驗證",
+		1 =>	"驗證成功",
+		2 =>	"待驗證",
+		3 =>	"已發送",
+		4 =>	"驗證失敗",
+	);
+
 	public function __construct()
 	{
 		parent::__construct();

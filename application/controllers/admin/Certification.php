@@ -23,8 +23,9 @@ class Certification extends MY_Admin_Controller {
 		$list 		= $this->certification_model->get_all();
 		$name_list	= array();
 		if(!empty($list)){
-			$page_data["list"] = $list;
+			$page_data["list"] 			= $list;
 			$page_data["name_list"] 	= $this->admin_model->get_name_list();
+			$page_data["status_list"] 	= $this->certification_model->status_list;
 		}
 
 		$this->load->view('admin/_header');

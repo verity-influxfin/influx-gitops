@@ -9,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><?=$type=="edit"?"修改會員資訊":"新增會員" ?></h1>
+                    <h1 class="page-header"><?=$type=="edit"?"會員資訊":"新增會員" ?></h1>
 					
                 </div>
                 <!-- /.col-lg-12 -->
@@ -19,7 +19,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<?=$type=="edit"?"修改會員資訊":"新增會員" ?>
+							<?=$type=="edit"?"會員資訊":"新增會員" ?>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -99,23 +99,83 @@
 										</div>
 										<!--button type="submit" class="btn btn-default">Submit Button</button-->
 									</form>
+									<div class="table-responsive">
+										<table class="table table-bordered table-hover" style="text-align:center;">
+											<tbody>
+											<? if(!empty($meta_fields)){
+												foreach($meta_fields as $alias => $fields){
+											?>
+												<tr style="background-color:#f5f5f5;">
+													<td colspan="2"><?=isset($certification_list[$alias])?$certification_list[$alias]:$alias?></td>
+												</tr>
+											<?		foreach($fields as $key => $field){
+											?>
+												<tr>
+													<td style="width:40%;"><?=$field ?></td>
+													<td style="word-break: break-all;width:60%;"><?
+													if(isset($meta[$key])&&!empty($meta[$key])){
+														if(in_array($key,$meta_images)){
+															echo "<img src='".$meta[$key]."' style='width:30%;'>";
+														}else if( $key == $alias.'_status' && $meta[$key]==1){
+															echo "已認證"; 
+														}else{
+															echo $meta[$key];
+														}
+													}else{
+														echo "無";
+													}
+													?></td>
+												</tr>
+											<? }}} ?>
+											</tbody>
+										</table>
+									</div>
 								</div>
 								<div class="col-lg-6 meta">
 									<div class="table-responsive">
-										<table class="table table-bordered table-hover table-striped">
+										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
-											<?php if(!empty($meta)){
-												$image = array("health_card_status","health_card_front","id_card_front","id_card_back","id_card_person","student_card_front","student_card_back","financial_creditcard","financial_passbook");
-												foreach($meta as $key => $value){
-													if(in_array($key,$image)){
-														$value = "<img src='".$value."' style='width:50%'>";
-													}
+											<tr style="background-color:#f5f5f5;">
+												<td colspan="4">金融卡資訊</td>
+											</tr>
+											<? if(!empty($bank_account)){
+												foreach($bank_account as $key => $value){
 											?>
-												<tr>
-													<td><?=isset($meta_fields[$key])?$meta_fields[$key]:$key?></td>
-													<td style="word-break: break-all;"><?=$value?></td>
+												<tr style="background-color:#f5f5f5;">
+													<td><p class="form-control-static">ID</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->id)?$value->id:"";?></p>
+													</td>
+													<td><p class="form-control-static">借款端/出借端</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->investor)?$bank_account_investor[$value->investor]:"";?></p>
+													</td>
 												</tr>
-											<?php }} ?>
+												<tr>
+													<td><p class="form-control-static">銀行號 分行號</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->bank_code)?$value->bank_code.' '.$value->branch_code:"";?></p>
+													</td>
+													<td><p class="form-control-static">銀行帳號</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->bank_account)?$value->bank_account:"";?></p>
+													</td>
+												</tr>
+												<tr>
+													<td><p class="form-control-static">狀態</p></td>
+													<td>
+														<p class="form-control-static">正常</p>
+													</td>
+													<td><p class="form-control-static">驗證狀態</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->verify)?$bank_account_verify[$value->verify]:"";?></p>
+													</td>
+												</tr>
+												<tr>
+													<td colspan="2"><?=isset($value->front_image)?"<img src='".$value->front_image."' style='width:30%;'>":"";?></td>
+													<td colspan="2"><?=isset($value->back_image)?"<img src='".$value->back_image."' style='width:30%;'>":"";?></td>
+												</tr>
+											<? }} ?>
 											</tbody>
 										</table>
 									</div>

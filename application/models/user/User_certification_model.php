@@ -11,6 +11,10 @@ class User_certification_model extends MY_Model
 		2 => "驗證失敗" ,
 		3 => "待人工審核" ,
 	);
+	public $investor_list  	= array(
+		0 =>	"借款端",
+		1 =>	"投資端",
+	);
 	
 	public function __construct()
 	{

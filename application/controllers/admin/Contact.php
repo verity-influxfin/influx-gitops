@@ -22,6 +22,8 @@ class Contact extends MY_Admin_Controller {
 		if(!empty($list)){
 			$page_data["list"] 			= $list;
 			$page_data["name_list"] 	= $this->admin_model->get_name_list();
+			$page_data["status_list"] 	= $this->user_contact_model->status_list;
+			$page_data["investor_list"] = $this->user_contact_model->investor_list;
 		}
 
 		$this->load->view('admin/_header');
@@ -40,11 +42,13 @@ class Contact extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_contact_model->get_by('id', $id);
 				if($info){
-					$page_data['data'] 				= $info;
-					
+					$page_data["data"] 			= $info;
+					$page_data["name_list"] 	= $this->admin_model->get_name_list();
+					$page_data["status_list"] 	= $this->user_contact_model->status_list;
+					$page_data["investor_list"] = $this->user_contact_model->investor_list;
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/products_edit',$page_data);
+					$this->load->view('admin/contacts_edit',$page_data);
 					$this->load->view('admin/_footer');
 				}else{
 					alert("ERROR , id isn't exist",admin_url('contact/index'));
@@ -54,12 +58,13 @@ class Contact extends MY_Admin_Controller {
 			}
 		}else{
 			if(!empty($post['id'])){
-				$fields = ['name', 'loan_range_s', 'loan_range_e', 'interest_rate_s', 'interest_rate_e','description', 'instalment','status'];
+				$fields = ['remark', 'status'];
 				foreach ($fields as $field) {
 					if (isset($post[$field])) {
 						$data[$field] = $post[$field];
 					}
 				}
+				$data["admin_id"] = $this->login_info->id;
 				$rs = $this->user_contact_model->update($post['id'],$data);
 				if($rs===true){
 					alert("更新成功",admin_url('contact/index'));

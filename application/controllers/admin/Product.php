@@ -22,6 +22,7 @@ class Product extends MY_Admin_Controller {
 		if(!empty($list)){
 			$page_data["list"] 			= $list;
 			$page_data["name_list"] 	= $this->admin_model->get_name_list();
+			$page_data["status_list"] 	= $this->product_model->status_list;
 		}
 
 		$this->load->view('admin/_header');

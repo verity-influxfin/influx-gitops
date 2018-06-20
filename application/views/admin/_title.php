@@ -7,7 +7,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">普匯金融科技</a>
+                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">普匯金融科技內部管理後台</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -39,33 +39,26 @@
                             <a href="<?=admin_url('AdminDashboard/') ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li class="<?=isset($menu)&&$menu=="product"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>產品管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-briefcase fa-fw"></i>產品管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('product/') ?>">產品列表</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="target"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>標的管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-gavel fa-fw"></i>標的管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('target/') ?>">標的列表</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>                        
-						<li class="<?=isset($menu)&&$menu=="user"?"active":""; ?>">
-                            <a href="<?=admin_url('user/') ?>"><i class="fa fa-table fa-fw"></i>會員管理</a>
-                            <!-- /.nav-second-level -->
-                        </li>
 						<li class="<?=isset($menu)&&$menu=="contact"?"active":""; ?>">
-                            <a href="<?=admin_url('contact/') ?>"><i class="fa fa-table fa-fw"></i>投訴與建議</a>
-                            <!-- /.nav-second-level -->
+                            <a href="<?=admin_url('contact/') ?>"><i class="fa fa-star fa-fw"></i>投訴與建議</a>
                         </li>
 						<li class="<?=isset($menu)&&$menu=="certification"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>認證管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-question-circle fa-fw"></i>認證管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('certification/') ?>">認證方式列表</a>
@@ -74,13 +67,15 @@
                                     <a href="<?=admin_url('certification/user_certification_list') ?>">會員認證申請</a>
                                 </li> 
                             </ul>
-                            <!-- /.nav-second-level -->
+                        </li>
+						<li class="<?=isset($menu)&&$menu=="user"?"active":""; ?>">
+                            <a href="<?=admin_url('user/') ?>"><i class="fa fa-user fa-fw"></i>會員管理</a>
                         </li>
 						 <li class="<?=isset($menu)&&$menu=="admin"?"active":""; ?>">
                             <a href="<?=admin_url('admin/') ?>"><i class="fa fa-user fa-fw"></i>後台人員管理</a>
                         </li>
 						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>合作夥伴專區<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-group fa-fw"></i>合作夥伴專區<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('Partner/') ?>">合作商列表</a>
@@ -89,7 +84,7 @@
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>平台文件管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-file fa-fw"></i>平台文件管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('Agreement/') ?>">協議書</a>
@@ -98,7 +93,7 @@
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="test"?"active":""; ?>">
-                            <a href="#"><i class="fa fa-table fa-fw"></i>測試工具<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i>測試工具<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('TestScript/') ?>">申貸流程</a>

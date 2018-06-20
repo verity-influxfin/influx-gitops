@@ -46,8 +46,8 @@
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:"" ?></td>
-                                            <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
-                                            <td><?=isset($value->repayment)?$value->repayment:"" ?></td>
+                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:"" ?></td>
+                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?$value->created_at:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">查看</a></td> 

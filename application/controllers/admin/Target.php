@@ -26,9 +26,11 @@ class Target extends MY_Admin_Controller {
 		}
 
 		if(!empty($list)){
-			$page_data["list"] 			= $list;
-			$page_data["status_list"] 	= $this->target_model->status_list;
-			$page_data["name_list"] 	= $this->admin_model->get_name_list();
+			$page_data['instalment_list']	= $this->config->item('instalment');
+			$page_data['repayment_type']	= $this->config->item('repayment_type');
+			$page_data['list'] 				= $list;
+			$page_data['status_list'] 		= $this->target_model->status_list;
+			$page_data['name_list'] 		= $this->admin_model->get_name_list();
 		}
 
 		$this->load->view('admin/_header');
@@ -48,9 +50,10 @@ class Target extends MY_Admin_Controller {
 				$info = $this->target_model->get($id);
 				if($info){
 					$page_data['info'] 				= $info;
-					$page_data["instalment_list"]	= $this->config->item('instalment');
+					$page_data['instalment_list']	= $this->config->item('instalment');
+					$page_data['repayment_type']	= $this->config->item('repayment_type');
 					$page_data['instalment'] 		= json_decode($info->instalment,TRUE);
-					$page_data["status_list"] 	= $this->target_model->status_list;
+					$page_data['status_list'] 		= $this->target_model->status_list;
 					$page_data['target_fields'] 	= $this->config->item('target_fields');
 					
 					$this->load->view('admin/_header');
