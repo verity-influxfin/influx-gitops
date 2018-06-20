@@ -10,7 +10,6 @@ class Admin extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->login_info = check_admin();
-		$this->load->model('admin/admin_model');
 		$this->load->model('admin/role_model');
 		$this->load->model('log/log_adminlogin_model');
 		$this->load->helper('cookie');

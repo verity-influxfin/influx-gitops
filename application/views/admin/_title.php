@@ -7,7 +7,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">P2P Lending</a>
+                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">普匯金融科技</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -58,6 +58,10 @@
                         </li>                        
 						<li class="<?=isset($menu)&&$menu=="user"?"active":""; ?>">
                             <a href="<?=admin_url('user/') ?>"><i class="fa fa-table fa-fw"></i>會員管理</a>
+                            <!-- /.nav-second-level -->
+                        </li>
+						<li class="<?=isset($menu)&&$menu=="contact"?"active":""; ?>">
+                            <a href="<?=admin_url('contact/') ?>"><i class="fa fa-table fa-fw"></i>投訴與建議</a>
                             <!-- /.nav-second-level -->
                         </li>
 						<li class="<?=isset($menu)&&$menu=="certification"?"active":""; ?>">

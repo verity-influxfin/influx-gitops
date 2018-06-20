@@ -1007,7 +1007,8 @@ class User extends REST_Controller {
 		$this->load->library('S3_upload');
         $input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
-		$param		= array("user_id" => $user_id);
+		$investor 	= $this->user_info->investor;
+		$param		= array("user_id" => $user_id,"investor"=>$investor);
 		if (empty($input['content'])) {
 			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 		}else{

@@ -5,7 +5,7 @@
 			return true;
 		}
 	</script>
-	
+
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -23,71 +23,84 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-6 user">
-                                    <form role="form" method="post" onsubmit="return form_onsubmit();" >
-									    <div class="form-group">
-                                            <label>ID</label>
-                                            <p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>姓名</label>
-                                            <!--input id="name" name="name" class="form-control" placeholder="Enter Name" value="<?=isset($data->name)?$data->name:"";?>"-->
-											<p class="form-control-static"><?=isset($data->name)?$data->name:"";?></p>
-											<?
-												if($type=="edit"){
-											?>
-											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-											<? } ?>
-                                        </div>
-										<div class="form-group">
-                                            <label>性別</label>
-                                            <p class="form-control-static"><?=isset($data->sex)?$data->sex:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>電話</label>
-                                            <p class="form-control-static"><?=isset($data->phone)?$data->phone:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>身分證字號</label>
-                                            <p class="form-control-static"><?=isset($data->id_number)?$data->id_number:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>發證地點</label>
-                                            <p class="form-control-static"><?=isset($data->id_card_date)?$data->id_card_date:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>發證日期</label>
-                                            <p class="form-control-static"><?=isset($data->id_card_place)?$data->id_card_place:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>地址</label>
-                                            <p class="form-control-static"><?=isset($data->address)?$data->address:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>Email</label>
-                                            <!--input id="email" name="email" class="form-control" placeholder="Enter Email" value="<?=isset($data->email)?$data->email:"";?>"-->
-											<p class="form-control-static"><?=isset($data->address)?$data->address:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>生日</label>
-                                            <p class="form-control-static"><?=isset($data->birthday)?$data->birthday:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>借款端帳號</label>
-                                            <p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>出借端帳號</label>
-                                            <p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>註冊日期</label>
-                                            <p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
-                                        </div>
-                                        <!--button type="submit" class="btn btn-default">Submit Button</button-->
-                                    </form>
-                                </div>
-                                <div class="col-lg-6 meta">
+								<div class="col-lg-6 meta">
+									<form role="form" method="post" onsubmit="return form_onsubmit();" >
+										<? if($type=="edit"){ ?>
+										<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+										<? } ?>
+										
+										<div class="table-responsive">
+											<table class="table table-bordered table-hover table-striped">
+												<tbody>
+													<tr>
+														<td><p class="form-control-static">ID</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
+														</td>
+														<td><p class="form-control-static">姓名</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->name)?$data->name:"";?></p>
+														</td>
+
+														<td><p class="form-control-static">Email</p></td>
+														<td colspan="3">
+															<p class="form-control-static"><?=isset($data->email)?$data->email:"";?></p>
+														</td>
+	
+													</tr>
+													<tr>
+														<td><p class="form-control-static">發證地點</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->id_card_place)?$data->id_card_place:"";?></p>
+														</td>
+														<td><p class="form-control-static">發證日期</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->id_card_date)?$data->id_card_date:"";?></p>
+														</td>
+														<td><p class="form-control-static">身分證字號</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->id_number)?$data->id_number:"";?></p>
+														</td>
+														<td><p class="form-control-static">性別</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->sex)?$data->sex:"";?></p>
+														</td>
+													</tr>
+													<tr>
+														<td><p class="form-control-static">生日</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->birthday)?$data->birthday:"";?></p>
+														</td>
+														<td><p class="form-control-static">電話</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->phone)?$data->phone:"";?></p>
+														</td>
+														<td><p class="form-control-static">地址</p></td>
+														<td colspan="3">
+															<p class="form-control-static"><?=isset($data->address)?$data->address:"";?></p>
+														</td>
+													</tr>
+													<tr>
+														<td><p class="form-control-static">借款端帳號</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
+														</td>
+														<td><p class="form-control-static">出借端帳號</p></td>
+														<td>
+															<p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
+														</td>
+														<td><p class="form-control-static">註冊日期</p></td>
+														<td colspan="3">
+															<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<!--button type="submit" class="btn btn-default">Submit Button</button-->
+									</form>
+								</div>
+								<div class="col-lg-6 meta">
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover table-striped">
 											<tbody>
@@ -95,7 +108,7 @@
 												$image = array("health_card_status","health_card_front","id_card_front","id_card_back","id_card_person","student_card_front","student_card_back","financial_creditcard","financial_passbook");
 												foreach($meta as $key => $value){
 													if(in_array($key,$image)){
-														$value = "<img src='".display_image($value)."' style='width:50%'>";
+														$value = "<img src='".$value."' style='width:50%'>";
 													}
 											?>
 												<tr>
@@ -107,6 +120,7 @@
 										</table>
 									</div>
                                 </div>
+
 
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->

@@ -17,7 +17,6 @@ class Target extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$this->load->model('admin/admin_model');
 		$page_data 		= array("type"=>"list");
 		$list 			= $this->target_model->get_all();
 		$product_list 	= $this->product_model->get_all();

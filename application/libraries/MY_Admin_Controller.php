@@ -7,10 +7,10 @@ class MY_Admin_Controller extends CI_Controller{
 	
 	public function __construct(){
         parent::__construct();
-		/*if(!app_access()){
+		if(!app_access()){
 			show_404();
-		}*/
-
+		}
+		$this->load->model('admin/admin_model');
 		$this->load->helper('admin');
     }
 }

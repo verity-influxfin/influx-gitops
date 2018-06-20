@@ -19,7 +19,6 @@ class Certification extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$this->load->model('admin/admin_model');
 		$page_data 	= array("type"=>"list");
 		$list 		= $this->certification_model->get_all();
 		$name_list	= array();
@@ -113,7 +112,6 @@ class Certification extends MY_Admin_Controller {
 	}
 
 	public function user_certification_list(){
-		$this->load->model('admin/admin_model');
 		$page_data 			= array("type"=>"list");
 		$certification 		= $this->certification_model->get_all();
 		$list				= $this->user_certification_model->get_all();

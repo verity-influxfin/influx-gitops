@@ -16,7 +16,6 @@ class Product extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$this->load->model('admin/admin_model');
 		$page_data 	= array("type"=>"list");
 		$list 		= $this->product_model->get_all();
 		$name_list	= array();

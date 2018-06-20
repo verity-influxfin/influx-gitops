@@ -10,7 +10,6 @@ class Partner extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->login_info = check_admin();
-		$this->load->model('admin/admin_model');
 		$this->load->model('partner/partner_model');
 		$method = $this->router->fetch_method();
 		$nonAuthMethods = [];
