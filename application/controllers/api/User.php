@@ -1099,7 +1099,7 @@ class User extends REST_Controller {
 		$user_id 		= $this->user_info->id;
 		$promote_code	= $this->user_info->my_promote_code;
 		$url 			= BORROW_URL.'?promote_code='.$promote_code;
-		$qrcode			= "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+		$qrcode			= get_qrcode($url);
 		$data			= array(
 			"promote_code"	=> $promote_code,
 			"promote_url"	=> $url,

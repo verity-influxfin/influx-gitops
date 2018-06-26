@@ -24,7 +24,6 @@
                                             <th>簡介</th>
                                             <th>狀態</th>
                                             <th>創建日期</th>
-                                            <th>創建者</th>
                                             <!--th>修改</th-->
                                         </tr>
                                     </thead>
@@ -42,7 +41,6 @@
                                             <td><?=isset($value->description)?$value->description:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
 											<!--td><a href="<?=admin_url('certification/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td--> 
                                         </tr>                                        
 									<?php 

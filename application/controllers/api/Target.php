@@ -14,6 +14,7 @@ class Target extends REST_Controller {
 		$this->load->model('platform/certification_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
+		$this->load->model('loan/batch_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/virtual_account_model');
 		$this->load->library('Certification_lib');
@@ -56,10 +57,10 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} target_no 標的號
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {String} credit_level 信用指數
+	 * @apiSuccess {String} credit_level 信用評等
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} loan_amount 核准金額
-	 * @apiSuccess {String} interest_rate 核可利率
+	 * @apiSuccess {String} interest_rate 年化利率
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
@@ -159,11 +160,12 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} target_no 標的號
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} loan_amount 借款金額
-	 * @apiSuccess {String} credit_level 信用指數
+	 * @apiSuccess {String} credit_level 信用評等
 	 * @apiSuccess {String} interest_rate 年化利率
 	 * @apiSuccess {String} total_interest 總利息
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} expire_time 流標時間
@@ -184,12 +186,12 @@ class Target extends REST_Controller {
 	 * @apiSuccess {json} amortization_schedule 預計還款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
-	 * @apiSuccess {String} amortization_schedule.rate 年利率
+	 * @apiSuccess {String} amortization_schedule.rate 年化利率
 	 * @apiSuccess {String} amortization_schedule.date 起始時間
 	 * @apiSuccess {String} amortization_schedule.total_payment 每月還款金額
 	 * @apiSuccess {String} amortization_schedule.leap_year 是否為閏年
 	 * @apiSuccess {String} amortization_schedule.year_days 本年日數
-	 * @apiSuccess {String} amortization_schedule.XIRR XIRR
+	 * @apiSuccess {String} amortization_schedule.XIRR 內部報酬率(%)
 	 * @apiSuccess {String} amortization_schedule.schedule 還款計畫
 	 * @apiSuccess {String} amortization_schedule.schedule.instalment 第幾期
 	 * @apiSuccess {String} amortization_schedule.schedule.repayment_date 還款日
@@ -215,6 +217,7 @@ class Target extends REST_Controller {
      * 			"interest_rate":"9",
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
+     * 			"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！",
      * 			"remark":"",
      * 			"delay": "0",
      * 			"delay_days": "0",
@@ -257,7 +260,7 @@ class Target extends REST_Controller {
   	 *           "total_payment": 2053,
   	 *           "leap_year": false,
   	 *           "year_days": 365,
-  	 *           "XIRR": 0.0939,
+  	 *           "XIRR": 9.39,
   	 *           "schedule": {
  	 *                "1": {
    	 *                  "instalment": 1,
@@ -366,6 +369,7 @@ class Target extends REST_Controller {
 				"remark" 			=> $target->remark,
 				"instalment" 		=> $instalment_list[$target->instalment],
 				"repayment" 		=> $repayment_type[$target->repayment],
+				"contract" 			=> $target->contract,
 				"delay" 			=> $target->delay,
 				"delay_days" 		=> $target->delay_days,
 				"expire_time" 		=> $target->expire_time,
@@ -561,10 +565,10 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-	 * @apiSuccess {json} funds 可用資金
-	 * @apiSuccess {String} funds.total 可用資金
-	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入時間
-	 * @apiSuccess {String} funds.frozen 待交易資金
+	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {String} funds.total 資金總額
+	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
+	 * @apiSuccess {String} funds.frozen 待交易餘額
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -726,4 +730,363 @@ class Target extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list,"bank_account"=>$bank_account,"virtual_account"=>$virtual_account,"funds"=>$funds) ));
     }
  
+ 	/**
+     * @api {get} /target/batch 出借方 智能出借
+     * @apiGroup Target
+	 * @apiParam {number} budget (required) 預算金額
+     * @apiParam {number} interest_rate_s 利率區間下限(%)
+     * @apiParam {number} interest_rate_e 利率區間上限(%)
+     * @apiParam {number} instalment_s 期數區間下限(%)
+     * @apiParam {number} instalment_e 期數區間上限(%)
+     * @apiParam {String} credit_level 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8 default:all
+     * @apiParam {String} national 信用評等 全部:all 私立:0 國立:1 default:all
+     * @apiParam {String} system 學制 全部:all 0:大學 1:碩士 2:博士 default:all
+     * @apiParam {String} gender 性別 全部:all 女性:F 男性:M default:all
+	 * 
+	 * 
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} batch_id 智能出借ID
+	 * @apiSuccess {String} total_amount 總金額
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+     * @apiSuccess {json} contract 合約列表
+	 * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 70000,
+     * 			"total_count": 1,
+     * 			"max_instalment": "12",
+     * 			"min_instalment": "12",
+     * 			"XIRR": 10.47,
+     * 			"batch_id": 2,
+     * 			"contract": [
+     * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+	 *
+     * @apiError 202 未通過所需的驗證(實名驗證)
+     * @apiErrorExample {json} 202
+     *     {
+     *       "result": "ERROR",
+     *       "error": "202"
+     *     }
+	 *
+     * @apiError 203 金融帳號驗證尚未通過
+     * @apiErrorExample {json} 203
+     *     {
+     *       "result": "ERROR",
+     *       "error": "203"
+     *     }
+	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {json} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {json} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
+     *     }
+	 *
+     */
+	public function batch_get()
+    {
+
+		$input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+		$param		= array("user_id"=> $user_id);
+		$where		= array(
+			"user_id !=" 	=> $user_id,
+			"status"		=> 3,
+			"invested"		=> 0
+		);
+		
+		//必填欄位
+		if (empty($input['budget']) || intval($input['budget'])<=0) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}else{
+			$budget = intval($input['budget']);
+		}
+
+		//檢查認證 NOT_VERIFIED
+		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
+		foreach($certification_list as $key => $value){
+			if( $value->alias=='id_card' && $value->user_status!=1 ){
+				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+			}
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if(!$bank_account){
+			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+		}
+		
+		if($this->user_info->transaction_password==""){
+			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+		}
+
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+		}
+		
+		if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
+			$where["interest_rate >="] = intval($input["interest_rate_s"]);
+		}
+		
+		if(isset($input["interest_rate_e"]) && intval($input["interest_rate_e"])>0){
+			$where["interest_rate <="] = intval($input["interest_rate_e"]);
+		}
+
+		if(isset($input["instalment_s"]) && intval($input["instalment_s"])>=0){
+			$where["instalment >="] = intval($input["instalment_s"]);
+		}
+		
+		if(isset($input["instalment_e"]) && intval($input["instalment_e"])>0){
+			$where["instalment <="] = intval($input["instalment_e"]);
+		}
+		
+		if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
+			$where["credit_level"] = explode(",",$input["credit_level"]);
+		}
+		
+		$targets = $this->target_model->get_many_by($where);
+		if($targets){
+			$investments = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,2,3)));
+			if($investments){
+				$investment_target = array();
+				foreach($investments as $key => $value){
+					$investment_target[] = $value->target_id;
+				}
+				
+				foreach($targets as $key => $value){
+					if(in_array($value->id,$investment_target)){
+						unset($targets[$key]);
+					}
+				}
+			}
+			
+			if(isset($input["gender"]) && !empty($input["gender"]) && $input["gender"]!='all' ){
+				$where["gender"] = $input["gender"];
+				if($targets){
+					foreach($targets as $key => $value){
+						$target_user_info = $this->user_model->get($value->user_id);
+						if($target_user_info->sex != $input["gender"]){
+							unset($targets[$key]);
+						}
+					}
+				}
+			}
+			
+			if(isset($input["system"]) && $input["system"]!='all' && $input["system"]!=''){
+				$where["system"] = $input["system"];
+				if($targets){
+					foreach($targets as $key => $value){
+						$user_meta = $this->user_meta_model->get_by(array(
+							"user_id"	=> $value->user_id,
+							"meta_key"	=> "school_system"
+						));
+						if($user_meta){
+							if($user_meta->meta_value != $input["system"]){
+								unset($targets[$key]);
+							}
+						}else{
+							unset($targets[$key]);
+						}
+					}
+				}
+			}
+			
+			if(isset($input["national"]) && $input["national"]!='all' && $input["national"]!=''){
+				$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
+				$school_list = json_decode($school_list,true);
+				$where["national"] = $input["national"];
+				if($targets){
+					foreach($targets as $key => $value){
+						$user_meta = $this->user_meta_model->get_by(array(
+							"user_id"	=> $value->user_id,
+							"meta_key"	=> "school_name"
+						));
+						
+						if($user_meta){
+							foreach($school_list as $key => $value){
+								if(trim($user_meta->meta_value)==$value['name']){
+									$school_info = $value;
+									break;
+								}
+							}
+							if($school_info["national"]!=$input["national"]){
+								unset($targets[$key]);
+							}
+						}else{
+							unset($targets[$key]);
+						}
+					}
+				}
+			}
+			
+			if($targets){
+				$data = array(
+					'total_amount' 		=> 0,
+					'total_count' 		=> 0,
+					'max_instalment' 	=> 0,
+					'min_instalment' 	=> 0,
+					'XIRR' 				=> 0,
+					'batch_id' 			=> "",
+					'contract' 			=> array(),
+				);
+				foreach($targets as $key => $value){
+					$data['total_amount'] += $value->loan_amount;
+					$data['total_count'] ++;
+					if($data['max_instalment'] < $value->instalment){
+						$data['max_instalment'] = $value->instalment;
+					}
+					if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+						$data['min_instalment'] = $value->instalment;
+					}
+					$data['contract'][] = $value->contract;
+					$content[] = $value->id;
+					$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
+					$data['XIRR'] += $amortization_schedule["XIRR"];
+				}
+				$param = array(
+					"user_id"	=> $user_id,
+					"type"		=> 0,
+					"filter"	=> json_encode($where),
+					"content"	=> json_encode($content),
+				);
+				$batch_id = $this->batch_model->insert($param);
+				if($batch_id){
+					$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
+					$data['batch_id'] = $batch_id;
+					$this->response(array('result' => 'SUCCESS',"data" => $data));
+				}else{
+					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				}
+			}
+		}
+		$this->response(array('result' => 'SUCCESS',"data" => array(
+			'total_amount' 		=> 0,
+			'total_count' 		=> 0,
+			'max_instalment' 	=> 0,
+			'min_instalment' 	=> 0,
+			'XIRR' 				=> 0,
+			'batch_id' 			=> "",
+			'contract' 			=> array(),
+		)));
+    }
+	
+	/**
+     * @api {post} /target/batch/{batch_id} 出借方 智能出借確認
+     * @apiGroup Target
+	 * @apiParam {number} batch_id 智能出借ID
+     *
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} total_amount 總金額
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+	 * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 50000,
+     * 			"total_count": 1,
+     * 			"max_instalment": "12",
+     * 			"min_instalment": "12",
+     * 			"XIRR": 10.47
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+	 *
+	 * @apiError 811 智能出借不存在
+     * @apiErrorExample {json} 811
+     *     {
+     *       "result": "ERROR",
+     *       "error": "811"
+     *     }
+	 *
+	 * @apiError 812 對此智能出借無權限
+     * @apiErrorExample {json} 812
+     *     {
+     *       "result": "ERROR",
+     *       "error": "812"
+     *     }
+     */
+	 
+	public function batch_post($batch_id)
+    {
+		$input 				= $this->input->post(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$batch 				= $this->batch_model->get($batch_id);
+		if($batch && $batch->status==0){
+			if($batch->user_id != $user_id){
+				$this->response(array('result' => 'ERROR',"error" => BATCH_NO_PERMISSION ));
+			}
+			
+			$target_ids = json_decode($batch->content,true);
+			$targets 	= $this->target_model->get_many($target_ids);
+			if($targets){
+				$data = array(
+					'total_amount' 		=> 0,
+					'total_count' 		=> 0,
+					'max_instalment' 	=> 0,
+					'min_instalment' 	=> 0,
+					'XIRR' 				=> 0,
+				);
+				foreach($targets as $key => $value){
+					if($value->status == 3 ){
+						$investments = $this->investment_model->get_by(array("target_id"=>$value->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
+						if(!$investments){
+							$param = array(
+								"user_id" 	=> $user_id,
+								"target_id" => $value->id,
+								"amount" 	=> $value->loan_amount,
+							);
+							$investment_id = $this->investment_model->insert($param);
+							if($investment_id){
+								$data['total_amount'] += $value->loan_amount;
+								$data['total_count'] ++;
+								if($data['max_instalment'] < $value->instalment){
+									$data['max_instalment'] = $value->instalment;
+								}
+								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+									$data['min_instalment'] = $value->instalment;
+								}
+								$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
+								$data['XIRR'] += $amortization_schedule["XIRR"];
+							}
+						}
+					}
+				}
+				$data['XIRR'] = $data['total_count']>0?round($data['XIRR']/$data['total_count'] ,2):0;
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'SUCCESS',"data" => array(
+				'total_amount' 		=> 0,
+				'total_count' 		=> 0,
+				'max_instalment' 	=> 0,
+				'min_instalment' 	=> 0,
+				'XIRR' 				=> 0,
+			)));
+		}
+		$this->response(array('result' => 'ERROR',"error" => BATCH_NOT_EXIST ));
+    }
 }

@@ -240,7 +240,7 @@ class Financial_lib{
 			$x_mid = $rtb + $dx;
 			$f_mid = $this->XNPV($x_mid, $values, $dates);
 			if ($f_mid <= 0.0) $rtb = $x_mid;
-			if ((abs($f_mid) < FINANCIAL_ACCURACY) || (abs($dx) < FINANCIAL_ACCURACY)) return round($x_mid ,4);
+			if ((abs($f_mid) < FINANCIAL_ACCURACY) || (abs($dx) < FINANCIAL_ACCURACY)) return round($x_mid ,4)*100;
 		}
 		return false;
 	}

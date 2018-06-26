@@ -25,7 +25,6 @@ class Certification_lib{
 				"expire_time >="	=> time(),
 			);
 			$certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
-			
 			if(!empty($certification)){
 				$certification->content = json_decode($certification->content,true);
 				return $certification;
@@ -222,10 +221,15 @@ class Certification_lib{
 	
 	private function debit_card_success($info){
 		if($info){
-			$this->CI->load->model('user/user_bankaccount_model');
 			$content 	= $info->content;
 			$exist 		= $this->CI->user_meta_model->get_by(array("user_id"=>$info->user_id , "meta_key" => "debit_card_status"));
-			if(!$exist){
+			if($exist){
+				$param = array(
+					"user_id"		=> $info->user_id,
+					"meta_key" 		=> "debit_card_status",
+				);
+				$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> 1));
+			}else{
 				$param = array(
 					"user_id"		=> $info->user_id,
 					"meta_key" 		=> 'debit_card_status',
@@ -233,27 +237,10 @@ class Certification_lib{
 				);
 				$rs  = $this->CI->user_meta_model->insert($param);
 			}
-		
-			$user_info = array(
-				"user_id"		=> $info->user_id,
-				"investor"		=> $info->investor,
-				"bank_code"		=> $content["bank_code"],
-				"branch_code"	=> $content["branch_code"],
-				"bank_account"	=> intval($content["bank_account"]),
-				"front_image"	=> $content["front_image"],
-				"back_image"	=> $content["back_image"],
-			);
-			
-			if($info->investor){
-				$user_info['verify'] = 2;
-			}
-			
-			$rs = $this->CI->user_bankaccount_model->insert($user_info);
+
 			if($rs){
 				$this->CI->user_certification_model->update($info->id,array("status"=>1));
 				return true;
-			}else{
-				$this->CI->user_certification_model->update($info->id,array("status"=>2,"remark"=>"exist"));
 			}
 		}
 		return false;

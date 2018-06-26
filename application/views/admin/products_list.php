@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('product/add') ?>" class="btn btn-default float-right ">新增產品</a>
+							<a href="<?=admin_url('product/add') ?>" class="btn btn-primary float-right" >新增產品</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

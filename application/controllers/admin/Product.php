@@ -111,56 +111,5 @@ class Product extends MY_Admin_Controller {
 		}
 	}
 
-
-	/*public function rating_edit(){
-		$page_data 	= array("type"=>"edit");
-		$post 		= $this->input->post(NULL, TRUE);
-		$get 		= $this->input->get(NULL, TRUE);
-		$this->load->model('platform/rating_model');
-		$rating 	= $this->rating_model->get_many_by(array("status"=>1));
-		
-		if(empty($post)){
-			$id 	= isset($get["id"])?intval($get["id"]):0;
-			if($id){
-				$info = $this->product_model->get_by('id', $id);
-				if($info){
-					$page_data['data'] 				= $info;
-					$page_data['product_rating'] 	= json_decode($info->ratings,TRUE);
-					$page_data['rating'] 			= $rating;
-					$this->load->view('admin/_header');
-					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/product_rating_edit',$page_data);
-					$this->load->view('admin/_footer');
-				}else{
-					alert("ERROR , id isn't exist",admin_url('product/'));
-				}
-			}else{
-				alert("ERROR , id isn't exist",admin_url('product/'));
-			}
-		}else{
-			if(!empty($post['id'])){
-				$data = array();
-				if($rating){
-					foreach($rating as $key =>$value){
-						$status 		= isset($post["rating"][$value->id])&&$post["rating"][$value->id]?1:0;
-						$rating_value	= isset($post["rating_value"][$value->id])&&$post["rating_value"][$value->id]?$post["rating_value"][$value->id]:0;
-						$data[$value->id] = array(
-							"id" 		=> $value->id,
-							"status"	=> $status,
-							"value"		=> $rating_value,
-						);
-					}
-				}
-				$rs = $this->product_model->update($post['id'],array("ratings"=>json_encode($data)));
-				if($rs===true){
-					alert("更新成功",admin_url('product/'));
-				}else{
-					alert("更新失敗，請洽工程師",admin_url('product/'));
-				}
-			}else{
-				alert("ERROR , id isn't exist",admin_url('product/'));
-			}
-		}
-	}*/
 }
 ?>

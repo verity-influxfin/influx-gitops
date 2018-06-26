@@ -144,6 +144,8 @@ defined('TARGET_APPLY_STATUS_ERROR')  	OR define('TARGET_APPLY_STATUS_ERROR'	, 8
 defined('TRANSFER_EXIST') 				OR define('TRANSFER_EXIST'				, 808); 
 defined('TRANSFER_NOT_EXIST') 			OR define('TRANSFER_NOT_EXIST'			, 809); 
 defined('TRANSFER_APPLY_EXIST')  		OR define('TRANSFER_APPLY_EXIST'		, 810);
+defined('BATCH_NOT_EXIST') 				OR define('BATCH_NOT_EXIST'				, 811); 
+defined('BATCH_NO_PERMISSION') 			OR define('BATCH_NO_PERMISSION'			, 812); 
 //Repayment Error Code
 defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
 defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 

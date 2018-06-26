@@ -62,6 +62,16 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
 	 * @apiSuccess {String} funds.frozen 待交易餘額
+	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
+	 * @apiSuccess {String} bank_account.branch_code 分行代碼
+	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
+	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
+	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
+	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
+	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
+	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -79,13 +89,25 @@ class Recoveries extends REST_Controller {
      * 				  "5": 0,
      * 				  "6": 0,
      * 				  "7": 0,
-     * 				  "8": 0,
+     * 				  "8": 0
      * 			},
      * 			"funds": {
-     * 				 "total": 500,
+     * 				 "total": "500",
      * 				 "last_recharge_date": "2018-05-03 19:15:42",
-     * 				 "frozen": 0
-     * 			}
+     * 				 "frozen": "0"
+     * 			},
+     * 	        "bank_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "1234",
+     * 	            "bank_account": "12345678910"
+     * 	        },
+     * 	        "virtual_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "0154",
+     * 	            "bank_name": "國泰世華商業銀行",
+     * 	            "branch_name": "信義分行",
+     * 	            "virtual_account": "56639100000001"
+     * 	        }
      * 		}
      *    }
 	 *
@@ -105,7 +127,6 @@ class Recoveries extends REST_Controller {
 		$other_income			= 0;
 		$credit_level 			= $this->config->item('credit_level');
 		$principal_level		= array();
-		$funds					= array("total"=>0,"last_recharge_date"=>"","frozen"=>0);
 		if($credit_level){
 			foreach($credit_level as $level => $value){
 				$principal_level[$level] = 0;
@@ -150,10 +171,50 @@ class Recoveries extends REST_Controller {
 				}
 			}
 		}
-		$virtual_account = $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
-		if($virtual_account){
-			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+		$virtual 			= $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
+		if($virtual){
+			$virtual_account	= array(
+				"bank_code"			=> CATHAY_BANK_CODE,
+				"branch_code"		=> CATHAY_BRANCH_CODE,
+				"bank_name"			=> CATHAY_BANK_NAME,
+				"branch_name"		=> CATHAY_BRANCH_NAME,
+				"virtual_account"	=> $virtual->virtual_account,
+			);
+			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
+		}else{
+			$funds			 = array(
+				"total"					=> 0,
+				"last_recharge_date"	=> "",
+				"frozen"				=> 0
+			);
+			$virtual_account	= array(
+				"bank_code"			=> "",
+				"branch_code"		=> "",
+				"bank_name"			=> "",
+				"branch_name"		=> "",
+				"virtual_account"	=> "",
+			);
 		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$user_bankaccount 	= $this->user_bankaccount_model->get_by(array("investor"=>1,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if($user_bankaccount){
+			$bank_account 		= array(
+				"bank_code"		=> $user_bankaccount->bank_code,
+				"branch_code"	=> $user_bankaccount->branch_code,
+				"bank_account"	=> $user_bankaccount->bank_account,
+			);
+		}else{
+			$bank_account 		= array(
+				"bank_code"		=> "",
+				"branch_code"	=> "",
+				"bank_account"	=> "",
+			);
+		}
+
+
+		
+		
 		$data			 = array(
 			"remaining_principal"	=> $remaining_principal,
 			"interest"				=> $interest,
@@ -161,7 +222,9 @@ class Recoveries extends REST_Controller {
 			"interest_receivable"	=> $interest_receivable,
 			"other_income"			=> $other_income,
 			"principal_level"		=> $principal_level,
-			"funds"					=> $funds
+			"funds"					=> $funds,
+			"bank_account"			=> $bank_account,
+			"virtual_account"		=> $virtual_account,
 		);
 		$this->response(array('result' => 'SUCCESS',"data" => $data ));
     }
@@ -216,7 +279,7 @@ class Recoveries extends REST_Controller {
      * 					"delay": "0",
      * 					"delay_days": "0",
      * 					"status": "5",
-     * 					"sub_status": "0",
+     * 					"sub_status": "0"
      * 				},
 	 * 	        	"next_repayment": {
      * 	            	"date": "2018-06-10",
@@ -351,8 +414,8 @@ class Recoveries extends REST_Controller {
      * 			"created_at":"1520421572",
 	 * 			"transfer":{
      * 				"amount":"5000",
-     * 				"transfer_fee":"25"
-     * 				"contract":"我是合約，我是合約"
+     * 				"transfer_fee":"25",
+     * 				"contract":"我是合約，我是合約",
      * 				"transfer_at":"0"
      * 			},
 	 * 			"product":{
@@ -800,7 +863,7 @@ class Recoveries extends REST_Controller {
 	/**
      * @api {post} /recoveries/transfer 出借方 轉讓申請
      * @apiGroup Recoveries
-     * @apiParam {String} ids (required) Investments IDs (1,3,10,21)
+     * @apiParam {String} ids (required) Investments IDs (複選使用逗號隔開1,3,10,21)
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS

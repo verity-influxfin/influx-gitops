@@ -96,7 +96,12 @@ class Repayment extends REST_Controller {
 		$transaction 			= $this->transaction_model->order_by("limit_date","asc")->get_many_by(array(
 			"user_from"	=> $user_id,
 			"status"	=> "1",
-			"source" 	=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST,SOURCE_AR_DAMAGE,SOURCE_AR_DELAYINTEREST), 
+			"source" 	=> array(
+				SOURCE_AR_PRINCIPAL,
+				SOURCE_AR_INTEREST,
+				SOURCE_AR_DAMAGE,
+				SOURCE_AR_DELAYINTEREST
+			), 
 		));
 		
 		if($transaction){

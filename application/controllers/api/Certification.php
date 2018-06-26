@@ -567,6 +567,7 @@ class Certification extends REST_Controller {
      */
 	public function debitcard_post()
     {
+		$this->load->model('user/user_bankaccount_model');
 		$alias 			= "debit_card";
 		$certification 	= $this->certification_model->get_by(array("alias"=>$alias));
 		if($certification && $certification->status==1){
@@ -578,12 +579,13 @@ class Certification extends REST_Controller {
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification->id,
 				"investor"			=> $investor,
-				"expire_time"		=> time(),
+				"expire_time"		=> strtotime("+20 years"),
 			);
 			
 			//是否驗證過
 			$where = array(
 				"certification_id"	=> $certification->id,
+				"expire_time >="	=> time(),
 				"status"			=> array(0,1),
 				"user_id"			=> $user_id,
 				"investor"			=> $investor,
@@ -628,11 +630,29 @@ class Certification extends REST_Controller {
 					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
 				}
 			}
-			
+
 			$param['content'] = json_encode($content);
+	
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
+				$bankaccount_info = array(
+					"user_id"		=> $user_id,
+					"investor"		=> $investor,
+					"bank_code"		=> $content["bank_code"],
+					"branch_code"	=> $content["branch_code"],
+					"bank_account"	=> intval($content["bank_account"]),
+					"front_image"	=> $content["front_image"],
+					"back_image"	=> $content["back_image"],
+				);
+				
+				if($investor){
+					$bankaccount_info['verify'] = 2;
+				}else{
+					$this->certification_lib->set_success($insert);
+				}
+				
+				$this->user_bankaccount_model->insert($bankaccount_info);
+				
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));

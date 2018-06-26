@@ -13,6 +13,8 @@ class User extends MY_Admin_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('platform/certification_model');
+		$this->load->model('product/product_model');
+		$this->load->model('loan/credit_model');
 		if(empty($this->login_info)){
 			redirect(admin_url('admin/login'), 'refresh');
         }
@@ -59,7 +61,7 @@ class User extends MY_Admin_Controller {
 				}
 				
 				$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$id));
-				
+				$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
 				$info = $this->user_model->get($id);
 				if($info){
 					$page_data['data'] 					= $info;
@@ -67,6 +69,8 @@ class User extends MY_Admin_Controller {
 					$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
 					$page_data['meta_images'] 			= $this->config->item('user_meta_images');
 					$page_data['certification_list'] 	= $certification_list;
+					$page_data['credit_list'] 			= $credit_list;
+					$page_data['product_list'] 			= $this->product_model->get_name_list();
 					$page_data['bank_account'] 			= $bank_account;
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;

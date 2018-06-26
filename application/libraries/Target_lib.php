@@ -125,6 +125,7 @@ class Target_lib{
 					if($target->expire_time < time()){
 						//流標
 						$this->CI->target_model->update($target->id,array(
+							"invested"		=> 0,
 							"launch_times"	=> $target->launch_times + 1,
 							"expire_time"	=> strtotime("+2 days", $target->expire_time)
 						));

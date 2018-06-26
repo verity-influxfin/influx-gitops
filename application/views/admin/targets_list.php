@@ -26,8 +26,10 @@
 											<th>年化利率</th>
                                             <th>期數</th>
                                             <th>還款方式</th>
+                                            <th>逾期狀況</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
+                                            <th>邀請碼</th>
                                             <th>查看</th>
                                         </tr>
                                     </thead>
@@ -48,8 +50,10 @@
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:"" ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:"" ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
+                                            <td><?=isset($value->delay)&&$value->delay?"逾期":"無" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
-                                            <td><?=isset($value->created_at)?$value->created_at:"" ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">查看</a></td> 
                                         </tr>                                        
 									<?php 

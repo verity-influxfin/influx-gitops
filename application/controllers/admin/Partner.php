@@ -27,7 +27,7 @@ class Partner extends MY_Admin_Controller {
 		if(!empty($list)){
 			foreach($list as $key => $value){
 				$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
-				$qrcode			= "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+				$qrcode			= get_qrcode($url);
 				$value->qrcode	= $qrcode;
 				$list[$key] 	= $value;
 			}
@@ -93,7 +93,7 @@ class Partner extends MY_Admin_Controller {
 				$partner_info = $this->partner_model->get_by('id', $id);
 				if($partner_info){
 					$url 					= BORROW_URL.'?promote_code='.$partner_info->my_promote_code;
-					$qrcode					= "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+					$qrcode					= get_qrcode($url);
 					$partner_info->qrcode	= $qrcode;
 					unset($page_data['partner_name'][$id]);
 					$page_data['data'] = $partner_info;

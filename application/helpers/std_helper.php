@@ -228,4 +228,7 @@
 		return $entering_date;
 	}
 	
+	function get_qrcode($url){
+		return "https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+	}
 ?>

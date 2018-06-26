@@ -52,8 +52,9 @@ class Welcome extends CI_Controller {
 					$image2_answer = $this->faceplusplus_lib->token_compare($image2_token[0],$image2_token[1]);
 				}
 				
-				$this->load->library('Ocr_lib');
-				$ocr = $this->ocr_lib->identify($image,1031);
+				//$this->load->library('Ocr_lib');
+				//$ocr = $this->ocr_lib->identify($image,1031);
+				$ocr = array();
 				$data = array(
 					"image"			=> 	$image,
 					"id_card"		=>	$ocr,

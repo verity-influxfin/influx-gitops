@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<!--a href="<?=admin_url('certification/add') ?>" class="btn btn-default float-right ">新增認證方式</a-->
+							<!--a href="<?=admin_url('certification/add') ?>" class="btn btn-primary float-right" >新增認證方式</a-->
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -20,6 +20,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>User</th>
+                                            <th>出借/借款</th>
                                             <th>認證方式</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
@@ -36,6 +37,7 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($value->investor)?$value->investor:"" ?></td>
                                             <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>

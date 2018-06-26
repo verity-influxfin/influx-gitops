@@ -105,6 +105,14 @@ class Subloan extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
+	 *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {json} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+	 *
      * @apiError 903 已申請提前還款或產品轉換
      * @apiErrorExample {json} 903
      *     {
@@ -127,6 +135,10 @@ class Subloan extends REST_Controller {
 			
 			if($target->sub_status != 0){
 				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
+			}
+
+			if($target->delay == 0){ 
+				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
 			}
 			
 			$product 	= $this->product_model->get($target->product_id);

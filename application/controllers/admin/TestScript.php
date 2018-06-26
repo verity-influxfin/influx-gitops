@@ -100,7 +100,7 @@ class TestScript extends MY_Admin_Controller
         $param = ["loan_status"	=> 1 ];
 		 $this->target_model->update_by($where, $param);
         // TODO: 攤還資料未新增，未切換至status 5
-        $this->transaction_lib->lending_success($targetId);
+        $rs = $this->transaction_lib->lending_success($targetId);
 
         $this->redirectToIndex();
     }

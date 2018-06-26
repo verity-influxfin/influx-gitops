@@ -115,7 +115,7 @@
 													<td style="word-break: break-all;width:60%;"><?
 													if(isset($meta[$key])&&!empty($meta[$key])){
 														if(in_array($key,$meta_images)){
-															echo "<img src='".$meta[$key]."' style='width:30%;'>";
+															echo "<a href='".$meta[$key]."' data-fancybox='images'><img src='".$meta[$key]."' style='width:30%;'></a>";
 														}else if( $key == $alias.'_status' && $meta[$key]==1){
 															echo "已認證"; 
 														}else{
@@ -172,18 +172,69 @@
 													</td>
 												</tr>
 												<tr>
-													<td colspan="2"><?=isset($value->front_image)?"<img src='".$value->front_image."' style='width:30%;'>":"";?></td>
-													<td colspan="2"><?=isset($value->back_image)?"<img src='".$value->back_image."' style='width:30%;'>":"";?></td>
+													<td colspan="2"><?=isset($value->front_image)?"<a href='".$value->front_image."' data-fancybox='images'><img src='".$value->front_image."' style='width:30%;'></a>":"";?></td>
+													<td colspan="2"><?=isset($value->back_image)?"<a href='".$value->back_image."' data-fancybox='images'><img src='".$value->back_image."' style='width:30%;'></a>":"";?></td>
 												</tr>
 											<? }} ?>
 											</tbody>
 										</table>
 									</div>
                                 </div>
-
-
+								<div class="col-lg-6 meta">
+									<div class="table-responsive">
+										<table class="table table-bordered table-hover" style="text-align:center;">
+											<tbody>
+											<tr style="background-color:#f5f5f5;">
+												<td colspan="4">信用指數</td>
+											</tr>
+											<? if(!empty($credit_list)){
+												foreach($credit_list as $key => $value){
+											?>
+												<tr style="background-color:#f5f5f5;">
+													<td><p class="form-control-static">ID</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->id)?$value->id:"";?></p>
+													</td>
+													<td><p class="form-control-static">借款端</p></td>
+													<td>
+														<p class="form-control-static">借款端</p>
+													</td>
+												</tr>
+												<tr>
+													<td><p class="form-control-static">產品</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->product_id)?$product_list[$value->product_id]:"";?></p>
+													</td>
+													<td><p class="form-control-static">信用等級</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->level)?$value->level:"";?></p>
+													</td>
+												</tr>
+												<tr>
+													<td><p class="form-control-static">信用評分</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->points)?$value->points:"";?></p>
+													</td>
+													<td><p class="form-control-static">信用額度</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->amount)?$value->amount:"";?></p>
+													</td>
+												</tr>
+												<tr>
+													<td><p class="form-control-static">有效時間</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->expire_time)&&!empty($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"";?></p>
+													</td>
+													<td><p class="form-control-static">核准時間</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"";?></p>
+													</td>
+												</tr>
+											<? }} ?>
+											</tbody>
+										</table>
+									</div>
                                 </div>
-                                <!-- /.col-lg-6 (nested) -->
                             </div>
                             <!-- /.row (nested) -->
                         </div>
