@@ -74,11 +74,8 @@ class Transfer_lib{
 		return false;
 	}
 
-	public function get_transfer_list(){
+	public function get_transfer_list($where = array("status" => 0)){
 		$list 	= array();
-		$where 	= array(
-			"status" => 0
-		);
 		$rs = $this->CI->transfer_model->get_many_by($where);
 		if($rs){
 			$list = $rs;

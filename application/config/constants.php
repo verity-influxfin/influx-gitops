@@ -172,6 +172,7 @@ defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 2); //違約�
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
+defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'			, 7); //寬限期
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('LENDING_URL') 				OR define('LENDING_URL'				, 'https://lend.influxfin.com');
 defined('BORROW_URL') 				OR define('BORROW_URL'				, 'https://borrow.influxfin.com');
@@ -196,8 +197,8 @@ defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '93');
 defined('SOURCE_DELAYINTEREST')     OR define('SOURCE_DELAYINTEREST'	, '94');//延滯息
 
 //Facebook
-defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, '2066969360226590');
-defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, 'd8ed8469f718c53e9e93cdb6a99e1e0b');
+defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, getenv('ENV_FB_CLIENT_ID'));
+defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, getenv('ENV_FB_CLIENT_SECRET'));
 
 //Instagram
 defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, '622ba30fa4524019a3b36fccd862b764');
@@ -213,11 +214,11 @@ defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'UCEPzxzn
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
-defined('CATHAY_CUST_ID')     		OR define('CATHAY_CUST_ID'			, '68566881');
-defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME'	, 'toychen');
-defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD'	, 'fable1234');
-defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'		, '015035006475');
-defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'		, '5663');
+defined('CATHAY_CUST_ID')     		OR define('CATHAY_CUST_ID'			, getenv('ENV_CATHAY_CUST_ID'));
+defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME'	, getenv('ENV_CATHAY_CUST_NICKNAME'));
+defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD'	, getenv('ENV_CATHAY_CUST_PASSWORD'));
+defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'		, getenv('ENV_CATHAY_CUST_ACCNO'));
+defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'		, getenv('ENV_CATHAY_VIRTUAL_CODE'));
 defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '013');
 defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'		, '0154');
 defined('CATHAY_BANK_NAME')     	OR define('CATHAY_BANK_NAME'		, '國泰世華商業銀行');
@@ -235,12 +236,12 @@ defined('EVER8D_UID')      			OR define('EVER8D_UID'				, '0977249516');
 defined('EVER8D_PWD')     			OR define('EVER8D_PWD'				, 'n7xg');
 
 //S3
-defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN'		, 'AKIAJE5RGXS7FXHKSVBA');
-defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, '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');
+defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV_AWS_ACCESS_TOKEN'));
+defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, getenv('ENV_AWS_SECRET_TOKEN'));
 defined('S3_BUCKET')     			OR define('S3_BUCKET'				, 'influxp2p-personal');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
 //SMTP
-defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT'		, 'service@influxfin.com');
-defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD'		, 'fable1234');
+defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT'		, getenv('ENV_GMAIL_SMTP_ACCOUNT'));
+defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD'		, getenv('ENV_GMAIL_SMTP_PASSWORD'));
 defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME'			, '普匯金融科技');

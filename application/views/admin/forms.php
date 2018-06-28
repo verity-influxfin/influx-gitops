@@ -89,8 +89,8 @@
         </div>
     </div>
 
-    <!-- jQuery Version 1.11.0 -->
-    <script src="<?=base_url()?>assets/admin/js/jquery-1.11.0.js"></script>
+	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/bootstrap.min.js"></script>
     <!-- Metis Menu Plugin JavaScript -->

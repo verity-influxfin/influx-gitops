@@ -808,7 +808,6 @@ class Target extends REST_Controller {
 		$input 		= $this->input->get(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array("user_id"=> $user_id);
 		$where		= array(
 			"user_id !=" 	=> $user_id,
 			"status"		=> 3,
@@ -940,6 +939,7 @@ class Target extends REST_Controller {
 			}
 			
 			if($targets){
+				$where["budget"] = $budget;
 				$data = array(
 					'total_amount' 		=> 0,
 					'total_count' 		=> 0,
@@ -950,32 +950,37 @@ class Target extends REST_Controller {
 					'contract' 			=> array(),
 				);
 				foreach($targets as $key => $value){
-					$data['total_amount'] += $value->loan_amount;
-					$data['total_count'] ++;
-					if($data['max_instalment'] < $value->instalment){
-						$data['max_instalment'] = $value->instalment;
+					$next = $data['total_amount'] + $value->loan_amount;
+					if($next <= $budget){
+						$data['total_amount'] += $value->loan_amount;
+						$data['total_count'] ++;
+						if($data['max_instalment'] < $value->instalment){
+							$data['max_instalment'] = $value->instalment;
+						}
+						if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+							$data['min_instalment'] = $value->instalment;
+						}
+						$data['contract'][] = $value->contract;
+						$content[] = $value->id;
+						$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
+						$data['XIRR'] += $amortization_schedule["XIRR"];
 					}
-					if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-						$data['min_instalment'] = $value->instalment;
-					}
-					$data['contract'][] = $value->contract;
-					$content[] = $value->id;
-					$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
-					$data['XIRR'] += $amortization_schedule["XIRR"];
 				}
-				$param = array(
-					"user_id"	=> $user_id,
-					"type"		=> 0,
-					"filter"	=> json_encode($where),
-					"content"	=> json_encode($content),
-				);
-				$batch_id = $this->batch_model->insert($param);
-				if($batch_id){
-					$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
-					$data['batch_id'] = $batch_id;
-					$this->response(array('result' => 'SUCCESS',"data" => $data));
-				}else{
-					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				if($data['total_count']){
+					$param = array(
+						"user_id"	=> $user_id,
+						"type"		=> 0,
+						"filter"	=> json_encode($where),
+						"content"	=> json_encode($content),
+					);
+					$batch_id = $this->batch_model->insert($param);
+					if($batch_id){
+						$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
+						$data['batch_id'] = $batch_id;
+						$this->response(array('result' => 'SUCCESS',"data" => $data));
+					}else{
+						$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+					}
 				}
 			}
 		}
@@ -1036,7 +1041,7 @@ class Target extends REST_Controller {
 		$input 				= $this->input->post(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$batch 				= $this->batch_model->get($batch_id);
-		if($batch && $batch->status==0){
+		if($batch && $batch->status==0 && $batch->type==0){
 			if($batch->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => BATCH_NO_PERMISSION ));
 			}

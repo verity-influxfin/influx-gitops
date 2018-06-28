@@ -24,7 +24,6 @@ class Welcome extends CI_Controller {
 		$this->load->library('S3_upload');
 		$this->load->library('Faceplusplus_lib');
 		$data = array();
-
 		if(isset($_FILES["image"]) && !empty($_FILES["image"])){
 			$image 	= $this->s3_upload->image($_FILES,"image",0,"test");
 			$image2 = $this->s3_upload->image($_FILES,"image2",0,"test");
@@ -81,14 +80,14 @@ class Welcome extends CI_Controller {
 		$date 		= $_GET['date'];//起始日
 		$repayment	= isset($_GET['repayment'])?intval($_GET['repayment']):1;//起始日
 		$schedule 	= $this->financial_lib->get_amortization_schedule($amount,$instalment,$rate,$date,$repayment); 
-		echo '<span>本金：'		.$schedule['amount'].'</span><br>';
-		echo '<span>年利率：'		.$schedule['rate'].'%</span><br>';
-		echo '<span>每期應繳：'	.$schedule['total_payment'].'</span><br>';
-		echo '<span>Day0：'		.$schedule['date'].'</span><br>';
-		echo '<span>有無需考慮閏年：'.$schedule['leap_year'].'</span><br>';
-		echo '<span>期數：'.$schedule['instalment'].'</span><br>';
-		echo '<span>XIRR：'.($schedule['XIRR']*100).'%</span><br>';
-		echo '<table style="width:50%;text-align: center;"><tr><th>期數</th><th>還款日</th><th>日數</th><th>期初本金餘額</th><th>還款本金</th><th>還款利息</th><th>還款合計</th></tr>';
+		echo '<span>本金：'		.$schedule['amount']		.'</span><br>';
+		echo '<span>年利率：'		.$schedule['rate']		.'%</span><br>';
+		echo '<span>每期應繳：'	.$schedule['total_payment']	.'</span><br>';
+		echo '<span>Day0：'		.$schedule['date']			.'</span><br>';
+		echo '<span>有無需考慮閏年：'.$schedule['leap_year']	.'</span><br>';
+		echo '<span>期數：'.$schedule['instalment']			.'</span><br>';
+		echo '<span>XIRR：'.($schedule['XIRR'])			.'%</span><br>';
+		echo '<table style="width:50%;text-align:center;"><tr><th>期數</th><th>還款日</th><th>日數</th><th>期初本金餘額</th><th>還款本金</th><th>還款利息</th><th>還款合計</th></tr>';
 
 		foreach($schedule['schedule'] as $key =>$value){
 			echo "<tr>";
@@ -107,30 +106,8 @@ class Welcome extends CI_Controller {
 		echo "<td>".$schedule['total']['interest']."</td>";
 		echo "<td>".$schedule['total']['total_payment']."</td>";
 		echo "</tr>";
-		echo '</table>';
+		echo "</table>";
 		
-	}
-
-	/*function transaction(){
-		$this->load->library('Transaction_lib');
-		$rs = $this->transaction_lib->check_bidding(1);
-		dump($rs);
-	}*/
-
-	function transaction(){
-		$this->load->model('transaction/target_model');
-		$this->load->library('Transaction_lib'); 
-		$rs = $this->transaction_lib->lending_success(12); 
-		dump($rs);
-	}
-	
-	function target(){
-		$this->load->model('transaction/target_model');
-		$this->load->library('Subloan_lib'); 
-		$target = $this->target_model->get(1);
-		$rs = $this->subloan_lib->get_subloan($target); 
-		$rs = $this->subloan_lib->cancel_subloan($rs); 
-		dump($rs);
 	}
 	
 	function allimage(){

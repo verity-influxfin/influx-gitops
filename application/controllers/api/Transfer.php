@@ -15,6 +15,7 @@ class Transfer extends REST_Controller {
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_investment_model');
+		$this->load->model('loan/batch_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
@@ -173,6 +174,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} id Transfer ID
 	 * @apiSuccess {String} amount 借款轉讓金額
 	 * @apiSuccess {String} instalment 借款剩餘期數
+	 * @apiSuccess {String} debt_transfer_contract 債權轉讓合約
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {json} target 原案資訊
 	 * @apiSuccess {String} target.id Target ID
@@ -206,6 +208,7 @@ class Transfer extends REST_Controller {
 	 *			"id":"1",
 	 *			"amount":"5000",
 	 *			"instalment":"12",
+	 *			"debt_transfer_contract":"我是合約！！",
 	 *			"expire_time":"1527865369",
      * 			"target":{
      * 				"id":"1",
@@ -314,6 +317,7 @@ class Transfer extends REST_Controller {
 				"id"			=> $transfer->id,
 				"amount"		=> $transfer->amount,
 				"instalment"	=> $transfer->instalment,
+				"debt_transfer_contract" => $transfer->contract,
 				"expire_time"	=> $transfer->expire_time,
 			);
 				
@@ -476,4 +480,352 @@ class Transfer extends REST_Controller {
 		$this->response(array('result' => 'ERROR',"error" => TRANSFER_NOT_EXIST ));
     }
 
+	 
+ 	/**
+     * @api {get} /transfer/batch 出借方 智能收購
+     * @apiGroup Transfer
+	 * @apiParam {number} budget (required) 預算金額
+	 * @apiParam {number} delay (required) 逾期標的 0:正常標的 1:逾期標的 default:0
+     * @apiParam {number} user_id 指定使用者ID
+	 * @apiParam {number} interest_rate_s 正常標的-利率區間下限(%)
+     * @apiParam {number} interest_rate_e 正常標的-利率區間上限(%)
+     * @apiParam {number} instalment_s 正常標的-剩餘期數區間下限(%)
+     * @apiParam {number} instalment_e 正常標的-剩餘期數區間上限(%)
+     * @apiParam {String} credit_level 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8 default:all
+	 * 
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} batch_id 智能收購ID
+	 * @apiSuccess {String} total_amount 總金額
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+     * @apiSuccess {json} debt_transfer_contract 合約列表
+	 * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 70000,
+     * 			"total_count": 1,
+     * 			"max_instalment": "12",
+     * 			"min_instalment": "12",
+     * 			"XIRR": 10.47,
+     * 			"batch_id": 2,
+     * 			"debt_transfer_contract": [
+     * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+	 *
+     * @apiError 202 未通過所需的驗證(實名驗證)
+     * @apiErrorExample {json} 202
+     *     {
+     *       "result": "ERROR",
+     *       "error": "202"
+     *     }
+	 *
+     * @apiError 203 金融帳號驗證尚未通過
+     * @apiErrorExample {json} 203
+     *     {
+     *       "result": "ERROR",
+     *       "error": "203"
+     *     }
+	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {json} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {json} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
+     *     }
+	 *
+     */
+	public function batch_get()
+    {
+
+		$filter 	= $input = $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+		$where		= array(
+			"user_id !="	=> $user_id,
+			"status"		=> 5,
+		);
+		
+		//必填欄位
+		if (empty($input['budget']) || intval($input['budget'])<=0) {
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}else{
+			$budget = intval($input['budget']);
+		}
+
+		if (isset($input['delay']) && in_array($input['delay'],array(0,1))) {
+			$delay 	= intval($input['delay']);
+		}else{
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
+
+		//檢查認證 NOT_VERIFIED
+		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
+		foreach($certification_list as $key => $value){
+			if( $value->alias=='id_card' && $value->user_status!=1 ){
+				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+			}
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if(!$bank_account){
+			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+		}
+		
+		if($this->user_info->transaction_password==""){
+			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+		}
+
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+		}
+		
+		$transfer 	= $this->transfer_lib->get_transfer_list();
+		if($transfer){
+			
+			if($delay){
+				$where["delay_days >"] 	= GRACE_PERIOD;
+				if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
+					$where["credit_level"] = explode(",",$input["credit_level"]);
+				}
+			}else{
+				$where["delay_days <="] = GRACE_PERIOD;
+				if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
+					$where["interest_rate >="] = intval($input["interest_rate_s"]);
+				}
+				
+				if(isset($input["interest_rate_e"]) && intval($input["interest_rate_e"])>0){
+					$where["interest_rate <="] = intval($input["interest_rate_e"]);
+				}
+
+				if(isset($input["instalment_s"]) && intval($input["instalment_s"])>=0){
+					if($transfer){
+						foreach($transfer as $key => $value){
+							if($value->instalment<intval($input["instalment_s"])){
+								unset($transfer[$key]);
+							}
+						}
+					}
+				}
+				
+				if(isset($input["instalment_e"]) && intval($input["instalment_e"])>0){
+					if($transfer){
+						foreach($transfer as $key => $value){
+							if($value->instalment>intval($input["instalment_e"])){
+								unset($transfer[$key]);
+							}
+						}
+					}
+				}
+			
+			}
+			$transfer_investment = $this->transfer_investment_model->get_by(array("user_id"=>$user_id,"status"=>array(0,1,10)));
+			if($transfer_investment){
+				if($transfer){
+					$transfer_investment_target = array();
+					foreach($transfer_investment as $key => $value){
+						$transfer_investment_target[] = $value->transfer_id;
+					}
+					
+					foreach($transfer as $key => $value){
+						if(in_array($value->id,$transfer_investment_target)){
+							unset($transfer[$key]);
+						}
+					}
+				}
+			}
+			
+			if($transfer){
+				$target_ids = array();
+				foreach($transfer as $key => $value){
+					$target_ids[] = $value->target_id;
+				}
+				$where["id"] 	= $target_ids;
+				$targets = $this->target_model->get_many_by($where);
+				if($targets){
+					$target_ids 	= array();
+					$target_list 	= array();
+					foreach($targets as $key => $value){
+						$target_ids[] = $value->id;
+						$target_list[$value->id] = $value;
+					}
+					
+					$where["budget"] = $budget;
+					$data = array(
+						'total_amount' 		=> 0,
+						'total_count' 		=> 0,
+						'max_instalment' 	=> 0,
+						'min_instalment' 	=> 0,
+						'XIRR' 				=> 0,
+						'batch_id' 			=> "",
+						'debt_transfer_contract' => array(),
+					);
+					foreach($transfer as $key => $value){
+						if(in_array($value->target_id,$target_ids)){
+							
+							$next = $data['total_amount'] + $value->amount;
+							if($next <= $budget){
+								$data['total_amount'] += $value->amount;
+								$data['total_count'] ++;
+								if($data['max_instalment'] < $value->instalment){
+									$data['max_instalment'] = $value->instalment;
+								}
+								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+									$data['min_instalment'] = $value->instalment;
+								}
+								$data['debt_transfer_contract'][] = $value->contract;
+								$content[] = $value->id;
+								$target = $target_list[$value->target_id];
+								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
+								$data['XIRR'] += $amortization_schedule["XIRR"];
+							}
+						}
+					}
+					if($data['total_count']){
+						$param = array(
+							"user_id"	=> $user_id,
+							"type"		=> 1,
+							"filter"	=> json_encode($filter),
+							"content"	=> json_encode($content),
+						);
+						$batch_id = $this->batch_model->insert($param);
+						if($batch_id){
+							$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
+							$data['batch_id'] = $batch_id;
+							$this->response(array('result' => 'SUCCESS',"data" => $data));
+						}else{
+							$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+						}
+					}
+				}
+			}
+		}
+		$this->response(array('result' => 'SUCCESS',"data" => array(
+			'total_amount' 		=> 0,
+			'total_count' 		=> 0,
+			'max_instalment' 	=> 0,
+			'min_instalment' 	=> 0,
+			'XIRR' 				=> 0,
+			'batch_id' 			=> "",
+			'debt_transfer_contract' => array(),
+		)));
+    }
+	
+	/**
+     * @api {post} /transfer/batch/{batch_id} 出借方 智能收購確認
+     * @apiGroup Transfer
+	 * @apiParam {number} batch_id 智能收購ID
+     *
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} total_amount 總金額
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+	 * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 50000,
+     * 			"total_count": 1,
+     * 			"max_instalment": "12",
+     * 			"min_instalment": "12",
+     * 			"XIRR": 10.47
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+	 *
+	 * @apiError 811 智能收購不存在
+     * @apiErrorExample {json} 811
+     *     {
+     *       "result": "ERROR",
+     *       "error": "811"
+     *     }
+	 *
+	 * @apiError 812 對此智能收購無權限
+     * @apiErrorExample {json} 812
+     *     {
+     *       "result": "ERROR",
+     *       "error": "812"
+     *     }
+     */
+	 
+	public function batch_post($batch_id)
+    {
+		$input 				= $this->input->post(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$batch 				= $this->batch_model->get($batch_id);
+		if($batch && $batch->status==0 && $batch->type==1){
+			if($batch->user_id != $user_id){
+				$this->response(array('result' => 'ERROR',"error" => BATCH_NO_PERMISSION ));
+			}
+			
+			$transfer_ids 	= json_decode($batch->content,true);
+			$transfer 		= $this->transfer_lib->get_transfer_list(array("id"=>$transfer_ids,"status"=>0));
+			if($transfer){
+				$data = array(
+					'total_amount' 		=> 0,
+					'total_count' 		=> 0,
+					'max_instalment' 	=> 0,
+					'min_instalment' 	=> 0,
+					'XIRR' 				=> 0,
+				);
+				foreach($transfer as $key => $value){
+					if($value->status == 0 ){
+						$investments = $this->transfer_investment_model->get_by(array("transfer_id"=>$value->id,"user_id"=>$user_id,"status"=>array(0,1,10)));
+						if(!$investments){
+							$param = array(
+								"user_id" 		=> $user_id,
+								"transfer_id" 	=> $value->id,
+								"amount" 		=> $value->amount,
+							);
+							$investment_id = $this->transfer_investment_model->insert($param);
+							if($investment_id){
+								$data['total_amount'] += $value->amount;
+								$data['total_count'] ++;
+								if($data['max_instalment'] < $value->instalment){
+									$data['max_instalment'] = $value->instalment;
+								}
+								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+									$data['min_instalment'] = $value->instalment;
+								}
+								$target = $this->target_model->get($value->target_id);
+								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
+								$data['XIRR'] += $amortization_schedule["XIRR"];
+							}
+						}
+					}
+				}
+				$data['XIRR'] = $data['total_count']>0?round($data['XIRR']/$data['total_count'] ,2):0;
+				$this->response(array('result' => 'SUCCESS',"data" => $data));
+			}
+			$this->response(array('result' => 'SUCCESS',"data" => array(
+				'total_amount' 		=> 0,
+				'total_count' 		=> 0,
+				'max_instalment' 	=> 0,
+				'min_instalment' 	=> 0,
+				'XIRR' 				=> 0,
+			)));
+		}
+		$this->response(array('result' => 'ERROR',"error" => BATCH_NOT_EXIST ));
+    }
 }
