@@ -24,16 +24,16 @@ class Transfer_lib{
 				$principal			= 0;
 				foreach($transaction as $k => $v){
 					if($v->source == SOURCE_AR_PRINCIPAL){
-						$principal += $v->amount;
+						$principal 		+= $v->amount;
 						$instalment		 = $v->instalment_no;
 					}
 					if($v->source == SOURCE_PRINCIPAL){
-						$principal -= $v->amount;
+						$principal 		-= $v->amount;
 						$instalment_paid = $v->instalment_no;
 					}
 				}
 				$instalment = $instalment - $instalment_paid;
-				$fee 		= round($principal*DEBT_TRANSFER_FEES/100,0);
+				$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
 				$data 		= array(
 					"instalment"				=> $instalment,
 					"principal"					=> $principal,
@@ -193,7 +193,7 @@ class Transfer_lib{
 	}
 	
 	public function script_check_bidding(){
-		$script  	= 4;
+		$script  	= 5;
 		$count 		= 0;
 		$ids		= array();
 		$transfers 	= $this->CI->transfer_model->get_many_by(array("status"=>0,"script_status"=>0));

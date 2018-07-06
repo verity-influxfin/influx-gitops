@@ -106,7 +106,7 @@ class Subloan extends REST_Controller {
      *     }
 	 *
 	 *
-     * @apiError 407 目前狀態無法完成此動作
+     * @apiError 407 目前狀態無法完成此動作(需逾期且過寬限期)
      * @apiErrorExample {json} 407
      *     {
      *       "result": "ERROR",
@@ -137,7 +137,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
 			}
 
-			if($target->delay == 0){ 
+			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
 				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
 			}
 			
@@ -203,7 +203,7 @@ class Subloan extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
-     * @apiError 407 目前狀態無法完成此動作
+     * @apiError 407 目前狀態無法完成此動作(需逾期且過寬限期)
      * @apiErrorExample {json} 407
      *     {
      *       "result": "ERROR",
@@ -250,7 +250,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
 			}
 			
-			if($target->delay == 0){ 
+			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
 				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
 			}
 			
@@ -304,6 +304,8 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} subloan_target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} subloan_target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} subloan_target.created_at 申請日期
+	 * @apiSuccess {json} subloan_target.product 產品資訊
+	 * @apiSuccess {String} subloan_target.product.name 產品名稱
 	 * @apiSuccess {json} subloan_target.amortization_schedule 預計還款計畫(簽約後不出現)
 	 * @apiSuccess {String} subloan_target.amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} subloan_target.amortization_schedule.instalment 借款期數
@@ -352,6 +354,10 @@ class Subloan extends REST_Controller {
      * 				"status":"1",
      * 				"sub_status":"8",
      * 				"created_at":"1520421572",
+     * 				"product":{
+     * 					"id":"2",
+     * 					"name":"輕鬆學貸"
+     * 				},
   	 *       		"amortization_schedule": {
   	 *           		"amount": "12000",
   	 *           		"instalment": "6",
@@ -452,6 +458,7 @@ class Subloan extends REST_Controller {
 				"status"			=> $subloan->status,
 				"created_at"		=> $subloan->created_at,
 			);
+			
 			$new_target  = $this->target_model->get($subloan->new_target_id);
 
 			$amortization_schedule = array();
@@ -470,8 +477,16 @@ class Subloan extends REST_Controller {
 				if($field=="repayment"){
 					$subloan_target[$field] = $repayment_type[$new_target->$field];
 				}
+				if($field=="product_id"){
+					$product_info = $this->product_model->get($new_target->product_id);
+					$product = array(
+						"id"			=> $product_info->id,
+						"name"			=> $product_info->name,
+					);
+				}
 			}
 
+			$subloan_target["product"] 					= $product;
 			$subloan_target["amortization_schedule"] 	= $amortization_schedule;
 			$data["subloan_target"]						= $subloan_target;
 			$this->response(array('result' => 'SUCCESS',"data" => $data ));

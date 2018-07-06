@@ -51,15 +51,16 @@ class Certification extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"id":"1",
-     * 				"name":"身分證認證",
-     * 				"description":"身分證認證",
+     * 				"name":"實名認證",
+     * 				"description":"實名認證",
      * 				"alias":"id_card",
      * 				"user_status":1,
      * 			},
      * 			{
      * 				"id":"2",
-     * 				"name":"健保卡認證",
-     * 				"description":"健保卡認證",
+     * 				"name":"金融帳號認證",
+     * 				"description":"金融帳號認證",
+	 * 				"alias":"debit_card",
      * 				"user_status":1,
      * 			}
      * 			]
@@ -301,7 +302,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/student 認證 學生證認證
+     * @api {post} /certification/student 認證 學生身份認證
      * @apiGroup Certification
 	 * @apiParam {String} school (required) 學校名稱
 	 * @apiParam {String} system 學制 0:大學 1:碩士 2:博士 default:0
@@ -427,7 +428,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/student 認證 學生證認證資料
+     * @api {get} /certification/student 認證 學生身份認證資料
      * @apiGroup Certification
      *
      * @apiSuccess {json} result SUCCESS
@@ -511,7 +512,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/debitcard 認證 金融卡認證
+     * @api {post} /certification/debitcard 認證 金融帳號認證
      * @apiGroup Certification
 	 * @apiParam {String} bank_code (required) 銀行代碼三碼
 	 * @apiParam {String} branch_code (required) 分支機構代號四碼
@@ -612,7 +613,7 @@ class Certification extends REST_Controller {
 			if(strlen($content['branch_code'])!=4){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BRANCH_CODE_ERROR ));
 			}
-			if(strlen($content['bank_account'])<10){
+			if(strlen($content['bank_account'])<10 || is_virtual_account($content['bank_account'])){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
 			
@@ -662,7 +663,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/debitcard 認證 金融卡驗證資料
+     * @api {get} /certification/debitcard 認證 金融帳號認證資料
      * @apiGroup Certification
      *
      * @apiSuccess {json} result SUCCESS
@@ -897,7 +898,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/email 認證 常用郵箱
+     * @api {post} /certification/email 認證 常用電子信箱
      * @apiGroup Certification
 	 * @apiParam {String} email (required) Email
      * @apiSuccess {json} result SUCCESS
@@ -988,7 +989,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/email 認證 常用郵箱資料
+     * @api {get} /certification/email 認證 常用電子信箱資料
      * @apiGroup Certification
      *
      * @apiSuccess {json} result SUCCESS
@@ -1055,7 +1056,7 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/verifyemail 認證 認證Email(學生、常用郵件)
+     * @api {post} /certification/verifyemail 認證 認證電子信箱(學生身份、常用電子信箱)
      * @apiGroup Certification
 	 * @apiParam {String} type (required) 認證Type
 	 * @apiParam {String} email (required) Email
@@ -1302,7 +1303,7 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/social 認證 社交認證
      * @apiGroup Certification
-     * @apiParam {String} type (required) 認證類型（"facebook","instagram"）
+     * @apiParam {String} type (required) 認證類型（"facebook"）
      * @apiParam {String} access_token (required) access_token
      *
      * @apiSuccess {json} result SUCCESS
@@ -1371,6 +1372,7 @@ class Certification extends REST_Controller {
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));

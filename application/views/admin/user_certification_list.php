@@ -5,6 +5,14 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+			<script type="text/javascript">
+				function showChang(){
+					var investor 			= $('#investor :selected').val();
+					var certification_id 	= $('#certification_id :selected').val();
+					var status 				= $('#status :selected').val();
+					top.location = './user_certification_list?investor='+investor+'&certification_id='+certification_id+'&status='+status;
+				}
+			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -20,9 +28,30 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>User</th>
-                                            <th>出借/借款</th>
-                                            <th>認證方式</th>
-                                            <th>狀態</th>
+                                            <th>出借/借款
+												<select id="investor" onchange="showChang();">
+													<option value="" >請選擇</option>
+													<? foreach($investor_list as $key => $value){ ?>
+														<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
+													<? } ?>
+												</select>
+											</th>
+                                            <th>認證方式
+												<select id="certification_id" onchange="showChang();">
+													<option value="" >請選擇</option>
+													<? foreach($certification_list as $key => $value){ ?>
+														<option value="<?=$key?>" <?=isset($_GET['certification_id'])&&$_GET['certification_id']==$key?"selected":""?>><?=$value?></option>
+													<? } ?>
+												</select>
+											</th>
+                                            <th>狀態
+												<select id="status" onchange="showChang();">
+													<option value="" >請選擇</option>
+													<? foreach($status_list as $key => $value){ ?>
+														<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+													<? } ?>
+												</select>
+											</th>
                                             <th>申請日期</th>
                                             <th>查看訊息</th>
                                         </tr>
@@ -37,7 +66,7 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-                                            <td><?=isset($value->investor)?$value->investor:"" ?></td>
+                                            <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>

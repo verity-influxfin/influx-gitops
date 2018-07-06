@@ -230,7 +230,7 @@ class Transaction_lib{
 						
 						$rs  = $this->CI->transaction_model->insert_many($transaction);
 						if($rs && is_array($rs)){
-							$this->CI->target_model->update($target_id,array("status"=>5));
+							$this->CI->target_model->update($target_id,array("status"=>5,"loan_date"=>$date));
 							$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
 							$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
 							foreach($rs as $key => $value){

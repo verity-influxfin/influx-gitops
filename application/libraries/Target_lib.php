@@ -15,13 +15,13 @@ class Target_lib{
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->model('transaction/frozen_amount_model');
-		$this->CI->load->library('credit_lib');
-		$this->CI->load->library('Transaction_lib');
+		$this->CI->load->library('Financial_lib');
+		$this->CI->load->library('Notification_lib');
     }
 	
 	//核可額度利率
 	public function approve_target($target = array()){
-		
+		$this->CI->load->library('credit_lib');
 		if(!empty($target) && $target->status=="0"){
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -48,7 +48,7 @@ class Target_lib{
 					if($loan_amount>=5000){
 						$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
 						$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
-						$contract 		= $this->get_target_contract($loan_amount,$interest_rate);
+						$contract 		= $this->get_target_contract($user_id,$loan_amount,$interest_rate);
 						$param = array(
 							"loan_amount"		=> $loan_amount,
 							"credit_level"		=> $credit['level'],
@@ -66,14 +66,16 @@ class Target_lib{
 								"investor"			=> 0,
 							);
 							$this->CI->virtual_account_model->insert($virtual_data);
+							$this->CI->notification_lib->approve_target($user_id,"1",$loan_amount);
 						}
 					}else{
 						$param = array(
 							"loan_amount"		=> 0,
-							"status"			=> "8",
+							"status"			=> "9",
 							"remark"			=> "credit not enough",
 						);
 						$rs = $this->CI->target_model->update($target->id,$param);
+						$this->CI->notification_lib->approve_target($user_id,"9");
 					}
 					
 					return $rs;
@@ -83,6 +85,12 @@ class Target_lib{
 		return false;
 	}
 
+	private function get_target_contract($user_id,$amount,$rate){
+		$this->CI->load->model('platform/contract_model');
+		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
+		return sprintf($contract->content,"",$user_id,$amount,$rate,"");
+	}
+	
 	//判斷流標或結標或凍結投資款項
 	function check_bidding($target){
 		if( $target && $target->id && $target->status == 3){
@@ -108,10 +116,14 @@ class Target_lib{
 								$total += $value->amount;
 								if($total < $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount;
-									$param 			= array("loan_amount"=> $loan_amount ,"status"=>2);
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,"",$target->repayment);
+									$contract		= $this->get_investment_contract($value->user_id,$target->user_id,$loan_amount,$target->interest_rate,$schedule["total_payment"]);
+									$param 			= array("loan_amount"=> $loan_amount,"contract"=>$contract ,"status"=>2);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
-									$param 			= array("loan_amount"=> $loan_amount ,"status"=>2); 
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,"",$target->repayment);
+									$contract		= $this->get_investment_contract($value->user_id,$target->user_id,$loan_amount,$target->interest_rate,$schedule["total_payment"]);
+									$param 			= array("loan_amount"=> $loan_amount,"contract"=>$contract ,"status"=>2); 
 									$ended 			= false;
 								}else{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -124,11 +136,16 @@ class Target_lib{
 				}else{
 					if($target->expire_time < time()){
 						//流標
-						$this->CI->target_model->update($target->id,array(
-							"invested"		=> 0,
-							"launch_times"	=> $target->launch_times + 1,
-							"expire_time"	=> strtotime("+2 days", $target->expire_time)
-						));
+						if($target->sub_status==8){
+							$this->CI->load->library('Subloan_lib');
+							$this->CI->subloan_lib->auction_ended($target);
+						}else{
+							$this->CI->target_model->update($target->id,array(
+								"launch_times"	=> $target->launch_times + 1,
+								"expire_time"	=> strtotime("+2 days", $target->expire_time),
+								"invested"		=> 0,
+							));
+						}
 						foreach($investments as $key => $value){
 							$this->CI->investment_model->update($value->id,array("status"=>9));
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
@@ -167,71 +184,28 @@ class Target_lib{
 				}
 			}else{
 				if($target->expire_time < time()){
-					$this->CI->target_model->update($target->id,array(
-						"launch_times"	=> $target->launch_times + 1,
-						"expire_time"	=> strtotime("+2 days", $target->expire_time)
-					));
+					if($target->sub_status==8){
+						$this->CI->load->library('Subloan_lib');
+						$this->CI->subloan_lib->auction_ended($target);
+					}else{
+						$this->CI->target_model->update($target->id,array(
+							"launch_times"	=> $target->launch_times + 1,
+							"expire_time"	=> strtotime("+2 days", $target->expire_time),
+							"invested"		=> 0,
+						));
+					}
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public function add_subloan_target($target,$subloan){
-		
-			$user_id 		= $target->user_id;
-			$product_id 	= $target->product_id;
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
-			if(!$credit){
-				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
-				if($rs){
-					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
-				}
-			}
-			if($credit){
-				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment);
-				if($interest_rate){
-					$contract 		= $this->get_target_contract($subloan["amount"],$interest_rate);
-					$target_no 		= $this->get_target_no();
-					$param = array(
-						"product_id"		=> $product_id,
-						"user_id"			=> $user_id,
-						"target_no"			=> $target_no,
-						"amount"			=> $subloan["amount"],
-						"loan_amount"		=> $subloan["amount"],
-						"instalment"		=> $subloan["instalment"],
-						"repayment"			=> $subloan["repayment"],
-						"credit_level"		=> $credit['level'],
-						"platform_fee"		=> $subloan["platform_fee"],
-						"interest_rate"		=> $interest_rate,
-						"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target_no,
-						"contract"			=> $contract,
-						"status"			=> "1",
-						"sub_status"		=> "8",
-						"remark"			=> "轉換產品",
-					);
-
-					$rs = $this->CI->target_model->insert($param);
-					if($rs){
-						$virtual_data = array(
-							"user_id"			=> $user_id,				
-							"virtual_account"	=> $param['virtual_account'],
-							"investor"			=> 0,
-						);
-						$this->CI->virtual_account_model->insert($virtual_data);
-					}
-					return $rs;
-				}
-			}
-
-		return false;
-	}
 	
-	private function get_target_contract($amount,$rate){
-		return "我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！";
+	private function get_investment_contract($user_from,$user_to,$amount,$rate,$PMT){
+		$this->CI->load->model('platform/contract_model');
+		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
+		return sprintf($contract->content,$user_from,$user_to,$amount,$rate,$PMT);
 	}
-	
 	
 	//借款端還款計畫
 	public function get_amortization_table($target=array()){
@@ -241,78 +215,76 @@ class Target_lib{
 			"instalment"	=> $target->instalment,
 			"rate"			=> $target->interest_rate,
 			"total_payment"	=> 0,
-			"date"			=> "",
+			"date"			=> $target->loan_date,
 			"sub_loan_fees"	=> 0,
 			"platform_fees"	=> 0,
 			"list"			=> array(),
 		);
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
+			"user_from"	=> $target->user_id,
 			"target_id" => $target->id,
 			"status !=" => 0
 		));
-		$list = array();
 		
+		$list = array();
 		if($transactions){
 			foreach($transactions as $key => $value){
-				
-				if($value->instalment_no && !isset($list[$value->instalment_no])){
+				if($value->instalment_no){
 					$list[$value->instalment_no] = array(
 						"instalment"		=> $value->instalment_no,//期數
-						"total_payment"		=> 0,//本期還款金額
-						"interest"			=> 0,//還款利息
-						"principal"			=> 0,//還款本金
+						"total_payment"		=> 0,//本期應還款金額
+						"repayment"			=> 0,//本期已還款金額
+						"interest"			=> 0,//利息
+						"principal"			=> 0,//本金
 						"delay_interest"	=> 0,//延滯息
 						"liquidated_damages"=> 0,//違約金
-						"repayment"			=> 0,//已還款金額
-						"repayment_date"	=> $value->limit_date
+						"repayment_date"	=> ""//還款日
 					);
 				}
-				
+			}
+			
+			foreach($transactions as $key => $value){
 				switch($value->source){
-					case SOURCE_LENDING: 
-						$schedule["date"] 	= $value->entering_date;
-						break;
 					case SOURCE_AR_PRINCIPAL: 
-						$list[$value->instalment_no]['principal'] 		+= $value->amount;
-						$list[$value->instalment_no]['total_payment'] 	+= $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						break;
-					case SOURCE_PRINCIPAL: 
-						$list[$value->instalment_no]['repayment'] += $value->amount;
+						if($value->limit_date){
+							$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
+						}
+						$list[$value->instalment_no]['principal'] 			+= $value->amount;
 						break;
 					case SOURCE_AR_INTEREST: 
-						$list[$value->instalment_no]['interest'] 		+= $value->amount;
-						$list[$value->instalment_no]['total_payment'] 	+= $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						break;
-					case SOURCE_INTEREST: 
-						$list[$value->instalment_no]['repayment'] += $value->amount;
+						$list[$value->instalment_no]['interest']  			+= $value->amount;
 						break;
 					case SOURCE_AR_DAMAGE: 
 						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
-						$list[$value->instalment_no]['total_payment'] 		+= $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						break;
-					case SOURCE_DAMAGE: 
-						$list[$value->instalment_no]['repayment'] += $value->amount;
 						break;
 					case SOURCE_AR_DELAYINTEREST: 
-						$list[$value->instalment_no]['delay_interest'] 	+= $value->amount;
-						$list[$value->instalment_no]['total_payment'] 	+= $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						break;
-					case SOURCE_DELAYINTEREST: 
-						$list[$value->instalment_no]['repayment'] += $value->amount;
+						$list[$value->instalment_no]['delay_interest'] 		+= $value->amount;
 						break;
 					case SOURCE_SUBLOAN_FEE: 
 						$schedule["sub_loan_fees"] += $value->amount;
 						break;
 					case SOURCE_FEES: 
-						if($value->user_from == $target->user_id){
-							$schedule["platform_fees"] += $value->amount;
-						}
+						$schedule["platform_fees"] += $value->amount;
+						break;
+					case SOURCE_PRINCIPAL: 
+					case SOURCE_DELAYINTEREST: 
+					case SOURCE_DAMAGE: 
+					case SOURCE_INTEREST: 
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;
+					default:
 						break;
 				}
+				if($value->instalment_no){
+					$list[$value->instalment_no]["total_payment"] = 
+					$list[$value->instalment_no]["interest"] + 
+					$list[$value->instalment_no]["principal"] + 
+					$list[$value->instalment_no]["delay_interest"] + 
+					$list[$value->instalment_no]["liquidated_damages"];
+				}
+			}
+			foreach($list as $key => $value){
+				$schedule["total_payment"] += $value["total_payment"];
 			}
 		}
 		$schedule['list'] = $list;
@@ -322,48 +294,52 @@ class Target_lib{
 	//出借端回款計畫
 	public function get_investment_amortization_table($target=array(),$investment=array()){
 		
-		$xirr_dates		= array();
-		$xirr_value		= array();
+		$xirr_dates		= array($target->loan_date);
+		$xirr_value		= array($investment->loan_amount*(-1));
 		$schedule		= array(
 			"amount"		=> $investment->loan_amount,
 			"instalment"	=> $target->instalment,
 			"rate"			=> $target->interest_rate,
 			"total_payment"	=> 0,
-			"date"			=> "",
+			"XIRR"			=> 0,
+			"date"			=> $target->loan_date,
 		);
 		$users			= array($target->user_id,$investment->user_id);
-		$transactions 	= $this->CI->transaction_model->get_many_by(array(	"target_id" => $target->id,"user_from"=>$users,"user_to"=>$users));
+		$transactions 	= $this->CI->transaction_model->get_many_by(array(
+			"user_from"	=> $users,
+			"user_to"	=> $users,
+			"target_id" => $target->id,
+			"status !=" => 0
+		));
 		$list = array();
 		
 		if($transactions){
 			foreach($transactions as $key => $value){
-				if($value->instalment_no && !isset($list[$value->instalment_no])){
+				if($value->instalment_no){
 					$list[$value->instalment_no] = array(
-						"instalment"		=> $value->instalment_no,
-						"total_payment"		=> 0,
-						"interest"			=> 0,
-						"principal"			=> 0,
-						"repayment"			=> 0,
-						"repayment_date"	=> $value->limit_date
+						"instalment"		=> $value->instalment_no,//期數
+						"total_payment"		=> 0,//本期應收款金額
+						"repayment"			=> 0,//本期已收款金額
+						"interest"			=> 0,//利息
+						"principal"			=> 0,//本金
+						"delay_interest"	=> 0,//應收延滯息
+						"repayment_date"	=> $value->limit_date//還款日
 					);
 				}
+			}
+			foreach($transactions as $key => $value){
 				switch ($value->source) {
-					case SOURCE_LENDING: 
-						$schedule["date"] 	= $value->entering_date;
-						break;
 					case SOURCE_AR_PRINCIPAL: 
 						$list[$value->instalment_no]['principal'] += $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
 						break;
 					case SOURCE_AR_INTEREST:
 						$list[$value->instalment_no]['interest'] += $value->amount;
-						$schedule["total_payment"] += $value->amount;
-						$list[$value->instalment_no]['repayment_date'] = $value->limit_date;
-						break;					
+						break;
+					case SOURCE_AR_DELAYINTEREST: 
+						$list[$value->instalment_no]['delay_interest'] 	+= $value->amount;
+						break;
 					case SOURCE_PRINCIPAL: 
-						$list[$value->instalment_no]['repayment'] += $value->amount;
-						break;					
+					case SOURCE_DELAYINTEREST: 
 					case SOURCE_INTEREST: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
 						break;
@@ -371,9 +347,18 @@ class Target_lib{
 						break;
 				}
 				if($value->instalment_no){
-					$list[$value->instalment_no]['total_payment'] = $list[$value->instalment_no]['interest'] + $list[$value->instalment_no]['principal'];
+					$list[$value->instalment_no]["total_payment"] = 
+					$list[$value->instalment_no]["interest"] + 
+					$list[$value->instalment_no]["principal"] + 
+					$list[$value->instalment_no]["delay_interest"];
 				}
 			}
+			foreach($list as $key => $value){
+				$schedule["total_payment"] += $value["total_payment"];
+				$xirr_dates[] = $value["repayment_date"];
+				$xirr_value[] = $value["total_payment"];
+			}
+			$schedule["XIRR"] = $this->CI->financial_lib->XIRR($xirr_value,$xirr_dates);
 		}
 		$schedule['list'] = $list;
 		return $schedule;
@@ -409,7 +394,7 @@ class Target_lib{
 		$targets 	= $this->CI->target_model->get_many_by(array("status"=>0,"script_status"=>0));
 		$list 		= array();
 		$ids		= array();
-		$script  	= 1;
+		$script  	= 4;
 		$count 		= 0;
 		if($targets && !empty($targets)){
 			foreach($targets as $key => $value){

@@ -375,7 +375,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} transfer.amount 債權轉讓本金
 	 * @apiSuccess {String} transfer.transfer_fee 債權轉讓手續費
 	 * @apiSuccess {String} transfer.contract 債權轉讓合約
-	 * @apiSuccess {String} transfer.transfer_at 債權轉讓日期
+	 * @apiSuccess {String} transfer.transfer_date 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -416,7 +416,7 @@ class Recoveries extends REST_Controller {
      * 				"amount":"5000",
      * 				"transfer_fee":"25",
      * 				"contract":"我是合約，我是合約",
-     * 				"transfer_at":"0"
+     * 				"transfer_date":NULL
      * 			},
 	 * 			"product":{
      * 				"id":"2",
@@ -534,7 +534,7 @@ class Recoveries extends REST_Controller {
 						"transfer_fee"	=> $transfer_info->transfer_fee,
 						"amount"		=> $transfer_info->amount,
 						"contract"		=> $transfer_info->contract,
-						"transfer_at"	=> $transfer_info->transfer_at,
+						"transfer_at"	=> $transfer_info->transfer_date,
 					);
 				}
 			}

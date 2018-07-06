@@ -11,119 +11,104 @@ class Subloan_lib{
 		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/subloan_model');
 		$this->CI->load->library('Financial_lib');
-		$this->CI->load->library('Target_lib');
-		$this->CI->load->library('Prepayment_lib');
+		$this->CI->load->library('credit_lib');
     }
-/*
-	public function get_prepayment_info($target=array()){
-		if($target->status == 5 && $target->delay == 1 && $target->delay_days > 7){
-			$where 			= array("target_id" => $target->id ,"status" => array(1,2) );
+
+	public function get_info($target=array()){
+		if($target->status == 5 && $target->delay == 1 && $target->delay_days > GRACE_PERIOD){
+			$range_days 	= 2;
+			$where 			= array(
+				"target_id" => $target->id,
+				"user_from" => $target->user_id,
+				"status"	=> array(1,2)
+			);
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by($where);
 			if($transaction){
-				$settlement_date 	= time()>strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+3 day')):date("Y-m-d",strtotime('+2 day'));
+				$entering_date		= get_entering_date();
+				$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.$range_days.' days'));
+
 				$data = array(
-					"remaining_principal"	=> 0,
-					"remaining_instalment"	=> 0,
-					"settlement_date"		=> $settlement_date,//結帳日
-					"liquidated_damages"	=> 0,
-					"delay_interest_payable"=> 0,
-					"interest_payable"		=> 0,
-					"total"					=> 0,
+					"remaining_principal"		=> 0,//剩餘本金
+					"remaining_instalment"		=> 0,//剩餘期數
+					"settlement_date"			=> $settlement_date,//結帳日
+					"liquidated_damages"		=> 0,//違約金
+					"delay_interest_payable"	=> 0,//延滯息
+					"interest_payable"			=> 0,//應付利息
+					"total"						=> 0,
 				);
 				$instalment 			= 0;
 				$remaining_principal	= array();
 				$interest_payable		= array();
 				foreach($transaction as $key => $value){
+					$remaining_principal[$value->user_to] 	= 0;
+					$interest_payable[$value->user_to] 		= 0;
+				}
+				foreach($transaction as $key => $value){
 					switch($value->source){
-						case SOURCE_LENDING: 
-							$last_settlement_date = $day0 = $value->entering_date;
-							break;
 						case SOURCE_AR_PRINCIPAL: 
-							if(!isset($remaining_principal[$value->user_to])){
-								$remaining_principal[$value->user_to] = 0;
-							}
-							$data["remaining_principal"] 			+= $value->amount;
+							$instalment = $value->status==2?$value->instalment_no:$instalment;
 							$remaining_principal[$value->user_to]	+= $value->amount;
-							if($value->status==2){
-								$instalment = $value->instalment_no;
-							}
 							break;
 						case SOURCE_PRINCIPAL: 
-							$data["remaining_principal"] 			-= $value->amount;
 							$remaining_principal[$value->user_to]	-= $value->amount;
 							break;
 						case SOURCE_AR_INTEREST: 
 							if($value->limit_date <= $settlement_date){
-								if(!isset($interest_payable[$value->user_to])){
-									$interest_payable[$value->user_to] = 0;
-								}
-								$interest_payable[$value->user_to]	+= $value->amount;
-								$last_settlement_date				= $value->limit_date;
+								$interest_payable[$value->user_to]	+= $value->amount;			
 							}
 							break;
 						case SOURCE_INTEREST: 
 							$interest_payable[$value->user_to] -= $value->amount;
 							break;
 						case SOURCE_AR_DAMAGE: 
-							$data["liquidated_damages"] += $value->amount;
-							break;
-						case SOURCE_DAMAGE: 
-							$data["liquidated_damages"] -= $value->amount;
+							$data['liquidated_damages'] 	+= $value->amount;
 							break;
 						case SOURCE_AR_DELAYINTEREST: 
-							$data["delay_interest"] += $value->amount;
+							$data['delay_interest_payable'] += $value->amount;
 							break;
-						case SOURCE_DELAYINTEREST: 
-							$data["delay_interest"] -= $value->amount;
+						case SOURCE_DAMAGE:
+							$data['liquidated_damages'] 	-= $value->amount;
+							break;
+						case SOURCE_DELAYINTEREST:
+							$data['delay_interest_payable'] -= $value->amount;
+							break;
+						default:
 							break;
 					}
 				} 
 
 				$data["remaining_instalment"] 	= $target->instalment - $instalment;
-				if($target->delay && $target->delay_days > 7){
-					$days  						= 7;
-					$data["liquidated_damages"] = $data["liquidated_damages"];
-				}else{
-					$days  						= get_range_days($last_settlement_date,$settlement_date);
-					$data["liquidated_damages"] = round($data["remaining_principal"]*LIQUIDATED_DAMAGES/100,0);
-				}
 				
-				$leap_year = $this->CI->financial_lib->leap_year($day0,$target->instalment);
-				$year_days = $leap_year?366:365;//今年日數
 				if($remaining_principal){
+					
 					foreach($remaining_principal as $k => $v){
-						if(!isset($interest_payable[$k])){
-							$interest_payable[$k] = 0;
-						}
-						$interest_payable[$k] += round( $v * $target->interest_rate / 100 * $days / $year_days ,0);
-					}
-					foreach($interest_payable as $k => $v){
-						$data["interest_payable"] += $v;
+						$data["remaining_principal"] 	+= $v;
+						$data["delay_interest_payable"] += $this->CI->financial_lib->get_delay_interest($v,$target->delay_days+$range_days);
 					}
 					
+					foreach($interest_payable as $k => $v){
+						$data["interest_payable"] 	 += $v;
+					}
 				}
-				$data["total"] = $data["remaining_principal"] + $data["liquidated_damages"] + $data["delay_interest_payable"] + $data["interest_payable"];
+				$total 			= 	$data["remaining_principal"] + 
+									$data["interest_payable"] + 
+									$data["liquidated_damages"] + 
+									$data["delay_interest_payable"];
+				$data["sub_loan_fees"] 	= intval(round( $total * SUB_LOAN_FEES / 100 ,0));
+				$total += $data["sub_loan_fees"];
+				$data["platform_fees"] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+				$data["platform_fees"] 	= $data["platform_fees"] > PLATFORM_FEES_MIN?$data["platform_fees"]:PLATFORM_FEES_MIN;
+				$total 					+= $data["platform_fees"];
+				$data["total"]			= $total;
 				return $data;
 			}
 		}
 		return false;
 	}
-*/
-	public function get_info($target=array()){
-		$info = $this->CI->prepayment_lib->get_prepayment_info($target);
-		if($info){
-			$total 					= $info["total"];
-			$info["sub_loan_fees"] 	= intval(round( $total * SUB_LOAN_FEES / 100 ,0));
-			$total 					+= $info["sub_loan_fees"];
-			$info["platform_fees"] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-			$info["platform_fees"] 	= $info["platform_fees"] > PLATFORM_FEES_MIN?$info["platform_fees"]:PLATFORM_FEES_MIN;
-			$total 					+= $info["platform_fees"];
-			$info["total"]			= $total;
-		}  
-		return $info;
-	}
+
 	
 	public function apply_subloan($target,$data){
+			
 		if($target && $target->status==5){
 			$info  = $this->get_info($target);
 			if($info){
@@ -135,7 +120,7 @@ class Subloan_lib{
 					"instalment"		=> $data["instalment"],
 					"repayment"			=> $data["repayment"]
 				);
-				$new_target_id = $this->CI->target_lib->add_subloan_target($target,$param);
+				$new_target_id = $this->add_subloan_target($target,$param);
 				if($new_target_id){
 					$param["new_target_id"] = $new_target_id;
 					$rs = $this->CI->subloan_model->insert($param);
@@ -149,6 +134,62 @@ class Subloan_lib{
 		return false;
 	}
 
+		public function add_subloan_target($target,$subloan){
+		
+			$user_id 		= $target->user_id;
+			$product_id 	= $target->product_id;
+			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
+			if(!$credit){
+				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
+				if($rs){
+					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
+				}
+			}
+			if($credit){
+				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment);
+				if($interest_rate){
+					$contract 		= $this->get_subloan_contract($user_id,$subloan["amount"],$interest_rate);
+					$target_no 		= $this->get_target_no();
+					$param = array(
+						"product_id"		=> $product_id,
+						"user_id"			=> $user_id,
+						"target_no"			=> $target_no,
+						"amount"			=> $subloan["amount"],
+						"loan_amount"		=> $subloan["amount"],
+						"instalment"		=> $subloan["instalment"],
+						"repayment"			=> $subloan["repayment"],
+						"credit_level"		=> $credit['level'],
+						"platform_fee"		=> $subloan["platform_fee"],
+						"interest_rate"		=> $interest_rate,
+						"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target_no,
+						"contract"			=> $contract,
+						"status"			=> "1",
+						"sub_status"		=> "8",
+						"remark"			=> "轉換產品",
+					);
+
+					$rs = $this->CI->target_model->insert($param);
+					if($rs){
+						$virtual_data = array(
+							"user_id"			=> $user_id,				
+							"virtual_account"	=> $param['virtual_account'],
+							"investor"			=> 0,
+						);
+						$this->CI->virtual_account_model->insert($virtual_data);
+					}
+					return $rs;
+				}
+			}
+
+		return false;
+	}
+
+	private function get_subloan_contract($user_id,$amount,$rate){
+		$this->CI->load->model('platform/contract_model');
+		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
+		return sprintf($contract->content,"",$user_id,$amount,$rate,"");
+	}
+	
 	public function signing_subloan($subloan,$data){
 
 		if($subloan && $subloan->status==0){
@@ -156,7 +197,9 @@ class Subloan_lib{
 			if($target && $target->status==1){
 				$param = array(
 					"person_image"	=> $data["person_image"],
-					"status"		=> 2
+					"launch_times"	=> 1,
+					"expire_time"	=> strtotime($subloan->settlement_date.' '.CLOSING_TIME),
+					"status"		=> 3,
 				);
 				$rs = $this->CI->target_model->update($target->id,$param);
 				if($rs){
@@ -168,10 +211,43 @@ class Subloan_lib{
 		return false;
 	}
 	
+	//流標
+	public function auction_ended($target){
+		if($target->status == 3 && $target->expire_time < time()){
+			$where 		= array("status !="=>8,"new_target_id"=>$target->id);
+			$subloan	= $this->CI->subloan_model->get_by($where);
+			if($subloan && $subloan->status ==1){
+				$old_target = $this->CI->target_model->get($subloan->target_id);
+				$info  		= $this->get_info($old_target);
+				if($info){
+					$subloan_param = array(
+						"settlement_date"	=> $info["settlement_date"],
+						"amount"			=> $info["total"],
+						"platform_fee"		=> $info["platform_fees"]
+					);
+				
+					$target_param = array(
+						"amount"			=> $info["total"],
+						"loan_amount"		=> $info["total"],
+						"platform_fee"		=> $info["platform_fees"],
+						"launch_times"		=> $target->launch_times + 1,
+						"expire_time"		=> strtotime($info["settlement_date"].' '.CLOSING_TIME),
+						"invested"			=> 0,
+					);
+					$rs = $this->CI->subloan_model->update($subloan->id,$subloan_param);
+					if($rs){
+						$this->CI->target_model->update($target->id,$target_param);
+						return $rs;
+					}
+				}
+			}
+		}
+	}
+
 	public function get_subloan($target){
 		if($target){
 			$where 		= array("status !="=>8,"target_id"=>$target->id);
-			$subloan	= $this->CI->subloan_model->get_by($where);
+			$subloan	= $this->CI->subloan_model->order_by("settlement_date","desc")->get_by($where);
 			if($subloan){
 				return $subloan;
 			}

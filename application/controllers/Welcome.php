@@ -116,6 +116,20 @@ class Welcome extends CI_Controller {
 	}
 	
 	function recharge(){
-
+		$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
+		$school_list = json_decode($school_list,true);
+		echo '<table style="width:50%;text-align:center;"><tr><th></th><th>學校</th><th>分數</th><th>公立</th></tr>';
+		
+		foreach($school_list as $key =>$value){
+			$value['national'] = $value['national']?"公立":"私立";
+			echo "<tr>";
+			echo "<td>".$key."</td>";
+			echo "<td>".$value['name']."</td>";
+			echo "<td>".$value['points']."</td>";
+			echo "<td>".$value['national']."</td>";
+			echo "</tr>";
+		}
+		echo "</tr>";
+		echo "</table>";
 	}
 }

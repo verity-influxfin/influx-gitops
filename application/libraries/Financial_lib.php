@@ -178,6 +178,21 @@ class Financial_lib{
 		}
 		return false;
 	}
+
+	public function get_liquidated_damages($remaining_principal=0){
+		if($remaining_principal){
+			return intval(round($remaining_principal*LIQUIDATED_DAMAGES/100,0));
+		}
+		return 0;
+	}
+	
+	public function get_delay_interest($remaining_principal=0,$delay_days=0){
+		if($remaining_principal && $delay_days > GRACE_PERIOD){
+			$days = $delay_days - GRACE_PERIOD;
+			return intval(round($remaining_principal*DELAY_INTEREST*$days/100,0));
+		}
+		return 0;
+	}
 	
 	private function PMT($rate=0,$instalment=0,$amount=0)
 	{
@@ -204,7 +219,7 @@ class Financial_lib{
 		return is_finite($xnpv) ? $xnpv: false ;
 	}
 
-	private function XIRR($values, $dates, $guess = 0.1)
+	public function XIRR($values, $dates, $guess = 0.1)
 	{
 		if ((!is_array($values)) && (!is_array($dates))) return false;
 		if (count($values) != count($dates)) return false;

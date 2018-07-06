@@ -1,4 +1,6 @@
 <?php
+
+ini_set('memory_limit','256M');
 /*
  *                       _oo0oo_					|                               |~~~~~~~|
  *                      o8888888o					|                               |       |

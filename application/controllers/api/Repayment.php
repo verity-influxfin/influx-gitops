@@ -643,6 +643,13 @@ class Repayment extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
+	 *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {json} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
      */
 	public function prepayment_get($target_id)
     {
@@ -652,9 +659,14 @@ class Repayment extends REST_Controller {
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
-		if(!empty($target) && $target->status == 5 ){
-			if($target->user_id != $user_id){
+		if(!empty($target)){
+
+		if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+			}
+			
+			if($target->status != 5 ){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
 			}
 			
 			$virtual_account	= array(
@@ -711,6 +723,13 @@ class Repayment extends REST_Controller {
      *       "error": "405"
      *     }
 	 *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {json} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+	 *
      * @apiError 903 已申請提前還款或產品轉換
      * @apiErrorExample {json} 903
      *     {
@@ -723,7 +742,12 @@ class Repayment extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
-		if(!empty($target) && $target->status == 5 ){
+		if(!empty($target)){
+			
+			if($target->status != 5 ){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+			}
+			
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
 			}
@@ -741,4 +765,75 @@ class Repayment extends REST_Controller {
 		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
     }
 
+		/**
+     * @api {get} /repayment/contract/{ID} 借款方 合約列表
+     * @apiGroup Repayment
+	 * @apiParam {number} ID Targets ID
+	 * 
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} id Targets ID
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+	 * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！",
+	 * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+	 *			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse IsInvestor
+	 * @apiUse TokenError
+	 *
+     * @apiError 404 此申請不存在
+     * @apiErrorExample {json} 404
+     *     {
+     *       "result": "ERROR",
+     *       "error": "404"
+     *     }
+	 *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {json} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+     */
+	public function contract_get($target_id)
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$target 			= $this->target_model->get($target_id);
+		$data				= array();
+		if(!empty($target)){
+			
+			$list = array();
+			
+			if($target->user_id != $user_id){
+				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+			}
+
+			if(in_array($target->status,array(5,10))){
+				$where = array(
+					"target_id"	=> $target->id,
+					"status"	=> array(3,10)
+				);
+				$investments = $this->investment_model->get_many_by($where);
+				if($investments){
+					foreach($investments as $key => $value){
+						$list[] = $value->contract;
+					}
+				}
+			}else if(in_array($target->status,array(1,2,3,4))){
+				$list[] = $target->contract;
+			}
+
+			$data["list"] 	= $list;
+
+			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		}
+		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+    }
+	
 }

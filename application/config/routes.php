@@ -64,6 +64,7 @@ $route['api/notitication/info/(:num)'] 		= 'api/notitication/info/$1';
 
 $route['api/repayment/info/(:num)'] 		= 'api/repayment/info/$1';
 $route['api/repayment/prepayment/(:num)'] 	= 'api/repayment/prepayment/$1';
+$route['api/repayment/contract/(:num)'] 	= 'api/repayment/contract/$1';
 
 $route['api/subloan/applyinfo/(:num)'] 	= 'api/subloan/applyinfo/$1';
 $route['api/subloan/cancel/(:num)'] 	= 'api/subloan/cancel/$1';

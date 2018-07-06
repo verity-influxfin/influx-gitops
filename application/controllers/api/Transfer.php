@@ -731,7 +731,7 @@ class Transfer extends REST_Controller {
 	/**
      * @api {post} /transfer/batch/{batch_id} 出借方 智能收購確認
      * @apiGroup Transfer
-	 * @apiParam {number} batch_id 智能收購ID
+	 * @apiParam {number} batch_id (required) 智能收購ID
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額
@@ -752,6 +752,7 @@ class Transfer extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse InputError
 	 * @apiUse NotInvestor
 	 *
 	 * @apiError 811 智能收購不存在
@@ -772,6 +773,9 @@ class Transfer extends REST_Controller {
 	public function batch_post($batch_id)
     {
 		$input 				= $this->input->post(NULL, TRUE);
+		if(!$batch_id){
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
 		$user_id 			= $this->user_info->id;
 		$batch 				= $this->batch_model->get($batch_id);
 		if($batch && $batch->status==0 && $batch->type==1){

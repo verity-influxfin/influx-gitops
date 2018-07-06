@@ -113,19 +113,30 @@ class Certification extends MY_Admin_Controller {
 	}
 
 	public function user_certification_list(){
-		$page_data 			= array("type"=>"list");
+		$page_data 			= array("type"=>"list","list"=>array());
+		$input 				= $this->input->get(NULL, TRUE);
+		$where				= array();
 		$certification 		= $this->certification_model->get_all();
-		$list				= $this->user_certification_model->get_all();
+		//必填欄位
+		$fields 	= ['investor','certification_id','status'];
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				$where[$field] = $input[$field];
+			}
+		}
+		
+		$list					= $this->user_certification_model->get_many_by($where);
+		if(!empty($list)){
+			$page_data['list'] = $list;
+		}
+		
 		$certification_list = array();
 		foreach($certification as $key => $value){
 			$certification_list[$value->id] = $value->name;
 		}
-		if(!empty($list)){
-			$page_data["list"] 				= $list;
-			$page_data["certification_list"] = $certification_list;
-			$page_data["status_list"] 		= $this->user_certification_model->status_list;
-		}
-
+		$page_data['certification_list'] = $certification_list;
+		$page_data['status_list'] 		= $this->user_certification_model->status_list;
+		$page_data['investor_list'] 	= $this->user_certification_model->investor_list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/user_certification_list',$page_data);
@@ -150,7 +161,8 @@ class Certification extends MY_Admin_Controller {
 					$page_data['certification_list'] 	= $certification_list;
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
-					$page_data["status_list"] 			= $this->user_certification_model->status_list;
+					$page_data['status_list'] 			= $this->user_certification_model->status_list;
+					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 					
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);

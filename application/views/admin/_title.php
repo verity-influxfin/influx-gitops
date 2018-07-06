@@ -74,7 +74,7 @@
 						 <li class="<?=isset($menu)&&$menu=="admin"?"active":""; ?>">
                             <a href="<?=admin_url('admin/') ?>"><i class="fa fa-user fa-fw"></i>後台人員管理</a>
                         </li>
-						<li class="<?=isset($menu)&&$menu=="agreement"?"active":""; ?>">
+						<li class="<?=isset($menu)&&$menu=="partner"?"active":""; ?>">
                             <a href="#"><i class="fa fa-group fa-fw"></i>合作夥伴專區<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -88,6 +88,9 @@
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="<?=admin_url('Agreement/') ?>">協議書</a>
+                                </li>
+								<li>
+                                    <a href="<?=admin_url('Contract/') ?>">合約書</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

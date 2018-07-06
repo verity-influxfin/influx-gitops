@@ -169,6 +169,7 @@ defined('CLOSING_TIME')   			OR define('CLOSING_TIME'			, '12:00:00'); //關帳�
 defined('DEBT_TRANSFER_FEES')   	OR define('DEBT_TRANSFER_FEES'		, 0.5); //債轉手續費%
 defined('SUB_LOAN_FEES')   			OR define('SUB_LOAN_FEES'			, 1); //轉貸手續費%
 defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 2); //違約金%
+defined('DELAY_INTEREST')   		OR define('DELAY_INTEREST'			, 0.1); //延滯息%
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%

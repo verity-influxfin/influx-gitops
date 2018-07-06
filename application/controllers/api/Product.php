@@ -542,7 +542,7 @@ class Product extends REST_Controller {
 				}
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
-				$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"user_id"=>$user_id ));
+				$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"investor"=>$investor,"user_id"=>$user_id ));
 				if($bank_account){
 					if($bank_account->verify==0){
 						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
@@ -581,6 +581,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} remark 備註
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還

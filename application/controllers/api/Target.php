@@ -523,6 +523,7 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
 			}
 			
+			$param['contract'] = "";
 			$insert = $this->investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -542,6 +543,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
@@ -578,6 +580,7 @@ class Target extends REST_Controller {
      * 				"id":"1",
      * 				"amount":"5000",
      * 				"loan_amount":"",
+	 * 				"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊",
      * 				"status":"3",
      * 				"transfer_status":"0",
      * 				"created_at":"1520421572",
@@ -719,6 +722,7 @@ class Target extends REST_Controller {
 					"id" 				=> $value->id,
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
+					"contract" 			=> $value->contract,
 					"status" 			=> $value->status,
 					"transfer_status" 	=> $value->transfer_status,
 					"created_at" 		=> $value->created_at,
@@ -998,7 +1002,7 @@ class Target extends REST_Controller {
 	/**
      * @api {post} /target/batch/{batch_id} 出借方 智能出借確認
      * @apiGroup Target
-	 * @apiParam {number} batch_id 智能出借ID
+	 * @apiParam {number} batch_id (required) 智能出借ID
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額
@@ -1018,6 +1022,7 @@ class Target extends REST_Controller {
      * 		}
      *    }
 	 *
+	 * @apiUse InputError
 	 * @apiUse TokenError
 	 * @apiUse NotInvestor
 	 *
@@ -1036,9 +1041,12 @@ class Target extends REST_Controller {
      *     }
      */
 	 
-	public function batch_post($batch_id)
+	public function batch_post($batch_id=0)
     {
 		$input 				= $this->input->post(NULL, TRUE);
+		if(!$batch_id){
+			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+		}
 		$user_id 			= $this->user_info->id;
 		$batch 				= $this->batch_model->get($batch_id);
 		if($batch && $batch->status==0 && $batch->type==0){
