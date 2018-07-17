@@ -22,6 +22,7 @@ class Target_lib{
 	//核可額度利率
 	public function approve_target($target = array()){
 		$this->CI->load->library('credit_lib');
+		$this->CI->load->library('contract_lib');
 		if(!empty($target) && $target->status=="0"){
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -48,25 +49,27 @@ class Target_lib{
 					if($loan_amount>=5000){
 						$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
 						$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
-						$contract 		= $this->get_target_contract($user_id,$loan_amount,$interest_rate);
-						$param = array(
-							"loan_amount"		=> $loan_amount,
-							"credit_level"		=> $credit['level'],
-							"platform_fee"		=> $platform_fee,
-							"interest_rate"		=> $interest_rate, 
-							"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
-							"contract"			=> $contract,
-							"status"			=> "1",
-						);
-						$rs = $this->CI->target_model->update($target->id,$param);
-						if($rs){
-							$virtual_data = array(
-								"user_id"			=> $user_id,				
-								"virtual_account"	=> $param['virtual_account'],
-								"investor"			=> 0,
+						$contract_id	= $this->CI->contract_lib->sign_contract("lend",["",$user_id,$loan_amount,$interest_rate,""]);
+						if($contract_id){
+							$param = array(
+								"loan_amount"		=> $loan_amount,
+								"credit_level"		=> $credit['level'],
+								"platform_fee"		=> $platform_fee,
+								"interest_rate"		=> $interest_rate, 
+								"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
+								"contract_id"		=> $contract_id,
+								"status"			=> "1",
 							);
-							$this->CI->virtual_account_model->insert($virtual_data);
-							$this->CI->notification_lib->approve_target($user_id,"1",$loan_amount);
+							$rs = $this->CI->target_model->update($target->id,$param);
+							if($rs){
+								$virtual_data = array(
+									"user_id"			=> $user_id,				
+									"virtual_account"	=> $param['virtual_account'],
+									"investor"			=> 0,
+								);
+								$this->CI->virtual_account_model->insert($virtual_data);
+								$this->CI->notification_lib->approve_target($user_id,"1",$loan_amount);
+							}
 						}
 					}else{
 						$param = array(
@@ -84,12 +87,6 @@ class Target_lib{
 		}
 		return false;
 	}
-
-	private function get_target_contract($user_id,$amount,$rate){
-		$this->CI->load->model('platform/contract_model');
-		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
-		return sprintf($contract->content,"",$user_id,$amount,$rate,"");
-	}
 	
 	//判斷流標或結標或凍結投資款項
 	function check_bidding($target){
@@ -105,6 +102,7 @@ class Target_lib{
 				//更新invested
 				$this->CI->target_model->update($target->id,array("invested"=>$amount));
 				if($amount >= $target->loan_amount){
+					$this->CI->load->library('contract_lib');
 					//結標
 					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
 					if($rs){
@@ -117,13 +115,33 @@ class Target_lib{
 								if($total < $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount;
 									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,"",$target->repayment);
-									$contract		= $this->get_investment_contract($value->user_id,$target->user_id,$loan_amount,$target->interest_rate,$schedule["total_payment"]);
-									$param 			= array("loan_amount"=> $loan_amount,"contract"=>$contract ,"status"=>2);
+									$contract_id	= $this->CI->contract_lib->sign_contract("lend",[
+										$value->user_id,
+										$target->user_id,
+										$loan_amount,
+										$target->interest_rate,
+										$schedule["total_payment"]
+									]);
+									$param 			= array(
+										"loan_amount"	=> $loan_amount,
+										"contract_id"	=> $contract_id ,
+										"status"		=> 2
+									);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
 									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,"",$target->repayment);
-									$contract		= $this->get_investment_contract($value->user_id,$target->user_id,$loan_amount,$target->interest_rate,$schedule["total_payment"]);
-									$param 			= array("loan_amount"=> $loan_amount,"contract"=>$contract ,"status"=>2); 
+									$contract_id	= $this->CI->contract_lib->sign_contract("lend",[
+										$value->user_id,
+										$target->user_id,
+										$loan_amount,
+										$target->interest_rate,
+										$schedule["total_payment"]
+									]);
+									$param 			= array(
+										"loan_amount"	=> $loan_amount,
+										"contract_id"	=> $contract_id ,
+										"status"		=> 2
+									); 
 									$ended 			= false;
 								}else{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -199,12 +217,6 @@ class Target_lib{
 			}
 		}
 		return false;
-	}
-	
-	private function get_investment_contract($user_from,$user_to,$amount,$rate,$PMT){
-		$this->CI->load->model('platform/contract_model');
-		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
-		return sprintf($contract->content,$user_from,$user_to,$amount,$rate,$PMT);
 	}
 	
 	//借款端還款計畫

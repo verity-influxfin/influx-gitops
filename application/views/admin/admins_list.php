@@ -25,7 +25,6 @@
                                             <th>電話</th>
                                             <th>地址</th>
                                             <th>Email</th>
-                                            <th>QR code</th>
                                             <th>創建者</th>
                                             <th>修改</th>
                                         </tr>
@@ -43,9 +42,8 @@
                                             <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
                                             <td><?=isset($value->phone)?$value->phone:"" ?></td>
-                                            <td><?=isset($value->birthday)?$value->birthday:"" ?></td>
+                                            <td><?=isset($value->birthday)?date("m/d",strtotime($value->birthday)):"" ?></td>
                                             <td><?=isset($value->email)?$value->email:"" ?></td>
-                                            <td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" ><img src="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" /></a></td>
                                             <td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
 											<td><a href="<?=admin_url('admin/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
                                         </tr>                                        

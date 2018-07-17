@@ -9,6 +9,7 @@ class Payment_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/payment_model');
+		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Transaction_lib');
@@ -32,9 +33,11 @@ class Payment_lib{
 			"txdate8"		=> "Y",
 		);
 		$rs 	= curl_get(CATHAY_API_URL,$param);
+		dump($rs);
 		$rs 	= iconv('big5', 'big5//IGNORE', $rs); 
 		$xml 	= simplexml_load_string($rs);
 		$xml 	= json_decode(json_encode($xml),TRUE);
+		
 		$insert_param = array();
 		if(isset($xml["@attributes"]["error_id"]) && $xml["@attributes"]["error_id"]=="0"){
 			if(isset($xml["TXDETAIL"])&& !empty($xml["TXDETAIL"])){
@@ -110,7 +113,6 @@ class Payment_lib{
 		return false;
 	}
 	
-	
 	public function script_handle_payment($num=20){ 
 		$count = 0;
 		$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
@@ -168,5 +170,117 @@ class Payment_lib{
 	private function expense($value){
 		$this->CI->payment_model->update($value->id,array("status"=>0));
 		return false;
+	}
+	
+	public function verify_bankaccount_txt(){
+		
+		$check_len = array(
+			"code"			=> 1,
+			"upload_date"	=> 8,
+			"entering_date"	=> 8,
+			"t_type"		=> 3,
+			"t_code"		=> 10,
+			"bankcode_from"	=> 7,
+			"bankacc_from"	=> 16,
+			"tax_from"		=> 10,
+			"name_from"		=> 70,
+			"TWD"			=> 3,
+			"plus"			=> 1,
+			"amount"		=> 14,//靠左補0
+			"bankcode_to"	=> 7,
+			"bankacc_to"	=> 16,
+			"tax_to"		=> 10,
+			"name_to"		=> 70,
+			"alert_to"		=> 1,
+			"email_to"		=> 50,
+			"fee_type"		=> 2,
+			"invoice_num"	=> 4,
+			"remark"		=> 50,
+		);
+		
+		$where				= array(
+			"status"		=> 1,
+			"verify"		=> 2
+		);
+		$bankaccounts 	= $this->CI->user_bankaccount_model->get_many_by($where);
+		$content 		= "";
+		if($bankaccounts){
+			foreach($bankaccounts as $key => $value){
+				//$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3));
+				$user_info = $this->CI->user_model->get($value->user_id);
+				if($user_info && $user_info->name){
+					$data = array(
+						"code"			=> "0",
+						"upload_date"	=> "",
+						"entering_date"	=> date("Ymd"),
+						"t_type"		=> "SPU",
+						"t_code"		=> "",
+						"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+						"bankacc_from"	=> CATHAY_CUST_ACCNO,
+						"tax_from"		=> CATHAY_CUST_ID,
+						"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+						"TWD"			=> "TWD",
+						"plus"			=> "+",
+						"amount"		=> 1,//靠左補0
+						"bankcode_to"	=> $value->bank_code.$value->branch_code,
+						"bankacc_to"	=> $value->bank_account,
+						"tax_to"		=> "",
+						"name_to"		=> nf_to_wf($user_info->name),
+						"alert_to"		=> "0",
+						"email_to"		=> "",
+						"fee_type"		=> "15",
+						"invoice_num"	=> "",
+						"remark"		=> nf_to_wf("金融帳號驗證"),
+					);
+				
+					foreach($check_len as $key => $value){
+						$param = isset($data[$key])?$data[$key]:"";
+						if(in_array($key,array("name_from","name_to","remark"))){
+							$len = mb_strlen($param)*2;
+							$len = $value>$len?intval($value-$len):0;
+							if($len){
+								for($i=1;$i<=$len;$i++){
+									$data[$key] = $data[$key]." ";
+								}
+							}
+						}else if($key == "amount"){
+							$data[$key] = intval($data[$key])."00";
+							$len = strlen($data[$key]);
+							$len = $value>$len?intval($value-$len):0;
+							if($len){
+								for($i=1;$i<=$len;$i++){
+									$data[$key] = "0".$data[$key];
+								}
+							}
+						}else if($key == "invoice_num"){
+							$len = strlen($data[$key]);
+							$len = $value>$len?intval($value-$len):0;
+							if($len){
+								for($i=1;$i<=$len;$i++){
+									$data[$key] = "0".$data[$key];
+								}
+							}
+						}else{
+							$len = strlen($param);
+							$len = $value>$len?intval($value-$len):0;
+							if($len){
+								for($i=1;$i<=$len;$i++){
+									$data[$key] = $data[$key]." ";
+								}
+							}
+						}
+					}
+					
+					if($content != ""){
+						$content .= "\n";
+					}
+					
+					foreach($data as $key => $value){
+						$content .= $value;
+					}
+				}
+			}		
+		}
+		return $content;
 	}
 }

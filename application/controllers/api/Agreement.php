@@ -83,7 +83,7 @@ class Agreement extends REST_Controller {
 	/**
      * @api {get} /agreement/info/{alias} 協議 協議書
      * @apiGroup Agreement
-	 * @apiParam {String} alias (required) 代號
+	 * @apiParam {String} alias 代號
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Agreement ID

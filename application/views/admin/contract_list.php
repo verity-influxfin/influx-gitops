@@ -1,6 +1,6 @@
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">協議書</h1>
+        <h1 class="page-header">合約書</h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">

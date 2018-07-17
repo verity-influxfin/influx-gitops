@@ -59,13 +59,12 @@ class Certification_lib{
 		if($id){
 			$this->CI->load->library('Ocr_lib');
 			$this->CI->load->library('Faceplusplus_lib');
-			
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status ==0 ){
 				$info->content 		= json_decode($info->content,true);
 				$content			= $info->content;
-				//$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
-				$ocr = false;
+				$this->set_success($id);return true;
+				$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
 				if($ocr && $content['name']==$ocr['name'] && $content['id_number']==$ocr['id_number']){
 					$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image']);
 					$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image']);

@@ -92,16 +92,16 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/idcard 認證 實名認證
      * @apiGroup Certification
-     * @apiParam {String} name (required) 姓名
-     * @apiParam {String} id_number (required) 身分證字號
-     * @apiParam {String} id_card_date (required) 發證日期(民國) ex:1060707
-     * @apiParam {String} id_card_place (required) 發證地點
-     * @apiParam {String} birthday (required) 生日(民國) ex:1020101
-     * @apiParam {String} address (required) 地址
-     * @apiParam {file} front_image (required) 身分證正面照
-     * @apiParam {file} back_image (required) 身分證背面照
-     * @apiParam {file} person_image (required) 本人照
-     * @apiParam {file} healthcard_image (required) 健保卡照
+     * @apiParam {String} name 姓名
+     * @apiParam {String} id_number 身分證字號
+     * @apiParam {String} id_card_date 發證日期(民國) ex:1060707
+     * @apiParam {String} id_card_place 發證地點
+     * @apiParam {String} birthday 生日(民國) ex:1020101
+     * @apiParam {String} address 地址
+     * @apiParam {file} front_image 身分證正面照
+     * @apiParam {file} back_image 身分證背面照
+     * @apiParam {file} person_image 本人照
+     * @apiParam {file} healthcard_image 健保卡照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -226,12 +226,12 @@ class Certification extends REST_Controller {
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
-	 * @apiSuccess {String} name (required) 姓名
-     * @apiSuccess {String} id_number (required) 身分證字號
-     * @apiSuccess {String} id_card_date (required) 發證日期(民國) ex:1060707
-     * @apiSuccess {String} id_card_place (required) 發證地點
-     * @apiSuccess {String} birthday (required) 生日(民國) ex:1020101
-     * @apiSuccess {String} address (required) 地址
+	 * @apiSuccess {String} name 姓名
+     * @apiSuccess {String} id_number 身分證字號
+     * @apiSuccess {String} id_card_date 發證日期(民國) ex:1060707
+     * @apiSuccess {String} id_card_place 發證地點
+     * @apiSuccess {String} birthday 生日(民國) ex:1020101
+     * @apiSuccess {String} address 地址
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
@@ -304,17 +304,17 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/student 認證 學生身份認證
      * @apiGroup Certification
-	 * @apiParam {String} school (required) 學校名稱
-	 * @apiParam {String} system 學制 0:大學 1:碩士 2:博士 default:0
-	 * @apiParam {String} department (required) 系所
-	 * @apiParam {String} grade (required) 年級
-	 * @apiParam {String} student_id (required) 學號
-	 * @apiParam {String} email (required) 校內電子信箱
-	 * @apiParam {String} sip_account SIP帳號
-	 * @apiParam {String} sip_password SIP密碼
-     * @apiParam {file} front_image (required) 學生證正面照
-     * @apiParam {file} back_image (required) 學生證背面照
-     * @apiParam {file} transcript_image 成績單
+	 * @apiParam {String} school 學校名稱
+	 * @apiParam {String=0,1,2} [system=0] 學制 0:大學 1:碩士 2:博士
+	 * @apiParam {String} department 系所
+	 * @apiParam {String} grade 年級
+	 * @apiParam {String} student_id 學號
+	 * @apiParam {String} email 校內電子信箱
+     * @apiParam {file} front_image 學生證正面照
+     * @apiParam {file} back_image 學生證背面照
+	 * @apiParam {String} [sip_account] SIP帳號
+	 * @apiParam {String} [sip_password] SIP密碼
+     * @apiParam {file} [transcript_image] 成績單
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -514,11 +514,11 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/debitcard 認證 金融帳號認證
      * @apiGroup Certification
-	 * @apiParam {String} bank_code (required) 銀行代碼三碼
-	 * @apiParam {String} branch_code (required) 分支機構代號四碼
-	 * @apiParam {String} bank_account (required) 銀行帳號
-     * @apiParam {file} front_image (required) 金融卡正面照
-     * @apiParam {file} back_image (required) 金融卡背面照
+	 * @apiParam {String{3}} bank_code 銀行代碼三碼
+	 * @apiParam {String{4}} branch_code 分支機構代號四碼
+	 * @apiParam {String{10..16}} bank_account 銀行帳號
+     * @apiParam {file} front_image 金融卡正面照
+     * @apiParam {file} back_image 金融卡背面照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -563,6 +563,13 @@ class Certification extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "508"
+     *     }
+	 *
+     * @apiError 509 銀行帳號已存在
+     * @apiErrorExample {json} 509
+     *     {
+     *       "result": "ERROR",
+     *       "error": "509"
      *     }
 	 *
      */
@@ -615,6 +622,17 @@ class Certification extends REST_Controller {
 			}
 			if(strlen($content['bank_account'])<10 || is_virtual_account($content['bank_account'])){
 				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_ERROR ));
+			}
+			
+			$where = array(
+				"investor"		=> $investor,
+				"bank_code"		=> $content["bank_code"],
+				"bank_account"	=> intval($content["bank_account"]),
+			);
+			
+			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
+			if($user_bankaccount){
+				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_EXIST ));
 			}
 			
 			//上傳檔案欄位
@@ -744,9 +762,10 @@ class Certification extends REST_Controller {
 		/**
      * @api {post} /certification/emergency 認證 緊急聯絡人
      * @apiGroup Certification
-	 * @apiParam {String} name (required) 緊急聯絡人姓名
-	 * @apiParam {String} phone (required) 緊急聯絡人電話
-	 * @apiParam {String} relationship (required) 緊急聯絡人關係
+	 * @apiParam {String} name 緊急聯絡人姓名
+	 * @apiParam {String} phone 緊急聯絡人電話
+	 * @apiParam {String} relationship 緊急聯絡人關係
+	 *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -900,7 +919,8 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/email 認證 常用電子信箱
      * @apiGroup Certification
-	 * @apiParam {String} email (required) Email
+	 * @apiParam {String} email Email
+	 *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -1058,9 +1078,9 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/verifyemail 認證 認證電子信箱(學生身份、常用電子信箱)
      * @apiGroup Certification
-	 * @apiParam {String} type (required) 認證Type
-	 * @apiParam {String} email (required) Email
-	 * @apiParam {String} code (required) 認證Code
+	 * @apiParam {String} type 認證Type
+	 * @apiParam {String} email Email
+	 * @apiParam {String} code 認證Code
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
      *    {
@@ -1121,8 +1141,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {Number} transportation 交通支出
 	 * @apiParam {Number} entertainment 娛樂支出
 	 * @apiParam {Number} other_expense 其他支出
-     * @apiParam {file} creditcard_image 信用卡帳單照
-     * @apiParam {file} passbook_image 存摺內頁照
+     * @apiParam {file} [creditcard_image] 信用卡帳單照
+     * @apiParam {file} [passbook_image] 存摺內頁照
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -1303,8 +1323,8 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/social 認證 社交認證
      * @apiGroup Certification
-     * @apiParam {String} type (required) 認證類型（"facebook"）
-     * @apiParam {String} access_token (required) access_token
+     * @apiParam {String="facebook"} type 認證類型
+     * @apiParam {String} access_token access_token
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS

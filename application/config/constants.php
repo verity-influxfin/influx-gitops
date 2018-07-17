@@ -129,6 +129,7 @@ defined('CERTIFICATION_IDNUMBER_EXIST') OR define('CERTIFICATION_IDNUMBER_EXIST'
 defined('CERTIFICATION_BANK_CODE_ERROR') 	OR define('CERTIFICATION_BANK_CODE_ERROR'	, 506); 
 defined('CERTIFICATION_BRANCH_CODE_ERROR') 	OR define('CERTIFICATION_BRANCH_CODE_ERROR'	, 507); 
 defined('CERTIFICATION_BANK_ACCOUNT_ERROR') OR define('CERTIFICATION_BANK_ACCOUNT_ERROR', 508);
+defined('CERTIFICATION_BANK_ACCOUNT_EXIST') OR define('CERTIFICATION_BANK_ACCOUNT_EXIST', 509);
 //Notification Error Code
 defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601); 
 //Agreement Error Code
@@ -224,9 +225,10 @@ defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '013');
 defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'		, '0154');
 defined('CATHAY_BANK_NAME')     	OR define('CATHAY_BANK_NAME'		, '國泰世華商業銀行');
 defined('CATHAY_BRANCH_NAME')     	OR define('CATHAY_BRANCH_NAME'		, '信義分行');
+defined('CATHAY_COMPANY_NAME')     	OR define('CATHAY_COMPANY_NAME'		, '普匯金融科技股份有限公司');
 
 //OCR 
-defined('OCR_API_URL')      		OR define('OCR_API_URL'				, 'http://13.230.227.104:8888/cxfServerX/ImgReconCard?wsdl'); 
+defined('OCR_API_URL')      		OR define('OCR_API_URL'				, 'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl'); 
 
 //SMS
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME'			, 1800); 

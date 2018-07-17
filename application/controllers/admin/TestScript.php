@@ -4,8 +4,6 @@ require(APPPATH . "/libraries/MY_Admin_Controller.php");
 
 class TestScript extends MY_Admin_Controller
 {
-	public $menu = array("menu"=>"test");
-	
     public function __construct()
     {
         parent::__construct();
@@ -23,14 +21,14 @@ class TestScript extends MY_Admin_Controller
         $investmentList = $this->investment_model->get_all();
 
         $viewData = [
-            "targetList" => $targetList,
-            "investmentList" => $investmentList,
+            "targetList" 		=> $targetList,
+            "investmentList" 	=> $investmentList,
 			"target_status"		=> $this->target_model->status_list,
 			"investment_status"		=> $this->investment_model->status_list,
         ];
 
         $this->load->view("admin/_header");
-        $this->load->view('admin/_title',$this->menu);
+        $this->load->view("admin/_title",$this->menu);
         $this->load->view("admin/test_script", $viewData);
         $this->load->view("admin/_footer");
     }
@@ -50,7 +48,7 @@ class TestScript extends MY_Admin_Controller
         ];
 
         $this->load->view("admin/_header");
-        $this->load->view('admin/_title',$this->menu);
+        $this->load->view("admin/_title",$this->menu);
         $this->load->view("admin/test_payment_script", $viewData);
         $this->load->view("admin/_footer");
     }

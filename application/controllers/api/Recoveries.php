@@ -561,8 +561,8 @@ class Recoveries extends REST_Controller {
 	/**
      * @api {post} /recoveries/withdraw 出借方 提領申請
      * @apiGroup Recoveries
-     * @apiParam {number} amount (required) 提領金額
-     * @apiParam {String} transaction_password (required) 交易密碼
+     * @apiParam {number} amount 提領金額
+     * @apiParam {String} transaction_password 交易密碼
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
@@ -738,7 +738,7 @@ class Recoveries extends REST_Controller {
 	/**
      * @api {post} /recoveries/pretransfer 出借方 我要轉讓
      * @apiGroup Recoveries
-     * @apiParam {String} ids (required) Investments IDs (1,3,10,21)
+     * @apiParam {String} ids Investments IDs ex: 1,3,10,21
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} total_principal 轉讓本金
@@ -863,7 +863,7 @@ class Recoveries extends REST_Controller {
 	/**
      * @api {post} /recoveries/transfer 出借方 轉讓申請
      * @apiGroup Recoveries
-     * @apiParam {String} ids (required) Investments IDs (複選使用逗號隔開1,3,10,21)
+     * @apiParam {String} ids Investments IDs (複選使用逗號隔開1,3,10,21)
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS

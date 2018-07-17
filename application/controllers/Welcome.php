@@ -51,9 +51,8 @@ class Welcome extends CI_Controller {
 					$image2_answer = $this->faceplusplus_lib->token_compare($image2_token[0],$image2_token[1]);
 				}
 				
-				//$this->load->library('Ocr_lib');
-				//$ocr = $this->ocr_lib->identify($image,1031);
-				$ocr = array();
+				$this->load->library('Ocr_lib');
+				$ocr = $this->ocr_lib->identify($image,1031);
 				$data = array(
 					"image"			=> 	$image,
 					"id_card"		=>	$ocr,
@@ -102,7 +101,7 @@ class Welcome extends CI_Controller {
 		}
 		
 		echo "<td>合計</td><td></td><td></td><td></td>";
-		echo "<td>".$schedule['total']['principal']."</td>";
+		echo "<td>".$schedule['total']['principal']."</td>"; 
 		echo "<td>".$schedule['total']['interest']."</td>";
 		echo "<td>".$schedule['total']['total_payment']."</td>";
 		echo "</tr>";
@@ -116,20 +115,14 @@ class Welcome extends CI_Controller {
 	}
 	
 	function recharge(){
-		$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
-		$school_list = json_decode($school_list,true);
-		echo '<table style="width:50%;text-align:center;"><tr><th></th><th>學校</th><th>分數</th><th>公立</th></tr>';
-		
-		foreach($school_list as $key =>$value){
-			$value['national'] = $value['national']?"公立":"私立";
-			echo "<tr>";
-			echo "<td>".$key."</td>";
-			echo "<td>".$value['name']."</td>";
-			echo "<td>".$value['points']."</td>";
-			echo "<td>".$value['national']."</td>";
-			echo "</tr>";
+		$a = file_get_contents('https://s3-ap-northeast-1.amazonaws.com/influxp2p/banks.json');
+		$a = json_decode($a,TRUE);
+		$data = [];
+		$i = 0;
+		foreach($a as $k => $value){
+			$data[$i] = $value;
+			$i++;
 		}
-		echo "</tr>";
-		echo "</table>";
+		dump(json_encode($data));
 	}
 }

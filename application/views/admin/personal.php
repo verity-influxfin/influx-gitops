@@ -9,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><?=$type=="edit"?"修改後台人員資訊":"新增後台人員" ?></h1>
+                    <h1 class="page-header">修改個人資料</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -18,7 +18,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						<?=$type=="edit"?"修改後台人員資訊":"新增後台人員" ?>
+						修改個人資料
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -26,15 +26,8 @@
                                     <form role="form" method="post" onsubmit="return form_onsubmit();" > 
                                         <div class="form-group">
                                             <label>帳號</label>
-											<?
-												if($type=="edit"){
-											?>
 												<p class="form-control-static"><?=isset($data->account)?$data->account:"";?></p>
-												<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 												<a href="<?=isset($data->my_promote_code)?$data->qrcode:"" ?>" data-fancybox="images" ><img src="<?=isset($data->my_promote_code)?$data->qrcode:"" ?>" /></a>
-											<? }else{ ?>
-												<input id="account" name="account" class="form-control" placeholder="Enter Account">
-											<? } ?>
                                         </div>
                                         <div class="form-group">
                                             <label>姓名</label>
@@ -46,41 +39,24 @@
                                         </div>
 										<div class="form-group">
                                             <label>生日</label> 
-                                            <input id="birthday" name="birthday" class="form-control" placeholder="Enter Birthday" value="<?=isset($data->birthday)?$data->birthday:"";?>" >
+                                            <p class="form-control-static"><?=isset($data->birthday)?date("m/d",strtotime($data->birthday)):"";?></p>
                                         </div>
 										<div class="form-group">
                                             <label>Email</label> 
-											<?
-												if($type=="edit"){
-											?>
-												<p class="form-control-static"><?=isset($data->email)?$data->email:"";?></p>
-											<? }else{ ?>
-												<input id="email" name="email" class="form-control" placeholder="Enter Email">
-											<? } ?>
+											<p class="form-control-static"><?=isset($data->email)?$data->email:"";?></p>
                                         </div>
 										<div class="form-group">
                                             <label>角色</label>
-                                            <select class="form-control" id="role_id" name="role_id">
-												<? 
-												if(isset($role_name) && !empty($role_name)){
-													foreach($role_name as $key => $value){
-												?>
-                                                <option value="<?=$key; ?>" <?=isset($data->role_id)&&$data->role_id==$key?"selected":"";?>><?=$value; ?></option>
-												<? }} ?>
-                                            </select>
+											<p class="form-control-static"><?=isset($data->role_id)?$role_name[$data->role_id]:"";?></p>
                                         </div>
-										<?
-											if($type!="edit"){
-										?>
-											<div class="form-group">
-												<label>Password</label> 
-												<input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
-											</div>
-											<div class="form-group">
-												<label>Confirm Password</label> 
-												<input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password">
-											</div>
-										<? } ?>
+										<div class="form-group">
+											<label>新密碼</label> 
+											<input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
+										</div>
+										<div class="form-group">
+											<label>確認新密碼</label> 
+											<input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password">
+										</div>
                                         <button type="submit" class="btn btn-default">Submit Button</button>
                                     </form>
                                 </div>

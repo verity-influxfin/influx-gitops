@@ -17,6 +17,7 @@ class Repayment extends REST_Controller {
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Target_lib');
 		$this->load->library('Prepayment_lib');
+		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
@@ -275,7 +276,6 @@ class Repayment extends REST_Controller {
 					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
 					"instalment" 		=> $instalment_list[$value->instalment],
 					"repayment" 		=> $repayment_type[$value->repayment],
-					"contract" 			=> $value->contract,
 					"remark" 			=> $value->remark, 
 					"delay" 			=> $value->delay,
 					"delay_days" 		=> $value->delay_days,
@@ -771,14 +771,17 @@ class Repayment extends REST_Controller {
 	 * @apiParam {number} ID Targets ID
 	 * 
 	 * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} id Targets ID
+	 * @apiSuccess {String} title 合約標題
+	 * @apiSuccess {String} contract 合約內容
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
-	 * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！",
-	 * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+	 *				{
+	 *					"title": "借貸契約書",
+	 * 					"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+	 *				}
 	 *			]
      * 		}
      *    }
@@ -822,11 +825,15 @@ class Repayment extends REST_Controller {
 				$investments = $this->investment_model->get_many_by($where);
 				if($investments){
 					foreach($investments as $key => $value){
-						$list[] = $value->contract;
+						$contract_data = $this->contract_lib->get_contract($value->contract_id);
+						$contract = $contract_data["content"];
+						$list[] = array("title"=>$contract_data["title"],"contract"=>$contract_data["content"]);
 					}
 				}
 			}else if(in_array($target->status,array(1,2,3,4))){
-				$list[] = $target->contract;
+				$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
+				$contract 		= $contract_data["content"];
+				$list[] 		= array("title"=>$contract_data["title"],"contract"=>$contract_data["content"]);
 			}
 
 			$data["list"] 	= $list;

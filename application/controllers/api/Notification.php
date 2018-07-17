@@ -97,7 +97,7 @@ class Notification extends REST_Controller {
 	/**
      * @api {get} /notification/info/{id} 消息 消息內容（已讀）
      * @apiGroup Notification
-	 * @apiParam {String} id (required) 代號
+	 * @apiParam {String} id 代號
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Notification ID
@@ -157,7 +157,6 @@ class Notification extends REST_Controller {
      * @apiGroup Notification
      *
      * @apiSuccess {json} result SUCCESS
-
      * @apiSuccessExample {json} SUCCESS
      * {
      * 	"result":"SUCCESS"

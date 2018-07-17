@@ -167,9 +167,9 @@ class Subloan extends REST_Controller {
 	/**
      * @api {post} /subloan/apply/ 借款方 產品轉換申請
      * @apiGroup Subloan
-	 * @apiParam {number} target_id (required) Target ID
-	 * @apiParam {number} instalment (required) 申請期數
-	 * @apiParam {number} repayment (required) 還款方式
+	 * @apiParam {number} target_id Target ID
+	 * @apiParam {number} instalment 申請期數
+	 * @apiParam {number} repayment 還款方式
 	 * 
 	 * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -497,8 +497,8 @@ class Subloan extends REST_Controller {
 	/**
      * @api {post} /subloan/signing 借款方 產品轉換簽約
      * @apiGroup Subloan
-	 * @apiParam {number} target_id (required) Targets ID
-	 * @apiParam {file} person_image (required) 本人照
+	 * @apiParam {number} target_id Targets ID
+	 * @apiParam {file} person_image 本人照
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -610,7 +610,7 @@ class Subloan extends REST_Controller {
 	/**
      * @api {get} /subloan/cancel/{ID} 借款方 取消產品轉換
      * @apiGroup Subloan
-	 * @apiParam {number} id (required) Targets ID
+	 * @apiParam {number} id Targets ID
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS

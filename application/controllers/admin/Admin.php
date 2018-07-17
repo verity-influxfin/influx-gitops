@@ -5,22 +5,9 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Admin extends MY_Admin_Controller {
 	
-	public $menu = array("menu"=>"admin");
-	
 	public function __construct() {
 		parent::__construct();
-		$this->login_info = check_admin();
-		$this->load->model('admin/role_model');
 		$this->load->model('log/log_adminlogin_model');
-		$this->load->helper('cookie');
-		$this->load->library('encrypt');
-		$method = $this->router->fetch_method();
-		$nonAuthMethods = ['login'];
-        if (!in_array($method, $nonAuthMethods)) {
-			if(empty($this->login_info)){
-				redirect(admin_url('admin/login'), 'refresh');
-			}
-        }	
  	}
 	
 	public function index(){
@@ -30,7 +17,7 @@ class Admin extends MY_Admin_Controller {
 		if(!empty($list)){
 			foreach($list as $key => $value){
 				$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
-				$qrcode			= "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+				$qrcode			= get_qrcode($url);
 				$value->qrcode	= $qrcode;
 				$list[$key] 	= $value;
 			}
@@ -145,7 +132,9 @@ class Admin extends MY_Admin_Controller {
 			if($id){
 				$admin_info = $this->admin_model->get_by('id', $id);
 				if($admin_info){
-					$page_data['data'] = $admin_info;
+					$url 				= BORROW_URL.'?promote_code='.$admin_info->my_promote_code;
+					$admin_info->qrcode	= get_qrcode($url);
+					$page_data['data'] 	= $admin_info;
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/admins_edit',$page_data);

@@ -12,7 +12,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "alias",
-            "description": "<p>(required) 代號</p>"
+            "description": "<p>代號</p>"
           }
         ]
       }
@@ -647,42 +647,42 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>(required) 姓名</p>"
+            "description": "<p>姓名</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "id_number",
-            "description": "<p>(required) 身分證字號</p>"
+            "description": "<p>身分證字號</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "id_card_date",
-            "description": "<p>(required) 發證日期(民國) ex:1060707</p>"
+            "description": "<p>發證日期(民國) ex:1060707</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "id_card_place",
-            "description": "<p>(required) 發證地點</p>"
+            "description": "<p>發證地點</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "birthday",
-            "description": "<p>(required) 生日(民國) ex:1020101</p>"
+            "description": "<p>生日(民國) ex:1020101</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "address",
-            "description": "<p>(required) 地址</p>"
+            "description": "<p>地址</p>"
           },
           {
             "group": "Success 200",
@@ -1131,37 +1131,40 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "size": "3",
             "optional": false,
             "field": "bank_code",
-            "description": "<p>(required) 銀行代碼三碼</p>"
+            "description": "<p>銀行代碼三碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
+            "size": "4",
             "optional": false,
             "field": "branch_code",
-            "description": "<p>(required) 分支機構代號四碼</p>"
+            "description": "<p>分支機構代號四碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
+            "size": "10..16",
             "optional": false,
             "field": "bank_account",
-            "description": "<p>(required) 銀行帳號</p>"
+            "description": "<p>銀行帳號</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "front_image",
-            "description": "<p>(required) 金融卡正面照</p>"
+            "description": "<p>金融卡正面照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "back_image",
-            "description": "<p>(required) 金融卡背面照</p>"
+            "description": "<p>金融卡背面照</p>"
           }
         ]
       }
@@ -1222,6 +1225,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "509",
+            "description": "<p>銀行帳號已存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -1266,6 +1275,11 @@ define({ "api": [
           "type": "json"
         },
         {
+          "title": "509",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"509\"\n}",
+          "type": "json"
+        },
+        {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "json"
@@ -1300,7 +1314,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>(required) Email</p>"
+            "description": "<p>Email</p>"
           }
         ]
       }
@@ -1417,21 +1431,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>(required) 緊急聯絡人姓名</p>"
+            "description": "<p>緊急聯絡人姓名</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 緊急聯絡人電話</p>"
+            "description": "<p>緊急聯絡人電話</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "relationship",
-            "description": "<p>(required) 緊急聯絡人關係</p>"
+            "description": "<p>緊急聯絡人關係</p>"
           }
         ]
       }
@@ -1591,14 +1605,14 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "creditcard_image",
             "description": "<p>信用卡帳單照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "passbook_image",
             "description": "<p>存摺內頁照</p>"
           }
@@ -1706,70 +1720,70 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>(required) 姓名</p>"
+            "description": "<p>姓名</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "id_number",
-            "description": "<p>(required) 身分證字號</p>"
+            "description": "<p>身分證字號</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "id_card_date",
-            "description": "<p>(required) 發證日期(民國) ex:1060707</p>"
+            "description": "<p>發證日期(民國) ex:1060707</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "id_card_place",
-            "description": "<p>(required) 發證地點</p>"
+            "description": "<p>發證地點</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "birthday",
-            "description": "<p>(required) 生日(民國) ex:1020101</p>"
+            "description": "<p>生日(民國) ex:1020101</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "address",
-            "description": "<p>(required) 地址</p>"
+            "description": "<p>地址</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "front_image",
-            "description": "<p>(required) 身分證正面照</p>"
+            "description": "<p>身分證正面照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "back_image",
-            "description": "<p>(required) 身分證背面照</p>"
+            "description": "<p>身分證背面照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "person_image",
-            "description": "<p>(required) 本人照</p>"
+            "description": "<p>本人照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "healthcard_image",
-            "description": "<p>(required) 健保卡照</p>"
+            "description": "<p>健保卡照</p>"
           }
         ]
       }
@@ -1895,16 +1909,19 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "allowedValues": [
+              "\"facebook\""
+            ],
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 認證類型（&quot;facebook&quot;）</p>"
+            "description": "<p>認證類型</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>(required) access_token</p>"
+            "description": "<p>access_token</p>"
           }
         ]
       }
@@ -2010,75 +2027,81 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "school",
-            "description": "<p>(required) 學校名稱</p>"
+            "description": "<p>學校名稱</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
             "field": "system",
-            "description": "<p>學制 0:大學 1:碩士 2:博士 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "department",
-            "description": "<p>(required) 系所</p>"
+            "description": "<p>系所</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "grade",
-            "description": "<p>(required) 年級</p>"
+            "description": "<p>年級</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "student_id",
-            "description": "<p>(required) 學號</p>"
+            "description": "<p>學號</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>(required) 校內電子信箱</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "sip_account",
-            "description": "<p>SIP帳號</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "sip_password",
-            "description": "<p>SIP密碼</p>"
+            "description": "<p>校內電子信箱</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "front_image",
-            "description": "<p>(required) 學生證正面照</p>"
+            "description": "<p>學生證正面照</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "back_image",
-            "description": "<p>(required) 學生證背面照</p>"
+            "description": "<p>學生證背面照</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sip_account",
+            "description": "<p>SIP帳號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sip_password",
+            "description": "<p>SIP密碼</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "transcript_image",
             "description": "<p>成績單</p>"
           }
@@ -2197,21 +2220,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 認證Type</p>"
+            "description": "<p>認證Type</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>(required) Email</p>"
+            "description": "<p>Email</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 認證Code</p>"
+            "description": "<p>認證Code</p>"
           }
         ]
       }
@@ -2295,7 +2318,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "id",
-            "description": "<p>(required) 代號</p>"
+            "description": "<p>代號</p>"
           }
         ]
       }
@@ -2878,7 +2901,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"contract\":\"我是合約\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -3043,13 +3066,6 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "contract",
-            "description": "<p>合約內容</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
             "field": "delay",
             "description": "<p>是否逾期 0:無 1:逾期中</p>"
           },
@@ -3132,7 +3148,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>(required) Targets ID</p>"
+            "description": "<p>Targets ID</p>"
           }
         ]
       }
@@ -3563,26 +3579,26 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "product_id",
-            "description": "<p>(required) 產品ID</p>"
+            "description": "<p>產品ID</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "amount",
-            "description": "<p>(required) 借款金額</p>"
+            "description": "<p>借款金額</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "instalment",
-            "description": "<p>(required) 申請期數</p>"
+            "description": "<p>申請期數</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "promote_code",
             "description": "<p>邀請碼</p>"
           }
@@ -3730,14 +3746,14 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "target_id",
-            "description": "<p>(required) Targets ID</p>"
+            "description": "<p>Targets ID</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "person_image",
-            "description": "<p>(required) 本人照</p>"
+            "description": "<p>本人照</p>"
           }
         ]
       }
@@ -4788,7 +4804,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "ids",
-            "description": "<p>(required) Investments IDs (1,3,10,21)</p>"
+            "description": "<p>Investments IDs ex: 1,3,10,21</p>"
           }
         ]
       }
@@ -4951,7 +4967,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "ids",
-            "description": "<p>(required) Investments IDs (複選使用逗號隔開1,3,10,21)</p>"
+            "description": "<p>Investments IDs (複選使用逗號隔開1,3,10,21)</p>"
           }
         ]
       }
@@ -5079,14 +5095,14 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "amount",
-            "description": "<p>(required) 提領金額</p>"
+            "description": "<p>提領金額</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "transaction_password",
-            "description": "<p>(required) 交易密碼</p>"
+            "description": "<p>交易密碼</p>"
           }
         ]
       }
@@ -5251,15 +5267,22 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>Targets ID</p>"
+            "field": "title",
+            "description": "<p>合約標題</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "contract",
+            "description": "<p>合約內容</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！\",\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"title\": \"借貸契約書\",\n\t\t\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -7005,7 +7028,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "id",
-            "description": "<p>(required) Targets ID</p>"
+            "description": "<p>Targets ID</p>"
           }
         ]
       }
@@ -7271,21 +7294,21 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "target_id",
-            "description": "<p>(required) Target ID</p>"
+            "description": "<p>Target ID</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "instalment",
-            "description": "<p>(required) 申請期數</p>"
+            "description": "<p>申請期數</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "repayment",
-            "description": "<p>(required) 還款方式</p>"
+            "description": "<p>還款方式</p>"
           }
         ]
       }
@@ -7435,14 +7458,14 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "target_id",
-            "description": "<p>(required) Targets ID</p>"
+            "description": "<p>Targets ID</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
             "optional": false,
             "field": "person_image",
-            "description": "<p>(required) 本人照</p>"
+            "description": "<p>本人照</p>"
           }
         ]
       }
@@ -7913,63 +7936,83 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "budget",
-            "description": "<p>(required) 預算金額</p>"
+            "description": "<p>預算金額</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "interest_rate_s",
             "description": "<p>利率區間下限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "interest_rate_e",
             "description": "<p>利率區間上限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "instalment_s",
             "description": "<p>期數區間下限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "instalment_e",
             "description": "<p>期數區間上限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "credit_level",
-            "description": "<p>信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8 default:all</p>"
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "all",
+              "0",
+              "1"
+            ],
+            "optional": true,
             "field": "national",
-            "description": "<p>信用評等 全部:all 私立:0 國立:1 default:all</p>"
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "all",
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
             "field": "system",
-            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士 default:all</p>"
+            "defaultValue": "all",
+            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "all",
+              "F",
+              "M"
+            ],
+            "optional": true,
             "field": "gender",
-            "description": "<p>性別 全部:all 女性:F 男性:M default:all</p>"
+            "defaultValue": "all",
+            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       }
@@ -8575,16 +8618,27 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "credit_level",
+              "instalment",
+              "interest_rate"
+            ],
+            "optional": true,
             "field": "orderby",
-            "description": "<p>排序值 credit_level(default)、instalment、interest_rate</p>"
+            "defaultValue": "credit_level",
+            "description": "<p>排序值</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
             "field": "sort",
-            "description": "<p>降序/升序 desc/asc(default)</p>"
+            "defaultValue": "asc",
+            "description": "<p>降序/升序</p>"
           }
         ]
       }
@@ -8746,14 +8800,14 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "target_id",
-            "description": "<p>(required) 產品ID</p>"
+            "description": "<p>產品ID</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
             "optional": false,
             "field": "amount",
-            "description": "<p>(required) 出借金額</p>"
+            "description": "<p>出借金額</p>"
           }
         ]
       }
@@ -8936,7 +8990,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "batch_id",
-            "description": "<p>(required) 智能出借ID</p>"
+            "description": "<p>智能出借ID</p>"
           }
         ]
       }
@@ -9077,56 +9131,58 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "budget",
-            "description": "<p>(required) 預算金額</p>"
+            "description": "<p>預算金額</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "delay",
-            "description": "<p>(required) 逾期標的 0:正常標的 1:逾期標的 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>逾期標的 0:正常標的 1:逾期標的 default:0</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "user_id",
             "description": "<p>指定使用者ID</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "interest_rate_s",
             "description": "<p>正常標的-利率區間下限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "interest_rate_e",
             "description": "<p>正常標的-利率區間上限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "instalment_s",
             "description": "<p>正常標的-剩餘期數區間下限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "number",
-            "optional": false,
+            "optional": true,
             "field": "instalment_e",
             "description": "<p>正常標的-剩餘期數區間上限(%)</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "credit_level",
-            "description": "<p>逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8 default:all</p>"
+            "defaultValue": "all",
+            "description": "<p>逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8</p>"
           }
         ]
       }
@@ -9599,16 +9655,27 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "credit_level",
+              "instalment",
+              "interest_rate"
+            ],
+            "optional": true,
             "field": "orderby",
-            "description": "<p>排序值 credit_level(default)、instalment、interest_rate</p>"
+            "defaultValue": "credit_level",
+            "description": "<p>排序值</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
             "field": "sort",
-            "description": "<p>降序/升序 desc/asc(default)</p>"
+            "defaultValue": "asc",
+            "description": "<p>降序/升序</p>"
           }
         ]
       }
@@ -9803,7 +9870,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "transfer_id",
-            "description": "<p>(required) 投資ID</p>"
+            "description": "<p>投資ID</p>"
           }
         ]
       }
@@ -9975,7 +10042,7 @@ define({ "api": [
             "type": "number",
             "optional": false,
             "field": "batch_id",
-            "description": "<p>(required) 智能收購ID</p>"
+            "description": "<p>智能收購ID</p>"
           }
         ]
       }
@@ -10278,7 +10345,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "number",
             "optional": false,
             "field": "investor",
             "description": "<p>1:投資端 0:借款端</p>"
@@ -10426,16 +10493,21 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "allowedValues": [
+              "facebook",
+              "instagram",
+              "line"
+            ],
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;,&quot;line&quot;）</p>"
+            "description": "<p>登入類型</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>(required) access_token</p>"
+            "description": "<p>access_token</p>"
           }
         ]
       }
@@ -10563,26 +10635,26 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "content",
-            "description": "<p>(required) 內容</p>"
+            "description": "<p>內容</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "image1",
             "description": "<p>附圖1</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "image2",
             "description": "<p>附圖2</p>"
           },
           {
             "group": "Parameter",
             "type": "file",
-            "optional": false,
+            "optional": true,
             "field": "image3",
             "description": "<p>附圖3</p>"
           }
@@ -10668,28 +10740,34 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "school",
-            "description": "<p>(required) 學校名稱</p>"
+            "description": "<p>學校名稱</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "allowedValues": [
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
             "field": "system",
-            "description": "<p>學制 0:大學 1:碩士 2:博士 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "department",
-            "description": "<p>(required) 系所</p>"
+            "description": "<p>系所</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "grade",
-            "description": "<p>(required) 年級</p>"
+            "description": "<p>年級</p>"
           }
         ]
       }
@@ -10758,21 +10836,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "password",
-            "description": "<p>(required) 原密碼</p>"
+            "description": "<p>原密碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "new_password",
-            "description": "<p>(required) 新密碼</p>"
+            "description": "<p>新密碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 簡訊驗證碼</p>"
+            "description": "<p>簡訊驗證碼</p>"
           }
         ]
       }
@@ -10889,14 +10967,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "new_password",
-            "description": "<p>(required) 新密碼</p>"
+            "description": "<p>新密碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 簡訊驗證碼</p>"
+            "description": "<p>簡訊驗證碼</p>"
           }
         ]
       }
@@ -11013,21 +11091,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 手機號碼</p>"
+            "description": "<p>手機號碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 簡訊驗證碼</p>"
+            "description": "<p>簡訊驗證碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "new_password",
-            "description": "<p>(required) 新密碼</p>"
+            "description": "<p>新密碼</p>"
           }
         ]
       }
@@ -11122,21 +11200,26 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 手機號碼</p>"
+            "description": "<p>手機號碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "password",
-            "description": "<p>(required) 密碼</p>"
+            "description": "<p>密碼</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
             "field": "investor",
-            "description": "<p>1:投資端 0:借款端 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>1:投資端 0:借款端</p>"
           }
         ]
       }
@@ -11241,33 +11324,38 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 手機號碼</p>"
+            "description": "<p>手機號碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "password",
-            "description": "<p>(required) 設定密碼</p>"
+            "description": "<p>設定密碼</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>(required) 簡訊驗證碼</p>"
+            "description": "<p>簡訊驗證碼</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
             "field": "investor",
-            "description": "<p>1:投資端 0:借款端 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>1:投資端 0:借款端</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
             "field": "promote_code",
             "description": "<p>邀請碼</p>"
           }
@@ -11385,7 +11473,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 手機號碼</p>"
+            "description": "<p>手機號碼</p>"
           }
         ]
       }
@@ -11469,7 +11557,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "phone",
-            "description": "<p>(required) 手機號碼</p>"
+            "description": "<p>手機號碼</p>"
           }
         ]
       }
@@ -11551,23 +11639,33 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "allowedValues": [
+              "facebook",
+              "instagram",
+              "line"
+            ],
             "optional": false,
             "field": "type",
-            "description": "<p>(required) 登入類型（&quot;facebook&quot;,&quot;instagram&quot;,&quot;line&quot;）</p>"
+            "description": "<p>登入類型</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>(required) access_token</p>"
+            "description": "<p>access_token</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
+            "type": "number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
             "field": "investor",
-            "description": "<p>1:投資端 0:借款端 default:0</p>"
+            "defaultValue": "0",
+            "description": "<p>1:投資端 0:借款端</p>"
           }
         ]
       }

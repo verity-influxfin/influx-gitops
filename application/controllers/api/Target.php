@@ -21,6 +21,7 @@ class Target extends REST_Controller {
 		$this->load->library('Target_lib');
 		$this->load->library('Transaction_lib');
 		$this->load->library('Financial_lib');
+		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list' ,'info'];
 		if (!in_array($method, $nonAuthMethods)) {
@@ -49,8 +50,8 @@ class Target extends REST_Controller {
 	/**
      * @api {get} /target/list 出借方 取得標的列表
      * @apiGroup Target
-	 * @apiParam {String} orderby 排序值 credit_level(default)、instalment、interest_rate
-	 * @apiParam {String} sort 降序/升序 desc/asc(default)
+	 * @apiParam {String=credit_level,instalment,interest_rate} [orderby="credit_level"] 排序值
+	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
@@ -359,6 +360,9 @@ class Target extends REST_Controller {
 				);
 			}
 			
+			
+			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
+			$contract 		= $contract_data?$contract_data["content"]:"";
 			$data = array(
 				"id" 				=> $target->id,
 				"target_no" 		=> $target->target_no,
@@ -369,7 +373,7 @@ class Target extends REST_Controller {
 				"remark" 			=> $target->remark,
 				"instalment" 		=> $instalment_list[$target->instalment],
 				"repayment" 		=> $repayment_type[$target->repayment],
-				"contract" 			=> $target->contract,
+				"contract" 			=> $contract,
 				"delay" 			=> $target->delay,
 				"delay_days" 		=> $target->delay_days,
 				"expire_time" 		=> $target->expire_time,
@@ -392,8 +396,8 @@ class Target extends REST_Controller {
 	/**
      * @api {post} /target/apply 出借方 申請出借
      * @apiGroup Target
-	 * @apiParam {number} target_id (required) 產品ID
-     * @apiParam {number} amount (required) 出借金額
+	 * @apiParam {number} target_id 產品ID
+     * @apiParam {number} amount 出借金額
 	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -523,7 +527,6 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
 			}
 			
-			$param['contract'] = "";
 			$insert = $this->investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -718,11 +721,17 @@ class Target extends REST_Controller {
 					"name"			=> $product_info->name,
 				);
 				
+				$contract = "";
+				if($value->contract_id){
+					$contract_data = $this->contract_lib->get_contract($value->contract_id);
+					$contract = $contract_data["content"];
+				}
+			
 				$list[] = array(
 					"id" 				=> $value->id,
 					"amount" 			=> $value->amount,
 					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
-					"contract" 			=> $value->contract,
+					"contract" 			=> $contract,
 					"status" 			=> $value->status,
 					"transfer_status" 	=> $value->transfer_status,
 					"created_at" 		=> $value->created_at,
@@ -737,15 +746,15 @@ class Target extends REST_Controller {
  	/**
      * @api {get} /target/batch 出借方 智能出借
      * @apiGroup Target
-	 * @apiParam {number} budget (required) 預算金額
-     * @apiParam {number} interest_rate_s 利率區間下限(%)
-     * @apiParam {number} interest_rate_e 利率區間上限(%)
-     * @apiParam {number} instalment_s 期數區間下限(%)
-     * @apiParam {number} instalment_e 期數區間上限(%)
-     * @apiParam {String} credit_level 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8 default:all
-     * @apiParam {String} national 信用評等 全部:all 私立:0 國立:1 default:all
-     * @apiParam {String} system 學制 全部:all 0:大學 1:碩士 2:博士 default:all
-     * @apiParam {String} gender 性別 全部:all 女性:F 男性:M default:all
+	 * @apiParam {number} budget 預算金額
+     * @apiParam {number} [interest_rate_s] 利率區間下限(%)
+     * @apiParam {number} [interest_rate_e] 利率區間上限(%)
+     * @apiParam {number} [instalment_s] 期數區間下限(%)
+     * @apiParam {number} [instalment_e] 期數區間上限(%)
+     * @apiParam {String} [credit_level=all] 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8
+     * @apiParam {String=all,0,1} [national=all] 信用評等 全部:all 私立:0 國立:1
+     * @apiParam {String=all,0,1,2} [system=all] 學制 全部:all 0:大學 1:碩士 2:博士
+     * @apiParam {String=all,F,M} [gender=all] 性別 全部:all 女性:F 男性:M
 	 * 
 	 * 
 	 * @apiSuccess {json} result SUCCESS
@@ -964,7 +973,8 @@ class Target extends REST_Controller {
 						if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
 							$data['min_instalment'] = $value->instalment;
 						}
-						$data['contract'][] = $value->contract;
+						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
+						$data['contract'][] = $contract_data?$contract_data["content"]:"";
 						$content[] = $value->id;
 						$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
 						$data['XIRR'] += $amortization_schedule["XIRR"];
@@ -1002,7 +1012,7 @@ class Target extends REST_Controller {
 	/**
      * @api {post} /target/batch/{batch_id} 出借方 智能出借確認
      * @apiGroup Target
-	 * @apiParam {number} batch_id (required) 智能出借ID
+	 * @apiParam {number} batch_id 智能出借ID
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額

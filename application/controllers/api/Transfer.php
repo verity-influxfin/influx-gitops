@@ -49,8 +49,8 @@ class Transfer extends REST_Controller {
 	/**
      * @api {get} /transfer/list 出借方 取得債權標的列表
      * @apiGroup Transfer
-	 * @apiParam {String} orderby 排序值 credit_level(default)、instalment、interest_rate
-	 * @apiParam {String} sort 降序/升序 desc/asc(default)
+	 * @apiParam {String=credit_level,instalment,interest_rate} [orderby="credit_level"] 排序值
+	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Transfer ID
@@ -313,11 +313,14 @@ class Transfer extends REST_Controller {
 				);
 			}
 
+			$contract_data 	= $this->contract_lib->get_contract($transfer->contract_id);
+			$contract 		= isset($contract_data["content"])?$contract_data["content"]:"";
+
 			$data 	= array(
 				"id"			=> $transfer->id,
 				"amount"		=> $transfer->amount,
 				"instalment"	=> $transfer->instalment,
-				"debt_transfer_contract" => $transfer->contract,
+				"debt_transfer_contract" => $contract,
 				"expire_time"	=> $transfer->expire_time,
 			);
 				
@@ -350,7 +353,7 @@ class Transfer extends REST_Controller {
 	/**
      * @api {post} /transfer/apply 出借方 申請債權收購
      * @apiGroup Transfer
-	 * @apiParam {number} transfer_id (required) 投資ID
+	 * @apiParam {number} transfer_id 投資ID
 	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -484,14 +487,14 @@ class Transfer extends REST_Controller {
  	/**
      * @api {get} /transfer/batch 出借方 智能收購
      * @apiGroup Transfer
-	 * @apiParam {number} budget (required) 預算金額
-	 * @apiParam {number} delay (required) 逾期標的 0:正常標的 1:逾期標的 default:0
-     * @apiParam {number} user_id 指定使用者ID
-	 * @apiParam {number} interest_rate_s 正常標的-利率區間下限(%)
-     * @apiParam {number} interest_rate_e 正常標的-利率區間上限(%)
-     * @apiParam {number} instalment_s 正常標的-剩餘期數區間下限(%)
-     * @apiParam {number} instalment_e 正常標的-剩餘期數區間上限(%)
-     * @apiParam {String} credit_level 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8 default:all
+	 * @apiParam {number} budget 預算金額
+	 * @apiParam {number} [delay=0] 逾期標的 0:正常標的 1:逾期標的 default:0
+     * @apiParam {number} [user_id] 指定使用者ID
+	 * @apiParam {number} [interest_rate_s] 正常標的-利率區間下限(%)
+     * @apiParam {number} [interest_rate_e] 正常標的-利率區間上限(%)
+     * @apiParam {number} [instalment_s] 正常標的-剩餘期數區間下限(%)
+     * @apiParam {number} [instalment_e] 正常標的-剩餘期數區間上限(%)
+     * @apiParam {String} [credit_level=all] 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8
 	 * 
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} batch_id 智能收購ID
@@ -572,7 +575,7 @@ class Transfer extends REST_Controller {
 		if (isset($input['delay']) && in_array($input['delay'],array(0,1))) {
 			$delay 	= intval($input['delay']);
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$delay 	= $input['delay'] = 0;
 		}
 
 		//檢查認證 NOT_VERIFIED
@@ -636,9 +639,24 @@ class Transfer extends REST_Controller {
 				}
 			
 			}
-			$transfer_investment = $this->transfer_investment_model->get_by(array("user_id"=>$user_id,"status"=>array(0,1,10)));
-			if($transfer_investment){
-				if($transfer){
+			if($transfer){
+				$investment = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>3,"transfer_status"=>1));
+				if($investment){
+					$investment_ids = array();
+					foreach($investment as $key => $value){
+						$investment_ids[] = $value->id;
+					}
+					foreach($transfer as $key => $value){
+						if(in_array($value->investment_id,$investment_ids)){
+							unset($transfer[$key]);
+						}
+					}
+				}
+			}
+			
+			if($transfer){
+				$transfer_investment = $this->transfer_investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,10)));
+				if($transfer_investment){
 					$transfer_investment_target = array();
 					foreach($transfer_investment as $key => $value){
 						$transfer_investment_target[] = $value->transfer_id;
@@ -690,7 +708,8 @@ class Transfer extends REST_Controller {
 								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
 									$data['min_instalment'] = $value->instalment;
 								}
-								$data['debt_transfer_contract'][] = $value->contract;
+								$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
+								$data['debt_transfer_contract'][] = $contract_data?$contract_data["content"]:"";
 								$content[] = $value->id;
 								$target = $target_list[$value->target_id];
 								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
@@ -731,7 +750,7 @@ class Transfer extends REST_Controller {
 	/**
      * @api {post} /transfer/batch/{batch_id} 出借方 智能收購確認
      * @apiGroup Transfer
-	 * @apiParam {number} batch_id (required) 智能收購ID
+	 * @apiParam {number} batch_id 智能收購ID
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額

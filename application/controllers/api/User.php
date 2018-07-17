@@ -84,7 +84,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/registerphone 會員 發送驗證簡訊 (註冊)
      * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} phone 手機號碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -139,11 +139,11 @@ class User extends REST_Controller {
 	 /**
      * @api {post} /user/register 會員 註冊
      * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
-     * @apiParam {String} password (required) 設定密碼
-     * @apiParam {String} code (required) 簡訊驗證碼
-     * @apiParam {String} investor 1:投資端 0:借款端 default:0
-     * @apiParam {String} promote_code 邀請碼
+     * @apiParam {String} phone 手機號碼
+     * @apiParam {String} password 設定密碼
+     * @apiParam {String} code 簡訊驗證碼
+     * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
+     * @apiParam {String} [promote_code] 邀請碼
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} token request_token
@@ -231,9 +231,9 @@ class User extends REST_Controller {
 	 /**
      * @api {post} /user/login 會員 用戶登入
      * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
-     * @apiParam {String} password (required) 密碼
-	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
+     * @apiParam {String} phone 手機號碼
+     * @apiParam {String} password 密碼
+	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} token request_token
@@ -312,9 +312,9 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/sociallogin 會員 第三方登入
      * @apiGroup User
-     * @apiParam {String} type (required) 登入類型（"facebook","instagram","line"）
-     * @apiParam {String} access_token (required) access_token
-	 * @apiParam {String} investor 1:投資端 0:借款端 default:0
+     * @apiParam {String=facebook,instagram,line} type 登入類型
+     * @apiParam {String} access_token access_token
+	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} token request_token
@@ -431,7 +431,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/smsloginphone 會員 發送驗證簡訊 （簡訊登入/忘記密碼）
      * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
+     * @apiParam {String} phone 手機號碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -487,9 +487,9 @@ class User extends REST_Controller {
 	 /**
      * @api {post} /user/forgotpw 會員 忘記密碼
      * @apiGroup User
-     * @apiParam {String} phone (required) 手機號碼
-     * @apiParam {String} code (required) 簡訊驗證碼
-	 * @apiParam {String} new_password (required) 新密碼
+     * @apiParam {String} phone 手機號碼
+     * @apiParam {String} code 簡訊驗證碼
+	 * @apiParam {String} new_password 新密碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -553,7 +553,7 @@ class User extends REST_Controller {
 	 * @apiSuccess {String} sex 性別
 	 * @apiSuccess {String} phone 手機號碼
 	 * @apiSuccess {String} id_number 身分證字號
-	 * @apiSuccess {String} investor 1:投資端 0:借款端
+	 * @apiSuccess {number} investor 1:投資端 0:借款端
 	 * @apiSuccess {String} transaction_password 是否設置交易密碼
 	 * @apiSuccess {String} my_promote_code 推廣碼
 	 * @apiSuccess {String} expiry_time token時效
@@ -595,8 +595,8 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/bind 會員 綁定第三方帳號
      * @apiGroup User
-     * @apiParam {String} type (required) 登入類型（"facebook","instagram","line"）
-     * @apiParam {String} access_token (required) access_token
+     * @apiParam {String=facebook,instagram,line} type 登入類型
+     * @apiParam {String} access_token access_token
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -805,9 +805,9 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/editpw 會員 修改密碼
      * @apiGroup User
-     * @apiParam {String} password (required) 原密碼
-     * @apiParam {String} new_password (required) 新密碼
-     * @apiParam {String} code (required) 簡訊驗證碼
+     * @apiParam {String} password 原密碼
+     * @apiParam {String} new_password 新密碼
+     * @apiParam {String} code 簡訊驗證碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -880,8 +880,8 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/edittpw 會員 設置交易密碼
      * @apiGroup User
-     * @apiParam {String} new_password (required) 新密碼
-     * @apiParam {String} code (required) 簡訊驗證碼
+     * @apiParam {String} new_password 新密碼
+     * @apiParam {String} code 簡訊驗證碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -985,10 +985,10 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/contact 會員 投訴與建議
      * @apiGroup User
-	 * @apiParam {String} content (required) 內容
-     * @apiParam {file} image1 附圖1
-     * @apiParam {file} image2 附圖2
-     * @apiParam {file} image3 附圖3
+	 * @apiParam {String} content 內容
+     * @apiParam {file} [image1] 附圖1
+     * @apiParam {file} [image2] 附圖2
+     * @apiParam {file} [image3] 附圖3
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -1036,10 +1036,10 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/credittest 會員 測一測
      * @apiGroup User
-	 * @apiParam {String} school (required) 學校名稱
-	 * @apiParam {String} system 學制 0:大學 1:碩士 2:博士 default:0
-	 * @apiParam {String} department (required) 系所
-	 * @apiParam {String} grade (required) 年級
+	 * @apiParam {String} school 學校名稱
+	 * @apiParam {String=0,1,2} [system=0] 學制 0:大學 1:碩士 2:博士
+	 * @apiParam {String} department 系所
+	 * @apiParam {String} grade 年級
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} amount 可貸款額度

@@ -5,18 +5,9 @@ require(APPPATH . '/libraries/MY_Admin_Controller.php');
 
 class Contract extends MY_Admin_Controller
 {
-
-	public $menu = array("menu"=>"agreement");
-
     public function __construct()
     {
         parent::__construct();
-        $this->login_info = check_admin();
-        $this->load->model('platform/contract_model');
-        $this->load->library('form_validation');
-        if (empty($this->login_info)) {
-            redirect(admin_url('admin/login'), 'refresh');
-        }
     }
 
     public function index()

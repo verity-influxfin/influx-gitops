@@ -10,6 +10,7 @@ class Subloan_lib{
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/subloan_model');
+		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('credit_lib');
     }
@@ -265,6 +266,16 @@ class Subloan_lib{
 			}
 		}
 		return false;
+	}
+	
+	private function get_target_no(){
+		$code = date("ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$result = $this->CI->target_model->get_by('target_no',$code);
+		if ($result) {
+			return $this->get_target_no();
+		}else{
+			return $code;
+		}
 	}
 	
 }

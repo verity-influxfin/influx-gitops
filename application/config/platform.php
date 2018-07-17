@@ -1,4 +1,35 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+$config['admin_menu'] = array(
+	"AdminDashboard" 	=> array("name"=>"Dashboard","icon"=>"fa-dashboard"),
+	"Product" 			=> array(
+		"parent_name"	=> "產品管理",
+		"parent_icon"	=> "fa-briefcase",
+		"index"			=> "產品列表",
+	),
+	"Target" 			=> array(
+		"parent_name"	=> "標的管理",
+		"parent_icon"	=> "fa-gavel",
+		"index"			=> "標的列表",
+	),
+	"Contact" 			=> array("name"=>"投訴與建議","icon"=>"fa-star"),
+	"Certification" 	=> array(
+		"parent_name"	=> "認證管理",
+		"parent_icon"	=> "fa-question-circle",
+		"index"			=> "認證方式列表",
+		"user_certification_list"		=> "會員認證申請",
+		"user_bankaccount_list"			=> "會員金融帳號",
+	),
+	"User" 				=> array("name"=>"會員管理","icon"=>"fa-user"),
+	"Admin" 			=> array("name"=>"後台人員管理","icon"=>"fa-user"),
+	"Partner" 			=> array(
+		"parent_name"	=> "合作夥伴",
+		"parent_icon"	=> "fa-group",
+		"index"			=> "合作商列表",
+	),
+	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
+	"Contract" 			=> array("name"=>"合約書","icon"=>"fa-star"),
+);
+
 $config['instalment']= array(
 0=> "其他",
 3=> "3期",

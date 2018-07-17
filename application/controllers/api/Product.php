@@ -315,10 +315,10 @@ class Product extends REST_Controller {
 	/**
      * @api {post} /product/apply 借款方 申請產品
      * @apiGroup Product
-	 * @apiParam {number} product_id (required) 產品ID
-     * @apiParam {number} amount (required) 借款金額
-     * @apiParam {number} instalment (required) 申請期數
-	 * @apiParam {String} promote_code 邀請碼
+	 * @apiParam {number} product_id 產品ID
+     * @apiParam {number} amount 借款金額
+     * @apiParam {number} instalment 申請期數
+	 * @apiParam {String} [promote_code] 邀請碼
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
@@ -412,8 +412,8 @@ class Product extends REST_Controller {
 	/**
      * @api {post} /product/signing 借款方 申請簽約
      * @apiGroup Product
-	 * @apiParam {number} target_id (required) Targets ID
-	 * @apiParam {file} person_image (required) 本人照
+	 * @apiParam {number} target_id Targets ID
+	 * @apiParam {file} person_image 本人照
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -581,7 +581,6 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
@@ -675,7 +674,6 @@ class Product extends REST_Controller {
 					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
 					"instalment" 		=> $instalment_list[$value->instalment],
 					"repayment" 		=> $repayment_type[$value->repayment],
-					"contract" 			=> $value->contract,
 					"remark" 			=> $value->remark, 
 					"delay" 			=> $value->delay,
 					"status" 			=> $value->status,
@@ -756,6 +754,7 @@ class Product extends REST_Controller {
      * 			"status":"0",
      * 			"sub_status":"0",
      * 			"created_at":"1520421572",
+     * 			"contract":"我是合約",
      * 			"product":{
      * 				"id":"2",
      * 				"name":"輕鬆學貸",
@@ -898,6 +897,13 @@ class Product extends REST_Controller {
 				$credit = $credit_info;
 			}
 			
+			$contract = "";
+			if($target->contract_id){
+				$this->load->library('Contract_lib');
+				$contract_data = $this->contract_lib->get_contract($target->contract_id);
+				$contract = $contract_data["content"];
+			}
+			
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
 				$data[$field] = isset($target->$field)?$target->$field:"";
@@ -910,6 +916,7 @@ class Product extends REST_Controller {
 				}
 			}
 
+			$data["contract"] 				= $contract;
 			$data["credit"] 				= $credit;
 			$data["product"] 				= $product;
 			$data["certification"] 			= $certification;
@@ -923,7 +930,7 @@ class Product extends REST_Controller {
 	/**
      * @api {get} /product/cancel/{ID} 借款方 取消申請
      * @apiGroup Product
-	 * @apiParam {number} id (required) Targets ID
+	 * @apiParam {number} id Targets ID
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS

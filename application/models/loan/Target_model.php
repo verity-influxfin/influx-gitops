@@ -46,7 +46,6 @@ class Target_model extends MY_Model
 		"interest_rate",
 		"instalment",
 		"repayment",
-		"contract", 
 		"remark",
 		"delay",
 		"delay_days",
