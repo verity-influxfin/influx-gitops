@@ -99,5 +99,52 @@ class User extends MY_Admin_Controller {
 		}
 	}
 	
+	public function display(){
+		$page_data 	= array("type"=>"edit");
+		$get 		= $this->input->get(NULL, TRUE);
+		$id = isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$certification 		= $this->certification_model->get_all();
+			$certification_list = array();
+			if($certification){
+				foreach($certification as $key => $value){
+					$certification_list[$value->alias] = $value->name;
+				}
+			}
+			
+			$meta_data 			= array();
+			$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$id));
+			if($meta){
+				foreach($meta as $key => $value){
+					$meta_data[$value->meta_key] = $value->meta_value;
+				}
+			}
+			
+			$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$id));
+			$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
+			$info = $this->user_model->get($id);
+			if($info){
+				$page_data['data'] 					= $info;
+				$page_data['meta'] 					= $meta_data;
+				$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
+				$page_data['meta_images'] 			= $this->config->item('user_meta_images');
+				$page_data['certification_list'] 	= $certification_list;
+				$page_data['credit_list'] 			= $credit_list;
+				$page_data['product_list'] 			= $this->product_model->get_name_list();
+				$page_data['bank_account'] 			= $bank_account;
+				$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
+				$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
+				$this->load->view('admin/_header');
+				//$this->load->view('admin/_title',$this->menu);
+				$this->load->view('admin/users_edit',$page_data);
+				$this->load->view('admin/_footer');
+			}else{
+				alert("ERROR , id isn't exist",admin_url('user/index'));
+			}
+		}else{
+			alert("ERROR , id isn't exist",admin_url('user/index'));
+		}
+	}
+	
 }
 ?>

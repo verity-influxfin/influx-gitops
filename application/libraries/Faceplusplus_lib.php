@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Faceplusplus_lib{
 
-	public $api_url = "https://api-cn.faceplusplus.com/facepp/v3/";
+	public $api_url = "https://api-us.faceplusplus.com/facepp/v3/";
 
 	public function __construct()
     {

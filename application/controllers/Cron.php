@@ -7,17 +7,15 @@ class Cron extends CI_Controller {
     function __construct()
     {
 		parent::__construct();
+		if(!app_access()){
+			show_404();
+		}
         $this->load->model('log/log_script_model');
-		$this->load->library('Transaction_lib'); 
-		$this->load->library('Target_lib'); 
-		$this->load->library('Transfer_lib'); 
-		$this->load->library('Payment_lib'); 
-		$this->load->library('Charge_lib'); 
-		$this->load->library('Prepayment_lib'); 
     }
 	
 	public function cathay()
 	{
+		$this->load->library('Payment_lib'); 
 		$script  	= 1;
 		$start_time = time();
 		$ids 		= $this->payment_lib->script_get_cathay_info();
@@ -35,6 +33,7 @@ class Cron extends CI_Controller {
 
 	public function handle_payment()
 	{
+		$this->load->library('Payment_lib'); 
 		$script  	= 2;
 		$start_time = time();
 		$count 		= $this->payment_lib->script_handle_payment();
@@ -52,6 +51,7 @@ class Cron extends CI_Controller {
 	
 	public function check_bidding()
 	{
+		$this->load->library('Target_lib'); 
 		$script  	= 3;
 		$start_time = time();
 		$count 		= $this->target_lib->script_check_bidding();
@@ -69,6 +69,7 @@ class Cron extends CI_Controller {
 	
 	public function approve_target()
 	{
+		$this->load->library('Target_lib'); 
 		$script  	= 4;
 		$start_time = time();
 		$count 		= $this->target_lib->script_approve_target();
@@ -86,6 +87,7 @@ class Cron extends CI_Controller {
 	
 	public function check_transfer_bidding()
 	{
+		$this->load->library('Transfer_lib'); 
 		$script  	= 5;
 		$start_time = time();
 		$count 		= $this->transfer_lib->script_check_bidding();
@@ -103,6 +105,7 @@ class Cron extends CI_Controller {
 	
 	public function charge_targets()
 	{
+		$this->load->library('Charge_lib'); 
 		$script  	= 6;
 		$start_time = time();
 		$count 		= $this->charge_lib->script_charge_targets();
@@ -120,6 +123,7 @@ class Cron extends CI_Controller {
 	
 	public function prepayment_targets()
 	{
+		$this->load->library('Prepayment_lib'); 
 		$script  	= 7;
 		$start_time = time();
 		$count 		= $this->prepayment_lib->script_prepayment_targets();

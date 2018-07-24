@@ -10,8 +10,6 @@ class Repayment extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('user/user_model');
-		$this->load->model('product/product_model');
-		$this->load->model('platform/certification_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
@@ -24,17 +22,17 @@ class Repayment extends REST_Controller {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			//只限借款人
 			if($tokenData->investor != 0){
-				$this->response(array('result' => 'ERROR',"error" => IS_INVERTOR ));
+				$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 			}
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -134,7 +132,7 @@ class Repayment extends REST_Controller {
 			"user"					=> $user,
 		);
 		
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
 	/**
@@ -253,6 +251,7 @@ class Repayment extends REST_Controller {
 					}
 				}
 				
+				$this->load->model('product/product_model');
 				$product_info 	= $this->product_model->get($value->product_id);
 				$product = array(
 					"id"				=> $product_info->id,
@@ -287,7 +286,7 @@ class Repayment extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 	
 	/**
@@ -470,9 +469,10 @@ class Repayment extends REST_Controller {
 		if(!empty($target) && in_array($target->status,array(5,10))){
 			
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
+			$this->load->model('product/product_model');
 			$product_info 	= $this->product_model->get($target->product_id);
 			$product 		= array(
 				"id"			=> $product_info->id,
@@ -553,9 +553,9 @@ class Repayment extends REST_Controller {
 			$data["fees"] 					= $fees;
 			$data["amortization_schedule"] 	= $this->target_lib->get_amortization_table($target);
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -662,11 +662,11 @@ class Repayment extends REST_Controller {
 		if(!empty($target)){
 
 		if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			if($target->status != 5 ){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
 			$virtual_account	= array(
@@ -690,9 +690,9 @@ class Repayment extends REST_Controller {
 			$data["virtual_account"] 	= $virtual_account;
 
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -745,15 +745,15 @@ class Repayment extends REST_Controller {
 		if(!empty($target)){
 			
 			if($target->status != 5 ){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			if($target->sub_status != 0){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
 			}
 			
 			$prepayment 	= $this->prepayment_lib->get_prepayment_info($target);
@@ -762,7 +762,7 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'SUCCESS'));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 
 		/**
@@ -814,7 +814,7 @@ class Repayment extends REST_Controller {
 			$list = array();
 			
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
 			if(in_array($target->status,array(5,10))){
@@ -838,9 +838,9 @@ class Repayment extends REST_Controller {
 
 			$data["list"] 	= $list;
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 }

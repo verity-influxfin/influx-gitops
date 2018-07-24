@@ -11,7 +11,6 @@ class Product extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
-		$this->load->model('platform/certification_model');
 		$this->load->model('loan/target_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
@@ -25,17 +24,17 @@ class Product extends REST_Controller {
 				$this->user_info = array();
 			}else{
 				if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 				}
 			
 				$this->user_info = $this->user_model->get($tokenData->id);
 				if($tokenData->auth_otp != $this->user_info->auth_otp){
-					$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 				}
 				
 				//只限借款人
 				if($tokenData->investor != 0){
-					$this->response(array('result' => 'ERROR',"error" => IS_INVERTOR ));
+					$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 				}
 				
 				$this->user_info->investor 		= $tokenData->investor;
@@ -191,7 +190,7 @@ class Product extends REST_Controller {
 			}
 		}
 		$data["list"] = $list;
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
 	/**
@@ -306,10 +305,10 @@ class Product extends REST_Controller {
 					"repayment"				=> $repayment,
 				);
 				
-				$this->response(array('result' => 'SUCCESS',"data" => $data ));
+				$this->response(array('result' => 'SUCCESS','data' => $data ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
     }
 	
 	/**
@@ -372,7 +371,7 @@ class Product extends REST_Controller {
 		$fields 	= ['product_id','amount','instalment'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 				$param[$field] = intval($input[$field]);
 			}
@@ -382,16 +381,16 @@ class Product extends REST_Controller {
 		if($product && $product->status == 1 ){
 			$product->instalment 		= json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){
-				$this->response(array('result' => 'ERROR',"error" => PRODUCT_INSTALMENT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
 			if($input['amount'] < $product->loan_range_s || $input['amount'] > $product->loan_range_e){
-				$this->response(array('result' => 'ERROR',"error" => PRODUCT_AMOUNT_RANGE ));
+				$this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
 			}
 
 			$target = $this->target_model->get_by(array("status <="=>1,"user_id"=>$user_id,"product_id"=>$product->id));
 			if($target){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
 			}
 			$param["target_no"] = $this->get_target_no();
 			$insert = $this->target_model->insert($param);
@@ -403,10 +402,10 @@ class Product extends REST_Controller {
 				if($insert){
 					$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
 				}
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
     }
 
 	/**
@@ -497,7 +496,7 @@ class Product extends REST_Controller {
 		$fields 	= ['target_id'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 				$param[$field] = intval($input[$field]);
 			}
@@ -511,10 +510,10 @@ class Product extends REST_Controller {
 				if($image){
 					$param[$field] = $image;
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 		
@@ -522,7 +521,7 @@ class Product extends REST_Controller {
 		if(!empty($targets)){
 
 			if($targets->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			$product = $this->product_model->get($targets->product_id);
@@ -533,12 +532,12 @@ class Product extends REST_Controller {
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
 					if(in_array($value->id,$product->certifications) && $value->user_status!=1){
-						$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}
 				
 				if(get_age($this->user_info->birthday) < 20){
-					$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+					$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 				}
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
@@ -548,7 +547,7 @@ class Product extends REST_Controller {
 						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
 					}
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 				}
 				
 				if($targets->status == 1){
@@ -556,12 +555,12 @@ class Product extends REST_Controller {
 					$rs = $this->target_model->update($targets->id,$param);
 					$this->response(array('result' => 'SUCCESS'));
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 				}
 			}
-			$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -682,7 +681,7 @@ class Product extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 	
 	/**
@@ -859,7 +858,7 @@ class Product extends REST_Controller {
 		$data				= array();
 		if(!empty($target)){
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
 			$product_info = $this->product_model->get($target->product_id);
@@ -922,9 +921,9 @@ class Product extends REST_Controller {
 			$data["certification"] 			= $certification;
 			$data["amortization_schedule"] 	= $amortization_schedule;
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -973,17 +972,17 @@ class Product extends REST_Controller {
 		if(!empty($targets)){
 
 			if($targets->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
 			if(in_array($targets->status,array(0,1,2))){
 				$rs = $this->target_model->update($targets->id,array("status"=>8));
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	private function get_target_no(){

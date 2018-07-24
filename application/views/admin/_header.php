@@ -22,6 +22,13 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
 	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=50g7aczgyla2r7aenym5m6qorvpgpbo0mjec0fffvlt9frf6"></script>
+    <script type="text/javascript">
+		$(function() {
+			$('.fancyframe').fancybox({
+				'type':'iframe',
+			});
+		});
+    </script>
 </head>
 <body>
     <div id="wrapper">

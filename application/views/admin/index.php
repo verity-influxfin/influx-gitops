@@ -20,7 +20,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="#">
+					<a href="<?=admin_url('Target/index?status=2') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -42,7 +42,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="#">
+					<a href="<?=admin_url('Target/index?status=3') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -59,12 +59,12 @@
 								<i class="fa fa-tasks fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge"><?=$target_count["repay"];?></div>
-								<div>還款中</div>
+								<div class="huge"><?=$target_count["success"];?></div>
+								<div>待放款</div>
 							</div>
 						</div>
 					</div>
-					<a href="#">
+					<a href="<?=admin_url('Target/index?status=4') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -82,11 +82,11 @@
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge"><?=$target_count["delay"];?></div>
-								<div>已逾期</div>
+								<div>還款已逾期</div>
 							</div>
 						</div>
 					</div>
-					<a href="#">
+					<a href="<?=admin_url('Target/index?delay=1&status=5') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

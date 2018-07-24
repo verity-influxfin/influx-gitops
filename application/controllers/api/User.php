@@ -11,19 +11,18 @@ class User extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('log/log_userlogin_model');
-		$this->load->library('sms_lib'); 
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -113,23 +112,24 @@ class User extends REST_Controller {
     {
 
         $input = $this->input->post(NULL, TRUE);
-		$phone = isset($input["phone"])?trim($input["phone"]):"";
+		$phone = isset($input['phone'])?trim($input['phone']):"";
 		if (empty($phone)) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
 		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
+		$this->load->library('sms_lib'); 
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
-			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
 		
 		$result = $this->user_model->get_by('phone', $phone);
         if ($result) {
-			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
         } else {
 			$this->sms_lib->send_register($phone);
 			$this->response(array('result' => 'SUCCESS'));
@@ -140,7 +140,7 @@ class User extends REST_Controller {
      * @api {post} /user/register 會員 註冊
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
-     * @apiParam {String} password 設定密碼
+     * @apiParam {String{6..}} password 設定密碼
      * @apiParam {String} code 簡訊驗證碼
      * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      * @apiParam {String} [promote_code] 邀請碼
@@ -174,6 +174,13 @@ class User extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
+	 *
+	 * @apiError 312 密碼長度不足
+     * @apiErrorExample {json} 312
+     *     {
+     *       "result": "ERROR",
+     *       "error": "312"
+     *     }
      *
      *
      */
@@ -185,12 +192,16 @@ class User extends REST_Controller {
         $fields 	= ['phone','password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
 				$data[$field] = $input[$field];
 			}
         }
 
+		if(strlen($input['password']) < PASSWORD_LENGTH){
+			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
+		}
+		
 		if(isset($input['investor']) && $input['investor']){
 			$data['status'] 			= 0;
 			$data['investor_status'] 	= 1;;
@@ -199,31 +210,34 @@ class User extends REST_Controller {
 			$data['status'] 			= 1;
 		}
 		
-		$data['promote_code']		= isset($input["promote_code"])?$input["promote_code"]:"";
+		$data['promote_code']		= isset($input['promote_code'])?$input['promote_code']:"";
 		$data['my_promote_code'] 	= $this->get_promote_code();
 		$data['auth_otp'] 			= get_rand_token();
-		$result = $this->user_model->get_by('phone',$data["phone"]);
+		$result = $this->user_model->get_by('phone',$data['phone']);
 		if ($result) {
-			$this->response(array('result' => 'ERROR',"error" => USER_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
         } else {
-			$rs = $this->sms_lib->verify_code($data["phone"],$data["code"]);
+			$this->load->library('sms_lib'); 
+			$rs = $this->sms_lib->verify_code($data['phone'],$data["code"]);
 			if($rs){
-				unset($data["code"]);
+				unset($data['code']);
 				$insert = $this->user_model->insert($data);
 				if($insert){
 					$token 				= new stdClass();
 					$token->id			= $insert;
-					$token->phone		= $data["phone"];
-					$token->auth_otp	= $data["auth_otp"];
+					$token->phone		= $data['phone'];
+					$token->auth_otp	= $data['auth_otp'];
 					$token->expiry_time	= time() + REQUEST_TOKEN_EXPIRY;
-					$token->investor 	= $data["investor_status"];
+					$token->investor 	= $data['investor_status'];
 					$request_token 		= AUTHORIZATION::generateUserToken($token);
-					$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token, "expiry_time"=>$token->expiry_time ,"first_time"=>1)));
+					$this->load->library('notification_lib'); 
+					$this->notification_lib->first_login($insert,$input['investor']);
+					$this->response(array('result' => 'SUCCESS', 'data' => array( "token" => $request_token, "expiry_time"=>$token->expiry_time ,"first_time"=>1)));
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+					$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 				}
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 			}
         }
     }
@@ -232,7 +246,7 @@ class User extends REST_Controller {
      * @api {post} /user/login 會員 用戶登入
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
-     * @apiParam {String} password 密碼
+     * @apiParam {String{6..}} password 密碼
 	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
      * @apiSuccess {json} result SUCCESS
@@ -271,7 +285,7 @@ class User extends REST_Controller {
         $fields 	= ['phone','password'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
@@ -298,14 +312,18 @@ class User extends REST_Controller {
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
-				$this->response(array('result' => 'SUCCESS', "data" => array( "token" => $request_token,"expiry_time"=>$token->expiry_time,"first_time"=>$first_time) ));
+				if($first_time){
+					$this->load->library('notification_lib'); 
+					$this->notification_lib->first_login($user_info->id,$investor);
+				}
+				$this->response(array('result' => 'SUCCESS', 'data' => array( "token" => $request_token,"expiry_time"=>$token->expiry_time,"first_time"=>$first_time) ));
 			}else{
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"user_id"=>$user_info->id,"status"=>0));
-				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 			}
 		}else{
 			$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor,"status"=>0));
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
 	
@@ -362,12 +380,12 @@ class User extends REST_Controller {
 				$fields = ['access_token'];
 				break;  
 			default:
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
 		
@@ -416,15 +434,19 @@ class User extends REST_Controller {
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
 				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>1));
-				$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$request_token,"expiry_time"=>$token->expiry_time,"first_time"=>$first_time) ));
+				if($first_time){
+					$this->load->library('notification_lib'); 
+					$this->notification_lib->first_login($user_info->id,$investor);
+				}
+				$this->response(array('result' => 'SUCCESS','data' => array("token"=>$request_token,"expiry_time"=>$token->expiry_time,"first_time"=>$first_time) ));
 
 			}else{
 				$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"user_id"=>$user_id,"status"=>0));
-				$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
 		}else{
 			$this->log_userlogin_model->insert(array("account"=>$account,"investor"=>$investor,"status"=>0));
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
 	
@@ -461,18 +483,18 @@ class User extends REST_Controller {
     {
 
         $input = $this->input->post(NULL, TRUE);
-		$phone = isset($input["phone"])?trim($input["phone"]):"";
+		$phone = isset($input['phone'])?trim($input['phone']):'';
 		if (empty($phone)) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
 		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-
+		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
-			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
 		
 		$result = $this->user_model->get_by('phone', $phone);
@@ -480,7 +502,7 @@ class User extends REST_Controller {
 			$this->sms_lib->send_verify_code($result->id,$phone);
 			$this->response(array('result' => 'SUCCESS'));
         } else {
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
         }
     }
 	
@@ -489,7 +511,7 @@ class User extends REST_Controller {
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
      * @apiParam {String} code 簡訊驗證碼
-	 * @apiParam {String} new_password 新密碼
+	 * @apiParam {String{6..}} new_password 新密碼
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -511,6 +533,13 @@ class User extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
+	 *
+	 * @apiError 312 密碼長度不足
+     * @apiErrorExample {json} 312
+     *     {
+     *       "result": "ERROR",
+     *       "error": "312"
+     *     }
      *
      */
 	public function forgotpw_post(){
@@ -519,25 +548,30 @@ class User extends REST_Controller {
         $fields 	= ['phone','code','new_password'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-
+		
+		if(strlen($input['new_password']) < PASSWORD_LENGTH){
+			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
+		}
+		
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
+			$this->load->library('sms_lib'); 
 			$rs = $this->sms_lib->verify_code($user_info->phone,$input["code"]);
 			if($rs){
 				$res = $this->user_model->update($user_info->id,array("password"=>$input['new_password']));
 				if($res){
 					$this->response(array('result' => 'SUCCESS'));
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR));
+					$this->response(array('result' => 'ERROR','error' => INSERT_ERROR));
 				}
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 			}
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
 	
@@ -586,10 +620,10 @@ class User extends REST_Controller {
 		foreach($fields as $key => $field){
 			$data[$field] = $this->user_info->$field?$this->user_info->$field:"";
 		}
-		$data["transaction_password"] = empty($this->user_info->transaction_password)?false:true;
-		$data["investor"] 		= $this->user_info->investor;
-		$data["expiry_time"] 	= $this->user_info->expiry_time;
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		$data['transaction_password'] = empty($this->user_info->transaction_password)?false:true;
+		$data['investor'] 		= $this->user_info->investor;
+		$data['expiry_time'] 	= $this->user_info->expiry_time;
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
 	/**
@@ -658,12 +692,12 @@ class User extends REST_Controller {
 				$fields = ['access_token'];
 				break;  
 			default:
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
 		
@@ -672,7 +706,7 @@ class User extends REST_Controller {
 			
 			$meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
 			if($meta){
-				$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 			}
 			
 			$debug_token = $this->facebook_lib->debug_token($input["access_token"]);
@@ -681,19 +715,19 @@ class User extends REST_Controller {
 				if($info){
 					$user_id 	= $this->facebook_lib->login($info);
 					if($user_id){
-						$this->response(array('result' => 'ERROR',"error" => FBID_EXIST ));
+						$this->response(array('result' => 'ERROR','error' => FBID_EXIST ));
 					}else{
 						$rs 		= $this->facebook_lib->bind_user($this->user_info->id,$info);
 						if($rs){
 							$this->set_nickname($info);
 							$this->response(array('result' => 'SUCCESS'));
 						}else{
-							$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+							$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 						}
 					}
 				}
 			}
-			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
 		}
 		
 		if($type=="instagram"){
@@ -701,25 +735,25 @@ class User extends REST_Controller {
 			
 			$meta  = $this->instagram_lib->get_user_meta($this->user_info->id);
 			if($meta){
-				$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 			}
 			
 			$info 			= $this->instagram_lib->get_info($input["access_token"]);
 			if($info){
 				$user_id 	= $this->instagram_lib->login($info);
 				if($user_id){
-					$this->response(array('result' => 'ERROR',"error" => IGID_EXIST ));
+					$this->response(array('result' => 'ERROR','error' => IGID_EXIST ));
 				}else{
 					$rs 	= $this->instagram_lib->bind_user($this->user_info->id,$info);
 					if($rs){
 						$this->set_nickname($info);
 						$this->response(array('result' => 'SUCCESS'));
 					}else{
-						$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+						$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 					}
 				}
 			}
-			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
 		}
 		
 		if($type=="line"){
@@ -727,7 +761,7 @@ class User extends REST_Controller {
 			
 			$meta  = $this->line_lib->get_user_meta($this->user_info->id);
 			if($meta){
-				$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 			}
 			
 			$debug_token = $this->line_lib->debug_token($input["access_token"]);
@@ -736,19 +770,19 @@ class User extends REST_Controller {
 				if($info){
 					$user_id 	= $this->line_lib->login($info);
 					if($user_id){
-						$this->response(array('result' => 'ERROR',"error" => LINEID_EXIST ));
+						$this->response(array('result' => 'ERROR','error' => LINEID_EXIST ));
 					}else{
 						$rs 	= $this->line_lib->bind_user($this->user_info->id,$info);
 						if($rs){
 							$this->set_nickname($info);
 							$this->response(array('result' => 'SUCCESS'));
 						}else{
-							$this->response(array('result' => 'ERROR',"error" => TYPE_WAS_BINDED ));
+							$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 						}
 					}
 				}
 			}
-			$this->response(array('result' => 'ERROR',"error" => ACCESS_TOKEN_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
 		}
     }
 	
@@ -790,12 +824,13 @@ class User extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$phone 		= $this->user_info->phone;
 		if (empty($phone)) {
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
-
+		
+		$this->load->library('sms_lib'); 
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
-			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_BUSY ));
+			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
 		
 		$this->sms_lib->send_verify_code($user_id,$phone);
@@ -806,7 +841,7 @@ class User extends REST_Controller {
      * @api {post} /user/editpw 會員 修改密碼
      * @apiGroup User
      * @apiParam {String} password 原密碼
-     * @apiParam {String} new_password 新密碼
+     * @apiParam {String{6..}} new_password 新密碼
      * @apiParam {String} code 簡訊驗證碼
      *
      * @apiSuccess {json} result SUCCESS
@@ -837,6 +872,13 @@ class User extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "304"
+     *     }
+	 *
+	 * @apiError 312 密碼長度不足
+     * @apiErrorExample {json} 312
+     *     {
+     *       "result": "ERROR",
+     *       "error": "312"
      *     }
 	 *
      */
@@ -848,39 +890,44 @@ class User extends REST_Controller {
         $fields 	= ['password','new_password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
 				$data[$field] = $input[$field];
 			}
         }
 		
+		if(strlen($input["new_password"]) < PASSWORD_LENGTH){
+			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
+		}
+		
 		$user_info = $this->user_info;
 		if ($user_info) {
 			if(sha1($data['password'])!=$user_info->password){
-				$this->response(array('result' => 'ERROR',"error" => PASSWORD_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 			}
 			
+			$this->load->library('sms_lib'); 
 			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
 			if(!$rs){
-				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 			}
 			
 			$res = $this->user_model->update($user_info->id,array("password"=>$data['new_password']));
 			if($res){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 
         } else {
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
         }
     }
 	
 	/**
      * @api {post} /user/edittpw 會員 設置交易密碼
      * @apiGroup User
-     * @apiParam {String} new_password 新密碼
+     * @apiParam {String{6..}} new_password 新交易密碼
      * @apiParam {String} code 簡訊驗證碼
      *
      * @apiSuccess {json} result SUCCESS
@@ -906,11 +953,11 @@ class User extends REST_Controller {
      *       "error": "303"
      *     }
 	 *
-	 * @apiError 304 密碼錯誤
-     * @apiErrorExample {json} 304
+	 * @apiError 311 交易密碼長度不足
+     * @apiErrorExample {json} 311
      *     {
      *       "result": "ERROR",
-     *       "error": "304"
+     *       "error": "311"
      *     }
 	 *
      */
@@ -919,36 +966,35 @@ class User extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
 		$user_info 	= $this->user_info;
-		if(empty($user_info->transaction_password)){
-			$fields 	= ['new_password','code'];
-		}else{
-			$fields 	= ['new_password','code'];
-		}
-       
+		$investor 	= $this->user_info->investor;
+		
+		$fields 	= ['new_password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
 				$data[$field] = $input[$field];
 			}
         }
 		
-		if ($user_info) {
-			
-			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
-			if(!$rs){
-				$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
-			}
-			
-			$res = $this->user_model->update($user_info->id,array("transaction_password"=>$data['new_password']));
-			if($res){
-				$this->response(array('result' => 'SUCCESS'));
-			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
-			}
-        } else {
-			$this->response(array('result' => 'ERROR',"error" => USER_NOT_EXIST ));
-        }
+		if(strlen($input['new_password']) < TRANSACTION_PASSWORD_LENGTH){
+			$this->response(array('result' => 'ERROR','error' => TRANSACTIONPW_LEN_ERROR ));
+		}
+
+		$this->load->library('sms_lib'); 
+		$rs = $this->sms_lib->verify_code($user_info->phone,$data['code']);
+		if(!$rs){
+			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
+		}
+		
+		$res = $this->user_model->update($user_info->id,array('transaction_password'=>$data['new_password']));
+		if($res){
+			$this->load->library('notification_lib'); 
+			$this->notification_lib->transaction_password($user_info->id,$investor);
+			$this->response(array('result' => 'SUCCESS'));
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+		}
     }
 	
 	/**
@@ -979,7 +1025,7 @@ class User extends REST_Controller {
 		$token->auth_otp	= $this->user_info->auth_otp;
 		$token->expiry_time	= time()+REQUEST_RETOKEN_EXPIRY;
 		$request_token 		= AUTHORIZATION::generateUserToken($token);
-		$this->response(array('result' => 'SUCCESS',"data" => array("token"=>$request_token,"expiry_time"=>$token->expiry_time) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("token"=>$request_token,"expiry_time"=>$token->expiry_time) ));
     }
 	
 	/**
@@ -1010,7 +1056,7 @@ class User extends REST_Controller {
 		$investor 	= $this->user_info->investor;
 		$param		= array("user_id" => $user_id,"investor"=>$investor);
 		if (empty($input['content'])) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}else{
 			$param['content'] = $input['content'];
 		}
@@ -1029,7 +1075,7 @@ class User extends REST_Controller {
 		if($insert){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 		}
     }
 	
@@ -1057,16 +1103,22 @@ class User extends REST_Controller {
 	public function credittest_post()
     {
         $input 	= $this->input->post(NULL, TRUE);
-		$data 	= array("amount"=>50000); 
+		$data 	= array("amount"=>0); 
 		//必填欄位
 		$fields 	= ['school','department','grade'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 		
 		$input['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+		$this->load->library('credit_lib'); 
+		$point  = $this->credit_lib->get_school_point($input['school'],$input['system'],$input['department']);
+		if($point>0){
+			$point = $point + 300;
+			$data["amount"] = $this->credit_lib->get_credit_amount($point);
+		}
 		
 		$this->response(array('result' => 'SUCCESS','data'=> $data));
     }

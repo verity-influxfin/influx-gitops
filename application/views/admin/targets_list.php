@@ -5,6 +5,13 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+			<script type="text/javascript">
+				function showChang(){
+					var delay 				= $('#delay :selected').val();
+					var status 				= $('#status :selected').val();
+					top.location = './index?delay='+delay+'&status='+status;
+				}
+			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -26,8 +33,22 @@
 											<th>年化利率</th>
                                             <th>期數</th>
                                             <th>還款方式</th>
-                                            <th>逾期狀況</th>
-                                            <th>狀態</th>
+                                            <th>逾期狀況
+												<select id="delay" onchange="showChang();">
+													<option value="" >請選擇</option>
+													<? foreach($delay_list as $key => $value){ ?>
+														<option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=""&&intval($_GET['delay'])==intval($key)?"selected":""?>><?=$value?></option>
+													<? } ?>
+												</select>
+											</th>
+                                            <th>狀態
+												<select id="status" onchange="showChang();">
+													<option value="" >請選擇</option>
+													<? foreach($status_list as $key => $value){ ?>
+														<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+													<? } ?>
+												</select>
+											</th>
                                             <th>申請日期</th>
                                             <th>邀請碼</th>
                                             <th>查看</th>
@@ -50,8 +71,14 @@
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:"" ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:"" ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
-                                            <td><?=isset($value->delay)&&$value->delay?"逾期":"無" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
+                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
+                                            <td>
+											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<? 	if($value->status==4 && !$value->bank_account_verify){
+													echo '<p style="color:red;">金融帳號未驗證</p>';
+												}
+											?>
+											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">查看</a></td> 

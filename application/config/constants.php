@@ -98,6 +98,7 @@ defined('UNDER_AGE')  					OR define('UNDER_AGE'					, 208); //未滿20歲
 defined('NO_TRANSACTION_PASSWORD')  	OR define('NO_TRANSACTION_PASSWORD'		, 209); //未設置交易密碼
 defined('TRANSACTION_PASSWORD_ERROR')  	OR define('TRANSACTION_PASSWORD_ERROR'	, 210); //交易密碼錯誤
 defined('NOT_ENOUGH_FUNDS')  			OR define('NOT_ENOUGH_FUNDS'			, 211); //可用餘額不足
+defined('NOT_ENOUGH_FUNDS')  			OR define('NOT_ENOUGH_FUNDS'			, 211); //可用餘額不足
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
@@ -110,6 +111,9 @@ defined('VERIFY_CODE_BUSY')  			OR define('VERIFY_CODE_BUSY'			, 307); //SMS太�
 defined('FBID_EXIST')  					OR define('FBID_EXIST'					, 308);
 defined('IGID_EXIST')  					OR define('IGID_EXIST'					, 309);
 defined('LINEID_EXIST')  				OR define('LINEID_EXIST'				, 310);
+defined('TRANSACTIONPW_LEN_ERROR')  	OR define('TRANSACTIONPW_LEN_ERROR'		, 311);
+defined('PASSWORD_LENGTH_ERROR')  		OR define('PASSWORD_LENGTH_ERROR'		, 312);
+
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
 defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
@@ -175,6 +179,8 @@ defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續�
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'			, 7); //寬限期
+defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
+defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'	, 6); //登入密碼長度
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('LENDING_URL') 				OR define('LENDING_URL'				, 'https://lend.influxfin.com');
 defined('BORROW_URL') 				OR define('BORROW_URL'				, 'https://borrow.influxfin.com');
@@ -211,8 +217,8 @@ defined('LINE_CHANNEL_ID')     	 	OR define('LINE_CHANNEL_ID'			, '1508139296');
 defined('LINE_CHANNEL_SECRET')  	OR define('LINE_CHANNEL_SECRET'		, '7f57ae86e8ff067d9e11248b2a75973e');
 
 //曠視
-defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');
-defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4');
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'WW6FytNauCGA4U4UZuVbT4bqYq2tNtJo');
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PPlwd8Ue3EdErHHdBTNFSZ2-Yh');
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
@@ -235,8 +241,8 @@ defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME'			, 1800);
 defined('SMS_LIMIT_TIME')      		OR define('SMS_LIMIT_TIME'			, 180);
 
 //EVER8D
-defined('EVER8D_UID')      			OR define('EVER8D_UID'				, '0977249516');
-defined('EVER8D_PWD')     			OR define('EVER8D_PWD'				, 'n7xg');
+defined('EVER8D_UID')      			OR define('EVER8D_UID'				, '0908903885');
+defined('EVER8D_PWD')     			OR define('EVER8D_PWD'				, 'ATx#25B6');
 
 //S3
 defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV_AWS_ACCESS_TOKEN'));

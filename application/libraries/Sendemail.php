@@ -11,6 +11,7 @@ class Sendemail
         $this->CI = &get_instance();
 		$this->CI->load->model('user/email_verify_model');
 		$this->CI->load->library('email');
+		$this->CI->load->library('parser');
         $this->config = array(
 			'protocol'		=> 'smtp',
 			'smtp_host'		=> 'ssl://smtp.gmail.com',
@@ -30,8 +31,8 @@ class Sendemail
 			$type	 = 'school';
 			$code	 = md5($email.time());
 			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
-			$content = "手機ATM，學生 Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
-			$subject = "手機ATM，學生 Email會員認證";
+			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link),TRUE);
+			$subject = "手機ATM - 學校電子郵件認證";
 			$param = array(
 				"certification_id"	=> $certification_id,
 				"type" 			=> $type,
@@ -46,18 +47,23 @@ class Sendemail
 		return false;
 	}
 
-	public function send_verify_email($certification_id,$email=""){
+	public function send_verify_email($certification_id,$email="",$investor=0){
 		if($certification_id && !empty($email)){
 			$type	 = 'email';
 			$code	 = md5($email.time());
-			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
-			$content = "手機ATM，Email會員認證，<br><a href='$link' target='_blank'>點擊連結完成認證</a>";
-			$subject = "手機ATM，Email會員認證";
+			if($investor){
+				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
+			}else{
+				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
+			}
+			
+			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link),TRUE);
+			$subject = "手機ATM - 電子郵件認證";
 			$param = array(
 				"certification_id"	=> $certification_id,
-				"type" 			=> $type,
-				"email"			=> $email,
-				"code"			=> $code,
+				"type" 				=> $type,
+				"email"				=> $email,
+				"code"				=> $code,
 			);
 			$rs = $this->CI->email_verify_model->insert($param);
 			if($rs){

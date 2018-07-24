@@ -4,21 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
+/*
 	public function index()
 	{
 		$this->load->library('S3_upload');
@@ -108,21 +94,5 @@ class Welcome extends CI_Controller {
 		echo "</table>";
 		
 	}
-	
-	function allimage(){
-		$this->load->library('S3_upload');
-		$this->s3_upload->image_list();
-	}
-	
-	function recharge(){
-		$a = file_get_contents('https://s3-ap-northeast-1.amazonaws.com/influxp2p/banks.json');
-		$a = json_decode($a,TRUE);
-		$data = [];
-		$i = 0;
-		foreach($a as $k => $value){
-			$data[$i] = $value;
-			$i++;
-		}
-		dump(json_encode($data));
-	}
+*/
 }

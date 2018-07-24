@@ -17,12 +17,12 @@ class Notification extends REST_Controller {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -91,7 +91,7 @@ class Notification extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 	
 	/**
@@ -146,10 +146,10 @@ class Notification extends REST_Controller {
 					"created_at" 	=> $notification->created_at,
 				);
 				$this->user_notification_model->update($id,array("status"=>2));
-				$this->response(array('result' => 'SUCCESS',"data" => $data ));
+				$this->response(array('result' => 'SUCCESS','data' => $data ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => NOTIFICATION_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => NOTIFICATION_NOT_EXIST ));
     }
 	
 	/**

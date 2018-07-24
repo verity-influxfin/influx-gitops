@@ -15,16 +15,16 @@ class Certification extends REST_Controller {
 		$this->load->library('S3_upload');
 		$this->load->library('Certification_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ["verifyemail"];
+        $nonAuthMethods = ['verifyemail'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -86,7 +86,7 @@ class Certification extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 
 	/**
@@ -167,14 +167,14 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
 			$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
@@ -183,13 +183,13 @@ class Certification extends REST_Controller {
 			//檢查身分證字號
 			$id_check = check_cardid($input['id_number']);
 			if(!$id_check){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_IDNUMBER_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_IDNUMBER_ERROR ));
 			}
 
 			//檢查身分證字號
 			$id_number_used = $this->user_model->get_by(array( "id_number" => $input['id_number'] ));
 			if($id_number_used && $id_number_used->id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_IDNUMBER_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_IDNUMBER_EXIST ));
 			}
 
 			//上傳檔案欄位
@@ -200,10 +200,10 @@ class Certification extends REST_Controller {
 					if($image){
 						$content[$field] = $image;
 					}else{
-						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 
@@ -213,10 +213,10 @@ class Certification extends REST_Controller {
 				$this->certification_lib->idcard_verify($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -294,11 +294,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -373,14 +373,14 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
 			$fields 	= ['school','department','grade','student_id','email'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
@@ -390,7 +390,7 @@ class Certification extends REST_Controller {
 			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
 
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!=".edu.tw") {
-				$this->response(array('result' => 'ERROR',"error" => INVALID_EMAIL_FORMAT ));
+				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
 			
 			//上傳檔案欄位
@@ -401,10 +401,10 @@ class Certification extends REST_Controller {
 					if($image){
 						$content[$field] = $image;
 					}else{
-						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 			
@@ -421,10 +421,10 @@ class Certification extends REST_Controller {
 				$this->sendemail->send_verify_school($insert,$content['email']);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -504,11 +504,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -601,27 +601,27 @@ class Certification extends REST_Controller {
 			
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 
 			//必填欄位
 			$fields 	= ['bank_code','branch_code','bank_account'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = trim($input[$field]);
 				}
 			}
 			
 			if(strlen($content['bank_code'])!=3){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_CODE_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_CODE_ERROR ));
 			}
 			if(strlen($content['branch_code'])!=4){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BRANCH_CODE_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BRANCH_CODE_ERROR ));
 			}
 			if(strlen($content['bank_account'])<10 || is_virtual_account($content['bank_account'])){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
 			
 			$where = array(
@@ -632,7 +632,7 @@ class Certification extends REST_Controller {
 			
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
 			if($user_bankaccount){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_BANK_ACCOUNT_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_EXIST ));
 			}
 			
 			//上傳檔案欄位
@@ -643,10 +643,10 @@ class Certification extends REST_Controller {
 					if($image){
 						$content[$field] = $image;
 					}else{
-						$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 
@@ -674,10 +674,10 @@ class Certification extends REST_Controller {
 				
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -752,11 +752,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 		/**
@@ -816,21 +816,21 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
 			$fields 	= ['name','phone','relationship'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
 			}
 			
 			if(!preg_match("/09[0-9]{2}[0-9]{6}/", $content['phone'])){
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		
 			$param['content'] 	= json_encode($content);
@@ -839,10 +839,10 @@ class Certification extends REST_Controller {
 				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -909,11 +909,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -978,34 +978,34 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
 			$fields 	= ['email'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
 			}
 			
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL)) {
-				$this->response(array('result' => 'ERROR',"error" => INVALID_EMAIL_FORMAT ));
+				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
 		
 			$param['content'] = json_encode($content);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('Sendemail');
-				$this->sendemail->send_verify_email($insert,$content['email']);
+				$this->sendemail->send_verify_email($insert,$content['email'],$investor);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -1068,11 +1068,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -1113,19 +1113,19 @@ class Certification extends REST_Controller {
 		$fields 	= ['type','email','code'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 		
 		if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-			$this->response(array('result' => 'ERROR',"error" => INVALID_EMAIL_FORMAT ));
+			$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 		}
 	
 		$rs = $this->sendemail->verify_code($input["type"],$input["email"],$input["code"]);
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => VERIFY_CODE_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 		}
 
     }
@@ -1194,7 +1194,7 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
@@ -1228,10 +1228,10 @@ class Certification extends REST_Controller {
 				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -1313,11 +1313,11 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -1376,14 +1376,14 @@ class Certification extends REST_Controller {
 			);
 			$user_certification = $this->user_certification_model->get_by($where);
 			if($user_certification){
-				$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_WAS_VERIFY ));
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
 			//必填欄位
 			$fields 	= ['type','access_token'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
@@ -1395,10 +1395,10 @@ class Certification extends REST_Controller {
 				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 	
 	/**
@@ -1473,10 +1473,10 @@ class Certification extends REST_Controller {
 						$data[$field] = $content[$field];
 					}
 				}
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => CERTIFICATION_NOT_ACTIVE ));
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 }

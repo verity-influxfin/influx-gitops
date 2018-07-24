@@ -38,27 +38,8 @@ class Credit_lib{
 		}
 		
 		//學校
-		if(isset($data['school_name']) && isset($data['school_system']) && !empty($data['school_name'])){
-			$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
-			$school_list = json_decode($school_list,true);
-			$school_info = array();
-			foreach($school_list as $key => $value){
-				if(trim($data['school_name'])==$value['name']){
-					$school_info = $value;
-					break;
-				}
-			}
-			if($data['school_system']==1){
-				if($school_info['national']==1){
-					$total += 400;
-				}else{
-					$total += 200;
-				}
-			}else if($data['school_system']==2){
-				$total += 1200;
-			}else{
-				$total += $school_info['points'];
-			}
+		if(isset($data['school_name']) && !empty($data['school_name'])){
+			$total += $this->get_school_point($data['school_name'],$data['school_system'],$data['school_department']);
 		}
 		
 		//財務證明
@@ -73,23 +54,41 @@ class Credit_lib{
 			$total += 300;
 		}
 		$total = $user_info->sex=="M"?$total:round($total*0.95);
-		$param['points'] = $total;
-		$credit_level 	= $this->CI->config->item('credit_level');
-		foreach($credit_level as $level => $value){
-			if($total>=$value['start'] && $total<=$value['end']){
-				$param['level'] = $level;
-				break;
-			}
-		}
-		$credit_amount 	= $this->CI->config->item('credit_amount');
-		foreach($credit_amount as $key => $value){
-			if($total>=$value['start'] && $total<=$value['end']){
-				$param['amount'] = $value['amount'];
-				break;
-			}
-		}
-		$rs = $this->CI->credit_model->insert($param);
+		$param['points'] 	= $total;
+		$param['level'] 	= $this->get_credit_level($total);
+		$param['amount'] 	= $this->get_credit_amount($total);
+		$rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
+	}
+	
+	public function get_school_point($school_name="",$school_system=0,$department=""){
+		$point = 0;
+		if(!empty($school_name) && !empty($department)){
+			$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
+			$school_list = json_decode($school_list,true);
+			$school_info = array();
+			foreach($school_list as $key => $value){
+				if(trim($school_name)==$value['name']){
+					$school_info = $value;
+					break;
+				}
+			}
+			
+			if(!empty($school_info)){
+				if($school_system==1){
+					if($school_info['national']==1){
+						$point = 400;
+					}else{
+						$point = 200;
+					}
+				}else if($school_system==2){
+					$point = 1200;
+				}else{
+					$point = $school_info['points'];
+				}
+			}
+		}
+		return $point;
 	}
 	
 	//取得信用評分
@@ -115,6 +114,32 @@ class Credit_lib{
 		return false;
 	}
 	
+	public function get_credit_level($points=0){
+		if(intval($points)>0){
+			$credit_level 	= $this->CI->config->item('credit_level');
+			foreach($credit_level as $level => $value){
+				if($points >= $value['start'] && $points <= $value['end']){
+					return $level;
+					break;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function get_credit_amount($points=0){
+		if(intval($points)>0){
+			$credit_amount 	= $this->CI->config->item('credit_amount');
+			foreach($credit_amount as $key => $value){
+				if($points>=$value['start'] && $points<=$value['end']){
+					return $value['amount'];
+					break;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public function get_rate($level,$instalment){
 		$credit_level 	= $this->CI->config->item('credit_level');
 		if(isset($credit_level[$level])){
@@ -123,6 +148,5 @@ class Credit_lib{
 			}
 		}
 		return false;
-		
 	}
 }

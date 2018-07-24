@@ -19,7 +19,9 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($contracts as $contract): ?>
+            <?php 
+			if($contracts){
+			foreach ($contracts as $contract): ?>
                 <tr>
                     <td><?= $contract->id ?></td>
                     <td><?= $contract->alias ?></td>
@@ -33,7 +35,9 @@
                         </a>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endforeach; 
+			}
+			?>
             </tbody>
         </table>
     </div>

@@ -250,6 +250,8 @@ class Target_lib{
 						"principal"			=> 0,//本金
 						"delay_interest"	=> 0,//延滯息
 						"liquidated_damages"=> 0,//違約金
+						"days"				=> 0,//本期天數
+						"remaining_principal"=> 0,//期初本金
 						"repayment_date"	=> ""//還款日
 					);
 				}
@@ -295,7 +297,14 @@ class Target_lib{
 					$list[$value->instalment_no]["liquidated_damages"];
 				}
 			}
+			
+			$old_date = $target->loan_date;
+			$total 	= $target->loan_amount;
 			foreach($list as $key => $value){
+				$list[$key]["days"] 				= get_range_days($old_date,$value["repayment_date"]);
+				$list[$key]["remaining_principal"] 	= $total;
+				$old_date = $value["repayment_date"];
+				$total = $total - $value["principal"];
 				$schedule["total_payment"] += $value["total_payment"];
 			}
 		}
@@ -335,6 +344,8 @@ class Target_lib{
 						"interest"			=> 0,//利息
 						"principal"			=> 0,//本金
 						"delay_interest"	=> 0,//應收延滯息
+						"days"				=> 0,//本期天數
+						"remaining_principal"=> 0,//期初本金
 						"repayment_date"	=> $value->limit_date//還款日
 					);
 				}
@@ -365,11 +376,20 @@ class Target_lib{
 					$list[$value->instalment_no]["delay_interest"];
 				}
 			}
+			
+			$old_date 	= $target->loan_date;
+			$total 		= $investment->loan_amount;
 			foreach($list as $key => $value){
+				$list[$key]["days"] 				= get_range_days($old_date,$value["repayment_date"]);
+				$list[$key]["remaining_principal"] 	= $total;
+				$old_date = $value["repayment_date"];
+				$total = $total - $value["principal"];
+				
 				$schedule["total_payment"] += $value["total_payment"];
 				$xirr_dates[] = $value["repayment_date"];
 				$xirr_value[] = $value["total_payment"];
 			}
+			
 			$schedule["XIRR"] = $this->CI->financial_lib->XIRR($xirr_value,$xirr_dates);
 		}
 		$schedule['list'] = $list;

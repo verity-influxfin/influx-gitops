@@ -10,7 +10,6 @@ class Subloan extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('user/user_model');
-		$this->load->model('product/product_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Subloan_lib');
@@ -20,17 +19,17 @@ class Subloan extends REST_Controller {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			//只限借款人
 			if($tokenData->investor != 0){
-				$this->response(array('result' => 'ERROR',"error" => IS_INVERTOR ));
+				$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 			}
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -130,17 +129,18 @@ class Subloan extends REST_Controller {
 		$data				= array();
 		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			if($target->sub_status != 0){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
 			}
 
 			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
+			$this->load->model('product/product_model');
 			$product 	= $this->product_model->get($target->product_id);
 			$instalment = json_decode($product->instalment,TRUE);
 			foreach($instalment as $k => $v){
@@ -159,9 +159,9 @@ class Subloan extends REST_Controller {
 				"repayment"		=> $repayment
 			);
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -234,7 +234,7 @@ class Subloan extends REST_Controller {
 		$fields 	= ['target_id','instalment','repayment'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 				$param[$field] = intval($input[$field]);
 			}
@@ -243,35 +243,36 @@ class Subloan extends REST_Controller {
 		$target = $this->target_model->get($input["target_id"]);
 		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
 			if($target->sub_status != 0){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_HAD_SUBSTATUS ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
 			}
 			
 			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
+			$this->load->model('product/product_model');
 			$product 			 = $this->product_model->get($target->product_id);
 			$product->instalment = json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){
-				$this->response(array('result' => 'ERROR',"error" => PRODUCT_INSTALMENT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
 			if(!isset($repayment_type[$input['repayment']])){
-				$this->response(array('result' => 'ERROR',"error" => PRODUCT_REPAYMENT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => PRODUCT_REPAYMENT_ERROR ));
 			}
 			
 			$rs = $this->subloan_lib->apply_subloan($target,$param);
 			if($rs){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -441,12 +442,12 @@ class Subloan extends REST_Controller {
 		$subloan_target		= array();
 		if(!empty($target)){
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			$subloan = $this->subloan_lib->get_subloan($target);
 			if(!$subloan){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_SUBLOAN_NOT_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
 			
 			$data = array(
@@ -478,6 +479,7 @@ class Subloan extends REST_Controller {
 					$subloan_target[$field] = $repayment_type[$new_target->$field];
 				}
 				if($field=="product_id"){
+					$this->load->model('product/product_model');
 					$product_info = $this->product_model->get($new_target->product_id);
 					$product = array(
 						"id"			=> $product_info->id,
@@ -489,9 +491,9 @@ class Subloan extends REST_Controller {
 			$subloan_target["product"] 					= $product;
 			$subloan_target["amortization_schedule"] 	= $amortization_schedule;
 			$data["subloan_target"]						= $subloan_target;
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -559,7 +561,7 @@ class Subloan extends REST_Controller {
 		$fields 	= ['target_id'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 				$param[$field] = intval($input[$field]);
 			}
@@ -573,10 +575,10 @@ class Subloan extends REST_Controller {
 				if($image){
 					$param[$field] = $image;
 				}else{
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 		
@@ -584,12 +586,12 @@ class Subloan extends REST_Controller {
 		if(!empty($target)){
 
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
 			$subloan = $this->subloan_lib->get_subloan($target);
 			if(!$subloan){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_SUBLOAN_NOT_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
 
 			if($subloan->status == 0){
@@ -597,14 +599,14 @@ class Subloan extends REST_Controller {
 				if($rs){
 					$this->response(array('result' => 'SUCCESS'));
 				}
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 
-			$this->response(array('result' => 'ERROR',"error" => PRODUCT_NOT_EXIST ));
+			$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -660,21 +662,21 @@ class Subloan extends REST_Controller {
 		if(!empty($target)){
 
 			if($target->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
 			$subloan = $this->subloan_lib->get_subloan($target);
 			if(!$subloan){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_SUBLOAN_NOT_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
 			
 			if($subloan->status == 0 ){
 				$this->subloan_lib->cancel_subloan($subloan);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => APPLY_STATUS_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 }

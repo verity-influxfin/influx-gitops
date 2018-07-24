@@ -28,17 +28,17 @@ class Recoveries extends REST_Controller {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			//只限出借人
 			if($tokenData->investor != 1){
-				$this->response(array('result' => 'ERROR',"error" => NOT_INVERTOR ));
+				$this->response(array('result' => 'ERROR','error' => NOT_INVERTOR ));
 			}
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -212,9 +212,6 @@ class Recoveries extends REST_Controller {
 			);
 		}
 
-
-		
-		
 		$data			 = array(
 			"remaining_principal"	=> $remaining_principal,
 			"interest"				=> $interest,
@@ -226,7 +223,7 @@ class Recoveries extends REST_Controller {
 			"bank_account"			=> $bank_account,
 			"virtual_account"		=> $virtual_account,
 		);
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
 	/**
@@ -263,10 +260,6 @@ class Recoveries extends REST_Controller {
      * 				"loan_amount":"",
      * 				"status":"3",
      * 				"transfer_status":"0",
-     * 				"transfer_fee":"0",
-     * 				"transfer_amount":"0",
-     * 				"transfer_contract":"",
-     * 				"transfer_at":"0",
      * 				"created_at":"1520421572",
 	 * 				"product":{
      * 					"id":"2",
@@ -357,7 +350,7 @@ class Recoveries extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 	
 	/**
@@ -410,13 +403,13 @@ class Recoveries extends REST_Controller {
      * 			"amount":"50000",
      * 			"loan_amount":"",
      * 			"status":"3",
-	  * 		"transfer_status":"1",
+	 * 			"transfer_status":"1",
      * 			"created_at":"1520421572",
 	 * 			"transfer":{
      * 				"amount":"5000",
      * 				"transfer_fee":"25",
      * 				"contract":"我是合約，我是合約",
-     * 				"transfer_date":NULL
+     * 				"transfer_date": null
      * 			},
 	 * 			"product":{
      * 				"id":"2",
@@ -439,33 +432,33 @@ class Recoveries extends REST_Controller {
   	 *           	"date": "2018-04-17",
   	 *           	"total_payment": 2053,
   	 *           	"list": {
- 	 *              "1": {
-   	 *                  "instalment": 1,
-   	 *                  "repayment_date": "2018-06-10",
-   	 *                  "repayment": 0,
-   	 *                  "principal": 1893,
-   	 *                  "interest": 160,
-   	 *                  "total_payment": 2053
-   	 *              },
-   	 *              "2": {
-  	 *                   "instalment": 2,
-   	 *                   "repayment_date": "2018-07-10",
-   	 *                   "repayment": 0,
-  	 *                   "principal": 1978,
-  	 *                   "interest": 75,
- 	 *                   "total_payment": 2053
-  	 *               },
-   	 *              "3": {
- 	 *                    "instalment": 3,
- 	 *                    "repayment_date": "2018-08-10",
- 	 *                    "repayment": 0,
-  	 *                    "principal": 1991,
-  	 *                    "interest": 62,
- 	 *                    "total_payment": 2053
- 	 *               }
- 	 *            }
+ 	 *              	"1": {
+   	 *                  	"instalment": 1,
+   	 *                  	"repayment_date": "2018-06-10",
+   	 *                  	"repayment": 0,
+   	 *                  	"principal": 1893,
+   	 *                  	"interest": 160,
+   	 *                  	"total_payment": 2053
+   	 *              	},
+   	 *              	"2": {
+  	 *                  	"instalment": 2,
+   	 *                   	"repayment_date": "2018-07-10",
+   	 *                   	"repayment": 0,
+  	 *                   	"principal": 1978,
+  	 *                   	"interest": 75,
+ 	 *                   	"total_payment": 2053
+  	 *               	},
+   	 *              	"3": {
+ 	 *                    	"instalment": 3,
+ 	 *                    	"repayment_date": "2018-08-10",
+ 	 *                    	"repayment": 0,
+  	 *                    	"principal": 1991,
+  	 *                    	"interest": 62,
+ 	 *                    	"total_payment": 2053
+ 	 *               	}
+ 	 *            	}
 	 *        	}
-     * 		}
+     *		 }
      *    }
 	 *
 	 * @apiUse TokenError
@@ -494,7 +487,7 @@ class Recoveries extends REST_Controller {
 		$repayment_type 	= $this->config->item('repayment_type');
 		if(!empty($investment) && in_array($investment->status,array(3,10))){
 			if($investment->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
 			}
 
 			$target_info = $this->target_model->get($investment->target_id);
@@ -530,20 +523,22 @@ class Recoveries extends REST_Controller {
 			if($investment->transfer_status!=0){
 				$transfer_info = $this->transfer_lib->get_transfer_investments($investment->id);
 				if($transfer_info){
+					$contract_data 	= $this->contract_lib->get_contract($transfer_info->contract_id);
+					$contract 		= isset($contract_data["content"])?$contract_data["content"]:"";
 					$transfer = array(
 						"transfer_fee"	=> $transfer_info->transfer_fee,
 						"amount"		=> $transfer_info->amount,
-						"contract"		=> $transfer_info->contract,
+						"contract"		=> $contract,
 						"transfer_at"	=> $transfer_info->transfer_date,
 					);
 				}
 			}
 			
-			
+			$investment_contract = $this->contract_lib->get_contract($investment->contract_id);
 			$data = array(
 				"id" 					=> $investment->id,
 				"loan_amount" 			=> $investment->loan_amount?$investment->loan_amount:"",
-				"contract" 				=> $investment->contract,
+				"contract" 				=> $investment_contract["content"],
 				"status" 				=> $investment->status,
 				"transfer_status" 		=> $investment->transfer_status,
 				"created_at" 			=> $investment->created_at,
@@ -553,9 +548,9 @@ class Recoveries extends REST_Controller {
 				"amortization_schedule" => $this->target_lib->get_investment_amortization_table($target_info,$investment),
 			);
 			
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -621,7 +616,7 @@ class Recoveries extends REST_Controller {
 		$fields 	= ['amount','transaction_password'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 		
@@ -629,29 +624,29 @@ class Recoveries extends REST_Controller {
 		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 		foreach($certification_list as $key => $value){
 			if( $value->alias=='id_card' && $value->user_status != 1 ){
-				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$bank_account){
-			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
 		if($this->user_info->transaction_password==""){
-			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 		
 		if($this->user_info->transaction_password != sha1($input['transaction_password'])){
-			$this->response(array('result' => 'ERROR',"error" => TRANSACTION_PASSWORD_ERROR ));
+			$this->response(array('result' => 'ERROR','error' => TRANSACTION_PASSWORD_ERROR ));
 		}
 		
 		$withdraw = $this->transaction_lib->withdraw($user_id,intval($input['amount']));
 		if($withdraw){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => NOT_ENOUGH_FUNDS ));
+			$this->response(array('result' => 'ERROR','error' => NOT_ENOUGH_FUNDS ));
 		}
     }
 
@@ -719,20 +714,20 @@ class Recoveries extends REST_Controller {
 		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 		foreach($certification_list as $key => $value){
 			if( $value->alias=='id_card' && $value->user_status != 1 ){
-				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$bank_account){
-			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
 		$virtual_account = $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
 		$list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
 
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
     }
 	
 	/**
@@ -798,7 +793,7 @@ class Recoveries extends REST_Controller {
 		$ids		= array();
 		//必填欄位
 		if (empty($input['ids'])) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		$ids 	= explode(",",$input['ids']);
@@ -807,11 +802,11 @@ class Recoveries extends REST_Controller {
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		$investments = $this->investment_model->get_many($ids);
@@ -824,13 +819,13 @@ class Recoveries extends REST_Controller {
 			$debt_transfer_contract = array();
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
-					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
+					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
 				}
 				if($value->status != 3){
-					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
+					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR ));
 				}
 				if($value->transfer_status != 0){
-					$this->response(array('result' => 'ERROR',"error" => TRANSFER_EXIST ));
+					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
 				}
 			}
 			foreach( $investments as $key => $value ){
@@ -855,9 +850,9 @@ class Recoveries extends REST_Controller {
 				"min_instalment"			=> $min_instalment,
 				"debt_transfer_contract" 	=> $debt_transfer_contract,
 			);
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
     }
 	
 	/**
@@ -911,7 +906,7 @@ class Recoveries extends REST_Controller {
 		$ids		= array();
 		//必填欄位
 		if (empty($input['ids'])) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		$ids = explode(",",$input['ids']);
@@ -919,29 +914,29 @@ class Recoveries extends REST_Controller {
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
-					$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 		}else{
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		$investments = $this->investment_model->get_many($ids);
 		if(count($investments)==count($ids)){
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
-					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NO_PERMISSION ));
+					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
 				}
 				if($value->status != 3){
-					$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_STATUS_ERROR ));
+					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR ));
 				}
 				if($value->transfer_status != 0){
-					$this->response(array('result' => 'ERROR',"error" => TRANSFER_EXIST ));
+					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
 				}
 				$rs = $this->transfer_lib->apply_transfer($value);
 			}
 			$this->response(array('result' => 'SUCCESS'));
 		}
-		$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
     }
 }

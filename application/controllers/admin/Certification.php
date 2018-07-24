@@ -115,8 +115,7 @@ class Certification extends MY_Admin_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$where				= array();
 		$certification 		= $this->certification_model->get_all();
-		//必填欄位
-		$fields 	= ['investor','certification_id','status'];
+		$fields 			= ['investor','certification_id','status'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];

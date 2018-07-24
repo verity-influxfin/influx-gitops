@@ -17,6 +17,11 @@ class Target_model extends MY_Model
 		10 =>	"已結案",
 	);
 	
+	public $delay_list   = array(
+		0 =>	"無",
+		1 =>	"逾期中",
+	);
+	
 	public $simple_fields  = array(
 		"id",
 		"target_no",

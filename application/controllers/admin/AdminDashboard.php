@@ -16,26 +16,26 @@ class AdminDashboard extends MY_Admin_Controller {
 		$target_count 	= array(
 			"approve"	=> 0,
 			"bidding"	=> 0,
-			"repay"		=> 0,
+			"success"	=> 0,
 			"delay"		=> 0,
 		);
 		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5,10)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
 		if($target_list){
 			foreach($target_list as $key => $value){
-				if($value->delay==1){
+				if($value->delay==1 && $value->status==5){
 					$target_count["delay"] += 1;
 				}
 				if($value->status==2){
 					$target_count["approve"] += 1;
 				}
 				
-				if($value->status==3 || $value->status==4){
+				if($value->status==3){
 					$target_count["bidding"] += 1;
 				}
 				
-				if($value->status==5){
-					$target_count["repay"] += 1;
+				if($value->status==4){
+					$target_count["success"] += 1;
 				}
 			}
 		}

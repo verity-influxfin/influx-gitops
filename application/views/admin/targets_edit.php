@@ -4,10 +4,7 @@
 		function form_onsubmit(){
 			return true;
 		}
-		
-		$(document).ready(function () {
 
-		});	
 	</script>
 	
 	<div id="page-wrapper">
@@ -107,7 +104,9 @@
 									<table class="table table-bordered table-hover" style="text-align:center;">
 										<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan="8">會員資訊</td>
+												<td colspan="8">
+													<a class="fancyframe" href="<?=admin_url('User/display?id='.$user_info->id) ?>" >借款人資訊</a>
+												</td>
 											</tr>
 											<tr>
 												<td><p class="form-control-static">ID</p></td>
@@ -171,144 +170,109 @@
 													<p class="form-control-static"><?=isset($user_info->created_at)&&!empty($user_info->created_at)?date("Y-m-d H:i:s",$user_info->created_at):"";?></p>
 												</td>
 											</tr>
+											<? if($data->status==5 || $data->status==10){?>
+												<tr style="background-color:#f5f5f5;">
+													<td>期數</td>
+													<td>期初本金</td>
+													<td>還款日</td>
+													<td>日數</td>
+													<td>還款本金</td>
+													<td>還款利息</td>
+													<td>還款合計</td>
+													<td>已還款金額</td>
+												</tr>
+												<? if($amortization_table){
+													foreach($amortization_table["list"] as $key => $value){
+												?>
+												<tr>
+													<td><?=$value['instalment'] ?></td>
+													<td><?=$value['remaining_principal'] ?></td>
+													<td><?=$value['repayment_date'] ?></td>
+													<td><?=$value['days'] ?></td>
+													<td><?=$value['principal'] ?></td>
+													<td><?=$value['interest'] ?></td>
+													<td><?=$value['total_payment'] ?></td>
+													<td><?=$value['repayment'] ?></td>
+												</tr>
+											<? }}} ?>
 										</tbody>
 									</table>
 								</div>
+							</div>
+							<? if($data->status==5 || $data->status==10){?>
+							<div class="col-lg-6">
 								<div class="table-responsive">
-									<table class="table table-bordered table-hover" style="text-align:center;">
+								<? if($investments){
+									foreach($investments as $key => $value){
+								?>
+								<table class="table table-bordered table-hover" style="text-align:center;">
 										<tbody>
-										<tr style="background-color:#f5f5f5;">
-											<td colspan="4">金融卡資訊</td>
-										</tr>
-										<? if(!empty($bank_account)){
-											foreach($bank_account as $key => $value){
-										?>
 											<tr style="background-color:#f5f5f5;">
+												<td colspan="8">
+													<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_info->id) ?>" >出借人資訊：<?=isset($value->user_info->id)?$value->user_info->id:"";?></a>
+												</td>
+											</tr>
+											<tr>
 												<td><p class="form-control-static">ID</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($value->id)?$value->id:"";?></p>
+													<p class="form-control-static"><?=isset($value->user_info->id)?$value->user_info->id:"";?></p>
 												</td>
-												<td><p class="form-control-static">借款端/出借端</p></td>
+												<td><p class="form-control-static">姓名</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($value->investor)?$bank_account_investor[$value->investor]:"";?></p>
+													<p class="form-control-static"><?=isset($value->user_info->name)?$value->user_info->name:"";?></p>
 												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">銀行號 分行號</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->bank_code)?$value->bank_code.' '.$value->branch_code:"";?></p>
-												</td>
-												<td><p class="form-control-static">銀行帳號</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->bank_account)?$value->bank_account:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">狀態</p></td>
-												<td>
-													<p class="form-control-static">正常</p>
-												</td>
-												<td><p class="form-control-static">驗證狀態</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->verify)?$bank_account_verify[$value->verify]:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td colspan="2"><?=isset($value->front_image)?"<a href='".$value->front_image."' data-fancybox='images'><img src='".$value->front_image."' style='width:30%;'></a>":"";?></td>
-												<td colspan="2"><?=isset($value->back_image)?"<a href='".$value->back_image."' data-fancybox='images'><img src='".$value->back_image."' style='width:30%;'></a>":"";?></td>
-											</tr>
-										<? }} ?>
-										</tbody>
-									</table>
-								</div>
 
-								<div class="table-responsive">
-									<table class="table table-bordered table-hover" style="text-align:center;">
-										<tbody>
-										<tr style="background-color:#f5f5f5;">
-											<td colspan="4">信用指數</td>
-										</tr>
-										<? if(!empty($credit_list)){
-											foreach($credit_list as $key => $value){
-										?>
-											<tr style="background-color:#f5f5f5;">
-												<td><p class="form-control-static">ID</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->id)?$value->id:"";?></p>
-												</td>
-												<td><p class="form-control-static">借款端</p></td>
-												<td>
-													<p class="form-control-static">借款端</p>
+												<td><p class="form-control-static">Email</p></td>
+												<td colspan="3">
+													<p class="form-control-static"><?=isset($value->user_info->email)?$value->user_info->email:"";?></p>
 												</td>
 											</tr>
 											<tr>
-												<td><p class="form-control-static">產品</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->product_id)?$product_list[$value->product_id]:"";?></p>
-												</td>
-												<td><p class="form-control-static">信用等級</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->level)?$value->level:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">信用評分</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->points)?$value->points:"";?></p>
-												</td>
-												<td><p class="form-control-static">信用額度</p></td>
+												<td><p class="form-control-static">投標</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($value->amount)?$value->amount:"";?></p>
 												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">有效時間</p></td>
+												<td><p class="form-control-static">得標</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($value->expire_time)&&!empty($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"";?></p>
+													<p class="form-control-static"><?=isset($value->loan_amount)?$value->loan_amount:"";?></p>
 												</td>
-												<td><p class="form-control-static">核准時間</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"";?></p>
+
+												<td><p class="form-control-static">匯款時間</p></td>
+												<td colspan="3">
+													<p class="form-control-static"><?=isset($value->tx_datetime)?$value->tx_datetime:"";?></p>
 												</td>
 											</tr>
-										<? }} ?>
+
+												<tr style="background-color:#f5f5f5;">
+													<td>期數</td>
+													<td>期初本金</td>
+													<td>還款日</td>
+													<td>日數</td>
+													<td>還款本金</td>
+													<td>還款利息</td>
+													<td>還款合計</td>
+													<td>已還款金額</td>
+												</tr>
+												<? if($investments_amortization_table[$value->id]){
+													foreach($investments_amortization_table[$value->id]["list"] as $k => $v){
+												?>
+												<tr>
+													<td><?=$v['instalment'] ?></td>
+													<td><?=$v['remaining_principal'] ?></td>
+													<td><?=$v['repayment_date'] ?></td>
+													<td><?=$v['days'] ?></td>
+													<td><?=$v['principal'] ?></td>
+													<td><?=$v['interest'] ?></td>
+													<td><?=$v['total_payment'] ?></td>
+													<td><?=$v['repayment'] ?></td>
+												</tr>
+											<? }} ?>
 										</tbody>
 									</table>
+								<?}}?>
 								</div>
 							</div>
-							<div class="col-lg-6 meta">
-								<div class="table-responsive">
-									<table class="table table-bordered table-hover" style="text-align:center;">
-										<tbody>
-										<? if(!empty($meta_fields)){
-											foreach($meta_fields as $alias => $fields){
-										?>
-											<tr style="background-color:#f5f5f5;">
-												<td colspan="2"><?=isset($certification_list[$alias])?$certification_list[$alias]:$alias?></td>
-											</tr>
-										<?		foreach($fields as $key => $field){
-										?>
-											<tr>
-												<td style="width:40%;"><?=$field ?></td>
-												<td style="word-break: break-all;width:60%;"><?
-												if(isset($meta[$key])&&!empty($meta[$key])){
-													if(in_array($key,$meta_images)){
-														echo "<a href='".$meta[$key]."' data-fancybox='images'><img src='".$meta[$key]."' style='width:30%;'></a>";
-													}else if( $key == $alias.'_status' && $meta[$key]==1){
-														echo "已認證"; 
-													}else{
-														echo $meta[$key];
-													}
-												}else{
-													echo "無";
-												}
-												?></td>
-											</tr>
-										<? }}} ?>
-										</tbody>
-									</table>
-								</div>
-							</div>
+							<? }?>
 						</div>
 						<!-- /.row (nested) -->
 					</div>

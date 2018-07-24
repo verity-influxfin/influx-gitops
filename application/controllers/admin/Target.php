@@ -8,26 +8,49 @@ class Target extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('loan/target_model');
+		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('platform/certification_model');
 		$this->load->model('product/product_model');
 		$this->load->model('loan/credit_model');
+		$this->load->library('target_lib');
  	}
 	
 	public function index(){
 		$page_data 					= array("type"=>"list");
-		$list 						= $this->target_model->get_all();
+		$input 						= $this->input->get(NULL, TRUE);
+		$where						= array();
 		$page_data["product_name"]	= $this->product_model->get_name_list();
-
-		if(!empty($list)){
-			$page_data['instalment_list']	= $this->config->item('instalment');
-			$page_data['repayment_type']	= $this->config->item('repayment_type');
-			$page_data['list'] 				= $list;
-			$page_data['status_list'] 		= $this->target_model->status_list;
-			$page_data['name_list'] 		= $this->admin_model->get_name_list();
+		$fields 					= ['status','target_no','user_id','delay'];
+		
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				$where[$field] = $input[$field];
+			}
 		}
+		$list 							= $this->target_model->get_many_by($where);
+		if($list){
+			foreach($list as $key => $value){
+				if($value->status==4){
+					$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
+						"user_id"	=> $value->user_id,
+						"investor"	=> 0,
+						"status"	=> 1,
+						"verify"	=> 1,
+					));
+					$list[$key]->bank_account_verify = $bank_account?1:0;
+				}
+			}
+		}
+		$page_data['instalment_list']	= $this->config->item('instalment');
+		$page_data['repayment_type']	= $this->config->item('repayment_type');
+		$page_data['list'] 				= $list;
+		$page_data['status_list'] 		= $this->target_model->status_list;
+		$page_data['delay_list'] 		= $this->target_model->delay_list;
+		$page_data['name_list'] 		= $this->admin_model->get_name_list();
+
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -42,39 +65,42 @@ class Target extends MY_Admin_Controller {
 		if(empty($post)){
 			$id = isset($get["id"])?intval($get["id"]):0;
 			if($id){
-				$certification 		= $this->certification_model->get_all();
-				$certification_list = array();
-				if($certification){
-					foreach($certification as $key => $value){
-						$certification_list[$value->alias] = $value->name;
-					}
-				}
 
 				$info = $this->target_model->get($id);
 				if($info){
-					$user_id = $info->user_id;
-					$user_meta_data = array();
-					$user_meta 		= $this->user_meta_model->get_many_by(array("user_id"=>$user_id));
-					if($user_meta){
-						foreach($user_meta as $key => $value){
-							$user_meta_data[$value->meta_key] = $value->meta_value;
+					$amortization_table 			= array();
+					$investments 					= array();
+					$investments 					= array();
+					$investments_amortization_table = array();
+					if($info->status==5 || $info->status==10){
+						$amortization_table = $this->target_lib->get_amortization_table($info);
+						$investments = $this->investment_model->get_many_by(array("target_id"=>$info->id,"status"=>array(3,10)));
+						if($investments){
+							foreach($investments as $key =>$value){
+								$investments[$key]->user_info = $this->user_model->get($value->user_id);
+								$investments_amortization_table[$value->id] = $this->target_lib->get_investment_amortization_table($info,$value);
+							}
 						}
 					}
-					
-					$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$user_id));
+
+					$user_id 			= $info->user_id;
+					$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
+						"user_id"	=> $user_id,
+						"investor"	=> 0,
+						"status"	=> 1,
+						"verify"	=> 1,
+					));
+					$bank_account_verify = $bank_account?1:0;
 					$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$user_id));
 					$user_info 			= $this->user_model->get($user_id);
 					$page_data['data'] 					= $info;
 					$page_data['user_info'] 			= $user_info;
-					$page_data['meta'] 					= $user_meta_data;
-					$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
-					$page_data['meta_images'] 			= $this->config->item('user_meta_images');
-					$page_data['certification_list'] 	= $certification_list;
+					$page_data['amortization_table'] 	= $amortization_table;
+					$page_data['investments'] 			= $investments;
+					$page_data['investments_amortization_table'] = $investments_amortization_table;
 					$page_data['credit_list'] 			= $credit_list;
 					$page_data['product_list'] 			= $this->product_model->get_name_list();
-					$page_data['bank_account'] 			= $bank_account;
-					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
-					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
+					$page_data['bank_account_verify'] 	= $bank_account_verify;
 					$page_data['instalment_list']		= $this->config->item('instalment');
 					$page_data['repayment_type']		= $this->config->item('repayment_type');
 					$page_data['status_list'] 			= $this->target_model->status_list;

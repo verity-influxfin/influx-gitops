@@ -11,12 +11,8 @@ class Target extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_model');
 		$this->load->model('product/product_model');
-		$this->load->model('platform/certification_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
-		$this->load->model('loan/batch_model');
-		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('user/virtual_account_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
 		$this->load->library('Transaction_lib');
@@ -28,17 +24,17 @@ class Target extends REST_Controller {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
 			//只限出借人
 			if($tokenData->investor != 1){
-				$this->response(array('result' => 'ERROR',"error" => NOT_INVERTOR ));
+				$this->response(array('result' => 'ERROR','error' => NOT_INVERTOR ));
 			}
 			
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -148,7 +144,7 @@ class Target extends REST_Controller {
 			}
 		}
 		$data["list"] = $list;
-		$this->response(array('result' => 'SUCCESS',"data" => $data ));
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
 	/**
@@ -347,11 +343,11 @@ class Target extends REST_Controller {
 			$user_info 	= $this->user_model->get($target->user_id); 
 			$user		= array();
 			if($user_info){
-				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."XX";
+				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."**";
 				$age  		= get_age($user_info->birthday);
 				$user_meta 	= $this->user_meta_model->get_by(array("user_id"=>$target->user_id,"meta_key"=>"school_name"));
 				$school_name= $user_meta?$user_meta->meta_value:"";
-				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5)."XXXXX":"";
+				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5)."*****":"";
 				$user = array(
 					"name" 			=> $name,
 					"age"			=> $age,
@@ -388,9 +384,9 @@ class Target extends REST_Controller {
 			$data["certification"] 			= $certification;
 			$data["amortization_schedule"] 	= $amortization_schedule;
 
-			$this->response(array('result' => 'SUCCESS',"data" => $data ));
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
-		$this->response(array('result' => 'ERROR',"error" => TARGET_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
     }
 	
 	/**
@@ -480,7 +476,7 @@ class Target extends REST_Controller {
 		$fields 	= ['target_id','amount'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 				$input[$field] = intval($input[$field]);
 				$param[$field] = $input[$field];
@@ -491,21 +487,21 @@ class Target extends REST_Controller {
 		if($target && $target->status == 3 ){
 			
 			if( $input['amount'] < TARGET_AMOUNT_MIN || $input['amount'] > $target->loan_amount ){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_AMOUNT_RANGE ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
 			}
 
 			if( $user_id == $target->user_id ){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_SAME_USER ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 			}
 
 
 			if(get_age($this->user_info->birthday) < 20){
-				$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
 			
 			$investments = $this->investment_model->get_by(array("target_id"=>$target->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
 			if($investments){
-				$this->response(array('result' => 'ERROR',"error" => TARGET_APPLY_EXIST ));
+				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
 			}
 			
 
@@ -513,29 +509,30 @@ class Target extends REST_Controller {
 			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 			foreach($certification_list as $key => $value){
 				if( $value->alias=='id_card' && $value->user_status!=1 ){
-					$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+					$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 				}
 			}
 			
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
+			$this->load->model('user/user_bankaccount_model');
 			$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 			if(!$bank_account){
-				$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 			}
 			
 			if($this->user_info->transaction_password==""){
-				$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 			}
 			
 			$insert = $this->investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
-				$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
 		
-		$this->response(array('result' => 'ERROR',"error" => TARGET_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
     }
 	
 	/**
@@ -661,28 +658,29 @@ class Target extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 	
 		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
 
 		//檢查認證 NOT_VERIFIED
 		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 		foreach($certification_list as $key => $value){
 			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 		}
 			
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
 		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$user_bankaccount){
-			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
 		if($this->user_info->transaction_password==""){
-			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 		
-
+		$this->load->model('user/virtual_account_model');
 		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
 		$virtual_account	= array(
 			"bank_code"			=> CATHAY_BANK_CODE,
@@ -740,7 +738,7 @@ class Target extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list,"bank_account"=>$bank_account,"virtual_account"=>$virtual_account,"funds"=>$funds) ));
+		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list,"bank_account"=>$bank_account,"virtual_account"=>$virtual_account,"funds"=>$funds) ));
     }
  
  	/**
@@ -829,7 +827,7 @@ class Target extends REST_Controller {
 		
 		//必填欄位
 		if (empty($input['budget']) || intval($input['budget'])<=0) {
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}else{
 			$budget = intval($input['budget']);
 		}
@@ -838,22 +836,23 @@ class Target extends REST_Controller {
 		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 		foreach($certification_list as $key => $value){
 			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR',"error" => NOT_VERIFIED ));
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
 		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$bank_account){
-			$this->response(array('result' => 'ERROR',"error" => NO_BANK_ACCOUNT ));
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
 		if($this->user_info->transaction_password==""){
-			$this->response(array('result' => 'ERROR',"error" => NO_TRANSACTION_PASSWORD ));
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 
 		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR',"error" => UNDER_AGE ));
+			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
 		
 		if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
@@ -987,18 +986,19 @@ class Target extends REST_Controller {
 						"filter"	=> json_encode($where),
 						"content"	=> json_encode($content),
 					);
+					$this->load->model('loan/batch_model');
 					$batch_id = $this->batch_model->insert($param);
 					if($batch_id){
 						$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
 						$data['batch_id'] = $batch_id;
-						$this->response(array('result' => 'SUCCESS',"data" => $data));
+						$this->response(array('result' => 'SUCCESS','data' => $data));
 					}else{
-						$this->response(array('result' => 'ERROR',"error" => INSERT_ERROR ));
+						$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 					}
 				}
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array(
+		$this->response(array('result' => 'SUCCESS','data' => array(
 			'total_amount' 		=> 0,
 			'total_count' 		=> 0,
 			'max_instalment' 	=> 0,
@@ -1054,14 +1054,16 @@ class Target extends REST_Controller {
 	public function batch_post($batch_id=0)
     {
 		$input 				= $this->input->post(NULL, TRUE);
+		$this->load->model('loan/batch_model');
+		
 		if(!$batch_id){
-			$this->response(array('result' => 'ERROR',"error" => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		$user_id 			= $this->user_info->id;
 		$batch 				= $this->batch_model->get($batch_id);
 		if($batch && $batch->status==0 && $batch->type==0){
 			if($batch->user_id != $user_id){
-				$this->response(array('result' => 'ERROR',"error" => BATCH_NO_PERMISSION ));
+				$this->response(array('result' => 'ERROR','error' => BATCH_NO_PERMISSION ));
 			}
 			
 			$target_ids = json_decode($batch->content,true);
@@ -1100,9 +1102,9 @@ class Target extends REST_Controller {
 					}
 				}
 				$data['XIRR'] = $data['total_count']>0?round($data['XIRR']/$data['total_count'] ,2):0;
-				$this->response(array('result' => 'SUCCESS',"data" => $data));
+				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'SUCCESS',"data" => array(
+			$this->response(array('result' => 'SUCCESS','data' => array(
 				'total_amount' 		=> 0,
 				'total_count' 		=> 0,
 				'max_instalment' 	=> 0,
@@ -1110,6 +1112,6 @@ class Target extends REST_Controller {
 				'XIRR' 				=> 0,
 			)));
 		}
-		$this->response(array('result' => 'ERROR',"error" => BATCH_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => BATCH_NOT_EXIST ));
     }
 }

@@ -10,6 +10,22 @@ class Notification_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('user/user_notification_model');
     }
+
+	public function first_login($user_id,$investor){
+		
+		$title = "[登入資訊] 首次登入成功";
+		$content = "您已於 ".date("Y-m-d H:i:s")." 首次登入成功
+					inFlux歡迎您";
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
 	
 	public function certification($user_id,$investor,$name,$status){
 		if($status==1){
@@ -24,6 +40,21 @@ class Notification_lib{
 						您的".$name."未通過，請重新認證。";
 		}
 		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
+	
+	public function transaction_password($user_id,$investor){
+		$title = "[會員] 交易密碼設置成功";
+		$content = "您好！
+					您的交易密碼設置成功。";
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
