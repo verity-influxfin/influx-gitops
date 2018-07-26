@@ -44,16 +44,32 @@ class Credit_lib{
 		
 		//財務證明
 		if(isset($data['financial_status']) && !empty($data['financial_status'])){
-			$total += 100;
+			$total += 50;
 			if(!empty($data['financial_creditcard']) || !empty($data['financial_passbook'])){
-				$total += 100;
+				$total += 50;
+				if(!empty($data['financial_creditcard'])){
+					$total += 50;
+				}
+				if(!empty($data['financial_passbook'])){
+					$total += 50;
+				}
 			}
 		}
 		
 		if(isset($data['social_status']) && !empty($data['social_status'])){
-			$total += 300;
+			$total += 50;
 		}
-		$total = $user_info->sex=="M"?$total:round($total*0.95);
+		
+		//SIP
+		if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
+			$total += 150;
+		}
+		//成績單
+		if(isset($data['transcript_front']) && !empty($data['transcript_front'])){
+			$total += 100;
+		}
+		
+		$total = $user_info->sex=="M"?round($total*0.9):$total;
 		$param['points'] 	= $total;
 		$param['level'] 	= $this->get_credit_level($total);
 		$param['amount'] 	= $this->get_credit_amount($total);
@@ -75,16 +91,15 @@ class Credit_lib{
 			}
 			
 			if(!empty($school_info)){
+				$point = $school_info['points'];
 				if($school_system==1){
 					if($school_info['national']==1){
-						$point = 400;
+						$point += 300;
 					}else{
-						$point = 200;
+						$point += 200;
 					}
 				}else if($school_system==2){
-					$point = 1200;
-				}else{
-					$point = $school_info['points'];
+					$point += 400;
 				}
 			}
 		}

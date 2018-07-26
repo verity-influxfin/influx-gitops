@@ -89,5 +89,26 @@ class Notification_lib{
 		return $rs;
 	}
 
+	public function auction_closed($user_id,$investor,$target_no,$amount=0){
+		if($investor==1){
+			$title = "[標的籌滿] 您申請的標的 $target_no 已滿標";
+			$content = "尊敬的用戶：
+						您好！
+						您申請的標的 $target_no ，已成功籌滿，您的得標金額為 $amount 元，感謝您的關注與信任。";
+		}else{
+			$title = "[借款籌滿] 您申請的借款 $target_no 已滿標";
+			$content = "您好！
+						您申請的借款 $target_no ，核可金額 $amount 元，已成功籌滿，系統將安排進行放款，請即刻注意銀行匯款資訊。";
+		}
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
 	
 }

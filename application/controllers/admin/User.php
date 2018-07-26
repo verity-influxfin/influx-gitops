@@ -135,7 +135,6 @@ class User extends MY_Admin_Controller {
 				$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 				$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
 				$this->load->view('admin/_header');
-				//$this->load->view('admin/_title',$this->menu);
 				$this->load->view('admin/users_edit',$page_data);
 				$this->load->view('admin/_footer');
 			}else{
@@ -145,6 +144,6 @@ class User extends MY_Admin_Controller {
 			alert("ERROR , id isn't exist",admin_url('user/index'));
 		}
 	}
-	
+
 }
 ?>

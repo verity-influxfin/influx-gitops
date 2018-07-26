@@ -29,4 +29,16 @@ class Certification_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+	
+	public function get_name_list(){
+		$data 	= array();
+		$list 	= $this->get_all();
+		if($list){
+			foreach($list as $key => $value){
+				if($value->status ==1 )
+					$data[$value->id] = $value->name;
+			}
+		}
+		return $data;
+	}
 }

@@ -25,6 +25,7 @@ class Passbook_lib{
 		SOURCE_INTEREST,
 		SOURCE_DAMAGE,
 		SOURCE_DELAYINTEREST,
+		SOURCE_TRANSFER,
 	);
 
 	public function __construct()

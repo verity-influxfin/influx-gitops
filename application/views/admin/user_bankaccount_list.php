@@ -64,7 +64,13 @@
                                             <td><?=isset($value->bank_code)?$value->bank_code:"" ?></td>
                                             <td><?=isset($value->branch_code)?$value->branch_code:"" ?></td>
                                             <td><?=isset($value->bank_account)?$value->bank_account:"" ?></td>
-											<td><?=isset($value->verify)?$verify_list[$value->verify]:"" ?></td>
+											<td>
+											<?=isset($value->verify)?$verify_list[$value->verify]:"" ?>
+											<? 	if($value->verify==2 && empty($value->user_name)){
+													echo '<p style="color:red;">未實名認證</p>';
+												}
+											?>
+											</td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">查看訊息</a></td> 
                                         </tr>                                        

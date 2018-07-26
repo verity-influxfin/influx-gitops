@@ -114,7 +114,6 @@ class Certification extends MY_Admin_Controller {
 		$page_data 			= array("type"=>"list","list"=>array());
 		$input 				= $this->input->get(NULL, TRUE);
 		$where				= array();
-		$certification 		= $this->certification_model->get_all();
 		$fields 			= ['investor','certification_id','status'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
@@ -126,14 +125,10 @@ class Certification extends MY_Admin_Controller {
 		if(!empty($list)){
 			$page_data['list'] = $list;
 		}
-		
-		$certification_list = array();
-		foreach($certification as $key => $value){
-			$certification_list[$value->id] = $value->name;
-		}
-		$page_data['certification_list'] = $certification_list;
-		$page_data['status_list'] 		= $this->user_certification_model->status_list;
-		$page_data['investor_list'] 	= $this->user_certification_model->investor_list;
+
+		$page_data['certification_list'] 	= $this->certification_model->get_name_list();
+		$page_data['status_list'] 			= $this->user_certification_model->status_list;
+		$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/user_certification_list',$page_data);
@@ -150,14 +145,10 @@ class Certification extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_certification_model->get($id);
 				if($info){
-					$certification 		= $this->certification_model->get_all();
-					$certification_list = array();
-					foreach($certification as $key => $value){
-						$certification_list[$value->id] = $value->name;
-					}
-					$page_data['certification_list'] 	= $certification_list;
+					$page_data['certification_list'] 	= $this->certification_model->get_name_list();
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
+					$page_data['remark'] 				= json_decode($info->remark,true);
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 					
@@ -216,10 +207,16 @@ class Certification extends MY_Admin_Controller {
 		}
 		
 		$list = $this->user_bankaccount_model->get_many_by($where);
-		if(!empty($list)){
-			$page_data['list'] = $list;
+		if($list){
+			foreach($list as $key => $value){
+				if($value->verify==2){
+					$user = $this->user_model->get($value->user_id);
+					$list[$key]->user_name = $user->name;
+				}
+			}
 		}
-
+		
+		$page_data['list'] 				= $list?$list:array();
 		$page_data['verify_list'] 		= $this->user_bankaccount_model->verify_list;
 		$page_data['investor_list'] 	= $this->user_bankaccount_model->investor_list;
 		$this->load->view('admin/_header');

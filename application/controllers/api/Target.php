@@ -738,7 +738,12 @@ class Target extends REST_Controller {
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list,"bank_account"=>$bank_account,"virtual_account"=>$virtual_account,"funds"=>$funds) ));
+		$this->response(array('result' => 'SUCCESS','data' => array(
+			"list" 				=> $list,
+			"bank_account"		=> $bank_account,
+			"virtual_account"	=> $virtual_account,
+			"funds"				=> $funds
+		)));
     }
  
  	/**

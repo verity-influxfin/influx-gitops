@@ -187,7 +187,7 @@ class Transfer_lib{
 										$target->user_id,
 										$target->user_id,
 									]);
-									$param 			= array("status"=>3,"contract_id"=>$contract_id);
+									$param 			= array("status"=>2,"contract_id"=>$contract_id);
 									$ended 			= false;
 								}else{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -224,6 +224,7 @@ class Transfer_lib{
 										$tx_datetime = $last_recharge_date < $value->created_at?$value->created_at:$last_recharge_date;
 										$tx_datetime = date("Y-m-d H:i:s",$tx_datetime);
 										$param = array(
+											"type"				=> 2,
 											"virtual_account"	=> $virtual_account->virtual_account,
 											"amount"			=> intval($value->amount),
 											"tx_datetime"		=> $tx_datetime,

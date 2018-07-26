@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "influx-p2p-ocr",
+  "private_key_id": "d05e530591b134df6f07244538272f1d8a4711ed",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCZ6RofMwX7QVRu\nq9xL8fZgLtnJ6gTUsGOhqiiCAbjcNDhDgUMv+l443u6h5f7bRDncZFZLuPBCBeTQ\nEtw9HVXlWmIXF3gHoJHy9tVmeSDPxn9qHfrL5bfuMHyYLckPR7dAGtCqEkbdcaNc\nsCVAOWWhgEEl6BNoBEEeKOkVn2Qj8eoxSfkymuFHo+Rj/kEvpDuq2Bh/L+oea3UE\njYbzegF2Zxrlp8TssgSw7LDrY6MYCvsCxmPPyeQ7otj8A1dt4GHKjFz8Xswz495j\nNpBe2d9EBERV/hjbydQ9Sgj32oexAD4J7XONNqLiw8G8MkVlEF5dxxX8li8bjBki\nORL76qr5AgMBAAECggEATD/jpRlOGVAgWEPke+t/t97+Hr5FbmmEso7uSpo3z0A/\nr5HWi2pqS5qGdsbPICoI0FsVNaaFwO/SkBMH8W8bIulIN1B1MrImHEyVJJNV4hng\n/d2kZmeEXAjBcVMdjOhmrOecAOXVHdgyqrTJf6vv4bb8j58OHjYdXKe/8eppXjSy\nopAbv3GcqTh+OsijY76KO0q5SVF8aFsRAxwQQ6aOQxJHrhHs9oD36aiqNit9dTCK\ngNCzQ7X67iAPKIf2ooH6MOCXJOXLdd4K9z9NtD0mPpPghsTEFjMYdI6RUJdRl5Bm\n8ybhzbqecPX70KeVdlDYFrwshdOIu4QveeQmFGuuEQKBgQDMTOeslx212UJrkjDc\nmI+kIjHjG37iF7P31aWgk5vgnX4WPSyEmvDZPCdMxtndFs2+9qeSc22GALml6mgU\nTbA5ii8D0G2j4UyKOhII7oVT5JqrYZdY+92GP3Ru9nW+FUSOq/4usYUGrasRsZP4\nYGrTj+xy4F0Oo4C4RQGTswh/RwKBgQDA29C6zqplOCgTZYnqFzUHm6jabmykSUSE\n/NhrWBZAj/0GCwcBzmFmKRrkzGfPJU3DZqSSsKdw5nVI02tETgJTb98hTgcrMf/v\nqwhrqCGfDhbAk/orrqp+cBNO4wRTKFlDqmbTJ/uRNCWcyDPXRN91vVNfkezgpFlh\nswVZz+sjvwKBgFlCLGIKb++YaV2INJLckL1cN0GLLMdpJbbdAA0FELB0/raGqaGR\n9DJlBqKTqnHe2ataJmJkzfAi9vlXTXu5aYnqJppbANv9viwSLPj8BQJfOXgxHifB\nesqBhMRKJ60Rq69N07Lg2kbNr5T+abC1p1ahZePWxLF1m/JmK8c1DDxXAoGBALsH\ncZD4Qv8OSq8k1W6TOvY52rKaS/m2pCBkJG1Va58JBFQL9aumvYYZbt9b64BTqOpK\nbGdlsbwngq4xeeEv1cmcwELILOOTBaUjtHLTBmf9fcsctowOQ4GCpvbl6ZfLlWWt\npzI3oBvc+mzlKoElZaAFDwmrtpDUUWoR9qp2nI55AoGBALDbZOrRYlDsxuZlpZP8\n3oBAd777WNt726PpBwuQrLOlWwxaJEUXlt0YyrBgVvFiF03zIcYyeNpooOeVmlXD\nujW/GREIfYWnh6U3s/462kSKRx/bw7YEXBwjw3owpkmSNS3Q69JjNQ678+SmZ1ZX\n63gFF6CKnaOjOQo6RfvJPUOj\n-----END PRIVATE KEY-----\n",
+  "client_email": "vision@influx-p2p-ocr.iam.gserviceaccount.com",
+  "client_id": "118344350280064352747",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vision%40influx-p2p-ocr.iam.gserviceaccount.com"
+}

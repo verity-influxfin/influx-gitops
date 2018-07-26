@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
 
@@ -95,4 +96,90 @@ class Welcome extends CI_Controller {
 		
 	}
 */
+	public function test3(){
+		$this->load->library("Transaction_lib");
+		$rs = $this->transaction_lib->transfer_success(2);
+		dump($rs);
+	}
+	
+	public function test2(){
+
+		$imageAnnotator = new ImageAnnotatorClient();
+		$image 			= file_get_contents("https://influxp2p-personal.s3.ap-northeast-1.amazonaws.com/id_card/img15325133402.jpg");
+		$response = $imageAnnotator->labelDetection($image);
+		$labels = $response->getLabelAnnotations();
+
+		if ($labels) {
+			echo("Labels:" . PHP_EOL);
+			foreach ($labels as $label) {
+				echo($label->getDescription() . PHP_EOL);
+			}
+		} else {
+			echo('No label found' . PHP_EOL);
+		}
+	}
+	
+	public function test(){
+		$a = '0        20180726SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+000000000001008223164164540083054              陳霈霈                                                                0                                                  150000金融帳號驗證                                      ';
+		$b = 
+		'<MYB2B>
+			<HEADER>
+				<SERVICE>PAYSVC</SERVICE>
+				<ACTION>BTRS01</ACTION>
+				<TXNKEY>20180726140605</TXNKEY>
+			</HEADER>
+			<BODY>
+				<LOGON>
+					<IDNO>68566881</IDNO>
+					<PASSWORD>fable1234</PASSWORD>
+					<USERNO>toychen</USERNO>
+					<BRANCH>5663</BRANCH>
+				</LOGON>
+				<DATA>
+					<CONTENT FileType="BTRS/BRMT/0" DrAcno="015035006475" PayDate="20180725" >
+				'.$a.'
+					</CONTENT>
+				</DATA>
+			</BODY>
+		</MYB2B>';
+		
+		$b = iconv('UTF-8', 'BIG-5', $b);
+		$key = iconv('UTF-8', 'BIG-5', 'influx6856688100');
+		$rs = $this->fnEncrypt($b,$key);
+		$rs = $this->strToHex($rs);
+		$rs = "68566881            ".$rs;
+		dump(iconv('UTF-8', 'BIG-5', $rs));
+	}
+
+	function fnEncrypt($sValue, $sSecretKey){
+		return rtrim(
+			base64_encode(
+				mcrypt_encrypt(
+					MCRYPT_RIJNDAEL_128,
+					$sSecretKey, $sValue, 
+					MCRYPT_MODE_ECB, 
+					mcrypt_create_iv(
+						mcrypt_get_iv_size(
+							MCRYPT_RIJNDAEL_128, 
+							MCRYPT_MODE_ECB
+						), 
+						MCRYPT_RAND
+					)
+				)
+			), "\0"
+		);
+	}
+
+	function strToHex($string){
+		$hex='';
+		for ($i=0; $i < strlen($string); $i++){
+			$hex .= dechex(ord($string[$i]));
+		}
+		return $hex;
+	}
+
+
 }
+
+
+

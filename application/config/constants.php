@@ -195,6 +195,7 @@ defined('SOURCE_TRANSFER_FEE')    	OR define('SOURCE_TRANSFER_FEE'		, '6');//債
 defined('SOURCE_PREPAYMENT_ALLOWANCE') OR define('SOURCE_PREPAYMENT_ALLOWANCE'	, '7');//提還補償金
 defined('SOURCE_PREPAYMENT_DAMAGE') OR define('SOURCE_PREPAYMENT_DAMAGE', '8');//提還違約金
 defined('SOURCE_AR_FEES') 			OR define('SOURCE_AR_FEES'			, '9');//應收平台服務費
+defined('SOURCE_TRANSFER') 			OR define('SOURCE_TRANSFER'			, '10');//債權轉讓金
 defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//應收借款本金
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息

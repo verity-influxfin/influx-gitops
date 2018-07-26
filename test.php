@@ -12,9 +12,9 @@ $db = array(
 	
 );
 
-$servername = "localhost";
-$username 	= "root";
-$password 	= "169euAO4nBxO5CvR";
+$servername = "influxp2p-db.cvtw7xmqixa4.ap-northeast-1.rds.amazonaws.com";
+$username 	= "influxdb";
+$password 	= "Ch67jVGwcjS&zZYZ!*e2";
 
 
 foreach($db as $dbname => $tables){

@@ -17,6 +17,7 @@ class Target_lib{
 		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Notification_lib');
+		
     }
 	
 	//核可額度利率
@@ -75,7 +76,7 @@ class Target_lib{
 						$param = array(
 							"loan_amount"		=> 0,
 							"status"			=> "9",
-							"remark"			=> "credit not enough",
+							"remark"			=> "信用不足",
 						);
 						$rs = $this->CI->target_model->update($target->id,$param);
 						$this->CI->notification_lib->approve_target($user_id,"9");
@@ -106,6 +107,7 @@ class Target_lib{
 					//結標
 					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
 					if($rs){
+						$this->CI->notification_lib->auction_closed($target->user_id,0,$target->target_no,$target->loan_amount);
 						$total = 0;
 						$ended = true;
 						foreach($investments as $key => $value){
@@ -127,6 +129,7 @@ class Target_lib{
 										"contract_id"	=> $contract_id ,
 										"status"		=> 2
 									);
+									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
 									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,"",$target->repayment);
@@ -142,6 +145,7 @@ class Target_lib{
 										"contract_id"	=> $contract_id ,
 										"status"		=> 2
 									); 
+									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 									$ended 			= false;
 								}else{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -177,6 +181,7 @@ class Target_lib{
 								$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$value->user_id));
 								if($virtual_account){
 									$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
+									$this->CI->load->library('Transaction_lib');
 									$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 									$total = $funds["total"] - $funds["frozen"];
 									if(intval($total)-intval($value->amount)>=0){

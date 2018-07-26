@@ -57,15 +57,16 @@ class Certification_lib{
 	
 	public function idcard_verify($id){
 		if($id){
-			$this->CI->load->library('Ocr_lib');
+			//$this->CI->load->library('Ocr_lib');
 			$this->CI->load->library('Faceplusplus_lib');
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status ==0 ){
 				$info->content 		= json_decode($info->content,true);
 				$content			= $info->content;
-				$this->set_success($id);return true;
-				$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
-				if($ocr && $content['name']==$ocr['name'] && $content['id_number']==$ocr['id_number']){
+				$ocr 				= array();
+				//$ocr = $this->CI->ocr_lib->identify($content['front_image'],1031);
+				//if($ocr && $content['name']==$ocr['name'] && $content['id_number']==$ocr['id_number']){
+				
 					$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image']);
 					$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image']);
 					$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
@@ -82,17 +83,22 @@ class Certification_lib{
 								$answer[1] 	= $tmp;
 							}
 							if($answer[0]>=60 && $answer[1]>=90){
+								$error = array("error"=>"","OCR"=>$ocr,"face"=>$answer);
+								$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
 								$this->set_success($id);
 							}else{
-								$this->CI->user_certification_model->update($id,array("remark"=>"Face points ".json_encode($answer),"status"=>3));
+								$error = array("error"=>"face point","OCR"=>$ocr,"face"=>$answer);
+								$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error),"status"=>3));
 							}
 						}
 					}else{
-						$this->CI->user_certification_model->update($id,array("remark"=>"Face count error","status"=>3));
+						$error = array("error"=>"face count","OCR"=>$ocr);
+						$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error),"status"=>3));
 					}
-				}else{
-					$this->CI->user_certification_model->update($id,array("remark"=>"OCR error","status"=>2));
-				}
+				/*}else{
+					$error = array("error"=>"OCR","OCR"=>$ocr);
+					$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error),"status"=>2));
+				}*/
 			}
 		}
 		return false;

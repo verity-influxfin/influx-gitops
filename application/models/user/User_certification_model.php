@@ -13,7 +13,7 @@ class User_certification_model extends MY_Model
 	);
 	public $investor_list  	= array(
 		0 =>	"借款端",
-		1 =>	"投資端",
+		1 =>	"出借端",
 	);
 	
 	public function __construct()

@@ -33,7 +33,6 @@ class Payment_lib{
 			"txdate8"		=> "Y",
 		);
 		$rs 	= curl_get(CATHAY_API_URL,$param);
-		dump($rs);
 		$rs 	= iconv('big5', 'big5//IGNORE', $rs); 
 		$xml 	= simplexml_load_string($rs);
 		$xml 	= json_decode(json_encode($xml),TRUE);

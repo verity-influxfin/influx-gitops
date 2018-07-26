@@ -481,8 +481,231 @@ class Transfer extends REST_Controller {
 		
 		$this->response(array('result' => 'ERROR','error' => TRANSFER_NOT_EXIST ));
     }
+	
+	/**
+     * @api {get} /transfer/applylist 出借方 債權申請紀錄列表
+     * @apiGroup Transfer
+	 * 
+	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} id Transfer Investments ID
+	 * @apiSuccess {String} amount 投標金額
+	 * @apiSuccess {String} contract 合約內容
+	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 9:流標 10:移轉成功
+	 * @apiSuccess {String} created_at 申請日期
+	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {String} product.name 產品名稱
+	 * @apiSuccess {json} transfer 債轉標的資訊
+	 * @apiSuccess {String} transfer.id Transfer ID
+	 * @apiSuccess {String} transfer.amount 借款轉讓金額
+	 * @apiSuccess {String} transfer.instalment 借款剩餘期數
+	 * @apiSuccess {String} transfer.expire_time 流標時間
+	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {String} target.loan_amount 標的金額
+	 * @apiSuccess {String} target.target_no 案號
+	 * @apiSuccess {String} target.expire_time 流標時間
+	 * @apiSuccess {String} target.invested 目前投標量
+	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
+	 * @apiSuccess {String} bank_account.branch_code 分行代碼
+	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
+	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
+	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
+	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
+	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
+	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
+	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {String} funds.total 資金總額
+	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
+	 * @apiSuccess {String} funds.frozen 待交易餘額
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 			{
+     * 				"id":"1",
+     * 				"amount":"5000",
+	 * 				"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊",
+     * 				"status":"0,
+     * 				"created_at":"1520421572",
+	 * 				"product":{
+     * 					"id":"2",
+     * 					"name":"輕鬆學貸",
+     * 					"description":"輕鬆學貸",
+     * 					"alias":"FA"
+     * 				},
+     * 				"transfer": {
+     * 					"id": "1",
+     * 					"amount": "1804233189",
+     * 					"instalment": "5000",
+     * 					"expire_time": "123456789"
+     * 				}
+     * 				"target": {
+     * 					"id": "19",
+     * 					"target_no": "1804233189",
+     * 					"invested": "5000",
+     * 					"expire_time": "123456789",
+     * 					"delay": "0",
+     * 					"status": "5"
+     * 				}
+     * 			}
+     * 			],
+     * 	        "bank_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "1234",
+     * 	            "bank_account": "12345678910"
+     * 	        },
+     * 	        "virtual_account": {
+     * 	            "bank_code": "013",
+     * 	            "branch_code": "0154",
+     * 	            "bank_name": "國泰世華商業銀行",
+     * 	            "branch_name": "信義分行",
+     * 	            "virtual_account": "56639100000001"
+     * 	        },
+     * 	        "funds": {
+     * 	            "total": 500,
+     * 	            "last_recharge_date": "2018-05-03 19:15:42",
+     * 	            "frozen": 0
+     * 	        }
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse NotInvestor
+	 *
+     * @apiError 202 未通過所需的驗證(實名驗證)
+     * @apiErrorExample {json} 202
+     *     {
+     *       "result": "ERROR",
+     *       "error": "202"
+     *     }
+	 *
+     * @apiError 203 金融帳號驗證尚未通過
+     * @apiErrorExample {json} 203
+     *     {
+     *       "result": "ERROR",
+     *       "error": "203"
+     *     }
+	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {json} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {json} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
+     *     }
+     */
+	public function applylist_get()
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$investor 			= $this->user_info->investor;
+	
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+		}
 
-	 
+		//檢查認證 NOT_VERIFIED
+		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
+		foreach($certification_list as $key => $value){
+			if( $value->alias=='id_card' && $value->user_status!=1 ){
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+			}
+		}
+			
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if(!$user_bankaccount){
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+		}
+		
+		if($this->user_info->transaction_password==""){
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
+		}
+		
+		$this->load->model('user/virtual_account_model');
+		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
+		$virtual_account	= array(
+			"bank_code"			=> CATHAY_BANK_CODE,
+			"branch_code"		=> CATHAY_BRANCH_CODE,
+			"bank_name"			=> CATHAY_BANK_NAME,
+			"branch_name"		=> CATHAY_BRANCH_NAME,
+			"virtual_account"	=> $virtual->virtual_account,
+		);
+		$bank_account 		= array(
+			"bank_code"		=> $user_bankaccount->bank_code,
+			"branch_code"	=> $user_bankaccount->branch_code,
+			"bank_account"	=> $user_bankaccount->bank_account,
+		);
+		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
+		$param				= array( "user_id"=> $user_id);
+		$transfer_investment = $this->transfer_investment_model->get_many_by($param);
+		$list				= array();
+		if(!empty($transfer_investment)){
+			foreach($transfer_investment as $key => $value){
+				$transfer_info 		= $this->transfer_lib->get_transfer($value->transfer_id);
+				$transfer		= array(
+					"id"			=> $transfer_info->id,
+					"amount"		=> $transfer_info->amount,
+					"instalment"	=> $transfer_info->instalment,
+					"expire_time"	=> $transfer_info->expire_time,
+				);
+
+				$target_info 	= $this->target_model->get($transfer_info->target_id);
+				$target = array(
+					"id"			=> $target_info->id,
+					"loan_amount"	=> $target_info->loan_amount,
+					"target_no"		=> $target_info->target_no,
+					"invested"		=> $target_info->invested,
+					"expire_time"	=> $target_info->expire_time,
+					"delay"			=> $target_info->delay,
+					"status"		=> $target_info->status,
+					"sub_status"	=> $target_info->sub_status,
+				);
+				
+				$product_info = $this->product_model->get($target_info->product_id);
+				$product = array(
+					"id"			=> $product_info->id,
+					"name"			=> $product_info->name,
+				);
+				
+				$contract = "";
+				if($value->contract_id){
+					$contract_data = $this->contract_lib->get_contract($value->contract_id);
+					$contract = $contract_data["content"];
+				}
+			
+				$list[] = array(
+					"id" 				=> $value->id,
+					"amount" 			=> $value->amount,
+					"contract" 			=> $contract,
+					"status" 			=> $value->status,
+					"created_at" 		=> $value->created_at,
+					"product" 			=> $product,
+					"transfer" 			=> $transfer,
+					"target" 			=> $target,
+				);
+			}
+		}
+		$this->response(array('result' => 'SUCCESS','data' => array(
+			"list" 				=> $list,
+			"bank_account"		=> $bank_account,
+			"virtual_account"	=> $virtual_account,
+			"funds"				=> $funds
+		)));
+    }
+ 
  	/**
      * @api {get} /transfer/batch 出借方 智能收購
      * @apiGroup Transfer

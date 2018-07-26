@@ -41,7 +41,12 @@
 										<?
 											}}
 										?>
-										
+										<div class="form-group">
+                                            <label>備註</label>
+											<pre>
+											<? var_dump($remark);?>
+											</pre>
+                                        </div>
 										<? if($data->status!=1){ ?>
 											<div class="form-group">
 												<label>審核</label>
@@ -56,8 +61,6 @@
                                         
                                     </form>
                                 </div>
-
-
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
                             </div>
