@@ -70,7 +70,10 @@
 											<tr>
 												<td><p class="form-control-static">還款虛擬帳號</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->virtual_account)?$data->virtual_account:"";?></p>
+													<p class="form-control-static">
+													
+													<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$virtual_account->virtual_account) ?>" ><?=$virtual_account->virtual_account ?></a>
+													</p>
 												</td>
 												<td><p class="form-control-static">備註</p></td>
 												<td>
@@ -80,11 +83,11 @@
 											<tr>
 												<td><p class="form-control-static">狀態</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->status)?$data->status:"";?></p>
+													<p class="form-control-static"><?=isset($data->status)?$status_list[$data->status]:"";?></p>
 												</td>
 												<td><p class="form-control-static">放款狀態</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->loan_status)?$data->loan_status:"";?></p>
+													<p class="form-control-static"><?=isset($data->loan_status)?$loan_list[$data->loan_status]:"";?> - <?=$bank_account_verify?"金融帳號已驗證":"金融帳號未驗證";?></p>
 												</td>
 											</tr>
 											<tr>
@@ -199,7 +202,7 @@
 									</table>
 								</div>
 							</div>
-							<? if($data->status==5 || $data->status==10){?>
+							<? if(in_array($data->status,array(4,5,10))){?>
 							<div class="col-lg-6">
 								<div class="table-responsive">
 								<? if($investments){
@@ -228,6 +231,24 @@
 												</td>
 											</tr>
 											<tr>
+												<td><p class="form-control-static">發證地點</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($value->user_info->id_card_place)?$value->user_info->id_card_place:"";?></p>
+												</td>
+												<td><p class="form-control-static">發證日期</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($value->user_info->id_card_date)?$value->user_info->id_card_date:"";?></p>
+												</td>
+												<td><p class="form-control-static">身分證字號</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($value->user_info->id_number)?$value->user_info->id_number:"";?></p>
+												</td>
+												<td><p class="form-control-static">性別</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($value->user_info->sex)?$value->user_info->sex:"";?></p>
+												</td>
+											</tr>
+											<tr>
 												<td><p class="form-control-static">投標</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($value->amount)?$value->amount:"";?></p>
@@ -242,7 +263,67 @@
 													<p class="form-control-static"><?=isset($value->tx_datetime)?$value->tx_datetime:"";?></p>
 												</td>
 											</tr>
-
+											<tr>
+												<td><p class="form-control-static">出借虛擬帳號</p></td>
+												<td colspan="3">
+													<p class="form-control-static">
+													<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account->virtual_account) ?>" ><?=$value->virtual_account->virtual_account ?></a>
+													</p>
+												</td>
+												<td><p class="form-control-static">待交易區流水號</p></td>
+												<td colspan="3">
+													<p class="form-control-static"><?=isset($value->frozen_id)?$value->frozen_id:"";?></p>
+												</td>
+											</tr>
+											<? if(isset($investments_amortization_schedule[$value->id]) && $investments_amortization_schedule[$value->id]){?>
+												<tr style="background-color:#f5f5f5;">
+													<td colspan="7">預計攤還表</td>
+												</tr>
+												<tr style="background-color:#f5f5f5;">
+													<td>本金合計</td>
+													<td><?=$investments_amortization_schedule[$value->id]["amount"]?></td>
+													<td>本息合計</td>
+													<td><?=$investments_amortization_schedule[$value->id]["total"]["total_payment"]?></td>
+													<td>XIRR</td>
+													<td><?=$investments_amortization_schedule[$value->id]["XIRR"]?>%</td>
+													<td><?=$investments_amortization_schedule[$value->id]["date"]?></td>
+												</tr>
+												<tr style="background-color:#f5f5f5;">
+													<td>期數</td>
+													<td>期初本金</td>
+													<td>還款日</td>
+													<td>日數</td>
+													<td>還款本金</td>
+													<td>還款利息</td>
+													<td>還款合計</td>
+												</tr>
+												<?	foreach($investments_amortization_schedule[$value->id]["schedule"] as $k => $v){ ?>
+												
+												
+												<tr>
+													<td><?=$v['instalment'] ?></td>
+													<td><?=$v['remaining_principal'] ?></td>
+													<td><?=$v['repayment_date'] ?></td>
+													<td><?=$v['days'] ?></td>
+													<td><?=$v['principal'] ?></td>
+													<td><?=$v['interest'] ?></td>
+													<td><?=$v['total_payment'] ?></td>
+												</tr>
+											<? }} ?>
+											
+											<? if(isset($investments_amortization_table[$value->id]) && $investments_amortization_table[$value->id]){ ?>
+												<tr style="background-color:#f5f5f5;">
+													<td colspan="8">攤還表</td>
+												</tr>
+												<tr style="background-color:#f5f5f5;">
+													<td>本金合計</td>
+													<td><?=$investments_amortization_table[$value->id]["amount"]?></td>
+													<td>本息合計</td>
+													<td><?=$investments_amortization_table[$value->id]["total_payment"]?></td>
+													<td>XIRR</td>
+													<td><?=$investments_amortization_table[$value->id]["XIRR"]?>%</td>
+													<td colspan="2"><?=$investments_amortization_table[$value->id]["date"]?></td>
+												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
 													<td>期初本金</td>
@@ -253,9 +334,7 @@
 													<td>還款合計</td>
 													<td>已還款金額</td>
 												</tr>
-												<? if($investments_amortization_table[$value->id]){
-													foreach($investments_amortization_table[$value->id]["list"] as $k => $v){
-												?>
+												<?	foreach($investments_amortization_table[$value->id]["list"] as $k => $v){ ?>
 												<tr>
 													<td><?=$v['instalment'] ?></td>
 													<td><?=$v['remaining_principal'] ?></td>

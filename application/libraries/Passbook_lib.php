@@ -48,7 +48,7 @@ class Passbook_lib{
 						"virtual_account"	=> $transaction->bank_account_to,
 						"transaction_id"	=> $transaction_id,
 						"amount"			=> intval($transaction->amount),
-						"remark"			=> json_encode(array("source"=>$transaction->source)),
+						"remark"			=> json_encode(array("source"=>$transaction->source,"target_id"=>$transaction->target_id)),
 						"tx_datetime"		=> $tx_datetime,
 					);
 				}
@@ -58,7 +58,7 @@ class Passbook_lib{
 						"virtual_account"	=> $transaction->bank_account_from,
 						"transaction_id"	=> $transaction_id,
 						"amount"			=> intval($transaction->amount)*(-1),
-						"remark"			=> json_encode(array("source"=>$transaction->source)),
+						"remark"			=> json_encode(array("source"=>$transaction->source,"target_id"=>$transaction->target_id)),
 						"tx_datetime"		=> $tx_datetime,
 					);
 				}

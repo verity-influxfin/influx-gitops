@@ -9,12 +9,9 @@ class Target_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/target_model');
-		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('product/product_model');
 		$this->CI->load->model('user/user_bankaccount_model');
-		$this->CI->load->model('user/virtual_account_model');
-		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Notification_lib');
 		
@@ -57,18 +54,11 @@ class Target_lib{
 								"credit_level"		=> $credit['level'],
 								"platform_fee"		=> $platform_fee,
 								"interest_rate"		=> $interest_rate, 
-								"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target->target_no,
 								"contract_id"		=> $contract_id,
 								"status"			=> "1",
 							);
 							$rs = $this->CI->target_model->update($target->id,$param);
 							if($rs){
-								$virtual_data = array(
-									"user_id"			=> $user_id,				
-									"virtual_account"	=> $param['virtual_account'],
-									"investor"			=> 0,
-								);
-								$this->CI->virtual_account_model->insert($virtual_data);
 								$this->CI->notification_lib->approve_target($user_id,"1",$loan_amount);
 							}
 						}
@@ -91,9 +81,17 @@ class Target_lib{
 	
 	//判斷流標或結標或凍結投資款項
 	function check_bidding($target){
-		if( $target && $target->id && $target->status == 3){
+		if( $target && $target->status == 3){
+			$this->CI->load->model('loan/investment_model');
+			$this->CI->load->model('transaction/frozen_amount_model');
+			$this->CI->load->model('user/virtual_account_model');
+			$this->CI->load->library('Subloan_lib');
+			$this->CI->load->library('Contract_lib');
+			$this->CI->load->library('Transaction_lib');
+
 			$investments = $this->CI->investment_model->order_by("tx_datetime","asc")->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1")));
 			if($investments){
+				
 				$amount = 0;
 				foreach($investments as $key => $value){
 					if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
@@ -103,7 +101,7 @@ class Target_lib{
 				//更新invested
 				$this->CI->target_model->update($target->id,array("invested"=>$amount));
 				if($amount >= $target->loan_amount){
-					$this->CI->load->library('contract_lib');
+					
 					//結標
 					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
 					if($rs){
@@ -159,7 +157,6 @@ class Target_lib{
 					if($target->expire_time < time()){
 						//流標
 						if($target->sub_status==8){
-							$this->CI->load->library('Subloan_lib');
 							$this->CI->subloan_lib->auction_ended($target);
 						}else{
 							$this->CI->target_model->update($target->id,array(
@@ -181,7 +178,6 @@ class Target_lib{
 								$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$value->user_id));
 								if($virtual_account){
 									$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
-									$this->CI->load->library('Transaction_lib');
 									$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 									$total = $funds["total"] - $funds["frozen"];
 									if(intval($total)-intval($value->amount)>=0){
@@ -208,7 +204,7 @@ class Target_lib{
 			}else{
 				if($target->expire_time < time()){
 					if($target->sub_status==8){
-						$this->CI->load->library('Subloan_lib');
+						
 						$this->CI->subloan_lib->auction_ended($target);
 					}else{
 						$this->CI->target_model->update($target->id,array(

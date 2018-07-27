@@ -104,21 +104,30 @@ class Welcome extends CI_Controller {
 	
 	public function test2(){
 
+		//$imageAnnotator = new ImageAnnotatorClient();
+		$path = "https://influxp2p-personal.s3.ap-northeast-1.amazonaws.com/id_card/img15326705194.jpg";
 		$imageAnnotator = new ImageAnnotatorClient();
-		$image 			= file_get_contents("https://influxp2p-personal.s3.ap-northeast-1.amazonaws.com/id_card/img15325133402.jpg");
-		$response = $imageAnnotator->labelDetection($image);
-		$labels = $response->getLabelAnnotations();
 
-		if ($labels) {
-			echo("Labels:" . PHP_EOL);
-			foreach ($labels as $label) {
-				echo($label->getDescription() . PHP_EOL);
+		# annotate the image
+		$image = file_get_contents($path);
+		$response = $imageAnnotator->textDetection($image);
+		$texts = $response->getTextAnnotations();
+
+		printf('%d texts found:' . PHP_EOL, count($texts));
+		foreach ($texts as $text) {
+			print($text->getDescription() . PHP_EOL);
+
+			# get bounds
+			$vertices = $text->getBoundingPoly()->getVertices();
+			$bounds = [];
+			foreach ($vertices as $vertex) {
+				$bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
 			}
-		} else {
-			echo('No label found' . PHP_EOL);
+			print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
 		}
 	}
-	
+
+
 	public function test(){
 		$a = '0        20180726SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+000000000001008223164164540083054              陳霈霈                                                                0                                                  150000金融帳號驗證                                      ';
 		$b = 
@@ -145,30 +154,29 @@ class Welcome extends CI_Controller {
 		
 		$b = iconv('UTF-8', 'BIG-5', $b);
 		$key = iconv('UTF-8', 'BIG-5', 'influx6856688100');
-		$rs = $this->fnEncrypt($b,$key);
+		$rs = $this->encrypt($b,$key);
 		$rs = $this->strToHex($rs);
 		$rs = "68566881            ".$rs;
 		dump(iconv('UTF-8', 'BIG-5', $rs));
 	}
 
-	function fnEncrypt($sValue, $sSecretKey){
-		return rtrim(
-			base64_encode(
-				mcrypt_encrypt(
-					MCRYPT_RIJNDAEL_128,
-					$sSecretKey, $sValue, 
-					MCRYPT_MODE_ECB, 
-					mcrypt_create_iv(
-						mcrypt_get_iv_size(
-							MCRYPT_RIJNDAEL_128, 
-							MCRYPT_MODE_ECB
-						), 
-						MCRYPT_RAND
-					)
-				)
-			), "\0"
-		);
-	}
+    public function encrypt($src, $key, $size = 128, $mode = 'ECB') {
+        if (is_null($key)) {
+            log_message('error', 'Key為空值');
+            return null;
+        }
+
+        $method = $this->findMethod($size, $mode);
+        $ivSize = openssl_cipher_iv_length($method);
+        $iv = openssl_random_pseudo_bytes($ivSize);
+        $encrypted = openssl_encrypt($src, $method, mb_convert_encoding($key, 'big5', 'utf-8'), OPENSSL_RAW_DATA, $iv);
+        return base64_encode($iv . $encrypted);
+    }
+
+    function findMethod($size, $mode = 'ECB') {
+        return 'AES-' . $size . '-' . $mode;
+    }
+	
 
 	function strToHex($string){
 		$hex='';

@@ -167,7 +167,6 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {String} invested 目前投標量
-	 * @apiSuccess {String} virtual_account 還款虛擬帳號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
@@ -704,7 +703,7 @@ class Target extends REST_Controller {
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
 					"id"			=> $target_info->id,
-					"loan_amount"		=> $target_info->loan_amount,
+					"loan_amount"	=> $target_info->loan_amount,
 					"target_no"		=> $target_info->target_no,
 					"invested"		=> $target_info->invested,
 					"expire_time"	=> $target_info->expire_time,

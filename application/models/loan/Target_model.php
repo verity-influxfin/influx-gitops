@@ -16,6 +16,11 @@ class Target_model extends MY_Model
 		9 =>	"申請失敗",
 		10 =>	"已結案",
 	);
+	public $loan_list   = array(
+		0 =>	"",
+		1 =>	"已出款",
+		2 =>	"待出款",
+	);
 	
 	public $delay_list   = array(
 		0 =>	"無",

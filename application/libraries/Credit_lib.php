@@ -39,7 +39,7 @@ class Credit_lib{
 		
 		//學校
 		if(isset($data['school_name']) && !empty($data['school_name'])){
-			$total += $this->get_school_point($data['school_name'],$data['school_system'],$data['school_department']);
+			$total += $this->get_school_point($data['school_name'],$data['school_system'],$data['school_major']);
 		}
 		
 		//財務證明
@@ -77,9 +77,9 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	public function get_school_point($school_name="",$school_system=0,$department=""){
+	public function get_school_point($school_name="",$school_system=0,$school_major=""){
 		$point = 0;
-		if(!empty($school_name) && !empty($department)){
+		if(!empty($school_name)){
 			$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
 			$school_list = json_decode($school_list,true);
 			$school_info = array();
@@ -101,6 +101,40 @@ class Credit_lib{
 				}else if($school_system==2){
 					$point += 400;
 				}
+			}
+
+			if(!empty($school_major)){
+				$school_major_point = array(
+					'醫藥衛生學門'			=> 400,
+					'教育學門'				=> 400,
+					'運輸服務學門'			=> 400,
+					'資訊通訊科技學門'			=> 400,
+					'工程及工程業學門'			=> 400,
+					'建築及營建工程學門'		=> 300,
+					'商業及管理學門'			=> 300,
+					'物理、化學及地球科學學門'	=> 300,
+					'社會及行為科學學門'		=> 300,
+					'獸醫學門'				=> 300,
+					'數學及統計學門'			=> 300,
+					'法律學門'				=> 300,
+					'安全服務學門'			=> 300,
+					'製造及加工學門'			=> 300,
+					'衛生及職業衛生服務學門'	=> 300,
+					'農業學門'				=> 200,
+					'餐旅及民生服務學門'		=> 200,
+					'環境學門'				=> 200,
+					'人文學門'				=> 200,
+					'語文學門'				=> 200,
+					'社會福利學門'			=> 200,
+					'新聞學及圖書資訊學門'		=> 200,
+				);
+				if(isset($school_major_point[$school_major]) && $school_major_point[$school_major]){
+					$point += intval($school_major_point[$school_major]);
+				}else{
+					$point += 100;
+				}
+			}else{
+				$point += 100;
 			}
 		}
 		return $point;

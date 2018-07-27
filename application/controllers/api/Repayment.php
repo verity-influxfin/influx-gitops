@@ -223,6 +223,15 @@ class Repayment extends REST_Controller {
 		$repayment_type 	= $this->config->item('repayment_type');
 		$list				= array();
 		if(!empty($targets)){
+			$this->load->model('user/virtual_account_model');
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account		= array(
+				"bank_code"			=> CATHAY_BANK_CODE,
+				"branch_code"		=> CATHAY_BRANCH_CODE,
+				"bank_name"			=> CATHAY_BANK_NAME,
+				"branch_name"		=> CATHAY_BRANCH_NAME,
+				"virtual_account"	=> $virtual_account_info->virtual_account,
+			);
 			foreach($targets as $key => $value){
 				$next_repayment = array(
 					"date" 			=> "",
@@ -257,15 +266,7 @@ class Repayment extends REST_Controller {
 					"id"				=> $product_info->id,
 					"name"				=> $product_info->name,
 				);
-				
-				$virtual_account	= array(
-					"bank_code"			=> CATHAY_BANK_CODE,
-					"branch_code"		=> CATHAY_BRANCH_CODE,
-					"bank_name"			=> CATHAY_BANK_NAME,
-					"branch_name"		=> CATHAY_BRANCH_NAME,
-					"virtual_account"	=> $value->virtual_account,
-				);
-		
+
 				$list[] = array(
 					"id" 				=> $value->id,
 					"target_no" 		=> $value->target_no,
@@ -479,12 +480,14 @@ class Repayment extends REST_Controller {
 				"name"			=> $product_info->name,
 			);
 			
-			$virtual_account	= array(
+			$this->load->model('user/virtual_account_model');
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account		= array(
 				"bank_code"			=> CATHAY_BANK_CODE,
 				"branch_code"		=> CATHAY_BRANCH_CODE,
 				"bank_name"			=> CATHAY_BANK_NAME,
 				"branch_name"		=> CATHAY_BRANCH_NAME,
-				"virtual_account"	=> $target->virtual_account,
+				"virtual_account"	=> $virtual_account_info->virtual_account,
 			);
 			
 			$next_repayment = array(

@@ -52,7 +52,6 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} id Product ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} parent_id 父層產品
 	 * @apiSuccess {String} rank 排序
 	 * @apiSuccess {json} instalment 可申請期數
 	 * @apiSuccess {json} repayment 可選還款方式
@@ -108,7 +107,23 @@ class Product extends REST_Controller {
      * 					"status":"0",
      * 					"instalment":"3期",
      * 					"created_at":"1520421572"
-     * 				}
+     * 				},
+	 * 				"certification":[
+	 * 					{
+     * 						"id":"1",
+     * 						"name": "實名認證",
+     * 						"description":"實名認證",
+     * 						"alias":"id_card",
+     * 						"user_status":"1"
+     * 					},
+	 * 					{
+     * 						"id":"2",
+     * 						"name": "學生身份認證",
+     * 						"description":"學生身份認證",
+     * 						"alias":"student",
+     * 						"user_status":"1"
+     * 					}
+	 * 				]
      * 			}
      * 			]
      * 		}
@@ -376,8 +391,8 @@ class Product extends REST_Controller {
 				$param[$field] = intval($input[$field]);
 			}
 		}
-		$param["promote_code"] = isset($input['promote_code'])?$input['promote_code']:"";
-		$product = $this->product_model->get($input['product_id']);
+		$param["promote_code"] 	= isset($input['promote_code'])?$input['promote_code']:"";
+		$product 				= $this->product_model->get($input['product_id']);
 		if($product && $product->status == 1 ){
 			$product->instalment 		= json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){
@@ -392,6 +407,7 @@ class Product extends REST_Controller {
 			if($target){
 				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
 			}
+			
 			$param["target_no"] = $this->get_target_no();
 			$insert = $this->target_model->insert($param);
 			if($insert){

@@ -161,12 +161,19 @@ class Certification_lib{
 						"birthday"			=> $birthday,
 					);
 					
-					$virtual_data = array(
+					$virtual_data[] = array(
 						"investor"			=> 1,
 						"user_id"			=> $info->user_id,				
 						"virtual_account"	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.substr($content["id_number"],1,9),
 					);
-					$this->CI->virtual_account_model->insert($virtual_data);
+					
+					$virtual_data[] = array(
+						"investor"			=> 0,
+						"user_id"			=> $info->user_id,				
+						"virtual_account"	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.substr($content["id_number"],1,9),
+					);
+					
+					$this->CI->virtual_account_model->insert_many($virtual_data);
 				}
 
 				$this->CI->user_model->update_many($info->user_id,$user_info);
@@ -186,6 +193,7 @@ class Certification_lib{
 				"school_name"			=> $content["school"],
 				"school_system"			=> $content["system"],
 				"school_department"		=> $content["department"],
+				"school_major"			=> $content["major"],
 				"school_email"			=> $content["email"],
 				"school_grade"			=> $content["grade"],
 				"student_id"			=> $content["student_id"],

@@ -124,121 +124,124 @@ class Transaction_lib{
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 4 && $target->loan_status == 1){
-				$where = array(
-					"user_id"	=> $target->user_id,
-					"status"	=> 1,
-					"verify"	=> 1,
-					"investor"	=> 0
-				);
-				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
-				if($user_bankaccount){
-				
-					//手續費
-					$transaction[]	= array(
-						"source"			=> SOURCE_FEES,
-						"entering_date"		=> $date,
-						"user_from"			=> $target->user_id,
-						"bank_account_from"	=> $user_bankaccount->bank_account,
-						"amount"			=> intval($target->platform_fee),
-						"target_id"			=> $target->id,
-						"instalment_no"		=> 0,
-						"user_to"			=> 0,
-						"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
-						"status"			=> 2
+				$target_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$target->user_id,"investor"=>0,"status"=>1));
+				if($target_account){
+					$where = array(
+						"user_id"	=> $target->user_id,
+						"status"	=> 1,
+						"verify"	=> 1,
+						"investor"	=> 0
 					);
+					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+					if($user_bankaccount){
 					
+						//手續費
+						$transaction[]	= array(
+							"source"			=> SOURCE_FEES,
+							"entering_date"		=> $date,
+							"user_from"			=> $target->user_id,
+							"bank_account_from"	=> $user_bankaccount->bank_account,
+							"amount"			=> intval($target->platform_fee),
+							"target_id"			=> $target->id,
+							"instalment_no"		=> 0,
+							"user_to"			=> 0,
+							"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+							"status"			=> 2
+						);
+						
 
-					$investment_ids = array();
-					$frozen_ids 	= array();
-					$investments 	= $this->CI->investment_model->get_many_by(array(
-						"target_id"		=> $target->id,
-						"status"		=> 2,
-						"loan_amount >"	=> 0,
-						"frozen_status"	=> 1
-					));
-					if($investments){
-						foreach($investments as $key => $value){
-							$investment_ids[]	= $value->id;
-							$frozen_ids[]		= $value->frozen_id;
-							$virtual_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"investor"=>1));
-							
-							//放款
-							$transaction[]		= array(
-								"source"			=> SOURCE_LENDING,
-								"entering_date"		=> $date,
-								"user_from"			=> $value->user_id,
-								"bank_account_from"	=> $virtual_account->virtual_account,
-								"amount"			=> intval($value->loan_amount),
-								"target_id"			=> $target->id,
-								"investment_id"		=> $value->id,
-								"instalment_no"		=> 0,
-								"user_to"			=> $target->user_id,
-								"bank_account_to"	=> $user_bankaccount->bank_account,
-								"status"			=> 2
-							);
+						$investment_ids = array();
+						$frozen_ids 	= array();
+						$investments 	= $this->CI->investment_model->get_many_by(array(
+							"target_id"		=> $target->id,
+							"status"		=> 2,
+							"loan_amount >"	=> 0,
+							"frozen_status"	=> 1
+						));
+						if($investments){
+							foreach($investments as $key => $value){
+								$investment_ids[]	= $value->id;
+								$frozen_ids[]		= $value->frozen_id;
+								$virtual_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"investor"=>1,"status"=>1));
+								
+								//放款
+								$transaction[]		= array(
+									"source"			=> SOURCE_LENDING,
+									"entering_date"		=> $date,
+									"user_from"			=> $value->user_id,
+									"bank_account_from"	=> $virtual_account->virtual_account,
+									"amount"			=> intval($value->loan_amount),
+									"target_id"			=> $target->id,
+									"investment_id"		=> $value->id,
+									"instalment_no"		=> 0,
+									"user_to"			=> $target->user_id,
+									"bank_account_to"	=> $user_bankaccount->bank_account,
+									"status"			=> 2
+								);
 
-							
-							//攤還表
-							$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
-							if($amortization_schedule){
-								foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
-									$transaction[]	= array(
-										"source"			=> SOURCE_AR_PRINCIPAL,
-										"entering_date"		=> $date,
-										"user_from"			=> $target->user_id,
-										"bank_account_from"	=> $target->virtual_account,
-										"amount"			=> intval($payment['principal']),
-										"target_id"			=> $target->id,
-										"investment_id"		=> $value->id,
-										"instalment_no"		=> $instalment_no,
-										"user_to"			=> $value->user_id,
-										"bank_account_to"	=> $virtual_account->virtual_account,
-										"limit_date"		=> $payment['repayment_date'],
-									);
-									
-									$transaction[]	= array(
-										"source"			=> SOURCE_AR_INTEREST,
-										"entering_date"		=> $date,
-										"user_from"			=> $target->user_id,
-										"bank_account_from"	=> $target->virtual_account,
-										"amount"			=> intval($payment['interest']),
-										"target_id"			=> $target->id,
-										"investment_id"		=> $value->id,
-										"instalment_no"		=> $instalment_no,
-										"user_to"			=> $value->user_id,
-										"bank_account_to"	=> $virtual_account->virtual_account,
-										"limit_date"		=> $payment['repayment_date'],
-									);
-									
-									$total 	= intval($payment['interest'])+intval($payment['principal']);
-									$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
-									$transaction[]	= array(
-										"source"			=> SOURCE_AR_FEES,
-										"entering_date"		=> $date,
-										"user_from"			=> $value->user_id,
-										"bank_account_from"	=> $virtual_account->virtual_account,
-										"amount"			=> $ar_fee,
-										"target_id"			=> $target->id,
-										"investment_id"		=> $value->id,
-										"instalment_no"		=> $instalment_no,
-										"user_to"			=> 0,
-										"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
-										"limit_date"		=> $payment['repayment_date'],
-									);
+								
+								//攤還表
+								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
+								if($amortization_schedule){
+									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
+										$transaction[]	= array(
+											"source"			=> SOURCE_AR_PRINCIPAL,
+											"entering_date"		=> $date,
+											"user_from"			=> $target->user_id,
+											"bank_account_from"	=> $target_account->virtual_account,
+											"amount"			=> intval($payment['principal']),
+											"target_id"			=> $target->id,
+											"investment_id"		=> $value->id,
+											"instalment_no"		=> $instalment_no,
+											"user_to"			=> $value->user_id,
+											"bank_account_to"	=> $virtual_account->virtual_account,
+											"limit_date"		=> $payment['repayment_date'],
+										);
+										
+										$transaction[]	= array(
+											"source"			=> SOURCE_AR_INTEREST,
+											"entering_date"		=> $date,
+											"user_from"			=> $target->user_id,
+											"bank_account_from"	=> $target_account->virtual_account,
+											"amount"			=> intval($payment['interest']),
+											"target_id"			=> $target->id,
+											"investment_id"		=> $value->id,
+											"instalment_no"		=> $instalment_no,
+											"user_to"			=> $value->user_id,
+											"bank_account_to"	=> $virtual_account->virtual_account,
+											"limit_date"		=> $payment['repayment_date'],
+										);
+										
+										$total 	= intval($payment['interest'])+intval($payment['principal']);
+										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+										$transaction[]	= array(
+											"source"			=> SOURCE_AR_FEES,
+											"entering_date"		=> $date,
+											"user_from"			=> $value->user_id,
+											"bank_account_from"	=> $virtual_account->virtual_account,
+											"amount"			=> $ar_fee,
+											"target_id"			=> $target->id,
+											"investment_id"		=> $value->id,
+											"instalment_no"		=> $instalment_no,
+											"user_to"			=> 0,
+											"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+											"limit_date"		=> $payment['repayment_date'],
+										);
+									}
 								}
 							}
-						}
-						
-						$rs  = $this->CI->transaction_model->insert_many($transaction);
-						if($rs && is_array($rs)){
-							$this->CI->target_model->update($target_id,array("status"=>5,"loan_date"=>$date));
-							$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
-							$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
-							foreach($rs as $key => $value){
-								$this->CI->passbook_lib->enter_account($value);
-							}
 							
-							return true;
+							$rs  = $this->CI->transaction_model->insert_many($transaction);
+							if($rs && is_array($rs)){
+								$this->CI->target_model->update($target_id,array("status"=>5,"loan_date"=>$date));
+								$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
+								$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
+								foreach($rs as $key => $value){
+									$this->CI->passbook_lib->enter_account($value);
+								}
+								
+								return true;
+							}
 						}
 					}
 				}

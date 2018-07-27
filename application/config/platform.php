@@ -10,6 +10,7 @@ $config['admin_menu'] = array(
 		"parent_name"	=> "借款管理",
 		"parent_icon"	=> "fa-gavel",
 		"index"			=> "借款列表",
+		"waiting_loan"	=> "待放款 - 借款",
 	),
 	"Passbook" 			=> array("name"=>"虛擬帳號管理","icon"=>"fa-star"),
 	"Certification" 	=> array(
@@ -28,7 +29,7 @@ $config['admin_menu'] = array(
 	"User" 				=> array("name"=>"會員管理","icon"=>"fa-user"),
 	"Admin" 			=> array("name"=>"後台人員管理","icon"=>"fa-user"),
 	
-	//"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
+	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
 	//"Contract" 		=> array("name"=>"合約書","icon"=>"fa-star"),
 );
 

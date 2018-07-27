@@ -306,6 +306,7 @@ class Certification extends REST_Controller {
      * @apiGroup Certification
 	 * @apiParam {String} school 學校名稱
 	 * @apiParam {String=0,1,2} [system=0] 學制 0:大學 1:碩士 2:博士
+	 * @apiParam {String} major 學門
 	 * @apiParam {String} department 系所
 	 * @apiParam {String} grade 年級
 	 * @apiParam {String} student_id 學號
@@ -385,6 +386,7 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+			$content['major'] 			= isset($input['major'])?$input['major']:"資訊通訊科技學門";
 			$content['system'] 			= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 			$content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
 			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
@@ -436,6 +438,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} school 學校名稱
 	 * @apiSuccess {String} system 學制 0:大學 1:碩士 2:博士
+	 * @apiSuccess {String} major 學門
 	 * @apiSuccess {String} department 系所
 	 * @apiSuccess {String} grade 年級
 	 * @apiSuccess {String} student_id 學號
@@ -498,7 +501,7 @@ class Certification extends REST_Controller {
 					"created_at"		=> $rs->created_at,
 					"updated_at"		=> $rs->updated_at,
 				);
-				$fields 	= ['school','department','student_id','system','email','grade'];
+				$fields 	= ['school','major','department','student_id','system','email','grade'];
 				foreach ($fields as $field) {
 					if (isset($content[$field])) {
 						$data[$field] = $content[$field];

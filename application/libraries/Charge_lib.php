@@ -46,8 +46,7 @@ class Charge_lib{
 				$virtual_account = $this->CI->virtual_account_model->get_by(array(
 					"status"			=> 1,
 					"investor"			=> 0,
-					"user_id"			=> $target->user_id,
-					"virtual_account"	=> $target->virtual_account
+					"user_id"			=> $target->user_id
 				));
 				if($virtual_account){
 					$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
@@ -358,7 +357,7 @@ class Charge_lib{
 			$update_rs 	= $this->CI->target_model->update_many($ids,array("script_status"=>$script));
 			if($update_rs){
 				foreach($targets as $key => $value){
-					$transaction = $this->CI->transaction_model->order_by("limit_date","asc")->get_by(array(
+					$transaction = $this->CI->transaction_model->get_by(array(
 						"target_id"		=> $value->id,
 						"limit_date <=" => $date,
 						"status"		=> 1,

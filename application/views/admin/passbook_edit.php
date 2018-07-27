@@ -59,10 +59,11 @@
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan="4">待交易紀錄</td>
+												<td colspan="5">待交易紀錄</td>
 											</tr>
 											<tr>
 												<td>交易時間</td>
+												<td>流水號</td>
 												<td>金額</td>
 												<td>狀態</td>
 												<td>備註</td>
@@ -72,6 +73,7 @@
 											?>
 												<tr>
 													<td><?=$value->tx_datetime ?></td>
+													<td><?=$value->id ?></td>
 													<td><?=$value->amount ?></td>
 													<td style="color:<?=$value->status?"red":"green";?>"><?=$frozen_status[$value->status] ?></td>
 													<td><?=$frozen_type[$value->type] ?></td>

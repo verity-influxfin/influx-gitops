@@ -1114,7 +1114,7 @@ class User extends REST_Controller {
 		
 		$input['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 		$this->load->library('credit_lib'); 
-		$point  = $this->credit_lib->get_school_point($input['school'],$input['system'],$input['department']);
+		$point  = $this->credit_lib->get_school_point($input['school'],$input['system'],"");
 		if($point>0){
 			$point = $point + 300;
 			$data["amount"] = $this->credit_lib->get_credit_amount($point);
