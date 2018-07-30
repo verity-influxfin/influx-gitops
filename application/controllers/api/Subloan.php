@@ -9,7 +9,6 @@ class Subloan extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Subloan_lib');
@@ -140,7 +139,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$this->load->model('product/product_model');
+			$this->load->model('loan/product_model');
 			$product 	= $this->product_model->get($target->product_id);
 			$instalment = json_decode($product->instalment,TRUE);
 			foreach($instalment as $k => $v){
@@ -254,7 +253,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$this->load->model('product/product_model');
+			$this->load->model('loan/product_model');
 			$product 			 = $this->product_model->get($target->product_id);
 			$product->instalment = json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){
@@ -479,7 +478,7 @@ class Subloan extends REST_Controller {
 					$subloan_target[$field] = $repayment_type[$new_target->$field];
 				}
 				if($field=="product_id"){
-					$this->load->model('product/product_model');
+					$this->load->model('loan/product_model');
 					$product_info = $this->product_model->get($new_target->product_id);
 					$product = array(
 						"id"			=> $product_info->id,

@@ -9,10 +9,9 @@ class Recoveries extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('product/product_model');
+		$this->load->model('loan/product_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');

@@ -9,9 +9,7 @@ class Payment_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/payment_model');
-		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('user/user_bankaccount_model');
-		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Transaction_lib');
     }
 	
@@ -143,7 +141,7 @@ class Payment_lib{
 				$bank_code 		= $value->bank_id;
 				$bank_account 	= $value->bank_acc;
 			}
-
+			$this->CI->load->model('user/virtual_account_model');
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
 			$investor			= investor_virtual_account($value->virtual_account)?1:0;
 			$where				= array(

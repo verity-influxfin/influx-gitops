@@ -263,4 +263,9 @@
 
 		return str_replace($nft, $wft, $strs);
 	}
+	
+	 function myErrorHandler($errno,$errstr,$errfile,$errline)  
+	 {  
+	  echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";  
+	 }
 ?>

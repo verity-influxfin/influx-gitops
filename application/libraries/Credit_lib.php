@@ -12,7 +12,6 @@ class Credit_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/credit_model');
 		$this->CI->load->model('user/user_meta_model');
-		$this->CI->load->model('user/user_model');
     }
 	
 	//信用評比

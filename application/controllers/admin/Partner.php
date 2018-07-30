@@ -7,7 +7,7 @@ class Partner extends MY_Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('partner/partner_model');
+		$this->load->model('admin/partner_model');
  	}
 	
 	public function index(){

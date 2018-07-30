@@ -9,7 +9,6 @@ class Transfer extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_investment_model');
@@ -119,7 +118,7 @@ class Transfer extends REST_Controller {
 		if(!empty($transfer)){
 			
 			$product_list = array();
-			$this->load->model('product/product_model');
+			$this->load->model('loan/product_model');
 			$products = $this->product_model->get_all();
 			if($products){
 				foreach($products as $key => $value){
@@ -272,7 +271,7 @@ class Transfer extends REST_Controller {
 		$data				= array();
 		if(!empty($transfer)){
 			$target 		= $this->target_model->get($transfer->target_id);
-			$this->load->model('product/product_model');
+			$this->load->model('loan/product_model');
 			$product_info 	= $this->product_model->get($target->product_id);
 			$product = array(
 				"id"			=> $product_info->id,

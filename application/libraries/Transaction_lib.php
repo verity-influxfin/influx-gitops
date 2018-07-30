@@ -10,12 +10,8 @@ class Transaction_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('loan/target_model');
-		$this->CI->load->model('transaction/payment_model');
 		$this->CI->load->model('loan/investment_model');
-		$this->CI->load->model('transaction/virtual_passbook_model');
 		$this->CI->load->model('transaction/frozen_amount_model');
-		$this->CI->load->model('transaction/withdraw_model');
-		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Passbook_lib');
@@ -27,6 +23,7 @@ class Transaction_lib{
 			$total  = 0;
 			$frozen = 0;
 			$last_recharge_date	= "";
+			$this->CI->load->model('transaction/virtual_passbook_model');
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array("virtual_account" => $virtual_account));
 			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array("virtual_account" => $virtual_account,"status" => 1));
 			if($virtual_passbook){
@@ -52,6 +49,7 @@ class Transaction_lib{
 	//儲值
 	public function recharge($payment_id=0){
 		if($payment_id){
+			$this->CI->load->model('transaction/payment_model');
 			$payment 	= $this->CI->payment_model->get($payment_id);
 			if($payment->status != "1" && $payment->amount > 0  && !empty($payment->virtual_account)){
 				$rs = $this->CI->payment_model->update($payment_id,array("status"=>1));
@@ -106,6 +104,7 @@ class Transaction_lib{
 							"amount"			=> $amount,
 							"frozen_id"			=> $rs,
 						);
+						$this->CI->load->model('transaction/withdraw_model');
 						$withdraw = $this->CI->withdraw_model->insert($data);
 					}
 				}
@@ -132,6 +131,7 @@ class Transaction_lib{
 						"verify"	=> 1,
 						"investor"	=> 0
 					);
+					$this->CI->load->model('user/user_bankaccount_model');
 					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 					if($user_bankaccount){
 					

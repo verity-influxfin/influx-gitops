@@ -11,7 +11,6 @@ class Certification extends MY_Admin_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/user_certification_model');
 		$this->load->model('user/user_meta_model');
-		$this->load->model('user/user_model');
 		$this->load->library('payment_lib');
  	}
 	

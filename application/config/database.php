@@ -101,7 +101,5 @@ $db['platform']		=	array_merge($db_base, array('database'=>'p2p_platform'));
 $db['loan']			=	array_merge($db_base, array('database'=>'p2p_loan'));
 $db['log']			=	array_merge($db_base, array('database'=>'p2p_log'));
 $db['admin']		=	array_merge($db_base, array('database'=>'p2p_admin'));
-$db['product']		=	array_merge($db_base, array('database'=>'p2p_product'));
 $db['transaction']	=	array_merge($db_base, array('database'=>'p2p_transaction'));
-$db['partner']		=	array_merge($db_base, array('database'=>'p2p_partner'));
 

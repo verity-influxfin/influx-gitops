@@ -8,13 +8,7 @@ class Charge_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/target_model');
-		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('transaction/payment_model');
-		$this->CI->load->model('transaction/virtual_passbook_model');
-		$this->CI->load->model('transaction/frozen_amount_model');
-		$this->CI->load->model('transaction/withdraw_model');
-		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Passbook_lib');
 		$this->CI->load->library('Transaction_lib');
@@ -332,6 +326,7 @@ class Charge_lib{
 			$transaction 	= $this->CI->transaction_model->get_by($where);
 			if(!$transaction){
 				$this->CI->target_model->update($target->id,array("status"=>10));
+				$this->CI->load->model('loan/investment_model');
 				$this->CI->investment_model->update_by(array("target_id" => $target->id,"status"=> 3),array("status"=>10));
 				return true;
 			}

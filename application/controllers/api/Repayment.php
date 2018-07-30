@@ -9,7 +9,6 @@ class Repayment extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
@@ -260,7 +259,7 @@ class Repayment extends REST_Controller {
 					}
 				}
 				
-				$this->load->model('product/product_model');
+				$this->load->model('loan/product_model');
 				$product_info 	= $this->product_model->get($value->product_id);
 				$product = array(
 					"id"				=> $product_info->id,
@@ -473,7 +472,7 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			$this->load->model('product/product_model');
+			$this->load->model('loan/product_model');
 			$product_info 	= $this->product_model->get($target->product_id);
 			$product 		= array(
 				"id"			=> $product_info->id,
@@ -672,12 +671,14 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$virtual_account	= array(
+			$this->load->model('user/virtual_account_model');
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account		= array(
 				"bank_code"			=> CATHAY_BANK_CODE,
 				"branch_code"		=> CATHAY_BRANCH_CODE,
 				"bank_name"			=> CATHAY_BANK_NAME,
 				"branch_name"		=> CATHAY_BRANCH_NAME,
-				"virtual_account"	=> $target->virtual_account,
+				"virtual_account"	=> $virtual_account_info->virtual_account,
 			);
 		
 			$fields = $this->target_model->simple_fields;

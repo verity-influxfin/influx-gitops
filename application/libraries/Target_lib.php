@@ -10,11 +10,8 @@ class Target_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('product/product_model');
-		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Notification_lib');
-		
     }
 	
 	//核可額度利率
@@ -438,6 +435,7 @@ class Target_lib{
 			$rs = $this->CI->target_model->update_many($ids,array("script_status"=>$script));
 			if($rs){
 				foreach($list as $product_id => $targets){
+					$this->CI->load->model('loan/product_model');
 					$product 				= $this->CI->product_model->get($product_id);
 					$product_certification 	= json_decode($product->certifications,true);
 					foreach($targets as $target_id => $value){

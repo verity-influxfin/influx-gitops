@@ -9,7 +9,6 @@ class User extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('log/log_userlogin_model');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest'];

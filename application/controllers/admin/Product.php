@@ -7,7 +7,7 @@ class Product extends MY_Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('product/product_model');
+		$this->load->model('loan/product_model');
  	}
 	
 	public function index(){

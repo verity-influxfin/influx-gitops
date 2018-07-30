@@ -11,7 +11,6 @@ class Certification extends REST_Controller {
         parent::__construct();
 		$this->load->model('platform/certification_model');
 		$this->load->model('user/user_certification_model');
-		$this->load->model('user/user_model');
 		$this->load->library('S3_upload');
 		$this->load->library('Certification_lib');
         $method = $this->router->fetch_method();

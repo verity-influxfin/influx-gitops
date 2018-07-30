@@ -9,7 +9,6 @@ class Notification extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('user/user_notification_model');
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];

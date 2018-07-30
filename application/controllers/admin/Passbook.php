@@ -7,7 +7,6 @@ class Passbook extends MY_Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('user/user_model');
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('transaction/frozen_amount_model');
 		$this->load->library('passbook_lib');

@@ -107,59 +107,58 @@ class Welcome extends CI_Controller {
 		//$imageAnnotator = new ImageAnnotatorClient();
 		$path = "https://influxp2p-personal.s3.ap-northeast-1.amazonaws.com/id_card/img15326705194.jpg";
 		$imageAnnotator = new ImageAnnotatorClient();
-
-		# annotate the image
 		$image = file_get_contents($path);
-		$response = $imageAnnotator->textDetection($image);
-		$texts = $response->getTextAnnotations();
-
-		printf('%d texts found:' . PHP_EOL, count($texts));
-		foreach ($texts as $text) {
-			print($text->getDescription() . PHP_EOL);
-
-			# get bounds
-			$vertices = $text->getBoundingPoly()->getVertices();
-			$bounds = [];
-			foreach ($vertices as $vertex) {
-				$bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
-			}
-			print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
-		}
+		$response = $imageAnnotator->imagePropertiesDetection($image);
+		$props = $response->getImagePropertiesAnnotation();
+		dump($props);
 	}
 
 
 	public function test(){
-		$a = '0        20180726SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+000000000001008223164164540083054              陳霈霈                                                                0                                                  150000金融帳號驗證                                      ';
+		$a 			= '0        20180730SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+000000000001008223164164540083054              陳霈霈                                                                0                                                  150000金融帳號驗證                                      ';
+		$hash_str 	= iconv('UTF-8', 'BIG-5', $a);
+		$hash  		= $this->hash($hash_str);
+		dump($hash);
 		$b = 
 		'<MYB2B>
 			<HEADER>
 				<SERVICE>PAYSVC</SERVICE>
 				<ACTION>BTRS01</ACTION>
-				<TXNKEY>20180726140605</TXNKEY>
+				<TXNKEY>20180730140605</TXNKEY>
 			</HEADER>
 			<BODY>
 				<LOGON>
 					<IDNO>68566881</IDNO>
-					<PASSWORD>fable1234</PASSWORD>
-					<USERNO>toychen</USERNO>
+					<PASSWORD>aaa123</PASSWORD>
+					<USERNO>test001</USERNO>
 					<BRANCH>5663</BRANCH>
 				</LOGON>
 				<DATA>
 					<CONTENT FileType="BTRS/BRMT/0" DrAcno="015035006475" PayDate="20180725" >
 				'.$a.'
 					</CONTENT>
+					<SIGNEDINFO>'.$hash.'</SIGNEDINFO>
 				</DATA>
 			</BODY>
 		</MYB2B>';
 		
-		$b = iconv('UTF-8', 'BIG-5', $b);
-		$key = iconv('UTF-8', 'BIG-5', 'influx6856688100');
-		$rs = $this->encrypt($b,$key);
-		$rs = $this->strToHex($rs);
-		$rs = "68566881            ".$rs;
-		dump(iconv('UTF-8', 'BIG-5', $rs));
+		$b 		= iconv('UTF-8', 'BIG-5', $b);
+		$key 	= iconv('UTF-8', 'BIG-5', 'abcdefgh68566881');//influx6856688100
+		$rs 	= $this->encrypt($b,$key);
+		$rs 	= $this->strToHex($rs);
+		$rs 	= "68566881            ".$rs;
+		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
+		dump($rs);
+		$res 	= curl_get("http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx",$rs,["Content-type:text/xml"]);
+		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $res)));
+		
 	}
 
+	public function hash($str=""){
+		$res 	= curl_get("http://ahs2.azurewebsites.net/api/ahs2",$str);
+		return $res;
+	}
+	
     public function encrypt($src, $key, $size = 128, $mode = 'ECB') {
         if (is_null($key)) {
             log_message('error', 'Key為空值');

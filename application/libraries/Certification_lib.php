@@ -10,9 +10,7 @@ class Certification_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('platform/certification_model');
 		$this->CI->load->model('user/user_certification_model');
-		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->model('user/user_meta_model');
-		$this->CI->load->model('user/user_model');
 		$this->CI->load->library('Notification_lib');
     }
 	
@@ -172,7 +170,7 @@ class Certification_lib{
 						"user_id"			=> $info->user_id,				
 						"virtual_account"	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.substr($content["id_number"],1,9),
 					);
-					
+					$this->CI->load->model('user/virtual_account_model');
 					$this->CI->virtual_account_model->insert_many($virtual_data);
 				}
 
