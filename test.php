@@ -5,8 +5,7 @@ header ('Content-type:text/html; charset=utf-8');
 
 $db = array(
 	"p2p_loan"			=> array("batch","contracts","credits","investments","prepayment","subloan","targets","transfers","transfer_investment"),
-	"p2p_log"			=> array("admin_login_log","faceplusplus_log","image_log","script_log","sns_log","user_login_log"),
-	"p2p_partner"		=> array("partners"),
+	"p2p_log"			=> array("admin_login_log","faceplusplus_log","image_log","script_log","sns_log","user_login_log","payment_export_log"),
 	"p2p_transaction"	=> array("frozen_amount","payments","transactions","virtual_passbook","withdraw"),
 	"p2p_user"			=> array("email_verify_code","sms_verify_code","users","user_bankaccount","user_certification","user_contact","user_meta","	user_notification","virtual_account"),
 	

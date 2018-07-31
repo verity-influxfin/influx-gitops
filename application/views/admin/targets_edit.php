@@ -175,12 +175,17 @@
 											</tr>
 											<? if($data->status==5 || $data->status==10){?>
 												<tr style="background-color:#f5f5f5;">
+													<td colspan="8">
+														<a class="fancyframe" href="<?=admin_url('Target/transaction_display?id='.$data->id) ?>" >攤還表</a>
+													</td>
+												</tr>
+												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>
-													<td>還款本金</td>
-													<td>還款利息</td>
+													<td>還款本息</td>
+													<td>違約延滯</td>
 													<td>還款合計</td>
 													<td>已還款金額</td>
 												</tr>
@@ -192,8 +197,8 @@
 													<td><?=$value['remaining_principal'] ?></td>
 													<td><?=$value['repayment_date'] ?></td>
 													<td><?=$value['days'] ?></td>
-													<td><?=$value['principal'] ?></td>
-													<td><?=$value['interest'] ?></td>
+													<td><?=$value['principal'] ?><br><?=$value['interest'] ?></td>
+													<td style="color:red;"><?=$value['liquidated_damages'] ?><br><?=$value['delay_interest'] ?></td>
 													<td><?=$value['total_payment'] ?></td>
 													<td><?=$value['repayment'] ?></td>
 												</tr>
@@ -313,7 +318,7 @@
 											
 											<? if(isset($investments_amortization_table[$value->id]) && $investments_amortization_table[$value->id]){ ?>
 												<tr style="background-color:#f5f5f5;">
-													<td colspan="8">攤還表</td>
+													<td colspan="8"><a class="fancyframe" href="<?=admin_url('Target/transaction_display?id='.$data->id) ?>" >攤還表</a></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>本金合計</td>

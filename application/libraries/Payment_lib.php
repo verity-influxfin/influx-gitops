@@ -169,7 +169,7 @@ class Payment_lib{
 		return false;
 	}
 	
-	public function verify_bankaccount_txt(){
+	public function verify_bankaccount_txt($admin_id=0){
 		
 		$check_len = array(
 			"code"			=> 1,
@@ -201,11 +201,13 @@ class Payment_lib{
 		);
 		$bankaccounts 	= $this->CI->user_bankaccount_model->get_many_by($where);
 		$content 		= "";
+		$ids 			= array();
 		if($bankaccounts){
 			foreach($bankaccounts as $key => $value){
-				//$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3));
 				$user_info = $this->CI->user_model->get($value->user_id);
 				if($user_info && $user_info->name){
+					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time()));
+					$ids[] = $value->id;
 					$data = array(
 						"code"			=> "0",
 						"upload_date"	=> "",
@@ -276,7 +278,13 @@ class Payment_lib{
 						$content .= $value;
 					}
 				}
-			}		
+			}
+			$this->CI->load->model('log/log_paymentexport_model');
+			$this->CI->log_paymentexport_model->insert(array(
+				"type"		=> "bankaccount",
+				"content"	=> json_encode($ids),
+				"admin_id"	=> $admin_id
+			));
 		}
 		return $content;
 	}

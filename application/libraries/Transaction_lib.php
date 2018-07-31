@@ -9,7 +9,6 @@ class Transaction_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->model('user/virtual_account_model');

@@ -11,6 +11,36 @@
 					var status 				= $('#status :selected').val();
 					top.location = './index?delay='+delay+'&status='+status;
 				}
+				
+				function success(id){
+					if(confirm("確認審批上架？")){
+						if(id){
+							$.ajax({
+								url: './verify_success?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+				
+				function failed(id){
+					if(confirm("確認驗證失敗？案件將自動取消")){
+						if(id){
+							$.ajax({
+								url: './verify_failed?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -74,8 +104,13 @@
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
                                             <td>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-											<? 	if($value->status==4 && !$value->bank_account_verify){
-													echo '<p style="color:red;">金融帳號未驗證</p>';
+											<? 	if($value->status==2){
+													if($value->bank_account_verify){
+														echo '<button class="btn btn-default" onclick="success('.$value->id.')">審批上架</button>';
+														echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
+													}else{
+														echo '<p style="color:red;">金融帳號未驗證</p>';
+													}
 												}
 											?>
 											</td>
@@ -87,7 +122,7 @@
 										}}else{
 									?>
 									<tr class="odd">
-										<th class="text-center" colspan="11">目前尚無資料</th>
+										<th class="text-center" colspan="14">目前尚無資料</th>
 									</tr>
 									<?php 
 										}

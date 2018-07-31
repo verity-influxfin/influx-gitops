@@ -9,7 +9,6 @@ class Transfer extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_investment_model');
 		$this->load->library('Certification_lib');
@@ -672,7 +671,7 @@ class Transfer extends REST_Controller {
 					"status"		=> $target_info->status,
 					"sub_status"	=> $target_info->sub_status,
 				);
-				
+				$this->load->model('loan/product_model');
 				$product_info = $this->product_model->get($target_info->product_id);
 				$product = array(
 					"id"			=> $product_info->id,

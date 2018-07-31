@@ -1,16 +1,6 @@
 <div id="page-wrapper">
-
-    <div class="col-md-6">
-        <p>待驗證 > 待出借 status 2 to 3</p>
-        <form action="<?=admin_url('TestScript/admin_verify_target_2_to_3') ?>" method="post">
-            <div class="form-group">
-                <label>target_id</label>
-                <input type="number" class="form-control" name="target_id">
-            </div>
-            <button type="submit" class="btn btn-default">update</button>
-        </form>
-    </div>
-
+	<div class="col-md-6">
+	</div>
     <div class="col-md-6">
         <p>放款 status 4 to 5</p>
         <form action="<?=admin_url('TestScript/lending_success') ?>" method="post">

@@ -11,13 +11,43 @@
 					var verify 				= $('#verify :selected').val();
 					top.location = './user_bankaccount_list?investor='+investor+'&verify='+verify;
 				}
+				
+				function success(id){
+					if(confirm("確認驗證成功？")){
+						if(id){
+							$.ajax({
+								url: './user_bankaccount_success?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+				
+				function failed(id){
+					if(confirm("確認驗證失敗？申請中的案件將自動取消")){
+						if(id){
+							$.ajax({
+								url: './user_bankaccount_failed?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_blank" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
+							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_self" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -68,6 +98,11 @@
 											<?=isset($value->verify)?$verify_list[$value->verify]:"" ?>
 											<? 	if($value->verify==2 && empty($value->user_name)){
 													echo '<p style="color:red;">未實名認證</p>';
+												}
+												
+												if($value->verify==3){
+													echo '<button class="btn btn-default" onclick="success('.$value->id.')">通過</button>';
+													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>
 											</td>

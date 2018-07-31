@@ -40,6 +40,7 @@ class S3_upload {
 				$exif = json_decode(json_encode($exif),true);
 				$fileType = $this->image_type[$files[$name]['type']];
 				if($fileType == ".jpg"){
+					ini_set('gd.jpeg_ignore_warning', true);
 					$src = imagecreatefromjpeg($files[$name]['tmp_name']);
 				}elseif($fileType == ".gif"){
 					$src = imagecreatefromgif($files[$name]['tmp_name']);

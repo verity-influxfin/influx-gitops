@@ -209,7 +209,7 @@ class Certification extends REST_Controller {
 			$param['content'] 	= json_encode($content);
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->idcard_verify($insert);
+				//$this->certification_lib->idcard_verify($insert); 7/31改人工
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -658,7 +658,8 @@ class Certification extends REST_Controller {
 			if($insert){
 				$bankaccount_info = array(
 					"user_id"		=> $user_id,
-					"investor"		=> $investor,
+					"investor"				=> $investor,
+					"user_certification_id"	=> $insert,
 					"bank_code"		=> $content["bank_code"],
 					"branch_code"	=> $content["branch_code"],
 					"bank_account"	=> intval($content["bank_account"]),

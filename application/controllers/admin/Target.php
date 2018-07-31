@@ -7,7 +7,6 @@ class Target extends MY_Admin_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
@@ -31,11 +30,11 @@ class Target extends MY_Admin_Controller {
 				$where[$field] = $input[$field];
 			}
 		}
-		$list 							= $this->target_model->get_many_by($where);
+		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==4){
-					$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
+				if($value->status==2){
+					$bank_account 		= $this->user_bankaccount_model->get_by(array(
 						"user_id"	=> $value->user_id,
 						"investor"	=> 0,
 						"status"	=> 1,
@@ -107,6 +106,7 @@ class Target extends MY_Admin_Controller {
 							}
 						}
 					}
+
 					$user_id 			= $info->user_id;
 					$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
 						"user_id"	=> $user_id,
@@ -167,6 +167,38 @@ class Target extends MY_Admin_Controller {
 		}
 	}
 
+	function verify_success(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && $info->status==2){
+				$this->target_lib->target_verify_success($info);
+				echo "更新成功";die();
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
+	function verify_failed(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && $info->status==2){
+				$this->target_lib->target_verify_failed($info);
+				echo "更新成功";die();
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
 	public function waiting_loan(){
 		$page_data 					= array("type"=>"list");
 		$input 						= $this->input->get(NULL, TRUE);
@@ -208,6 +240,40 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/waiting_loan_target',$page_data);
 		$this->load->view('admin/_footer');
+	}
+	
+	public function transaction_display(){
+		$page_data 	= array("type"=>"edit");
+		$get 		= $this->input->get(NULL, TRUE);
+		$id = isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && in_array($info->status,array(5,10))){
+				$list = array();
+				$this->load->model('transaction/transaction_model');
+				$transaction_list = $this->transaction_model->order_by("id","asc")->get_many_by(array("target_id"=>$info->id));
+				if($transaction_list){
+					foreach($transaction_list as $key =>$value){
+						$list[$value->investment_id][$value->instalment_no][] = $value;
+					}
+				}
+
+				$page_data['info'] 					= $info;
+				$page_data['list'] 					= $list;
+				$page_data['transaction_source'] 	= $this->config->item('transaction_source');
+				$page_data['status_list'] 			= $this->transaction_model->status_list;
+				$page_data['passbook_status_list'] 	= $this->transaction_model->passbook_status_list;
+				$this->load->view('admin/_header');
+				$this->load->view('admin/transaction_edit',$page_data);
+				$this->load->view('admin/_footer');
+				
+			}else{
+				die("ERROR , id isn't exist");
+			}
+		}else{
+			die("ERROR , id isn't exist");
+		}
+		
 	}
 }
 ?>

@@ -8,9 +8,7 @@ class Subloan_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/subloan_model');
-		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('credit_lib');
     }
@@ -135,7 +133,7 @@ class Subloan_lib{
 		return false;
 	}
 
-		public function add_subloan_target($target,$subloan){
+	public function add_subloan_target($target,$subloan){
 		
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -149,46 +147,34 @@ class Subloan_lib{
 			if($credit){
 				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment);
 				if($interest_rate){
-					$contract 		= $this->get_subloan_contract($user_id,$subloan["amount"],$interest_rate);
-					$target_no 		= $this->get_target_no();
-					$param = array(
-						"product_id"		=> $product_id,
-						"user_id"			=> $user_id,
-						"target_no"			=> $target_no,
-						"amount"			=> $subloan["amount"],
-						"loan_amount"		=> $subloan["amount"],
-						"instalment"		=> $subloan["instalment"],
-						"repayment"			=> $subloan["repayment"],
-						"credit_level"		=> $credit['level'],
-						"platform_fee"		=> $subloan["platform_fee"],
-						"interest_rate"		=> $interest_rate,
-						"virtual_account" 	=> CATHAY_VIRTUAL_CODE.$target_no,
-						"contract"			=> $contract,
-						"status"			=> "1",
-						"sub_status"		=> "8",
-						"remark"			=> "轉換產品",
-					);
-
-					$rs = $this->CI->target_model->insert($param);
-					if($rs){
-						$virtual_data = array(
-							"user_id"			=> $user_id,				
-							"virtual_account"	=> $param['virtual_account'],
-							"investor"			=> 0,
+					$this->CI->load->library('contract_lib');
+					$contract_id	= $this->CI->contract_lib->sign_contract("lend",["",$user_id,$subloan["amount"],$interest_rate,""]);
+					if($contract_id){
+						$target_no 		= $this->get_target_no();
+						$param = array(
+							"product_id"		=> $product_id,
+							"user_id"			=> $user_id,
+							"target_no"			=> $target_no,
+							"amount"			=> $subloan["amount"],
+							"loan_amount"		=> $subloan["amount"],
+							"instalment"		=> $subloan["instalment"],
+							"repayment"			=> $subloan["repayment"],
+							"credit_level"		=> $credit['level'],
+							"platform_fee"		=> $subloan["platform_fee"],
+							"interest_rate"		=> $interest_rate,
+							"contract_id"		=> $contract_id,
+							"status"			=> "1",
+							"sub_status"		=> "8",
+							"remark"			=> "轉換產品",
 						);
-						$this->CI->virtual_account_model->insert($virtual_data);
+
+						$rs = $this->CI->target_model->insert($param);
+						return $rs;
 					}
-					return $rs;
 				}
 			}
 
 		return false;
-	}
-
-	private function get_subloan_contract($user_id,$amount,$rate){
-		$this->CI->load->model('platform/contract_model');
-		$contract = $this->CI->contract_model->get_by(array("alias"=>"lend"));
-		return sprintf($contract->content,"",$user_id,$amount,$rate,"");
 	}
 	
 	public function signing_subloan($subloan,$data){

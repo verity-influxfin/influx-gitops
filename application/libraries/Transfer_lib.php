@@ -7,8 +7,6 @@ class Transfer_lib{
 	public function __construct()
     {
         $this->CI = &get_instance();
-		
-		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/transfer_model');
 		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('loan/transfer_investment_model');

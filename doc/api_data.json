@@ -5449,13 +5449,83 @@
             "optional": false,
             "field": "user.my_promote_code",
             "description": "<p>推廣碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "funds",
+            "description": "<p>資金資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "funds.total",
+            "description": "<p>資金總額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "funds.last_recharge_date",
+            "description": "<p>最後一次匯入日</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "funds.frozen",
+            "description": "<p>待交易餘額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "virtual_account",
+            "description": "<p>專屬虛擬帳號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "virtual_account.bank_code",
+            "description": "<p>銀行代碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "virtual_account.branch_code",
+            "description": "<p>分行代碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "virtual_account.bank_name",
+            "description": "<p>銀行名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "virtual_account.branch_name",
+            "description": "<p>分行名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "virtual_account.virtual_account",
+            "description": "<p>虛擬帳號</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\t\"remaining_principal\": \"12345\",\n\t\t\t\t\"next_repayment_amount\": \"1588\",\n\t\t\t\t\"user\": {\n     \t\t\t\"id\": \"1\",\n     \t\t\t\"name\": \"\",\n     \t\t\t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n     \t\t\t\"nickname\": \"陳霈\",\n     \t\t\t\"phone\": \"0912345678\",\n     \t\t\t\"investor_status\": \"1\",\n     \t\t\t\"my_promote_code\": \"9JJ12CQ5\",\n     \t\t\t\"id_number\": null,\n     \t\t\t\"investor\": 1,  \n     \t\t\t\"created_at\": \"1522651818\",     \n     \t\t\t\"updated_at\": \"1522653939\"     \n\t\t\t\t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\t\"remaining_principal\": \"12345\",\n\t\t\t\t\"next_repayment_amount\": \"1588\",\n\t\t\t\t\"user\": {\n     \t\t\t\"id\": \"1\",\n     \t\t\t\"name\": \"\",\n     \t\t\t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n     \t\t\t\"nickname\": \"陳霈\",\n     \t\t\t\"phone\": \"0912345678\",\n     \t\t\t\"investor_status\": \"1\",\n     \t\t\t\"my_promote_code\": \"9JJ12CQ5\",\n     \t\t\t\"id_number\": null,\n     \t\t\t\"investor\": 1,  \n     \t\t\t\"created_at\": \"1522651818\",     \n     \t\t\t\"updated_at\": \"1522653939\"     \n\t\t\t\t},\n\t\t\t\t\"funds\": {\n\t\t\t\t \t\"total\": \"500\",\n\t\t\t\t \t\"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \t\"frozen\": \"0\"\n\t\t\t\t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56639100000001\"\n\t        \t}\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -6193,6 +6263,7 @@
         ]
       }
     },
+    "description": "<p>只有正常還款的狀態才可申請，逾期或寬限期內都將不通過</p>",
     "success": {
       "fields": {
         "Success 200": [
@@ -6488,6 +6559,7 @@
         ]
       }
     },
+    "description": "<p>只有正常還款的狀態才可申請，逾期或寬限期內都將不通過</p>",
     "success": {
       "fields": {
         "Success 200": [
@@ -6745,13 +6817,6 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "subloan_target.contract",
-            "description": "<p>合約內容</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
             "field": "subloan_target.remark",
             "description": "<p>備註</p>"
           },
@@ -6782,6 +6847,13 @@
             "optional": false,
             "field": "subloan_target.created_at",
             "description": "<p>申請日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "subloan_target.contract",
+            "description": "<p>合約內容</p>"
           },
           {
             "group": "Success 200",

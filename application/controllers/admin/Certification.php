@@ -168,12 +168,16 @@ class Certification extends MY_Admin_Controller {
 					if($info->status=="1"){
 						alert("更新成功",admin_url('certification/user_certification_list'));
 					}else{
-						
-						if($post['status']=="1"){
-							$this->load->library('Certification_lib');
-							$rs = $this->certification_lib->set_success($post['id']);
+						$certification = $this->certification_model->get($info->certification_id);
+						if($certification->alias=="debit_card" && $info->investor==1){
+							alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
 						}else{
-							$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
+							if($post['status']=="1"){
+								$this->load->library('Certification_lib');
+								$rs = $this->certification_lib->set_success($post['id']);
+							}else{
+								$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
+							}
 						}
 
 						if($rs===true){
@@ -278,15 +282,55 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 	
+	function user_bankaccount_success(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->user_bankaccount_model->get($id);
+			if($info){
+				$this->load->library('Certification_lib');
+				$this->certification_lib->set_success($info->user_certification_id);
+				$this->user_bankaccount_model->update($id,array("verify"=>1));
+				echo "更新成功";die();
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
+	function user_bankaccount_failed(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->user_bankaccount_model->get($id);
+			if($info){
+				$this->user_certification_model->update($info->user_certification_id,array("status"=>2));
+				$this->user_bankaccount_model->update($id,array("verify"=>4));
+				if($info->investor==0){
+					$this->load->library('target_lib');
+					$this->target_lib->bankaccount_verify_failed($info->user_id);
+				}
+				
+				echo "更新成功";die();
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
 	function user_bankaccount_verify(){
-		$rs = $this->payment_lib->verify_bankaccount_txt();
+		$rs = $this->payment_lib->verify_bankaccount_txt($this->login_info->id);
 		if($rs!=""){
 			$rs = iconv('UTF-8', 'BIG-5', $rs);
 			header("Content-type: application/text");
 			header("Content-Disposition: attachment; filename=verify_".date("YmdHis").".txt");
 			echo $rs;
 		}else{
-			alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
+			alert("沒有待驗證的金融帳號",admin_url('certification/user_bankaccount_list'));
 		}
 	}
 }

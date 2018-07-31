@@ -6,7 +6,6 @@ class AdminDashboard extends MY_Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('loan/target_model');
 		$this->load->model('user/user_contact_model');
 	}
 	

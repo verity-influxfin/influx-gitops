@@ -7,7 +7,6 @@ class TestScript extends MY_Admin_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("loan/target_model");
         $this->load->model("loan/investment_model");
         $this->load->model("transaction/payment_model");
         $this->load->model("user/virtual_account_model");
@@ -65,7 +64,7 @@ class TestScript extends MY_Admin_Controller
 
 
     // status 2 to 3
-    public function admin_verify_target_2_to_3()
+   /* public function admin_verify_target_2_to_3()
     {
         $targetId = $this->input->post("target_id");
 
@@ -78,16 +77,16 @@ class TestScript extends MY_Admin_Controller
         $this->target_model->update_by($where, $param);
 
         $this->redirectToIndex();
-    } 
+    } */
 
-    public function VerifyBankAccount()
+ /*   public function VerifyBankAccount()
     {
         $bankaccount_id = $this->input->get("id");
         $param = ["verify"=> 1];
         $this->user_bankaccount_model->update($bankaccount_id, $param);
         $this->redirectToTestPaymentPage();
     }
-
+*/
 
     // status 4 to 5
     public function lending_success()

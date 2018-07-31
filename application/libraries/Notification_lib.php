@@ -89,6 +89,37 @@ class Notification_lib{
 		return $rs;
 	}
 
+	public function bankaccount_verify_failed($user_id){
+		$title = "[驗證失敗] 您的借款驗證未通過";
+			$content = "您好！
+						很抱歉的通知，您的借款驗證未能通過，非常感謝您的申請，我們將會對您的申請信息進行嚴格保密，感謝您對我司的信任。";
+
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
+
+	public function target_verify_success($target){
+		$title = "[借款驗證] 您的借款驗證已通過";
+			$content = "尊敬的用戶：
+						您好！
+						您的借款驗證已通過，將進入媒合階段，感謝您的關注與信任。";
+
+		$param = array(
+			"user_id"	=> $target->user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
+	
 	public function auction_closed($user_id,$investor,$target_no,$amount=0){
 		if($investor==1){
 			$title = "[標的籌滿] 您申請的標的 $target_no 已滿標";

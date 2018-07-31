@@ -8,14 +8,13 @@ class Prepayment_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-		$this->CI->load->model('loan/target_model');
 		$this->CI->load->model('loan/prepayment_model');
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Transaction_lib');
     }
  
 	public function get_prepayment_info($target=array()){
-		if($target->status == 5){
+		if($target->status == 5 && $target->delay_days==0){
 			$range_days 	= 2;
 			$where 			= array(
 				"target_id" => $target->id,
@@ -25,13 +24,7 @@ class Prepayment_lib{
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by($where);
 			if($transaction){
 				$entering_date		= get_entering_date();
-				if($target->delay_days>0 && $target->delay_days<=GRACE_PERIOD){
-					$days = GRACE_PERIOD-$target->delay_days;
-					$days = $days>$range_days?$range_days:$days;
-					$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.$days.' days'));
-				}else{
-					$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.$range_days.' days'));
-				}
+				$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.$range_days.' days'));
 
 				$data = array(
 					"remaining_principal"		=> 0,//剩餘本金
@@ -90,21 +83,15 @@ class Prepayment_lib{
 				$data["remaining_instalment"] 	= $target->instalment - $instalment;
 				
 				if($remaining_principal){
-					if($target->delay_days > GRACE_PERIOD){
-						foreach($remaining_principal as $k => $v){
-							$data["remaining_principal"] 	+= $v;
-							$data["delay_interest_payable"] += $this->CI->financial_lib->get_delay_interest($v,$target->delay_days+$range_days);
-						}
-					}else{
-						$days  		= get_range_days($last_settlement_date,$settlement_date);
-						$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
-						$year_days 	= $leap_year?366:365;//今年日數
-						foreach($remaining_principal as $k => $v){
-							$data["remaining_principal"] += $v;
-							$interest_payable[$k] 		 = round( $v * $target->interest_rate / 100 * $days / $year_days ,0);
-						}
-						$data["liquidated_damages"] 	= $this->CI->financial_lib->get_liquidated_damages($data["remaining_principal"]);
+					$days  		= get_range_days($last_settlement_date,$settlement_date);
+					$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
+					$year_days 	= $leap_year?366:365;//今年日數
+					foreach($remaining_principal as $k => $v){
+						$data["remaining_principal"] += $v;
+						$interest_payable[$k] 		 = round( $v * $target->interest_rate / 100 * $days / $year_days ,0);
 					}
+					$data["liquidated_damages"] 	= $this->CI->financial_lib->get_liquidated_damages($data["remaining_principal"]);
+
 					foreach($interest_payable as $k => $v){
 						$data["interest_payable"] 	 += $v;
 					}
@@ -121,7 +108,7 @@ class Prepayment_lib{
 	}
 	
 	public function apply_prepayment($target){
-		if($target && $target->status==5){
+		if($target && $target->status==5 && $target->delay_days==0){
 			$info  = $this->get_prepayment_info($target);
 			$param = array(
 				"target_id"			=> $target->id,
@@ -174,8 +161,7 @@ class Prepayment_lib{
 							$virtual_account = $this->CI->virtual_account_model->get_by(array(
 								"status"			=> 1,
 								"investor"			=> 0,
-								"user_id"			=> $value->user_id,
-								"virtual_account"	=> $value->virtual_account
+								"user_id"			=> $value->user_id
 							));
 							if($virtual_account){
 								$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));

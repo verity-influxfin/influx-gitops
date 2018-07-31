@@ -9,7 +9,6 @@ class Subloan extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Subloan_lib');
         $method = $this->router->fetch_method();
@@ -298,12 +297,12 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} subloan_target.interest_rate 核可利率
 	 * @apiSuccess {String} subloan_target.instalment 期數
 	 * @apiSuccess {String} subloan_target.repayment 還款方式
-	 * @apiSuccess {String} subloan_target.contract 合約內容
 	 * @apiSuccess {String} subloan_target.remark 備註
 	 * @apiSuccess {String} subloan_target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} subloan_target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} subloan_target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} subloan_target.created_at 申請日期
+	 * @apiSuccess {String} subloan_target.contract 合約內容
 	 * @apiSuccess {json} subloan_target.product 產品資訊
 	 * @apiSuccess {String} subloan_target.product.name 產品名稱
 	 * @apiSuccess {json} subloan_target.amortization_schedule 預計還款計畫(簽約後不出現)
@@ -467,6 +466,13 @@ class Subloan extends REST_Controller {
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target->instalment,$new_target->interest_rate,$date="",$new_target->repayment);
 			}
 			
+			$contract = "";
+			if($new_target->contract_id){
+				$this->load->library('Contract_lib');
+				$contract_data = $this->contract_lib->get_contract($new_target->contract_id);
+				$contract = $contract_data["content"];
+			}
+			
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
 				$subloan_target[$field] = isset($new_target->$field)?$new_target->$field:"";
@@ -486,7 +492,7 @@ class Subloan extends REST_Controller {
 					);
 				}
 			}
-
+			$subloan_target["contract"] 				= $contract;
 			$subloan_target["product"] 					= $product;
 			$subloan_target["amortization_schedule"] 	= $amortization_schedule;
 			$data["subloan_target"]						= $subloan_target;

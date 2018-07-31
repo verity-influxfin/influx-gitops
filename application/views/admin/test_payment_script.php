@@ -68,7 +68,7 @@
                         <td><?= $userBankAccount->bank_account ?></td>
                         <td>
 							<?= $bankaccount_verify[$userBankAccount->verify] ?>
-							<?=$userBankAccount->verify==2?' <a href="'.admin_url('TestScript/VerifyBankAccount?id='.$userBankAccount->id).'">驗證</a>':"" ?>
+							<?//=$userBankAccount->verify==2?' <a href="'.admin_url('TestScript/VerifyBankAccount?id='.$userBankAccount->id).'">驗證</a>':"" ?>
 						</td>
                     </tr>
                 <?php endforeach; ?>

@@ -10,7 +10,6 @@ class Target extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('loan/product_model');
-		$this->load->model('loan/target_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
