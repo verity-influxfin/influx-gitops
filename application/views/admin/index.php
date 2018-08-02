@@ -20,7 +20,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/index?status=2') ?>">
+					<a href="<?=admin_url('Target/waiting_verify') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -64,7 +64,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/index?status=4') ?>">
+					<a href="<?=admin_url('Target/waiting_loan') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

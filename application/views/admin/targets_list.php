@@ -104,13 +104,8 @@
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
                                             <td>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-											<? 	if($value->status==2){
-													if($value->bank_account_verify){
-														echo '<button class="btn btn-default" onclick="success('.$value->id.')">審批上架</button>';
-														echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
-													}else{
-														echo '<p style="color:red;">金融帳號未驗證</p>';
-													}
+											<? 	if($value->status==2 && !$value->bank_account_verify){
+													echo '<p style="color:red;">金融帳號未驗證</p>';
 												}
 											?>
 											</td>

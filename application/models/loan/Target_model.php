@@ -17,9 +17,10 @@ class Target_model extends MY_Model
 		10 =>	"已結案",
 	);
 	public $loan_list   = array(
-		0 =>	"未出款",
+		0 =>	"無",
 		1 =>	"已出款",
 		2 =>	"待出款",
+		3 =>	"出款中",
 	);
 	
 	public $delay_list   = array(

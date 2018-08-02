@@ -209,7 +209,7 @@ class Certification extends REST_Controller {
 			$param['content'] 	= json_encode($content);
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
-				//$this->certification_lib->idcard_verify($insert); 7/31改人工
+				$this->certification_lib->idcard_verify($insert);// 7/31改人工
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));

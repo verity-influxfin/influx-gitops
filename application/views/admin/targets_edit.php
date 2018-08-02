@@ -28,7 +28,7 @@
 									<table class="table table-bordered table-hover table-striped">
 										<tbody>
 											<tr>
-												<td><p class="form-control-static">ID</p></td>
+												<td><p class="form-control-static">案件 ID</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
 												</td>
@@ -112,7 +112,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td><p class="form-control-static">ID</p></td>
+												<td><p class="form-control-static">借款人ID</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($user_info->id)?$user_info->id:"";?></p>
 												</td>
@@ -221,7 +221,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td><p class="form-control-static">ID</p></td>
+												<td><p class="form-control-static">出借人ID</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($value->user_info->id)?$value->user_info->id:"";?></p>
 												</td>

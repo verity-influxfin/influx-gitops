@@ -169,7 +169,7 @@ class Prepayment_lib{
 								$total = $funds["total"] - $funds["frozen"];
 								if($total >= $prepayment->amount){
 									$this->CI->load->library('Charge_lib');
-									$this->CI->charge_lib->charge_prepayment_target($value,$prepayment->settlement_date);
+									$this->CI->charge_lib->charge_prepayment_target($value,$virtual_account,$prepayment->settlement_date);
 								}
 								$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>1));
 							}

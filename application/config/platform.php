@@ -7,10 +7,11 @@ $config['admin_menu'] = array(
 		"index"			=> "產品列表",
 	),*/
 	"Target" 			=> array(
-		"parent_name"	=> "借款管理",
+		"parent_name"	=> "借款案件管理",
 		"parent_icon"	=> "fa-gavel",
-		"index"			=> "借款列表",
-		"waiting_loan"	=> "待放款 - 借款",
+		"index"			=> "全部列表",
+		"waiting_verify"=> "待審批",
+		"waiting_loan"	=> "待放款",
 	),
 	"Passbook" 			=> array("name"=>"虛擬帳號管理","icon"=>"fa-star"),
 	"Certification" 	=> array(

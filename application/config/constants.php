@@ -179,6 +179,7 @@ defined('DELAY_INTEREST')   		OR define('DELAY_INTEREST'			, 0.1); //延滯息%
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
+defined('PREPAYMENT_ALLOWANCE_FEES') 	OR define('PREPAYMENT_ALLOWANCE_FEES'	, 1); //提還補貼%
 defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'			, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
 defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'	, 6); //登入密碼長度

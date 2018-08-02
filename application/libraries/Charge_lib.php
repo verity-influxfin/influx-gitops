@@ -125,13 +125,9 @@ class Charge_lib{
 		return false;
 	}
 
-	public function charge_prepayment_target($target,$settlement_date=""){
+	public function charge_prepayment_target($target,$virtual_account,$settlement_date=""){
 		if($target->status == 5 && $settlement_date){
 			$date			= get_entering_date();
-			$virtual_account = $this->CI->virtual_account_model->get_by(array(
-				"investor"			=> 0,
-				"user_id"			=> $target->user_id
-			));
 			if($virtual_account){
 				$where 			= array(
 					"target_id" => $target->id,
@@ -146,7 +142,7 @@ class Charge_lib{
 					$instalment				= 1;
 					foreach($transaction as $key => $value){
 						if($value->user_to && $value->user_to!=$target->user_id){
-							$user_to_info[$value->user_to] 				= array(
+							$user_to_info[$value->user_to] 	= array(
 								"bank_account_to"			=> $value->bank_account_to,
 								"investment_id"				=> $value->investment_id,
 								"total_amount"				=> 0,
@@ -272,26 +268,26 @@ class Charge_lib{
 									"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
 									"status"			=> 2
 								);
+								$platform_fee	= intval(round($value["remaining_principal"]/100*PREPAYMENT_ALLOWANCE_FEES,0));
+								$transaction_param[] = array(
+									"source"			=> SOURCE_PREPAYMENT_ALLOWANCE,
+									"entering_date"		=> $date,
+									"user_from"			=> 0,
+									"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+									"amount"			=> $platform_fee,
+									"target_id"			=> $target->id,
+									"investment_id"		=> $value["investment_id"],
+									"instalment_no"		=> $instalment,
+									"user_to"			=> $user_to,
+									"bank_account_to"	=> $value["bank_account_to"],
+									"status"			=> 2
+								);
 							}
 						}
 
 						if(intval($liquidated_damages)>0){
 							$transaction_param[] = array(
-								"source"			=> SOURCE_AR_DAMAGE,
-								"entering_date"		=> $date,
-								"user_from"			=> $target->user_id,
-								"bank_account_from"	=> $virtual_account->virtual_account,
-								"amount"			=> $liquidated_damages,
-								"target_id"			=> $target->id,
-								"investment_id"		=> 0,
-								"instalment_no"		=> $instalment,
-								"user_to"			=> 0,
-								"limit_date"		=> $settlement_date,
-								"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
-								"status"			=> 2
-							);
-							$transaction_param[] = array(
-								"source"			=> SOURCE_DAMAGE,
+								"source"			=> SOURCE_PREPAYMENT_DAMAGE,
 								"entering_date"		=> $date,
 								"user_from"			=> $target->user_id,
 								"bank_account_from"	=> $virtual_account->virtual_account,

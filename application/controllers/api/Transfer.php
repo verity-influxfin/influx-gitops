@@ -875,6 +875,23 @@ class Transfer extends REST_Controller {
 				}
 			}
 			
+			if($transfer && isset($input['user_id']) && intval($input['user_id'])>0){
+				$investment = $this->investment_model->get_many_by(array("user_id"=>$input['user_id'],"status"=>3,"transfer_status"=>1));
+				$investment_ids = array();
+				if($investment){
+					foreach($investment as $key => $value){
+						$investment_ids[] = $value->id;
+					}
+				}
+				
+				foreach($transfer as $key => $value){
+					if(!in_array($value->investment_id,$investment_ids)){
+						unset($transfer[$key]);
+					}
+				}
+
+			}
+			
 			if($transfer){
 				$transfer_investment = $this->transfer_investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,10)));
 				if($transfer_investment){

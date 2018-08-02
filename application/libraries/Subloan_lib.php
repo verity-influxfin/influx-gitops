@@ -255,8 +255,8 @@ class Subloan_lib{
 	}
 	
 	private function get_target_no(){
-		$code = date("ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
-		$result = $this->CI->target_model->get_by('target_no',$code);
+		$code = "STS".date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$result = $this->target_model->get_by('target_no',$code);
 		if ($result) {
 			return $this->get_target_no();
 		}else{

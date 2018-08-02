@@ -11,7 +11,6 @@ class Certification extends MY_Admin_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/user_certification_model');
 		$this->load->model('user/user_meta_model');
-		$this->load->library('payment_lib');
  	}
 	
 	public function index(){
@@ -323,6 +322,7 @@ class Certification extends MY_Admin_Controller {
 	}
 	
 	function user_bankaccount_verify(){
+		$this->load->library('payment_lib');
 		$rs = $this->payment_lib->verify_bankaccount_txt($this->login_info->id);
 		if($rs!=""){
 			$rs = iconv('UTF-8', 'BIG-5', $rs);

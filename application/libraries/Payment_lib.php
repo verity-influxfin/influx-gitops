@@ -288,4 +288,134 @@ class Payment_lib{
 		}
 		return $content;
 	}
+	
+	public function loan_txt($ids=array(),$admin_id=0){
+		
+		$check_len = array(
+			"code"			=> 1,
+			"upload_date"	=> 8,
+			"entering_date"	=> 8,
+			"t_type"		=> 3,
+			"t_code"		=> 10,
+			"bankcode_from"	=> 7,
+			"bankacc_from"	=> 16,
+			"tax_from"		=> 10,
+			"name_from"		=> 70,
+			"TWD"			=> 3,
+			"plus"			=> 1,
+			"amount"		=> 14,//靠左補0
+			"bankcode_to"	=> 7,
+			"bankacc_to"	=> 16,
+			"tax_to"		=> 10,
+			"name_to"		=> 70,
+			"alert_to"		=> 1,
+			"email_to"		=> 50,
+			"fee_type"		=> 2,
+			"invoice_num"	=> 4,
+			"remark"		=> 50,
+		);
+		
+		if($ids){
+			$targets = $this->CI->target_model->get_many($ids);
+			if($targets){
+				$content 	= "";
+				$ids 		= array();
+				foreach($targets as $key => $value){
+					if($value->status==4 && $value->sub_status==0 && $value->loan_status==2){
+						$user_info = $this->CI->user_model->get($value->user_id);
+						if($user_info){
+							$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
+								"user_id"		=> $value->user_id,
+								"investor"		=> 0,
+								"status"		=> 1,
+								"verify"		=> 1
+							));
+							if($bankaccount){
+								$this->CI->target_model->update($value->id,array("loan_status"=>3));
+								$ids[] = $value->id;
+								$data = array(
+									"code"			=> "0",
+									"upload_date"	=> "",
+									"entering_date"	=> date("Ymd"),
+									"t_type"		=> "SPU",
+									"t_code"		=> "",
+									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+									"bankacc_from"	=> CATHAY_CUST_ACCNO,
+									"tax_from"		=> CATHAY_CUST_ID,
+									"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+									"TWD"			=> "TWD",
+									"plus"			=> "+",
+									"amount"		=> $value->loan_amount,//靠左補0
+									"bankcode_to"	=> $bankaccount->bank_code.$bankaccount->branch_code,
+									"bankacc_to"	=> $bankaccount->bank_account,
+									"tax_to"		=> "",
+									"name_to"		=> nf_to_wf($user_info->name),
+									"alert_to"		=> "0",
+									"email_to"		=> "",
+									"fee_type"		=> "13",
+									"invoice_num"	=> "",
+									"remark"		=> nf_to_wf($value->target_no."放款"),
+								);
+							
+								foreach($check_len as $key => $value){
+									$param = isset($data[$key])?$data[$key]:"";
+									if(in_array($key,array("name_from","name_to","remark"))){
+										$len = mb_strlen($param)*2;
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = $data[$key]." ";
+											}
+										}
+									}else if($key == "amount"){
+										$data[$key] = intval($data[$key])."00";
+										$len = strlen($data[$key]);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = "0".$data[$key];
+											}
+										}
+									}else if($key == "invoice_num"){
+										$len = strlen($data[$key]);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = "0".$data[$key];
+											}
+										}
+									}else{
+										$len = strlen($param);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = $data[$key]." ";
+											}
+										}
+									}
+								}
+								
+								if($content != ""){
+									$content .= "\n";
+								}
+								
+								foreach($data as $key => $value){
+									$content .= $value;
+								}
+							}
+						}
+					}
+				}
+				$this->CI->load->model('log/log_paymentexport_model');
+				$this->CI->log_paymentexport_model->insert(array(
+					"type"		=> "target_loan",
+					"content"	=> json_encode($ids),
+					"admin_id"	=> $admin_id
+				));
+				
+				return $content;
+			}
+		}
+		return false;
+	}
 }

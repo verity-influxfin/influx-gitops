@@ -47,7 +47,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_self" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
+							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_blank" onclick="setTimeout(location.reload(),400);" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -101,7 +101,7 @@
 												}
 												
 												if($value->verify==3){
-													echo '<button class="btn btn-default" onclick="success('.$value->id.')">通過</button>';
+													echo '<button class="btn btn-default" onclick="success('.$value->id.')">通過</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>

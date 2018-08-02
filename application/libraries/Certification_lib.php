@@ -81,17 +81,17 @@ class Certification_lib{
 								$answer[1] 	= $tmp;
 							}
 							if($answer[0]>=60 && $answer[1]>=90){
-								$error = array("error"=>"","OCR"=>$ocr,"face"=>$answer);
+								$error = array("error"=>"","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
 								$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
-								$this->set_success($id);
+								//$this->set_success($id);
 							}else{
-								$error = array("error"=>"face point","OCR"=>$ocr,"face"=>$answer);
-								$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error),"status"=>3));
+								$error = array("error"=>"人臉比對分數不足","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
+								$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
 							}
 						}
 					}else{
-						$error = array("error"=>"face count","OCR"=>$ocr);
-						$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error),"status"=>3));
+						$error = array("error"=>"人臉數量錯誤","OCR"=>$ocr,"face"=>array(),"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
+						$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
 					}
 				/*}else{
 					$error = array("error"=>"OCR","OCR"=>$ocr);

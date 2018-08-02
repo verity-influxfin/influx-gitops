@@ -4,61 +4,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
-
-/*
-	public function index()
-	{
-		$this->load->library('S3_upload');
-		$this->load->library('Faceplusplus_lib');
-		$data = array();
-		if(isset($_FILES["image"]) && !empty($_FILES["image"])){
-			$image 	= $this->s3_upload->image($_FILES,"image",0,"test");
-			$image2 = $this->s3_upload->image($_FILES,"image2",0,"test");
-			if($image && $image2){
-				$image_token 	= $this->faceplusplus_lib->get_face_token($image);
-				$image2_token 	= $this->faceplusplus_lib->get_face_token($image2);
-				$image_count 	= $image_token&&is_array($image_token)?count($image_token):0;
-				$image2_count 	= $image2_token&&is_array($image2_token)?count($image2_token):0;
-				$image_answer	= 0;
-				$image2_answer	= 0;
-				$answer			= array();
-				if($image_count>0 && $image2_count>0){
-					foreach($image_token as $token){
-						foreach($image2_token as $token2){
-							$answer[] = $this->faceplusplus_lib->token_compare($token,$token2);
-						}
-					}
-				}
-				
-				if($image_count>1){
-					$image_answer = $this->faceplusplus_lib->token_compare($image_token[0],$image_token[1]);
-				}
-				
-				if($image2_count>1){
-					$image2_answer = $this->faceplusplus_lib->token_compare($image2_token[0],$image2_token[1]);
-				}
-				
-				$this->load->library('Ocr_lib');
-				$ocr = $this->ocr_lib->identify($image,1031);
-				$data = array(
-					"image"			=> 	$image,
-					"id_card"		=>	$ocr,
-					"image2"		=> 	$image2,
-					"image_count"	=> 	$image_count,
-					"image2_count"	=> 	$image2_count,
-					"image_answer"	=> 	$image_answer,
-					"image2_answer"	=> 	$image2_answer,
-					"answer"		=> 	$answer,
-				);
-			}else{
-				alert("上傳失敗");
+	function toysssssssss(){
+		$this->load->model('user/user_model');
+		$this->load->model('user/user_meta_model');
+		$users 		= $this->user_model->get_many_by(array("status"=>1));
+		$meta 		= $this->user_meta_model->get_many_by(array("meta_key"=>array("fb_id","fb_name")));
+		$meta_data 	= array();
+		$data		= array();
+		if($meta){			
+			foreach($meta as $k => $v){
+				$meta_data[$v->user_id][$v->meta_key] = $v->meta_value;
 			}
 		}
-		$this->load->view('admin/forms',$data);
+		if($users){
+			foreach($users as $k =>$v){
+				$data[$v->id] = array(
+					"id"	=> $v->id,
+					"phone"	=> $v->phone,
+					"fbid"	=> isset($meta_data[$v->id]["fb_id"])?$meta_data[$v->id]["fb_id"]:"",
+					"name"	=> isset($meta_data[$v->id]["fb_name"])?$meta_data[$v->id]["fb_name"]:"",
+				);
+			}
+		}
+		echo json_encode($data);
 	}
-	
-	
-	function test(){
+/*	function schedule(){
 		$this->load->library('Financial_lib');
 		$amount 	= intval($_GET['amount']);//額度
 		$rate		= $_GET['rate'];
@@ -96,59 +66,44 @@ class Welcome extends CI_Controller {
 		
 	}
 */
-	public function test3(){
-		$this->load->library("Transaction_lib");
-		$rs = $this->transaction_lib->transfer_success(2);
-		dump($rs);
-	}
-	
-	public function test2(){
 
-		//$imageAnnotator = new ImageAnnotatorClient();
-		$path = "https://influxp2p-personal.s3.ap-northeast-1.amazonaws.com/id_card/img15326705194.jpg";
-		$imageAnnotator = new ImageAnnotatorClient();
-		$image = file_get_contents($path);
-		$response = $imageAnnotator->imagePropertiesDetection($image);
-		$props = $response->getImagePropertiesAnnotation();
-		dump($props);
-	}
-
-
-	public function test(){
-		$a 			= '0        20180730SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+000000000001008223164164540083054              陳霈霈                                                                0                                                  150000金融帳號驗證                                      ';
+/*	public function test(){
+		$a 			= '0        20180801SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
 		$hash_str 	= iconv('UTF-8', 'BIG-5', $a);
 		$hash  		= $this->hash($hash_str);
-		dump($hash);
+		$hash_value = $this->hash($hash);
 		$b = 
-		'<MYB2B>
-			<HEADER>
-				<SERVICE>PAYSVC</SERVICE>
-				<ACTION>BTRS01</ACTION>
-				<TXNKEY>20180730140605</TXNKEY>
-			</HEADER>
-			<BODY>
-				<LOGON>
-					<IDNO>68566881</IDNO>
-					<PASSWORD>aaa123</PASSWORD>
-					<USERNO>test001</USERNO>
-					<BRANCH>5663</BRANCH>
-				</LOGON>
-				<DATA>
-					<CONTENT FileType="BTRS/BRMT/0" DrAcno="015035006475" PayDate="20180725" >
-				'.$a.'
-					</CONTENT>
-					<SIGNEDINFO>'.$hash.'</SIGNEDINFO>
-				</DATA>
-			</BODY>
-		</MYB2B>';
-		
+		'
+<MYB2B>
+	<HEADER>
+		<SERVICE>PAYSVC</SERVICE>
+		<ACTION>BTRS01</ACTION>
+		<TXNKEY>20180801140605</TXNKEY>
+	</HEADER>
+	<BODY>
+		<LOGON>
+			<IDNO>68566881</IDNO>
+			<PASSWORD>aaa123</PASSWORD>
+			<USERNO>test001</USERNO>
+			<BRANCH>5663</BRANCH>
+		</LOGON>
+		<SIGNATURE>
+			<SIGNEDINFO>'.$hash.'</SIGNEDINFO>
+			<SIGNATUREVALUE>'.$hash_value.'</SIGNATUREVALUE>
+		</SIGNATURE>
+		<DATA>
+			<CONTENT FileType="BTRS/BRMT/0" DrAcno="" PayDate="" >
+				<![CDATA['.$a.']]>
+			</CONTENT>
+		</DATA>
+	</BODY>
+</MYB2B>';
 		$b 		= iconv('UTF-8', 'BIG-5', $b);
 		$key 	= iconv('UTF-8', 'BIG-5', 'abcdefgh68566881');//influx6856688100
 		$rs 	= $this->encrypt($b,$key);
 		$rs 	= $this->strToHex($rs);
 		$rs 	= "68566881            ".$rs;
 		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
-		dump($rs);
 		$res 	= curl_get("http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx",$rs,["Content-type:text/xml"]);
 		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $res)));
 		
@@ -184,7 +139,7 @@ class Welcome extends CI_Controller {
 		}
 		return $hex;
 	}
-
+*/
 
 }
 

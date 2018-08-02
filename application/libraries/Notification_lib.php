@@ -105,10 +105,11 @@ class Notification_lib{
 	}
 
 	public function target_verify_success($target){
-		$title = "[借款驗證] 您的借款驗證已通過";
+		$target_no = $target->target_no;
+		$title = "[借款驗證] 您申請的借款 $target_no 驗證已通過";
 			$content = "尊敬的用戶：
 						您好！
-						您的借款驗證已通過，將進入媒合階段，感謝您的關注與信任。";
+						您申請的借款 $target_no 驗證已通過，將進入媒合階段，感謝您的關注與信任。";
 
 		$param = array(
 			"user_id"	=> $target->user_id,
