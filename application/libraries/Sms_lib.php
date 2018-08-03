@@ -50,6 +50,23 @@ class Sms_lib {
 		}
 		return false;
 	}
+
+	public function lending_success($user_id,$investor,$target_no,$amount=0,$bankaccount=""){
+		if(!empty($user_id)){
+			$user_info 	= $this->CI->user_model->get($user_id);
+			if($user_info){
+				$phone 		= $user_info->phone;
+				if($investor==1){
+					$content 	= "親愛的用戶：您好！您申請的標的 $target_no ，核可金額 $amount 元，已成功放款。";
+				}else{
+					$bankaccount = substr($bankaccount, -4, 4);
+					$content = "【手機Atm用戶通知】您的借款 $target_no ，借款金額為 $amount 元已發放至您的綁定金融卡帳戶尾號 $bankaccount 內! 立即登入手機Atm查看最新資訊 https://borrow.influxfin.com/ ，祝您一切順心。";
+				}
+				return $this->send('lending_success',$user_id,$phone,$content);
+			}
+		}
+		return false;
+	}
 	
 	public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){

@@ -143,4 +143,29 @@ class Notification_lib{
 		return $rs;
 	}
 	
+	public function lending_success($user_id,$investor,$target_no,$amount=0,$bankaccount=""){
+		if($investor==1){
+			$title 		= "[借款放款成功] 您申請的標的 $target_no 已放款成功";
+			$content 	= "尊敬的用戶：
+						您好！
+						您申請的標的 $target_no ，核可金額 $amount 元，已成功放款。";
+		}else{
+			$bankaccount = substr($bankaccount, -4, 4);
+			$title 		= "[借款放款成功] 您的借款 $target_no 已發放成功";
+			$content 	= "尊敬的用戶：
+						您好！
+						您的借款 $target_no ，借款金額 $amount 元已發放至您的綁定金融卡賬戶尾號 $bankaccount 內，請您妥善安排用款。
+						敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號，如有收到類似通知，謹防詐騙，或致電我司客服電話 02-2507990 舉報，感謝您的配合。";
+		}
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
+	
 }

@@ -902,6 +902,7 @@ class Recoveries extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$ids		= array();
+		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));//  8/3暫不開放
 		//必填欄位
 		if (empty($input['ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));

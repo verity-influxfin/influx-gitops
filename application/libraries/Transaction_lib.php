@@ -130,10 +130,14 @@ class Transaction_lib{
 						"verify"	=> 1,
 						"investor"	=> 0
 					);
+
 					$this->CI->load->model('user/user_bankaccount_model');
 					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 					if($user_bankaccount){
-					
+						$this->CI->load->library('sms_lib');
+						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
+						$this->CI->load->library('Notification_lib');
+						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
 						//手續費
 						$transaction[]	= array(
 							"source"			=> SOURCE_FEES,
@@ -162,6 +166,8 @@ class Transaction_lib{
 								$investment_ids[]	= $value->id;
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$value->user_id,"investor"=>1,"status"=>1));
+								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,"");
+								$this->CI->sms_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,"");
 								
 								//放款
 								$transaction[]		= array(

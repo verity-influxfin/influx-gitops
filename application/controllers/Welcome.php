@@ -5,7 +5,6 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
 	function toysssssssss(){
-		$this->load->model('user/user_model');
 		$this->load->model('user/user_meta_model');
 		$users 		= $this->user_model->get_many_by(array("status"=>1));
 		$meta 		= $this->user_meta_model->get_many_by(array("meta_key"=>array("fb_id","fb_name")));
