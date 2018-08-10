@@ -17,7 +17,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>帳號</th>
+                                            <th>虛擬帳號</th>
                                             <th>User ID</th>
                                             <th>借款端/出借端</th>
                                             <th>狀態</th>
@@ -34,8 +34,8 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->virtual_account)?$value->virtual_account:"" ?></td>
-                                            <td><a href="<?=admin_url('user/edit?id='.$value->user_id) ?>" target="_blank"><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
-                                            <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
+                                            <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('passbook/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 

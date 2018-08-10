@@ -18,7 +18,7 @@
                                 <div class="col-lg-12">
                                     <form role="form" method="post"> 
                                         <div class="form-group">
-                                            <label>User</label>
+                                            <label>會員 ID</label>
 											<p><?=isset($data->user_id)?$data->user_id:"";?></p>
 											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                         </div>
@@ -33,7 +33,7 @@
 											<div class="form-group">
 												<label><?=$key; ?></label>
 												<? if(substr($key,-5,5)=="image"){?>
-												<img src="<?=$value?>" height="300" width="auto">
+												<a href="<?=$value?>" data-fancybox="images"><img src="<?=$value?>" style='width:30%;max-width:400px'></a>
 												<? }else{?>
 												<p><?=$value?></p>
 												<? }?>

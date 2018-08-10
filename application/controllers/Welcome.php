@@ -4,30 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
-	function toysssssssss(){
-		$this->load->model('user/user_meta_model');
-		$users 		= $this->user_model->get_many_by(array("status"=>1));
-		$meta 		= $this->user_meta_model->get_many_by(array("meta_key"=>array("fb_id","fb_name")));
-		$meta_data 	= array();
-		$data		= array();
-		if($meta){			
-			foreach($meta as $k => $v){
-				$meta_data[$v->user_id][$v->meta_key] = $v->meta_value;
-			}
-		}
-		if($users){
-			foreach($users as $k =>$v){
-				$data[$v->id] = array(
-					"id"	=> $v->id,
-					"phone"	=> $v->phone,
-					"fbid"	=> isset($meta_data[$v->id]["fb_id"])?$meta_data[$v->id]["fb_id"]:"",
-					"name"	=> isset($meta_data[$v->id]["fb_name"])?$meta_data[$v->id]["fb_name"]:"",
-				);
-			}
-		}
-		echo json_encode($data);
-	}
-/*	function schedule(){
+
+	function schedule(){
 		$this->load->library('Financial_lib');
 		$amount 	= intval($_GET['amount']);//額度
 		$rate		= $_GET['rate'];
@@ -64,45 +42,41 @@ class Welcome extends CI_Controller {
 		echo "</table>";
 		
 	}
-*/
 
-/*	public function test(){
-		$a 			= '0        20180801SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
-		$hash_str 	= iconv('UTF-8', 'BIG-5', $a);
-		$hash  		= $this->hash($hash_str);
-		$hash_value = $this->hash($hash);
+	public function test(){
+		$a 			= '0        20180808SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
 		$b = 
-		'
+		'<?xml version="1.0" encoding="big5"?>
 <MYB2B>
 	<HEADER>
 		<SERVICE>PAYSVC</SERVICE>
 		<ACTION>BTRS01</ACTION>
-		<TXNKEY>20180801140605</TXNKEY>
+		<TXNKEY>2018080912305</TXNKEY>
 	</HEADER>
 	<BODY>
 		<LOGON>
 			<IDNO>68566881</IDNO>
 			<PASSWORD>aaa123</PASSWORD>
 			<USERNO>test001</USERNO>
-			<BRANCH>5663</BRANCH>
+			<BRANCH>001</BRANCH>
 		</LOGON>
-		<SIGNATURE>
-			<SIGNEDINFO>'.$hash.'</SIGNEDINFO>
-			<SIGNATUREVALUE>'.$hash_value.'</SIGNATUREVALUE>
-		</SIGNATURE>
 		<DATA>
 			<CONTENT FileType="BTRS/BRMT/0" DrAcno="" PayDate="" >
-				<![CDATA['.$a.']]>
+				<![CDATA[
+				'.$a.'
+				]]>
 			</CONTENT>
 		</DATA>
 	</BODY>
 </MYB2B>';
+dump(htmlspecialchars($b));
 		$b 		= iconv('UTF-8', 'BIG-5', $b);
 		$key 	= iconv('UTF-8', 'BIG-5', 'abcdefgh68566881');//influx6856688100
 		$rs 	= $this->encrypt($b,$key);
 		$rs 	= $this->strToHex($rs);
 		$rs 	= "68566881            ".$rs;
 		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
+		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $rs)));
 		$res 	= curl_get("http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx",$rs,["Content-type:text/xml"]);
 		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $res)));
 		
@@ -138,7 +112,7 @@ class Welcome extends CI_Controller {
 		}
 		return $hex;
 	}
-*/
+
 
 }
 

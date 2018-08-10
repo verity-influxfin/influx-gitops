@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							會員列表
+							會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -18,7 +18,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>會員 ID</th>
                                             <th>姓名</th>
                                             <th>電話</th>
                                             <th>性別</th>
@@ -37,7 +37,7 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->id)?$value->id:"" ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
                                             <td><?=isset($value->phone)?$value->phone:"" ?></td>
@@ -47,7 +47,7 @@
 											<td><?=isset($value->investor_status)&&$value->investor_status?"正常":"未申請" ?></td>
 											<td><?=isset($value->block_status)&&$value->block_status?"封鎖":"否" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">修改</a></td> 
+											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}else{

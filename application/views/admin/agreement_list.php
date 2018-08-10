@@ -16,7 +16,7 @@
                 <th>名稱</th>
                 <th>最後更新時間</th>
                 <th>修改</th>
-                <th>刪除</th>
+                <!--th>刪除</th-->
             </tr>
             </thead>
             <tbody>
@@ -33,11 +33,11 @@
                             <button class="btn btn-default">修改</button>
                         </a>
                     </td>
-                    <td>
+                    <!--td>
                         <a href="<?=admin_url('agreement/deleteAgreement?id='.$agreement->id) ?>">
                             <button class="btn btn-danger">刪除</button>
                         </a>
-                    </td>
+                    </td-->
                 </tr>
             <?php endforeach; ?>
             </tbody>

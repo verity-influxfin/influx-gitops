@@ -11,11 +11,11 @@
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>NO.</th>
                 <th>代號</th>
                 <th>名稱</th>
                 <th>最後更新時間</th>
-                <th>修改</th>
+                <th>Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         <a href="<?=admin_url('contract/editContract?id='.$contract->id) ?>">
-                            <button class="btn btn-default">修改</button>
+                            <button class="btn btn-default">Edit</button>
                         </a>
                     </td>
                 </tr>

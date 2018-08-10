@@ -28,7 +28,8 @@
 				}
 				
 				function failed(id){
-					if(confirm("確認驗證失敗？申請中的案件將自動取消")){
+					//if(confirm("確認驗證失敗？申請中的案件將自動取消")){
+					if(confirm("確認驗證失敗？")){
 						if(id){
 							$.ajax({
 								url: './user_bankaccount_failed?id='+id,
@@ -55,8 +56,9 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>User</th>
+                                            <th>NO.</th>
+                                            <th>會員 ID</th>
+                                            <th>會員姓名</th>
                                             <th>出借/借款
 												<select id="investor" onchange="showChang();">
 													<option value="" >請選擇</option>
@@ -77,7 +79,7 @@
 												</select>
 											</th>
                                             <th>申請日期</th>
-                                            <th>查看訊息</th>
+                                            <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -87,9 +89,10 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?>  list <?=isset($value->user_id)?$value->user_id:"" ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->bank_code)?$value->bank_code:"" ?></td>
                                             <td><?=isset($value->branch_code)?$value->branch_code:"" ?></td>
@@ -101,13 +104,13 @@
 												}
 												
 												if($value->verify==3){
-													echo '<button class="btn btn-default" onclick="success('.$value->id.')">通過</button>&nbsp;';
+													echo '<button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>
 											</td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">查看訊息</a></td> 
+											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}

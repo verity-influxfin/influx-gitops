@@ -180,12 +180,12 @@ defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續�
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('PREPAYMENT_ALLOWANCE_FEES') 	OR define('PREPAYMENT_ALLOWANCE_FEES'	, 1); //提還補貼%
-defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'			, 7); //寬限期
+defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
-defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'	, 6); //登入密碼長度
+defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'					, 6); //登入密碼長度
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
-defined('LENDING_URL') 				OR define('LENDING_URL'				, 'https://lend.influxfin.com');
-defined('BORROW_URL') 				OR define('BORROW_URL'				, 'https://borrow.influxfin.com');
+defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
+defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值

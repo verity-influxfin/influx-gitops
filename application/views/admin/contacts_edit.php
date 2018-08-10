@@ -72,7 +72,7 @@
 											<textarea cols="50" rows="5" name="remark"><?=isset($data->remark)?$data->remark:"" ?></textarea>
                                         </div>
 
-                                        <button type="submit" class="btn btn-default">Submit Button</button>
+                                        <button type="submit" class="btn btn-default">送出</button>
                                     </form>
                                 </div>
 

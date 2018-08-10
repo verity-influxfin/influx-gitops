@@ -60,29 +60,6 @@
 								</ul>
 							</li>
 					<?}}}?>
-						<li class="<?=isset($menu)&&$menu=="test"?"active":""; ?>">
-
-                            <a href="#"><i class="fa fa-wrench fa-fw"></i>測試工具<span class="fa arrow"></span></a>
-
-                            <ul class="nav nav-second-level">
-
-                                <li>
-
-                                    <a href="<?=admin_url('TestScript/') ?>">申貸流程</a>
-
-                                </li>
-
-								<li>
-
-                                    <a href="<?=admin_url('TestScript/payment') ?>">匯款工具</a>
-
-                                </li> 
-
-                            </ul>
-
-                            <!-- /.nav-second-level -->
-
-                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

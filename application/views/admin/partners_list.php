@@ -18,7 +18,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>NO.</th>
                                             <th>負責業務</th>
                                             <th>上層公司名稱</th>
                                             <th>公司名稱</th>

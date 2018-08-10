@@ -33,7 +33,20 @@
 											<table class="table table-bordered table-hover table-striped">
 												<tbody>
 													<tr>
-														<td><p class="form-control-static">ID</p></td>
+														<td><p class="form-control-static">FB 照片</p></td>
+														<td colspan="3">
+															<p class="form-control-static">
+															<?=isset($meta["fb_id"])?"<a href='https://graph.facebook.com/".$meta["fb_id"]."/picture?width=500&heigth=500' data-fancybox='images'><img src='https://graph.facebook.com/".$meta["fb_id"]."/picture?type=large' style='width:30%;'></a>":"";?>
+															</p>
+														</td>
+														<td><p class="form-control-static">FB 暱稱</p></td>
+														<td colspan="3">
+															<p class="form-control-static"><?=isset($data->nickname)?$data->nickname:"";?></p>
+														</td>
+
+													</tr>
+													<tr>
+														<td><p class="form-control-static">會員 ID</p></td>
 														<td>
 															<p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
 														</td>

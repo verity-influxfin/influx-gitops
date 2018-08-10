@@ -41,5 +41,5 @@
         <textarea name="content" style="width:100%;height:500px">
         <?= is_null($contract) ? "" : $contract->content ?>
     </textarea>
-        <button type="submit" class="btn btn-default">submit</button>
+        <button type="submit" class="btn btn-default">送出</button>
     </form>

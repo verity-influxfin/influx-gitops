@@ -18,7 +18,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<!--a href="<?=admin_url('certification/add') ?>" class="btn btn-primary float-right" >新增認證方式</a-->
+							會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -26,8 +26,8 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>User</th>
+                                            <th>NO</th>
+                                            <th>會員 ID</th>
                                             <th>出借/借款
 												<select id="investor" onchange="showChang();">
 													<option value="" >請選擇</option>
@@ -53,7 +53,7 @@
 												</select>
 											</th>
                                             <th>申請日期</th>
-                                            <th>查看訊息</th>
+                                            <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -63,14 +63,14 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">查看訊息</a></td> 
+											<td><a href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}

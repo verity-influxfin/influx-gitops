@@ -130,7 +130,6 @@ class Payment_lib{
 
 	//入帳處理
 	private function receipt($value){
-		
 		if(!empty($value->virtual_account)){
 			$bank_code 	= $bank_account = "";
 			$bank 		= bankaccount_substr($value->bank_acc);
@@ -165,7 +164,7 @@ class Payment_lib{
 	
 	//出帳處理
 	private function expense($value){
-		$this->CI->payment_model->update($value->id,array("status"=>0));
+		$this->CI->payment_model->update($value->id,array("status"=>3));
 		return false;
 	}
 	
@@ -332,7 +331,8 @@ class Payment_lib{
 							));
 							if($bankaccount){
 								$this->CI->target_model->update($value->id,array("loan_status"=>3));
-								$ids[] = $value->id;
+								$amount = intval($value->loan_amount) - intval($value->platform_fee);
+								$ids[] 	= $value->id;
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
@@ -345,7 +345,7 @@ class Payment_lib{
 									"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
 									"TWD"			=> "TWD",
 									"plus"			=> "+",
-									"amount"		=> $value->loan_amount,//靠左補0
+									"amount"		=> $amount,//靠左補0
 									"bankcode_to"	=> $bankaccount->bank_code.$bankaccount->branch_code,
 									"bankacc_to"	=> $bankaccount->bank_account,
 									"tax_to"		=> "",

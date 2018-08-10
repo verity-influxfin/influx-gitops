@@ -17,14 +17,14 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>User ID</th>
+                                            <th>NO.</th>
+                                            <th>會員 ID</th>
                                             <th>借款端/出借端</th>
                                             <th>內容</th>
                                             <th>處理人</th>
                                             <th>處理狀態</th>
                                             <th>回報時間</th>
-                                            <th>修改</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>

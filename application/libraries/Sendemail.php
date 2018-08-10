@@ -94,6 +94,23 @@ class Sendemail
 		return false;
 	}
 	
+	public function user_notification($user_id=0,$title="",$content=""){
+		if($user_id){
+			$user_info 		= $this->CI->user_model->get($user_id);
+			if($user_info && $user_info->email){
+				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
+				return $this->send($user_info->email,$title,$content);
+			}
+		}
+		return false;
+	}
+	
+	public function admin_notification($title="",$content=""){
+		$admin_email 	= $this->CI->config->item('admin_email');
+		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content ),TRUE);
+		return $this->send($admin_email,$title,$content);
+	}
+	
     private function send($email,$subject,$content)
     {
 		$this->CI->email->initialize($this->config);

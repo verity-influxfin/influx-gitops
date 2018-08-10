@@ -105,7 +105,7 @@
 											<? }} ?>
 											<input type="hidden" name="instalment" id="instalment" value="<?=isset($data->instalment)?$data->instalment:"";?>" >
                                         </div>
-                                        <button type="submit" class="btn btn-default">Submit Button</button>
+                                        <button type="submit" class="btn btn-default">送出</button>
                                     </form>
                                 </div>
 

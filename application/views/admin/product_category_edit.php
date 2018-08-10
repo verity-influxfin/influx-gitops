@@ -39,7 +39,7 @@
 											<textarea id="description" name="description" class="form-control" rows="3"><?=isset($data->description)?$data->description:"";?></textarea>
                                         </div>
 
-                                        <button type="submit" class="btn btn-default">Submit Button</button>
+                                        <button type="submit" class="btn btn-default">送出</button>
                                     </form>
                                 </div>
 

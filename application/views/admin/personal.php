@@ -57,7 +57,7 @@
 											<label>確認新密碼</label> 
 											<input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password">
 										</div>
-                                        <button type="submit" class="btn btn-default">Submit Button</button>
+                                        <button type="submit" class="btn btn-default">送出</button>
                                     </form>
                                 </div>
 

@@ -76,7 +76,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>NO.</th>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>借款人ID</th>
@@ -87,7 +87,7 @@
                                             <th>放款狀態</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
-                                            <th>查看</th>
+                                            <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -118,14 +118,14 @@
                                             <td>
 												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:"" ?>
 												<? if($value->loan_status==3){
-													echo '<button class="btn btn-default" onclick="success('.$value->id.')">成功</button>&nbsp;';
+													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
 												} ?>
 											</td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">查看</a></td> 
+											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}else{

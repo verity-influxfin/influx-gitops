@@ -28,6 +28,26 @@
 				'type':'iframe',
 			});
 		});
+		
+		function number_only(evt)
+		{
+			var charCode 	= (evt.which) ? evt.which : event.keyCode;
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+				return false;
+			
+			return true;
+		}
+		
+		function user_search(){
+			var user_id 	= $("#user_search").val();
+			if(user_id == ""){
+				$(".list" ).show();
+			}else{
+				$(".list" ).hide();
+				$("." + user_id ).show();
+			}
+			console.log(user_id)
+		}
     </script>
 </head>
 <body>

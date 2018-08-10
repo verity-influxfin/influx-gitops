@@ -48,7 +48,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>NO.</th>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>借款人ID</th>
@@ -60,7 +60,7 @@
                                             <th>狀態
 											</th>
                                             <th>申請日期</th>
-                                            <th>查看</th>
+                                            <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -86,11 +86,11 @@
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
                                             <td>
 												<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-												<button class="btn btn-default" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批上架</button>
+												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批上架</button>
 												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">查看</a></td> 
+											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}else{

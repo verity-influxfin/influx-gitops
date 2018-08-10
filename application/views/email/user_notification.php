@@ -111,23 +111,12 @@
 												</tr>
 												<tr>
 													<td data-color="title" data-size="size title" data-min="25" data-max="45" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:35px/38px Arial, Helvetica, sans-serif; color:#292c34; padding:0 0 24px;">
-														EMAIL驗證信
+														{title}
 													</td>
 												</tr>
 												<tr>
 													<td data-color="text" data-size="size text" data-min="10" data-max="26" data-link-color="link text color" data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;" align="center" style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; padding:0 0 23px;">
-														手機ATM 電子信箱驗證信，請點擊下方按鈕完成認證
-													</td>
-												</tr>
-												<tr>
-													<td style="padding:0 0 20px;">
-														<table width="134" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
-															<tr>
-																<td data-bgcolor="bg-button" data-size="size button" data-min="10" data-max="16" class="btn" align="center" style="font:12px/14px Arial, Helvetica, sans-serif; color:#f8f9fb; text-transform:uppercase; mso-padding-alt:12px 10px 10px; border-radius:2px;" bgcolor="#7bb84f">
-																	<a target="_blank" style="text-decoration:none; color:#f8f9fb; display:block; padding:12px 10px 10px;" href="{link}">驗證連結</a>
-																</td>
-															</tr>
-														</table>
+														{content}
 													</td>
 												</tr>
 											</table>
@@ -152,7 +141,7 @@
 															<tr>
 																<td data-color="text" data-link-color="link text color" data-link-style="text-decoration:underline; color:#797c82;" class="aligncenter" style="font:12px/16px Arial, Helvetica, sans-serif; color:#797c82; padding:0 0 10px;">
 																	此信件為系統自動發送，請勿直接回覆<br>
-																	Copyright ©2018 普匯金融科技股份有限公司
+																	Copyright c2018 普匯金融科技股份有限公司
 																</td>
 															</tr>
 														</table>

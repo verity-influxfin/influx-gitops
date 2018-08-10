@@ -488,7 +488,7 @@ class Product extends REST_Controller {
      *       "error": "206"
      *     }
 	 *
-     * @apiError 208 未滿20歲
+     * @apiError 208 未滿20歲或大於35歲
      * @apiErrorExample {json} 208
      *     {
      *       "result": "ERROR",
@@ -550,7 +550,7 @@ class Product extends REST_Controller {
 					}
 				}
 				
-				if(get_age($this->user_info->birthday) < 20){
+				if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
 					$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 				}
 				
@@ -559,6 +559,8 @@ class Product extends REST_Controller {
 				if($bank_account){
 					if($bank_account->verify==0){
 						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
+						$this->load->library('Sendemail');
+						$this->sendemail->admin_notification("新的一筆金融帳號驗證 會員ID:".$user_id,"有新的一筆金融帳號驗證 會員ID:".$user_id);
 					}
 				}else{
 					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
@@ -566,6 +568,8 @@ class Product extends REST_Controller {
 				
 				if($targets->status == 1){
 					unset($param['target_id']);
+					$this->load->library('Sendemail');
+					$this->sendemail->admin_notification("案件待審批 會員ID：".$user_id,"案件待審批 會員ID：".$user_id." 案號：".$targets->target_no);
 					$rs = $this->target_model->update($targets->id,$param);
 					$this->response(array('result' => 'SUCCESS'));
 				}else{

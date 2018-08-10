@@ -18,7 +18,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>NO.</th>
                                             <th>名稱</th>
                                             <th>借款額度</th>
                                             <th>年利率下限（%）</th>

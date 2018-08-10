@@ -495,12 +495,6 @@ class Target extends REST_Controller {
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
-			
-			$investments = $this->investment_model->get_by(array("target_id"=>$target->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
-			if($investments){
-				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
-			}
-			
 
 			//檢查認證 NOT_VERIFIED
 			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
@@ -519,6 +513,11 @@ class Target extends REST_Controller {
 			
 			if($this->user_info->transaction_password==""){
 				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
+			}
+
+			$investments = $this->investment_model->get_by(array("target_id"=>$target->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
+			if($investments){
+				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
 			}
 			
 			$insert = $this->investment_model->insert($param);

@@ -196,6 +196,8 @@ class Target_lib{
 							}
 							$this->CI->investment_model->update($value->id,$param);
 						}
+						$this->CI->load->library('Sendemail');
+						$this->CI->sendemail->admin_notification("案件待放款 會員ID：".$target->user_id,"案件待放款 會員ID：".$target->user_id." 案號：".$target->target_no);
 						return true;
 					}
 				}else{

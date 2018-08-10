@@ -210,6 +210,8 @@ class Certification extends REST_Controller {
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
 				$this->certification_lib->idcard_verify($insert);// 7/31改人工
+				$this->load->library('Sendemail');
+				$this->sendemail->admin_notification("新的一筆實名認證 會員ID:".$user_id,"有新的一筆實名認證 會員ID:".$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -669,6 +671,8 @@ class Certification extends REST_Controller {
 				
 				if($investor){
 					$bankaccount_info['verify'] = 2;
+					$this->load->library('Sendemail');
+					$this->sendemail->admin_notification("新的一筆金融帳號驗證 會員ID:".$user_id,"有新的一筆金融帳號驗證 會員ID:".$user_id);
 				}else{
 					$this->certification_lib->set_success($insert);
 				}

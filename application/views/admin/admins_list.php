@@ -18,7 +18,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>NO.</th>
                                             <th>帳號</th>
                                             <th>角色</th>
                                             <th>姓名</th>
@@ -26,7 +26,7 @@
                                             <th>地址</th>
                                             <th>Email</th>
                                             <th>創建者</th>
-                                            <th>修改</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -119,7 +119,7 @@ class Certification extends MY_Admin_Controller {
 			}
 		}
 		
-		$list					= $this->user_certification_model->get_many_by($where);
+		$list					= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
 		if(!empty($list)){
 			$page_data['list'] = $list;
 		}
@@ -175,6 +175,10 @@ class Certification extends MY_Admin_Controller {
 								$this->load->library('Certification_lib');
 								$rs = $this->certification_lib->set_success($post['id']);
 							}else{
+								if($post['status']=="2"){
+									$this->load->library('Notification_lib');
+									$this->notification_lib->certification($info->user_id,$info->investor,$certification->name,$post['status']);
+								}
 								$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
 							}
 						}
@@ -211,10 +215,8 @@ class Certification extends MY_Admin_Controller {
 		$list = $this->user_bankaccount_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->verify==2){
-					$user = $this->user_model->get($value->user_id);
-					$list[$key]->user_name = $user->name;
-				}
+				$user = $this->user_model->get($value->user_id);
+				$list[$key]->user_name = $user->name;
 			}
 		}
 		
@@ -307,10 +309,10 @@ class Certification extends MY_Admin_Controller {
 			if($info){
 				$this->user_certification_model->update($info->user_certification_id,array("status"=>2));
 				$this->user_bankaccount_model->update($id,array("verify"=>4));
-				if($info->investor==0){
+				/*if($info->investor==0){
 					$this->load->library('target_lib');
 					$this->target_lib->bankaccount_verify_failed($info->user_id);
-				}
+				}*/
 				
 				echo "更新成功";die();
 			}else{

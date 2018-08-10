@@ -34,6 +34,8 @@ $config['admin_menu'] = array(
 	//"Contract" 		=> array("name"=>"合約書","icon"=>"fa-star"),
 );
 
+$config['admin_email'] = array('news@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');
+
 $config['instalment']= array(
 0=> "其他",
 3=> "3期",
