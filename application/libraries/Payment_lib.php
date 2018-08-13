@@ -169,7 +169,8 @@ class Payment_lib{
 	}
 	
 	public function verify_bankaccount_txt($admin_id=0){
-		
+		$this->CI->load->model('admin/difficult_word_model');
+		$word_list = $this->CI->difficult_word_model->get_name_list();
 		$check_len = array(
 			"code"			=> 1,
 			"upload_date"	=> 8,
@@ -205,6 +206,19 @@ class Payment_lib{
 			foreach($bankaccounts as $key => $value){
 				$user_info = $this->CI->user_model->get($value->user_id);
 				if($user_info && $user_info->name){
+
+					$name_list = mb_str_split($user_info->name);
+					if($name_list){
+						$name = "";
+						foreach($name_list as $key => $value){
+							if(!iconv('UTF-8', 'BIG-5', $value)){
+								$value = isset($word_list[$value])?$word_list[$value]:"";
+							}
+							$name .= $value;
+						}
+						$user_info->name = $name;
+					}
+
 					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time()));
 					$ids[] = $value->id;
 					$data = array(
@@ -289,7 +303,8 @@ class Payment_lib{
 	}
 	
 	public function loan_txt($ids=array(),$admin_id=0){
-		
+		$this->CI->load->model('admin/difficult_word_model');
+		$word_list = $this->CI->difficult_word_model->get_name_list();
 		$check_len = array(
 			"code"			=> 1,
 			"upload_date"	=> 8,
@@ -333,6 +348,19 @@ class Payment_lib{
 								$this->CI->target_model->update($value->id,array("loan_status"=>3));
 								$amount = intval($value->loan_amount) - intval($value->platform_fee);
 								$ids[] 	= $value->id;
+								
+								$name_list = mb_str_split($user_info->name);
+								if($name_list){
+									$name = "";
+									foreach($name_list as $key => $value){
+										if(!iconv('UTF-8', 'BIG-5', $value)){
+											$value = isset($word_list[$value])?$word_list[$value]:"";
+										}
+										$name .= $value;
+									}
+									$user_info->name = $name;
+								}
+					
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",

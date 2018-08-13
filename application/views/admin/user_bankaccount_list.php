@@ -92,7 +92,22 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>  list <?=isset($value->user_id)?$value->user_id:"" ?>">
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-                                            <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
+                                            <td>
+											<?=isset($value->user_name)?$value->user_name:"" ?>
+											<? 
+												if(isset($value->user_name_list) && !empty($value->user_name_list)){
+													foreach($value->user_name_list as $k => $word){
+														if(!iconv('UTF-8', 'BIG-5', $word)){
+															if(isset($word_list[$word]) && $word_list[$word]){
+																echo '<br><p">已處理特殊字：'.$word.'</p>';
+															}else{
+																echo '<br><p style="color:red;">請處理特殊字：'.$word.'</p>';
+															}
+														}
+													}
+												}
+											?>
+											</td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->bank_code)?$value->bank_code:"" ?></td>
                                             <td><?=isset($value->branch_code)?$value->branch_code:"" ?></td>
@@ -104,7 +119,7 @@
 												}
 												
 												if($value->verify==3){
-													echo '<button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
+													echo '<br><button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>

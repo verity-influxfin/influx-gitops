@@ -264,8 +264,12 @@
 		return str_replace($nft, $wft, $strs);
 	}
 	
-	 function myErrorHandler($errno,$errstr,$errfile,$errline)  
-	 {  
-	  echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";  
-	 }
+	function myErrorHandler($errno,$errstr,$errfile,$errline)  
+	{  
+		echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";  
+	}
+	
+	function mb_str_split($str){
+		return preg_split('/(?<!^)(?!$)/u', $str );
+	}
 ?>

@@ -632,6 +632,7 @@ class Certification extends REST_Controller {
 				"investor"		=> $investor,
 				"bank_code"		=> $content["bank_code"],
 				"bank_account"	=> intval($content["bank_account"]),
+				"status"		=> 1,
 			);
 			
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);

@@ -20,6 +20,7 @@ class Certification_lib{
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification_id,
 				"investor"			=> $investor,
+				"status !="			=> 2,// 8/10 by toy
 				"expire_time >="	=> time(),
 			);
 			$certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);

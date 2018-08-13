@@ -292,7 +292,7 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('payment_lib');
 			$rs = $this->payment_lib->loan_txt($ids,$this->login_info->id);
 			if($rs && $rs !=""){
-				$rs = iconv('UTF-8', 'BIG-5', $rs);
+				$rs = iconv('UTF-8', 'BIG-5//IGNORE', $rs);
 				header("Content-type: application/text");
 				header("Content-Disposition: attachment; filename=loan_".date("YmdHis").".txt");
 				echo $rs;

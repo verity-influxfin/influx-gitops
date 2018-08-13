@@ -216,13 +216,18 @@ class Certification extends MY_Admin_Controller {
 		if($list){
 			foreach($list as $key => $value){
 				$user = $this->user_model->get($value->user_id);
-				$list[$key]->user_name = $user->name;
+				$list[$key]->user_name 		= $user->name;
+				$list[$key]->user_name_list = $user->name?mb_str_split($user->name):"";
 			}
 		}
 		
-		$page_data['list'] 				= $list?$list:array();
-		$page_data['verify_list'] 		= $this->user_bankaccount_model->verify_list;
-		$page_data['investor_list'] 	= $this->user_bankaccount_model->investor_list;
+		$this->load->model('admin/difficult_word_model');
+		
+		$page_data['list'] 			= $list?$list:array();
+		$page_data['verify_list'] 	= $this->user_bankaccount_model->verify_list;
+		$page_data['investor_list'] = $this->user_bankaccount_model->investor_list;
+		$page_data['word_list'] 	= $this->difficult_word_model->get_name_list();
+
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/user_bankaccount_list',$page_data);
@@ -308,7 +313,7 @@ class Certification extends MY_Admin_Controller {
 			$info = $this->user_bankaccount_model->get($id);
 			if($info){
 				$this->user_certification_model->update($info->user_certification_id,array("status"=>2));
-				$this->user_bankaccount_model->update($id,array("verify"=>4));
+				$this->user_bankaccount_model->update($id,array("verify"=>4,"status"=>0));
 				/*if($info->investor==0){
 					$this->load->library('target_lib');
 					$this->target_lib->bankaccount_verify_failed($info->user_id);
@@ -327,12 +332,100 @@ class Certification extends MY_Admin_Controller {
 		$this->load->library('payment_lib');
 		$rs = $this->payment_lib->verify_bankaccount_txt($this->login_info->id);
 		if($rs!=""){
-			$rs = iconv('UTF-8', 'BIG-5', $rs);
+			$rs = iconv('UTF-8', 'BIG-5//IGNORE', $rs);
 			header("Content-type: application/text");
 			header("Content-Disposition: attachment; filename=verify_".date("YmdHis").".txt");
 			echo $rs;
 		}else{
 			alert("沒有待驗證的金融帳號",admin_url('certification/user_bankaccount_list'));
+		}
+	}
+	
+	public function difficult_word_list(){
+		$this->load->model('admin/difficult_word_model');
+		$page_data 	= array("type"=>"list");
+		$list 		= $this->difficult_word_model->get_all();
+		if(!empty($list)){
+			$page_data["list"] 		= $list;
+			$page_data["name_list"] = $this->admin_model->get_name_list();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/difficult_word_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	public function difficult_word_add(){
+		$this->load->model('admin/difficult_word_model');
+		$page_data 	= array("type"=>"add");
+		$data		= array();
+		$post 		= $this->input->post(NULL, TRUE);
+		if(empty($post)){
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/difficult_word_edit',$page_data);
+			$this->load->view('admin/_footer');
+		}else{
+			$required_fields 	= [ 'word', 'spelling'];
+			foreach ($required_fields as $field) {
+				if (empty($post[$field])) {
+					alert($field." is empty",admin_url('certification/difficult_word_list'));
+				}else{
+					$data[$field] = trim($post[$field]);
+				}
+			}
+
+			$data["creator_id"] = $this->login_info->id;
+			$rs = $this->difficult_word_model->insert($data);
+			if($rs){
+				alert("新增成功",admin_url('certification/difficult_word_list'));
+			}else{
+				alert("新增失敗，請洽工程師",admin_url('certification/difficult_word_list'));
+			}
+		}
+	}
+	
+	public function difficult_word_edit(){
+		$this->load->model('admin/difficult_word_model');
+		$page_data 	= array("type"=>"edit");
+		$post 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		
+		if(empty($post)){
+			$id = isset($get["id"])?intval($get["id"]):0;
+			if($id){
+				$info = $this->difficult_word_model->get_by('id', $id);
+				if($info){
+					$page_data['data'] 			= $info;
+					
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/difficult_word_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert("ERROR , id isn't exist",admin_url('certification/difficult_word_list'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('certification/difficult_word_list'));
+			}
+		}else{
+			if(!empty($post['id'])){
+				$fields = ['spelling'];
+				foreach ($fields as $field) {
+					if (isset($post[$field])) {
+						$data[$field] = $post[$field];
+					}
+				}
+				$rs = $this->difficult_word_model->update($post['id'],$data);
+				if($rs===true){
+					alert("更新成功",admin_url('certification/difficult_word_list'));
+				}else{
+					alert("更新失敗，請洽工程師",admin_url('certification/difficult_word_list'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('certification/difficult_word_list'));
+			}
 		}
 	}
 }

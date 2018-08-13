@@ -5,6 +5,23 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
 
+	function xxx(){
+		$this->load->model('admin/difficult_word_model');
+		$word_list = $this->difficult_word_model->get_name_list();
+		$name = '啟 啓';
+		$name_list = mb_str_split($name);
+		if($name_list){
+			$name = "";
+			foreach($name_list as $key => $value){
+				if(!iconv('UTF-8', 'BIG-5', $value)){
+					$value = isset($word_list[$value])?$word_list[$value]:"";
+				}
+				$name .= $value;
+			}
+		}
+		dump($name);
+	}
+	
 	function schedule(){
 		$this->load->library('Financial_lib');
 		$amount 	= intval($_GET['amount']);//額度
@@ -44,14 +61,15 @@ class Welcome extends CI_Controller {
 	}
 
 	public function test(){
-		$a 			= '0        20180808SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
+		$tano = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$a 			= '0                SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
 		$b = 
 		'<?xml version="1.0" encoding="big5"?>
 <MYB2B>
 	<HEADER>
 		<SERVICE>PAYSVC</SERVICE>
 		<ACTION>BTRS01</ACTION>
-		<TXNKEY>2018080912305</TXNKEY>
+		<TXNKEY>'.$tano.'</TXNKEY>
 	</HEADER>
 	<BODY>
 		<LOGON>
@@ -78,7 +96,10 @@ dump(htmlspecialchars($b));
 		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
 		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $rs)));
 		$res 	= curl_get("http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx",$rs,["Content-type:text/xml"]);
-		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $res)));
+		$res 	= iconv('big5', 'big5//IGNORE', $res); 
+		$xml 	= simplexml_load_string($res);
+		$xml 	= json_decode(json_encode($xml),TRUE);
+		dump($xml);
 		
 	}
 

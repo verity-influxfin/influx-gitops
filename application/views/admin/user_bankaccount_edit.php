@@ -44,11 +44,11 @@
                                         </div>
                                        <div class="form-group">
                                             <label>正面</label>
-											<p> <img src="<?=$data->front_image ?>" height="300" width="auto"></p>
+											<a href="<?=$data->front_image ?>" data-fancybox="images"><img src="<?=$data->front_image ?>" style='width:30%;max-width:400px'></a>
                                         </div>
 										<div class="form-group">
                                             <label>反面</label>
-											<p> <img src="<?=$data->back_image ?>" height="300" width="auto"></p>
+											<a href="<?=$data->back_image ?>" data-fancybox="images"><img src="<?=$data->back_image ?>" style='width:30%;max-width:400px'></a>
                                         </div>
                                     </form>
                                 </div>
