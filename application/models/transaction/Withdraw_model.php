@@ -5,7 +5,17 @@ class Withdraw_model extends MY_Model
 	public $_table = 'withdraw';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
-
+	public $status_list  	= array(
+		0 =>	"待出款",
+		1 =>	"提領成功",
+		2 =>	"出款中",
+		3 =>	"取消",
+	);
+	public $investor_list  	= array(
+		0 =>	"借款端",
+		1 =>	"出借端",
+	);
+	
 	public function __construct()
 	{
 		parent::__construct();

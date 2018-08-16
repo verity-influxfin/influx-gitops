@@ -10,6 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+						會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -26,14 +27,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+									<tr class="<?=$count%2==0?"odd":"even"; ?> list 0">
+										<td>
+										<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.PLATFORM_VIRTUAL_ACCOUNT) ?>" >
+												<?=PLATFORM_VIRTUAL_ACCOUNT ?>
+											</a>
+										</td>
+										<td>平台虛擬帳號</td>
+										<td></td>
+										<td>正常</td>
+										<td></td>
+										<td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_VIRTUAL_ACCOUNT ?>" class="btn btn-default">Detail</a></td> 
+									</tr> 
 									<?php 
 										if(isset($list) && !empty($list)){
 											$count = 0;
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->virtual_account)?$value->virtual_account:"" ?></td>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
+                                            <td>
+											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
+												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
+											</a>
+											</td>
                                             <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
 											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>

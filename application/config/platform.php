@@ -14,6 +14,13 @@ $config['admin_menu'] = array(
 		"waiting_loan"	=> "待放款",
 	),
 	"Passbook" 			=> array("name"=>"虛擬帳號管理","icon"=>"fa-star"),
+	"Passbook" 	=> array(
+		"parent_name"					=> "虛擬帳號管理",
+		"parent_icon"					=> "fa-star",
+		"index"							=> "虛擬帳號列表",
+		"withdraw_list"					=> "提領紀錄列表",
+		"withdraw_waiting"				=> "提領待放款",
+	),
 	"Certification" 	=> array(
 		"parent_name"	=> "認證管理",
 		"parent_icon"	=> "fa-question-circle",
@@ -35,7 +42,7 @@ $config['admin_menu'] = array(
 	//"Contract" 		=> array("name"=>"合約書","icon"=>"fa-star"),
 );
 
-$config['admin_email'] = array('news@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');
+$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');
 
 $config['instalment']= array(
 0=> "其他",
@@ -67,6 +74,11 @@ $config['transaction_source']= array(
 12	=> "還款本金",
 13	=> "應付借款利息",
 14	=> "還款利息",
+
+81	=> "平台驗證費",
+82	=> "平台驗證費退回",
+83	=> "跨行轉帳費",
+84	=> "跨行轉帳費退回",
 
 91	=> "應付違約金",
 92	=> "已還違約金",

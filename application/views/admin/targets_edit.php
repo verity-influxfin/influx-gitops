@@ -91,6 +91,16 @@
 												</td>
 											</tr>
 											<tr>
+												<td><p class="form-control-static">平台服務費</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($data->platform_fee)?$data->platform_fee:"";?></p>
+												</td>
+												<td><p class="form-control-static">放款日期</p></td>
+												<td>
+													<p class="form-control-static"><?=isset($data->loan_date)?$data->loan_date:"";?></p>
+												</td>
+											</tr>
+											<tr>
 												<td><p class="form-control-static">逾期狀態 - 天數</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($data->delay)?$data->delay.'-'.$data->delay_days:"";?></p>

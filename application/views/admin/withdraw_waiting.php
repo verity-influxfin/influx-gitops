@@ -1,14 +1,14 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 待放款</h1>
+                    <h1 class="page-header">提領 - 待放款</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
 				function toloan(){
 					var ids = "";
-					$('.targets:checked').each(function() {
+					$('.withdraws:checked').each(function() {
 						if(ids==""){
 							ids += this.value;
 						}else{
@@ -16,11 +16,11 @@
 						}		
 					});
 					if(ids==""){
-						alert("請先選擇欲放款案件");
+						alert("請先選擇欲出款申請");
 						return false;
 					}
 					if(confirm("確認匯出下列案件ID:"+ids)){
-						window.open('./target_loan?ids=' + ids,'_blank');
+						window.open('./withdraw_loan?ids=' + ids,'_blank');
 						setTimeout(location.reload(),500);
 					}
 				}
@@ -55,13 +55,6 @@
 					}
 				}
 
-				function rollback(id){
-					if(confirm("確認整案退回？得標者全數流標")){
-						if(id){
-							alert("功能實作中，請找IT");
-						}
-					}
-				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -77,16 +70,13 @@
                                     <thead>
                                         <tr>
                                             <th>NO.</th>
-                                            <th>案號</th>
-                                            <th>產品</th>
-                                            <th>借款人ID</th>
-                                            <th>放款金額</th>
-                                            <th>平台服務費</th>
-                                            <th>實際出帳金額</th>
-                                            <th>放款狀態</th>
+                                            <th>虛擬帳號</th>
+                                            <th>User ID</th>
+											<th>借款端/出借端</th>
+                                            <th>提領金額</th>
+                                            <th>待交易流水號</th>
                                             <th>狀態</th>
-                                            <th>申請日期</th>
-                                            <th>Detail</th>
+                                            <th>創建日期</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,32 +88,26 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if($value->loan_status==2){ ?>
-												<input class="targets" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
+												<? if($value->status==0){ ?>
+												<input class="withdraws" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->id)?$value->id:"" ?>
 											</td>
-                                            <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td>
-												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
-													<?=isset($value->user_id)?$value->user_id:"" ?>
-												</a>
+											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
+												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
+											</a>
 											</td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
-                                            <td><?=isset($value->platform_fee)&&$value->platform_fee?$value->platform_fee:"" ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:"" ?></td>
-                                            <td>
-												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:"" ?>
-												<? if($value->loan_status==3){
+                                            <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
+											<td><?=isset($value->amount)?intval($value->amount):"" ?></td>
+											<td><?=isset($value->frozen_id)?$value->frozen_id:"" ?></td>
+                                            <td><?=isset($value->status)?$status_list[$value->status]:"" ?>
+												<? if($value->status==2){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
-													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>&nbsp;';
-													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
-												} ?>
-											</td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
-                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>';
+												} ?></td>
+											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 
 										}}else{

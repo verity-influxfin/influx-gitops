@@ -101,7 +101,7 @@
 															if(isset($word_list[$word]) && $word_list[$word]){
 																echo '<br><p">已處理特殊字：'.$word.'</p>';
 															}else{
-																echo '<br><p style="color:red;">請處理特殊字：'.$word.'</p>';
+																echo '<br><a href="'.admin_url('certification/difficult_word_list').'" target="_blank"><p style="color:red;">請處理特殊字：'.$word.'</p></a>';
 															}
 														}
 													}

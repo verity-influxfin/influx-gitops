@@ -5,23 +5,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
 class Welcome extends CI_Controller {
 
-	function xxx(){
-		$this->load->model('admin/difficult_word_model');
-		$word_list = $this->difficult_word_model->get_name_list();
-		$name = '啟 啓';
-		$name_list = mb_str_split($name);
-		if($name_list){
-			$name = "";
-			foreach($name_list as $key => $value){
-				if(!iconv('UTF-8', 'BIG-5', $value)){
-					$value = isset($word_list[$value])?$word_list[$value]:"";
-				}
-				$name .= $value;
-			}
-		}
-		dump($name);
-	}
-	
+
 	function schedule(){
 		$this->load->library('Financial_lib');
 		$amount 	= intval($_GET['amount']);//額度
@@ -61,8 +45,12 @@ class Welcome extends CI_Controller {
 	}
 
 	public function test(){
+		
+		$url 	= "http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx";
 		$tano = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
-		$a 			= '0                SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+0000000050000001300393213213213212313          煢煢                                                                  0                                                  130000１８０８０１３６３９放款                          ';
+		$a 			= '0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+000000000001000132033203506027355              郭基永                                                                0                                                  150000金融帳號驗證                                      
+0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+00000000000100812002328881003050014            謝承翰                                                                0                                                  150000金融帳號驗證                                      
+0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+00000000000100812002328881003050014            謝承瀚                                                                0                                                  150000金融帳號驗證                                      ';
 		$b = 
 		'<?xml version="1.0" encoding="big5"?>
 <MYB2B>
@@ -79,33 +67,73 @@ class Welcome extends CI_Controller {
 			<BRANCH>001</BRANCH>
 		</LOGON>
 		<DATA>
-			<CONTENT FileType="BTRS/BRMT/0" DrAcno="" PayDate="" >
-				<![CDATA[
-				'.$a.'
-				]]>
+			<CONTENT FileType="BTRS/BRMT/0" DrAcno="">
+				<![CDATA['.$a.']]>
 			</CONTENT>
 		</DATA>
 	</BODY>
 </MYB2B>';
-dump(htmlspecialchars($b));
+echo $url."<pre>";
+var_dump(htmlspecialchars($b)); 
 		$b 		= iconv('UTF-8', 'BIG-5', $b);
 		$key 	= iconv('UTF-8', 'BIG-5', 'abcdefgh68566881');//influx6856688100
 		$rs 	= $this->encrypt($b,$key);
 		$rs 	= $this->strToHex($rs);
 		$rs 	= "68566881            ".$rs;
 		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
-		dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $rs)));
-		$res 	= curl_get("http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx",$rs,["Content-type:text/xml"]);
+		//dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $rs)));
+		$res 	= curl_get($url,$rs,["Content-type:text/xml"]);
 		$res 	= iconv('big5', 'big5//IGNORE', $res); 
 		$xml 	= simplexml_load_string($res);
 		$xml 	= json_decode(json_encode($xml),TRUE);
-		dump($xml);
+		echo "<br>";
+		var_dump($xml);
+		//TXNKEY 2018081578439
+		//BATCH_NO 00033602
 		
 	}
 
-	public function hash($str=""){
-		$res 	= curl_get("http://ahs2.azurewebsites.net/api/ahs2",$str);
-		return $res;
+	public function test2(){
+		$url 	= "https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_QueryRMT.aspx";
+		$b = 
+		'<?xml version="1.0" encoding="big5"?>
+<MYB2B>
+	<HEADER>
+		<SERVICE>PAYSVC</SERVICE>
+		<ACTION>BTRS03</ACTION>
+	</HEADER>
+	<BODY>
+		<IDNO>68566881</IDNO>
+		<PASSWORD>fable1234</PASSWORD>
+		<USERNO>IT0001</USERNO>
+		<ACNO>015035006475</ACNO>
+		<FromDate>20180810</FromDate>
+		<ToDate>20180816</ToDate>
+		<FromTime></FromTime>
+		<ToTime></ToTime>
+		<BatchNo>07126392</BatchNo>
+		<RemitType></RemitType>
+		<XML>Y</XML>
+		<ErrData>Y</ErrData>
+		<FileType>BMUL/BRMT/0</FileType>
+	</BODY>
+</MYB2B>';
+echo $url."<pre>";
+var_dump(htmlspecialchars($b));
+		$b 		= iconv('UTF-8', 'BIG-5', $b);
+		$key 	= iconv('UTF-8', 'BIG-5', 'influx6856688100');//influx6856688100
+		$rs 	= $this->encrypt($b,$key);
+		$rs 	= $this->strToHex($rs);
+		$rs 	= "68566881            ".$rs;
+		$rs 	= iconv('UTF-8', 'BIG-5', $rs);
+		//dump(htmlspecialchars(iconv( 'BIG-5','UTF-8', $rs)));
+		$res 	= curl_get($url,$rs,["Content-type:text/xml"]);
+		$res 	= iconv('big5', 'big5//IGNORE', $res); 
+		$xml 	= simplexml_load_string($res);
+		$xml 	= json_decode(json_encode($xml),TRUE);
+		var_dump($xml);
+		//TXNKEY 2018081578439
+		//BATCH_NO 00033602
 	}
 	
     public function encrypt($src, $key, $size = 128, $mode = 'ECB') {

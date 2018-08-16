@@ -17,6 +17,8 @@
     <link href="<?=base_url()?>assets/admin/css/plugins/morris.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="<?=base_url()?>assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	
+	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 
@@ -32,7 +34,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">請先登入</h3>
                     </div>
                     <div class="panel-body">
                         <form role="form" method="post" onsubmit="return form_onsubmit();" >
@@ -43,13 +45,13 @@
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Password" name="password" type="password" value="<?=isset($cookie->password)?$cookie->password:""?>">
                                 </div>
-                                <div class="checkbox">
+                                <!--div class="checkbox">
                                     <label>
                                         <input name="remember" type="checkbox" value="Remember Me" <?=isset($cookie->remember)?"checked":""?>>Remember Me
                                     </label>
-                                </div>
+                                </div-->
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button type="submit" class="btn btn-lg btn-success btn-block">Login</a>
+                                <button type="submit" class="btn btn-lg btn-success btn-block">登入</a>
                             </fieldset>
                         </form>
                     </div>
@@ -58,8 +60,7 @@
         </div>
     </div>
 
-    <!-- jQuery Version 1.11.0 -->
-    <script src="<?=base_url()?>assets/admin/js/jquery-1.11.0.js"></script>
+    
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/bootstrap.min.js"></script>
     <!-- Metis Menu Plugin JavaScript -->

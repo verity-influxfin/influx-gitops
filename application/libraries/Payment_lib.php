@@ -203,18 +203,18 @@ class Payment_lib{
 		$content 		= "";
 		$ids 			= array();
 		if($bankaccounts){
+			
 			foreach($bankaccounts as $key => $value){
 				$user_info = $this->CI->user_model->get($value->user_id);
 				if($user_info && $user_info->name){
-
 					$name_list = mb_str_split($user_info->name);
 					if($name_list){
 						$name = "";
-						foreach($name_list as $key => $value){
-							if(!iconv('UTF-8', 'BIG-5', $value)){
-								$value = isset($word_list[$value])?$word_list[$value]:"";
+						foreach($name_list as $k => $v){
+							if(!iconv('UTF-8', 'BIG-5', $v)){
+								$v = isset($word_list[$v])?$word_list[$v]:"";
 							}
-							$name .= $value;
+							$name .= $v;
 						}
 						$user_info->name = $name;
 					}
@@ -352,15 +352,15 @@ class Payment_lib{
 								$name_list = mb_str_split($user_info->name);
 								if($name_list){
 									$name = "";
-									foreach($name_list as $key => $value){
-										if(!iconv('UTF-8', 'BIG-5', $value)){
-											$value = isset($word_list[$value])?$word_list[$value]:"";
+									foreach($name_list as $k => $v){
+										if(!iconv('UTF-8', 'BIG-5', $v)){
+											$v = isset($word_list[$v])?$word_list[$v]:"";
 										}
-										$name .= $value;
+										$name .= $v;
 									}
 									$user_info->name = $name;
 								}
-					
+
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
@@ -437,6 +437,152 @@ class Payment_lib{
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "target_loan",
+					"content"	=> json_encode($ids),
+					"admin_id"	=> $admin_id
+				));
+				
+				return $content;
+			}
+		}
+		return false;
+	}
+	
+	public function withdraw_txt($ids=array(),$admin_id=0){
+		$this->CI->load->model('admin/difficult_word_model');
+		$this->CI->load->model('transaction/withdraw_model');
+		$word_list = $this->CI->difficult_word_model->get_name_list();
+		$check_len = array(
+			"code"			=> 1,
+			"upload_date"	=> 8,
+			"entering_date"	=> 8,
+			"t_type"		=> 3,
+			"t_code"		=> 10,
+			"bankcode_from"	=> 7,
+			"bankacc_from"	=> 16,
+			"tax_from"		=> 10,
+			"name_from"		=> 70,
+			"TWD"			=> 3,
+			"plus"			=> 1,
+			"amount"		=> 14,//靠左補0
+			"bankcode_to"	=> 7,
+			"bankacc_to"	=> 16,
+			"tax_to"		=> 10,
+			"name_to"		=> 70,
+			"alert_to"		=> 1,
+			"email_to"		=> 50,
+			"fee_type"		=> 2,
+			"invoice_num"	=> 4,
+			"remark"		=> 50,
+		);
+		
+		if($ids){
+			$withdraws = $this->CI->withdraw_model->get_many($ids);
+			if($withdraws){
+				$content 	= "";
+				$ids 		= array();
+				foreach($withdraws as $key => $value){
+					if($value->status==0 && $value->frozen_id>0){
+						$user_info = $this->CI->user_model->get($value->user_id);
+						if($user_info){
+							$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
+								"user_id"		=> $value->user_id,
+								"investor"		=> $value->investor,
+								"status"		=> 1,
+								"verify"		=> 1
+							));
+							if($bankaccount){
+								$this->CI->withdraw_model->update($value->id,array("status"=>2));
+								$amount = intval($value->amount);
+								$ids[] 	= $value->id;
+								
+								$name_list = mb_str_split($user_info->name);
+								if($name_list){
+									$name = "";
+									foreach($name_list as $k => $v){
+										if(!iconv('UTF-8', 'BIG-5', $v)){
+											$v = isset($word_list[$v])?$word_list[$v]:"";
+										}
+										$name .= $v;
+									}
+									$user_info->name = $name;
+								}
+
+								$data = array(
+									"code"			=> "0",
+									"upload_date"	=> "",
+									"entering_date"	=> date("Ymd"),
+									"t_type"		=> "SPU",
+									"t_code"		=> "",
+									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+									"bankacc_from"	=> CATHAY_CUST_ACCNO,
+									"tax_from"		=> CATHAY_CUST_ID,
+									"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+									"TWD"			=> "TWD",
+									"plus"			=> "+",
+									"amount"		=> $amount,//靠左補0
+									"bankcode_to"	=> $bankaccount->bank_code.$bankaccount->branch_code,
+									"bankacc_to"	=> $bankaccount->bank_account,
+									"tax_to"		=> "",
+									"name_to"		=> nf_to_wf($user_info->name),
+									"alert_to"		=> "0",
+									"email_to"		=> "",
+									"fee_type"		=> "13",
+									"invoice_num"	=> "",
+									"remark"		=> nf_to_wf("提領放款"),
+								);
+							
+								foreach($check_len as $key => $value){
+									$param = isset($data[$key])?$data[$key]:"";
+									if(in_array($key,array("name_from","name_to","remark"))){
+										$len = mb_strlen($param)*2;
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = $data[$key]." ";
+											}
+										}
+									}else if($key == "amount"){
+										$data[$key] = intval($data[$key])."00";
+										$len = strlen($data[$key]);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = "0".$data[$key];
+											}
+										}
+									}else if($key == "invoice_num"){
+										$len = strlen($data[$key]);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = "0".$data[$key];
+											}
+										}
+									}else{
+										$len = strlen($param);
+										$len = $value>$len?intval($value-$len):0;
+										if($len){
+											for($i=1;$i<=$len;$i++){
+												$data[$key] = $data[$key]." ";
+											}
+										}
+									}
+								}
+								
+								if($content != ""){
+									$content .= "\n";
+								}
+								
+								foreach($data as $key => $value){
+									$content .= $value;
+								}
+							}
+						}
+					}
+				}
+				$this->CI->load->model('log/log_paymentexport_model');
+				$this->CI->log_paymentexport_model->insert(array(
+					"type"		=> "withdraw",
 					"content"	=> json_encode($ids),
 					"admin_id"	=> $admin_id
 				));

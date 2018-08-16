@@ -6,7 +6,7 @@ class Admin_model extends MY_Model
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
-		0 =>	"已刪除",
+		0 =>	"停權",
 		1 =>	"正常"
 	);
 	

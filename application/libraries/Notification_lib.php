@@ -120,6 +120,8 @@ class Notification_lib{
 			"content"	=> $content,
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->admin_notification("案件已上架 會員ID：".$target->user_id,"案件已上架 會員ID：".$target->user_id." 案號：".$target->target_no);
 		return $rs;
 	}
 	
@@ -169,6 +171,26 @@ class Notification_lib{
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+	
+	public function withdraw_success($user_id,$investor,$amount=0,$bankaccount=""){
+		$bankaccount = substr($bankaccount, -4, 4);
+		$title 		= "[提領成功] 您申請的提領已發放成功";
+		$content 	= "尊敬的用戶：
+					您好！
+					您的申請的提領，金額 $amount 元已發放至您的綁定金融卡賬戶尾號 $bankaccount 內。
+					敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號，如有收到類似通知，謹防詐騙，或致電我司客服電話 02-2507990 舉報，感謝您的配合。";
+	
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content); 
 		return $rs;
 	}
 	

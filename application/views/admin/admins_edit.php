@@ -80,6 +80,18 @@
 												<label>Confirm Password</label> 
 												<input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password">
 											</div>
+										<? }else{ ?>
+											<div class="form-group">
+                                            <label>狀態</label>
+												<select class="form-control" id="status" name="status">
+													<? 
+													if(isset($status_list) && !empty($status_list)){
+														foreach($status_list as $key => $value){
+													?>
+													<option value="<?=$key; ?>" <?=isset($data->status)&&$data->status==$key?"selected":"";?>><?=$value; ?></option>
+													<? }} ?>
+												</select>
+											</div>
 										<? } ?>
                                         <button type="submit" class="btn btn-default">送出</button>
                                     </form>

@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">後台管理員</h1>
+                    <h1 class="page-header">提領紀錄列表</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('admin/add') ?>" class="btn btn-default float-right ">新增管理員</a>
+						會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -19,15 +19,13 @@
                                     <thead>
                                         <tr>
                                             <th>NO.</th>
-                                            <th>帳號</th>
-                                            <th>角色</th>
-                                            <th>姓名</th>
-                                            <th>電話</th>
-                                            <th>地址</th>
-                                            <th>Email</th>
-                                            <th>創建者</th>
+                                            <th>虛擬帳號</th>
+                                            <th>User ID</th>
+											<th>借款端/出借端</th>
+                                            <th>提領金額</th>
+                                            <th>待交易流水號</th>
                                             <th>狀態</th>
-                                            <th>Edit</th>
+                                            <th>創建日期</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -37,17 +35,19 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
-                                            <td><?=isset($value->account)?$value->account:"" ?></td>
-                                            <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
-                                            <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->phone)?$value->phone:"" ?></td>
-                                            <td><?=isset($value->birthday)?date("m/d",strtotime($value->birthday)):"" ?></td>
-                                            <td><?=isset($value->email)?$value->email:"" ?></td>
-                                            <td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
-											<td><a href="<?=admin_url('admin/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
+											<td><?=isset($value->id)?$value->id:"" ?></td>
+                                            <td>
+											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
+												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
+											</a>
+											</td>
+                                            <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
+											<td><?=isset($value->amount)?intval($value->amount):"" ?></td>
+											<td><?=isset($value->frozen_id)?$value->frozen_id:"" ?></td>
+                                            <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
+											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 
 										}}else{
