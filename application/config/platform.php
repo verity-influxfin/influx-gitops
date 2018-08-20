@@ -32,7 +32,12 @@ $config['admin_menu'] = array(
 	),
 	"Contact" 			=> array("name"=>"投訴與建議","icon"=>"fa-star"),
 	"User" 				=> array("name"=>"會員管理","icon"=>"fa-user"),
-	"Admin" 			=> array("name"=>"後台人員管理","icon"=>"fa-user"),
+	"Admin" 			=> array(
+		"parent_name"	=> "後台人員管理",
+		"parent_icon"	=> "fa-user",
+		"role_list"		=> "權限管理",
+		"index"			=> "人員列表",
+	),
 	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
 );
 

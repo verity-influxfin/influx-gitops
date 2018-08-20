@@ -172,6 +172,122 @@ class Admin extends MY_Admin_Controller {
 		
 	}
 	
+	public function role_list(){
+		$page_data 	= array();
+		$list 		= $this->role_model->get_all();
+		if(!empty($list)){
+			$page_data["list"] 			= $list;
+			$page_data["status_list"] 	= $this->role_model->status_list;
+			$page_data["name_list"] 	= $this->admin_model->get_name_list();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/roles_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	public function role_add(){
+		$status_list 	= $this->role_model->status_list;
+		$admin_menu = $this->config->item('admin_menu');
+		if(!empty($admin_menu)){
+			unset($admin_menu['AdminDashboard']);
+		}
+		$page_data 	= array(
+			"type"			=> "add",
+			"status_list"	=> $status_list,
+			"admin_menu"	=> $admin_menu,
+		);
+		$data		= array();
+		$post 		= $this->input->post(NULL, TRUE);
+		if(empty($post)){
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/roles_edit',$page_data);
+			$this->load->view('admin/_footer');
+		}else{
+			$required_fields 	= [ 'alias', 'name' ,'status'];
+			foreach ($required_fields as $field) {
+				if (empty($post[$field])) {
+					alert($field." is empty",admin_url('admin/index'));
+				}else{
+					$data[$field] = $post[$field];
+				}
+			}
+			$permission = array();
+			foreach($admin_menu as $key => $value){
+				$r = isset($post['permission'][$key]["r"])&&$post['permission'][$key]["r"]?1:0;
+				$u = isset($post['permission'][$key]["u"])&&$post['permission'][$key]["u"]?1:0;
+				$permission[$key] = array(
+					"r"	=> $r,
+					"u"	=> $u
+				);
+			}
+
+			$data["permission"] 	= json_encode($permission);
+			$data["creator_id"] 	= $this->login_info->id;
+			$rs = $this->role_model->insert($data);
+			if($rs){
+				alert("新增成功",admin_url('admin/role_list'));
+			}else{
+				alert("新增失敗，請洽工程師",admin_url('admin/role_list'));
+			}
+		}
+	}
+	
+	public function role_edit(){
+		$status_list 	= $this->role_model->status_list;
+		$admin_menu = $this->config->item('admin_menu');
+		if(!empty($admin_menu)){
+			unset($admin_menu['AdminDashboard']);
+		}
+		$page_data 	= array(
+			"type"			=> "edit",
+			"status_list"	=> $status_list,
+			"admin_menu"	=> $admin_menu,
+		);
+		$post 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		
+		if(empty($post)){
+			$id = isset($get["id"])?intval($get["id"]):0;
+			if($id){
+				$role_info = $this->role_model->get_by('id', $id);
+				if($role_info){
+					$role_info->permission = json_decode($role_info->permission,true);
+					$page_data['data'] = $role_info;
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/roles_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert("ERROR , id isn't exist",admin_url('admin/index'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('admin/index'));
+			}
+		}else{
+			if(!empty($post['id'])){
+				$fields = ['name','status'];
+				foreach ($fields as $field) {
+					if (isset($post[$field])) {
+						$data[$field] = $post[$field];
+					}
+				}
+
+				$rs = $this->admin_model->update($post['id'],$data);
+				if($rs===true){
+					alert("更新成功",admin_url('admin/index'));
+				}else{
+					alert("更新失敗，請洽工程師",admin_url('admin/index'));
+				}
+			}else{
+				alert("ERROR , id isn't exist",admin_url('admin/index'));
+			}
+		}
+		
+	}
+	
 	private function get_promote_code(){
 		$code 	= "SALES".make_promote_code();
 		$result = $this->admin_model->get_by('my_promote_code',$code);

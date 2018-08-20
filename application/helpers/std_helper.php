@@ -239,7 +239,7 @@
 	}
 	
 	function get_qrcode($url){
-		return "https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=200x200";
+		return "https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=500x500";
 	}
 	
 	function nf_to_wf($strs){  //全形半形轉換
