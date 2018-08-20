@@ -159,9 +159,9 @@ defined('TARGET_SUBLOAN_NOT_EXIST') 	OR define('TARGET_SUBLOAN_NOT_EXIST'	, 904)
 
 
 //Admin
-defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, 'app_admin_info'); //Use in Admin Login
+defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv('ENV_SESSION_APP_ADMIN_INFO')); //Use in Admin Login
 defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/'); 
-defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, 'admin_cookie'); //Use in Admin Login Cookies
+defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_COOKIES_LOGIN_ADMIN')); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
 
 
@@ -184,6 +184,7 @@ defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
 defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'					, 6); //登入密碼長度
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
+defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
 
@@ -202,6 +203,12 @@ defined('SOURCE_AR_PRINCIPAL')      OR define('SOURCE_AR_PRINCIPAL'		, '11');//�
 defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還款本金
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
+
+defined('SOURCE_VERIFY_FEE')     	OR define('SOURCE_VERIFY_FEE'		, '81');//平台驗證費
+defined('SOURCE_VERIFY_FEE_R')     	OR define('SOURCE_VERIFY_FEE_R'		, '82');//平台驗證費退回
+defined('SOURCE_REMITTANCE_FEE')    OR define('SOURCE_REMITTANCE_FEE'	, '83');//跨行轉帳費
+defined('SOURCE_REMITTANCE_FEE_R')  OR define('SOURCE_REMITTANCE_FEE_R'	, '84');//跨行轉帳費退回
+
 defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '91');//應收違約金
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '92');//違約金
 defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '93');//應收延滯息
@@ -250,10 +257,10 @@ defined('EVER8D_PWD')     			OR define('EVER8D_PWD'				, 'ATx#25B6');
 //S3
 defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV_AWS_ACCESS_TOKEN'));
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, getenv('ENV_AWS_SECRET_TOKEN'));
-defined('S3_BUCKET')     			OR define('S3_BUCKET'				, 'influxp2p-personal');
+defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
 //SMTP
 defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT'		, getenv('ENV_GMAIL_SMTP_ACCOUNT'));
 defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD'		, getenv('ENV_GMAIL_SMTP_PASSWORD'));
-defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME'			, '普匯金融科技');
+defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME'			, getenv('ENV_GMAIL_SMTP_NAME'));

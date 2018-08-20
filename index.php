@@ -92,7 +92,7 @@ ini_set('memory_limit','256M');
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 set_error_handler("myErrorHandler");
 
 /*
@@ -130,7 +130,7 @@ switch (ENVIRONMENT)
 }
 
 //set time zone
-date_default_timezone_set("Asia/Taipei");
+	date_default_timezone_set("Asia/Taipei");
 
 /*
  *---------------------------------------------------------------

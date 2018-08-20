@@ -157,6 +157,11 @@ class Payment_lib{
 					return true;
 				}
 			}
+		}else{
+			if(in_array($value->amount,array(1,30)) && in_array($value->tx_spec,array('匯出退匯','錯誤更正','沖ＦＸＭ'))){
+				$this->CI->transaction_lib->verify_fee($value);
+				return true;
+			}
 		}
 		$this->CI->payment_model->update($value->id,array("status"=>3));
 		return false;
@@ -164,8 +169,13 @@ class Payment_lib{
 	
 	//出帳處理
 	private function expense($value){
-		$this->CI->payment_model->update($value->id,array("status"=>3));
-		return false;
+		if(in_array($value->amount,array(-1,-30,-31))){
+			$this->CI->transaction_lib->verify_fee($value);
+			return true;
+		}else{
+			$this->CI->payment_model->update($value->id,array("status"=>3));
+			return false;
+		}
 	}
 	
 	public function verify_bankaccount_txt($admin_id=0){

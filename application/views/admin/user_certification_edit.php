@@ -71,7 +71,7 @@
 											?>
 											</p>
                                         </div>
-										<? if($data->status!=1){ ?>
+										<?// if($data->status!=1){ ?>
 											<div class="form-group">
 												<label>審核</label>
 												<select name="status">
@@ -81,7 +81,7 @@
 												</select>
 											</div>
 											<button type="submit" class="btn btn-default">Submit Button</button>
-										<? } ?>
+										<?// } ?>
                                         
                                     </form>
                                 </div>

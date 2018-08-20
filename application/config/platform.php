@@ -1,11 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 $config['admin_menu'] = array(
 	"AdminDashboard" 	=> array("name"=>"Dashboard","icon"=>"fa-dashboard"),
-	/*"Product" 			=> array(
-		"parent_name"	=> "產品管理",
-		"parent_icon"	=> "fa-briefcase",
-		"index"			=> "產品列表",
-	),*/
+	"Product" 			=> array("name"=>"產品管理","icon"=>"fa-briefcase"),
 	"Target" 			=> array(
 		"parent_name"	=> "借款案件管理",
 		"parent_icon"	=> "fa-gavel",
@@ -13,7 +9,6 @@ $config['admin_menu'] = array(
 		"waiting_verify"=> "待審批",
 		"waiting_loan"	=> "待放款",
 	),
-	"Passbook" 			=> array("name"=>"虛擬帳號管理","icon"=>"fa-star"),
 	"Passbook" 	=> array(
 		"parent_name"					=> "虛擬帳號管理",
 		"parent_icon"					=> "fa-star",
@@ -24,22 +19,21 @@ $config['admin_menu'] = array(
 	"Certification" 	=> array(
 		"parent_name"	=> "認證管理",
 		"parent_icon"	=> "fa-question-circle",
-		//"index"			=> "認證方式列表",
+		"index"			=> "認證方式列表",
 		"user_certification_list"		=> "會員認證審核",
 		"user_bankaccount_list"			=> "金融帳號認證",
 		"difficult_word_list"			=> "銀行困難字管理",
 	),
 	"Partner" 			=> array(
-		"parent_name"	=> "合作夥伴",
+		"parent_name"	=> "合作夥伴管理",
 		"parent_icon"	=> "fa-group",
+		"partner_type"	=> "合作商類別",
 		"index"			=> "合作商列表",
 	),
 	"Contact" 			=> array("name"=>"投訴與建議","icon"=>"fa-star"),
 	"User" 				=> array("name"=>"會員管理","icon"=>"fa-user"),
 	"Admin" 			=> array("name"=>"後台人員管理","icon"=>"fa-user"),
-	
 	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
-	//"Contract" 		=> array("name"=>"合約書","icon"=>"fa-star"),
 );
 
 $config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');

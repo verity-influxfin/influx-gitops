@@ -9,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><?=$type=="edit"?"修改管理員資訊":"新增管理員" ?></h1>
+                    <h1 class="page-header"><?=$type=="edit"?"修改合作商資訊":"新增合作商" ?></h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -18,7 +18,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						<?=$type=="edit"?"修改管理員資訊":"新增管理員" ?>
+						<?=$type=="edit"?"修改合作商資訊":"新增合作商" ?>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -31,7 +31,23 @@
                                             <label>QR Code</label> 
 											<img class="form-control-static" src="<?=isset($data->my_promote_code)?$data->qrcode:"" ?>" />
 	                                    </div>
+										<div class="form-group">
+                                            <label>邀請碼</label> 
+											<p class="form-control-static"><?=isset($data->my_promote_code)?$data->my_promote_code:"";?></p>											
+	                                    </div>
 										<? } ?>
+										<div class="form-group">
+                                            <label>類別</label>
+                                            <select class="form-control" id="type" name="type">
+												<option value="0" >無</option>
+												<? 
+												if(isset($partner_type) && !empty($partner_type)){
+													foreach($partner_type as $key => $value){
+												?>
+                                                <option value="<?=$key; ?>" <?=isset($data->type)&&$data->type==$key?"selected":"";?>><?=$value; ?></option>
+												<? }} ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group">
                                             <label>公司統編</label>
 											<?

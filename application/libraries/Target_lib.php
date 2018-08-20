@@ -316,7 +316,10 @@ class Target_lib{
 					case SOURCE_AR_INTEREST: 
 						$list[$value->instalment_no]['interest']  			+= $value->amount;
 						break;
-					case SOURCE_AR_DAMAGE: 
+					case SOURCE_PREPAYMENT_DAMAGE:
+						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
+						$list[$value->instalment_no]['repayment'] += $value->amount;
+					case SOURCE_AR_DAMAGE:
 						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
 						break;
 					case SOURCE_AR_DELAYINTEREST: 

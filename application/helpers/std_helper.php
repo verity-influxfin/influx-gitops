@@ -130,6 +130,14 @@
 		return false;
 	}
 
+	function is_development()
+	{
+		if(ENVIRONMENT=="development"){
+			return true;
+		}
+		return false;
+	}
+	
 	function check_cardid($cardid="") {
 		if(!empty($cardid)){
 			$alphabet =['A'=>'10','B'=>'11','C'=>'12','D'=>'13','E'=>'14','F'=>'15','G'=>'16','H'=>'17','I'=>'34',
@@ -172,6 +180,9 @@
 	}
 
 	function get_rand_token(){
+		if(is_development()){
+			return '000000';
+		}
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
 	

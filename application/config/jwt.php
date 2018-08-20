@@ -1,6 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-$config['jwt_key']				= 'fable1234';
-$config['jwt_admin_key']		= 'admin_fable1234';
-$config['jwt_admin_cookie_key']	= 'admin_cookie_fable1234';
+
+$config['jwt_key']				= getenv('ENV_JWT_KEY');
+$config['jwt_admin_key']		= getenv('ENV_JWT_ADMIN_KEY');
+$config['jwt_admin_cookie_key']	= getenv('ENV_JWT_ADMIN_COOKIE_KEY');
 /* End of file jwt.php */
 /* Location: ./application/config/jwt.php */

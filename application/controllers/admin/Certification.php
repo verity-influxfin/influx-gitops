@@ -164,9 +164,9 @@ class Certification extends MY_Admin_Controller {
 			if(!empty($post['id'])){
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
-					if($info->status=="1"){
+					/*if($info->status=="1"){
 						alert("更新成功",admin_url('certification/user_certification_list'));
-					}else{
+					}else{*/
 						$certification = $this->certification_model->get($info->certification_id);
 						if($certification->alias=="debit_card" && $info->investor==1){
 							alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
@@ -188,7 +188,7 @@ class Certification extends MY_Admin_Controller {
 						}else{
 							alert("更新失敗，請洽工程師",admin_url('certification/user_certification_list'));
 						}
-					}
+					//}
 				}else{
 					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
 				}

@@ -79,6 +79,99 @@ class Transaction_lib{
 		return false;
 	}
 	
+	function verify_fee($payment){
+		$date = get_entering_date();
+		if($payment && $payment->status != "1"){
+			$this->CI->load->model('transaction/payment_model');
+			$transaction = array();
+			switch ($payment->amount) {
+				case -1: 
+					$transaction[]	= array(
+						"source"			=> SOURCE_VERIFY_FEE,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> 1,
+						"user_to"			=> 0,
+						"bank_account_to"	=> BANK_COST_ACCOUNT,
+						"status"			=> 2
+					);
+					break;
+				case -30:
+					$transaction[]	= array(
+						"source"			=> SOURCE_REMITTANCE_FEE,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> 30,
+						"user_to"			=> 0,
+						"bank_account_to"	=> BANK_COST_ACCOUNT,
+						"status"			=> 2
+					);
+					break;
+				case -31: 
+					$transaction[]	= array(
+						"source"			=> SOURCE_VERIFY_FEE,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> 1,
+						"user_to"			=> 0,
+						"bank_account_to"	=> BANK_COST_ACCOUNT,
+						"status"			=> 2
+					);
+					$transaction[]	= array(
+						"source"			=> SOURCE_REMITTANCE_FEE,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> 30,
+						"user_to"			=> 0,
+						"bank_account_to"	=> BANK_COST_ACCOUNT,
+						"status"			=> 2
+					);
+					break;
+				case 1: 
+					$transaction[]	= array(
+						"source"			=> SOURCE_VERIFY_FEE_R,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> BANK_COST_ACCOUNT,
+						"amount"			=> 1,
+						"user_to"			=> 0,
+						"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"status"			=> 2
+					);
+					break;
+				case 30: 
+					$transaction[]	= array(
+						"source"			=> SOURCE_REMITTANCE_FEE_R,
+						"entering_date"		=> $date,
+						"user_from"			=> 0,
+						"bank_account_from"	=> BANK_COST_ACCOUNT,
+						"amount"			=> 30,
+						"user_to"			=> 0,
+						"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"status"			=> 2
+					);
+					break;
+				default:
+					break;
+			}
+			if($transaction){
+				$this->CI->payment_model->update($payment->id,array("status"=>1));
+				$rs  = $this->CI->transaction_model->insert_many($transaction);
+				if($rs && is_array($rs)){
+					foreach($rs as $key => $value){
+						$this->CI->passbook_lib->enter_account($value);
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	//提領
 	public function withdraw($user_id,$amount=0){
 		if($user_id && $amount > 31 ){

@@ -26,6 +26,7 @@
                                             <th>借款端帳號</th>
                                             <th>出借帳號</th>
                                             <th>是否封鎖</th>
+                                            <th>註冊邀請碼</th>
                                             <th>創建日期</th>
                                             <th>修改</th>
                                         </tr>
@@ -46,6 +47,7 @@
 											<td><?=isset($value->status)&&$value->status?"正常":"未申請" ?></td>
 											<td><?=isset($value->investor_status)&&$value->investor_status?"正常":"未申請" ?></td>
 											<td><?=isset($value->block_status)&&$value->block_status?"封鎖":"否" ?></td>
+											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        

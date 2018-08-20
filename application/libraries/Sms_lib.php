@@ -103,7 +103,9 @@ class Sms_lib {
 	}
 
 	private function send($type,$user_id,$phone,$content){
-		
+		if(is_development()){
+			return true;
+		}
 		$data = array(
 			"UID"	=> EVER8D_UID,
 			"PWD"	=> EVER8D_PWD,

@@ -8,11 +8,12 @@ class Partner extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('admin/partner_model');
+		$this->load->model('admin/partner_type_model');
  	}
 	
 	public function index(){
 		$page_data 	= array();
-		$list 		= $this->partner_model->get_all();
+		$list 		= $this->partner_model->order_by("parent_id","ASC")->get_all();
 		$name_list	= array();
 		if(!empty($list)){
 			foreach($list as $key => $value){
@@ -24,6 +25,7 @@ class Partner extends MY_Admin_Controller {
 			$page_data["list"] 			= $list;
 			$page_data["name_list"] 	= $this->admin_model->get_name_list();
 			$page_data["partner_name"] 	= $this->partner_model->get_name_list();
+			$page_data["partner_type"] 	= $this->partner_type_model->get_name_list();
 		}
 		
 
@@ -36,7 +38,13 @@ class Partner extends MY_Admin_Controller {
 	public function add(){
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
-		$page_data 	= array("type"=>"add","partner_name"=>$partner_name,"admins_name"=>$admins_name);
+		$partner_type 	= $this->partner_type_model->get_name_list();
+		$page_data 	= array(
+			"type"			=> "add",
+			"partner_name"	=> $partner_name,
+			"partner_type"	=> $partner_type,
+			"admins_name"	=> $admins_name
+		);
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		if(empty($post)){
@@ -53,7 +61,7 @@ class Partner extends MY_Admin_Controller {
 					$data[$field] = $post[$field];
 				}
 			}
-			$fields = ['tax_id', 'admin_id' , 'parent_id'];
+			$fields = ['type', 'tax_id', 'admin_id' , 'parent_id'];
 			foreach ($fields as $field) {
 				if (isset($post[$field])) {
 					$data[$field] = $post[$field];
@@ -74,7 +82,13 @@ class Partner extends MY_Admin_Controller {
 	public function edit(){
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
-		$page_data 	= array("type"=>"edit","partner_name"=>$partner_name,"admins_name"=>$admins_name);
+		$partner_type 	= $this->partner_type_model->get_name_list();
+		$page_data 	= array(
+			"type"			=> "edit",
+			"partner_name"	=> $partner_name,
+			"partner_type"	=> $partner_type,
+			"admins_name"	=> $admins_name
+		);
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		if(empty($post)){
@@ -99,7 +113,7 @@ class Partner extends MY_Admin_Controller {
 			}
 		}else{
 			if(!empty($post['id'])){
-				$fields = ['admin_id', 'parent_id', 'company', 'tax_id', 'name', 'title', 'phone', 'email', 'password'];
+				$fields = ['admin_id', 'type', 'parent_id', 'company', 'tax_id', 'name', 'title', 'phone', 'email', 'password'];
 				foreach ($fields as $field) {
 					if (isset($post[$field])) {
 						$data[$field] = $post[$field];
@@ -133,6 +147,41 @@ class Partner extends MY_Admin_Controller {
 		
 	}
 	
+	public function partner_type(){
+		$list 					= $this->partner_type_model->get_many_by(array("status" => 1));
+		$page_data["name_list"] = $this->admin_model->get_name_list();
+		$page_data["list"] 		= $list;
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/partner_type', $page_data);
+        $this->load->view('admin/_footer');
+	}
+	
+	public function partner_type_add(){
+		$post 		= $this->input->post(NULL, TRUE);
+		if(empty($post)){
+			$page_data = array("type"=>"add");
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/partner_type_edit',$page_data);
+			$this->load->view('admin/_footer');
+		}else{
+			$fields = ['title'];
+			foreach ($fields as $field) {
+				if (isset($post[$field])) {
+					$data[$field] = $post[$field];
+				}
+			}
+			
+			$data["creator_id"] = $this->login_info->id;
+			$rs 				= $this->partner_type_model->insert($data);
+			if($rs){
+				alert("新增成功",admin_url('partner/partner_type'));
+			}else{
+				alert("新增失敗，請洽工程師",admin_url('partner/partner_type'));
+			}
+		}
+	}
 	private function get_promote_code(){
 		$code 	= "PARTNER".make_promote_code();
 		$result = $this->partner_model->get_by('my_promote_code',$code);

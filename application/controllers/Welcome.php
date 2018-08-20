@@ -6,7 +6,7 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 class Welcome extends CI_Controller {
 
 
-	function schedule(){
+/*	function schedule(){
 		$this->load->library('Financial_lib');
 		$amount 	= intval($_GET['amount']);//額度
 		$rate		= $_GET['rate'];
@@ -45,12 +45,9 @@ class Welcome extends CI_Controller {
 	}
 
 	public function test(){
-		
-		$url 	= "http://218.32.90.71/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx";
+		$url 	= "https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx";
 		$tano = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
-		$a 			= '0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+000000000001000132033203506027355              郭基永                                                                0                                                  150000金融帳號驗證                                      
-0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+00000000000100812002328881003050014            謝承翰                                                                0                                                  150000金融帳號驗證                                      
-0        20180816SPU          0130017001035022704    68566881  普匯金融科技股份有限公司                                              TWD+00000000000100812002328881003050014            謝承瀚                                                                0                                                  150000金融帳號驗證                                      ';
+		$a 			= '2        20180820SPU          0130154015035006475    68566881  普匯金融科技股份有限公司                                              TWD+00000000000100812002328881003050014            謝承瀚                                                                0                                                  150000金融帳號驗證                                      ';
 		$b = 
 		'<?xml version="1.0" encoding="big5"?>
 <MYB2B>
@@ -62,12 +59,12 @@ class Welcome extends CI_Controller {
 	<BODY>
 		<LOGON>
 			<IDNO>68566881</IDNO>
-			<PASSWORD>aaa123</PASSWORD>
-			<USERNO>test001</USERNO>
-			<BRANCH>001</BRANCH>
+			<PASSWORD>fable1234</PASSWORD>
+			<USERNO>IT0001</USERNO>
+			<BRANCH>015</BRANCH>
 		</LOGON>
 		<DATA>
-			<CONTENT FileType="BTRS/BRMT/0" DrAcno="">
+			<CONTENT FileType="BTRS/BRMT/0" DrAcno="" RemitType="FXML">
 				<![CDATA['.$a.']]>
 			</CONTENT>
 		</DATA>
@@ -76,7 +73,7 @@ class Welcome extends CI_Controller {
 echo $url."<pre>";
 var_dump(htmlspecialchars($b)); 
 		$b 		= iconv('UTF-8', 'BIG-5', $b);
-		$key 	= iconv('UTF-8', 'BIG-5', 'abcdefgh68566881');//influx6856688100
+		$key 	= iconv('UTF-8', 'BIG-5', 'influx6856688100');//influx6856688100
 		$rs 	= $this->encrypt($b,$key);
 		$rs 	= $this->strToHex($rs);
 		$rs 	= "68566881            ".$rs;
@@ -88,8 +85,8 @@ var_dump(htmlspecialchars($b));
 		$xml 	= json_decode(json_encode($xml),TRUE);
 		echo "<br>";
 		var_dump($xml);
-		//TXNKEY 2018081578439
-		//BATCH_NO 00033602
+		//TXNKEY 2018082080764
+		//BATCH_NO 07172428
 		
 	}
 
@@ -111,7 +108,7 @@ var_dump(htmlspecialchars($b));
 		<ToDate>20180816</ToDate>
 		<FromTime></FromTime>
 		<ToTime></ToTime>
-		<BatchNo>07126392</BatchNo>
+		<BatchNo></BatchNo>
 		<RemitType></RemitType>
 		<XML>Y</XML>
 		<ErrData>Y</ErrData>
@@ -132,8 +129,8 @@ var_dump(htmlspecialchars($b));
 		$xml 	= simplexml_load_string($res);
 		$xml 	= json_decode(json_encode($xml),TRUE);
 		var_dump($xml);
-		//TXNKEY 2018081578439
-		//BATCH_NO 00033602
+		//TXNKEY 2018082095687
+		//BATCH_NO 07172183
 	}
 	
     public function encrypt($src, $key, $size = 128, $mode = 'ECB') {
@@ -161,7 +158,7 @@ var_dump(htmlspecialchars($b));
 		}
 		return $hex;
 	}
-
+*/
 
 }
 
