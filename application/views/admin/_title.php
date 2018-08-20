@@ -60,6 +60,11 @@
 								</ul>
 							</li>
 					<?}}}?>
+					<? if(is_development()){ ?>
+						<li class="<?=$active==$key?"active":""; ?>">
+							<a href="<?=admin_url('TestScript/') ?>"><i class="fa fa-gavel fa-fw"></i> 測試工具</a>
+						</li>
+					<?}?>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
