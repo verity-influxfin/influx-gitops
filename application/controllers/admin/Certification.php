@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Certification extends MY_Admin_Controller {
 	
+	protected $edit_method = array("add","edit","user_certification_edit","user_bankaccount_edit","user_bankaccount_failed","user_bankaccount_success","difficult_word_add","difficult_word_edit");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('platform/certification_model');

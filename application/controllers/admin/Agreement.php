@@ -5,7 +5,8 @@ require(APPPATH . '/libraries/MY_Admin_Controller.php');
 
 class Agreement extends MY_Admin_Controller
 {
-
+	protected $edit_method = array("editAgreement","insertAgreement","updateAgreement","deleteAgreement");
+	
     public function __construct()
     {
         parent::__construct();

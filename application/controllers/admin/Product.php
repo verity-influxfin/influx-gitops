@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Product extends MY_Admin_Controller {
 	
+	protected $edit_method = array("add","edit");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('loan/product_model');

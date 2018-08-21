@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Partner extends MY_Admin_Controller {
 	
+	protected $edit_method = array("add","edit","partner_type_add");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('admin/partner_model');

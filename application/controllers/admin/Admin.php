@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Admin extends MY_Admin_Controller {
 	
+	protected $edit_method = array("add","edit","role_add","role_edit");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('log/log_adminlogin_model');
@@ -261,10 +263,10 @@ class Admin extends MY_Admin_Controller {
 					$this->load->view('admin/roles_edit',$page_data);
 					$this->load->view('admin/_footer');
 				}else{
-					alert("ERROR , id isn't exist",admin_url('admin/index'));
+					alert("ERROR , id isn't exist",admin_url('admin/role_list'));
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('admin/index'));
+				alert("ERROR , id isn't exist",admin_url('admin/role_list'));
 			}
 		}else{
 			if(!empty($post['id'])){
@@ -274,15 +276,26 @@ class Admin extends MY_Admin_Controller {
 						$data[$field] = $post[$field];
 					}
 				}
+				
+				$permission = array();
+				foreach($admin_menu as $key => $value){
+					$r = isset($post['permission'][$key]["r"])&&$post['permission'][$key]["r"]?1:0;
+					$u = isset($post['permission'][$key]["u"])&&$post['permission'][$key]["u"]?1:0;
+					$permission[$key] = array(
+						"r"	=> $r,
+						"u"	=> $u
+					);
+				}
 
-				$rs = $this->admin_model->update($post['id'],$data);
+				$data["permission"] 	= json_encode($permission);
+				$rs = $this->role_model->update($post['id'],$data);
 				if($rs===true){
-					alert("更新成功",admin_url('admin/index'));
+					alert("更新成功",admin_url('admin/role_list'));
 				}else{
-					alert("更新失敗，請洽工程師",admin_url('admin/index'));
+					alert("更新失敗，請洽工程師",admin_url('admin/role_list'));
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('admin/index'));
+				alert("ERROR , id isn't exist",admin_url('admin/role_list'));
 			}
 		}
 		

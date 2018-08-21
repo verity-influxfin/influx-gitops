@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<!--a href="<?=admin_url('certification/add') ?>" class="btn btn-default float-right ">新增認證方式</a-->
+							<a href="<?=admin_url('certification/add') ?>" class="btn btn-default float-right ">新增認證方式</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -24,7 +24,7 @@
                                             <th>簡介</th>
                                             <th>狀態</th>
                                             <th>創建日期</th>
-                                            <!--th>修改</th-->
+                                            <th>修改</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -41,7 +41,7 @@
                                             <td><?=isset($value->description)?$value->description:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<!--td><a href="<?=admin_url('certification/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td--> 
+											<td><a href="<?=admin_url('certification/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
                                         </tr>                                        
 									<?php 
 										}}

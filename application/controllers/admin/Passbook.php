@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Passbook extends MY_Admin_Controller {
 	
+	protected $edit_method = array("withdraw_loan","loan_success","loan_failed");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/virtual_account_model');

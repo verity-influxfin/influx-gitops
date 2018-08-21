@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Contact extends MY_Admin_Controller {
 	
+	protected $edit_method = array("edit");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
