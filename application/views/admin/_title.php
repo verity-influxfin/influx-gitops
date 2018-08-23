@@ -61,7 +61,7 @@
 							</li>
 					<?}}}?>
 					<? if(is_development()){ ?>
-						<li class="<?=$active==$key?"active":""; ?>">
+						<li class="">
 							<a href="<?=admin_url('TestScript/') ?>"><i class="fa fa-gavel fa-fw"></i> 測試工具</a>
 						</li>
 					<?}?>
