@@ -488,7 +488,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} id Transfer Investments ID
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} contract 合約內容
-	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 9:流標 10:移轉成功
+	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款 9:流標 10:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱

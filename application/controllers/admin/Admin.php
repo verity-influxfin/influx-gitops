@@ -14,7 +14,8 @@ class Admin extends MY_Admin_Controller {
 	
 	public function index(){
 		$page_data 	= array();
-		$list 		= $this->admin_model->get_all();
+		$where		= array("status"=>1);
+		$list 		= $this->admin_model->get_many_by($where);
 		$name_list	= array();
 		if(!empty($list)){
 			foreach($list as $key => $value){

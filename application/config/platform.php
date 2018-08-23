@@ -30,7 +30,12 @@ $config['admin_menu'] = array(
 		"partner_type"	=> "合作商類別",
 		"index"			=> "合作商列表",
 	),
-	"Contact" 			=> array("name"=>"投訴與建議","icon"=>"fa-star"),
+	"Contact" 			=> array(
+		"parent_name"	=> "客服管理",
+		"parent_icon"	=> "fa-star",
+		"index"			=> "投訴與建議",
+		"send_email"	=> "通知工具",
+	),
 	"User" 				=> array("name"=>"會員管理","icon"=>"fa-user"),
 	"Admin" 			=> array(
 		"parent_name"	=> "後台人員管理",

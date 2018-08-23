@@ -5,6 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class User extends MY_Admin_Controller {
 	
+	protected $edit_method = array("edit");
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
@@ -28,7 +30,6 @@ class User extends MY_Admin_Controller {
 		$this->load->view('admin/users_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
 	
 	public function edit(){
 		$page_data 	= array("type"=>"edit");
@@ -97,8 +98,11 @@ class User extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
+		
+
 	public function display(){
+
 		$page_data 	= array("type"=>"edit");
 		$get 		= $this->input->get(NULL, TRUE);
 		$id = isset($get["id"])?intval($get["id"]):0;
@@ -118,7 +122,6 @@ class User extends MY_Admin_Controller {
 					$meta_data[$value->meta_key] = $value->meta_value;
 				}
 			}
-			
 			$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$id));
 			$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
 			$info = $this->user_model->get($id);
@@ -143,6 +146,5 @@ class User extends MY_Admin_Controller {
 			alert("ERROR , id isn't exist",admin_url('user/index'));
 		}
 	}
-
 }
 ?>

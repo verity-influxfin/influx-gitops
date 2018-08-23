@@ -105,6 +105,14 @@ class Sendemail
 		return false;
 	}
 	
+	public function email_notification($email="",$title="",$content=""){
+		if($email){
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
+			return $this->send($email,$title,$content);
+		}
+		return false;
+	}
+	
 	public function admin_notification($title="",$content=""){
 		$admin_email 	= $this->CI->config->item('admin_email');
 		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content ),TRUE);

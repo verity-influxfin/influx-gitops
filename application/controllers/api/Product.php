@@ -560,7 +560,7 @@ class Product extends REST_Controller {
 					if($bank_account->verify==0){
 						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
 						$this->load->library('Sendemail');
-						$this->sendemail->admin_notification("新的一筆金融帳號驗證 會員ID:".$user_id,"有新的一筆金融帳號驗證 會員ID:".$user_id);
+						$this->sendemail->admin_notification("新的一筆金融帳號驗證 借款端會員ID:".$user_id,"有新的一筆金融帳號驗證 借款端會員ID:".$user_id);
 					}
 				}else{
 					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));

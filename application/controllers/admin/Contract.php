@@ -5,6 +5,8 @@ require(APPPATH . '/libraries/MY_Admin_Controller.php');
 
 class Contract extends MY_Admin_Controller
 {
+	protected $edit_method = array("editContract");
+	
     public function __construct()
     {
         parent::__construct();

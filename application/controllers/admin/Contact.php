@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Contact extends MY_Admin_Controller {
 	
-	protected $edit_method = array("edit");
+	protected $edit_method = array("edit","send_email");
 	
 	public function __construct() {
 		parent::__construct();
@@ -70,6 +70,34 @@ class Contact extends MY_Admin_Controller {
 				}
 			}else{
 				alert("ERROR , id isn't exist",admin_url('contact/index'));
+			}
+		}
+	}
+	
+	public function send_email(){
+		$page_data 	= array("type"=>"edit");
+		$post 		= $this->input->post(NULL, TRUE);
+		$this->load->library('Sendemail');
+		if(empty($post)){
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/send_email',$page_data);
+			$this->load->view('admin/_footer');
+
+		}else{
+			$fields = ['email', 'title', 'content'];
+			foreach ($fields as $field) {
+				if (isset($post[$field]) && !empty($post[$field])) {
+					$data[$field] = trim($post[$field]);
+				}else{
+					alert("缺少參數:".$field,admin_url('contact/send_email'));
+				}
+			}
+			$rs = $this->sendemail->email_notification($data['email'],$data['title'],$data['content']);
+			if($rs===true){
+				alert("發送成功",admin_url('contact/send_email'));
+			}else{
+				alert("發送失敗，請洽工程師",admin_url('contact/send_email'));
 			}
 		}
 	}

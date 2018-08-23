@@ -3834,7 +3834,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "208",
-            "description": "<p>未滿20歲</p>"
+            "description": "<p>未滿20歲或大於35歲</p>"
           },
           {
             "group": "Error 4xx",
@@ -9231,7 +9231,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 9:流標 10:移轉成功</p>"
+            "description": "<p>投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款 9:流標 10:移轉成功</p>"
           },
           {
             "group": "Success 200",

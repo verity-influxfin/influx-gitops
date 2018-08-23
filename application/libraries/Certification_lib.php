@@ -86,7 +86,10 @@ class Certification_lib{
 						}
 					}
 				}else{
-					$error = array("error"=>"人臉數量錯誤","OCR"=>$ocr,"face"=>array(),"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
+					if($person_count==1 && $front_count==1){
+						$answer[] = $this->CI->faceplusplus_lib->token_compare($person_token[0],$front_token[0]);
+					}
+					$error = array("error"=>"人臉數量錯誤","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
 					$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
 				}
 			}

@@ -211,7 +211,8 @@ class Certification extends REST_Controller {
 			if($insert){
 				$this->certification_lib->idcard_verify($insert);// 7/31改人工
 				$this->load->library('Sendemail');
-				$this->sendemail->admin_notification("新的一筆實名認證 會員ID:".$user_id,"有新的一筆實名認證 會員ID:".$user_id);
+				$investor_status = $investor?"出借端":"借款端";
+				$this->sendemail->admin_notification("新的一筆實名認證 ".$investor_status."會員ID:".$user_id,"有新的一筆實名認證 ".$investor_status."會員ID:".$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -661,7 +662,7 @@ class Certification extends REST_Controller {
 			if($insert){
 				$bankaccount_info = array(
 					"user_id"		=> $user_id,
-					"investor"				=> $investor,
+					"investor"		=> $investor,
 					"user_certification_id"	=> $insert,
 					"bank_code"		=> $content["bank_code"],
 					"branch_code"	=> $content["branch_code"],
@@ -673,7 +674,7 @@ class Certification extends REST_Controller {
 				if($investor){
 					$bankaccount_info['verify'] = 2;
 					$this->load->library('Sendemail');
-					$this->sendemail->admin_notification("新的一筆金融帳號驗證 會員ID:".$user_id,"有新的一筆金融帳號驗證 會員ID:".$user_id);
+					$this->sendemail->admin_notification("新的一筆金融帳號驗證 出借端會員ID:".$user_id,"有新的一筆金融帳號驗證 出借端會員ID:".$user_id);
 				}else{
 					$this->certification_lib->set_success($insert);
 				}
