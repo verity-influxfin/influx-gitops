@@ -9,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">業務借款報表</h1>
+                    <h1 class="page-header">業務註冊報表</h1>
 					
                 </div>
                 <!-- /.col-lg-12 -->
@@ -32,41 +32,34 @@
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td>業務姓名</td>
-												<td>申請中</td>
-												<td>申請成功</td>
-												<td>已取消</td>
+												<td>註冊人數</td>
+												<td>FB登入</td>
+												<td>學生認證</td>
 											</tr>
 											<? 
 											$sum = array("apply"=>0,"success"=>0,"faile"=>0);
 											if(!empty($list["sales"])){
 												foreach($list["sales"] as $key => $value){
-													$num = array();
-													foreach($target_status as $k => $v){
-														$num[$k] = isset($value[$k])&&$value[$k]?count($value[$k]):0;
-													}
-													$apply 		= $num[0]+$num[1]+$num[2];
-													$success 	= $num[3]+$num[4]+$num[5]+$num[10];;
-													$faile 		= $num[8]+$num[9];
-													$sum["apply"] 	+= $apply;
-													$sum["success"] += $success;
-													$sum["faile"] 	+= $faile;
+													$sum["count"] 	+= $value["count"];
+													$sum["school"] += $value["school"];
+													$sum["fb"] 	+= $value["fb"];
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$apply; ?></p>
+														<p class="form-control-static"><?=$value["count"]?$value["count"]:0; ?></p>
 													</td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
+													<td><p class="form-control-static"><?=$value["fb"]?$value["fb"]:0; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$faile; ?></p>
+														<p class="form-control-static"><?=$value["school"]?$value["school"]:0; ?></p>
 													</td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
-												<td><?=$sum["apply"]; ?></td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["faile"]; ?></td>
+												<td><?=$sum["count"]; ?></td>
+												<td><?=$sum["fb"]; ?></td>
+												<td><?=$sum["school"]; ?></td>
 											</tr>
 											</tbody>
 										</table>
@@ -82,43 +75,36 @@
 											<tr style="background-color:#f5f5f5;">
 												<td>負責業務</td>
 												<td>單位</td>
-												<td>申請中</td>
-												<td>申請成功</td>
-												<td>已取消</td>
+												<td>註冊人數</td>
+												<td>FB登入</td>
+												<td>學生認證</td>
 											</tr>
 											<? 
 											$sum = array("apply"=>0,"success"=>0,"faile"=>0);
 											if(!empty($list["partner"])){
 												foreach($list["partner"] as $key => $value){
-													$num = array();
-													foreach($target_status as $k => $v){
-														$num[$k] = isset($value[$k])&&$value[$k]?count($value[$k]):0;
-													}
-													$apply 		= $num[0]+$num[1]+$num[2];
-													$success 	= $num[3]+$num[4]+$num[5]+$num[10];;
-													$faile 		= $num[8]+$num[9];
-													$sum["apply"] 	+= $apply;
-													$sum["success"] += $success;
-													$sum["faile"] 	+= $faile;
+													$sum["count"] 	+= $value["count"];
+													$sum["school"] 	+= $value["school"];
+													$sum["fb"] 		+= $value["fb"];
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$apply; ?></p>
+														<p class="form-control-static"><?=$value["count"]?$value["count"]:0; ?></p>
 													</td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
+													<td><p class="form-control-static"><?=$value["fb"]?$value["fb"]:0; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$faile; ?></p>
+														<p class="form-control-static"><?=$value["school"]?$value["school"]:0; ?></p>
 													</td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td></td>
 												<td>合計</td>
-												<td><?=$sum["apply"]; ?></td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["faile"]; ?></td>
+												<td><?=$sum["count"]; ?></td>
+												<td><?=$sum["fb"]; ?></td>
+												<td><?=$sum["school"]; ?></td>
 											</tr>
 											</tbody>
 										</table>

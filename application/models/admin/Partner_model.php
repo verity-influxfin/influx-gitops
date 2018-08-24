@@ -18,7 +18,7 @@ class Partner_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-		$data["password"] 	= sha1($data["password"]);
+		$data['password'] 	= sha1($data['password']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -26,8 +26,8 @@ class Partner_model extends MY_Model
 	
 	protected function before_data_u($data)
     {
-		if(isset($data["password"])){
-			$data["password"] 	= sha1($data["password"]);
+		if(isset($data['password'])){
+			$data['password'] 	= sha1($data['password']);
 		}
         $data['updated_at'] = time();
         $data['updated_ip'] = get_ip();
@@ -45,4 +45,5 @@ class Partner_model extends MY_Model
 		}
 		return $data;
 	}
+
 }
