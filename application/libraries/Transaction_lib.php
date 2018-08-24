@@ -259,13 +259,12 @@ class Transaction_lib{
 	}
 	
 	//放款成功
-	function lending_success($target_id,$date=""){
-		$entering_date 	= get_entering_date();
-		$date 			= $date?$date:$entering_date;
+	function lending_success($target_id){
+		$date 			= get_entering_date();
 		$transaction 	= array();
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
-			if( $target && $target->status == 4 && $target->loan_status == 1){
+			if( $target && $target->status == 4 && $target->loan_status == 3){
 				$target_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$target->user_id,"investor"=>0,"status"=>1));
 				if($target_account){
 					$where = array(
@@ -382,7 +381,7 @@ class Transaction_lib{
 							
 							$rs  = $this->CI->transaction_model->insert_many($transaction);
 							if($rs && is_array($rs)){
-								$this->CI->target_model->update($target_id,array("status"=>5,"loan_date"=>$date));
+								$this->CI->target_model->update($target_id,array("status"=>5,"loan_status"=>1,"loan_date"=>$date));
 								$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
 								$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
 								foreach($rs as $key => $value){
@@ -399,11 +398,19 @@ class Transaction_lib{
 		return false;
 	}
 
+	//放款失敗重新操作
+	function lending_failed($target_id){
+		if($target_id){
+			$target = $this->CI->target_model->get($target_id);
+			if( $target && $target->status == 4 && $target->loan_status == 3){
+				return $this->CI->target_model->update($target_id,array("loan_status"=>2));
+			}
+		}
+	}
 	
 	//債轉成功
-	function transfer_success($transfer_id,$date=""){
-		$entering_date 	= get_entering_date();
-		$date 			= $date?$date:$entering_date;
+	function transfer_success($transfer_id){
+		$date 			= get_entering_date();
 		$transaction 	= array();
 		if($transfer_id){
 			$this->CI->load->model('loan/transfer_model');

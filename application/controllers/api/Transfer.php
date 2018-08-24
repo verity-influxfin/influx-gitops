@@ -487,6 +487,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Transfer Investments ID
 	 * @apiSuccess {String} amount 投標金額
+	 * @apiSuccess {String} loan_amount 得標金額
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款 9:流標 10:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
@@ -527,8 +528,9 @@ class Transfer extends REST_Controller {
      * 			{
      * 				"id":"1",
      * 				"amount":"5000",
+     * 				"loan_amount":"",
 	 * 				"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊",
-     * 				"status":"0,
+     * 				"status":"0",
      * 				"created_at":"1520421572",
 	 * 				"product":{
      * 					"id":"2",
@@ -541,7 +543,7 @@ class Transfer extends REST_Controller {
      * 					"amount": "1804233189",
      * 					"instalment": "5000",
      * 					"expire_time": "123456789"
-     * 				}
+     * 				},
      * 				"target": {
      * 					"id": "19",
      * 					"target_no": "1804233189",
@@ -687,6 +689,7 @@ class Transfer extends REST_Controller {
 				$list[] = array(
 					"id" 				=> $value->id,
 					"amount" 			=> $value->amount,
+					"loan_amount" 		=> in_array($value->status,array(2,10))?$value->amount:"",
 					"contract" 			=> $contract,
 					"status" 			=> $value->status,
 					"created_at" 		=> $value->created_at,

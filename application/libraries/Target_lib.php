@@ -13,6 +13,47 @@ class Target_lib{
 		$this->CI->load->library('Notification_lib');
     }
 	
+	//新增target
+	public function add_target($param){
+		if(!empty($param)){
+			$param["target_no"] = $this->get_target_no();
+			$insert 			= $this->CI->target_model->insert($param);
+			if($insert){
+				return $insert;
+			}else{
+				$param["target_no"] = $this->get_target_no();
+				$insert 			= $this->CI->target_model->insert($param);
+				return $insert;
+			}
+		}
+		return false;
+	}
+	
+	//簽約
+	public function signing_target($target_id,$data){
+		if($target_id){
+			$param = array(
+				"person_image"	=> $data["person_image"],
+				"status"		=> 2,
+			);
+			$rs = $this->CI->target_model->update($target_id,$param);
+			return $rs;
+		}
+		return false;
+	}
+	
+	//取消
+	public function cancel_target($target_id){
+		if($target_id){
+			$param = array(
+				"status"		=> 8,
+			);
+			$rs = $this->CI->target_model->update($target_id,$param);
+			return $rs;
+		}
+		return false;
+	}
+	
 	//核可額度利率
 	public function approve_target($target = array()){
 		$this->CI->load->library('credit_lib');
@@ -40,7 +81,7 @@ class Target_lib{
 					}
 					$credit['amount'] 	= $credit['amount'] - $used_amount;
 					$loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
-					if($loan_amount>=5000){
+					if( $loan_amount >= 5000 ){
 						$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
 						$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
 						$contract_id	= $this->CI->contract_lib->sign_contract("lend",["",$user_id,$loan_amount,$interest_rate,""]);

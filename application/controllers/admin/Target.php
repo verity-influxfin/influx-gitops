@@ -293,13 +293,11 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3){
-				$this->target_model->update($id,array("loan_status"=>1));
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_success($id);
 				if($rs){
 					echo "更新成功";die();
 				}else{
-					$this->target_model->update($id,array("loan_status"=>3));
 					echo "更新失敗";die();
 				}
 			}else{
@@ -316,7 +314,8 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3){
-				$this->target_model->update($id,array("loan_status"=>2));
+				$this->load->library('Transaction_lib');
+				$rs = $this->transaction_lib->lending_failed($id);
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();

@@ -12,8 +12,6 @@ class Target extends REST_Controller {
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Certification_lib');
-		$this->load->library('Target_lib');
-		$this->load->library('Transaction_lib');
 		$this->load->library('Financial_lib');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
@@ -39,7 +37,6 @@ class Target extends REST_Controller {
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
-	
 
 	/**
      * @api {get} /target/list 出借方 取得標的列表
@@ -690,6 +687,8 @@ class Target extends REST_Controller {
 			"branch_code"	=> $user_bankaccount->branch_code,
 			"bank_account"	=> $user_bankaccount->bank_account,
 		);
+		
+		$this->load->library('Transaction_lib');
 		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		$param				= array( "user_id"=> $user_id);
 		$investments		= $this->investment_model->get_many_by($param);

@@ -405,17 +405,11 @@ class Product extends REST_Controller {
 			if($target){
 				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
 			}
-			
-			$param["target_no"] = $this->get_target_no();
-			$insert = $this->target_model->insert($param);
+
+			$insert = $this->target_lib->add_target($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
 			}else{
-				$param["target_no"] = $this->get_target_no();
-				$insert = $this->target_model->insert($param);
-				if($insert){
-					$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
-				}
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
@@ -567,10 +561,9 @@ class Product extends REST_Controller {
 				}
 				
 				if($targets->status == 1){
-					unset($param['target_id']);
 					$this->load->library('Sendemail');
 					$this->sendemail->admin_notification("案件待審批 會員ID：".$user_id,"案件待審批 會員ID：".$user_id." 案號：".$targets->target_no);
-					$rs = $this->target_model->update($targets->id,$param);
+					$rs = $this->target_lib->signing_target($targets->id,$param);
 					$this->response(array('result' => 'SUCCESS'));
 				}else{
 					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
@@ -994,7 +987,7 @@ class Product extends REST_Controller {
 			}
 
 			if(in_array($targets->status,array(0,1,2))){
-				$rs = $this->target_model->update($targets->id,array("status"=>8));
+				$rs = $this->target_lib->cancel_target($targets->id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
@@ -1002,14 +995,5 @@ class Product extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
-	private function get_target_no(){
-		$code = "STN".date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
-		$result = $this->target_model->get_by('target_no',$code);
-		if ($result) {
-			return $this->get_target_no();
-		}else{
-			return $code;
-		}
-	}
+
 }

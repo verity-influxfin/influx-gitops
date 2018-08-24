@@ -27,7 +27,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-									<tr class="<?=$count%2==0?"odd":"even"; ?> list 0">
+									<tr class="list 0">
 										<td>
 										<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.PLATFORM_VIRTUAL_ACCOUNT) ?>" >
 												<?=PLATFORM_VIRTUAL_ACCOUNT ?>
