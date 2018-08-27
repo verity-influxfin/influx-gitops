@@ -563,7 +563,7 @@ class Product extends REST_Controller {
 				if($targets->status == 1){
 					$this->load->library('Sendemail');
 					$this->sendemail->admin_notification("案件待審批 會員ID：".$user_id,"案件待審批 會員ID：".$user_id." 案號：".$targets->target_no);
-					$rs = $this->target_lib->signing_target($targets->id,$param);
+					$rs = $this->target_lib->signing_target($targets->id,$param,$user_id);
 					$this->response(array('result' => 'SUCCESS'));
 				}else{
 					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
@@ -987,7 +987,7 @@ class Product extends REST_Controller {
 			}
 
 			if(in_array($targets->status,array(0,1,2))){
-				$rs = $this->target_lib->cancel_target($targets->id);
+				$rs = $this->target_lib->cancel_target($targets->id,$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));

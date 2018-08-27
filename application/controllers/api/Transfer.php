@@ -112,6 +112,8 @@ class Transfer extends REST_Controller {
 		
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
+		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array("credit_level","instalment","interest_rate"))?$input['orderby']:"";
+		$sort				= isset($input['sort'])&&in_array($input['sort'],array("desc","asc"))?$input['sort']:"asc";
 		$transfer 			= $this->transfer_lib->get_transfer_list();
 		
 		if(!empty($transfer)){
@@ -154,6 +156,43 @@ class Transfer extends REST_Controller {
 					"product"		=> $product,
 					"target"		=> $target_info,
 				);
+			}
+			
+			if(!empty($orderby) && !empty($sort) && !empty($list)){
+				$num = count($list);
+				for($i = 0 ; $i < $num ; $i++){
+					for ($j=$i+1;$j<$num;$j++) {
+						switch($orderby){
+							case 'credit_level': 
+								$a = $list[$i]['target']['credit_level'];
+								$b = $list[$j]['target']['credit_level'];
+								break;
+							case 'instalment': 
+								$a = $list[$i]['instalment'];
+								$b = $list[$j]['instalment'];
+								break;
+							case 'interest_rate': 
+								$a = $list[$i]['target']['interest_rate'];
+								$b = $list[$j]['target']['interest_rate'];
+								break;
+							default:
+								break;
+						}
+						if ($sort=='desc') {
+							if( $a > $b ){
+								$tmp      = $list[$i];
+								$list[$i] = $list[$j];
+								$list[$j] = $tmp;
+							}
+						}else{
+							if( $a < $b ){
+								$tmp      = $list[$i];
+								$list[$i] = $list[$j];
+								$list[$j] = $tmp;
+							}
+						}
+					}
+				}
 			}
 		}
 		$data["list"] = $list;

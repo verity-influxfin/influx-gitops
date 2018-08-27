@@ -156,7 +156,7 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && $info->status==2){
-				$this->target_lib->target_verify_success($info);
+				$this->target_lib->target_verify_success($info,$this->login_info->id);
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();
@@ -172,7 +172,7 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && $info->status==2){
-				$this->target_lib->target_verify_failed($info);
+				$this->target_lib->target_verify_failed($info,$this->login_info->id);
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();
@@ -294,7 +294,7 @@ class Target extends MY_Admin_Controller {
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3){
 				$this->load->library('Transaction_lib');
-				$rs = $this->transaction_lib->lending_success($id);
+				$rs = $this->transaction_lib->lending_success($id,$this->login_info->id);
 				if($rs){
 					echo "更新成功";die();
 				}else{
@@ -315,7 +315,7 @@ class Target extends MY_Admin_Controller {
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3){
 				$this->load->library('Transaction_lib');
-				$rs = $this->transaction_lib->lending_failed($id);
+				$rs = $this->transaction_lib->lending_failed($id,$this->login_info->id);
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();

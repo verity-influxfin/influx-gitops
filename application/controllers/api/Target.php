@@ -94,7 +94,6 @@ class Target extends REST_Controller {
 	 	
 	public function list_get()
     {
-		$this->load->library('credit_lib');
 		$input 	= $this->input->get();
 		$data	= array();
 		$list	= array();
@@ -107,7 +106,7 @@ class Target extends REST_Controller {
 
 		if(!empty($target_list)){
 			$product_list = array();
-			$products = $this->product_model->get_all();
+			$products = $this->product_model->get_many_by(array("status"=>1));
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(

@@ -17,6 +17,8 @@ class Sales extends MY_Admin_Controller {
 	public function index(){
 		$page_data 		= array();	
 		$list			= array();
+		$max_date 		= "";
+		$min_date 		= "";
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
@@ -32,8 +34,6 @@ class Sales extends MY_Admin_Controller {
 		
 		$target_list	= $this->target_model->get_many_by(array("promote_code <>"=>""));
 		if(!empty($target_list)){
-			$max_date = "";
-			$min_date = "";
 			foreach($target_list as $key => $value){
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
 					$list["partner"][$partner_qrcode[$value->promote_code]][$value->status][] = array(
@@ -69,8 +69,8 @@ class Sales extends MY_Admin_Controller {
 		$page_data["admins_name"] 	= $admins_name;
 		$page_data["partner_type"] 	= $partner_type;
 		$page_data["target_status"] = $this->target_model->status_list;
-		$page_data["max_date"] 		= date("Y-m-d",$max_date);
-		$page_data["min_date"] 		= date("Y-m-d",$min_date);
+		$page_data["max_date"] 		= $max_date?date("Y-m-d",$max_date):"";
+		$page_data["min_date"] 		= $min_date?date("Y-m-d",$min_date):"";
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -81,6 +81,8 @@ class Sales extends MY_Admin_Controller {
 	public function register_report(){
 		$page_data 		= array();	
 		$list			= array();
+		$max_date 		= "";
+		$min_date 		= "";
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
@@ -101,8 +103,7 @@ class Sales extends MY_Admin_Controller {
 				$user_list[$key]->school 	= $school?1:0;
 				$user_list[$key]->fb 		= $value->nickname?1:0;
 			}
-			$max_date = "";
-			$min_date = "";
+			
 			foreach($user_list as $key => $value){
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
 					$list["partner"][$partner_qrcode[$value->promote_code]]["count"] ++;
@@ -129,8 +130,8 @@ class Sales extends MY_Admin_Controller {
 		$page_data["partner_list"] 	= $partner_list_byid;
 		$page_data["admins_name"] 	= $admins_name;
 		$page_data["partner_type"] 	= $partner_type;
-		$page_data["max_date"] 		= date("Y-m-d",$max_date);
-		$page_data["min_date"] 		= date("Y-m-d",$min_date);
+		$page_data["max_date"] 		= $max_date?date("Y-m-d",$max_date):"";
+		$page_data["min_date"] 		= $min_date?date("Y-m-d",$min_date):"";
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);

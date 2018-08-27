@@ -259,7 +259,7 @@ class Transaction_lib{
 	}
 	
 	//放款成功
-	function lending_success($target_id){
+	function lending_success($target_id,$admin_id=0){
 		$date 			= get_entering_date();
 		$transaction 	= array();
 		if($target_id){
@@ -381,7 +381,15 @@ class Transaction_lib{
 							
 							$rs  = $this->CI->transaction_model->insert_many($transaction);
 							if($rs && is_array($rs)){
-								$this->CI->target_model->update($target_id,array("status"=>5,"loan_status"=>1,"loan_date"=>$date));
+								$target_update_param = array(
+									"status"		=> 5,
+									"loan_status"	=> 1,
+									"loan_date"		=> $date
+								);
+								$this->CI->target_model->update($target_id,$target_update_param);
+								$this->CI->load->library('target_lib');
+								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
+								
 								$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
 								$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
 								foreach($rs as $key => $value){
@@ -399,11 +407,16 @@ class Transaction_lib{
 	}
 
 	//放款失敗重新操作
-	function lending_failed($target_id){
+	function lending_failed($target_id,$admin_id=0){
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 4 && $target->loan_status == 3){
-				return $this->CI->target_model->update($target_id,array("loan_status"=>2));
+				$target_update_param = array(
+					"loan_status"	=> 2,
+				);
+				$this->CI->load->library('target_lib');
+				$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
+				return $this->CI->target_model->update($target_id,$target_update_param);
 			}
 		}
 	}

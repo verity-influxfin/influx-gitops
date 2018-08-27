@@ -355,7 +355,10 @@ class Payment_lib{
 								"verify"		=> 1
 							));
 							if($bankaccount){
-								$this->CI->target_model->update($value->id,array("loan_status"=>3));
+								$target_update_param = array("loan_status"=>3);
+								$this->CI->target_model->update($value->id,$target_update_param);
+								$this->CI->load->library('target_lib');
+								$this->CI->target_lib->insert_change_log($value->id,$target_update_param,0,$admin_id);
 								$amount = intval($value->loan_amount) - intval($value->platform_fee);
 								$ids[] 	= $value->id;
 								

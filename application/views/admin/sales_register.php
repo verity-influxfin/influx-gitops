@@ -37,7 +37,7 @@
 												<td>學生認證</td>
 											</tr>
 											<? 
-											$sum = array("apply"=>0,"success"=>0,"faile"=>0);
+											$sum = array("count"=>0,"school"=>0,"fb"=>0);
 											if(!empty($list["sales"])){
 												foreach($list["sales"] as $key => $value){
 													$sum["count"] 	+= $value["count"];
@@ -80,7 +80,7 @@
 												<td>學生認證</td>
 											</tr>
 											<? 
-											$sum = array("apply"=>0,"success"=>0,"faile"=>0);
+											$sum = array("count"=>0,"school"=>0,"fb"=>0);
 											if(!empty($list["partner"])){
 												foreach($list["partner"] as $key => $value){
 													$sum["count"] 	+= $value["count"];

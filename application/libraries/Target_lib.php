@@ -30,25 +30,27 @@ class Target_lib{
 	}
 	
 	//簽約
-	public function signing_target($target_id,$data){
+	public function signing_target( $target_id, $data, $user_id=0 ){
 		if($target_id){
 			$param = array(
 				"person_image"	=> $data["person_image"],
 				"status"		=> 2,
 			);
 			$rs = $this->CI->target_model->update($target_id,$param);
+			$this->insert_change_log($target_id,$param,$user_id);
 			return $rs;
 		}
 		return false;
 	}
 	
 	//取消
-	public function cancel_target($target_id){
+	public function cancel_target($target_id,$user_id=0){
 		if($target_id){
 			$param = array(
 				"status"		=> 8,
 			);
 			$rs = $this->CI->target_model->update($target_id,$param);
+			$this->insert_change_log($target_id,$param,$user_id);
 			return $rs;
 		}
 		return false;
@@ -95,6 +97,7 @@ class Target_lib{
 								"status"			=> "1",
 							);
 							$rs = $this->CI->target_model->update($target->id,$param);
+							$this->insert_change_log($target->id,$param);
 							if($rs){
 								$this->CI->notification_lib->approve_target($user_id,"1",$loan_amount);
 							}
@@ -106,6 +109,7 @@ class Target_lib{
 							"remark"			=> "信用不足",
 						);
 						$rs = $this->CI->target_model->update($target->id,$param);
+						$this->insert_change_log($target->id,$param);
 						$this->CI->notification_lib->approve_target($user_id,"9");
 					}
 					
@@ -116,7 +120,7 @@ class Target_lib{
 		return false;
 	}
 	
-	public function bankaccount_verify_failed($user_id = 0){
+	public function bankaccount_verify_failed($user_id = 0,$admin_id=0){
 		$user_info = $this->CI->user_model->get($user_id);
 		if(!empty($user_info)){
 			
@@ -132,6 +136,7 @@ class Target_lib{
 						"remark"			=> "驗證失敗",
 					);
 					$this->CI->target_model->update($value->id,$param);
+					$this->insert_change_log($value->id,$param,0,$admin_id);
 					$this->CI->notification_lib->bankaccount_verify_failed($user_id);
 				}
 			}
@@ -139,7 +144,7 @@ class Target_lib{
 		return false;
 	}
 	
-	public function target_verify_success($target = array()){
+	public function target_verify_success($target = array(),$admin_id=0){
 		if(!empty($target) && $target->status==2){
 			$param = [
 				"status" 		=> 3 , 
@@ -147,12 +152,13 @@ class Target_lib{
 				"launch_times"	=> 1
 			];
 			$this->CI->target_model->update($target->id, $param);
+			$this->insert_change_log($target->id,$param,0,$admin_id);
 			$this->CI->notification_lib->target_verify_success($target);
 		}
 		return false;
 	}
 	
-	public function target_verify_failed($target = array()){
+	public function target_verify_failed($target = array(),$admin_id=0){
 		if(!empty($target)){
 			$param = array(
 				"loan_amount"		=> 0,
@@ -160,6 +166,7 @@ class Target_lib{
 				"remark"			=> "驗證失敗",
 			);
 			$this->CI->target_model->update($target->id,$param);
+			$this->insert_change_log($target->id,$param,0,$admin_id);
 			$this->CI->notification_lib->bankaccount_verify_failed($target->user_id);
 		}
 		return false;
@@ -189,7 +196,12 @@ class Target_lib{
 				if($amount >= $target->loan_amount){
 					
 					//結標
-					$rs = $this->CI->target_model->update($target->id,array("status"=>4,"loan_status"=>2));
+					$target_update_param = array(
+						"status"		=> 4,
+						"loan_status"	=> 2
+					);
+					$rs = $this->CI->target_model->update($target->id,$target_update_param);
+					$this->insert_change_log($target->id,$target_update_param);
 					if($rs){
 						$this->CI->notification_lib->auction_closed($target->user_id,0,$target->target_no,$target->loan_amount);
 						$total = 0;
@@ -247,11 +259,13 @@ class Target_lib{
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->auction_ended($target);
 						}else{
-							$this->CI->target_model->update($target->id,array(
+							$target_update_param = array(
 								"launch_times"	=> $target->launch_times + 1,
 								"expire_time"	=> strtotime("+2 days", $target->expire_time),
 								"invested"		=> 0,
-							));
+							);
+							$this->CI->target_model->update($target->id,$target_update_param);
+							$this->insert_change_log($target->id,$target_update_param);
 						}
 						foreach($investments as $key => $value){
 							$this->CI->investment_model->update($value->id,array("status"=>9));
@@ -295,11 +309,13 @@ class Target_lib{
 						
 						$this->CI->subloan_lib->auction_ended($target);
 					}else{
-						$this->CI->target_model->update($target->id,array(
+						$target_update_param = array(
 							"launch_times"	=> $target->launch_times + 1,
 							"expire_time"	=> strtotime("+2 days", $target->expire_time),
 							"invested"		=> 0,
-						));
+						);
+						$this->CI->target_model->update($target->id,$target_update_param);
+						$this->insert_change_log($target->id,$target_update_param);
 					}
 				}
 				return true;
@@ -565,4 +581,23 @@ class Target_lib{
 		}
 	}
 
+	public function insert_change_log($target_id,$update_param,$user_id=0,$admin_id=0){
+		if($target_id){
+			$this->CI->load->model('log/log_targetschange_mode');
+			$param		= array(
+				"target_id"		=> $target_id,
+				"change_user"	=> $user_id,
+				"change_admin"	=> $admin_id
+			);
+			$fields 	= ['delay','status','loan_status','sub_status'];
+			foreach ($fields as $field) {
+				if (isset($update_param[$field])) {
+					$param[$field] = $update_param[$field];
+				}
+			}
+			$rs = $this->CI->log_targetschange_mode->insert($param);
+			return $rs;
+		}
+		return false;
+	}
 }
