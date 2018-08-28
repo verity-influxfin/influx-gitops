@@ -28,7 +28,7 @@
 									<table class="table table-bordered table-hover table-striped">
 										<tbody>
 											<tr>
-												<td><p class="form-control-static">案件 ID</p></td>
+												<td style="width: 20%;"><p class="form-control-static">案件 ID</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
 												</td>

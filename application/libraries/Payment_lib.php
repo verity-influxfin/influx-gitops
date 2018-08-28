@@ -605,4 +605,114 @@ class Payment_lib{
 		}
 		return false;
 	}
+	//上傳檔案
+	public function upload_file($content="",$fxml=""){
+		if(is_development()){
+			return true;
+		}else{
+			$url 	= 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx';
+		}
+		
+		$txnkey = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		
+		$xml_file 	= 
+'<?xml version="1.0" encoding="big5"?>
+<MYB2B>
+	<HEADER>
+		<SERVICE>PAYSVC</SERVICE>
+		<ACTION>BTRS01</ACTION>
+		<TXNKEY>'.$txnkey.'</TXNKEY>
+	</HEADER>
+	<BODY>
+		<LOGON>
+			<IDNO>'.CATHAY_CUST_ID.'</IDNO>
+			<PASSWORD>'.CATHAY_CUST_PASSWORD.'</PASSWORD>
+			<USERNO>'.CATHAY_CUST_NICKNAME.'</USERNO>
+			<BRANCH>'.substr(CATHAY_BRANCH_CODE,0,3).'</BRANCH>
+		</LOGON>
+		<DATA>
+			<CONTENT FileType="BRMT/BRMT/0" DrAcno="15035006475" RemitType="'.$fxml.'">
+				<![CDATA['.$content.']]>
+			</CONTENT>
+		</DATA>
+	</BODY>
+</MYB2B>';
+		$xml_file 	= iconv('UTF-8', 'BIG-5', $xml_file);
+		$key 		= iconv('UTF-8', 'BIG-5', CATHAY_AES_KEY);
+		$rs 		= iconv('UTF-8', 'BIG-5',CATHAY_CUST_ID.'            '.$this->strToHex($this->encrypt($xml_file,$key)));
+		$res 		= curl_get($url,$rs,["Content-type:text/xml"]);
+		$res 		= iconv('big5', 'big5//IGNORE', $res); 
+		$xml 		= simplexml_load_string($res);
+		$xml 		= json_decode(json_encode($xml),TRUE);
+		if($xml && $xml['BODY']['DATA']['ERROR_ID']=='0000' && $txnkey==$xml['HEADER']['TXNKEY']){
+			$batch_no 	= $xml['BODY']['DATA']['BATCH_NO'];
+			return $batch_no;
+		}
+		return false;
+		
+	}
+	//取得資訊
+	public function get_batch_info($batch_no=""){
+		if(is_development()){
+			return array();
+		}else{
+			$url 	= 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_QueryRMT.aspx';
+			
+		}
+		$date		= date("Ymd");
+		$xml_file 	= 
+'<?xml version="1.0" encoding="big5"?>
+<MYB2B>
+	<HEADER>
+		<SERVICE>PAYSVC</SERVICE>
+		<ACTION>BTRS03</ACTION>
+	</HEADER>
+	<BODY>
+		<IDNO>'.CATHAY_CUST_ID.'</IDNO>
+		<PASSWORD>'.CATHAY_CUST_PASSWORD.'</PASSWORD>
+		<USERNO>'.CATHAY_CUST_NICKNAME.'</USERNO>
+		<ACNO>'.CATHAY_CUST_ACCNO.'</ACNO>
+		<FromDate>'.$date.'</FromDate>
+		<ToDate>'.$date.'</ToDate>
+		<FromTime>000000</FromTime>
+		<ToTime>235959</ToTime>
+		<BatchNo>'.$batch_no.'</BatchNo>
+		<XML>Y</XML>4
+		<ErrData>N</ErrData>
+		<FileType>BRMT/BRMT/0</FileType>
+	</BODY>
+</MYB2B>'; 
+		$xml_file 	= iconv('UTF-8', 'BIG-5', $xml_file);
+		$key 		= iconv('UTF-8', 'BIG-5', CATHAY_AES_KEY);
+		$rs 		= iconv('UTF-8', 'BIG-5',CATHAY_CUST_ID.'            '.$this->strToHex($this->encrypt($xml_file,$key)));
+		$res 		= curl_get($url,$rs,["Content-type:text/xml"]);
+		$res 		= iconv('big5', 'big5//IGNORE', $res); 
+		$xml 		= simplexml_load_string($res);
+		$xml 		= json_decode(json_encode($xml),TRUE);
+		if($xml && $xml['HEADER']['RETURN_CODE']=='0000'){
+			$data 	= $xml['BODY']['DATAS']['DATA'];
+			return $data;
+		}
+		return array();
+	}
+	
+    private function encrypt($src, $key, $size = 128, $mode = 'ECB') {
+        if (is_null($key)) {
+            return false;
+        }
+
+        $method 	= 'AES-' . $size . '-' . $mode;
+        $ivSize 	= openssl_cipher_iv_length($method);
+        $iv 		= openssl_random_pseudo_bytes($ivSize);
+        $encrypted 	= openssl_encrypt($src, $method, mb_convert_encoding($key, 'big5', 'utf-8'), OPENSSL_RAW_DATA, $iv);
+        return base64_encode($iv . $encrypted);
+    }
+	
+	private function strToHex($string){
+		$hex='';
+		for ($i=0; $i < strlen($string); $i++){
+			$hex .= dechex(ord($string[$i]));
+		}
+		return $hex;
+	}
 }

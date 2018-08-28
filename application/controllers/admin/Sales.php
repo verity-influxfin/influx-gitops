@@ -32,7 +32,7 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		$target_list	= $this->target_model->get_many_by(array("promote_code <>"=>""));
+		$target_list	= $this->target_model->get_all();
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
@@ -58,6 +58,19 @@ class Sales extends MY_Admin_Controller {
 						"created_date"	=> date("Y-m-d",$value->created_at),
 					);
 				}
+				
+				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list["platform"][$value->status][] = array(
+						"id"			=> $value->id,
+						"amount"		=> $value->amount,
+						"loan_amount"	=> $value->loan_amount,
+						"loan_date"		=> $value->loan_date,
+						"status"		=> $value->status,
+						"promote_code"	=> $value->promote_code,
+						"created_date"	=> date("Y-m-d",$value->created_at),
+					);
+				}
+				
 				if($max_date=="" || $max_date<$value->created_at)
 					$max_date = $value->created_at;
 				if($min_date=="" || $min_date>$value->created_at)
@@ -96,11 +109,20 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		$user_list	= $this->user_model->get_many_by(array("promote_code <>"=>""));
+		$user_list		= $this->user_model->get_many_by(array("status"=>1));
+		$school_list 	= $this->user_meta_model->get_many_by(array("meta_key"=>"student_status"));
 		if(!empty($user_list)){
+			
+			if(!empty($school_list)){
+				$school_status = array();
+				foreach($school_list as $key => $value){
+					
+					$school_status[$value->user_id] = 1;
+				}
+			}
+			
 			foreach($user_list as $key => $value){
-				$school = $this->user_meta_model->get_by(array("user_id"=>$value->id,"meta_key"=>"student_status"));
-				$user_list[$key]->school 	= $school?1:0;
+				$user_list[$key]->school 	= isset($school_status[$value->id])&&$school_status[$value->id]?1:0;
 				$user_list[$key]->fb 		= $value->nickname?1:0;
 			}
 			
@@ -120,6 +142,15 @@ class Sales extends MY_Admin_Controller {
 					if($value->fb)
 						$list["sales"][$admins_qrcode[$value->promote_code]]["fb"] ++;
 				}
+				
+				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list["platform"]["count"] ++;
+					if($value->school)
+						$list["platform"]["school"] ++;
+					if($value->fb)
+						$list["platform"]["fb"] ++;
+				}
+				
 				if($max_date=="" || $max_date<$value->created_at)
 					$max_date = $value->created_at;
 				if($min_date=="" || $min_date>$value->created_at)

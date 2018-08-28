@@ -37,15 +37,27 @@
 												<td>已取消</td>
 											</tr>
 											<? 
-											$sum = array("apply"=>0,"success"=>0,"faile"=>0);
+											$sum 		= array("apply"=>0,"success"=>0,"faile"=>0);
+											$platform 	= array("apply"=>0,"success"=>0,"faile"=>0);
+											if(!empty($list["platform"])){
+												$platform_num = array();
+												foreach($target_status as $k => $v){
+													$platform_num[$k] = isset($list["platform"][$k])&&$list["platform"][$k]?count($list["platform"][$k]):0;
+												}
+												$platform["apply"] 		= $platform_num[0]+$platform_num[1]+$platform_num[2];
+												$platform["success"] 	= $platform_num[3]+$platform_num[4]+$platform_num[5]+$platform_num[10];
+												$platform["faile"] 		= $platform_num[8]+$platform_num[9];
+											}
+											
 											if(!empty($list["sales"])){
 												foreach($list["sales"] as $key => $value){
 													$num = array();
 													foreach($target_status as $k => $v){
 														$num[$k] = isset($value[$k])&&$value[$k]?count($value[$k]):0;
 													}
+													
 													$apply 		= $num[0]+$num[1]+$num[2];
-													$success 	= $num[3]+$num[4]+$num[5]+$num[10];;
+													$success 	= $num[3]+$num[4]+$num[5]+$num[10];
 													$faile 		= $num[8]+$num[9];
 													$sum["apply"] 	+= $apply;
 													$sum["success"] += $success;
@@ -67,6 +79,12 @@
 												<td><?=$sum["apply"]; ?></td>
 												<td><?=$sum["success"]; ?></td>
 												<td><?=$sum["faile"]; ?></td>
+											</tr>
+											<tr style="background-color:#f5f5f5;">
+												<td>無邀請碼</td>
+												<td><?=$platform["apply"]; ?></td>
+												<td><?=$platform["success"]; ?></td>
+												<td><?=$platform["faile"]; ?></td>
 											</tr>
 											</tbody>
 										</table>

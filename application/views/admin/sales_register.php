@@ -61,6 +61,16 @@
 												<td><?=$sum["fb"]; ?></td>
 												<td><?=$sum["school"]; ?></td>
 											</tr>
+											<tr style="background-color:#f5f5f5;">
+												<td>無邀請碼</td>
+												<td>
+													<?=$list["platform"]["count"]?$list["platform"]["count"]:0; ?>
+												</td>
+												<td><?=$list["platform"]["fb"]?$list["platform"]["fb"]:0; ?></td>
+												<td>
+													<?=$list["platform"]["school"]?$list["platform"]["school"]:0; ?>
+												</td>
+											</tr>
 											</tbody>
 										</table>
 									</div>
