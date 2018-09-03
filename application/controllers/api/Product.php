@@ -389,8 +389,17 @@ class Product extends REST_Controller {
 				$param[$field] = intval($input[$field]);
 			}
 		}
+		
 		$param["promote_code"] 	= isset($input['promote_code'])?$input['promote_code']:"";
-		$product 				= $this->product_model->get($input['product_id']);
+
+		//邀請碼保留月
+		$limit_date 	= date("Y-m-d",strtotime("-".TARGET_PROMOTE_LIMIT." month"));
+		$create_date 	= date("Y-m-d",$this->user_info->created_at);
+		if($limit_date <= $create_date && $this->user_info->promote_code!=""){
+			$param["promote_code"] = $this->user_info->promote_code;
+		}
+		
+		$product 		= $this->product_model->get($input['product_id']);
 		if($product && $product->status == 1 ){
 			$product->instalment 		= json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){

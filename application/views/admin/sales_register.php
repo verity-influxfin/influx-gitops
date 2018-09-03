@@ -40,18 +40,18 @@
 											$sum = array("count"=>0,"school"=>0,"fb"=>0);
 											if(!empty($list["sales"])){
 												foreach($list["sales"] as $key => $value){
-													$sum["count"] 	+= $value["count"];
-													$sum["school"] += $value["school"];
-													$sum["fb"] 	+= $value["fb"];
+													$sum["count"] 	+= isset($value["count"])&&$value["count"]?$value["count"]:0;
+													$sum["school"] += isset($value["school"])&&$value["school"]?$value["school"]:0;
+													$sum["fb"] 	+= isset($value["fb"])&&$value["fb"]?$value["fb"]:0;
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$value["count"]?$value["count"]:0; ?></p>
+														<p class="form-control-static"><?=isset($value["count"])&&$value["count"]?$value["count"]:0; ?></p>
 													</td>
-													<td><p class="form-control-static"><?=$value["fb"]?$value["fb"]:0; ?></p></td>
+													<td><p class="form-control-static"><?=isset($value["fb"])&&$value["fb"]?$value["fb"]:0; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$value["school"]?$value["school"]:0; ?></p>
+														<p class="form-control-static"><?=isset($value["school"])&&$value["school"]?$value["school"]:0; ?></p>
 													</td>
 												</tr>
 											<? }} ?>
