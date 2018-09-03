@@ -48,6 +48,18 @@
 												<? }} ?>
                                             </select>
                                         </div>
+										<div class="form-group">
+                                            <label>學校</label>
+                                            <select class="form-control" id="school" name="school">
+												<option value="" >無</option>
+												<? 
+												if(isset($school_list) && !empty($school_list)){
+													foreach($school_list as $key => $value){
+												?>
+                                                <option value="<?=$value; ?>" <?=isset($data->school)&&$data->school==$value?"selected":"";?>><?=$value; ?></option>
+												<? }} ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group">
                                             <label>公司統編</label>
 											<?

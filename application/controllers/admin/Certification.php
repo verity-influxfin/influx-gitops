@@ -145,6 +145,9 @@ class Certification extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_certification_model->get($id);
 				if($info){
+					$certification 						= $this->certification_model->get($info->certification_id);
+					$user_meta_fields					= $this->config->item('user_meta_fields');
+					$page_data['user_meta_fields'] 		= isset($user_meta_fields[$certification->alias])?$user_meta_fields[$certification->alias]:array();
 					$page_data['certification_list'] 	= $this->certification_model->get_name_list();
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
@@ -173,6 +176,13 @@ class Certification extends MY_Admin_Controller {
 						if($certification->alias=="debit_card" && $info->investor==1){
 							alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
 						}else{
+							$this->load->model('log/log_usercertification_model');
+							$this->log_usercertification_model->insert(array(
+								'user_certification_id'	=> $post['id'],
+								'status'				=> $post['status'],
+								'change_admin'			=> $this->login_info->id,
+							));
+							
 							if($post['status']=="1"){
 								$this->load->library('Certification_lib');
 								$rs = $this->certification_lib->set_success($post['id']);
@@ -240,53 +250,23 @@ class Certification extends MY_Admin_Controller {
 		$page_data 	= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
-		if(empty($post)){
-			$id = isset($get["id"])?intval($get["id"]):0;
-			if($id){
-				$info = $this->user_bankaccount_model->get($id);
-				if($info){
-					$page_data['data'] 					= $info;
-					$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
-					$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
-					
-					$this->load->view('admin/_header');
-					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/user_bankaccount_edit',$page_data);
-					$this->load->view('admin/_footer');
-				}else{
-					alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
-				}
+		$id = isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->user_bankaccount_model->get($id);
+			if($info){
+				$page_data['data'] 					= $info;
+				$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
+				$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
+				
+				$this->load->view('admin/_header');
+				$this->load->view('admin/_title',$this->menu);
+				$this->load->view('admin/user_bankaccount_edit',$page_data);
+				$this->load->view('admin/_footer');
 			}else{
 				alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
 			}
 		}else{
-			if(!empty($post['id'])){
-				$info = $this->user_bankaccount_model->get($post['id']);
-				if($info){
-					if($info->status=="1"){
-						alert("更新成功",admin_url('certification/user_bankaccount_list'));
-					}else{
-						
-						if($post['status']=="1"){
-							$this->load->library('Certification_lib');
-							$rs = $this->certification_lib->set_success($post['id']);
-						}else{
-							$rs = $this->user_bankaccount_model->update($post['id'],array("status"=>intval($post['status'])));
-						}
-
-						if($rs===true){
-							alert("更新成功",admin_url('certification/user_bankaccount_list'));
-						}else{
-							alert("更新失敗，請洽工程師",admin_url('certification/user_bankaccount_list'));
-						}
-					}
-				}else{
-					alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
-				}
-			}else{
-				alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
-			}
+			alert("ERROR , id isn't exist",admin_url('certification/user_bankaccount_list'));
 		}
 	}
 	
@@ -296,6 +276,12 @@ class Certification extends MY_Admin_Controller {
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
 			if($info){
+				$this->load->model('log/log_usercertification_model');
+				$this->log_usercertification_model->insert(array(
+					'user_certification_id'	=> $info->user_certification_id,
+					'status'				=> 1,
+					'change_admin'			=> $this->login_info->id,
+				));
 				$this->load->library('Certification_lib');
 				$this->certification_lib->set_success($info->user_certification_id);
 				$this->user_bankaccount_model->update($id,array("verify"=>1));
@@ -314,6 +300,12 @@ class Certification extends MY_Admin_Controller {
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
 			if($info){
+				$this->load->model('log/log_usercertification_model');
+				$this->log_usercertification_model->insert(array(
+					'user_certification_id'	=> $info->user_certification_id,
+					'status'				=> 2,
+					'change_admin'			=> $this->login_info->id,
+				));
 				$this->user_certification_model->update($info->user_certification_id,array("status"=>2));
 				$this->user_bankaccount_model->update($id,array("verify"=>4,"status"=>0));
 				/*if($info->investor==0){

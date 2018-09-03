@@ -48,7 +48,7 @@
 												$platform["success"] 	= $platform_num[3]+$platform_num[4]+$platform_num[5]+$platform_num[10];
 												$platform["faile"] 		= $platform_num[8]+$platform_num[9];
 											}
-											
+
 											if(!empty($list["sales"])){
 												foreach($list["sales"] as $key => $value){
 													$num = array();

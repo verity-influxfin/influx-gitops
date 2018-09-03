@@ -583,7 +583,7 @@ class Target_lib{
 
 	public function insert_change_log($target_id,$update_param,$user_id=0,$admin_id=0){
 		if($target_id){
-			$this->CI->load->model('log/log_targetschange_mode');
+			$this->CI->load->model('log/Log_targetschange_model');
 			$param		= array(
 				"target_id"		=> $target_id,
 				"change_user"	=> $user_id,
@@ -595,7 +595,7 @@ class Target_lib{
 					$param[$field] = $update_param[$field];
 				}
 			}
-			$rs = $this->CI->log_targetschange_mode->insert($param);
+			$rs = $this->CI->Log_targetschange_model->insert($param);
 			return $rs;
 		}
 		return false;

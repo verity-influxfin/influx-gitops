@@ -21,6 +21,7 @@
                                             <th>NO.</th>
                                             <th>類別</th>
                                             <th>上層公司名稱</th>
+                                            <th>學校</th>
                                             <th>公司名稱</th>
                                             <th>負責人姓名</th>
                                             <th>QR code</th>
@@ -40,6 +41,7 @@
                                             <td><?=isset($value->id)?$value->id:"" ?></td>
 											<td><?=$value->type&&isset($partner_type[$value->type])?$partner_type[$value->type]:"" ?></td> 
 											<td><?=$value->parent_id&&isset($partner_name[$value->parent_id])?$partner_name[$value->parent_id]:"" ?></td>
+                                            <td><?=isset($value->school)?$value->school:"" ?></td>
                                             <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->name)?$value->name:"" ?></td>
                                             <td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" ><?=$value->my_promote_code ?></a></td>

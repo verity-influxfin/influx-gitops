@@ -1,8 +1,8 @@
 <?php
 
-class Log_targetschange_mode extends MY_Model
+class Log_usercertification_model extends MY_Model
 {
-	public $_table 			= 'targets_change_log';
+	public $_table 			= 'user_certification_log';
 	public $before_create 	= array( 'before_data_c' );
 	
 	public function __construct()

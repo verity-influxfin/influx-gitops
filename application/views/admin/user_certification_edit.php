@@ -19,7 +19,9 @@
                                     <form role="form" method="post"> 
                                         <div class="form-group">
                                             <label>會員 ID</label>
-											<p><?=isset($data->user_id)?$data->user_id:"";?></p>
+											<a class="fancyframe" href="<?=admin_url('User/display?id='.$data->user_id) ?>" >
+												<p><?=isset($data->user_id)?$data->user_id:"" ?></p>
+											</a>
 											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                         </div>
 										<div class="form-group">
@@ -31,7 +33,7 @@
 												foreach($content as $key => $value){
 										?>
 											<div class="form-group">
-												<label><?=$key; ?></label>
+												<label><?=isset($user_meta_fields[$key])?$user_meta_fields[$key]:$key; ?></label>
 												<? if(substr($key,-5,5)=="image"){?>
 												<a href="<?=$value?>" data-fancybox="images"><img src="<?=$value?>" style='width:30%;max-width:400px'></a>
 												<? }else{?>

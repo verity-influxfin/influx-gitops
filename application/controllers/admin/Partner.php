@@ -15,7 +15,7 @@ class Partner extends MY_Admin_Controller {
 	
 	public function index(){
 		$page_data 	= array();
-		$list 		= $this->partner_model->order_by("parent_id","ASC")->get_all();
+		$list 		= $this->partner_model->order_by("parent_id ASC","school ASC")->get_all();
 		$name_list	= array();
 		if(!empty($list)){
 			foreach($list as $key => $value){
@@ -41,11 +41,14 @@ class Partner extends MY_Admin_Controller {
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
+		$school_list 	= file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school.json");
+		$school_list 	= json_decode($school_list,true);
 		$page_data 	= array(
 			"type"			=> "add",
 			"partner_name"	=> $partner_name,
 			"partner_type"	=> $partner_type,
-			"admins_name"	=> $admins_name
+			"admins_name"	=> $admins_name,
+			"school_list"	=> $school_list,
 		);
 		$data		= array();
 		$post 		= $this->input->post(NULL, TRUE);
@@ -63,7 +66,7 @@ class Partner extends MY_Admin_Controller {
 					$data[$field] = $post[$field];
 				}
 			}
-			$fields = ['type', 'tax_id', 'admin_id' , 'parent_id'];
+			$fields = ['type', 'tax_id', 'admin_id' , 'parent_id','school'];
 			foreach ($fields as $field) {
 				if (isset($post[$field])) {
 					$data[$field] = $post[$field];
@@ -85,11 +88,14 @@ class Partner extends MY_Admin_Controller {
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
+		$school_list 	= file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school.json");
+		$school_list 	= json_decode($school_list,true);
 		$page_data 	= array(
 			"type"			=> "edit",
 			"partner_name"	=> $partner_name,
 			"partner_type"	=> $partner_type,
-			"admins_name"	=> $admins_name
+			"admins_name"	=> $admins_name,
+			"school_list"	=> $school_list,
 		);
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
@@ -115,7 +121,7 @@ class Partner extends MY_Admin_Controller {
 			}
 		}else{
 			if(!empty($post['id'])){
-				$fields = ['admin_id', 'type', 'parent_id', 'company', 'tax_id', 'name', 'title', 'phone', 'email', 'password'];
+				$fields = ['admin_id', 'type', 'parent_id', 'company', 'tax_id', 'name', 'title', 'phone', 'email', 'password','school'];
 				foreach ($fields as $field) {
 					if (isset($post[$field])) {
 						$data[$field] = $post[$field];

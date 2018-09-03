@@ -53,7 +53,7 @@ $config['admin_menu'] = array(
 );
 
 if(ENVIRONMENT=="development"){
-	$config['admin_email'] = array('news@influxfin.com','toy@influxfin.com');
+	$config['admin_email'] = array('news@influxfin.com');
 }else{
 	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');
 } 

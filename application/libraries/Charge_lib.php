@@ -19,7 +19,6 @@ class Charge_lib{
 			"target_id"		=> $target->id,
 			"limit_date <=" => $date,
 			"status"		=> 1,
-			//"user_from"		=> $target->user_id
 		));
 		if($transaction){
 			$amount			= 0;
@@ -71,6 +70,36 @@ class Charge_lib{
 									case SOURCE_AR_INTEREST: 
 										$transaction_param[] = array(
 											"source"			=> SOURCE_INTEREST,
+											"entering_date"		=> $date,
+											"user_from"			=> $value->user_from,
+											"bank_account_from"	=> $value->bank_account_from,
+											"amount"			=> intval($value->amount),
+											"target_id"			=> $value->target_id,
+											"investment_id"		=> $value->investment_id,
+											"instalment_no"		=> $value->instalment_no,
+											"user_to"			=> $value->user_to,
+											"bank_account_to"	=> $value->bank_account_to,
+											"status"			=> 2
+										);
+										break;
+									case SOURCE_AR_DAMAGE: 
+										$transaction_param[] = array(
+											"source"			=> SOURCE_DAMAGE,
+											"entering_date"		=> $date,
+											"user_from"			=> $value->user_from,
+											"bank_account_from"	=> $value->bank_account_from,
+											"amount"			=> intval($value->amount),
+											"target_id"			=> $value->target_id,
+											"investment_id"		=> $value->investment_id,
+											"instalment_no"		=> $value->instalment_no,
+											"user_to"			=> $value->user_to,
+											"bank_account_to"	=> $value->bank_account_to,
+											"status"			=> 2
+										);
+										break;
+									case SOURCE_AR_DELAYINTEREST: 
+										$transaction_param[] = array(
+											"source"			=> SOURCE_DELAYINTEREST,
 											"entering_date"		=> $date,
 											"user_from"			=> $value->user_from,
 											"bank_account_from"	=> $value->bank_account_from,
@@ -342,7 +371,6 @@ class Charge_lib{
 		$ids		= array();
 		$targets 	= $this->CI->target_model->get_many_by(array(
 			"status"			=> 5,//還款中
-			"delay_days <="		=> 7,//未逾期
 			"sub_status !="		=> 3,
 			"script_status"		=> 0
 		));

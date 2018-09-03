@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 	
-	protected $edit_method = array("verify_success","verify_failed","loan_success","loan_failed");
+	protected $edit_method = array("edit","verify_success","verify_failed","loan_success","loan_failed");
 	
 	public function __construct() {
 		parent::__construct();

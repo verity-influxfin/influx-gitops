@@ -126,6 +126,7 @@ class Sales extends MY_Admin_Controller {
 				$user_list[$key]->fb 		= $value->nickname?1:0;
 			}
 			
+			$list = array("platform"=>array("count"=>0,"school"=>0,"fb"=>0));
 			foreach($user_list as $key => $value){
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
 					$list["partner"][$partner_qrcode[$value->promote_code]]["count"] ++;

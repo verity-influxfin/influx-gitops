@@ -383,6 +383,24 @@ class Certification_lib{
 					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
 				}
 			}else{
+				if($content["type"]=="facebook"){
+					$this->CI->load->library('facebook_lib'); 
+					$meta  = $this->CI->facebook_lib->get_user_meta($info->user_id);
+					if(!$meta){
+						$debug_token = $this->CI->facebook_lib->debug_token($content["access_token"]);
+						if($debug_token){
+							$facebook_info 		= $this->CI->facebook_lib->get_info($content["access_token"]);
+							if($facebook_info){
+								$user_id 		= $this->CI->facebook_lib->login($facebook_info);
+								if(!$user_id){
+									$this->CI->facebook_lib->bind_user($info->user_id,$facebook_info);
+									$this->CI->user_model->update($info->user_id,array("nickname"=>$facebook_info['name'],"picture"=>$facebook_info['picture']));
+								}
+							}
+						}
+					}
+				}
+			
 				foreach($data as $key => $value){
 					$param[] = array(
 						"user_id"		=> $info->user_id,
