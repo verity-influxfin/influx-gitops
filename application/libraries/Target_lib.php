@@ -561,6 +561,19 @@ class Target_lib{
 						if($finish){
 							$count++;
 							$this->approve_target($value);
+						}else{
+							//自動取消
+							$limit_date 	= date("Y-m-d",strtotime("-".TARGET_APPROVE_LIMIT." days"));
+							$create_date 	= date("Y-m-d",$value->created_at);
+							if($limit_date > $create_date){
+								$count++;
+								$param = array(
+									"status" => 9,
+								);
+								$this->CI->target_model->update($value->id,$param);
+								$this->insert_change_log($target_id,$param);
+								$this->CI->notification_lib->approve_cancel($value->user_id);
+							}
 						}
 						$this->CI->target_model->update($value->id,array("script_status"=>0));
 					}

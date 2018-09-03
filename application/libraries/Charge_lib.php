@@ -2,7 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Charge_lib{
+class Charge_lib
+{
 	
 	public function __construct()
     {

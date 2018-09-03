@@ -183,6 +183,7 @@ defined('PREPAYMENT_ALLOWANCE_FEES') 	OR define('PREPAYMENT_ALLOWANCE_FEES'	, 1)
 defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
 defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'					, 6); //登入密碼長度
+defined('TARGET_APPROVE_LIMIT')   	OR define('TARGET_APPROVE_LIMIT'	, 5); //申請期限
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
