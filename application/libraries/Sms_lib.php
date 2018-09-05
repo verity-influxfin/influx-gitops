@@ -68,6 +68,20 @@ class Sms_lib {
 		return false;
 	}
 	
+	public function notice_normal_target($user_id,$amount=0,$target_no="",$date=""){
+		if(!empty($user_id)){
+			$user_info 	= $this->CI->user_model->get($user_id);
+			if($user_info){
+				$phone 		= $user_info->phone;
+				$content 	= "親愛的用戶，您好！
+							您的借款 $target_no ，本期應還本息合計為 $amount 元，您的應還款日為 $date ，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可在我的手機ATM服務內點擊我的→我的還款查看，如已還款，請忽略本訊息。
+							敬告用戶，本公司不會以短信、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號，若有收到類似通知，謹防詐騙，或致電我司客服電話02-25079990舉報，感謝您的配合。";
+				return $this->send('target_notice',$user_id,$phone,$content);
+			}
+		}				
+		return false;
+	}
+	
 	public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){
 			$param = array(
@@ -103,9 +117,7 @@ class Sms_lib {
 	}
 
 	private function send($type,$user_id,$phone,$content){
-		if(is_development()){
-			return true;
-		}
+		
 		$data = array(
 			"UID"	=> EVER8D_UID,
 			"PWD"	=> EVER8D_PWD,
@@ -113,11 +125,16 @@ class Sms_lib {
 			"DEST"	=> $phone,
 		);
 		
-		$rs = curl_get("https://oms.every8d.com/API21/HTTP/sendSMS.ashx",$data);
-		if(substr($rs,0,1) == "-"){
-			$status = 0;
-		} else {
-			$status	= 1;
+		if(is_development()){
+			$rs 	= 1;
+			$status = 1;
+		}else{
+			$rs = curl_get("https://oms.every8d.com/API21/HTTP/sendSMS.ashx",$data);
+			if(substr($rs,0,1) == "-"){
+				$status = 0;
+			} else {
+				$status	= 1;
+			}
 		}
 		
 		$rs = $this->CI->log_sns_model->insert(array(

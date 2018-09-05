@@ -382,8 +382,7 @@ class Charge_lib
 			$update_rs 	= $this->CI->target_model->update_many($ids,array("script_status"=>$script));
 			if($update_rs){
 				foreach($targets as $key => $value){
-					dump($value);
-					$transaction = $this->CI->transaction_model->get_by(array(
+					$transaction = $this->CI->transaction_model->order_by("limit_date","ASC")->get_by(array(
 						"target_id"		=> $value->id,
 						"limit_date <=" => $date,
 						"status"		=> 1,
@@ -394,6 +393,8 @@ class Charge_lib
 						if($check){
 							$count++;
 						}
+					}else{
+						$this->notice_normal_target($value);
 					}
 					
 					$this->CI->target_model->update($value->id,array("script_status"=>0));
@@ -403,4 +404,44 @@ class Charge_lib
 		return $count;
 	}
 	
+	public function notice_normal_target($target){
+		$date			= get_entering_date();
+		$next_date		= "";
+		$range_days		= 0;
+		if($target->handle_date < $date){
+			$transaction = $this->CI->transaction_model->order_by("limit_date","ASC")->get_by(array(
+				"target_id"		=> $target->id,
+				"status"		=> 1,
+				"user_from"		=> $target->user_id
+			));
+			if($transaction){
+				$next_date 	= $transaction->limit_date;
+				$range_days	= get_range_days($date,$next_date);
+				$amount		= 0;
+				if(in_array($range_days,array(1,3,7,4))){
+					$transaction = $this->CI->transaction_model->get_many_by(array(
+						"target_id"		=> $target->id,
+						"status"		=> 1,
+						"user_from"		=> $target->user_id,
+						"limit_date"	=> $next_date,
+					));
+					foreach($transaction as $key => $value){
+						$amount += $value->amount;
+					}
+					if($amount){
+						$this->CI->load->library('Notification_lib');
+						$this->CI->notification_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						if($range_days==1){
+							$this->CI->load->library('sms_lib');
+							$this->CI->sms_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						}
+					}
+				}
+			}else{
+				$this->check_finish($target);
+			}
+			$this->CI->target_model->update($target->id,array("handle_date"=>$date));
+		}
+		return false;
+	}
 }

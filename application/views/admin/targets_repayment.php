@@ -12,6 +12,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+						<a href="<?=admin_url('target/repayment_export') ?>" target="_self"  class="btn btn-primary float-right" >匯出Excel</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
