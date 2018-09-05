@@ -358,5 +358,51 @@ class Target extends MY_Admin_Controller {
 		}
 		
 	}
+	
+	public function repayment(){
+		$page_data 					= array("type"=>"list");
+		$input 						= $this->input->get(NULL, TRUE);
+		$where						= array("status"=>5);
+		$page_data["product_name"]	= $this->product_model->get_name_list();
+		$list 						= $this->target_model->get_many_by($where);
+		$school_list 				= array();
+		$user_list 					= array();
+		$amortization_table 		= array();
+		if($list){
+			foreach($list as $key => $value){
+				$list[] = $value;
+				$user_list[] = $value->user_id;
+				$amortization_table = $this->target_lib->get_amortization_table($value);
+				$list[$key]->amortization_table = array(
+					"total_payment_m"	=> $amortization_table["list"][1]["total_payment"],
+					"total_payment"		=> $amortization_table["total_payment"],
+				);
+			}
+			
+			$this->load->model('user/user_meta_model');
+			$users_school 	= $this->user_meta_model->get_many_by(array(
+				"meta_key" 	=> array("school_name","school_department"),
+				"user_id" 	=> $user_list,
+			));
+			if($users_school){
+				foreach($users_school as $key => $value){
+					$school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+				}
+			}
+		}
+		$page_data['instalment_list']	= $this->config->item('instalment');
+		$page_data['repayment_type']	= $this->config->item('repayment_type');
+		$page_data['list'] 				= $list;
+		$page_data['delay_list'] 		= $this->target_model->delay_list;
+		$page_data['status_list'] 		= $this->target_model->status_list;
+		$page_data['school_list'] 		= $school_list;
+		$page_data['name_list'] 		= $this->admin_model->get_name_list();
+
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/targets_repayment',$page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

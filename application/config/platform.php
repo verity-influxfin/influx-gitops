@@ -8,6 +8,7 @@ $config['admin_menu'] = array(
 		"index"			=> "全部列表",
 		"waiting_verify"=> "待審批",
 		"waiting_loan"	=> "待放款",
+		"repayment"		=> "還款中",
 	),
 	"Passbook" 	=> array(
 		"parent_name"		=> "虛擬帳號管理",

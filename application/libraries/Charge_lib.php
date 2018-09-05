@@ -382,6 +382,7 @@ class Charge_lib
 			$update_rs 	= $this->CI->target_model->update_many($ids,array("script_status"=>$script));
 			if($update_rs){
 				foreach($targets as $key => $value){
+					dump($value);
 					$transaction = $this->CI->transaction_model->get_by(array(
 						"target_id"		=> $value->id,
 						"limit_date <=" => $date,

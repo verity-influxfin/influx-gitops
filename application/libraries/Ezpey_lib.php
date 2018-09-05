@@ -10,9 +10,9 @@ class Ezpey_lib{
     }
 	
 	public function test(){
-		$MerchantID = '31109025';
-		$hashkey 	= 'FmimazLJGdxHsFcoacjiekM1JGcxYuTf';
-		$hashiv		= 'C5DmFnFvj79MpXdG';
+		$MerchantID = EZPAY_ID;
+		$hashkey 	= EZPAY_KEY;
+		$hashiv		= EZPAY_IV;
 		$url 		= 'https://cinv.ezpay.com.tw/Api/invoice_issue';
 		$data		= array(
 			'RespondType'		=> 'JSON',

@@ -137,7 +137,7 @@ class Sales extends MY_Admin_Controller {
 				}
 
 				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
-					$list["sales"][$admins_qrcode[$value->promote_code]]["count"] ++;
+					@$list["sales"][$admins_qrcode[$value->promote_code]]["count"] ++;
 					if($value->school)
 						$list["sales"][$admins_qrcode[$value->promote_code]]["school"] ++;
 					if($value->fb)
