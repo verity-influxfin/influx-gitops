@@ -438,7 +438,7 @@ class Target extends MY_Admin_Controller {
 
 		header('Content-type:application/vnd.ms-excel');
 		header('Content-Disposition: attachment; filename=repayment_'.date("Ymd").'.xls');
-		$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>學校名稱</th><th>學校科系</th>
+		$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
                 <th>申請金額</th><th>核准金額</th><th>年化利率</th><th>期數</th>
                 <th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
                 <th>逾期狀況</th><th>狀態</th><th>申請日期</th></tr></thead><tbody>';
@@ -451,6 +451,7 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$value->target_no.'</td>';
 				$html .= '<td>'.$product_name[$value->product_id].'</td>';
 				$html .= '<td>'.$value->user_id.'</td>';
+				$html .= '<td>'.$value->credit_level.'</td>';
 				$html .= '<td>'.$school_list[$value->user_id]["school_name"].'</td>';
 				$html .= '<td>'.$school_list[$value->user_id]["school_department"].'</td>';
 				$html .= '<td>'.$value->amount.'</td>';

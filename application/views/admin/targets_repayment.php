@@ -23,6 +23,7 @@
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
+                                            <th>信用等級</th>
                                             <th>學校名稱</th>
                                             <th>學校科系</th>
                                             <th>申請金額</th>
@@ -50,6 +51,7 @@
                                             <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($value->credit_level)?$value->credit_level:"" ?></td>
 											<td><?=isset($school_list[$value->user_id]["school_name"])?$school_list[$value->user_id]["school_name"]:"" ?></td>
                                             <td><?=isset($school_list[$value->user_id]["school_department"])?$school_list[$value->user_id]["school_department"]:"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
