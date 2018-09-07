@@ -179,9 +179,10 @@ class Financial_lib{
 		return false;
 	}
 
-	public function get_liquidated_damages($remaining_principal=0){
+	public function get_liquidated_damages($remaining_principal=0,$damage_rate=0){
 		if($remaining_principal){
-			return intval(round($remaining_principal*LIQUIDATED_DAMAGES/100,0));
+			$damage_rate = $damage_rate?$damage_rate:LIQUIDATED_DAMAGES;
+			return intval(round($remaining_principal*$damage_rate/100,0));
 		}
 		return 0;
 	}

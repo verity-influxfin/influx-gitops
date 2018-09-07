@@ -240,7 +240,7 @@ class Charge_lib
 								$total_remaining_principal 	+= $value["remaining_principal"];
 								$user_to_info[$user_to]["interest_payable"] = intval(round( $value["remaining_principal"] * $target->interest_rate / 100 * $days / $year_days ,0));
 							}
-							$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal);
+							$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
 						}
 
 						$project_source = array(

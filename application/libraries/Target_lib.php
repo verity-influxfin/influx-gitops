@@ -376,6 +376,7 @@ class Target_lib{
 					case SOURCE_PREPAYMENT_DAMAGE:
 						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
 						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;
 					case SOURCE_AR_DAMAGE:
 						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
 						break;
@@ -501,7 +502,7 @@ class Target_lib{
 			
 			$schedule["XIRR"] = $this->CI->financial_lib->XIRR($xirr_value,$xirr_dates);
 		}
-		$schedule['list'] = $list;
+		$schedule["list"] = $list;
 		return $schedule;
 	}
 	

@@ -90,7 +90,7 @@ class Prepayment_lib{
 						$data["remaining_principal"] += $v;
 						$interest_payable[$k] 		 = round( $v * $target->interest_rate / 100 * $days / $year_days ,0);
 					}
-					$data["liquidated_damages"] 	= $this->CI->financial_lib->get_liquidated_damages($data["remaining_principal"]);
+					$data["liquidated_damages"] 	= $this->CI->financial_lib->get_liquidated_damages($data["remaining_principal"],$target->damage_rate);
 
 					foreach($interest_payable as $k => $v){
 						$data["interest_payable"] 	 += $v;

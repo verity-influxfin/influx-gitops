@@ -553,7 +553,7 @@ class Repayment extends REST_Controller {
 			$fees = array(
 				//"debt_transfer_fees" => DEBT_TRANSFER_FEES,
 				"sub_loan_fees"		 => SUB_LOAN_FEES,
-				"liquidated_damages" => LIQUIDATED_DAMAGES
+				"liquidated_damages" => $target->damage_rate,
 			);
 			
 			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target->id,"user_from"=>$user_id,"status"=>array(1,2)));

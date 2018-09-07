@@ -378,7 +378,7 @@ class Product extends REST_Controller {
     {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
-		$param		= array("user_id"=> $user_id);
+		$param		= array( "user_id" => $user_id, "damage_rate" => LIQUIDATED_DAMAGES );
 		
 		//必填欄位
 		$fields 	= ['product_id','amount','instalment'];
