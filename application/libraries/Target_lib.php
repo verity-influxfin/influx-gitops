@@ -265,7 +265,6 @@ class Target_lib{
 								"invested"		=> 0,
 							);
 							$this->CI->target_model->update($target->id,$target_update_param);
-							$this->insert_change_log($target->id,$target_update_param);
 						}
 						foreach($investments as $key => $value){
 							$this->CI->investment_model->update($value->id,array("status"=>9));
@@ -315,7 +314,6 @@ class Target_lib{
 							"invested"		=> 0,
 						);
 						$this->CI->target_model->update($target->id,$target_update_param);
-						$this->insert_change_log($target->id,$target_update_param);
 					}
 				}
 				return true;

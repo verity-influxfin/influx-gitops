@@ -163,7 +163,7 @@ class Payment_lib{
 				return true;
 			}
 		}
-		$this->CI->payment_model->update($value->id,array("status"=>3));
+		$this->CI->payment_model->update($value->id,array("status"=>5));
 		return false;
 	}
 	

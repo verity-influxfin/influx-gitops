@@ -45,7 +45,7 @@ class Charge_lib
 					$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
 					$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 					$total = $funds["total"] - $funds["frozen"];
-					if($total > $amount){
+					if($total >= $amount){
 						$transaction_param 	= array();
 						$pass_book			= array();
 						foreach($transaction as $key => $value){
@@ -145,9 +145,13 @@ class Charge_lib
 								}
 							}
 						}
+						
+						$this->check_finish($target);
+					}else{
+						$this->notice_delay_target($target);
 					}
+					
 					$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>1));
-					$this->check_finish($target);
 					return true;
 				}
 			}
@@ -441,6 +445,57 @@ class Charge_lib
 				$this->check_finish($target);
 			}
 			$this->CI->target_model->update($target->id,array("handle_date"=>$date));
+		}
+		return false;
+	}
+	
+	public function notice_delay_target($target){
+		$date		= get_entering_date();
+		$next_date	= "";
+		$range_days	= 0;
+		$amount		= 0;
+		$last_date	= "";
+		$delay_days	= 0;
+		$update_data= array( "handle_date" => $date );
+		if($target->handle_date < $date){
+			$transaction = $this->CI->transaction_model->order_by("limit_date","ASC")->get_many_by(array(
+				"target_id"		=> $target->id,
+				"status"		=> 1,
+				"limit_date <=" => $date,
+				"user_from"		=> $target->user_id
+			));
+			if($transaction){
+				foreach($transaction as $key => $value){
+					$amount += $value->amount;
+					if($last_date == "" || $last_date > $value->limit_date){
+						$last_date = $value->limit_date;
+					}
+				}
+				
+				$delay_days	= get_range_days($last_date,$date);
+				if( $delay_days > 0 ){
+
+					/*if($amount){
+						$this->CI->load->library('Notification_lib');
+						$this->CI->notification_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						if($range_days==1){
+							$this->CI->load->library('sms_lib');
+							$this->CI->sms_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						}
+					}*/
+					$update_data = array(
+						"delay"		  => 1,
+						"delay_days"  => $delay_days,
+						"handle_date" => $date
+					);
+					if($target->delay==0){
+						$this->CI->load->library('Target_lib');
+						$this->CI->target_lib->insert_change_log($target->id,$update_data,0,0);
+					}
+				}
+			}
+			
+			$this->CI->target_model->update($target->id,$update_data);
 		}
 		return false;
 	}
