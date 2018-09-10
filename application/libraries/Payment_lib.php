@@ -156,6 +156,13 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				}
+			}else{
+				if($virtual_account){
+					if(!investor_virtual_account($value->virtual_account)){
+						$this->CI->transaction_lib->recharge($value->id);
+						return true;
+					}
+				}
 			}
 		}else{
 			if(in_array($value->amount,array(1,30)) && in_array($value->tx_spec,array('匯出退匯','錯誤更正','沖ＦＸＭ'))){

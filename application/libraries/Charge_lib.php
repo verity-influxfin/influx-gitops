@@ -24,6 +24,7 @@ class Charge_lib
 		if($transaction){
 			$amount			= 0;
 			$limit_date		= "";
+			$user_to		= array();
 			$source_list 	= array(
 				SOURCE_AR_PRINCIPAL,
 				SOURCE_AR_INTEREST,
@@ -33,8 +34,13 @@ class Charge_lib
 			foreach($transaction as $key => $value){
 				if(in_array($value->source,$source_list) && $value->user_from==$target->user_id){
 					$amount += $value->amount;
+					if(!isset($user_to[$value->user_to])){
+						$user_to[$value->user_to] = 0;
+					}
+					$user_to[$value->user_to] += $value->amount;
 				}
 			}
+
 			if($amount>0){
 				$virtual_account = $this->CI->virtual_account_model->get_by(array(
 					"status"			=> 1,
@@ -143,9 +149,25 @@ class Charge_lib
 								foreach($pass_book as $key => $value){
 									$this->CI->passbook_lib->enter_account($value);
 								}
+								
+								if($target->delay){
+									$update_data = array(
+										"delay"		  => 0,
+										"delay_days"  => 0
+									);
+
+									$this->CI->load->library('Target_lib');
+									$this->CI->target_lib->insert_change_log($target->id,$update_data,0,0);
+									$this->CI->target_model->update($target->id,$update_data);
+								}
+								
+								$this->CI->load->library('Notification_lib');
+								$this->CI->notification_lib->repay_success($target->user_id,0,$target->target_no,$amount);
+								foreach($user_to as $user_to_id => $user_to_amount){
+									$this->CI->notification_lib->repay_success($user_to_id,1,$target->target_no,$user_to_amount);
+								}
 							}
 						}
-						
 						$this->check_finish($target);
 					}else{
 						$this->notice_delay_target($target);
@@ -363,6 +385,9 @@ class Charge_lib
 				$this->CI->target_model->update($target->id,array("status"=>10));
 				$this->CI->load->model('loan/investment_model');
 				$this->CI->investment_model->update_by(array("target_id" => $target->id,"status"=> 3),array("status"=>10));
+				$this->CI->load->library('Target_lib');
+				$this->CI->target_lib->insert_change_log($target->id,array("status"=>10),0,0);
+
 				return true;
 			}
 		}
@@ -475,14 +500,16 @@ class Charge_lib
 				$delay_days	= get_range_days($last_date,$date);
 				if( $delay_days > 0 ){
 
-					/*if($amount){
+					if($amount){
 						$this->CI->load->library('Notification_lib');
-						$this->CI->notification_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
-						if($range_days==1){
-							$this->CI->load->library('sms_lib');
-							$this->CI->sms_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						$this->CI->load->library('sms_lib');
+						
+						if($delay_days > 0 && $delay_days <=3){
+							$this->CI->notification_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
+							$this->CI->sms_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
 						}
-					}*/
+					}
+					
 					$update_data = array(
 						"delay"		  => 1,
 						"delay_days"  => $delay_days,
