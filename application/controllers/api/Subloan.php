@@ -462,7 +462,6 @@ class Subloan extends REST_Controller {
 
 			$amortization_schedule = array();
 			if($new_target->status==1){
-				$this->load->library('Financial_lib');
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target->instalment,$new_target->interest_rate,$date="",$new_target->repayment);
 			}
 			

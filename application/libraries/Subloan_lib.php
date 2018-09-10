@@ -9,7 +9,6 @@ class Subloan_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('loan/subloan_model');
-		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('credit_lib');
     }
 

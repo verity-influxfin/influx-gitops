@@ -123,10 +123,10 @@ class Cron extends CI_Controller {
 	
 	public function prepayment_targets()
 	{
-		$this->load->library('Prepayment_lib'); 
+		$this->load->library('Charge_lib'); 
 		$script  	= 7;
 		$start_time = time();
-		$count 		= $this->prepayment_lib->script_prepayment_targets();
+		$count 		= $this->charge_lib->script_prepayment_targets();
 		$num		= $count?intval($count):0;
 		$end_time 	= time();
 		$data		= array(

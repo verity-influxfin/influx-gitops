@@ -12,7 +12,6 @@ class Transaction_lib{
 		$this->CI->load->model('loan/investment_model');
 		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->model('user/virtual_account_model');
-		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Passbook_lib');
     }
 
@@ -516,7 +515,7 @@ class Transaction_lib{
 													"entering_date"		=> $date,
 													"user_from"			=> $transfer_investments->user_id,
 													"bank_account_from"	=> $virtual_account->virtual_account,
-													"amount"			=> intval($v->amount - $v->charged_amount),
+													"amount"			=> intval($v->amount),
 													"target_id"			=> $v->target_id,
 													"investment_id"		=> $new_investment,
 													"instalment_no"		=> $v->instalment_no,
@@ -530,7 +529,7 @@ class Transaction_lib{
 													"entering_date"		=> $date,
 													"user_from"			=> $v->user_from,
 													"bank_account_from"	=> $v->bank_account_from,
-													"amount"			=> intval($v->amount - $v->charged_amount),
+													"amount"			=> intval($v->amount),
 													"target_id"			=> $v->target_id,
 													"investment_id"		=> $new_investment,
 													"instalment_no"		=> $v->instalment_no,
@@ -540,11 +539,7 @@ class Transaction_lib{
 												);
 											}
 											
-											if($v->charged_amount>0){
-												$this->CI->transaction_model->update($v->id,array("status"=>2));
-											}else{
-												$this->CI->transaction_model->update($v->id,array("status"=>0));
-											}
+											$this->CI->transaction_model->update($v->id,array("status"=>0));
 										}
 									}
 								}

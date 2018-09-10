@@ -31,6 +31,13 @@ class Charge_lib
 				SOURCE_AR_DAMAGE,
 				SOURCE_AR_DELAYINTEREST
 			);
+			$charge_source_list = array(
+				SOURCE_AR_PRINCIPAL		=> SOURCE_PRINCIPAL,
+				SOURCE_AR_INTEREST		=> SOURCE_INTEREST,
+				SOURCE_AR_DAMAGE		=> SOURCE_DAMAGE,
+				SOURCE_AR_DELAYINTEREST	=> SOURCE_DELAYINTEREST,
+				SOURCE_AR_FEES			=> SOURCE_FEES,
+			);
 			foreach($transaction as $key => $value){
 				if(in_array($value->source,$source_list) && $value->user_from==$target->user_id){
 					$amount += $value->amount;
@@ -55,88 +62,23 @@ class Charge_lib
 						$transaction_param 	= array();
 						$pass_book			= array();
 						foreach($transaction as $key => $value){
-							$rs = $this->CI->transaction_model->update($value->id,array("status"=>2,"charged_amount"=>$value->amount));
+							$rs = $this->CI->transaction_model->update($value->id,array("status"=>2));
 							if($rs){
-								$pass_book[] = $value->id;
-								switch($value->source){
-									case SOURCE_AR_PRINCIPAL: 
-										$transaction_param[] = array(
-											"source"			=> SOURCE_PRINCIPAL,
-											"entering_date"		=> $date,
-											"user_from"			=> $value->user_from,
-											"bank_account_from"	=> $value->bank_account_from,
-											"amount"			=> intval($value->amount),
-											"target_id"			=> $value->target_id,
-											"investment_id"		=> $value->investment_id,
-											"instalment_no"		=> $value->instalment_no,
-											"user_to"			=> $value->user_to,
-											"bank_account_to"	=> $value->bank_account_to,
-											"status"			=> 2
-										);
-										break;
-									case SOURCE_AR_INTEREST: 
-										$transaction_param[] = array(
-											"source"			=> SOURCE_INTEREST,
-											"entering_date"		=> $date,
-											"user_from"			=> $value->user_from,
-											"bank_account_from"	=> $value->bank_account_from,
-											"amount"			=> intval($value->amount),
-											"target_id"			=> $value->target_id,
-											"investment_id"		=> $value->investment_id,
-											"instalment_no"		=> $value->instalment_no,
-											"user_to"			=> $value->user_to,
-											"bank_account_to"	=> $value->bank_account_to,
-											"status"			=> 2
-										);
-										break;
-									case SOURCE_AR_DAMAGE: 
-										$transaction_param[] = array(
-											"source"			=> SOURCE_DAMAGE,
-											"entering_date"		=> $date,
-											"user_from"			=> $value->user_from,
-											"bank_account_from"	=> $value->bank_account_from,
-											"amount"			=> intval($value->amount),
-											"target_id"			=> $value->target_id,
-											"investment_id"		=> $value->investment_id,
-											"instalment_no"		=> $value->instalment_no,
-											"user_to"			=> $value->user_to,
-											"bank_account_to"	=> $value->bank_account_to,
-											"status"			=> 2
-										);
-										break;
-									case SOURCE_AR_DELAYINTEREST: 
-										$transaction_param[] = array(
-											"source"			=> SOURCE_DELAYINTEREST,
-											"entering_date"		=> $date,
-											"user_from"			=> $value->user_from,
-											"bank_account_from"	=> $value->bank_account_from,
-											"amount"			=> intval($value->amount),
-											"target_id"			=> $value->target_id,
-											"investment_id"		=> $value->investment_id,
-											"instalment_no"		=> $value->instalment_no,
-											"user_to"			=> $value->user_to,
-											"bank_account_to"	=> $value->bank_account_to,
-											"status"			=> 2
-										);
-										break;
-									case SOURCE_AR_FEES: 
-										$transaction_param[] = array(
-											"source"			=> SOURCE_FEES,
-											"entering_date"		=> $date,
-											"user_from"			=> $value->user_from,
-											"bank_account_from"	=> $value->bank_account_from,
-											"amount"			=> intval($value->amount),
-											"target_id"			=> $value->target_id,
-											"investment_id"		=> $value->investment_id,
-											"instalment_no"		=> $value->instalment_no,
-											"user_to"			=> $value->user_to,
-											"bank_account_to"	=> $value->bank_account_to,
-											"status"			=> 2
-										);
-										break;
-									default:
-										break;
-								}
+								$charge_source 			= $charge_source_list[$value->source];
+								$pass_book[] 			= $value->id;
+								$transaction_param[] 	= array(
+									"source"			=> $charge_source,
+									"entering_date"		=> $date,
+									"user_from"			=> $value->user_from,
+									"bank_account_from"	=> $value->bank_account_from,
+									"amount"			=> intval($value->amount),
+									"target_id"			=> $value->target_id,
+									"investment_id"		=> $value->investment_id,
+									"instalment_no"		=> $value->instalment_no,
+									"user_to"			=> $value->user_to,
+									"bank_account_to"	=> $value->bank_account_to,
+									"status"			=> 2
+								);
 							}
 						}
 						if($transaction_param){
@@ -228,49 +170,27 @@ class Charge_lib
 							case SOURCE_INTEREST: 
 								$user_to_info[$value->user_to]["interest_payable"] 		-= $value->amount;
 								break;
-							case SOURCE_AR_DAMAGE:
-								if($value->status==1){
-									$liquidated_damages = intval($value->amount) - intval($value->charged_amount);
-								}
-								break;
-							case SOURCE_AR_DELAYINTEREST: 
-								$user_to_info[$value->user_to]["delay_interest_payable"]	+= $value->amount;
-								break;
-							case SOURCE_DELAYINTEREST:
-								$user_to_info[$value->user_to]["delay_interest_payable"]	-= $value->amount;
-								break;
 							default:
 								break;
 						}
 						if($value->status==1){
-							if(intval($value->charged_amount)>0){
-								$this->CI->transaction_model->update($value->id,array("status"=>2));
-							}else{
-								$this->CI->transaction_model->update($value->id,array("status"=>0));
-							}
+							$this->CI->transaction_model->update($value->id,array("status"=>0));
 						}
 					}
 					
 					if($user_to_info){
-						if($target->delay_days > GRACE_PERIOD){
-							$days  = get_range_days($date,$settlement_date);
-							foreach($user_to_info as $user_to => $value){
-								$user_to_info[$user_to]["delay_interest_payable"] += $this->CI->financial_lib->get_delay_interest($value["remaining_principal"],$target->delay_days+$days);
-							}
-						}else{
-							$days  		= get_range_days($last_settlement_date,$settlement_date);
-							$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
-							$year_days 	= $leap_year?366:365;//今年日數
-							$total_remaining_principal = 0;
-							foreach($user_to_info as $user_to => $value){
-								$total_remaining_principal 	+= $value["remaining_principal"];
-								$user_to_info[$user_to]["interest_payable"] = intval(round( $value["remaining_principal"] * $target->interest_rate / 100 * $days / $year_days ,0));
-							}
-							$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
+						$days  		= get_range_days($last_settlement_date,$settlement_date);
+						$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
+						$year_days 	= $leap_year?366:365;//今年日數
+						$total_remaining_principal = 0;
+						foreach($user_to_info as $user_to => $value){
+							$total_remaining_principal 	+= $value["remaining_principal"];
+							$user_to_info[$user_to]["interest_payable"] = intval(round( $value["remaining_principal"] * $target->interest_rate / 100 * $days / $year_days ,0));
 						}
+						$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
+
 
 						$project_source = array(
-							"delay_interest_payable"	=> array(SOURCE_AR_DELAYINTEREST,SOURCE_DELAYINTEREST),
 							"interest_payable"			=> array(SOURCE_AR_INTEREST,SOURCE_INTEREST),
 							"remaining_principal"		=> array(SOURCE_AR_PRINCIPAL,SOURCE_PRINCIPAL),
 						);
@@ -310,7 +230,7 @@ class Charge_lib
 							}
 							
 							if($value["total_amount"]>0){
-								$platform_fee	= intval(round($value["total_amount"]/100*REPAYMENT_PLATFORM_FEES,0));
+								$platform_fee	= intval(round($value["total_amount"]/100*REPAYMENT_PLATFORM_FEES,0));//回款手續費
 								$transaction_param[] = array(
 									"source"			=> SOURCE_FEES,
 									"entering_date"		=> $date,
@@ -324,13 +244,13 @@ class Charge_lib
 									"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
 									"status"			=> 2
 								);
-								$platform_fee	= intval(round($value["remaining_principal"]/100*PREPAYMENT_ALLOWANCE_FEES,0));
+								$prepayment_allowance	= intval(round($value["remaining_principal"]/100*PREPAYMENT_ALLOWANCE_FEES,0));//提還補貼金
 								$transaction_param[] = array(
 									"source"			=> SOURCE_PREPAYMENT_ALLOWANCE,
 									"entering_date"		=> $date,
 									"user_from"			=> 0,
 									"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
-									"amount"			=> $platform_fee,
+									"amount"			=> $prepayment_allowance,
 									"target_id"			=> $target->id,
 									"investment_id"		=> $value["investment_id"],
 									"instalment_no"		=> $instalment,
@@ -433,6 +353,61 @@ class Charge_lib
 		return $count;
 	}
 	
+	public function script_prepayment_targets(){
+		$script  	= 7;
+		$count 		= 0;
+		$date		= get_entering_date();
+		$ids		= array();
+		$targets 	= $this->CI->target_model->get_many_by(array(
+			"status"			=> 5,//還款中
+			"sub_status"		=> 3,
+			"script_status"		=> 0
+		));
+		if($targets){
+			foreach($targets as $key => $value){
+				$ids[] = $value->id;
+			}
+			$update_rs 	= $this->CI->target_model->update_many($ids,array("script_status"=>$script));
+			if($update_rs){
+				$this->CI->load->library('Target_lib');
+				$this->CI->load->library('Prepayment_lib');
+				foreach($targets as $key => $value){
+					$prepayment = $this->CI->prepayment_lib->get_prepayment($value);
+					if($prepayment){
+						if($date > $prepayment->settlement_date){
+							$update_data = array(
+								"script_status"	=> 0,
+								"sub_status"	=> 0
+							);
+							$this->CI->target_lib->insert_change_log($value->id,$update_data,0,0);
+							$this->CI->target_model->update($value->id,$update_data);
+						}else{
+							$virtual_account = $this->CI->virtual_account_model->get_by(array(
+								"status"	=> 1,
+								"investor"	=> 0,
+								"user_id"	=> $value->user_id
+							));
+							if($virtual_account){
+								$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>2));
+								$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+								$total = $funds["total"] - $funds["frozen"];
+								if($total >= $prepayment->amount){
+									$this->charge_prepayment_target($value,$virtual_account,$prepayment->settlement_date);
+								}else{
+									$this->notice_normal_target($value);
+								}
+								$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>1));
+							}
+							$this->CI->target_model->update($value->id,array("script_status"=>0));
+						}
+						$count++;
+					}
+				}
+			}
+		}
+		return $count;
+	}
+	
 	public function notice_normal_target($target){
 		$date			= get_entering_date();
 		$next_date		= "";
@@ -447,7 +422,7 @@ class Charge_lib
 				$next_date 	= $transaction->limit_date;
 				$range_days	= get_range_days($date,$next_date);
 				$amount		= 0;
-				if(in_array($range_days,array(1,3,7,4))){
+				if(in_array($range_days,array(1,3,7))){
 					$transaction = $this->CI->transaction_model->get_many_by(array(
 						"target_id"		=> $target->id,
 						"status"		=> 1,
@@ -504,7 +479,7 @@ class Charge_lib
 						$this->CI->load->library('Notification_lib');
 						$this->CI->load->library('sms_lib');
 						
-						if($delay_days > 0 && $delay_days <=3){
+						if($delay_days > 0 && in_array($delay_days,array(1,3,7))){
 							$this->CI->notification_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
 							$this->CI->sms_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
 						}

@@ -12,7 +12,6 @@ class Target extends REST_Controller {
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->library('Certification_lib');
-		$this->load->library('Financial_lib');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list' ,'info'];
@@ -307,7 +306,7 @@ class Target extends REST_Controller {
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
-		if(!empty($target)){
+		if(!empty($target) && in_array($target->status,array(3,4,5,10))){
 
 			$product_info = $this->product_model->get($target->product_id);
 			$product = array(
