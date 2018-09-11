@@ -457,4 +457,34 @@ class Certification_lib{
 		return false;
 	}
 	
+		
+	public function script_check_certification(){
+		$script  		= 8;
+		$count 			= 0;
+		$date			= get_entering_date();
+		$ids			= array();
+		$certification	= array();
+		$certifications = $this->CI->certification_model->get_many_by(array(
+			"alias"	=> array("email","student","emergency")
+		));
+		foreach($certifications as $key => $value){
+			$certification[$value->alias] = $value->id;
+		}
+
+		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(
+			"status"			=> 0,
+			"certification_id"	=> array_values($certification),
+		));
+		if($user_certifications){
+			foreach($user_certifications as $key => $value){
+				if(in_array($value->certification_id,array($certification["email"],$certification["student"]))){
+					if(time()> ($value->created_at + 3600)){
+						$this->set_failed($value->id);
+						$count++; 
+					}
+				}
+			}
+		}
+		return $count;
+	}
 }

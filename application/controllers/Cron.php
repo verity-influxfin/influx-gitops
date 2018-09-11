@@ -138,5 +138,23 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die("KO");
 	}
+	
+	public function check_certifications()
+	{
+		$this->load->library('Certification_lib'); 
+		$script  	= 8;
+		$start_time = time();
+		$count 		= $this->certification_lib->script_check_certification();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "check_certifications",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
 }
 
