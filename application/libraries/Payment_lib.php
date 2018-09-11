@@ -462,7 +462,7 @@ class Payment_lib{
 							"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
 							"TWD"			=> "TWD",
 							"plus"			=> "+",
-							"amount"		=> 1,//靠左補0
+							"amount"		=> $amount,//靠左補0
 							"bankcode_to"	=> $bank_code.'0000',
 							"bankacc_to"	=> $bank_account,
 							"tax_to"		=> "",
