@@ -154,6 +154,11 @@ class Payment_lib{
 				if($virtual_account->user_id == $user_bankaccount->user_id){
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
+				}else{
+					if(!investor_virtual_account($value->virtual_account)){
+						$this->CI->transaction_lib->recharge($value->id);
+						return true;
+					}
 				}
 			}else{
 				if($virtual_account){
@@ -169,6 +174,12 @@ class Payment_lib{
 				return true;
 			}
 		}
+		
+		if($virtual_account){
+			$this->CI->load->library('Notification_lib');
+			$this->CI->notification_lib->unknown_refund($virtual_account->user_id);
+		}
+		
 		$this->CI->payment_model->update($value->id,array("status"=>5));
 		return false;
 	}

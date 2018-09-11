@@ -191,6 +191,46 @@ class Notification_lib{
 		return $rs;
 	}
 	
+	public function recharge_success($user_id,$investor){
+		if($investor==1){
+			$title 		= "普匯金融科技【資金匯入通知】";
+			$content 	= "親愛的用戶：
+							您好！
+							目前在您綁定的虛擬帳戶中，偵測到資金投入，請登入服務後，在我的→虛擬帳戶餘額中查詢。";
+		}else{
+			$title 		= "普匯金融科技【款項確認通知】";
+			$content 	= "親愛的用戶：
+							您好！
+							普匯專屬您的還款帳號已收到款項入帳，平台將代為轉付給出借人，如有任何問題請您與平台聯繫。";
+		}
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		return $rs;
+	}
+	
+	public function unknown_refund($user_id){
+		$title 		= "【普匯金融科技安全通知】";
+		$content 	= "親愛的用戶：
+						您好！
+						目前在您綁定的虛擬帳戶中，偵測到不明資金投入，普匯將在近日安排退款。";
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 1,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content); 
+		return $rs;
+	}
+	
 	public function withdraw_success($user_id,$investor,$amount=0,$bankaccount=""){
 		$bankaccount = substr($bankaccount, -4, 4);
 		$title 		= "普匯金融科技【提領匯款通知】";
@@ -212,7 +252,7 @@ class Notification_lib{
 	
 	public function notice_normal_target($user_id,$amount=0,$target_no="",$date=""){
 
-		$title 		= "【手機ATM貼心提醒】您的借款 $target_no ，還款日為 $date";
+		$title 		= "【普匯金融科技貼心提醒】您的借款 $target_no ，還款日為 $date";
 		$content 	= "親愛的用戶，您好！
 					您的借款 $target_no ，本期應還本息合計為 $amount 元，您的應還款日為 $date ，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可在我的手機ATM服務內點擊我的→我的還款查看，如已還款，請忽略本訊息。
 					敬告用戶，本公司不會以短信、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號。";

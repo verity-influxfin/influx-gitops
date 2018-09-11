@@ -68,6 +68,8 @@ class Transaction_lib{
 						);
 						$transaction_id = $this->CI->transaction_model->insert($transaction);
 						if($transaction_id){
+							$this->CI->load->library('Notification_lib');
+							$this->CI->notification_lib->recharge_success($user_account->user_id,$user_account->investor);
 							$virtual_passbook = $this->CI->passbook_lib->enter_account($transaction_id,$payment->tx_datetime);
 							return $virtual_passbook;
 						}
