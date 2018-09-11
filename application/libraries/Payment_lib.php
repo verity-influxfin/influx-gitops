@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Payment_lib{
 	
-	
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -188,30 +187,6 @@ class Payment_lib{
 	public function verify_bankaccount_txt($admin_id=0){
 		$this->CI->load->model('admin/difficult_word_model');
 		$word_list = $this->CI->difficult_word_model->get_name_list();
-		$check_len = array(
-			"code"			=> 1,
-			"upload_date"	=> 8,
-			"entering_date"	=> 8,
-			"t_type"		=> 3,
-			"t_code"		=> 10,
-			"bankcode_from"	=> 7,
-			"bankacc_from"	=> 16,
-			"tax_from"		=> 10,
-			"name_from"		=> 70,
-			"TWD"			=> 3,
-			"plus"			=> 1,
-			"amount"		=> 14,//靠左補0
-			"bankcode_to"	=> 7,
-			"bankacc_to"	=> 16,
-			"tax_to"		=> 10,
-			"name_to"		=> 70,
-			"alert_to"		=> 1,
-			"email_to"		=> 50,
-			"fee_type"		=> 2,
-			"invoice_num"	=> 4,
-			"remark"		=> 50,
-		);
-		
 		$where				= array(
 			"status"		=> 1,
 			"verify"		=> 2
@@ -262,43 +237,7 @@ class Payment_lib{
 						"remark"		=> nf_to_wf("金融帳號驗證"),
 					);
 				
-					foreach($check_len as $key => $value){
-						$param = isset($data[$key])?$data[$key]:"";
-						if(in_array($key,array("name_from","name_to","remark"))){
-							$len = mb_strlen($param)*2;
-							$len = $value>$len?intval($value-$len):0;
-							if($len){
-								for($i=1;$i<=$len;$i++){
-									$data[$key] = $data[$key]." ";
-								}
-							}
-						}else if($key == "amount"){
-							$data[$key] = intval($data[$key])."00";
-							$len = strlen($data[$key]);
-							$len = $value>$len?intval($value-$len):0;
-							if($len){
-								for($i=1;$i<=$len;$i++){
-									$data[$key] = "0".$data[$key];
-								}
-							}
-						}else if($key == "invoice_num"){
-							$len = strlen($data[$key]);
-							$len = $value>$len?intval($value-$len):0;
-							if($len){
-								for($i=1;$i<=$len;$i++){
-									$data[$key] = "0".$data[$key];
-								}
-							}
-						}else{
-							$len = strlen($param);
-							$len = $value>$len?intval($value-$len):0;
-							if($len){
-								for($i=1;$i<=$len;$i++){
-									$data[$key] = $data[$key]." ";
-								}
-							}
-						}
-					}
+					$data = $this->check_len($data);
 					
 					if($content != ""){
 						$content .= "\n";
@@ -321,31 +260,7 @@ class Payment_lib{
 	
 	public function loan_txt($ids=array(),$admin_id=0){
 		$this->CI->load->model('admin/difficult_word_model');
-		$word_list = $this->CI->difficult_word_model->get_name_list();
-		$check_len = array(
-			"code"			=> 1,
-			"upload_date"	=> 8,
-			"entering_date"	=> 8,
-			"t_type"		=> 3,
-			"t_code"		=> 10,
-			"bankcode_from"	=> 7,
-			"bankacc_from"	=> 16,
-			"tax_from"		=> 10,
-			"name_from"		=> 70,
-			"TWD"			=> 3,
-			"plus"			=> 1,
-			"amount"		=> 14,//靠左補0
-			"bankcode_to"	=> 7,
-			"bankacc_to"	=> 16,
-			"tax_to"		=> 10,
-			"name_to"		=> 70,
-			"alert_to"		=> 1,
-			"email_to"		=> 50,
-			"fee_type"		=> 2,
-			"invoice_num"	=> 4,
-			"remark"		=> 50,
-		);
-		
+		$word_list = $this->CI->difficult_word_model->get_name_list();		
 		if($ids){
 			$targets = $this->CI->target_model->get_many($ids);
 			if($targets){
@@ -404,49 +319,10 @@ class Payment_lib{
 									"invoice_num"	=> "",
 									"remark"		=> nf_to_wf($value->target_no."放款"),
 								);
-							
-								foreach($check_len as $key => $value){
-									$param = isset($data[$key])?$data[$key]:"";
-									if(in_array($key,array("name_from","name_to","remark"))){
-										$len = mb_strlen($param)*2;
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = $data[$key]." ";
-											}
-										}
-									}else if($key == "amount"){
-										$data[$key] = intval($data[$key])."00";
-										$len = strlen($data[$key]);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = "0".$data[$key];
-											}
-										}
-									}else if($key == "invoice_num"){
-										$len = strlen($data[$key]);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = "0".$data[$key];
-											}
-										}
-									}else{
-										$len = strlen($param);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = $data[$key]." ";
-											}
-										}
-									}
-								}
-								
+								$data = $this->check_len($data);
 								if($content != ""){
 									$content .= "\n";
 								}
-								
 								foreach($data as $key => $value){
 									$content .= $value;
 								}
@@ -471,30 +347,6 @@ class Payment_lib{
 		$this->CI->load->model('admin/difficult_word_model');
 		$this->CI->load->model('transaction/withdraw_model');
 		$word_list = $this->CI->difficult_word_model->get_name_list();
-		$check_len = array(
-			"code"			=> 1,
-			"upload_date"	=> 8,
-			"entering_date"	=> 8,
-			"t_type"		=> 3,
-			"t_code"		=> 10,
-			"bankcode_from"	=> 7,
-			"bankacc_from"	=> 16,
-			"tax_from"		=> 10,
-			"name_from"		=> 70,
-			"TWD"			=> 3,
-			"plus"			=> 1,
-			"amount"		=> 14,//靠左補0
-			"bankcode_to"	=> 7,
-			"bankacc_to"	=> 16,
-			"tax_to"		=> 10,
-			"name_to"		=> 70,
-			"alert_to"		=> 1,
-			"email_to"		=> 50,
-			"fee_type"		=> 2,
-			"invoice_num"	=> 4,
-			"remark"		=> 50,
-		);
-		
 		if($ids){
 			$withdraws = $this->CI->withdraw_model->get_many($ids);
 			if($withdraws){
@@ -551,43 +403,7 @@ class Payment_lib{
 									"remark"		=> nf_to_wf("提領放款"),
 								);
 							
-								foreach($check_len as $key => $value){
-									$param = isset($data[$key])?$data[$key]:"";
-									if(in_array($key,array("name_from","name_to","remark"))){
-										$len = mb_strlen($param)*2;
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = $data[$key]." ";
-											}
-										}
-									}else if($key == "amount"){
-										$data[$key] = intval($data[$key])."00";
-										$len = strlen($data[$key]);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = "0".$data[$key];
-											}
-										}
-									}else if($key == "invoice_num"){
-										$len = strlen($data[$key]);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = "0".$data[$key];
-											}
-										}
-									}else{
-										$len = strlen($param);
-										$len = $value>$len?intval($value-$len):0;
-										if($len){
-											for($i=1;$i<=$len;$i++){
-												$data[$key] = $data[$key]." ";
-											}
-										}
-									}
-								}
+								$data = $this->check_len($data);
 								
 								if($content != ""){
 									$content .= "\n";
@@ -612,6 +428,74 @@ class Payment_lib{
 		}
 		return false;
 	}
+	
+	public function unknown_txt($ids=array(),$admin_id=0){
+
+		$this->CI->load->model('transaction/payment_model');
+		if($ids){
+			$payments = $this->CI->payment_model->get_many($ids);
+			if($payments){
+				$content 	= "";
+				$ids 		= array();
+				foreach($payments as $key => $value){
+					if($value->status==5 && $value->amount > 15){
+						$this->CI->payment_model->update($value->id,array("status"=>4));
+						$amount = intval($value->amount);
+						$bank 	= bankaccount_substr($value->bank_acc);
+						if($bank['bank_code']==$value->bank_id){
+							$bank_code 		= $bank['bank_code'];
+							$bank_account 	= $bank['bank_account'];
+						}else{
+							$bank_code 		= $value->bank_id;
+							$bank_account 	= $value->bank_acc;
+						}
+						$ids[] 	= $value->id;
+						$data = array(
+							"code"			=> "0",
+							"upload_date"	=> "",
+							"entering_date"	=> date("Ymd"),
+							"t_type"		=> "SPU",
+							"t_code"		=> "",
+							"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+							"bankacc_from"	=> CATHAY_CUST_ACCNO,
+							"tax_from"		=> CATHAY_CUST_ID,
+							"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+							"TWD"			=> "TWD",
+							"plus"			=> "+",
+							"amount"		=> 1,//靠左補0
+							"bankcode_to"	=> $bank_code.'0000',
+							"bankacc_to"	=> $bank_account,
+							"tax_to"		=> "",
+							"name_to"		=> "",
+							"alert_to"		=> "0",
+							"email_to"		=> "",
+							"fee_type"		=> "13",
+							"invoice_num"	=> "",
+							"remark"		=> nf_to_wf("不明退款"),
+						);
+					
+						$data = $this->check_len($data);
+						if($content != ""){
+							$content .= "\n";
+						}
+						foreach($data as $key => $value){
+							$content .= $value;
+						}
+					}
+				}
+				$this->CI->load->model('log/log_paymentexport_model');
+				$this->CI->log_paymentexport_model->insert(array(
+					"type"		=> "unknown_refund",
+					"content"	=> json_encode($ids),
+					"admin_id"	=> $admin_id
+				));
+				
+				return $content;
+			}
+		}
+		return false;
+	}
+	
 	//上傳檔案
 	public function upload_file($content="",$fxml=""){
 		if(is_development()){
@@ -721,5 +605,70 @@ class Payment_lib{
 			$hex .= dechex(ord($string[$i]));
 		}
 		return $hex;
+	}
+	
+	private function check_len($data = array()){
+		$data_len = array(
+			"code"			=> 1,
+			"upload_date"	=> 8,
+			"entering_date"	=> 8,
+			"t_type"		=> 3,
+			"t_code"		=> 10,
+			"bankcode_from"	=> 7,
+			"bankacc_from"	=> 16,
+			"tax_from"		=> 10,
+			"name_from"		=> 70,
+			"TWD"			=> 3,
+			"plus"			=> 1,
+			"amount"		=> 14,//靠左補0
+			"bankcode_to"	=> 7,
+			"bankacc_to"	=> 16,
+			"tax_to"		=> 10,
+			"name_to"		=> 70,
+			"alert_to"		=> 1,
+			"email_to"		=> 50,
+			"fee_type"		=> 2,
+			"invoice_num"	=> 4,
+			"remark"		=> 50,
+		);
+		
+		foreach($data_len as $key => $value){
+			$param = isset($data[$key])?$data[$key]:"";
+			if(in_array($key,array("name_from","name_to","remark"))){
+				$len = mb_strlen($param)*2;
+				$len = $value>$len?intval($value-$len):0;
+				if($len){
+					for($i=1;$i<=$len;$i++){
+						$data[$key] = $data[$key]." ";
+					}
+				}
+			}else if($key == "amount"){
+				$data[$key] = intval($data[$key])."00";
+				$len = strlen($data[$key]);
+				$len = $value>$len?intval($value-$len):0;
+				if($len){
+					for($i=1;$i<=$len;$i++){
+						$data[$key] = "0".$data[$key];
+					}
+				}
+			}else if($key == "invoice_num"){
+				$len = strlen($data[$key]);
+				$len = $value>$len?intval($value-$len):0;
+				if($len){
+					for($i=1;$i<=$len;$i++){
+						$data[$key] = "0".$data[$key];
+					}
+				}
+			}else{
+				$len = strlen($param);
+				$len = $value>$len?intval($value-$len):0;
+				if($len){
+					for($i=1;$i<=$len;$i++){
+						$data[$key] = $data[$key]." ";
+					}
+				}
+			}
+		}
+		return $data;
 	}
 }

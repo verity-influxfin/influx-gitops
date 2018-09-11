@@ -128,10 +128,47 @@ class Passbook extends MY_Admin_Controller {
 				header("Content-Disposition: attachment; filename=withdraw_".date("YmdHis").".txt");
 				echo $rs;
 			}else{
-				alert("無可放款之案件",admin_url('passbook/withdraw_loan'));
+				alert("無可放款之案件",admin_url('passbook/withdraw_waiting'));
 			}
 		}else{
-			alert("請選擇待放款的案件",admin_url('passbook/withdraw_loan'));
+			alert("請選擇待放款的案件",admin_url('passbook/withdraw_waiting'));
+		}
+	}
+	
+	function unknown_funds(){
+		$this->load->model('transaction/payment_model');
+		$page_data 	= array("type"=>"list");
+		$where		= array(
+			"status" 		=> array(4,5),
+		);
+		$list = $this->payment_model->get_many_by($where);
+		if(!empty($list)){
+			$page_data['list'] 				= $list;
+			$page_data['status_list'] 		= $this->payment_model->status_list;
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/unknown_funds',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	function unknown_refund(){
+		$get 		= $this->input->get(NULL, TRUE);
+		$ids		= isset($get["ids"])&&$get["ids"]?explode(",",$get["ids"]):"";
+		if($ids && is_array($ids)){
+			$this->load->library('payment_lib');
+			$rs = $this->payment_lib->unknown_txt($ids,$this->login_info->id);
+			if($rs && $rs !=""){
+				$rs = iconv('UTF-8', 'BIG-5//IGNORE', $rs);
+				header("Content-type: application/text");
+				header("Content-Disposition: attachment; filename=unknown_".date("YmdHis").".txt");
+				echo $rs;
+			}else{
+				alert("無退款的選擇",admin_url('Passbook/unknown_funds'));
+			}
+		}else{
+			alert("請選擇退款",admin_url('Passbook/unknown_funds'));
 		}
 	}
 	

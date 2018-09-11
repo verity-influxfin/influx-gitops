@@ -169,38 +169,32 @@ class Certification extends MY_Admin_Controller {
 			if(!empty($post['id'])){
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
-					/*if($info->status=="1"){
-						alert("更新成功",admin_url('certification/user_certification_list'));
-					}else{*/
-						$certification = $this->certification_model->get($info->certification_id);
-						if($certification->alias=="debit_card" && $info->investor==1){
-							alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
+					$certification = $this->certification_model->get($info->certification_id);
+					if($certification->alias=="debit_card" && $info->investor==1){
+						alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
+					}else{
+						$this->load->library('Certification_lib');
+						$this->load->model('log/log_usercertification_model');
+						$this->log_usercertification_model->insert(array(
+							'user_certification_id'	=> $post['id'],
+							'status'				=> $post['status'],
+							'change_admin'			=> $this->login_info->id,
+						));
+						
+						if($post['status']=="1"){
+							$rs = $this->certification_lib->set_success($post['id']);
+						}else if($post['status']=="2"){
+							$rs = $this->certification_lib->set_failed($post['id']);
 						}else{
-							$this->load->model('log/log_usercertification_model');
-							$this->log_usercertification_model->insert(array(
-								'user_certification_id'	=> $post['id'],
-								'status'				=> $post['status'],
-								'change_admin'			=> $this->login_info->id,
-							));
-							
-							if($post['status']=="1"){
-								$this->load->library('Certification_lib');
-								$rs = $this->certification_lib->set_success($post['id']);
-							}else{
-								if($post['status']=="2"){
-									$this->load->library('Notification_lib');
-									$this->notification_lib->certification($info->user_id,$info->investor,$certification->name,$post['status']);
-								}
-								$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
-							}
+							$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
 						}
+					}
 
-						if($rs===true){
-							alert("更新成功",admin_url('certification/user_certification_list'));
-						}else{
-							alert("更新失敗，請洽工程師",admin_url('certification/user_certification_list'));
-						}
-					//}
+					if($rs===true){
+						alert("更新成功",admin_url('certification/user_certification_list'));
+					}else{
+						alert("更新失敗，請洽工程師",admin_url('certification/user_certification_list'));
+					}
 				}else{
 					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
 				}

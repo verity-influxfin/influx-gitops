@@ -14,8 +14,9 @@ $config['admin_menu'] = array(
 		"parent_name"		=> "虛擬帳號管理",
 		"parent_icon"		=> "fa-star",
 		"index"				=> "虛擬帳號列表",
-		"withdraw_list"		=> "提領紀錄列表",
+		"withdraw_list"		=> "提領紀錄",
 		"withdraw_waiting"	=> "提領待放款",
+		"unknown_funds"		=> "不明來源退款",
 	),
 	"Certification" 	=> array(
 		"parent_name"	=> "認證管理",

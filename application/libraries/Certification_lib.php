@@ -43,12 +43,25 @@ class Certification_lib{
 					$rs = $this->$method($info);
 					if($rs){
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,1);
-					}else{
-						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,2);
 					}
-					
 					return $rs;
 				}
+			}
+		}
+		return false;
+	}
+	
+	public function set_failed($id){
+		if($id){
+			$info = $this->CI->user_certification_model->get($id);
+			if($info && $info->status != 2){
+				$info->content 	= json_decode($info->content,true);
+				$certification 	= $this->CI->certification_model->get($info->certification_id);
+				$rs = $this->CI->user_certification_model->update($id,array("status"=>2));
+				if($rs){
+					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,2);
+				}
+				return $rs;
 			}
 		}
 		return false;
