@@ -583,17 +583,20 @@ class Payment_lib{
 		
 		$fxml 	= '';
 		$ftype 	= 'BRMT/BRMT/0';
+		$source = '1';
 		if($type=='atm'){
 			$fxml 	= '';
 			$ftype 	= 'BTRS/BRMT/0';
+			$source = '2';
 		}
 		if($type=='fxml'){
 			$fxml 	= 'FXML';
 			$ftype 	= 'BRMT/BRMT/0';
+			$source = '3';
 		}
 
 		
-		$txnkey = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$txnkey = date("YmdHis").$source.rand(0, 9);
 		$xml_file 	= 
 '<?xml version="1.0" encoding="big5"?>
 <MYB2B>

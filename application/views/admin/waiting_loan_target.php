@@ -68,7 +68,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						<a href="javascript:void(0)" target="_blank" onclick="toloan();" class="btn btn-primary float-right" >轉出放款匯款單</a>
+						<a href="javascript:void(0)" onclick="toloan();" class="btn btn-primary float-right" >轉出放款匯款單</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

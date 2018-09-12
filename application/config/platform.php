@@ -52,12 +52,17 @@ $config['admin_menu'] = array(
 		"register_report"	=> "註冊報表",
 	),
 	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
+	"Account" 				=> array(
+		"parent_name"		=> "帳務報表",
+		"parent_icon"		=> "fa-thumbs-up",
+		"index"				=> "平台收支報表",
+	),
 );
 
 if(ENVIRONMENT=="development"){
 	$config['admin_email'] = array('news@influxfin.com');
 }else{
-	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','toy@influxfin.com');
+	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com');
 } 
 
 $config['instalment']= array(

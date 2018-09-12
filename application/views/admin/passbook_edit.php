@@ -19,7 +19,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							虛擬帳戶：<?=$virtual_account->virtual_account ?>
+							虛擬帳戶：<?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'平台帳號' ?>
                         </div>
                         <div class="panel-body">
                             <div class="row">

@@ -6,13 +6,34 @@
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
+				function checked_all(){
+					$('.targets').prop("checked", true);
+					check_checked();
+				}
+				
+				function check_checked(){
+					var ids					= "";
+					var repayment_export	= '<?=admin_url('target/repayment_export') ?>';
+					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
+					
+					$('.targets:checked').each(function() {
+						if(ids==""){
+							ids += this.value;
+						}else{
+							ids += ',' + this.value;
+						}		
+					});
+					$('#repayment_export').attr('href',repayment_export + '?ids=' + ids);
+					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						<a href="<?=admin_url('target/repayment_export') ?>" target="_self"  class="btn btn-primary float-right" >匯出Excel</a>
+							<a id="repayment_export" href="<?=admin_url('target/repayment_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
+							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -20,6 +41,9 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
+                                            <th>
+											<a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a>
+											</th>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
@@ -48,6 +72,9 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
+											<td>
+												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
+											</td>
                                             <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>

@@ -276,8 +276,8 @@ class Target extends MY_Admin_Controller {
 			$rs = $this->payment_lib->loan_txt($ids,$this->login_info->id);
 			if($rs && $rs !=""){
 				$rs = iconv('UTF-8', 'BIG-5//IGNORE', $rs);
-				header("Content-type: application/text");
-				header("Content-Disposition: attachment; filename=loan_".date("YmdHis").".txt");
+				header('Content-type: application/text');
+				header('Content-Disposition: attachment; filename=loan_'.date("YmdHis").'.txt');
 				echo $rs;
 			}else{
 				alert("無可放款之案件",admin_url('Target/waiting_loan'));
@@ -403,8 +403,14 @@ class Target extends MY_Admin_Controller {
 	}
 	
 	public function repayment_export(){
-		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array("status"=>5);
+		$get = $this->input->get(NULL, TRUE);
+		$ids = isset($get["ids"])&&$get["ids"]?explode(",",$get["ids"]):"";
+		if($ids && is_array($ids)){
+			$where = array("id"=>$ids,"status"=>5);
+		}else{
+			$where = array("status"=>5);
+		}
+		
 		$product_name				= $this->product_model->get_name_list();
 		$list 						= $this->target_model->get_many_by($where);
 		$school_list 				= array();
@@ -465,6 +471,61 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$delay_list[$value->delay].'</td>';
 				$html .= '<td>'.$status_list[$value->status].'</td>';
 				$html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
+				$html .= '</tr>';
+			}
+		}
+        $html .= '</tbody></table>';
+		echo $html;
+	}
+	
+	public function amortization_export(){
+		$get = $this->input->get(NULL, TRUE);
+		$ids = isset($get["ids"])&&$get["ids"]?explode(",",$get["ids"]):"";
+		if($ids && is_array($ids)){
+			$where = array("id"=>$ids,"status"=>5);
+		}else{
+			$where = array("status"=>5);
+		}
+		
+		$data 		= array();
+		$first_data = array();
+		$list 	= $this->target_model->get_many_by($where);
+		if($list){
+			foreach($list as $key => $value){
+				$amortization_table = $this->target_lib->get_amortization_table($value);
+				if($amortization_table){
+					@$first_data[$amortization_table['date']] -= $amortization_table['amount'];
+					foreach($amortization_table['list'] as $instalment => $value){
+						@$data[$value['repayment_date']]['total_payment'] 	+= $value['total_payment'];
+						@$data[$value['repayment_date']]['repayment'] 		+= $value['repayment'];
+						@$data[$value['repayment_date']]['interest'] 		+= $value['interest'];
+						@$data[$value['repayment_date']]['principal'] 		+= $value['principal'];
+					}
+					
+				}
+			}
+		}
+		
+		header('Content-type:application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename=repayment_'.date("Ymd").'.xls');
+		$html = '<table><thead><tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已回款</th></tr></thead><tbody>';
+		if(isset($first_data) && !empty($first_data)){
+			foreach($first_data as $key => $value){
+				$html .= '<tr>';
+				$html .= '<td>'.$key.'</td>';
+				$html .= '<td>'.$value.'</td>';
+				$html .= '<td></td><td></td><td></td>';
+				$html .= '</tr>';
+			}
+		}
+		if(isset($data) && !empty($data)){
+			foreach($data as $key => $value){
+				$html .= '<tr>';
+				$html .= '<td>'.$key.'</td>';
+				$html .= '<td>'.$value['total_payment'].'</td>';
+				$html .= '<td>'.$value['principal'].'</td>';
+				$html .= '<td>'.$value['interest'].'</td>';
+				$html .= '<td>'.$value['repayment'].'</td>';
 				$html .= '</tr>';
 			}
 		}
