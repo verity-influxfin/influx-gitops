@@ -232,7 +232,7 @@ class Payment_lib{
 					$data = array(
 						"code"			=> "0",
 						"upload_date"	=> "",
-						"entering_date"	=> "",
+						"entering_date"	=> date("Ymd"),
 						"t_type"		=> "SPU",
 						"t_code"		=> "",
 						"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -354,7 +354,7 @@ class Payment_lib{
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
-									"entering_date"	=> "",
+									"entering_date"	=> date("Ymd"),
 									"t_type"		=> "SPU",
 									"t_code"		=> "",
 									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -445,7 +445,7 @@ class Payment_lib{
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
-									"entering_date"	=> "",
+									"entering_date"	=> date("Ymd"),
 									"t_type"		=> "SPU",
 									"t_code"		=> "",
 									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -524,7 +524,7 @@ class Payment_lib{
 						$data = array(
 							"code"			=> "0",
 							"upload_date"	=> "",
-							"entering_date"	=> "",
+							"entering_date"	=> date("Ymd"),
 							"t_type"		=> "SPU",
 							"t_code"		=> "",
 							"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
