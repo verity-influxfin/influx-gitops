@@ -322,7 +322,7 @@ class Certification extends MY_Admin_Controller {
 		if($rs && $rs["content"]=="" && $rs["xml_content"]==""){
 			alert("沒有待驗證的金融帳號",admin_url('certification/user_bankaccount_list?verify=2'));
 		}else{
-			alert("轉出成功",admin_url('certification/user_bankaccount_list?verify=2'));
+			alert("轉出成功",admin_url('certification/user_bankaccount_list?verify=3'));
 		}
 	}
 	

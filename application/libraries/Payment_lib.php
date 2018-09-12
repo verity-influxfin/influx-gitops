@@ -294,7 +294,7 @@ class Payment_lib{
 			}
 
 			if($xml_content !=""){
-				$upload 	= $this->upload_file($xml_content,'xml');
+				$upload 	= $this->upload_file($xml_content,'fxml');
 				$batch_no 	= $upload?$upload['batch_no']:"";
 				$txn_key 	= $upload?$upload['txn_key']:"";
 				$this->CI->log_paymentexport_model->insert(array(
