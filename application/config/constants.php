@@ -235,6 +235,8 @@ defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PP
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
+defined('CATHAY_AP2AP_API_URL')     OR define('CATHAY_AP2AP_API_URL'	, 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx');
+defined('CATHAY_AP2APINFO_API_URL') OR define('CATHAY_AP2APINFO_API_URL', 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_QueryRMT.aspx');
 defined('CATHAY_CUST_ID')     		OR define('CATHAY_CUST_ID'			, getenv('ENV_CATHAY_CUST_ID'));
 defined('CATHAY_CUST_NICKNAME')     OR define('CATHAY_CUST_NICKNAME'	, getenv('ENV_CATHAY_CUST_NICKNAME'));
 defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD'	, getenv('ENV_CATHAY_CUST_PASSWORD'));

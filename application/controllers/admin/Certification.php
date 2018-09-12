@@ -319,13 +319,10 @@ class Certification extends MY_Admin_Controller {
 	function user_bankaccount_verify(){
 		$this->load->library('payment_lib');
 		$rs = $this->payment_lib->verify_bankaccount_txt($this->login_info->id);
-		if($rs!=""){
-			$rs = iconv('UTF-8', 'BIG-5//IGNORE', $rs);
-			header("Content-type: application/text");
-			header("Content-Disposition: attachment; filename=verify_".date("YmdHis").".txt");
-			echo $rs;
+		if($rs && $rs["content"]=="" && $rs["xml_content"]==""){
+			alert("沒有待驗證的金融帳號",admin_url('certification/user_bankaccount_list?verify=2'));
 		}else{
-			alert("沒有待驗證的金融帳號",admin_url('certification/user_bankaccount_list'));
+			alert("轉出成功",admin_url('certification/user_bankaccount_list?verify=2'));
 		}
 	}
 	

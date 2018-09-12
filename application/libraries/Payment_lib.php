@@ -48,12 +48,12 @@ class Payment_lib{
 					}
 				}
 				
-				if(isset($xml["TXDETAIL"]['BACCNO']) && !empty($xml["TXDETAIL"]['BACCNO'])){
-					$txdetail = $xml["TXDETAIL"];
-					$xml["TXDETAIL"] = array(0=>$txdetail);
+				if(isset($xml['TXDETAIL']['BACCNO']) && !empty($xml['TXDETAIL']['BACCNO'])){
+					$txdetail = $xml['TXDETAIL'];
+					$xml['TXDETAIL'] = array(0=>$txdetail);
 				}
 				
-				foreach($xml["TXDETAIL"] as $key => $value){
+				foreach($xml['TXDETAIL'] as $key => $value){
 					
 					if(is_array($value)){
 						foreach($value as $k =>$v){
@@ -197,25 +197,30 @@ class Payment_lib{
 	
 	public function verify_bankaccount_txt($admin_id=0){
 		$this->CI->load->model('admin/difficult_word_model');
-		$word_list = $this->CI->difficult_word_model->get_name_list();
+		$word_list 			= $this->CI->difficult_word_model->get_name_list();
 		$where				= array(
 			"status"		=> 1,
 			"verify"		=> 2
 		);
 		$bankaccounts 	= $this->CI->user_bankaccount_model->get_many_by($where);
 		$content 		= "";
+		$xml_content 	= "";
+		$xml_bank_list 	= $this->CI->config->item('xml_bank_list');
 		$ids 			= array();
+		$xml_ids 		= array();
 		if($bankaccounts){
 			
 			foreach($bankaccounts as $key => $value){
 				$user_info = $this->CI->user_model->get($value->user_id);
 				if($user_info && $user_info->name){
+					$difficult = false;
 					$name_list = mb_str_split($user_info->name);
 					if($name_list){
 						$name = "";
 						foreach($name_list as $k => $v){
-							if(!iconv('UTF-8', 'BIG-5', $v)){
-								$v = isset($word_list[$v])?$word_list[$v]:"";
+							if(!iconv('UTF-8', 'BIG-5//IGNORE', $v)){
+								$v 			= isset($word_list[$v])?$word_list[$v]:"";
+								$difficult 	= true;
 							}
 							$name .= $v;
 						}
@@ -223,11 +228,11 @@ class Payment_lib{
 					}
 
 					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time()));
-					$ids[] = $value->id;
+					
 					$data = array(
 						"code"			=> "0",
 						"upload_date"	=> "",
-						"entering_date"	=> date("Ymd"),
+						"entering_date"	=> "",
 						"t_type"		=> "SPU",
 						"t_code"		=> "",
 						"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -250,23 +255,62 @@ class Payment_lib{
 				
 					$data = $this->check_len($data);
 					
-					if($content != ""){
-						$content .= "\n";
+					if(!$difficult && in_array($value->bank_code,$xml_bank_list)){
+						$xml_ids[] = $value->id;
+						if($xml_content != ""){
+							$xml_content .= "\n";
+						}
+						
+						foreach($data as $key => $value){
+							$xml_content .= $value;
+						}
+					}else{
+						$ids[] = $value->id;
+						if($content != ""){
+							$content .= "\n";
+						}
+						
+						foreach($data as $key => $value){
+							$content .= $value;
+						}
 					}
 					
-					foreach($data as $key => $value){
-						$content .= $value;
-					}
 				}
 			}
 			$this->CI->load->model('log/log_paymentexport_model');
-			$this->CI->log_paymentexport_model->insert(array(
-				"type"		=> "bankaccount",
-				"content"	=> json_encode($ids),
-				"admin_id"	=> $admin_id
-			));
+			
+			if($content !=""){
+				$upload 	= $this->upload_file($content,'normal');
+				$batch_no 	= $upload?$upload['batch_no']:"";
+				$txn_key 	= $upload?$upload['txn_key']:"";
+				$this->CI->log_paymentexport_model->insert(array(
+					"type"		=> "bankaccount",
+					"content"	=> json_encode($ids),
+					"cdata"		=> base64_encode($content),
+					"batch_no"	=> $batch_no,
+					"txn_key"	=> $txn_key,
+					"admin_id"	=> $admin_id,
+				));
+			}
+
+			if($xml_content !=""){
+				$upload 	= $this->upload_file($xml_content,'xml');
+				$batch_no 	= $upload?$upload['batch_no']:"";
+				$txn_key 	= $upload?$upload['txn_key']:"";
+				$this->CI->log_paymentexport_model->insert(array(
+					"type"		=> "bankaccount",
+					"content"	=> json_encode($xml_ids),
+					"cdata"		=> base64_encode($xml_content),
+					"batch_no"	=> $batch_no,
+					"txn_key"	=> $txn_key,
+					"admin_id"	=> $admin_id,
+				));
+			}
 		}
-		return $content;
+		return array(
+			"content"		=> $content,
+			"xml_content"	=> $xml_content
+		);
 	}
 	
 	public function loan_txt($ids=array(),$admin_id=0){
@@ -310,7 +354,7 @@ class Payment_lib{
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
-									"entering_date"	=> date("Ymd"),
+									"entering_date"	=> "",
 									"t_type"		=> "SPU",
 									"t_code"		=> "",
 									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -341,13 +385,21 @@ class Payment_lib{
 						}
 					}
 				}
+				
+				$upload 	= $this->upload_file($content,'atm');
+				$batch_no 	= $upload?$upload['batch_no']:"";
+				$txn_key 	= $upload?$upload['txn_key']:"";
+				
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "target_loan",
 					"content"	=> json_encode($ids),
-					"admin_id"	=> $admin_id
+					"cdata"		=> base64_encode($content),
+					"batch_no"	=> $batch_no,
+					"txn_key"	=> $txn_key,
+					"admin_id"	=> $admin_id,
 				));
-				
+
 				return $content;
 			}
 		}
@@ -393,7 +445,7 @@ class Payment_lib{
 								$data = array(
 									"code"			=> "0",
 									"upload_date"	=> "",
-									"entering_date"	=> date("Ymd"),
+									"entering_date"	=> "",
 									"t_type"		=> "SPU",
 									"t_code"		=> "",
 									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -427,11 +479,19 @@ class Payment_lib{
 						}
 					}
 				}
+				
+				$upload 	= $this->upload_file($content,'atm');
+				$batch_no 	= $upload?$upload['batch_no']:"";
+				$txn_key 	= $upload?$upload['txn_key']:"";
+				
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "withdraw",
 					"content"	=> json_encode($ids),
-					"admin_id"	=> $admin_id
+					"cdata"		=> base64_encode($content),
+					"batch_no"	=> $batch_no,
+					"txn_key"	=> $txn_key,
+					"admin_id"	=> $admin_id,
 				));
 				
 				return $content;
@@ -464,7 +524,7 @@ class Payment_lib{
 						$data = array(
 							"code"			=> "0",
 							"upload_date"	=> "",
-							"entering_date"	=> date("Ymd"),
+							"entering_date"	=> "",
 							"t_type"		=> "SPU",
 							"t_code"		=> "",
 							"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
@@ -494,13 +554,21 @@ class Payment_lib{
 						}
 					}
 				}
+				
+				$upload 	= $this->upload_file($content,'atm');
+				$batch_no 	= $upload?$upload['batch_no']:"";
+				$txn_key 	= $upload?$upload['txn_key']:"";
+				
 				$this->CI->load->model('log/log_paymentexport_model');
 				$this->CI->log_paymentexport_model->insert(array(
 					"type"		=> "unknown_refund",
 					"content"	=> json_encode($ids),
-					"admin_id"	=> $admin_id
+					"cdata"		=> base64_encode($content),
+					"batch_no"	=> $batch_no,
+					"txn_key"	=> $txn_key,
+					"admin_id"	=> $admin_id,
 				));
-				
+
 				return $content;
 			}
 		}
@@ -508,15 +576,24 @@ class Payment_lib{
 	}
 	
 	//上傳檔案
-	public function upload_file($content="",$fxml=""){
+	public function upload_file($content='',$type='normal'){
 		if(is_development()){
-			return true;
-		}else{
-			$url 	= 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx';
+			return false;
 		}
 		
-		$txnkey = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+		$fxml 	= '';
+		$ftype 	= 'BRMT/BRMT/0';
+		if($type=='atm'){
+			$fxml 	= '';
+			$ftype 	= 'BTRS/BRMT/0';
+		}
+		if($type=='fxml'){
+			$fxml 	= 'FXML';
+			$ftype 	= 'BRMT/BRMT/0';
+		}
+
 		
+		$txnkey = date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
 		$xml_file 	= 
 '<?xml version="1.0" encoding="big5"?>
 <MYB2B>
@@ -533,22 +610,22 @@ class Payment_lib{
 			<BRANCH>'.substr(CATHAY_BRANCH_CODE,0,3).'</BRANCH>
 		</LOGON>
 		<DATA>
-			<CONTENT FileType="BRMT/BRMT/0" DrAcno="15035006475" RemitType="'.$fxml.'">
+			<CONTENT FileType="'.$ftype.'" DrAcno="'.CATHAY_CUST_ACCNO.'" RemitType="'.$fxml.'">
 				<![CDATA['.$content.']]>
 			</CONTENT>
 		</DATA>
 	</BODY>
 </MYB2B>';
-		$xml_file 	= iconv('UTF-8', 'BIG-5', $xml_file);
-		$key 		= iconv('UTF-8', 'BIG-5', CATHAY_AES_KEY);
+		$xml_file 	= iconv('UTF-8', 'BIG-5',$xml_file);
+		$key 		= iconv('UTF-8', 'BIG-5',CATHAY_AES_KEY);
 		$rs 		= iconv('UTF-8', 'BIG-5',CATHAY_CUST_ID.'            '.$this->strToHex($this->encrypt($xml_file,$key)));
-		$res 		= curl_get($url,$rs,["Content-type:text/xml"]);
+		$res 		= curl_get(CATHAY_AP2AP_API_URL,$rs,["Content-type:text/xml"]);
 		$res 		= iconv('big5', 'big5//IGNORE', $res); 
 		$xml 		= simplexml_load_string($res);
 		$xml 		= json_decode(json_encode($xml),TRUE);
 		if($xml && $xml['BODY']['DATA']['ERROR_ID']=='0000' && $txnkey==$xml['HEADER']['TXNKEY']){
 			$batch_no 	= $xml['BODY']['DATA']['BATCH_NO'];
-			return $batch_no;
+			return array( 'batch_no' => $batch_no,'txn_key' => $txnkey );
 		}
 		return false;
 		
@@ -557,10 +634,8 @@ class Payment_lib{
 	public function get_batch_info($batch_no=""){
 		if(is_development()){
 			return array();
-		}else{
-			$url 	= 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_QueryRMT.aspx';
-			
 		}
+		
 		$date		= date("Ymd");
 		$xml_file 	= 
 '<?xml version="1.0" encoding="big5"?>
@@ -587,7 +662,7 @@ class Payment_lib{
 		$xml_file 	= iconv('UTF-8', 'BIG-5', $xml_file);
 		$key 		= iconv('UTF-8', 'BIG-5', CATHAY_AES_KEY);
 		$rs 		= iconv('UTF-8', 'BIG-5',CATHAY_CUST_ID.'            '.$this->strToHex($this->encrypt($xml_file,$key)));
-		$res 		= curl_get($url,$rs,["Content-type:text/xml"]);
+		$res 		= curl_get(CATHAY_AP2APINFO_API_URL,$rs,["Content-type:text/xml"]);
 		$res 		= iconv('big5', 'big5//IGNORE', $res); 
 		$xml 		= simplexml_load_string($res);
 		$xml 		= json_decode(json_encode($xml),TRUE);

@@ -48,7 +48,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_blank" onclick="setTimeout(location.reload(),400);" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
+							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_self" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -97,7 +97,7 @@
 											<? 
 												if(isset($value->user_name_list) && !empty($value->user_name_list)){
 													foreach($value->user_name_list as $k => $word){
-														if(!iconv('UTF-8', 'BIG-5', $word)){
+														if(!iconv('UTF-8', 'BIG-5//IGNORE', $word)){
 															if(isset($word_list[$word]) && $word_list[$word]){
 																echo '<br><p">已處理特殊字：'.$word.'</p>';
 															}else{
