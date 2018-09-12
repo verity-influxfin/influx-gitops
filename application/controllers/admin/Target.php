@@ -507,7 +507,7 @@ class Target extends MY_Admin_Controller {
 		}
 		
 		header('Content-type:application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename=repayment_'.date("Ymd").'.xls');
+		header('Content-Disposition: attachment; filename=amortization_'.date("Ymd").'.xls');
 		$html = '<table><thead><tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已回款</th></tr></thead><tbody>';
 		if(isset($first_data) && !empty($first_data)){
 			foreach($first_data as $key => $value){
