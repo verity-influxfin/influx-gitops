@@ -302,11 +302,8 @@ class Certification extends MY_Admin_Controller {
 				));
 				$this->user_certification_model->update($info->user_certification_id,array("status"=>2));
 				$this->user_bankaccount_model->update($id,array("verify"=>4,"status"=>0));
-				/*if($info->investor==0){
-					$this->load->library('target_lib');
-					$this->target_lib->bankaccount_verify_failed($info->user_id,$this->login_info->id);
-				}*/
-				
+				$this->load->library('Notification_lib');
+				$this->notification_lib->bankaccount_verify_failed($info->user_id,$info->investor);
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();

@@ -18,7 +18,11 @@ class Transfer_lib{
 		if($investment){
 			$target 		= $this->CI->target_model->get($investment->target_id);
 			$this->CI->load->model('transaction/transaction_model');
-			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array("investment_id"=>$investment->id,"user_to"=>$investment->user_id,"status"=>array(1,2)));
+			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
+				"investment_id"	=>$investment->id,
+				"user_to"		=>$investment->user_id,
+				"status"		=>array(1,2)
+			));
 			if($transaction){
 				$instalment 		= 0;
 				$instalment_paid 	= 0;

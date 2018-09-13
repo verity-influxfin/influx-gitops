@@ -14,16 +14,15 @@ class Subloan_lib{
 
 	public function get_info($target=array()){
 		if($target->status == 5 && $target->delay == 1 && $target->delay_days > GRACE_PERIOD){
-			$range_days 	= 2;
 			$where 			= array(
 				"target_id" => $target->id,
 				"user_from" => $target->user_id,
-				"status"	=> array(1,2)
+				"status"	=> 1
 			);
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by($where);
 			if($transaction){
 				$entering_date		= get_entering_date();
-				$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.$range_days.' days'));
+				$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.SUBLOAN_RANGE_DAYS.' days'));
 
 				$data = array(
 					"remaining_principal"		=> 0,//剩餘本金
@@ -44,31 +43,17 @@ class Subloan_lib{
 				foreach($transaction as $key => $value){
 					switch($value->source){
 						case SOURCE_AR_PRINCIPAL: 
-							$instalment = $value->status==2?$value->instalment_no:$instalment;
+							$instalment 							= $value->instalment_no;
 							$remaining_principal[$value->user_to]	+= $value->amount;
 							break;
-						case SOURCE_PRINCIPAL: 
-							$remaining_principal[$value->user_to]	-= $value->amount;
-							break;
 						case SOURCE_AR_INTEREST: 
-							if($value->limit_date <= $settlement_date){
-								$interest_payable[$value->user_to]	+= $value->amount;			
-							}
-							break;
-						case SOURCE_INTEREST: 
-							$interest_payable[$value->user_to] -= $value->amount;
+							$interest_payable[$value->user_to]	+= $value->amount;			
 							break;
 						case SOURCE_AR_DAMAGE: 
 							$data['liquidated_damages'] 	+= $value->amount;
 							break;
 						case SOURCE_AR_DELAYINTEREST: 
 							$data['delay_interest_payable'] += $value->amount;
-							break;
-						case SOURCE_DAMAGE:
-							$data['liquidated_damages'] 	-= $value->amount;
-							break;
-						case SOURCE_DELAYINTEREST:
-							$data['delay_interest_payable'] -= $value->amount;
 							break;
 						default:
 							break;
@@ -78,10 +63,9 @@ class Subloan_lib{
 				$data["remaining_instalment"] 	= $target->instalment - $instalment;
 				
 				if($remaining_principal){
-					
 					foreach($remaining_principal as $k => $v){
 						$data["remaining_principal"] 	+= $v;
-						$data["delay_interest_payable"] += $this->CI->financial_lib->get_delay_interest($v,$target->delay_days+$range_days);
+						$data["delay_interest_payable"] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days + SUBLOAN_RANGE_DAYS);
 					}
 					
 					foreach($interest_payable as $k => $v){

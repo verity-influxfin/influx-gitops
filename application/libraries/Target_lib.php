@@ -304,7 +304,6 @@ class Target_lib{
 			}else{
 				if($target->expire_time < time()){
 					if($target->sub_status==8){
-						
 						$this->CI->subloan_lib->auction_ended($target);
 					}else{
 						$target_update_param = array(

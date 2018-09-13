@@ -380,7 +380,7 @@ class Certification extends REST_Controller {
 			}
 			
 			//必填欄位
-			$fields 	= ['school','department','grade','student_id','email'];
+			$fields 	= ['school','department','grade','student_id','email','major'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -388,7 +388,7 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
-			$content['major'] 			= isset($input['major'])?$input['major']:"資訊通訊科技學門";
+
 			$content['system'] 			= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 			$content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
 			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
@@ -677,6 +677,13 @@ class Certification extends REST_Controller {
 					$this->sendemail->admin_notification("新的一筆金融帳號驗證 出借端會員ID:".$user_id,"有新的一筆金融帳號驗證 出借端會員ID:".$user_id);
 				}else{
 					$this->certification_lib->set_success($insert);
+					$target = $this->target_model->get_by(array(
+						"user_id"	=> $user_id,
+						"status"	=> 2,
+					));
+					if($target){
+						$bankaccount_info['verify'] = 2;
+					}
 				}
 				
 				$this->user_bankaccount_model->insert($bankaccount_info);

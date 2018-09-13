@@ -108,18 +108,20 @@ class Notification_lib{
 		return $rs;
 	}
 	
-	public function bankaccount_verify_failed($user_id){
-		$title = "【驗證失敗】 您的借款驗證未通過";
+	public function bankaccount_verify_failed($user_id,$investor=0){
+		$title = "【驗證失敗】 您的金融驗證未通過";
 			$content = "您好！
-						很抱歉的通知，您的借款驗證未能通過，非常感謝您的申請，我們將會對您的申請信息進行嚴格保密，感謝您對普匯的信任。";
+						很抱歉的通知，您的金融驗證未能通過，請您重新認證，我們將會對您的申請信息進行嚴格保密，感謝您對普匯的信任。";
 
 		$param = array(
 			"user_id"	=> $user_id,
-			"investor"	=> 0,
+			"investor"	=> $investor,
 			"title"		=> $title,
 			"content"	=> $content,
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
 
