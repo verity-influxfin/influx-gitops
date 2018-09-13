@@ -499,7 +499,12 @@ class Transfer extends REST_Controller {
 			
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
 			$this->load->model('user/user_bankaccount_model');
-			$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+			$bank_account = $this->user_bankaccount_model->get_by(array(
+				"investor"	=> $investor,
+				"status"	=> 1,
+				"user_id"	=> $user_id,
+				"verify"	=> 1
+			));
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 			}
@@ -865,13 +870,13 @@ class Transfer extends REST_Controller {
 		
 		$transfer 	= $this->transfer_lib->get_transfer_list();
 		if($transfer){
-			
 			if($delay){
 				$where["delay_days >"] 	= GRACE_PERIOD;
 				if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
 					$where["credit_level"] = explode(",",$input["credit_level"]);
 				}
 			}else{
+				
 				$where["delay_days <="] = GRACE_PERIOD;
 				if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
 					$where["interest_rate >="] = intval($input["interest_rate_s"]);
@@ -900,11 +905,11 @@ class Transfer extends REST_Controller {
 						}
 					}
 				}
-			
 			}
 			if($transfer){
 				$investment = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>3,"transfer_status"=>1));
 				if($investment){
+					
 					$investment_ids = array();
 					foreach($investment as $key => $value){
 						$investment_ids[] = $value->id;
@@ -955,6 +960,7 @@ class Transfer extends REST_Controller {
 				foreach($transfer as $key => $value){
 					$target_ids[] = $value->target_id;
 				}
+				
 				$where["id"] 	= $target_ids;
 				$targets = $this->target_model->get_many_by($where);
 				if($targets){

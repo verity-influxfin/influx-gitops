@@ -15,54 +15,78 @@ class Transfer_lib{
     }
 
 	public function get_pretransfer_info($investment){
-		if($investment){
-			$target 		= $this->CI->target_model->get($investment->target_id);
+		if($investment && $investment->status==3){
+			$entering_date		= get_entering_date();
+			$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.TRANSFER_RANGE_DAYS.' days'));
+			$target 			= $this->CI->target_model->get($investment->target_id);
 			$this->CI->load->model('transaction/transaction_model');
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
-				"investment_id"	=>$investment->id,
-				"user_to"		=>$investment->user_id,
-				"status"		=>array(1,2)
+				"investment_id"	=> $investment->id,
+				"status"		=> 1
 			));
 			if($transaction){
-				$instalment 		= 0;
-				$instalment_paid 	= 0;
-				$principal			= 0;
-				foreach($transaction as $k => $v){
-					if($v->source == SOURCE_AR_PRINCIPAL){
-						$principal 		+= $v->amount;
-						$instalment		 = $v->instalment_no;
-					}
-					if($v->source == SOURCE_PRINCIPAL){
-						$principal 		-= $v->amount;
-						$instalment_paid = $v->instalment_no;
+				$instalment_paid 		= 0;//已還期數
+				$next_instalment 		= true;//下期
+				$principal				= 0;//本金
+				$interest				= 0;//利息
+				$platform_fee			= 0;//應付服務費
+				foreach($transaction as $key => $value){
+					switch($value->source){
+						case SOURCE_AR_PRINCIPAL: 
+							$principal 		+= $value->amount;
+							break;
+						case SOURCE_AR_INTEREST: 
+							if($value->limit_date <= $settlement_date){
+								$interest	+= $value->amount;
+								$instalment_paid = $value->instalment_no;
+								if($value->limit_date == $settlement_date){
+									$next_instalment = false;
+								}
+							}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
+								$interest	+= $value->amount;
+							}
+							break;
+						case SOURCE_AR_FEES: 
+							if($value->limit_date <= $settlement_date){
+								$platform_fee			+= $value->amount;
+								$instalment_paid 	= $value->instalment_no;
+								if($value->limit_date == $settlement_date){
+									$next_instalment = false;
+								}
+							}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
+								$platform_fee	+= $value->amount;
+							}
+							break;
+						default:
+							break;
 					}
 				}
 				
+				$total = $principal + $interest - $platform_fee;
+
 				$contract = $this->CI->contract_lib->pretransfer_contract([
 					$investment->user_id,
 					"",
-					$investment->user_id,
-					$target->target_no,
-					$principal,
-					$investment->user_id,
+					$target->user_id,
 					$target->target_no,
 					$principal,
 					$principal,
-					$principal,
-					"",
-					$principal,
+					$total,
 					$target->user_id,
 					$target->user_id,
 					$target->user_id,
 				]);
-				
-				$instalment = $instalment - $instalment_paid;
+				$instalment = $target->instalment - $instalment_paid;
 				$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
 				$data 		= array(
-					"instalment"				=> $instalment,
+					"total"						=> $total,
+					"instalment"				=> $instalment,//剩餘期數
 					"principal"					=> $principal,
+					"interest"					=> $interest,
+					"platform_fee"				=> $platform_fee,
 					"fee"						=> $fee,
 					"debt_transfer_contract" 	=> $contract,
+					"settlement_date"			=> $settlement_date,//結帳日
 				);
 				return $data;
 			}
@@ -76,50 +100,67 @@ class Transfer_lib{
 			$target 	= $this->CI->target_model->get($investment->target_id);
 			$info  		= $this->get_pretransfer_info($investment);
 			if($info){
-				$principal = $info["principal"];
-				$contract = $this->CI->contract_lib->sign_contract("transfer",[
+				$principal 	= $info["principal"];
+				$total 		= $info["total"];
+				$contract 	= $this->CI->contract_lib->sign_contract("transfer",[
 					$investment->user_id,
 					"",
-					$investment->user_id,
-					$target->target_no,
-					$principal,
-					$investment->user_id,
+					$target->user_id,
 					$target->target_no,
 					$principal,
 					$principal,
-					$principal,
-					"",
-					$principal,
+					$total,
 					$target->user_id,
 					$target->user_id,
 					$target->user_id,
 				]);
+				
 				if($contract){
 					$investment_param = array(
 						"transfer_status"		=> 1,
 					);
 					$rs = $this->CI->investment_model->update($investment->id,$investment_param);
 					if($rs){
+						$this->CI->load->library('target_lib');
+						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
 						$param = array(
 							"target_id"				=> $investment->target_id,
 							"investment_id"			=> $investment->id,
 							"transfer_fee"			=> $info["fee"],
-							"amount"				=> $info["principal"],
+							"amount"				=> $info["total"],
+							"principal"				=> $info["principal"],
 							"instalment"			=> $info["instalment"],
 							"expire_time"			=> strtotime("+2 days", time()),
-							"launch_times"			=> 1,
 							"contract_id"			=> $contract,
 						);
 						$res = $this->CI->transfer_model->insert($param);
 						return $res;
 					}
 				}
-				
 			}
 		}
 		return false;
 	}
 
+	
+	public function cancel_transfer($transfers){
+		if($transfers && $transfers->status==0){
+			$rs = $this->CI->transfer_model->update($transfers->id,array(
+				"status"	=> 8
+			));
+			if($rs){
+				$investment_param = array(
+					"transfer_status"	=> 0,
+				);
+				$rs = $this->CI->investment_model->update($transfers->investment_id,$investment_param);
+				$this->CI->load->library('target_lib');
+				$this->CI->target_lib->insert_investment_change_log($transfers->investment_id,$investment_param);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public function get_transfer_list($where = array("status" => 0)){
 		$list 	= array();
 		$rs = $this->CI->transfer_model->get_many_by($where);
@@ -153,7 +194,10 @@ class Transfer_lib{
 	//判斷流標或結標或凍結款項
 	function check_bidding($transfers){
 		if($transfers && $transfers->status==0){
-			$transfer_investments = $this->CI->transfer_investment_model->order_by("tx_datetime","asc")->get_many_by(array("transfer_id"=>$transfers->id,"status"=>array("0","1")));
+			$transfer_investments = $this->CI->transfer_investment_model->order_by("tx_datetime","asc")->get_many_by(array(
+				"transfer_id"	=> $transfers->id,
+				"status"		=> array("0","1")
+			));
 			if($transfer_investments){
 				$amount = 0;
 				foreach($transfer_investments as $key => $value){
@@ -176,21 +220,19 @@ class Transfer_lib{
 									$contract_id 	= $this->CI->contract_lib->sign_contract("transfer",[
 										$investment->user_id,
 										$value->user_id,
-										$investment->user_id,
+										$target->user_id,
 										$target->target_no,
-										$value->amount,
-										$investment->user_id,
-										$target->target_no,
-										$value->amount,
-										$value->amount,
-										$value->amount,
-										$value->user_id,
+										$transfers->principal,
+										$transfers->principal,
 										$value->amount,
 										$target->user_id,
 										$target->user_id,
 										$target->user_id,
 									]);
-									$param 			= array("status"=>2,"contract_id"=>$contract_id);
+									$param 			= array(
+										"status"		=> 2,
+										"contract_id"	=> $contract_id
+									);
 									$ended 			= false;
 								}else{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -198,15 +240,13 @@ class Transfer_lib{
 							}
 							$this->CI->transfer_investment_model->update($value->id,$param);
 						}
+						$this->CI->transaction_lib->transfer_success($transfers->id);
 						return true;
 					}
 				}else{
 					if($transfers->expire_time < time()){
 						//流標
-						$this->CI->transfer_model->update($transfers->id,array(
-							"launch_times"	=> $transfers->launch_times + 1,
-							"expire_time"	=> strtotime("+2 days", $transfers->expire_time)
-						));
+						$this->cancel_transfer($transfers);
 						foreach($transfer_investments as $key => $value){
 							$this->CI->transfer_investment_model->update($value->id,array("status"=>9));
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
@@ -234,7 +274,12 @@ class Transfer_lib{
 										);
 										$rs = $this->CI->frozen_amount_model->insert($param);
 										if($rs){
-											$this->CI->transfer_investment_model->update($value->id,array("frozen_status"=>1,"frozen_id"=>$rs,"status"=>1,"tx_datetime"=>$tx_datetime));
+											$this->CI->transfer_investment_model->update($value->id,array(
+												"frozen_status"		=> 1,
+												"frozen_id"			=> $rs,
+												"status"			=> 1,
+												"tx_datetime"		=> $tx_datetime
+											));
 										}
 									}
 									$this->CI->virtual_account_model->update($virtual_account->id,array("status"=>1));
@@ -246,10 +291,7 @@ class Transfer_lib{
 				}
 			}else{
 				if($transfers->expire_time < time()){
-					$this->CI->transfer_model->update($transfers->id,array(
-						"launch_times"	=> $transfers->launch_times + 1,
-						"expire_time"	=> strtotime("+2 days", $transfers->expire_time)
-					));
+					$this->cancel_transfer($transfers);
 				}
 				return true;
 			}

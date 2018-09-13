@@ -734,7 +734,7 @@ class Recoveries extends REST_Controller {
      * @apiParam {String} ids Investments IDs ex: 1,3,10,21
 	 * 
      * @apiSuccess {json} result SUCCESS
-     * @apiSuccess {String} total_principal 轉讓本金
+     * @apiSuccess {String} total_principal 轉讓價金
      * @apiSuccess {String} total_fee 預計轉讓費用
      * @apiSuccess {String} max_instalment 最大剩餘期數
      * @apiSuccess {String} min_instalment 最小剩餘期數
@@ -829,7 +829,7 @@ class Recoveries extends REST_Controller {
 			foreach( $investments as $key => $value ){
 				$info = $this->transfer_lib->get_pretransfer_info($value);
 				if($info){
-					$total_principal 	+= $info["principal"];
+					$total_principal 	+= $info["total"];
 					$total_fee 			+= $info["fee"];
 					$debt_transfer_contract[] = $info["debt_transfer_contract"];
 					if($max_instalment < $info["instalment"]){
@@ -902,9 +902,7 @@ class Recoveries extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$ids		= array();
-		if(!is_development()){
-			$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));//  8/3暫不開放
-		}
+
 		//必填欄位
 		if (empty($input['ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -934,8 +932,12 @@ class Recoveries extends REST_Controller {
 				if($value->transfer_status != 0){
 					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
 				}
+			}
+			
+			foreach( $investments as $key => $value ){
 				$rs = $this->transfer_lib->apply_transfer($value);
 			}
+			
 			$this->response(array('result' => 'SUCCESS'));
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));

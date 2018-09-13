@@ -246,6 +246,7 @@ class Target_lib{
 									$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
 								}
 							}
+							$this->insert_investment_change_log($value->id,$param);
 							$this->CI->investment_model->update($value->id,$param);
 						}
 						$this->CI->load->library('Sendemail');
@@ -266,6 +267,7 @@ class Target_lib{
 							$this->CI->target_model->update($target->id,$target_update_param);
 						}
 						foreach($investments as $key => $value){
+							$this->insert_investment_change_log($value->id,array("status"=>9));
 							$this->CI->investment_model->update($value->id,array("status"=>9));
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
 								$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
@@ -291,6 +293,7 @@ class Target_lib{
 										);
 										$rs = $this->CI->frozen_amount_model->insert($param);
 										if($rs){
+											$this->insert_investment_change_log($value->id,array("frozen_status"=>1,"frozen_id"=>$rs,"status"=>1,"tx_datetime"=>$tx_datetime));
 											$this->CI->investment_model->update($value->id,array("frozen_status"=>1,"frozen_id"=>$rs,"status"=>1,"tx_datetime"=>$tx_datetime));
 										}
 									}
@@ -606,6 +609,26 @@ class Target_lib{
 				}
 			}
 			$rs = $this->CI->Log_targetschange_model->insert($param);
+			return $rs;
+		}
+		return false;
+	}
+	
+	public function insert_investment_change_log($investment_id,$update_param,$user_id=0,$admin_id=0){
+		if($investment_id){
+			$this->CI->load->model('log/Log_investmentschange_model');
+			$param		= array(
+				"investment_id"	=> $investment_id,
+				"change_user"	=> $user_id,
+				"change_admin"	=> $admin_id
+			);
+			$fields 	= ['status','transfer_status'];
+			foreach ($fields as $field) {
+				if (isset($update_param[$field])) {
+					$param[$field] = $update_param[$field];
+				}
+			}
+			$rs = $this->CI->Log_investmentschange_model->insert($param);
 			return $rs;
 		}
 		return false;

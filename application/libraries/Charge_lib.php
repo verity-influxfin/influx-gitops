@@ -302,10 +302,10 @@ class Charge_lib
 			);
 			$transaction 	= $this->CI->transaction_model->get_by($where);
 			if(!$transaction){
-				$this->CI->target_model->update($target->id,array("status"=>10));
 				$this->CI->load->model('loan/investment_model');
-				$this->CI->investment_model->update_by(array("target_id" => $target->id,"status"=> 3),array("status"=>10));
 				$this->CI->load->library('Target_lib');
+				$this->CI->target_model->update($target->id,array("status"=>10));
+				$this->CI->investment_model->update_by(array("target_id" => $target->id,"status"=> 3),array("status"=>10));
 				$this->CI->target_lib->insert_change_log($target->id,array("status"=>10),0,0);
 
 				return true;

@@ -392,6 +392,9 @@ class Transaction_lib{
 								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
 								
 								$this->CI->investment_model->update_many($investment_ids,array("status"=>3));
+								foreach($investment_ids as $k => $investment_id){
+									$this->CI->target_lib->insert_investment_change_log($investment_id,array("status"=>3),0,$admin_id);
+								}
 								$this->CI->frozen_amount_model->update_many($frozen_ids,array("status"=>0));
 								foreach($rs as $key => $value){
 									$this->CI->passbook_lib->enter_account($value);
@@ -435,15 +438,15 @@ class Transaction_lib{
 				$investment = $this->CI->investment_model->get($transfer->investment_id);
 				if($investment && $investment->status==3 && $target && $target->script_status==0){
 					$this->CI->target_model->update($target->id,array("script_status"=>10));
-					$transaction_list 	= $this->CI->transaction_model->get_many_by(array("investment_id"=>$investment->id,"status !="=>0));
+					$transaction_list 	= $this->CI->transaction_model->get_many_by(array(
+						"investment_id"	=> $investment->id,
+						"status"		=> 1
+					));
 					$principal			= 0;
 					if($transaction_list){
 						foreach($transaction_list as $k => $v){
 							if($v->source == SOURCE_AR_PRINCIPAL){
-								$principal 		+= $v->amount;
-							}
-							if($v->source == SOURCE_PRINCIPAL){
-								$principal 		-= $v->amount;
+								$principal 	+= $v->amount;
 							}
 						}
 					}
@@ -454,13 +457,13 @@ class Transaction_lib{
 						"frozen_status"	=> 1
 					));
 						
-					if($principal>0 && $transfer_investments){
+					if($principal==$transfer->principal && $transfer_investments){
 
 						$investment_data = array(
 							"target_id"		=> $investment->target_id,
 							"user_id"		=> $transfer_investments->user_id,
-							"amount"		=> intval($principal),
-							"loan_amount"	=> intval($principal),
+							"amount"		=> intval($transfer->principal),
+							"loan_amount"	=> intval($transfer->principal),
 							"contract_id"	=> $transfer_investments->contract_id,
 							"status"		=> $investment->status,
 						);
@@ -482,7 +485,7 @@ class Transaction_lib{
 									"entering_date"		=> $date,
 									"user_from"			=> $investment->user_id,
 									"bank_account_from"	=> $transfer_account->virtual_account,
-									"amount"			=> intval(round($principal*DEBT_TRANSFER_FEES/100,0)),
+									"amount"			=> $transfer->transfer_fee,
 									"target_id"			=> $target->id,
 									"investment_id"		=> $new_investment,
 									"instalment_no"		=> 0,
@@ -497,7 +500,7 @@ class Transaction_lib{
 									"entering_date"		=> $date,
 									"user_from"			=> $transfer_investments->user_id,
 									"bank_account_from"	=> $virtual_account->virtual_account,
-									"amount"			=> intval($principal),
+									"amount"			=> intval($transfer->amount),
 									"target_id"			=> $target->id,
 									"investment_id"		=> $new_investment,
 									"instalment_no"		=> 0,
@@ -510,54 +513,55 @@ class Transaction_lib{
 								//攤還表
 								if($transaction_list){
 									foreach($transaction_list as $k => $v){
-										if($v->status ==1){
-											if($v->user_from==$investment->user_id){
-												$transaction[]	= array(
-													"source"			=> $v->source,
-													"entering_date"		=> $date,
-													"user_from"			=> $transfer_investments->user_id,
-													"bank_account_from"	=> $virtual_account->virtual_account,
-													"amount"			=> intval($v->amount),
-													"target_id"			=> $v->target_id,
-													"investment_id"		=> $new_investment,
-													"instalment_no"		=> $v->instalment_no,
-													"user_to"			=> $v->user_to,
-													"bank_account_to"	=> $v->bank_account_to,
-													"limit_date"		=> $v->limit_date,
-												);
-											}else if($v->user_to==$investment->user_id){
-												$transaction[]	= array(
-													"source"			=> $v->source,
-													"entering_date"		=> $date,
-													"user_from"			=> $v->user_from,
-													"bank_account_from"	=> $v->bank_account_from,
-													"amount"			=> intval($v->amount),
-													"target_id"			=> $v->target_id,
-													"investment_id"		=> $new_investment,
-													"instalment_no"		=> $v->instalment_no,
-													"user_to"			=> $transfer_investments->user_id,
-													"bank_account_to"	=> $virtual_account->virtual_account,
-													"limit_date"		=> $v->limit_date,
-												);
-											}
-											
-											$this->CI->transaction_model->update($v->id,array("status"=>0));
+										if($v->user_from==$investment->user_id){
+											$transaction[]	= array(
+												"source"			=> $v->source,
+												"entering_date"		=> $date,
+												"user_from"			=> $transfer_investments->user_id,
+												"bank_account_from"	=> $virtual_account->virtual_account,
+												"amount"			=> intval($v->amount),
+												"target_id"			=> $v->target_id,
+												"investment_id"		=> $new_investment,
+												"instalment_no"		=> $v->instalment_no,
+												"user_to"			=> $v->user_to,
+												"bank_account_to"	=> $v->bank_account_to,
+												"limit_date"		=> $v->limit_date,
+											);
+										}else if($v->user_to==$investment->user_id){
+											$transaction[]	= array(
+												"source"			=> $v->source,
+												"entering_date"		=> $date,
+												"user_from"			=> $v->user_from,
+												"bank_account_from"	=> $v->bank_account_from,
+												"amount"			=> intval($v->amount),
+												"target_id"			=> $v->target_id,
+												"investment_id"		=> $new_investment,
+												"instalment_no"		=> $v->instalment_no,
+												"user_to"			=> $transfer_investments->user_id,
+												"bank_account_to"	=> $virtual_account->virtual_account,
+												"limit_date"		=> $v->limit_date,
+											);
 										}
+										$this->CI->transaction_model->update($v->id,array("status"=>0));
 									}
 								}
 								
 								$rs  = $this->CI->transaction_model->insert_many($transaction);
 								if($rs && is_array($rs)){
-									$this->CI->transfer_model->update($transfer_id,array("status"=>10,"transfer_date"=>$date,"new_investment"=>$new_investment));
+									$this->CI->transfer_model->update($transfer_id,array(
+										"status"			=> 10,
+										"transfer_date"		=> $date,
+										"new_investment"	=> $new_investment
+									));
 									foreach($rs as $key => $value){
 										$this->CI->passbook_lib->enter_account($value);
 									}
-									return true;
 								}
 							}
 						}
 					}
 					$this->CI->target_model->update($target->id,array("script_status"=>0));
+					return true;
 				}
 			}
 		}
