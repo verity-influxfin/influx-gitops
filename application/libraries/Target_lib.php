@@ -433,12 +433,11 @@ class Target_lib{
 			"XIRR"			=> 0,
 			"date"			=> $target->loan_date,
 		);
-		$users			= array($target->user_id,$investment->user_id);
+
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
-			"user_from"	=> $users,
-			"user_to"	=> $users,
-			"target_id" => $target->id,
-			"status !=" => 0
+			"investment_id"	=> $investment->id,
+			"target_id" 	=> $target->id,
+			"status !=" 	=> 0
 		));
 		$list = array();
 		
