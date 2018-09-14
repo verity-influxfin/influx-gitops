@@ -437,13 +437,13 @@ class Target_lib{
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
 			"investment_id"	=> $investment->id,
 			"target_id" 	=> $target->id,
-			"status !=" 	=> 0
+			"status" 		=> array(1,2)
 		));
 		$list = array();
 		
 		if($transactions){
 			foreach($transactions as $key => $value){
-				if($value->instalment_no){
+				if($value->instalment_no && $value->source==SOURCE_AR_PRINCIPAL){
 					$limit_date = $value->limit_date?$value->limit_date:$limit_date;
 					$list[$value->instalment_no] = array(
 						"instalment"		=> $value->instalment_no,//期數

@@ -44,11 +44,11 @@ class Financial_lib{
 			for( $i=1; $i <= $instalment; $i++ ){
 				$odate 		= $date;
 				//還款日
-				$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+				$ym 		= date("Y-m",strtotime($date));
+				$date 		= date("Y-m-",strtotime($ym." + 1 month")).REPAYMENT_DAY;
 				if($i==1 && $odate > date("Y-m-",strtotime($odate)).REPAYMENT_DAY){
 					$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
 				}
-				
 				//本期日數
 				$days  		= get_range_days($odate,$date);
 				//本期利息 = 年利率/年日數*本期日數=本期利率

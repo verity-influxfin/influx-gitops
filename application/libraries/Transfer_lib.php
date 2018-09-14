@@ -66,7 +66,7 @@ class Transfer_lib{
 						}
 					}
 				}
-				$total = $principal + $interest - $platform_fee;
+				$total = $principal;
 
 				$contract = $this->CI->contract_lib->pretransfer_contract([
 					$investment->user_id,
