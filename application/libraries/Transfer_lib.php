@@ -22,7 +22,7 @@ class Transfer_lib{
 			$this->CI->load->model('transaction/transaction_model');
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
 				"investment_id"	=> $investment->id,
-				"status"		=> 1
+				"status"		=> array(1,2)
 			));
 			if($transaction){
 				$instalment_paid 		= 0;//已還期數
@@ -31,37 +31,41 @@ class Transfer_lib{
 				$interest				= 0;//利息
 				$platform_fee			= 0;//應付服務費
 				foreach($transaction as $key => $value){
-					switch($value->source){
-						case SOURCE_AR_PRINCIPAL: 
-							$principal 		+= $value->amount;
-							break;
-						case SOURCE_AR_INTEREST: 
-							if($value->limit_date <= $settlement_date){
-								$interest	+= $value->amount;
-								$instalment_paid = $value->instalment_no;
-								if($value->limit_date == $settlement_date){
-									$next_instalment = false;
-								}
-							}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
-								$interest	+= $value->amount;
-							}
-							break;
-						case SOURCE_AR_FEES: 
-							if($value->limit_date <= $settlement_date){
-								$platform_fee			+= $value->amount;
-								$instalment_paid 	= $value->instalment_no;
-								if($value->limit_date == $settlement_date){
-									$next_instalment = false;
-								}
-							}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
-								$platform_fee	+= $value->amount;
-							}
-							break;
-						default:
-							break;
+					if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
+						$instalment_paid = $value->instalment_no;
 					}
 				}
-				
+				foreach($transaction as $key => $value){
+					if($value->status==1){
+						switch($value->source){
+							case SOURCE_AR_PRINCIPAL: 
+								$principal 		+= $value->amount;
+								break;
+							case SOURCE_AR_INTEREST: 
+								if($value->limit_date <= $settlement_date){
+									$interest	+= $value->amount;
+									if($value->limit_date == $settlement_date){
+										$next_instalment = false;
+									}
+								}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
+									$interest	+= $value->amount;
+								}
+								break;
+							case SOURCE_AR_FEES: 
+								if($value->limit_date <= $settlement_date){
+									$platform_fee	+= $value->amount;
+									if($value->limit_date == $settlement_date){
+										$next_instalment = false;
+									}
+								}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
+									$platform_fee	+= $value->amount;
+								}
+								break;
+							default:
+								break;
+						}
+					}
+				}
 				$total = $principal + $interest - $platform_fee;
 
 				$contract = $this->CI->contract_lib->pretransfer_contract([
