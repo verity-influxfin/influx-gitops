@@ -94,8 +94,8 @@
 												</select>
 											</th>
                                             <th>申請日期</th>
+                                            <th>失敗</th>
                                             <th>Detail</th>
-                                            <th>退回</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -141,7 +141,6 @@
 											?>
 											</td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
 											<td>
 											<? 	
 												if($value->verify!=1 && $value->verify!=4){
@@ -149,6 +148,7 @@
 												}
 											?>
 											</td> 
+											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
 										}}
