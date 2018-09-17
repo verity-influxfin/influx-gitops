@@ -45,13 +45,7 @@
 											<td><a href="<?=admin_url('contact/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
                                         </tr>                                        
 									<?php 
-										}}else{
-									?>
-									<tr class="odd">
-										<th class="text-center" colspan="10">目前尚無資料</th>
-									</tr>
-									<?php 
-										}
+										}}
 									?>
                                     </tbody>
                                 </table>

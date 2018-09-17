@@ -42,6 +42,21 @@
 						}
 					}
 				}
+				
+				function resend(id){
+					if(confirm("改回待驗證？")){
+						if(id){
+							$.ajax({
+								url: './user_bankaccount_resend?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -121,6 +136,7 @@
 												
 												if($value->verify==3){
 													echo '<br><button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
+													echo '<button class="btn btn-danger" onclick="resend('.$value->id.')">退回重發</button>';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>
@@ -130,7 +146,7 @@
 											<td>
 											<? 	
 												if($value->verify!=1 && $value->verify!=4){
-													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">退回</button>';
+													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>
 											</td> 

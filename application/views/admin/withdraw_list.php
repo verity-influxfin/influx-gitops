@@ -50,13 +50,7 @@
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 
-										}}else{
-									?>
-									<tr class="odd">
-										<th class="text-center" colspan="10">目前尚無資料</th>
-									</tr>
-									<?php 
-										}
+										}}
 									?>
                                     </tbody>
                                 </table>

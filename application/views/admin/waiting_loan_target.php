@@ -117,7 +117,7 @@
 												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:"" ?>
 												<? if($value->loan_status==3){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
-													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>&nbsp;';
+													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
 												} ?>
 											</td>
@@ -126,13 +126,7 @@
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
-										}}else{
-									?>
-									<tr class="odd">
-										<th class="text-center" colspan="12">目前尚無資料</th>
-									</tr>
-									<?php 
-										}
+										}}
 									?>
                                     </tbody>
                                 </table>

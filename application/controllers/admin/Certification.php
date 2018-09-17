@@ -270,7 +270,7 @@ class Certification extends MY_Admin_Controller {
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
-			if($info){
+			if($info && $info->verify==3){
 				$this->load->model('log/log_usercertification_model');
 				$this->log_usercertification_model->insert(array(
 					'user_certification_id'	=> $info->user_certification_id,
@@ -294,7 +294,7 @@ class Certification extends MY_Admin_Controller {
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
-			if($info){
+			if($info && $info->verify==3){
 				$this->load->model('log/log_usercertification_model');
 				$this->log_usercertification_model->insert(array(
 					'user_certification_id'	=> $info->user_certification_id,
@@ -305,6 +305,22 @@ class Certification extends MY_Admin_Controller {
 				$this->user_bankaccount_model->update($id,array("verify"=>4,"status"=>0));
 				$this->load->library('Notification_lib');
 				$this->notification_lib->bankaccount_verify_failed($info->user_id,$info->investor);
+				echo "更新成功";die();
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
+	function user_bankaccount_resend(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->user_bankaccount_model->get($id);
+			if($info && $info->verify==3){
+				$this->user_bankaccount_model->update($id,array("verify"=>2));
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();
