@@ -10,12 +10,12 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('admin/add') ?>" class="btn btn-default float-right ">新增管理員</a>
+							<a href="<?=admin_url('admin/add') ?>" class="btn btn-default btn-primary float-right ">新增管理員</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
                                     <thead>
                                         <tr>
                                             <th>NO.</th>

@@ -15,7 +15,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
                                     <thead>
                                         <tr>
                                             <th>ID</th>

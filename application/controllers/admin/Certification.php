@@ -113,14 +113,15 @@ class Certification extends MY_Admin_Controller {
 	public function user_certification_list(){
 		$page_data 			= array("type"=>"list","list"=>array());
 		$input 				= $this->input->get(NULL, TRUE);
-		$where				= array();
+		$certifications 	= $this->certification_model->get_by(array('alias'	=> 'debit_card'));
+		$where				= array('certification_id !='	=> $certifications->id);
 		$fields 			= ['investor','certification_id','status'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];
 			}
 		}
-		
+
 		$list					= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
 		if(!empty($list)){
 			$page_data['list'] = $list;
@@ -170,8 +171,8 @@ class Certification extends MY_Admin_Controller {
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
 					$certification = $this->certification_model->get($info->certification_id);
-					if($certification->alias=="debit_card" && $info->investor==1){
-						alert("出借端 - 金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
+					if($certification->alias=="debit_card"){
+						alert("金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
 					}else{
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');

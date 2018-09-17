@@ -53,7 +53,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
                                     <thead>
                                         <tr>
                                             <th>NO.</th>
@@ -80,6 +80,7 @@
 											</th>
                                             <th>申請日期</th>
                                             <th>Detail</th>
+                                            <th>退回</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -126,6 +127,13 @@
 											</td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td>
+											<? 	
+												if($value->verify!=1 && $value->verify!=4){
+													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">退回</button>';
+												}
+											?>
+											</td> 
                                         </tr>                                        
 									<?php 
 										}}
