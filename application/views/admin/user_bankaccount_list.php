@@ -136,8 +136,7 @@
 												
 												if($value->verify==3){
 													echo '<br><button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
-													echo '<button class="btn btn-danger" onclick="resend('.$value->id.')">退回重發</button>';
-													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
+													echo '<button class="btn btn-danger" onclick="resend('.$value->id.')">重發</button>';
 												}
 											?>
 											</td>
