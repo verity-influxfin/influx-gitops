@@ -93,8 +93,8 @@
 													<? } ?>
 												</select>
 											</th>
+											<th>失敗</th>
                                             <th>申請日期</th>
-                                            <th>失敗</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -135,19 +135,19 @@
 												}
 												
 												if($value->verify==3){
-													echo '<br><button class="btn btn-success" onclick="success('.$value->id.')">通過</button>&nbsp;';
-													echo '<button class="btn btn-danger" onclick="resend('.$value->id.')">重發</button>';
+													echo '<br><button class="btn btn-success" title="驗證成功" onclick="success('.$value->id.')">通過</button>&nbsp;';
+													echo '<button class="btn btn-danger" title="退回待驗證，可重新匯出" onclick="resend('.$value->id.')">重發</button>';
+												}
+											?>
+											</td>
+											<td>
+											<? 	
+												if($value->verify!=1 && $value->verify!=4){
+													echo '<button class="btn btn-danger" title="驗證不通過，會通知使用者，使用者可重新驗證" onclick="failed('.$value->id.')">不通過</button>';
 												}
 											?>
 											</td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td>
-											<? 	
-												if($value->verify!=1 && $value->verify!=4){
-													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不通過</button>';
-												}
-											?>
-											</td> 
 											<td><a href="<?=admin_url('certification/user_bankaccount_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 
