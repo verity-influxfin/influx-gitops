@@ -63,6 +63,7 @@ class User extends MY_Admin_Controller {
 					$page_data['meta'] 					= $meta_data;
 					$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
 					$page_data['meta_images'] 			= $this->config->item('user_meta_images');
+					$page_data['school_system'] 		= $this->config->item('school_system');
 					$page_data['certification_list'] 	= $certification_list;
 					$page_data['credit_list'] 			= $credit_list;
 					$page_data['product_list'] 			= $this->product_model->get_name_list();
@@ -130,6 +131,7 @@ class User extends MY_Admin_Controller {
 				$page_data['meta'] 					= $meta_data;
 				$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
 				$page_data['meta_images'] 			= $this->config->item('user_meta_images');
+				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
 				$page_data['product_list'] 			= $this->product_model->get_name_list();

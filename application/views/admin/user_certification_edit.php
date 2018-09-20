@@ -35,9 +35,11 @@
 											<div class="form-group">
 												<label><?=isset($user_meta_fields[$key])?$user_meta_fields[$key]:$key; ?></label>
 												<? if(substr($key,-5,5)=="image"){?>
-												<a href="<?=$value?>" data-fancybox="images"><img src="<?=$value?>" style='width:30%;max-width:400px'></a>
+													<a href="<?=$value?>" data-fancybox="images"><img src="<?=$value?>" style='width:30%;max-width:400px'></a>
+												<? }else if($key=='system'){?>
+													<p><?=$school_system[$value]?></p>
 												<? }else{?>
-												<p><?=$value?></p>
+													<p><?=$value?></p>
 												<? }?>
 											</div>
 										<?

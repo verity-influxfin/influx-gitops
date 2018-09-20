@@ -173,7 +173,7 @@
 									<?php 
 										}}
 									?>
-										<tr <?=($count+1)%2==0?"style='background-color: #DCDCDC;'":""; ?>>
+										<tr style='background-color: #DCDCDC;'>
                                             <td>合計</td>
                                             <td></td>
                                             <td></td>

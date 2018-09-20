@@ -126,13 +126,18 @@
 												<tr>
 													<td style="width:40%;"><?=$field ?></td>
 													<td style="word-break: break-all;width:60%;"><?
-													if(isset($meta[$key])&&!empty($meta[$key])){
-														if(in_array($key,$meta_images)){
+													if(isset($meta[$key])){
+														if(in_array($key,$meta_images) && !empty($meta[$key])){
 															echo "<a href='".$meta[$key]."' data-fancybox='images'><img src='".$meta[$key]."' style='width:30%;'></a>";
 														}else if( $key == $alias.'_status' && $meta[$key]==1){
 															echo "已認證"; 
+														}else if( $key == 'school_system'){
+															echo $school_system[$meta[$key]]; 
 														}else{
-															echo $meta[$key];
+															if(!empty($meta[$key]))
+																echo $meta[$key];
+															else
+																echo "無";
 														}
 													}else{
 														echo "無";

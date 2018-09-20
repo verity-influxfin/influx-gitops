@@ -155,7 +155,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['remark'] 				= json_decode($info->remark,true);
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
-					
+					$page_data['school_system'] 		= $this->config->item('school_system');
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/user_certification_edit',$page_data);

@@ -81,6 +81,13 @@ $config['repayment_type']= array(
 2=> "先息後本",
 );
 
+$config['school_system']= array(
+	0=> "大學",
+	1=> "碩士",
+	2=> "博士",
+);
+
+
 $config['transaction_source']= array(
 1	=> "儲值",
 2	=> "提領",
