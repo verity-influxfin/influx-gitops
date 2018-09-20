@@ -19,8 +19,8 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/sb-admin-2.js"></script>
-
 	<script src="<?=base_url()?>assets/admin/js/custom.js"></script>
+	<script src="<?=base_url()?>assets/admin/js/datepicker.js"></script>
 	<script>			
 		$(document).ready(function() {
 			$('#dataTables-tables').dataTable({
@@ -42,6 +42,10 @@
 						"sNext":"下頁",
 						"sLast":"尾頁"}
                 }
+			});
+			
+			$('[data-toggle="datepicker"]').datepicker({
+			  format: 'yyyy-mm-dd',
 			});
 		});
 	</script>

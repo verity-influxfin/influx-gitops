@@ -294,7 +294,7 @@ class Certification extends MY_Admin_Controller {
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->user_bankaccount_model->get($id);
-			if($info && $info->verify==3){
+			if($info && $info->verify!=1){
 				$this->load->model('log/log_usercertification_model');
 				$this->log_usercertification_model->insert(array(
 					'user_certification_id'	=> $info->user_certification_id,

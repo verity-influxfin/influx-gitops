@@ -33,7 +33,7 @@ class Prepayment_lib{
 					"total"						=> 0,
 				);
 				$last_settlement_date 	= $target->loan_date;
-				$instalment 			= 0;
+				$instalment_paid 		= 0;
 				$remaining_principal	= array();
 				$interest_payable		= array();
 				foreach($transaction as $key => $value){
@@ -44,30 +44,23 @@ class Prepayment_lib{
 
 					switch($value->source){
 						case SOURCE_AR_PRINCIPAL: 
-							$instalment = $value->status==2?$value->instalment_no:$instalment;
+							$instalment_paid = $value->status==2?$value->instalment_no:$instalment_paid;
 							$remaining_principal[$value->user_to]	+= $value->amount;
 							break;
 						case SOURCE_PRINCIPAL: 
 							$remaining_principal[$value->user_to]	-= $value->amount;
 							break;
 						case SOURCE_AR_INTEREST: 
-							if($value->limit_date <= $settlement_date){
-								$interest_payable[$value->user_to]	+= $value->amount;
-								if($value->limit_date > $last_settlement_date){
-									$last_settlement_date	= $value->limit_date;
-								}						
+							if($value->limit_date <= $settlement_date && $value->status==2 && $value->limit_date > $last_settlement_date){
+								$last_settlement_date	= $value->limit_date;
 							}
-							break;
-						case SOURCE_INTEREST: 
-							$interest_payable[$value->user_to] -= $value->amount;
 							break;
 						default:
 							break;
 					}
 				} 
 
-				$data["remaining_instalment"] 	= $target->instalment - $instalment;
-				
+				$data["remaining_instalment"] 	= $target->instalment - $instalment_paid;
 				if($remaining_principal){
 					$days  		= get_range_days($last_settlement_date,$settlement_date);
 					$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);

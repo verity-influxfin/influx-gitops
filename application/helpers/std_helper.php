@@ -234,8 +234,18 @@
 	}
 
 	function get_entering_date() {
-		$entering_date 	= time() > strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+1 day')):date("Y-m-d");
+		$entering_date 	= time() >= strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+1 day')):date("Y-m-d");
 		return $entering_date;
+	}
+	
+	function entering_date_range($date="") {
+		if($date){
+			$sdate 	= date("Y-m-d",strtotime($date.' -1 day')).' '.CLOSING_TIME;
+			$temp 	= date("Y-m-d",strtotime($date)).' '.CLOSING_TIME;
+			$edate 	= date("Y-m-d H:i:s",strtotime($temp.' -1 second'));
+			return array("sdatetime"=>$sdate,"edatetime"=>$edate);
+		}
+		return false;
 	}
 	
 	function get_qrcode($url){

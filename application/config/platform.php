@@ -53,9 +53,11 @@ $config['admin_menu'] = array(
 	),
 	"Agreement" 		=> array("name"=>"協議書","icon"=>"fa-star"),
 	"Account" 				=> array(
-		"parent_name"		=> "帳務報表",
+		"parent_name"		=> "財務作業",
 		"parent_icon"		=> "fa-thumbs-up",
-		"index"				=> "平台收支報表",
+		"daily_report"		=> "交易日報表",
+		"passbook_report"	=> "虛擬帳號餘額明細表",
+		"index"				=> "收支統計表",
 	),
 );
 
@@ -105,6 +107,17 @@ $config['transaction_source']= array(
 92	=> "已還違約金",
 93	=> "應付延滯息",
 94	=> "已還延滯息",
+);
+
+$config['transaction_type_name']= array(
+	'recharge'		=> "儲值",
+	'withdraw'		=> "提領",
+	'lending'		=> "放款",
+	'subloan'		=> "產品轉換",
+	'transfer'		=> "債權轉讓",
+	'prepayment'	=> "提前還款",
+	'charge_delay'	=> "逾期清償",
+	'charge_normal'	=> "還款",
 );
 
 

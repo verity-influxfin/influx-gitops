@@ -136,8 +136,10 @@ class Charge_lib
 					$last_settlement_date 	= $target->loan_date;
 					$user_to_info 			= array();
 					$transaction_param 		= array();
+					$instalment_paid		= 0;
 					$liquidated_damages		= 0;
 					$instalment				= 1;
+					$next_instalment 		= true;//下期
 					foreach($transaction as $key => $value){
 						if($value->user_to && $value->user_to!=$target->user_id){
 							$user_to_info[$value->user_to] 	= array(
@@ -146,38 +148,44 @@ class Charge_lib
 								"total_amount"				=> 0,
 								"remaining_principal"		=> 0,
 								"interest_payable"			=> 0,
-								"delay_interest_payable"	=> 0,
+								"platform_fee"				=> 0,
 							);
 						}
-					}
-					foreach($transaction as $key => $value){
-						switch($value->source){
-							case SOURCE_AR_PRINCIPAL: 
-								$instalment = $value->status==2?$value->instalment_no:$instalment;
-								$user_to_info[$value->user_to]["remaining_principal"]	+= $value->amount;
-								break;
-							case SOURCE_PRINCIPAL: 
-								$user_to_info[$value->user_to]["remaining_principal"]	-= $value->amount;
-								break;
-							case SOURCE_AR_INTEREST: 
-								if($value->limit_date <= $settlement_date){
-									$user_to_info[$value->user_to]["interest_payable"]	+= $value->amount;
-									if($value->limit_date > $last_settlement_date){
-										$last_settlement_date	= $value->limit_date;
-									}		
-								}
-								break;
-							case SOURCE_INTEREST: 
-								$user_to_info[$value->user_to]["interest_payable"] 		-= $value->amount;
-								break;
-							default:
-								break;
+						
+						if($value->status==2 && $value->source==SOURCE_AR_PRINCIPAL){
+							$instalment_paid = $value->instalment_no;
+							if($value->limit_date > $last_settlement_date){
+								$last_settlement_date	= $value->limit_date;
+							}
 						}
+					}
+					$instalment = $instalment_paid + 1;
+					foreach($transaction as $key => $value){
 						if($value->status==1){
+							switch($value->source){
+								case SOURCE_AR_PRINCIPAL: 
+									$user_to_info[$value->user_to]["remaining_principal"]	+= $value->amount;
+									break;
+								case SOURCE_PRINCIPAL: 
+									$user_to_info[$value->user_to]["remaining_principal"]	-= $value->amount;
+									break;
+								case SOURCE_AR_FEES: 
+									if($value->limit_date <= $settlement_date){
+										$user_to_info[$value->user_from]["platform_fee"]	+= $value->amount;
+										if($value->limit_date == $settlement_date){
+											$next_instalment = false;
+										}
+									}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==$instalment){
+										$user_to_info[$value->user_from]["platform_fee"]	+= $value->amount;
+									}
+									break;
+								default:
+									break;
+							}
 							$this->CI->transaction_model->update($value->id,array("status"=>0));
 						}
 					}
-					
+
 					if($user_to_info){
 						$days  		= get_range_days($last_settlement_date,$settlement_date);
 						$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
@@ -230,13 +238,13 @@ class Charge_lib
 							}
 							
 							if($value["total_amount"]>0){
-								$platform_fee	= intval(round($value["total_amount"]/100*REPAYMENT_PLATFORM_FEES,0));//回款手續費
+								//回款手續費
 								$transaction_param[] = array(
 									"source"			=> SOURCE_FEES,
 									"entering_date"		=> $date,
 									"user_from"			=> $user_to,
 									"bank_account_from"	=> $value["bank_account_to"],
-									"amount"			=> $platform_fee,
+									"amount"			=> $user_to_info[$user_to]["platform_fee"],
 									"target_id"			=> $target->id,
 									"investment_id"		=> $value["investment_id"],
 									"instalment_no"		=> $instalment,

@@ -46,7 +46,7 @@
                                         </div>
 										<div class="form-group">
                                             <label>生日</label> 
-                                            <input id="birthday" name="birthday" class="form-control" placeholder="Enter Birthday" value="<?=isset($data->birthday)?$data->birthday:"";?>" >
+                                            <input data-toggle="datepicker" id="birthday" name="birthday" class="form-control" placeholder="Enter Birthday" value="<?=isset($data->birthday)?$data->birthday:"";?>" >
                                         </div>
 										<div class="form-group">
                                             <label>Email</label> 
