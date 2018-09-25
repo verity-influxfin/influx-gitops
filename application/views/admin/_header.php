@@ -9,46 +9,18 @@
     <link href="<?=base_url()?>assets/admin/css/bootstrap.min.css" rel="stylesheet">
     <!-- MetisMenu CSS -->
     <link href="<?=base_url()?>assets/admin/css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-    <!-- Timeline CSS -->
-    <link href="<?=base_url()?>assets/admin/css/plugins/timeline.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="<?=base_url()?>assets/admin/css/sb-admin-2.css" rel="stylesheet">
+    <link href="<?=base_url()?>assets/admin/css/sb-admin-2.css?t=1" rel="stylesheet">
     <!-- Morris Charts CSS -->
     <link href="<?=base_url()?>assets/admin/css/plugins/morris.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="<?=base_url()?>assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="<?=base_url()?>assets/admin/css/datepicker.css" rel="stylesheet">
-	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+	<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+	<link href="//cdn.datatables.net/responsive/1.0.7/css/responsive.dataTables.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
-	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
-	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=50g7aczgyla2r7aenym5m6qorvpgpbo0mjec0fffvlt9frf6"></script>
-    <script type="text/javascript">
-		$(function() {
-			$('.fancyframe').fancybox({
-				'type':'iframe',
-			});
-		});
-		
-		function number_only(evt)
-		{
-			var charCode 	= (evt.which) ? evt.which : event.keyCode;
-			if (charCode > 31 && (charCode < 48 || charCode > 57))
-				return false;
-			
-			return true;
-		}
-		
-		function user_search(){
-			var user_id 	= $("#user_search").val();
-			if(user_id == ""){
-				$(".list" ).show();
-			}else{
-				$(".list" ).hide();
-				$("." + user_id ).show();
-			}
-			console.log(user_id)
-		}
-    </script>
+	
+	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
     <div id="wrapper">

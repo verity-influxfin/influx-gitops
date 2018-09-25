@@ -1,8 +1,10 @@
- 
 
 	</div>
+	
     <!-- /#wrapper -->
-
+	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+	<script src="//cloud.tinymce.com/stable/tinymce.min.js?apiKey=50g7aczgyla2r7aenym5m6qorvpgpbo0mjec0fffvlt9frf6"></script>
+	
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/bootstrap.min.js"></script>
 
@@ -10,8 +12,8 @@
     <script src="<?=base_url()?>assets/admin/js/plugins/metisMenu/metisMenu.min.js"></script>
 
     <!-- DataTables JavaScript -->
-    <script src="<?=base_url()?>assets/admin/js/plugins/dataTables/jquery.dataTables.js"></script>
-    <script src="<?=base_url()?>assets/admin/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/responsive/1.0.7/js/dataTables.responsive.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/plugins/morris/raphael.min.js"></script>
@@ -19,7 +21,6 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="<?=base_url()?>assets/admin/js/sb-admin-2.js"></script>
-	<script src="<?=base_url()?>assets/admin/js/custom.js"></script>
 	<script src="<?=base_url()?>assets/admin/js/datepicker.js"></script>
 	<script>			
 		$(document).ready(function() {
@@ -69,10 +70,43 @@
 			  format: 'yyyy-mm-dd',
 			});
 		});
-	</script>
-	<style>
 
-	</style>
+		$(function() {
+			$('.fancyframe').fancybox({
+				'type':'iframe',
+			});
+		});
+		
+		function number_only(evt)
+		{
+			var charCode 	= (evt.which) ? evt.which : event.keyCode;
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+				return false;
+			
+			return true;
+		}
+		
+		function user_search(){
+			var user_id 	= $("#user_search").val();
+			if(user_id == ""){
+				$(".list" ).show();
+			}else{
+				$(".list" ).hide();
+				$("." + user_id ).show();
+			}
+			console.log(user_id)
+		}
+		
+		function ValidateNumber(e, pnumber)
+		{
+			if (!/^\d+$/.test(pnumber))
+			{
+				$(e).val(/^\d+/.exec($(e).val()));
+			}
+			return false;
+		}
+
+	</script>
 </body>
 
 </html>

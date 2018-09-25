@@ -14,10 +14,9 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO.</th>
                                             <th>會員 ID</th>
                                             <th>借款端/出借端</th>
                                             <th>內容</th>
@@ -35,7 +34,6 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><a href="<?=admin_url('user/edit?id='.$value->user_id) ?>" target="_blank"><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->content)?$value->content:"" ?></td>

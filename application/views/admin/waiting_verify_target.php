@@ -45,10 +45,9 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO.</th>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>借款人ID</th>
@@ -71,7 +70,6 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td>

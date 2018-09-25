@@ -73,10 +73,9 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%"  id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO.</th>
                                             <th>案號</th>
                                             <th>產品</th>
                                             <th>借款人ID</th>
@@ -101,9 +100,8 @@
 												<? if($value->loan_status==2){ ?>
 												<input class="targets" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<? } ?>
-												&nbsp;<?=isset($value->id)?$value->id:"" ?>
+												&nbsp;<?=isset($value->target_no)?$value->target_no:"" ?>
 											</td>
-                                            <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td>
 												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >

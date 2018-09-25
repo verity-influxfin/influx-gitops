@@ -116,7 +116,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
-		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
+		if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
@@ -197,6 +197,10 @@ class User extends REST_Controller {
 			}
         }
 
+		if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $input['phone'])){
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
 		if(strlen($input['password']) < PASSWORD_LENGTH){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}

@@ -15,10 +15,9 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO.</th>
                                             <th>虛擬帳號</th>
                                             <th>User ID</th>
 											<th>借款端/出借端</th>
@@ -36,13 +35,12 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-											<td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td>
 											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
 												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
 											</a>
 											</td>
-                                            <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
 											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
 											<td><?=isset($value->amount)?intval($value->amount):"" ?></td>
 											<td><?=isset($value->frozen_id)?$value->frozen_id:"" ?></td>
