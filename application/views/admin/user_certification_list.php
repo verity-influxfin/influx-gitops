@@ -19,39 +19,31 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
 							會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
-                        </div>
+							認證方式：
+							<select id="certification_id" onchange="showChang();">
+								<option value="" >請選擇</option>
+								<? foreach($certification_list as $key => $value){ ?>
+									<option value="<?=$key?>" <?=isset($_GET['certification_id'])&&$_GET['certification_id']==$key?"selected":""?>><?=$value?></option>
+								<? } ?>
+							</select>
+							狀態：
+							<select id="status" onchange="showChang();">
+								<option value="" >請選擇</option>
+								<? foreach($status_list as $key => $value){ ?>
+									<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+								<? } ?>
+							</select>
+						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="display responsive nowrap" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO</th>
                                             <th>會員 ID</th>
-                                            <th>出借/借款
-												<select id="investor" onchange="showChang();">
-													<option value="" >請選擇</option>
-													<? foreach($investor_list as $key => $value){ ?>
-														<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
-													<? } ?>
-												</select>
-											</th>
-                                            <th>認證方式
-												<select id="certification_id" onchange="showChang();">
-													<option value="" >請選擇</option>
-													<? foreach($certification_list as $key => $value){ ?>
-														<option value="<?=$key?>" <?=isset($_GET['certification_id'])&&$_GET['certification_id']==$key?"selected":""?>><?=$value?></option>
-													<? } ?>
-												</select>
-											</th>
-                                            <th>狀態
-												<select id="status" onchange="showChang();">
-													<option value="" >請選擇</option>
-													<? foreach($status_list as $key => $value){ ?>
-														<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
-													<? } ?>
-												</select>
-											</th>
+                                            <th>出借/借款</th>
+                                            <th>認證方式</th>
+                                            <th>狀態</th>
                                             <th>申請日期</th>
                                             <th>Detail</th>
                                         </tr>
@@ -64,7 +56,6 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>

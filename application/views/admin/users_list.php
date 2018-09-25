@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
+							<span>會員列表</span>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

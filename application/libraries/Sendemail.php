@@ -14,11 +14,11 @@ class Sendemail
 		$this->CI->load->library('parser');
         $this->config = array(
 			'protocol'		=> 'smtp',
-			'smtp_host'		=> 'ssl://smtp.gmail.com',
+			'smtp_host'		=> 'ssl://email-smtp.us-west-2.amazonaws.com',
 			'smtp_port'		=> '465',
 			'smtp_timeout'	=> '30',
-			'smtp_user'		=> GMAIL_SMTP_ACCOUNT,
-			'smtp_pass'		=> GMAIL_SMTP_PASSWORD,
+			'smtp_user'		=> SES_SMTP_ACCOUNT,
+			'smtp_pass'		=> SES_SMTP_PASSWORD,
 			'charset'		=> 'utf-8',
 			'newline'		=> "\r\n",
 			'mailtype'		=> 'html',

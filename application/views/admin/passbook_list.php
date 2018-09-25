@@ -51,7 +51,7 @@
 												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
 											</a>
 											</td>
-                                            <td><a class="fancyframe" href="<?=admin_url('user/display?id='.$value->user_id) ?>" ><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
 											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>

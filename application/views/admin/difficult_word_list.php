@@ -8,7 +8,7 @@
                 <button class="btn btn-primary">新增</button>
             </a>
         </div>
-        <table class="table table-bordered table-striped">
+        <table class="display responsive nowrap" width="100%" id="dataTables-paging">
             <thead>
             <tr>
                 <th>NO.</th>

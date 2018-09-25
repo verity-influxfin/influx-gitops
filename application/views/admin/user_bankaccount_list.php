@@ -64,35 +64,34 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
 							<a href="<?=admin_url('certification/user_bankaccount_verify') ?>" target="_self" class="btn btn-primary float-right" >轉出驗證匯款列表</a>
-                        </div>
+							出借/借款：
+							<select id="investor" onchange="showChang();">
+								<option value="" >請選擇</option>
+								<? foreach($investor_list as $key => $value){ ?>
+									<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
+								<? } ?>
+							</select>
+							驗證狀況：
+							<select id="verify" onchange="showChang();">
+								<option value="" >請選擇</option>
+								<? foreach($verify_list as $key => $value){ ?>
+									<option value="<?=$key?>" <?=isset($_GET['verify'])&&$_GET['verify']!=""&&intval($_GET['verify'])==intval($key)?"selected":""?>><?=$value?></option>
+								<? } ?>
+							</select>
+						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
-                                            <th>NO.</th>
                                             <th>會員 ID</th>
                                             <th>會員姓名</th>
-                                            <th>出借/借款
-												<select id="investor" onchange="showChang();">
-													<option value="" >請選擇</option>
-													<? foreach($investor_list as $key => $value){ ?>
-														<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
-													<? } ?>
-												</select>
-											</th>
+                                            <th>出借/借款</th>
                                             <th>銀行代碼</th>
                                             <th>分行代碼</th>
                                             <th>銀行帳號</th>
-                                            <th>驗證狀況
-												<select id="verify" onchange="showChang();">
-													<option value="" >請選擇</option>
-													<? foreach($verify_list as $key => $value){ ?>
-														<option value="<?=$key?>" <?=isset($_GET['verify'])&&$_GET['verify']!=""&&intval($_GET['verify'])==intval($key)?"selected":""?>><?=$value?></option>
-													<? } ?>
-												</select>
-											</th>
+                                            <th>驗證狀況</th>
 											<th>失敗</th>
                                             <th>申請日期</th>
                                             <th>Detail</th>
@@ -106,7 +105,6 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>  list <?=isset($value->user_id)?$value->user_id:"" ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td>
 											<?=isset($value->user_name)?$value->user_name:"" ?>

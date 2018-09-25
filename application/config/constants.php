@@ -272,7 +272,11 @@ defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, getenv('ENV_AW
 defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
-//SMTP
+//SMTP GMAIL
 defined('GMAIL_SMTP_ACCOUNT')   	OR define('GMAIL_SMTP_ACCOUNT'		, getenv('ENV_GMAIL_SMTP_ACCOUNT'));
 defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD'		, getenv('ENV_GMAIL_SMTP_PASSWORD'));
 defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME'			, getenv('ENV_GMAIL_SMTP_NAME'));
+
+//SMTP SES
+defined('SES_SMTP_ACCOUNT')   	OR define('SES_SMTP_ACCOUNT'		, getenv('ENV_SES_SMTP_ACCOUNT'));
+defined('SES_SMTP_PASSWORD')   	OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SES_SMTP_PASSWORD'));
