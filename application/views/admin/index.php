@@ -98,8 +98,22 @@
 		</div>
 		<!-- /.row -->
 		<div class="row">
-			<!-- /.col-lg-8 -->
-			<div class="col-lg-12">
+			<!-- /.col-lg-6 -->
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						註冊、申請成功
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div id="morris-bar-chart"></div>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-6 -->
+			<div class="col-lg-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						投訴與建議
@@ -126,8 +140,37 @@
 
 				<!-- /.panel .chat-panel -->
 			</div>
-			<!-- /.col-lg-4 -->
+
 		</div>
 		<!-- /.row -->
 	</div>
 	<!-- /#page-wrapper -->
+	<script>
+	$(function() {
+		Morris.Bar({
+			element: 'morris-bar-chart',
+			data: [
+			<? if($chart_list){
+				$count=0;
+				foreach($chart_list as $date => $value){
+					if($count!=0){
+						echo ',';
+					}
+			?>
+			{
+				y: '<?=$date ?>',
+				a: <?=$value['register'] ?>,
+				b: <?=$value['loan'] ?>
+			}
+			<? 
+				$count++;}}
+			?>
+			],
+			xkey: 'y',
+			ykeys: ['a', 'b'],
+			labels: ['註冊', '申貸成功'],
+			hideHover: 'auto',
+			resize: true
+		});
+		});
+	</script>

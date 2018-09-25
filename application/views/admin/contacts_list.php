@@ -19,11 +19,11 @@
                                         <tr>
                                             <th>會員 ID</th>
                                             <th>借款端/出借端</th>
-                                            <th>內容</th>
                                             <th>處理人</th>
                                             <th>處理狀態</th>
                                             <th>回報時間</th>
                                             <th>Edit</th>
+											<th>內容</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -36,12 +36,12 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><a href="<?=admin_url('user/edit?id='.$value->user_id) ?>" target="_blank"><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
-                                            <td><?=isset($value->content)?$value->content:"" ?></td>
                                             <td><?=$value->admin_id&&isset($name_list[$value->admin_id])?$name_list[$value->admin_id]:"未處理" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('contact/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
-                                        </tr>                                        
+											<td><?=isset($value->content)?$value->content:"" ?></td>
+										</tr>                                        
 									<?php 
 										}}
 									?>

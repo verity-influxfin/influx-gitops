@@ -18,8 +18,8 @@
                                 <table class="display responsive nowrap" width="100%" id="dataTables-paging">
                                     <thead>
                                         <tr>
+											<th>User ID</th>
                                             <th>虛擬帳號</th>
-                                            <th>User ID</th>
                                             <th>借款端/出借端</th>
                                             <th>狀態</th>
                                             <th>創建日期</th>
@@ -46,12 +46,12 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-                                            <td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+											<td>
 											<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$value->virtual_account) ?>" >
 												<?=isset($value->virtual_account)?$value->virtual_account:"" ?>
 											</a>
 											</td>
-                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
 											<td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>

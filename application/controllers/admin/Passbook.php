@@ -18,7 +18,7 @@ class Passbook extends MY_Admin_Controller {
 	
 	public function index(){
 		$page_data 	= array("type"=>"list");
-		$list 		= $this->virtual_account_model->get_all();
+		$list 		= $this->virtual_account_model->order_by("user_id","ASC")->get_all();
 		if(!empty($list)){
 			$page_data['list'] 				= $list;
 			$page_data['status_list'] 		= $this->virtual_account_model->status_list;

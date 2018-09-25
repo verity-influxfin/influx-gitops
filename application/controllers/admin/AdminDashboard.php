@@ -48,8 +48,44 @@ class AdminDashboard extends MY_Admin_Controller {
 			}
 		}
 
-		$data["target_count"] = $target_count;
-		$data["contact_list"] = $contact_list;
+		$chart_date = array();
+		$chart_list = array();
+		for($i=0;$i<10;$i++){
+			$chart_date[] = date("Y-m-d",strtotime("-".$i."days"));
+		}
+		sort($chart_date);
+		$sdatetime = current($chart_date).' 00:00:00';
+		$edatetime = end($chart_date).' 23:59:59';
+		
+
+		foreach($chart_date as $key => $date){
+			$chart_list[$date] = array("register"=>0,"loan"=>0);
+			
+		}
+		
+		$user_list	= $this->user_model->get_many_by(array(
+			"status"		=>1,
+			"created_at <=" =>strtotime($edatetime),
+			"created_at >="	=>strtotime($sdatetime),
+		));
+		
+		foreach($user_list as $k => $v){
+			$chart_list[date("Y-m-d",$v->created_at)]['register']++;
+		}
+
+		$target_list	= $this->target_model->get_many_by(array(
+			"status"		=>array(3,4,5,10),
+			"created_at <=" =>strtotime($edatetime),
+			"created_at >="	=>strtotime($sdatetime),
+		));
+		
+		foreach($target_list as $k => $v){
+			$chart_list[date("Y-m-d",$v->created_at)]['loan']++;
+		}
+		
+		$data["chart_list"] 	= $chart_list;
+		$data["target_count"] 	= $target_count;
+		$data["contact_list"] 	= $contact_list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/index',$data);
