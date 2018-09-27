@@ -11,7 +11,6 @@ class Target extends REST_Controller {
         parent::__construct();
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
-		$this->load->library('Certification_lib');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list' ,'info'];
@@ -312,7 +311,6 @@ class Target extends REST_Controller {
 		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
 		if(!empty($target) && in_array($target->status,array(3,4,5,10))){
-
 			$product_info = $this->product_model->get($target->product_id);
 			$product = array(
 				"id"			=> $product_info->id,
@@ -320,17 +318,12 @@ class Target extends REST_Controller {
 			);
 			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
-			$certification_list			= $this->certification_lib->get_status($target->user_id);
+			$this->load->library('Certification_lib');
+			$certification_list				= $this->certification_lib->get_status($target->user_id);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($value->id,$product_info->certifications)){
-						$certification[] = array(
-							"id" 			=> $value->id,
-							"name" 			=> $value->name,
-							"description" 	=> $value->description,
-							"alias" 		=> $value->alias,
-							"user_status" 	=> $value->user_status,
-						);
+					if(in_array($key,$product_info->certifications)){
+						$certification[] = $value;
 					}
 				}
 			}
@@ -492,19 +485,15 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 			}
 
-
+			//檢查認證 NOT_VERIFIED
+			if($this->user_info->id_number && $this->user_info->id_number==""){
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+			}
+			
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
 
-			//檢查認證 NOT_VERIFIED
-			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-			foreach($certification_list as $key => $value){
-				if( $value->alias=='id_card' && $value->user_status!=1 ){
-					$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-				}
-			}
-			
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
 			$this->load->model('user/user_bankaccount_model');
 			$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
@@ -654,19 +643,16 @@ class Target extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
-	
+
+		//檢查認證 NOT_VERIFIED
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+		}
+
 		if(get_age($this->user_info->birthday) < 20){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
 
-		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
-		}
-			
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
 		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
@@ -839,18 +825,8 @@ class Target extends REST_Controller {
 		}
 
 		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
-		}
-		
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
-		if(!$bank_account){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		if($this->user_info->transaction_password==""){
@@ -859,6 +835,13 @@ class Target extends REST_Controller {
 
 		if(get_age($this->user_info->birthday) < 20){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		if(!$bank_account){
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
 		if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){

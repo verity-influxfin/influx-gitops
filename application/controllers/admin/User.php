@@ -6,14 +6,15 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 class User extends MY_Admin_Controller {
 	
 	protected $edit_method = array("edit");
+	public $certification;
 	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('platform/certification_model');
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/credit_model');
+		$this->certification = $this->config->item('certifications');
  	}
 	
 	public function index(){
@@ -39,11 +40,10 @@ class User extends MY_Admin_Controller {
 		if(empty($post)){
 			$id = isset($get["id"])?intval($get["id"]):0;
 			if($id){
-				$certification 		= $this->certification_model->get_all();
 				$certification_list = array();
-				if($certification){
-					foreach($certification as $key => $value){
-						$certification_list[$value->alias] = $value->name;
+				if($this->certification){
+					foreach($this->certification as $key => $value){
+						$certification_list[$value['alias']] = $value['name'];
 					}
 				}
 				
@@ -108,14 +108,13 @@ class User extends MY_Admin_Controller {
 		$get 		= $this->input->get(NULL, TRUE);
 		$id = isset($get["id"])?intval($get["id"]):0;
 		if($id){
-			$certification 		= $this->certification_model->get_all();
 			$certification_list = array();
-			if($certification){
-				foreach($certification as $key => $value){
-					$certification_list[$value->alias] = $value->name;
+			if($this->certification){
+				foreach($this->certification as $key => $value){
+					$certification_list[$value['alias']] = $value['name'];
 				}
 			}
-			
+		
 			$meta_data 			= array();
 			$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$id));
 			if($meta){

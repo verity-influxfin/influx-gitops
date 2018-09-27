@@ -13,7 +13,6 @@ class Target extends MY_Admin_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/virtual_account_model');
-		$this->load->model('platform/certification_model');
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/credit_model');
 		$this->load->library('target_lib');

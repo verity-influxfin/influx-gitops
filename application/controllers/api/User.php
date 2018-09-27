@@ -352,7 +352,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/sociallogin 會員 第三方登入
      * @apiGroup User
-     * @apiParam {String=facebook,instagram,line} type 登入類型
+     * @apiParam {String=facebook,instagram} type 登入類型
      * @apiParam {String} access_token access_token
 	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
@@ -396,13 +396,10 @@ class User extends REST_Controller {
 		switch ($type){
 			case "facebook":
 				$fields = ['access_token'];
-				break; 
+				break;
 			case "instagram":
 				$fields = ['access_token'];
-				break;  
-			case "line":
-				$fields = ['access_token'];
-				break;  
+				break;
 			default:
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}

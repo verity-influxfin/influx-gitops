@@ -4,14 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
 	
+	public $certification;
 	
 	public function __construct()
     {
         $this->CI = &get_instance();
-		$this->CI->load->model('platform/certification_model');
 		$this->CI->load->model('user/user_certification_model');
 		$this->CI->load->model('user/user_meta_model');
 		$this->CI->load->library('Notification_lib');
+		$this->certification 	= $this->CI->config->item('certifications');
     }
 	
 	public function get_certification_info($user_id,$certification_id,$investor=0){
@@ -37,12 +38,12 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 1){
 				$info->content 	= json_decode($info->content,true);
-				$certification 	= $this->CI->certification_model->get($info->certification_id);
-				$method			= $certification->alias.'_success';
+				$certification 	= $this->certification[$info->certification_id];
+				$method			= $certification["alias"].'_success';
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
-						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,1);
+						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
 					return $rs;
 				}
@@ -56,10 +57,10 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
 				$info->content 	= json_decode($info->content,true);
-				$certification 	= $this->CI->certification_model->get($info->certification_id);
+				$certification 	= $this->certification[$info->certification_id];
 				$rs = $this->CI->user_certification_model->update($id,array("status"=>2));
 				if($rs){
-					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification->name,2);
+					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2);
 				}
 				return $rs;
 			}
@@ -440,14 +441,13 @@ class Certification_lib{
 				$where = array("status"=>1);
 			}
 
-			$certification_list = $this->CI->certification_model->get_many_by($where);
-			foreach($certification_list as $key => $value){
-				
-				$user_certification = $this->get_certification_info($user_id,$value->id,$investor);
+			$certification_list = array();
+			foreach($this->certification as $key => $value){
+				$user_certification = $this->get_certification_info($user_id,$key,$investor);
 				if($user_certification){
-					$value->user_status = $user_certification->status;
+					$value["user_status"] = $user_certification->status;
 				}else{
-					$value->user_status = null;
+					$value["user_status"] = null;
 				}
 				
 				$certification_list[$key] = $value;
@@ -464,11 +464,10 @@ class Certification_lib{
 		$date			= get_entering_date();
 		$ids			= array();
 		$certification	= array();
-		$certifications = $this->CI->certification_model->get_many_by(array(
-			"alias"	=> array("email","student","emergency")
-		));
-		foreach($certifications as $key => $value){
-			$certification[$value->alias] = $value->id;
+		foreach($this->certification as $key => $value){
+			if(in_array($value["alias"],array("email","student","emergency"))){
+				$certification[$value["alias"]] = $key;
+			}
 		}
 
 		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(

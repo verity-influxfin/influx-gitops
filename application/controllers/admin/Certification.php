@@ -6,24 +6,27 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 class Certification extends MY_Admin_Controller {
 	
 	protected $edit_method = array("add","edit","user_certification_edit","user_bankaccount_edit","user_bankaccount_failed","user_bankaccount_success","difficult_word_add","difficult_word_edit");
+	public $certification;
+	public $certification_name_list;
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('platform/certification_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/user_certification_model');
 		$this->load->model('user/user_meta_model');
+		$this->certification 	= $this->config->item('certifications');
+		foreach($this->certification as $id => $value){
+			$this->certification_name_list[$id] = $value['name'];
+		}
  	}
 	
 	public function index(){
 		
 		$page_data 	= array("type"=>"list");
-		$list 		= $this->certification_model->get_all();
+		$list 		= $this->certification;
 		$name_list	= array();
 		if(!empty($list)){
 			$page_data["list"] 			= $list;
-			$page_data["name_list"] 	= $this->admin_model->get_name_list();
-			$page_data["status_list"] 	= $this->certification_model->status_list;
 		}
 
 		$this->load->view('admin/_header');
@@ -31,103 +34,24 @@ class Certification extends MY_Admin_Controller {
 		$this->load->view('admin/certifications_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
-	public function add(){
-		$page_data 	= array("type"=>"add");
-		$data		= array();
-		$post 		= $this->input->post(NULL, TRUE);
-		if(empty($post)){
-			$this->load->view('admin/_header');
-			$this->load->view('admin/_title',$this->menu);
-			$this->load->view('admin/certifications_edit',$page_data);
-			$this->load->view('admin/_footer');
-		}else{
-			$required_fields 	= [ 'name', 'alias'];
-			foreach ($required_fields as $field) {
-				if (empty($post[$field])) {
-					alert($field." is empty",admin_url('certification/index'));
-				}else{
-					$data[$field] = $post[$field];
-				}
-			}
-			
-			$fields = ['description', 'status'];
-			foreach ($fields as $field) {
-				if (isset($post[$field])) {
-					$data[$field] = $post[$field];
-				}
-			}
-			
-			$data["creator_id"] = $this->login_info->id;
-			$rs = $this->certification_model->insert($data);
-			if($rs){
-				alert("新增成功",admin_url('certification/index'));
-			}else{
-				alert("新增失敗，請洽工程師",admin_url('certification/index'));
-			}
-		}
-	}
-	
-	public function edit(){
-		$page_data 	= array("type"=>"edit");
-		$post 		= $this->input->post(NULL, TRUE);
-		$get 		= $this->input->get(NULL, TRUE);
-		
-		if(empty($post)){
-			$id = isset($get["id"])?intval($get["id"]):0;
-			if($id){
-				$info = $this->certification_model->get_by('id', $id);
-				if($info){
-					$page_data['data'] 			= $info;
-					
-					$this->load->view('admin/_header');
-					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/certifications_edit',$page_data);
-					$this->load->view('admin/_footer');
-				}else{
-					alert("ERROR , id isn't exist",admin_url('certification/index'));
-				}
-			}else{
-				alert("ERROR , id isn't exist",admin_url('certification/index'));
-			}
-		}else{
-			if(!empty($post['id'])){
-				$fields = ['name', 'alias','description', 'status'];
-				foreach ($fields as $field) {
-					if (isset($post[$field])) {
-						$data[$field] = $post[$field];
-					}
-				}
-				$rs = $this->certification_model->update($post['id'],$data);
-				if($rs===true){
-					alert("更新成功",admin_url('certification/index'));
-				}else{
-					alert("更新失敗，請洽工程師",admin_url('certification/index'));
-				}
-			}else{
-				alert("ERROR , id isn't exist",admin_url('certification/index'));
-			}
-		}
-	}
 
 	public function user_certification_list(){
 		$page_data 			= array("type"=>"list","list"=>array());
 		$input 				= $this->input->get(NULL, TRUE);
-		$certifications 	= $this->certification_model->get_by(array('alias'	=> 'debit_card'));
-		$where				= array('certification_id !='	=> $certifications->id);
+		$where				= array('certification_id !=' => 3);
 		$fields 			= ['investor','certification_id','status'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];
 			}
 		}
-
+		
 		$list					= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
 		if(!empty($list)){
 			$page_data['list'] = $list;
 		}
 
-		$page_data['certification_list'] 	= $this->certification_model->get_name_list();
+		$page_data['certification_list'] 	= $this->certification_name_list;
 		$page_data['status_list'] 			= $this->user_certification_model->status_list;
 		$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 		$this->load->view('admin/_header');
@@ -146,10 +70,10 @@ class Certification extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_certification_model->get($id);
 				if($info){
-					$certification 						= $this->certification_model->get($info->certification_id);
+					$certification 						= $this->certification[$info->certification_id];
 					$user_meta_fields					= $this->config->item('user_meta_fields');
-					$page_data['user_meta_fields'] 		= isset($user_meta_fields[$certification->alias])?$user_meta_fields[$certification->alias]:array();
-					$page_data['certification_list'] 	= $this->certification_model->get_name_list();
+					$page_data['user_meta_fields'] 		= isset($user_meta_fields[$certification['alias']])?$user_meta_fields[$certification['alias']]:array();
+					$page_data['certification_list'] 	= $this->certification_name_list;
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
 					$page_data['remark'] 				= json_decode($info->remark,true);
@@ -170,8 +94,8 @@ class Certification extends MY_Admin_Controller {
 			if(!empty($post['id'])){
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
-					$certification = $this->certification_model->get($info->certification_id);
-					if($certification->alias=="debit_card"){
+					$certification = $this->certification[$info->certification_id];
+					if($certification['alias']=="debit_card"){
 						alert("金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
 					}else{
 						$this->load->library('Certification_lib');

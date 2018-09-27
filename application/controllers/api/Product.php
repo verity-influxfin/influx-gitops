@@ -165,14 +165,8 @@ class Product extends REST_Controller {
 						
 						if(!empty($certification_list)){
 							foreach($certification_list as $k => $v){
-								if(in_array($v->id,$value->certifications)){
-									$certification[] = array(
-										"id" 			=> $v->id,
-										"name" 			=> $v->name,
-										"description" 	=> $v->description,
-										"alias" 		=> $v->alias,
-										"user_status" 	=> $v->user_status,
-									);
+								if(in_array($k,$value->certifications)){
+									$certification[] = $v;
 								}
 							}
 						}
@@ -556,7 +550,7 @@ class Product extends REST_Controller {
 				$product->certifications 	= json_decode($product->certifications,TRUE);
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
-					if(in_array($value->id,$product->certifications) && $value->user_status!=1){
+					if(in_array($key,$product->certifications) && $value['user_status']!=1){
 						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}
@@ -902,14 +896,8 @@ class Product extends REST_Controller {
 			$certification_list				= $this->certification_lib->get_status($user_id,$investor);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($value->id,$product_info->certifications)){
-						$certification[] = array(
-							"id" 			=> $value->id,
-							"name" 			=> $value->name,
-							"description" 	=> $value->description,
-							"alias" 		=> $value->alias,
-							"user_status" 	=> $value->user_status,
-						);
+					if(in_array($key,$product_info->certifications)){
+						$certification[] = $value;
 					}
 				}
 			}

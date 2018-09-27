@@ -14,7 +14,6 @@ class Recoveries extends REST_Controller {
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
-		$this->load->library('Certification_lib');
 		$this->load->library('Transaction_lib'); 
 		$this->load->library('Target_lib'); 
 		$this->load->library('Transfer_lib'); 
@@ -627,11 +626,8 @@ class Recoveries extends REST_Controller {
 		}
 		
 		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status != 1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
@@ -717,12 +713,10 @@ class Recoveries extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$data		= array();
+
 		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status != 1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT

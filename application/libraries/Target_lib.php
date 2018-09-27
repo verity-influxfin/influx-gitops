@@ -552,7 +552,7 @@ class Target_lib{
 						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0);
 						$finish		 	= true;
 						foreach($certifications as $certification){
-							if(in_array($certification->id,$product_certification) && $certification->user_status !="1"){
+							if(in_array($certification['id'],$product_certification) && $certification['user_status']!="1"){
 								$finish	= false;
 							}
 						}

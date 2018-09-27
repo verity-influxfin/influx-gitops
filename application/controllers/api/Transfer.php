@@ -11,7 +11,6 @@ class Transfer extends REST_Controller {
         parent::__construct();
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_investment_model');
-		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
 		$this->load->library('Transfer_lib');
 		$this->load->library('credit_lib');
@@ -323,17 +322,12 @@ class Transfer extends REST_Controller {
 			);
 			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
-			$certification_list			= $this->certification_lib->get_status($target->user_id);
+			$this->load->library('Certification_lib');
+			$certification_list				= $this->certification_lib->get_status($target->user_id);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($value->id,$product_info->certifications)){
-						$certification[] = array(
-							"id" 			=> $value->id,
-							"name" 			=> $value->name,
-							"description" 	=> $value->description,
-							"alias" 		=> $value->alias,
-							"user_status" 	=> $value->user_status,
-						);
+					if(in_array($key,$product_info->certifications)){
+						$certification[] = $value;
 					}
 				}
 			}
@@ -486,22 +480,22 @@ class Transfer extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 			}
 
-
+			//檢查認證 NOT_VERIFIED
+			if($this->user_info->id_number && $this->user_info->id_number==""){
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+			}
+			
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+			}
+			
+			if($this->user_info->transaction_password==""){
+				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 			}
 			
 			$transfer_investment = $this->transfer_investment_model->get_by(array("transfer_id"=>$input['transfer_id'],"user_id"=>$user_id,"status"=>array(0,1,10)));
 			if($transfer_investment){
 				$this->response(array('result' => 'ERROR','error' => TRANSFER_APPLY_EXIST ));
-			}
-
-			//檢查認證 NOT_VERIFIED
-			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-			foreach($certification_list as $key => $value){
-				if( $value->alias=='id_card' && $value->user_status!=1 ){
-					$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-				}
 			}
 			
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
@@ -515,11 +509,7 @@ class Transfer extends REST_Controller {
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 			}
-			
-			if($this->user_info->transaction_password==""){
-				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-			}
-			
+
 			$insert = $this->transfer_investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -668,11 +658,8 @@ class Transfer extends REST_Controller {
 		}
 
 		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 			
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
@@ -853,13 +840,10 @@ class Transfer extends REST_Controller {
 		}else{
 			$delay 	= $input['delay'] = 0;
 		}
-
+		
 		//檢查認證 NOT_VERIFIED
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
-		foreach($certification_list as $key => $value){
-			if( $value->alias=='id_card' && $value->user_status!=1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
+		if($this->user_info->id_number && $this->user_info->id_number==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT

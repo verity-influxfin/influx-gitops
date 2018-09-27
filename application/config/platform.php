@@ -1,4 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+//後台menu
 $config['admin_menu'] = array(
 	"AdminDashboard" 	=> array("name"=>"Dashboard","icon"=>"fa-dashboard"),
 	"Product" 			=> array("name"=>"產品管理","icon"=>"fa-briefcase"),
@@ -10,6 +12,7 @@ $config['admin_menu'] = array(
 		"waiting_loan"	=> "待放款",
 		"repayment"		=> "還款中",
 	),
+	"Risk" 				=> array("name"=>"大風控長區","icon"=>"fa-briefcase"),
 	"Passbook" 	=> array(
 		"parent_name"		=> "虛擬帳號管理",
 		"parent_icon"		=> "fa-star",
@@ -61,33 +64,37 @@ $config['admin_menu'] = array(
 	),
 );
 
+//內部通知Email
 if(ENVIRONMENT=="development"){
 	$config['admin_email'] = array('news@influxfin.com');
 }else{
 	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com');
 } 
 
+//期數
 $config['instalment']= array(
-0=> "其他",
-3=> "3期",
-6=> "6期",
-12=> "12期",
-18=> "18期",
-24=> "24期",
+	0=> "其他",
+	3=> "3期",
+	6=> "6期",
+	12=> "12期",
+	18=> "18期",
+	24=> "24期",
 );
 
+//還款方式
 $config['repayment_type']= array(
-1=> "等額本息",
-2=> "先息後本",
+	1=> "等額本息",
+	2=> "先息後本",
 );
 
+//學制
 $config['school_system']= array(
 	0=> "大學",
 	1=> "碩士",
 	2=> "博士",
 );
 
-
+//科目名稱
 $config['transaction_source']= array(
 1	=> "儲值",
 2	=> "提領",
@@ -127,7 +134,6 @@ $config['transaction_type_name']= array(
 	'charge_normal'	=> "還款",
 );
 
-
 $config['credit_level']= array(
 1 => array("start"=>2001,"end"=>2500,"rate"=>array("3"=>5,"6"=>6,"12"=>7,"18"=>8,"24"=>9)),
 2 => array("start"=>1501,"end"=>2000,"rate"=>array("3"=>6,"6"=>7,"12"=>8,"18"=>9,"24"=>10)),
@@ -137,6 +143,16 @@ $config['credit_level']= array(
 6 => array("start"=>-501,"end"=>100,"rate"=>array("3"=>11,"6"=>12,"12"=>15,"18"=>18,"24"=>20)),
 7 => array("start"=>-1500,"end"=>-500,"rate"=>array("3"=>16,"6"=>17,"12"=>18,"18"=>19,"24"=>20)),
 8 => array()
+);
+
+$config['certifications']= array(
+	1 => array("id"=>1,"alias"=>"id_card"	,"name"=>"實名認證"		,"status"=>1,"description"=>"驗證個人身份資訊"),
+	2 => array("id"=>2,"alias"=>"student"	,"name"=>"學生身份認證"	,"status"=>1,"description"=>"驗證學生身份"),
+	3 => array("id"=>3,"alias"=>"debit_card","name"=>"金融帳號認證"	,"status"=>1,"description"=>"驗證個人金融帳號"),
+	4 => array("id"=>4,"alias"=>"social"	,"name"=>"社交認證"		,"status"=>1,"description"=>"個人社交帳號認證"),
+	5 => array("id"=>5,"alias"=>"emergency"	,"name"=>"緊急聯絡人"		,"status"=>1,"description"=>"設定緊急連絡人資訊"),
+	6 => array("id"=>6,"alias"=>"email"		,"name"=>"常用電子信箱"	,"status"=>1,"description"=>"驗證常用E-Mail位址"),
+	7 => array("id"=>7,"alias"=>"financial"	,"name"=>"財務訊息認證"	,"status"=>1,"description"=>"提供財務訊息資訊"	),
 );
 
 $config['credit_amount']= array(
@@ -258,6 +274,7 @@ array("start"=>201,"end"=>220,"amount"=>6000),
 array("start"=>100,"end"=>200,"amount"=>5000)
 );
 
+//支援XML銀行列表
 $config['xml_bank_list']= array(
 '004','005','006','007','008','009','011','012','013','016','017','021',
 '039','050','052','053','054','081','101','102','103','108','118','147',
