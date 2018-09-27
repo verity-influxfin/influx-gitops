@@ -30,6 +30,10 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -87,6 +91,7 @@ class Subloan extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
@@ -177,6 +182,7 @@ class Subloan extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse InsertError
 	 *
 	 *
@@ -406,6 +412,7 @@ class Subloan extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
 	 *
      * @apiError 404 此申請不存在
@@ -515,6 +522,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
      * @apiError 404 此申請不存在
@@ -626,6 +634,7 @@ class Subloan extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
 	 *

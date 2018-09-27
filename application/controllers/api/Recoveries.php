@@ -39,6 +39,10 @@ class Recoveries extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -110,6 +114,7 @@ class Recoveries extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      */
@@ -283,6 +288,7 @@ class Recoveries extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
      */
@@ -460,6 +466,7 @@ class Recoveries extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      * @apiError 806 此申請不存在
@@ -566,6 +573,7 @@ class Recoveries extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -685,6 +693,7 @@ class Recoveries extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -753,6 +762,7 @@ class Recoveries extends REST_Controller {
 	 * 
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符
@@ -866,6 +876,7 @@ class Recoveries extends REST_Controller {
 	 * 
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符

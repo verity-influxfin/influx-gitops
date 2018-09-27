@@ -255,6 +255,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -272,6 +278,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -333,6 +344,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -350,6 +367,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -425,6 +447,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -442,6 +470,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -587,6 +620,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -604,6 +643,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -735,6 +779,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -752,6 +802,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -833,6 +888,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -840,6 +901,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -932,6 +998,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -949,6 +1021,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1101,6 +1178,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1118,6 +1201,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1252,6 +1340,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1299,6 +1393,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1384,6 +1483,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1416,6 +1521,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1509,6 +1619,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1536,6 +1652,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1678,6 +1799,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1705,6 +1832,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1859,6 +1991,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -1896,6 +2034,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -1985,6 +2128,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -2012,6 +2161,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -2180,6 +2334,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -2212,6 +2372,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -2413,6 +2578,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -2425,6 +2596,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -2513,6 +2689,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -2520,6 +2702,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -2562,6 +2749,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -2569,6 +2762,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -2944,6 +3142,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -2963,6 +3167,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -3130,6 +3339,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -3139,6 +3354,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -3223,6 +3443,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -3252,6 +3478,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -3412,6 +3643,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -3431,6 +3668,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -3687,6 +3929,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -3726,6 +3974,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -3857,6 +4110,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -3916,6 +4175,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -4111,6 +4375,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -4120,6 +4390,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -4444,6 +4719,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -4463,6 +4744,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -4644,6 +4930,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -4653,6 +4945,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -4760,6 +5057,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -4784,6 +5087,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -4831,7 +5139,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "total_principal",
-            "description": "<p>轉讓本金</p>"
+            "description": "<p>轉讓價金</p>"
           },
           {
             "group": "Success 200",
@@ -4913,6 +5221,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -4947,6 +5261,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -5041,6 +5360,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -5075,6 +5400,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -5189,6 +5519,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -5228,6 +5564,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -5320,6 +5661,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -5342,6 +5689,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -5548,6 +5900,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -5560,6 +5918,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -5972,6 +6335,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -5994,6 +6363,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -6228,6 +6602,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -6240,6 +6620,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -6505,6 +6890,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -6532,6 +6923,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -6618,6 +7014,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -6650,6 +7052,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -7056,6 +7463,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -7080,6 +7493,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -7174,6 +7592,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -7208,6 +7632,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -7319,6 +7748,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -7351,6 +7786,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -7466,6 +7906,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "201",
             "description": "<p>新增時發生錯誤</p>"
           }
@@ -7510,6 +7956,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -7623,6 +8074,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
           }
@@ -7667,6 +8124,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -7959,6 +8421,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -7988,6 +8456,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -8213,6 +8686,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -8252,6 +8731,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -8651,6 +9135,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -8665,6 +9155,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -8976,6 +9471,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -9035,6 +9536,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -9152,6 +9658,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -9176,6 +9688,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -9496,6 +10013,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -9525,6 +10048,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -9725,6 +10253,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -9764,6 +10298,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -10037,6 +10576,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -10051,6 +10596,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -10266,6 +10816,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -10273,6 +10829,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -10382,6 +10943,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -10436,6 +11003,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -10547,6 +11119,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -10572,6 +11150,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         },
         {
@@ -10628,6 +11211,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -10635,6 +11224,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -10679,6 +11273,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -10691,6 +11291,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -10814,6 +11419,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -10821,6 +11432,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -10891,6 +11507,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -10898,6 +11520,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -10997,6 +11624,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -11034,6 +11667,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -11126,6 +11764,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -11143,6 +11787,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -11341,6 +11990,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -11378,6 +12033,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -11471,6 +12131,12 @@ define({ "api": [
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -11503,6 +12169,11 @@ define({ "api": [
         {
           "title": "100",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -11732,6 +12403,12 @@ define({ "api": [
             "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -11749,6 +12426,11 @@ define({ "api": [
         {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]
@@ -12006,7 +12688,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/user/smsloginphone",
-    "title": "會員 發送驗證簡訊 （簡訊登入/忘記密碼）",
+    "title": "會員 發送驗證簡訊 （忘記密碼）",
     "group": "User",
     "parameter": {
       "fields": {
@@ -12190,6 +12872,12 @@ define({ "api": [
             "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
           }
         ]
       },
@@ -12207,6 +12895,11 @@ define({ "api": [
         {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "json"
         }
       ]

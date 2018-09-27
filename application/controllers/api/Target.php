@@ -32,6 +32,10 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -289,6 +293,7 @@ class Target extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 * @apiError 801 標的不存在
      * @apiErrorExample {json} 801
@@ -397,6 +402,7 @@ class Target extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
 	 * @apiError 801 標的不存在
@@ -612,6 +618,7 @@ class Target extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -780,6 +787,7 @@ class Target extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -1032,6 +1040,7 @@ class Target extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
 	 * @apiError 811 智能出借不存在

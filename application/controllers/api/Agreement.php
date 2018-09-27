@@ -23,6 +23,10 @@ class Agreement extends REST_Controller {
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
 			}
+
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;

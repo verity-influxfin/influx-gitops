@@ -30,11 +30,16 @@ class Product extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 				}
 				
+				if($this->user_info->block_status != 0){
+					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+				}
+				
 				//只限借款人
 				if($tokenData->investor != 0){
 					$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 				}
-				
+
+			
 				$this->user_info->investor 		= $tokenData->investor;
 				$this->user_info->expiry_time 	= $tokenData->expiry_time;
 			}
@@ -265,6 +270,7 @@ class Product extends REST_Controller {
      * }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
 	 *
 	 * @apiError 401 產品不存在
@@ -343,6 +349,7 @@ class Product extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
@@ -440,6 +447,7 @@ class Product extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
@@ -660,6 +668,7 @@ class Product extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
      */
@@ -850,6 +859,7 @@ class Product extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
 	 *
      * @apiError 404 此申請不存在
@@ -958,6 +968,7 @@ class Product extends REST_Controller {
 	 *
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
      *
 	 *

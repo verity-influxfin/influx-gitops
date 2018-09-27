@@ -24,6 +24,10 @@ class Notification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -68,6 +72,7 @@ class Notification extends REST_Controller {
      * }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      */
 	 
@@ -120,6 +125,7 @@ class Notification extends REST_Controller {
      * }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 601 此消息不存在
      * @apiErrorExample {json} 601
@@ -162,6 +168,7 @@ class Notification extends REST_Controller {
      * }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      */
 	public function readall_get()

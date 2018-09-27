@@ -33,6 +33,10 @@ class Transfer extends REST_Controller {
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
+
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
@@ -101,6 +105,7 @@ class Transfer extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      */
 	 	
@@ -290,6 +295,7 @@ class Transfer extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 * @apiError 801 標的不存在
      * @apiErrorExample {json} 801
@@ -400,6 +406,7 @@ class Transfer extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
      *
 	 * @apiError 809 債權轉讓標的不存在
@@ -619,6 +626,7 @@ class Transfer extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -790,6 +798,7 @@ class Transfer extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -1058,6 +1067,7 @@ class Transfer extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 * @apiUse InputError
 	 * @apiUse NotInvestor
 	 *

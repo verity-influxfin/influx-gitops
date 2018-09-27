@@ -24,6 +24,10 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -40,6 +44,15 @@ class User extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "100"
+     *     }
+     */
+	 /**
+     * @apiDefine BlockUser
+     * @apiError 101 帳戶已黑名單
+     * @apiErrorExample {json} 101
+     *     {
+     *       "result": "ERROR",
+     *       "error": "101"
      *     }
      */
     /**
@@ -266,6 +279,7 @@ class User extends REST_Controller {
      *      }
      *    }
 	 * @apiUse InputError
+	 * @apiUse BlockUser
      *
      * @apiError 302 會員不存在
      * @apiErrorExample {json} 302
@@ -295,6 +309,11 @@ class User extends REST_Controller {
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
 			if(sha1($input['password'])==$user_info->password){
+				
+				if($user_info->block_status != 0){
+					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+				}
+			
 				$token 		= new stdClass();
 				$first_time = 0;
 				if($investor==1 && $user_info->investor_status==0){
@@ -352,6 +371,8 @@ class User extends REST_Controller {
      *    }
      *
 	 * @apiUse InputError
+	 * @apiUse BlockUser
+	 *
      * @apiError 302 會員不存在
      * @apiErrorExample {json} 302
      *     {
@@ -416,6 +437,11 @@ class User extends REST_Controller {
 		if($user_id && $account){
 			$user_info = $this->user_model->get($user_id);	
 			if($user_info){
+				
+				if($user_info->block_status != 0){
+					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+				}
+
 				$token 		= new stdClass();
 				$first_time = 0;
 				if($investor==1 && $user_info->investor_status==0){
@@ -454,7 +480,7 @@ class User extends REST_Controller {
 	}
 	
 	/**
-     * @api {post} /user/smsloginphone 會員 發送驗證簡訊 （簡訊登入/忘記密碼）
+     * @api {post} /user/smsloginphone 會員 發送驗證簡訊 （忘記密碼）
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
      *
@@ -491,9 +517,10 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
-		if(!preg_match("/09[0-9]{2}[0-9]{6}/", $phone)){
+		if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
+		
 		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
@@ -555,6 +582,10 @@ class User extends REST_Controller {
             }
         }
 		
+		if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $input['phone'])){
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
 		if(strlen($input['new_password']) < PASSWORD_LENGTH){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
@@ -614,6 +645,7 @@ class User extends REST_Controller {
 	 *      }
      *    }
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      *
      */
 	public function info_get()
@@ -642,6 +674,7 @@ class User extends REST_Controller {
      *    }
 	 * @apiUse InputError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      *
      * @apiError 305 access_token錯誤
      * @apiErrorExample {json} 305
@@ -811,6 +844,7 @@ class User extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      *
      * @apiError 307 發送簡訊間隔過短
      * @apiErrorExample {json} 307
@@ -855,6 +889,7 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 302 會員不存在
      * @apiErrorExample {json} 302
@@ -941,6 +976,7 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 302 會員不存在
      * @apiErrorExample {json} 302
@@ -1015,6 +1051,7 @@ class User extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      *
      */
 	 
@@ -1048,6 +1085,7 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse InsertError
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      * 
      */
 	public function contact_post()
@@ -1147,6 +1185,7 @@ class User extends REST_Controller {
      *    }
 	 *
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      * 
      */
 	public function promote_get()

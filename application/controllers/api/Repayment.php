@@ -33,6 +33,10 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
 			
+			if($this->user_info->block_status != 0){
+				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -102,6 +106,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      */
 	 	
@@ -256,6 +261,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
      *
      */
 	public function list_get()
@@ -494,6 +500,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
@@ -686,6 +693,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
@@ -770,6 +778,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
@@ -850,6 +859,7 @@ class Repayment extends REST_Controller {
 	 *
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
+	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {json} 404
