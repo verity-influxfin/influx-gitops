@@ -82,7 +82,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['school_system'] 		= $this->config->item('school_system');
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/user_certification_edit',$page_data);
+					$this->load->view('admin/certification/'.$certification['alias'],$page_data);
 					$this->load->view('admin/_footer');
 				}else{
 					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));

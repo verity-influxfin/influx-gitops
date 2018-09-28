@@ -11,50 +11,54 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-						金融帳號
+							金融帳號
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-12">
-                                    <form role="form" method="post"> 
-                                        <div class="form-group">
-                                            <label>會員 ID</label>
-											<p><?=isset($data->user_id)?$data->user_id:"";?></p>
-											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-                                        </div>
-										<div class="form-group">
-                                            <label>出借/借款</label>
-											<p><?=isset($data->investor)?$data->investor:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>銀行代碼</label>
-											<p><?=isset($data->bank_code)?$data->bank_code:"";?></p>
-                                        </div>	
-										<div class="form-group">
-                                            <label>分行代碼</label>
-											<p><?=isset($data->branch_code)?$data->branch_code:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>銀行帳號</label>
-											<p><?=isset($data->bank_account)?$data->bank_account:"";?></p>
-                                        </div>
-										<div class="form-group">
-                                            <label>驗證狀況</label>
-											<p> <?=isset($data->verify)?$verify_list[$data->verify]:"" ?></p>
-                                        </div>
-                                       <div class="form-group">
-                                            <label>正面</label>
-											<a href="<?=$data->front_image ?>" data-fancybox="images"><img src="<?=$data->front_image ?>" style='width:30%;max-width:400px'></a>
-                                        </div>
-										<div class="form-group">
-                                            <label>反面</label>
-											<a href="<?=$data->back_image ?>" data-fancybox="images"><img src="<?=$data->back_image ?>" style='width:30%;max-width:400px'></a>
-                                        </div>
-                                    </form>
+                                <div class="col-lg-6">
+									<div class="form-group">
+										<label>會員 ID</label>
+										<p class="form-control-static"><?=isset($data->user_id)?$data->user_id:"";?></p>
+										<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+									</div>
+									<div class="form-group">
+										<label>出借/借款</label>
+										<p class="form-control-static"><?=isset($data->investor)?$investor_list[$data->investor]:"";?></p>
+									</div>
+									<div class="form-group">
+										<label>銀行代碼</label>
+										<p class="form-control-static"><?=isset($data->bank_code)?$data->bank_code:"";?></p>
+									</div>	
+									<div class="form-group">
+										<label>分行代碼</label>
+										<p class="form-control-static"><?=isset($data->branch_code)?$data->branch_code:"";?></p>
+									</div>
+									<div class="form-group">
+										<label>銀行帳號</label>
+										<p class="form-control-static"><?=isset($data->bank_account)?$data->bank_account:"";?></p>
+									</div>
+									<div class="form-group">
+										<label>驗證狀況</label>
+										<p class="form-control-static"><?=isset($data->verify)?$verify_list[$data->verify]:"" ?></p>
+									</div>
                                 </div>
-
-
-                                </div>
+								<div class="col-lg-6">
+                                    <h1>圖片</h1>
+									<fieldset disabled>
+										<div class="form-group">
+											<label for="disabledSelect">金融卡正面照</label><br>
+											<a href="<?=isset($data->front_image)?$data->front_image:""?>" data-fancybox="images">
+												<img src="<?=isset($data->front_image)?$data->front_image:""?>" style='width:30%;max-width:400px'>
+											</a>
+										</div>
+										<div class="form-group">
+											<label for="disabledSelect">金融卡背面照</label><br>
+											<a href="<?=isset($data->back_image)?$data->back_image:""?>" data-fancybox="images">
+												<img src="<?=isset($data->back_image)?$data->back_image:""?>" style='width:30%;max-width:400px'>
+											</a>
+										</div>
+									</fieldset>
+								</div>
                                 <!-- /.col-lg-6 (nested) -->
                             </div>
                             <!-- /.row (nested) -->

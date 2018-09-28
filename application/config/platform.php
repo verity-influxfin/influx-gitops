@@ -12,7 +12,7 @@ $config['admin_menu'] = array(
 		"waiting_loan"	=> "待放款",
 		"repayment"		=> "還款中",
 	),
-	"Risk" 				=> array("name"=>"大風控長區","icon"=>"fa-briefcase"),
+	"Risk" 				=> array("name"=>"風控專區","icon"=>"fa-briefcase"),
 	"Passbook" 	=> array(
 		"parent_name"		=> "虛擬帳號管理",
 		"parent_icon"		=> "fa-star",
