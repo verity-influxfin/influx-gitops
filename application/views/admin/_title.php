@@ -7,8 +7,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">普匯金融科技內部管理後台</a>
-                <p class="navbar-brand">您好，<?=isset($login_info->name)?$login_info->name:""?></p>
+                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">inFlux Admin</a>
+                <p class="navbar-brand">Hi,<?=isset($login_info->name)?$login_info->name:""?></p>
             </div>
             <!-- /.navbar-header -->
 

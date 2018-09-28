@@ -7,10 +7,10 @@
             </div>
 			<script type="text/javascript">
 				function showChang(){
-					var investor 			= $('#investor :selected').val();
+					//var investor 			= $('#investor :selected').val();
 					var certification_id 	= $('#certification_id :selected').val();
 					var status 				= $('#status :selected').val();
-					top.location = './user_certification_list?investor='+investor+'&certification_id='+certification_id+'&status='+status;
+					top.location = './user_certification_list?&certification_id='+certification_id+'&status='+status;
 				}
 			</script>
             <!-- /.row -->

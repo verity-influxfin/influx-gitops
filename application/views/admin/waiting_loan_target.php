@@ -8,18 +8,24 @@
 			<script type="text/javascript">
 				function toloan(){
 					var ids = "";
+					var target_no = "";
 					$('.targets:checked').each(function() {
 						if(ids==""){
 							ids += this.value;
 						}else{
 							ids += ',' + this.value;
-						}		
+						}	
+						if(target_no==""){
+							target_no += $(this).attr("data-targetno");
+						}else{
+							target_no += ',' + $(this).attr("data-targetno");
+						}							
 					});
 					if(ids==""){
 						alert("請先選擇欲放款案件");
 						return false;
 					}
-					if(confirm("確認匯出下列案件ID:"+ids)){
+					if(confirm("確認匯出下列案件："+target_no)){
 						window.open('./target_loan?ids=' + ids,'_blank');
 						setTimeout(location.reload(),500);
 					}
@@ -98,7 +104,7 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
 												<? if($value->loan_status==2){ ?>
-												<input class="targets" type="checkbox" value="<?=isset($value->id)?$value->id:"" ?>" />
+												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:"" ?>" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->target_no)?$value->target_no:"" ?>
 											</td>

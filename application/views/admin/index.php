@@ -99,7 +99,7 @@
 		<!-- /.row -->
 		<div class="row">
 			<!-- /.col-lg-6 -->
-			<div class="col-lg-6">
+			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						註冊、申請成功
@@ -167,8 +167,8 @@
 			?>
 			],
 			xkey: 'y',
-			ykeys: ['a', 'b'],
-			labels: ['註冊', '申貸成功'],
+			ykeys: ['b','a'],
+			labels: ['申貸成功','註冊'],
 			hideHover: 'auto',
 			resize: true
 		});

@@ -33,6 +33,23 @@ class Certification_lib{
 		return false;
 	}
 	
+	public function get_last_certification_info($user_id,$certification_id,$investor=0){
+		if($user_id && $certification_id){
+			$param = array(
+				"user_id"			=> $user_id,
+				"certification_id"	=> $certification_id,
+				"investor"			=> $investor,
+				"expire_time >="	=> time(),
+			);
+			$certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
+			if(!empty($certification)){
+				$certification->content = json_decode($certification->content,true);
+				return $certification;
+			}
+		}
+		return false;
+	}
+	
 	public function set_success($id){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
@@ -435,19 +452,26 @@ class Certification_lib{
 	
 	public function get_status($user_id,$investor=0){
 		if($user_id){
+			$certification = array();
 			if($investor){
-				$where = array("status"=>1,"alias"=>array("id_card","debit_card","email","emergency"));
+				foreach($this->certification as $key => $value){
+					if(in_array($value["alias"],array("id_card","debit_card","email","emergency"))){
+						$certification[$key] = $value;
+					}
+				}
 			}else{
-				$where = array("status"=>1);
+				$certification = $this->certification;
 			}
 
 			$certification_list = array();
-			foreach($this->certification as $key => $value){
+			foreach($certification as $key => $value){
 				$user_certification = $this->get_certification_info($user_id,$key,$investor);
 				if($user_certification){
-					$value["user_status"] = $user_certification->status;
+					$value["user_status"] 		= $user_certification->status;
+					$value["certification_id"] 	= $user_certification->id;
 				}else{
-					$value["user_status"] = null;
+					$value["user_status"] 		= null;
+					$value["certification_id"] 	= null;
 				}
 				
 				$certification_list[$key] = $value;
@@ -457,6 +481,36 @@ class Certification_lib{
 		return false;
 	}
 	
+	public function get_last_status($user_id,$investor=0){
+		if($user_id){
+			$certification = array();
+			if($investor){
+				foreach($this->certification as $key => $value){
+					if(in_array($value["alias"],array("id_card","debit_card","email","emergency"))){
+						$certification[$key] = $value;
+					}
+				}
+			}else{
+				$certification = $this->certification;
+			}
+
+			$certification_list = array();
+			foreach($certification as $key => $value){
+				$user_certification = $this->get_last_certification_info($user_id,$key,$investor);
+				if($user_certification){
+					$value["user_status"] 		= $user_certification->status;
+					$value["certification_id"] 	= $user_certification->id;
+				}else{
+					$value["user_status"] 		= null;
+					$value["certification_id"] 	= null;
+				}
+				
+				$certification_list[$key] = $value;
+			}
+			return $certification_list;
+		}
+		return false;
+	}
 		
 	public function script_check_certification(){
 		$script  		= 8;

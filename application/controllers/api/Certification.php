@@ -384,7 +384,7 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
 					if($image){
 						$content[$field] = $image;
 					}else{
@@ -396,7 +396,7 @@ class Certification extends REST_Controller {
 			}
 			
 			if (isset($_FILES['transcript_image']) && !empty($_FILES['transcript_image'])) {
-				$content['transcript_image'] = $this->s3_upload->image($_FILES,'transcript_image',$user_id,$alias);
+				$content['transcript_image'] = $this->s3_upload->image($_FILES,'transcript_image',$user_id,$certification["alias"]);
 			}else{
 				$content['transcript_image'] = "";
 			}
@@ -622,7 +622,7 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
 					if($image){
 						$content[$field] = $image;
 					}else{
@@ -1190,7 +1190,7 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['creditcard_image','passbook_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$alias);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
 					if($image){
 						$content[$field] = $image;
 					}else{

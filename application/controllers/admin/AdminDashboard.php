@@ -50,7 +50,7 @@ class AdminDashboard extends MY_Admin_Controller {
 
 		$chart_date = array();
 		$chart_list = array();
-		for($i=0;$i<10;$i++){
+		for($i=0;$i<30;$i++){
 			$chart_date[] = date("Y-m-d",strtotime("-".$i."days"));
 		}
 		sort($chart_date);
