@@ -21,7 +21,6 @@
 										<a class="fancyframe" href="<?=admin_url('User/display?id='.$data->user_id) ?>" >
 											<p><?=isset($data->user_id)?$data->user_id:"" ?></p>
 										</a>
-										<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 									</div>
 									<div class="form-group">
 										<label>學校名稱</label>
@@ -60,7 +59,7 @@
 										<p class="form-control-static"><?=isset($content['sip_password'])?$content['sip_password']:""?></p>
 									</div>									
 									<h1>審核</h1>
-                                    <form role="form">
+                                    <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
 												<select name="status" class="form-control">
@@ -68,6 +67,7 @@
 													<option value="<?=$key?>" <?=$data->status==$key?"selected":""?>><?=$value?></option>
 													<? } ?>
 												</select>
+												<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
                                         </fieldset>
