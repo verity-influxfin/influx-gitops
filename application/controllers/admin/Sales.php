@@ -15,10 +15,12 @@ class Sales extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$page_data 		= array();	
+		$get 		= $this->input->get(NULL, TRUE);
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
+		$page_data 		= array("sdate"=>$sdate,"edate"=>$edate);	
 		$list			= array();
-		$max_date 		= "";
-		$min_date 		= "";
+		$count 			= 0;
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
@@ -32,14 +34,24 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		$target_list	= $this->target_model->get_all();
+		
+		if($sdate=='all' || $edate=='all'){
+			$target_list	= $this->target_model->get_all();
+		}else{
+			$target_list	= $this->target_model->get_many_by(array(
+				"created_at >="	=> strtotime($sdate.' 00:00:00'),
+				"created_at <="	=> strtotime($edate.' 23:59:59'),
+			));
+		}
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
+				$count++;
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
 					$list["partner"][$partner_qrcode[$value->promote_code]][$value->status][] = array(
 						"id"			=> $value->id,
 						"amount"		=> $value->amount,
 						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
@@ -52,6 +64,7 @@ class Sales extends MY_Admin_Controller {
 						"id"			=> $value->id,
 						"amount"		=> $value->amount,
 						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
@@ -64,26 +77,21 @@ class Sales extends MY_Admin_Controller {
 						"id"			=> $value->id,
 						"amount"		=> $value->amount,
 						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
 						"created_date"	=> date("Y-m-d",$value->created_at),
 					);
 				}
-				
-				if($max_date=="" || $max_date<$value->created_at)
-					$max_date = $value->created_at;
-				if($min_date=="" || $min_date>$value->created_at)
-					$min_date = $value->created_at;
 			}
 		}
 		$page_data["list"] 			= $list;
+		$page_data["count"] 		= $count;
 		$page_data["partner_list"] 	= $partner_list_byid;
 		$page_data["admins_name"] 	= $admins_name;
 		$page_data["partner_type"] 	= $partner_type;
 		$page_data["target_status"] = $this->target_model->status_list;
-		$page_data["max_date"] 		= $max_date?date("Y-m-d",$max_date):"";
-		$page_data["min_date"] 		= $min_date?date("Y-m-d",$min_date):"";
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
