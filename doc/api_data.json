@@ -2368,13 +2368,13 @@
           "type": "json"
         },
         {
-          "title": "502",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "title": "510",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"510\"\n}",
           "type": "json"
         },
         {
-          "title": "502",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "title": "511",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"511\"\n}",
           "type": "json"
         },
         {
