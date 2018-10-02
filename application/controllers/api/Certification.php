@@ -339,17 +339,17 @@ class Certification extends REST_Controller {
      *     }
 	 *
      * @apiError 510 此學號已被使用過
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {json} 510
      *     {
      *       "result": "ERROR",
-     *       "error": "502"
+     *       "error": "510"
      *     }
 	 *
      * @apiError 511 此學生Email已被使用過
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {json} 511
      *     {
      *       "result": "ERROR",
-     *       "error": "502"
+     *       "error": "511"
      *     }
 	 *
      * @apiError 204 Email格式錯誤
