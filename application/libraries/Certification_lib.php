@@ -131,6 +131,12 @@ class Certification_lib{
 	private function id_card_success($info){
 		if($info){
 			$content 	= $info->content;
+			//檢查身分證字號
+			$id_number_used = $this->CI->user_model->get_by(array( "id_number" => $content['id_number'] ));
+			if($id_number_used && $id_number_used->id != $info->user_id){
+				return false;
+			}
+			
 			$data 		= array(
 				"id_card_status"	=> 1,
 				"id_card_front"		=> $content["front_image"],
