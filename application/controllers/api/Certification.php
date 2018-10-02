@@ -510,7 +510,7 @@ class Certification extends REST_Controller {
      * @apiGroup Certification
 	 * @apiParam {String{3}} bank_code 銀行代碼三碼
 	 * @apiParam {String{4}} branch_code 分支機構代號四碼
-	 * @apiParam {String{10..16}} bank_account 銀行帳號
+	 * @apiParam {String{10..14}} bank_account 銀行帳號
      * @apiParam {file} front_image 金融卡正面照
      * @apiParam {file} back_image 金融卡背面照
      *
@@ -602,14 +602,14 @@ class Certification extends REST_Controller {
 			if(strlen($content['branch_code'])!=4){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BRANCH_CODE_ERROR ));
 			}
-			if(strlen(intval($content['bank_account']))<10 || is_virtual_account($content['bank_account'])){
+			if(strlen(intval($content['bank_account']))<8 || strlen($content['bank_account'])<10 || strlen($content['bank_account'])>14 || is_virtual_account($content['bank_account'])){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
 			
 			$where = array(
 				"investor"		=> $investor,
 				"bank_code"		=> $content["bank_code"],
-				"bank_account"	=> intval($content["bank_account"]),
+				"bank_account"	=> $content["bank_account"],
 				"status"		=> 1,
 			);
 			
@@ -649,7 +649,7 @@ class Certification extends REST_Controller {
 					"user_certification_id"	=> $insert,
 					"bank_code"		=> $content["bank_code"],
 					"branch_code"	=> $content["branch_code"],
-					"bank_account"	=> intval($content["bank_account"]),
+					"bank_account"	=> $content["bank_account"],
 					"front_image"	=> $content["front_image"],
 					"back_image"	=> $content["back_image"],
 				);

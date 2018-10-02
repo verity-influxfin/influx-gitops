@@ -130,8 +130,10 @@ class Payment_lib{
 	//入帳處理
 	private function receipt($value){
 		if(!empty($value->virtual_account)){
-			$bank_code 	= $bank_account = "";
-			$bank 		= bankaccount_substr($value->bank_acc);
+			$bank_code 		= $bank_account = "";
+			$bank 			= bankaccount_substr($value->bank_acc);
+			$value->bank_id = substr($value->bank_id,0,3);
+			
 			if($bank['bank_code']==$value->bank_id){
 				$bank_code 		= $bank['bank_code'];
 				$bank_account 	= $bank['bank_account'];
@@ -139,15 +141,16 @@ class Payment_lib{
 				$bank_code 		= $value->bank_id;
 				$bank_account 	= $value->bank_acc;
 			}
+			
 			$this->CI->load->model('user/virtual_account_model');
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
 			$investor			= investor_virtual_account($value->virtual_account)?1:0;
 			$where				= array(
-				"investor"		=> $investor,
-				"bank_code"		=> $bank_code,
-				"bank_account"	=> $bank_account,
-				"status"		=> 1,
-				"verify"		=> 1
+				"investor"			=> $investor,
+				"bank_code"			=> $bank_code,
+				"bank_account like"	=> '%'.$bank_account,
+				"status"			=> 1,
+				"verify"			=> 1
 			);
 			$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 			if($virtual_account && $user_bankaccount){
@@ -511,8 +514,9 @@ class Payment_lib{
 				foreach($payments as $key => $value){
 					if($value->status==5 && $value->amount > 15){
 						$this->CI->payment_model->update($value->id,array("status"=>4));
-						$amount = intval($value->amount);
-						$bank 	= bankaccount_substr($value->bank_acc);
+						$amount 		= intval($value->amount);
+						$bank 			= bankaccount_substr($value->bank_acc);
+						$value->bank_id = substr($value->bank_id,0,3);
 						if($bank['bank_code']==$value->bank_id){
 							$bank_code 		= $bank['bank_code'];
 							$bank_account 	= $bank['bank_account'];
