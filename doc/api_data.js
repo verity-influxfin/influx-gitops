@@ -1242,7 +1242,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "size": "10..16",
+            "size": "10..14",
             "optional": false,
             "field": "bank_account",
             "description": "<p>銀行帳號</p>"
@@ -2060,7 +2060,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
-              "\"facebook\""
+              "facebook",
+              "instagram"
             ],
             "optional": false,
             "field": "type",
@@ -2314,6 +2315,18 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "510",
+            "description": "<p>此學號已被使用過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "511",
+            "description": "<p>此學生Email已被使用過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "204",
             "description": "<p>Email格式錯誤</p>"
           },
@@ -2347,6 +2360,16 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
           "type": "json"
         },
         {
@@ -12782,8 +12805,7 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "facebook",
-              "instagram",
-              "line"
+              "instagram"
             ],
             "optional": false,
             "field": "type",

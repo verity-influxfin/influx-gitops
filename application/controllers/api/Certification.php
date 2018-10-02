@@ -338,6 +338,20 @@ class Certification extends REST_Controller {
      *       "error": "502"
      *     }
 	 *
+     * @apiError 510 此學號已被使用過
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     * @apiError 511 此學生Email已被使用過
+     * @apiErrorExample {json} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
      * @apiError 204 Email格式錯誤
      * @apiErrorExample {json} 204
      *     {
@@ -378,6 +392,35 @@ class Certification extends REST_Controller {
 
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!=".edu.tw") {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
+			}
+			
+			$this->load->model('user/user_meta_model');
+			
+			//Email是否使用過
+			$user_meta = $this->user_meta_model->get_by(array(
+				'meta_key'	=> 'school_email',
+				'meta_value'=> $content['email'],
+			));
+			
+			if($user_meta && $user_meta->user_id != $user_id){
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
+			}
+			
+			//學號是否使用過
+			$user_meta = $this->user_meta_model->get_by(array(
+				'meta_key'	=> 'student_id',
+				'meta_value'=> $content['student_id'],
+			));
+			
+			if($user_meta && $user_meta->user_id != $user_id){
+				$user_school = $this->user_meta_model->get_by(array(
+					'user_id'	=> $user_meta->user_id,
+					'meta_key'	=> 'school_name',
+				));
+
+				if($user_school && $user_school->meta_value==$content['school']){
+					$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTID_EXIST ));
+				}
 			}
 			
 			//上傳檔案欄位
