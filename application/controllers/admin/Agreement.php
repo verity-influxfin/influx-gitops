@@ -27,11 +27,12 @@ class Agreement extends MY_Admin_Controller
 
     public function editAgreement()
     {
-        $id        = $this->input->get('id');
-        $agreement = $this->agreement_model->get($id);
-        $viewData  = [
-            'agreement' => $agreement,
-        ];
+        $id        	= $this->input->get('id');
+        $data 		= $this->agreement_model->get($id);
+        $viewData  = array(
+            'data' => $data,
+			'type' => 'edit'
+        );
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/agreement', $viewData);
@@ -52,7 +53,10 @@ class Agreement extends MY_Admin_Controller
             $this->agreement_model->insert($param);
             $this->redirectToIndex();
         } else {
-            $this->editAgreement();
+            $this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/agreement');
+			$this->load->view('admin/_footer');
         }
     }
 

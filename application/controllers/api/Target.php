@@ -454,6 +454,13 @@ class Target extends REST_Controller {
      *       "error": "209"
      *     }
 	 *
+     * @apiError 212 未通過所需的驗證(Email)
+     * @apiErrorExample {json} 212
+     *     {
+     *       "result": "ERROR",
+     *       "error": "212"
+     *     }
+	 *
      */
 	public function apply_post()
     {
@@ -486,10 +493,15 @@ class Target extends REST_Controller {
 			}
 
 			//檢查認證 NOT_VERIFIED
-			if($this->user_info->id_number && $this->user_info->id_number==""){
+			if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 			
+			//檢查認證 NOT_VERIFIED_EMAIL
+			if(empty($this->user_info->email) || $this->user_info->email==""){
+				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+			}
+		
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
@@ -645,7 +657,7 @@ class Target extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 
 		//檢查認證 NOT_VERIFIED
-		if($this->user_info->id_number && $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 
@@ -804,6 +816,13 @@ class Target extends REST_Controller {
      *       "error": "209"
      *     }
 	 *
+     * @apiError 212 未通過所需的驗證(Email)
+     * @apiErrorExample {json} 212
+     *     {
+     *       "result": "ERROR",
+     *       "error": "212"
+     *     }
+	 *
      */
 	public function batch_get()
     {
@@ -825,8 +844,13 @@ class Target extends REST_Controller {
 		}
 
 		//檢查認證 NOT_VERIFIED
-		if($this->user_info->id_number && $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+		}
+		
+		//檢查認證 NOT_VERIFIED_EMAIL
+		if(empty($this->user_info->email) || $this->user_info->email==""){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 		}
 		
 		if($this->user_info->transaction_password==""){

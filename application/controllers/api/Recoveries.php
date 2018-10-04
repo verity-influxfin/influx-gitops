@@ -626,7 +626,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		//檢查認證 NOT_VERIFIED
-		if($this->user_info->id_number && $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
@@ -715,10 +715,10 @@ class Recoveries extends REST_Controller {
 		$data		= array();
 
 		//檢查認證 NOT_VERIFIED
-		if($this->user_info->id_number && $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
-		
+			
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$bank_account){

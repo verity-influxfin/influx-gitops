@@ -83,13 +83,17 @@
 														
 														switch($user_status){
 															case '0': 
-																echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>';
+																if(in_array($k,array(2,6))){
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																}else{
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
+																}
 																break;
-															case '1': 
-																echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>';
+															case '1':
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																break;
 															case '2': 
-																echo '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>';
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																break;
 															default:
 																break;

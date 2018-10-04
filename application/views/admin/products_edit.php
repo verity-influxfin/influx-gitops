@@ -48,7 +48,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <form role="form" method="post" onsubmit="return form_onsubmit();" > 
                                         <div class="form-group">
                                             <label>名稱</label>
@@ -107,9 +107,6 @@
                                         </div>
                                         <button type="submit" class="btn btn-default">送出</button>
                                     </form>
-                                </div>
-
-
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
                             </div>

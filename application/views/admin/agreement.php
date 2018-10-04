@@ -1,4 +1,3 @@
-<div id="page-wrapper">
     <script>
         tinymce.init({
             selector: 'textarea',
@@ -6,40 +5,52 @@
         });
     </script>
 
-    <?php if (empty(validation_errors()) === false): ?>
-        <div class="alert alert-danger" role="alert">
-            <?php echo validation_errors(); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php
-
-    $action = "updateAgreement";
-    if (is_null($agreement)) {
-        $action = "insertAgreement";
-    }
-
-    ?>
-
-    <form action="<?= $action ?>" method="post">
-        <input type="hidden" name="id"
-               value="<?= is_null($agreement) ? 0 : $agreement->id ?>">
-        <div class="form-group">
-            <label>alias</label>
-            <input type="text" name="alias" class="form-control"
-                   value="<?= is_null($agreement) ? ""
-                       : $agreement->alias ?>">
-        </div>
-
-        <div class="form-group">
-            <label>name</label>
-            <input type="text" name="name" class="form-control"
-                   value="<?= is_null($agreement) ? ""
-                       : $agreement->name ?>">
-        </div>
-
-        <textarea name="content">
-        <?= is_null($agreement) ? "" : $agreement->content ?>
-    </textarea>
-        <button type="submit" class="btn btn-default">submit</button>
-    </form>
+	<div id="page-wrapper">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">協議書</h1>
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+					協議書
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-6">
+								<form action="<?=$type=="edit"?"updateAgreement":"insertAgreement" ?>" method="post">
+									<div class="form-group">
+										<label>名稱</label>
+										<input id="name" name="name" class="form-control" placeholder="Enter Name" value="<?=isset($data->name)?$data->name:"" ?>">
+										<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"" ?>">
+									</div>
+									<div class="form-group">
+										<label>代號</label>
+										<input id="alias" name="alias" class="form-control" placeholder="Enter Alias" value="<?=isset($data->alias)?$data->alias:"" ?>" >
+									</div>
+									<div class="form-group">
+										<label>產品縮寫</label> 
+										<textarea id="content" name="content" class="form-control" rows="3">
+										<?=isset($data->content)?$data->content:"";?>
+										</textarea>
+									</div>
+									<button type="submit" class="btn btn-default">送出</button>
+								</form>
+							</div>
+							<!-- /.col-lg-6 (nested) -->
+						</div>
+						<!-- /.row (nested) -->
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /#page-wrapper -->

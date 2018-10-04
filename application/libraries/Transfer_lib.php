@@ -246,7 +246,6 @@ class Transfer_lib{
 							}
 							$this->CI->transfer_investment_model->update($value->id,$param);
 						}
-						$this->CI->transaction_lib->transfer_success($transfers->id);
 						return true;
 					}
 				}else{

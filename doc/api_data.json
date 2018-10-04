@@ -8691,6 +8691,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -8739,6 +8745,11 @@
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
           "type": "json"
         },
         {
@@ -9476,6 +9487,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -9544,6 +9561,11 @@
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
           "type": "json"
         },
         {
@@ -10258,6 +10280,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -10306,6 +10334,11 @@
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
           "type": "json"
         },
         {
@@ -10948,6 +10981,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -11011,6 +11050,11 @@
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
           "type": "json"
         },
         {

@@ -260,6 +260,12 @@ class Financial_lib{
 		}
 		return false;
 	}
-
+	
+	public function get_tax_amount($total=0){
+		if($total > 10){
+			return intval($total - round($total*100/(100+TAX_RATE),0));
+		}
+		return 0;
+	}
 
 }
