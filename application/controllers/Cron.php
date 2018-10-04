@@ -156,5 +156,23 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die("KO");
 	}
+	
+	public function daily_tax()
+	{
+		$this->load->library('Payment_lib'); 
+		$script  	= 9;
+		$start_time = time();
+		$count 		= $this->payment_lib->script_daily_tax();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "daily_tax",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
 }
 

@@ -764,4 +764,87 @@ class Payment_lib{
 		}
 		return $data;
 	}
+	
+	public function script_daily_tax($sdate=""){
+		$this->CI->load->library('Financial_lib');
+		$this->CI->load->library('Ezpay_lib');
+		$this->CI->load->model('transaction/transaction_model');
+		$this->CI->load->model('transaction/receipt_model');
+		$date		= date("Y-m-d",strtotime(get_entering_date().' -1 day'));
+		$script  	= 9;
+		$count 		= 0;
+		$source		= array(
+			SOURCE_FEES,
+			SOURCE_SUBLOAN_FEE,
+			SOURCE_TRANSFER_FEE,
+			SOURCE_PREPAYMENT_DAMAGE,
+			SOURCE_DAMAGE,
+			SOURCE_PREPAYMENT_ALLOWANCE,
+		);
+
+		if(isset($sdate) && $sdate!="" && $sdate < $date){
+			$where	= array(
+				"entering_date >="	=> $sdate,
+				"entering_date <="	=> $date,
+				"source"			=> $source,
+				"status <>"			=> 0
+			);
+		}else{
+			$where	= array(
+				"entering_date"	=> $date,
+				"source"		=> $source,
+				"status <>"		=> 0
+			);
+		}
+
+		$data 		= $this->CI->transaction_model->order_by("user_from","ASC")->get_many_by($where);
+		if($data && !empty($data)){
+			$tax_list 	= array();
+			$prepayment = array();
+			foreach($data as $key => $value){
+				if($value->source!=SOURCE_PREPAYMENT_ALLOWANCE){
+					if(!isset($tax_list[$value->user_from])){
+						$tax_list[$value->user_from] = 0;
+					}
+					$tax_list[$value->user_from] += $value->amount;
+					if($value->source == SOURCE_PREPAYMENT_DAMAGE){
+						$prepayment[$value->target_id] = $value->user_from;
+					}
+				}
+			}
+			if(!empty($prepayment)){
+				foreach($data as $key => $value){
+					if($value->source==SOURCE_PREPAYMENT_ALLOWANCE){
+						$tax_list[$prepayment[$value->target_id]] -= $value->amount;
+					}
+				}
+			}
+			
+			if(!empty($tax_list)){
+				foreach($tax_list as $user_id => $amount){
+					$today 		= $this->CI->receipt_model->get_by(array(
+						"entering_date"	=> $date,
+						"user_id"		=> $user_id,
+					));
+					
+					if(!$today){
+						$tax 		= $this->CI->financial_lib->get_tax_amount($amount);
+						$tax_info 	= $this->CI->ezpay_lib->send($user_id,$amount,$tax);
+						if($tax_info){
+							$this->CI->receipt_model->insert(array(
+								"entering_date"	=> $date,
+								"user_id"		=> $user_id,
+								"amount"		=> $tax_info['amount'],
+								"tax_amount"	=> $tax_info['tax_amount'],
+								"tax_id"		=> $tax_info['tax_id'],
+								"order_no"		=> $tax_info['order_no'],
+							));
+							$count++;
+						}
+					}
+				}
+			}
+		}
+		return $count;
+	}
 }

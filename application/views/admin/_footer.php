@@ -61,16 +61,6 @@
 						"sLast":"尾頁"}
                 }
 			});
-			
-			$('[data-toggle="datepicker"]').datepicker({
-			  format: 'yyyy-mm-dd',
-			});
-		});
-
-		$(function() {
-			$('.fancyframe').fancybox({
-				'type':'iframe',
-			});
 		});
 		
 		function number_only(evt)

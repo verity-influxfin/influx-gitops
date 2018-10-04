@@ -46,6 +46,7 @@ class Transaction_lib{
 	
 	//儲值
 	public function recharge($payment_id=0){
+		$date = get_entering_date();
 		if($payment_id){
 			$this->CI->load->model('transaction/payment_model');
 			$payment 	= $this->CI->payment_model->get($payment_id);
@@ -58,7 +59,7 @@ class Transaction_lib{
 						$bank_account	= $bank['bank_account'];
 						$transaction	= array(
 							"source"			=> SOURCE_RECHARGE,
-							"entering_date"		=> date("Y-m-d"),
+							"entering_date"		=> $date,
 							"user_from"			=> $user_account->user_id,
 							"bank_account_from"	=> $bank_account,
 							"amount"			=> intval($payment->amount),

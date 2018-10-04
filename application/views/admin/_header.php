@@ -24,6 +24,18 @@
 	<!-- /#wrapper -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 	<script src="//cloud.tinymce.com/stable/tinymce.min.js?apiKey=50g7aczgyla2r7aenym5m6qorvpgpbo0mjec0fffvlt9frf6"></script>
+	<script>
+		$(document).ready(function() {
+			
+			$('[data-toggle="datepicker"]').datepicker({
+			  format: 'yyyy-mm-dd',
+			});
+			
+			$('.fancyframe').fancybox({
+				'type':'iframe',
+			});
+		});
+		</script>
 </head>
 <body>
     <div id="wrapper">
