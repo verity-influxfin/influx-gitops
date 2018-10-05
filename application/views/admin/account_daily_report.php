@@ -17,10 +17,14 @@
 			</script>
 			<style>
 				td{
-					padding:5px;
+					padding:2px !important;
 				}
 				th{
+					padding:0px;
 					text-align: center;
+				}
+				.num{
+					text-align: right;
 				}
 			</style>
             <!-- /.row -->
@@ -48,7 +52,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover" >
+                                <table class="table table-bordered table-hover" style="font-size:10px;text-align: left;">
                                     <thead>
 										<tr>
                                             <th rowspan="2">交易日期</th>
@@ -114,21 +118,21 @@
                                             <td><?=isset($transaction_type_name[$value["source_type"]])?$transaction_type_name[$value["source_type"]]:"" ?></td>
                                             <td><?=isset($value["user_from"])?$value["user_from"]:"" ?></td>
                                             <td><?=isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:"" ?></td>
-                                            <td><?=isset($value["v_amount_from"])?$value["v_amount_from"]:"" ?></td>
+                                            <td class="num"><?=isset($value["v_amount_from"])&&$value["v_amount_from"]?number_format($value["v_amount_from"]):"" ?></td>
                                             <td><?=isset($value["bank_account_from"])?$value["bank_account_from"]:"" ?></td>
-                                            <td><?=isset($value["amount_from"])?$value["amount_from"]:"" ?></td>
+                                            <td class="num"><?=isset($value["amount_from"])&&$value["amount_from"]?number_format($value["amount_from"]):"" ?></td>
 											<td><?=isset($value["user_to"])?$value["user_to"]:"" ?></td>
                                             <td><?=isset($value["v_bank_account_to"])?$value["v_bank_account_to"]:"" ?></td>
-                                            <td><?=isset($value["v_amount_to"])?$value["v_amount_to"]:"" ?></td>
+                                            <td class="num"><?=isset($value["v_amount_to"])&&$value["v_amount_to"]?number_format($value["v_amount_to"]):"" ?></td>
                                             <td><?=isset($value["bank_account_to"])?$value["bank_account_to"]:"" ?></td>
-                                            <td><?=isset($value["amount_to"])?$value["amount_to"]:"" ?></td>
-                                            <td><?=isset($value["principal"])?$value["principal"]:"" ?></td>
-                                            <td><?=isset($value["interest"])?$value["interest"]:"" ?></td>
-                                            <td><?=isset($value["platform_fee"])?$value["platform_fee"]:"" ?></td>
-                                            <td><?=isset($value["damages"])?$value["damages"]:"" ?></td>
-                                            <td><?=isset($value["allowance"])?$value["allowance"]:"" ?></td>
-                                            <td><?=isset($value["delay_interest"])?$value["delay_interest"]:"" ?></td>
-                                            <td><?=isset($value["else"])?$value["else"]:"" ?></td>
+                                            <td class="num"><?=isset($value["amount_to"])&&$value["amount_to"]?number_format($value["amount_to"]):"" ?></td>
+                                            <td class="num"><?=isset($value["principal"])&&$value["principal"]?number_format($value["principal"]):"" ?></td>
+                                            <td class="num"><?=isset($value["interest"])&&$value["interest"]?number_format($value["interest"]):"" ?></td>
+                                            <td class="num"><?=isset($value["platform_fee"])&&$value["platform_fee"]?number_format($value["platform_fee"]):"" ?></td>
+                                            <td class="num"><?=isset($value["damages"])&&$value["damages"]?number_format($value["damages"]):"" ?></td>
+                                            <td class="num"><?=isset($value["allowance"])&&$value["allowance"]?number_format($value["allowance"]):"" ?></td>
+                                            <td class="num"><?=isset($value["delay_interest"])&&$value["delay_interest"]?number_format($value["delay_interest"]):"" ?></td>
+                                            <td class="num"><?=isset($value["else"])&&$value["else"]?number_format($value["else"]):"" ?></td>
                                         </tr>   
 											<?php 
 												if(isset($value["sub_list"]) && !empty($value["sub_list"])){
@@ -151,21 +155,21 @@
 												<td><?=isset($v["source_type"])?$transaction_type_name[$v["source_type"]]:"" ?></td>
 												<td><?=isset($v["user_from"])?$v["user_from"]:"" ?></td>
 												<td><?=isset($v["v_bank_account_from"])?$v["v_bank_account_from"]:"" ?></td>
-												<td><?=isset($v["v_amount_from"])?$v["v_amount_from"]:"" ?></td>
+												<td class="num"><?=isset($v["v_amount_from"])&&$v["v_amount_from"]?number_format($v["v_amount_from"]):"" ?></td>
 												<td><?=isset($v["bank_account_from"])?$v["bank_account_from"]:"" ?></td>
-												<td><?=isset($v["amount_from"])?$v["amount_from"]:"" ?></td>
+												<td class="num"><?=isset($v["amount_from"])&&$v["amount_from"]?number_format($v["amount_from"]):"" ?></td>
 												<td><?=isset($v["user_to"])?$v["user_to"]:"" ?></td>
 												<td><?=isset($v["v_bank_account_to"])?$v["v_bank_account_to"]:"" ?></td>
-												<td><?=isset($v["v_amount_to"])?$v["v_amount_to"]:"" ?></td>
+												<td class="num"><?=isset($v["v_amount_to"])&&$v["v_amount_to"]?number_format($v["v_amount_to"]):"" ?></td>
 												<td><?=isset($v["bank_account_to"])?$v["bank_account_to"]:"" ?></td>
-												<td><?=isset($v["amount_to"])?$v["amount_to"]:"" ?></td>
-												<td><?=isset($v["principal"])?$v["principal"]:"" ?></td>
-												<td><?=isset($v["interest"])?$v["interest"]:"" ?></td>
-												<td><?=isset($v["platform_fee"])?$v["platform_fee"]:"" ?></td>
-												<td><?=isset($v["damages"])?$v["damages"]:"" ?></td>
-												<td><?=isset($v["allowance"])?$v["allowance"]:"" ?></td>
-												<td><?=isset($v["delay_interest"])?$v["delay_interest"]:"" ?></td>
-												<td><?=isset($v["else"])?$v["else"]:"" ?></td>
+												<td class="num"><?=isset($v["amount_to"])&&$v["amount_to"]?number_format($v["amount_to"]):"" ?></td>
+												<td class="num"><?=isset($v["principal"])&&$v["principal"]?number_format($v["principal"]):"" ?></td>
+												<td class="num"><?=isset($v["interest"])&&$v["interest"]?number_format($v["interest"]):"" ?></td>
+												<td class="num"><?=isset($v["platform_fee"])&&$v["platform_fee"]?number_format($v["platform_fee"]):"" ?></td>
+												<td class="num"><?=isset($v["damages"])&&$v["damages"]?number_format($v["damages"]):"" ?></td>
+												<td class="num"><?=isset($v["allowance"])&&$v["allowance"]?number_format($v["allowance"]):"" ?></td>
+												<td class="num"><?=isset($v["delay_interest"])&&$v["delay_interest"]?number_format($v["delay_interest"]):"" ?></td>
+												<td class="num"><?=isset($v["else"])&&$v["else"]?number_format($v["else"]):"" ?></td>
 											</tr>  
 											<?php 
 												}}
@@ -179,21 +183,21 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><?=isset($sum["v_amount_from"])?$sum["v_amount_from"]:"" ?></td>
+                                            <td class="num"><?=isset($sum["v_amount_from"])?number_format($sum["v_amount_from"]):"" ?></td>
                                             <td></td>
-                                            <td><?=isset($sum["amount_from"])?$sum["amount_from"]:"" ?></td>
+                                            <td class="num"><?=isset($sum["amount_from"])?number_format($sum["amount_from"]):"" ?></td>
 											<td></td>
                                             <td></td>
-                                            <td><?=isset($sum["v_amount_to"])?$sum["v_amount_to"]:"" ?></td>
+                                            <td class="num"><?=isset($sum["v_amount_to"])?number_format($sum["v_amount_to"]):"" ?></td>
                                             <td></td>
-                                            <td><?=isset($sum["amount_to"])?$sum["amount_to"]:"" ?></td>
-                                            <td><?=isset($sum["principal"])?$sum["principal"]:"" ?></td>
-                                            <td><?=isset($sum["interest"])?$sum["interest"]:"" ?></td>
-                                            <td><?=isset($sum["platform_fee"])?$sum["platform_fee"]:"" ?></td>
-                                            <td><?=isset($sum["damages"])?$sum["damages"]:"" ?></td>
-                                            <td><?=isset($sum["allowance"])?$sum["allowance"]:"" ?></td>
-                                            <td><?=isset($sum["delay_interest"])?$sum["delay_interest"]:"" ?></td>
-                                            <td><?=isset($sum["else"])?$sum["else"]:"" ?></td>
+                                            <td class="num"><?=isset($sum["amount_to"])?number_format($sum["amount_to"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["principal"])?number_format($sum["principal"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["interest"])?number_format($sum["interest"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["platform_fee"])?number_format($sum["platform_fee"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["damages"])?number_format($sum["damages"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["allowance"])?number_format($sum["allowance"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["delay_interest"])?number_format($sum["delay_interest"]):"" ?></td>
+                                            <td class="num"><?=isset($sum["else"])?number_format($sum["else"]):"" ?></td>
                                         </tr>   
                                     </tbody>
                                 </table>

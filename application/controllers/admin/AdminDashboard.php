@@ -72,11 +72,12 @@ class AdminDashboard extends MY_Admin_Controller {
 		foreach($user_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['register']++;
 		}
-
-		$target_list	= $this->target_model->get_many_by(array(
-			"status"		=>array(3,4,5,10),
-			"created_at <=" =>strtotime($edatetime),
-			"created_at >="	=>strtotime($sdatetime),
+		
+		$this->load->model('log/Log_targetschange_model');
+		$target_list	= $this->Log_targetschange_model->get_many_by(array(
+			"status"		=> 3,
+			"created_at <=" => strtotime($edatetime),
+			"created_at >="	=> strtotime($sdatetime),
 		));
 		
 		foreach($target_list as $k => $v){

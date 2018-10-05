@@ -64,16 +64,16 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($key)?$transaction_source[$key]:"" ?></td>
-                                            <td><?=isset($value['debit'])&&$value['debit']?$value['debit']:"" ?></td>
-                                            <td><?=isset($value['credit'])&&$value['credit']?$value['credit']:"" ?></td>
+                                            <td style="text-align:right;"><?=isset($value['debit'])&&$value['debit']?number_format($value['debit']):"" ?></td>
+                                            <td style="text-align:right;"><?=isset($value['credit'])&&$value['credit']?number_format($value['credit']):"" ?></td>
                                         </tr>                                        
 									<?php 
 										}}
 									?>
 										<tr>
                                             <td>合計</td>
-                                            <td><?=isset($sum['debit'])&&$sum['debit']?$sum['debit']:"" ?></td>
-                                            <td><?=isset($sum['credit'])&&$sum['credit']?$sum['credit']:"" ?></td>
+                                            <td style="text-align:right;"><?=isset($sum['debit'])&&$sum['debit']?number_format($sum['debit']):"" ?></td>
+                                            <td style="text-align:right;"><?=isset($sum['credit'])&&$sum['credit']?number_format($sum['credit']):"" ?></td>
                                         </tr>   
                                     </tbody>
                                 </table>

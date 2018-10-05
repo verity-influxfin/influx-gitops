@@ -102,11 +102,11 @@
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						註冊、申請成功
+						註冊、上架
 					</div>
 					<!-- /.panel-heading -->
 					<div class="panel-body">
-						<div id="morris-bar-chart"></div>
+						<div id="morris-area-chart"></div>
 					</div>
 					<!-- /.panel-body -->
 				</div>
@@ -147,8 +147,8 @@
 	<!-- /#page-wrapper -->
 	<script>
 	$(function() {
-		Morris.Bar({
-			element: 'morris-bar-chart',
+		Morris.Area({
+			element: 'morris-area-chart',
 			data: [
 			<? if($chart_list){
 				$count=0;
@@ -158,19 +158,20 @@
 					}
 			?>
 			{
-				y: '<?=$date ?>',
-				a: <?=$value['register'] ?>,
-				b: <?=$value['loan'] ?>
+				date: '<?=$date ?>',
+				register: <?=$value['register'] ?>,
+				loan: <?=$value['loan'] ?>
 			}
 			<? 
 				$count++;}}
 			?>
 			],
-			xkey: 'y',
-			ykeys: ['b','a'],
-			labels: ['申貸成功','註冊'],
+			xkey: 'date',
+			ykeys: [ 'loan','register'],
+			labels: ['上架','註冊'],
+			pointSize: 2,
 			hideHover: 'auto',
 			resize: true
 		});
-		});
+	});
 	</script>

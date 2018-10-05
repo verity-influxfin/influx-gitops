@@ -61,7 +61,7 @@
                                             <td><?=isset($key)?$key:"" ?></td>
                                             <td><?=isset($info[$key])?$info[$key]->user_info->name:"" ?></td>
                                             <td><?=isset($info[$key])?$investor_list[$info[$key]->investor]:"" ?></td>
-                                            <td><?=isset($value)?$value:"" ?></td>
+                                            <td style="text-align:right;"><?=isset($value)?number_format($value):"" ?></td>
                                         </tr>                                        
 									<?php 
 										}}
