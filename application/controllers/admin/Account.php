@@ -13,6 +13,7 @@ class Account extends MY_Admin_Controller {
 		$this->load->model('transaction/virtual_passbook_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->model('user/virtual_account_model');
+		$this->load->model('user/user_estatement_model');
 	}
 	
 	public function index(){
@@ -454,6 +455,19 @@ class Account extends MY_Admin_Controller {
 					);
 				}
 			}
+			
+			$num = count($list);
+			for($i = 0 ; $i < $num ; $i++){
+				for ($j=$i+1;$j<$num;$j++) {
+					$a = $list[$i]["entering_date"];
+					$b = $list[$j]["entering_date"];
+					if( $a > $b ){
+						$tmp      = $list[$i];
+						$list[$i] = $list[$j];
+						$list[$j] = $tmp;
+					}
+				}
+			}
 		}
 
 		$page_data['list'] 					= $list;
@@ -503,6 +517,38 @@ class Account extends MY_Admin_Controller {
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/account_passbook_report',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	function estatement(){
+		$page_data 			= array("type"=>"list","list"=>array());
+		$input 				= $this->input->get(NULL, TRUE);
+		$where				= array();
+
+		//必填欄位
+		$fields 	= ['investor'];
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				$where[$field] = $input[$field];
+			}
+		}
+		
+		$list = $this->user_estatement_model->get_many_by($where);
+		if($list){
+			foreach($list as $key => $value){
+				$user = $this->user_model->get($value->user_id);
+				$list[$key]->user_name 		= $user->name;
+			}
+		}
+		
+		$this->load->model('admin/difficult_word_model');
+		
+		$page_data['list'] 			= $list?$list:array();
+		$page_data['investor_list'] = $this->user_estatement_model->investor_list;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/estatement_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
 }

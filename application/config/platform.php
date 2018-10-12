@@ -60,6 +60,7 @@ $config['admin_menu'] = array(
 		"parent_icon"		=> "fa-thumbs-up",
 		"daily_report"		=> "交易日報表",
 		"passbook_report"	=> "虛擬帳號餘額明細表",
+		"estatement"		=> "個人對帳單",
 		"index"				=> "收支統計表",
 	),
 );
@@ -68,7 +69,7 @@ $config['admin_menu'] = array(
 if(ENVIRONMENT=="development"){
 	$config['admin_email'] = array('news@influxfin.com');
 }else{
-	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com');
+	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','mori2.tw@gmail.com','tim@influxfin.com');
 } 
 
 //期數

@@ -282,5 +282,7 @@ defined('GMAIL_SMTP_PASSWORD')   	OR define('GMAIL_SMTP_PASSWORD'		, getenv('ENV
 defined('GMAIL_SMTP_NAME')   		OR define('GMAIL_SMTP_NAME'			, getenv('ENV_GMAIL_SMTP_NAME'));
 
 //SMTP SES
-defined('SES_SMTP_ACCOUNT')   	OR define('SES_SMTP_ACCOUNT'		, getenv('ENV_SES_SMTP_ACCOUNT'));
-defined('SES_SMTP_PASSWORD')   	OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SES_SMTP_PASSWORD'));
+defined('SES_SMTP_ACCOUNT')   		OR define('SES_SMTP_ACCOUNT'		, getenv('ENV_SES_SMTP_ACCOUNT'));
+defined('SES_SMTP_PASSWORD')   		OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SES_SMTP_PASSWORD'));
+
+defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_PDF_OWNER_PASSWORD'));

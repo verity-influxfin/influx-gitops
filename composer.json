@@ -13,7 +13,7 @@
 	"require": {
 		"php": ">=5.3.7",
 		"aws/aws-sdk-php": "3.*",
-		"setasign/fpdi-fpdf": "^2.0"
+		"tecnickcom/tcpdf": "6.*"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
