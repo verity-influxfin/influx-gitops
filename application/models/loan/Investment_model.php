@@ -14,6 +14,12 @@ class Investment_model extends MY_Model
 		9 =>	"已流標",
 		10 =>	"已結案",
 	);
+
+	public $transfer_status_list   = array(
+		0 =>	"",
+		1 =>	"債轉申請中",
+		2 =>	"已轉出",
+	);
 	
 	public function __construct()
 	{

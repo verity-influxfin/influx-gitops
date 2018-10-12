@@ -10,6 +10,7 @@ class Target extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('loan/investment_model');
+		$this->load->model('loan/transfer_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/virtual_account_model');
@@ -398,6 +399,48 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/targets_repayment',$page_data);
+		$this->load->view('admin/_footer');
+	}
+
+	public function assets(){
+		$page_data 					= array("type"=>"list");
+		$input 						= $this->input->get(NULL, TRUE);
+		$page_data["product_name"]	= $this->product_model->get_name_list();
+		$target_list 				= $this->target_model->get_many_by(array("status"=>array(5,10)));
+		$list 						= $this->investment_model->order_by("target_id","ASC")->get_many_by(array("status"=>array(3,10)));
+		$transfer_list 						= $this->transfer_model->get_many_by(array("status"=>10));
+		$school_list 				= array();
+		$user_list 					= array();
+		if($target_list){
+			$targets = array();
+			foreach($target_list as $key => $value){
+				$targets[$value->id] = $value;
+			}
+		}
+		if($transfer_list){
+			$transfers = array();
+			foreach($transfer_list as $key => $value){
+				$transfers[$value->investment_id] = $value;
+			}
+		}
+		if($list){
+			foreach($list as $key => $value){
+				$list[$key]->target = $targets[$value->target_id];
+			}
+		}
+		$page_data['instalment_list']		= $this->config->item('instalment');
+		$page_data['repayment_type']		= $this->config->item('repayment_type');
+		$page_data['list'] 					= $list;
+		$page_data['delay_list'] 			= $this->target_model->delay_list;
+		$page_data['status_list'] 			= $this->target_model->status_list;
+		$page_data['investment_status_list'] 	= $this->investment_model->status_list;
+		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
+		$page_data['school_list'] 				= $school_list;
+		$page_data['transfers'] 				= $transfers;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/targets_assets',$page_data);
 		$this->load->view('admin/_footer');
 	}
 	

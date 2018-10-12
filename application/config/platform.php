@@ -11,6 +11,7 @@ $config['admin_menu'] = array(
 		"waiting_verify"=> "待審批",
 		"waiting_loan"	=> "待放款",
 		"repayment"		=> "還款中",
+		"assets"		=> "債權列表",
 	),
 	"Risk" 				=> array("name"=>"風控專區","icon"=>"fa-briefcase"),
 	"Passbook" 	=> array(
