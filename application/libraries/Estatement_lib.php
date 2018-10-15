@@ -34,7 +34,6 @@ class Estatement_lib{
 						"virtual_account" 	=> $virtual_account->virtual_account,
 						"tx_datetime <=" 	=> $edatetime,
 					));
-					
 					if(!empty($virtual_passbook)){
 						foreach($virtual_passbook as $key => $value){
 							if($value->tx_datetime>=$sdatetime && $value->amount>0){
@@ -178,7 +177,7 @@ class Estatement_lib{
 						$ar_interest_count 			= count($investment['ar_interest']);
 						$delay_ar_principal_count 	= count($investment['delay_ar_principal']);
 						$delay_ar_interest_count 	= count($investment['delay_ar_interest']);
-						$ar_total_count = $ar_principal_count + $ar_interest_count + $delay_ar_principal_count + $delay_ar_interest_count;
+						$ar_total_count = $ar_principal_count + $delay_ar_principal_count ;
 						$ar_total		= $ar_principal + $ar_interest + $delay_ar_principal + $delay_ar_interest;
 					}
 				}
@@ -219,7 +218,6 @@ class Estatement_lib{
 					$rs = $this->CI->user_estatement_model->insert($param);
 					return $rs;
 				}
-				
 			}
 		}
 		return false;
@@ -334,7 +332,237 @@ class Estatement_lib{
 					$rs = $this->CI->user_estatement_model->insert($param);
 					return $rs;
 				}
-				
+			}
+		}
+		return false;
+	}
+	
+	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate=""){
+		$user_info = $this->CI->user_model->get($user_id);
+		if($user_info){
+			$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$user_id));
+			if($virtual_account){
+				$date_range	= entering_date_range($edate);
+				$edatetime	= $date_range?$date_range["edatetime"]:"";
+				$date_range	= entering_date_range($sdate);
+				$sdatetime	= $date_range?$date_range["sdatetime"]:"";
+				$first		= 0;
+				$list 		= array();
+				$tmp_list 	= array();
+				$transaction_id = array();
+				$target_id 		= array();
+				$target_list 	= array();
+				if($edatetime){
+					$virtual_passbook = $this->CI->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
+						"virtual_account" 	=> $virtual_account->virtual_account,
+						"tx_datetime <=" 	=> $edatetime,
+					));
+					
+					if(!empty($virtual_passbook)){
+						foreach($virtual_passbook as $key => $value){
+							if($value->tx_datetime>=$sdatetime){
+								$transaction_id[] 	= $value->transaction_id;
+								$remark 			= json_decode($value->remark,TRUE);
+								if($remark['target_id']){
+									$target_id[]	= $remark['target_id'];
+								}
+							}else{
+								$first += intval($value->amount);
+							}
+						}
+					}
+
+					$tmp_list[] = array("date"=>date("Y-m-d",strtotime($sdate.' -1 day')),"income_principal"=>$first);
+				}
+				$target_id 		= array_unique($target_id);
+				$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
+				$targets 		= $this->CI->target_model->get_many($target_id);
+				if($targets){
+					foreach($targets as $key =>$value){
+						$target_list[$value->id] = $value;
+					}
+				}
+				if($transactions){
+					foreach($transactions as $key => $value){
+						switch ($value->source) {
+							case SOURCE_TRANSFER_FEE: 
+								$tmp_list[$value->investment_id.'-t'.$value->entering_date] = array(
+									"date"			=> $value->entering_date,
+									"target_no"		=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+									"title"			=> "債權出讓",
+									"cost_fee"		=> intval($value->amount),
+									"income_principal"	=> 0,
+								);
+								break;
+							case SOURCE_PRINCIPAL: 
+								$instalment = isset($target_list[$value->target_id])?$target_list[$value->target_id]->instalment:"";
+								if(isset($tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date])){
+									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['income_principal'] += intval($value->amount);
+								}else{
+									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date] = array(
+										"date"				=> $value->entering_date,
+										"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+										"title"				=> "收款",
+										"income_principal"	=> intval($value->amount),
+										"remark" 			=> "帳期：".$value->instalment_no.'/'.$instalment,
+										"income_interest" 	=> 0,
+										"income_delay_interest" 	=> 0,
+										"income_allowance" 	=> 0,
+										"cost_fee" 			=> 0,
+									);
+								}
+								break;
+							default:
+								break;
+						}
+					}
+					foreach($transactions as $key => $value){
+						switch ($value->source) {
+							case SOURCE_RECHARGE: 
+								$tmp_list[] = array(
+									"date"				=> $value->entering_date,
+									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+									"title"				=> "儲值",
+									"income_principal"	=> intval($value->amount),
+								);
+								break;
+							case SOURCE_WITHDRAW:
+								$tmp_list[] = array(
+									"date"				=> $value->entering_date,
+									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+									"title"				=> "提領",
+									"cost_principal"	=> intval($value->amount),
+								);
+								break;
+							case SOURCE_LENDING:
+								$tmp_list[] = array(
+									"date"				=> $value->entering_date,
+									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+									"title"				=> "投資",
+									"cost_principal"	=> intval($value->amount),
+								);
+								break;
+							case SOURCE_TRANSFER:
+								if($value->user_from == $user_id){
+									$tmp_list[] = array(
+										"date"				=> $value->entering_date,
+										"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+										"title"				=> "債權受讓",
+										"cost_principal"	=> intval($value->amount),
+									);
+								}
+								if($value->user_to == $user_id){
+									if(isset($tmp_list[$value->investment_id.'-t'.$value->entering_date])){
+										$tmp_list[$value->investment_id.'-t'.$value->entering_date]["income_principal"] += intval($value->amount);
+									}else{
+										$tmp_list[$value->investment_id.'-t'.$value->entering_date] = array(
+											"date"				=> $value->entering_date,
+											"target_no"		=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+											"title"				=> "債權出讓",
+											"income_principal"	=> intval($value->amount),
+										);
+									}
+								}
+								break;
+							case SOURCE_INTEREST:
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['income_interest'] += intval($value->amount);
+								break;
+							case SOURCE_DELAYINTEREST:
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['income_delay_interest'] += intval($value->amount);
+								break;
+							case SOURCE_PREPAYMENT_ALLOWANCE:
+								$instalment = isset($target_list[$value->target_id])?$target_list[$value->target_id]->instalment:"";
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['income_allowance'] += intval($value->amount);
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['remark'] = '提前清償<br>帳期：'.$value->instalment_no.'/'.$instalment;
+								break;
+							case SOURCE_FEES:
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['cost_fee'] += intval($value->amount);
+								break;
+							default:
+								break;
+						}
+					}
+					$field = array(
+						"date",
+						"target_no",
+						"title",
+						"income_principal",
+						"income_interest",
+						"income_delay_interest",
+						"income_allowance",
+						"cost_principal",
+						"cost_fee",
+						"amount",
+						"remark"
+					);
+					foreach($tmp_list as $key => $value){
+						foreach($field as $k => $v){
+							if(!isset($value[$v]) || empty($value[$v])){
+								$value[$v] = "";
+							}
+						}
+						$list[] = $value;
+					}
+					
+					$num = count($list);
+					for($i = 0 ; $i < $num ; $i++){
+						for ($j=$i+1;$j<$num;$j++) {
+							$a = $list[$i]["date"];
+							$b = $list[$j]["date"];
+							if( $a > $b ){
+								$tmp      = $list[$i];
+								$list[$i] = $list[$j];
+								$list[$j] = $tmp;
+							}
+						}
+					}
+					$field = array(
+						"income_principal",
+						"income_interest",
+						"income_delay_interest",
+						"income_allowance",
+						"cost_principal",
+						"cost_fee",
+						"amount",
+					);
+					$amount = 0;
+					foreach($list as $key => $value){
+						$amount += 
+						intval($value["income_principal"]) + 
+						intval($value["income_interest"])+ 
+						intval($value["income_delay_interest"])+ 
+						intval($value["income_allowance"])-
+						intval($value["cost_principal"])-
+						intval($value["cost_fee"]);
+						$value["amount"] = $amount;
+						foreach($field as $k => $v){
+							if($value[$v])
+								$value[$v] = number_format($value[$v]);
+						}
+						$list[$key] = $value;
+					}
+				}
+				$data = array(
+					"edate" 		=> $edate,
+					"sdate" 		=> $sdate,
+					"user_id" 		=> $user_id,
+					"user_name"		=> $user_info->name,
+					"list"			=> $list,
+				);
+				$html 	= $this->CI->parser->parse('estatement/investor_detail', $data,TRUE);
+				$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單明細-".$edate,$user_id."-estatementdetail-".$edate.".pdf","investor/".$edate);
+				if($url){
+					$param = array(
+						"user_id"	=> $user_id,
+						"type"		=> "estatementdetail",
+						"investor"	=> 1,
+						"sdate"		=> $sdate,
+						"edate"		=> $edate,
+						"url"		=> $url,
+					);
+					$rs = $this->CI->user_estatement_model->insert($param);
+					return $rs;
+				}
 			}
 		}
 		return false;

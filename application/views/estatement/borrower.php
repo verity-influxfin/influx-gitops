@@ -160,7 +160,7 @@
 		</tr>		
 		<tr>
 			<td colspan="2" style="text-align:center;">
-				<img src="http://54.64.205.49/test/test2/img/06.png" style="width:300px">
+				<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/06.png" style="width:300px">
 			</td>
 			<td colspan="2" style="text-align:left;">
 				<p>請妥善保管密碼等個人訊息，並確保在官方途徑使用。
