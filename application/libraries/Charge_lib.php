@@ -141,8 +141,9 @@ class Charge_lib
 					$instalment				= 1;
 					$next_instalment 		= true;//下期
 					foreach($transaction as $key => $value){
-						if($value->user_to && $value->user_to!=$target->user_id){
-							$user_to_info[$value->user_to] 	= array(
+						if($value->source==SOURCE_AR_PRINCIPAL){
+							$user_to_info[$value->investment_id] 	= array(
+								"user_to"					=> $value->user_to,
 								"bank_account_to"			=> $value->bank_account_to,
 								"investment_id"				=> $value->investment_id,
 								"total_amount"				=> 0,
@@ -164,19 +165,19 @@ class Charge_lib
 						if($value->status==1){
 							switch($value->source){
 								case SOURCE_AR_PRINCIPAL: 
-									$user_to_info[$value->user_to]["remaining_principal"]	+= $value->amount;
+									$user_to_info[$value->investment_id]["remaining_principal"]	+= $value->amount;
 									break;
 								case SOURCE_PRINCIPAL: 
-									$user_to_info[$value->user_to]["remaining_principal"]	-= $value->amount;
+									$user_to_info[$value->investment_id]["remaining_principal"]	-= $value->amount;
 									break;
 								case SOURCE_AR_FEES: 
 									if($value->limit_date <= $settlement_date){
-										$user_to_info[$value->user_from]["platform_fee"]	+= $value->amount;
+										$user_to_info[$value->investment_id]["platform_fee"]	+= $value->amount;
 										if($value->limit_date == $settlement_date){
 											$next_instalment = false;
 										}
 									}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==$instalment){
-										$user_to_info[$value->user_from]["platform_fee"]	+= $value->amount;
+										$user_to_info[$value->investment_id]["platform_fee"]	+= $value->amount;
 									}
 									break;
 								default:
@@ -191,9 +192,9 @@ class Charge_lib
 						$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
 						$year_days 	= $leap_year?366:365;//今年日數
 						$total_remaining_principal = 0;
-						foreach($user_to_info as $user_to => $value){
+						foreach($user_to_info as $investment_id => $value){
 							$total_remaining_principal 	+= $value["remaining_principal"];
-							$user_to_info[$user_to]["interest_payable"] = intval(round( $value["remaining_principal"] * $target->interest_rate / 100 * $days / $year_days ,0));
+							$user_to_info[$investment_id]["interest_payable"] = intval(round( $value["remaining_principal"] * $target->interest_rate / 100 * $days / $year_days ,0));
 						}
 						$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
 
@@ -202,7 +203,7 @@ class Charge_lib
 							"interest_payable"			=> array(SOURCE_AR_INTEREST,SOURCE_INTEREST),
 							"remaining_principal"		=> array(SOURCE_AR_PRINCIPAL,SOURCE_PRINCIPAL),
 						);
-						foreach($user_to_info as $user_to => $value){
+						foreach($user_to_info as $investment_id => $value){
 							foreach($project_source as $k => $v){
 								$amount = $value[$k];
 								if(intval($amount)>0){
@@ -213,11 +214,11 @@ class Charge_lib
 										"bank_account_from"	=> $virtual_account->virtual_account,
 										"amount"			=> $amount,
 										"target_id"			=> $target->id,
-										"investment_id"		=> $user_to_info[$user_to]["investment_id"],
+										"investment_id"		=> $user_to_info[$investment_id]["investment_id"],
 										"instalment_no"		=> $instalment,
-										"user_to"			=> $user_to,
+										"user_to"			=> $user_to_info[$investment_id]["user_to"],
 										"limit_date"		=> $settlement_date,
-										"bank_account_to"	=> $user_to_info[$user_to]["bank_account_to"],
+										"bank_account_to"	=> $user_to_info[$investment_id]["bank_account_to"],
 										"status"			=> 2
 									);
 									$transaction_param[] = array(
@@ -227,10 +228,10 @@ class Charge_lib
 										"bank_account_from"	=> $virtual_account->virtual_account,
 										"amount"			=> $amount,
 										"target_id"			=> $target->id,
-										"investment_id"		=> $user_to_info[$user_to]["investment_id"],
+										"investment_id"		=> $user_to_info[$investment_id]["investment_id"],
 										"instalment_no"		=> $instalment,
-										"user_to"			=> $user_to,
-										"bank_account_to"	=> $user_to_info[$user_to]["bank_account_to"],
+										"user_to"			=> $user_to_info[$investment_id]["user_to"],
+										"bank_account_to"	=> $user_to_info[$investment_id]["bank_account_to"],
 										"status"			=> 2
 									);
 									$value["total_amount"] += $amount;
@@ -242,9 +243,9 @@ class Charge_lib
 								$transaction_param[] = array(
 									"source"			=> SOURCE_FEES,
 									"entering_date"		=> $date,
-									"user_from"			=> $user_to,
+									"user_from"			=> $user_to_info[$investment_id]["user_to"],
 									"bank_account_from"	=> $value["bank_account_to"],
-									"amount"			=> $user_to_info[$user_to]["platform_fee"],
+									"amount"			=> $user_to_info[$investment_id]["platform_fee"],
 									"target_id"			=> $target->id,
 									"investment_id"		=> $value["investment_id"],
 									"instalment_no"		=> $instalment,
@@ -262,7 +263,7 @@ class Charge_lib
 									"target_id"			=> $target->id,
 									"investment_id"		=> $value["investment_id"],
 									"instalment_no"		=> $instalment,
-									"user_to"			=> $user_to,
+									"user_to"			=> $user_to_info[$investment_id]["user_to"],
 									"bank_account_to"	=> $value["bank_account_to"],
 									"status"			=> 2
 								);
@@ -280,6 +281,7 @@ class Charge_lib
 								"investment_id"		=> 0,
 								"instalment_no"		=> $instalment,
 								"user_to"			=> 0,
+								"limit_date"		=> $settlement_date,
 								"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
 								"status"			=> 2
 							);
@@ -506,6 +508,138 @@ class Charge_lib
 			}
 			
 			$this->CI->target_model->update($target->id,$update_data);
+			if($delay_days > GRACE_PERIOD){
+				$this->handle_delay_target($target,$delay_days);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public function handle_delay_target($target,$delay_days=0){
+		if($target->status == 5 && $delay_days > GRACE_PERIOD){
+			$date			= get_entering_date();
+			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
+				"target_id" => $target->id,
+				"status"	=> 1
+			));
+			if($transaction){
+				$settlement 			= true;
+				$user_to_info 			= array();
+				$transaction_param 		= array();
+				$bank_account_from		= "";
+				$liquidated_damages		= 0;
+				$instalment				= 1;
+				$limit_date				= "";
+				foreach($transaction as $key => $value){
+					if($value->source==SOURCE_AR_PRINCIPAL){
+						if(!isset($user_to_info[$value->investment_id])){
+							$user_to_info[$value->investment_id] 	= array(
+								"user_to"				=> $value->user_to,
+								"bank_account_to"		=> $value->bank_account_to,
+								"investment_id"			=> $value->investment_id,
+								"remaining_principal"	=> 0,
+								"delay_interest"		=> 0,
+							);
+						}
+						$bank_account_from 	= $value->bank_account_from;
+						$user_to_info[$value->investment_id]["remaining_principal"]	+= $value->amount;
+						if($value->limit_date < $date){
+							$instalment = $value->instalment_no;
+							$limit_date = $value->limit_date;
+						}
+					}else if($value->source==SOURCE_AR_DELAYINTEREST){
+						$settlement = false;
+					}
+				}
+				
+				if($settlement){
+					foreach($transaction as $key => $value){
+						if($value->limit_date > $date || $value->source==SOURCE_AR_PRINCIPAL){
+							$this->CI->transaction_model->update($value->id,array("status"=>0));
+						}
+					}
+
+					if($user_to_info){
+						$total_remaining_principal = 0;
+						foreach($user_to_info as $investment_id => $value){
+							$user_to_info[$investment_id]["delay_interest"] = $this->CI->financial_lib->get_delay_interest($value["remaining_principal"],$delay_days);
+							$total_remaining_principal 	+= $value["remaining_principal"];
+						}
+						
+						$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
+
+						foreach($user_to_info as $investment_id => $value){
+							$transaction_param[] = array(
+								"source"			=> SOURCE_AR_PRINCIPAL,
+								"entering_date"		=> $date,
+								"user_from"			=> $target->user_id,
+								"bank_account_from"	=> $bank_account_from,
+								"amount"			=> $value["remaining_principal"],
+								"target_id"			=> $target->id,
+								"investment_id"		=> $value["investment_id"],
+								"instalment_no"		=> $instalment,
+								"user_to"			=> $value["user_to"],
+								"limit_date"		=> $limit_date,
+								"bank_account_to"	=> $value["bank_account_to"],
+								"status"			=> 1
+							);
+							
+							$transaction_param[] = array(
+								"source"			=> SOURCE_AR_DELAYINTEREST,
+								"entering_date"		=> $date,
+								"user_from"			=> $target->user_id,
+								"bank_account_from"	=> $bank_account_from,
+								"amount"			=> $value["delay_interest"],
+								"target_id"			=> $target->id,
+								"investment_id"		=> $value["investment_id"],
+								"instalment_no"		=> $instalment,
+								"user_to"			=> $value["user_to"],
+								"limit_date"		=> $limit_date,
+								"bank_account_to"	=> $value["bank_account_to"],
+								"status"			=> 1
+							);
+						}
+						
+						if(intval($liquidated_damages)>0){
+							$transaction_param[] = array(
+								"source"			=> SOURCE_AR_DAMAGE,
+								"entering_date"		=> $date,
+								"user_from"			=> $target->user_id,
+								"bank_account_from"	=> $bank_account_from,
+								"amount"			=> $liquidated_damages,
+								"target_id"			=> $target->id,
+								"investment_id"		=> 0,
+								"instalment_no"		=> $instalment,
+								"user_to"			=> 0,
+								"limit_date"		=> $limit_date,
+								"bank_account_to"	=> PLATFORM_VIRTUAL_ACCOUNT,
+								"status"			=> 1
+							);
+						}
+						
+						if($transaction_param){
+							$rs  = $this->CI->transaction_model->insert_many($transaction_param);
+						}
+					}
+				}else{
+					if($user_to_info){
+						foreach($user_to_info as $investment_id => $value){
+							$delay_interest = $this->CI->financial_lib->get_delay_interest($value["remaining_principal"],$delay_days);
+							$this->CI->transaction_model->update_by(
+								array(
+									"source" 		=> SOURCE_AR_DELAYINTEREST,
+									"investment_id" => $value["investment_id"],
+								),
+								array(
+									"amount" => $delay_interest
+								)
+							);
+						}
+					}
+				}
+				return true;
+			}
 		}
 		return false;
 	}
