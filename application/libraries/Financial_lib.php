@@ -189,8 +189,7 @@ class Financial_lib{
 	
 	public function get_delay_interest($remaining_principal=0,$delay_days=0){
 		if($remaining_principal && $delay_days > GRACE_PERIOD){
-			$days = $delay_days - GRACE_PERIOD;
-			return intval(round($remaining_principal*DELAY_INTEREST*$days/100,0));
+			return intval(round($remaining_principal*DELAY_INTEREST*$delay_days/100,0));
 		}
 		return 0;
 	}

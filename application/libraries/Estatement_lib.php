@@ -374,15 +374,21 @@ class Estatement_lib{
 
 					$tmp_list[] = array("date"=>date("Y-m-d",strtotime($sdate.' -1 day')),"income_principal"=>$first);
 				}
-				$target_id 		= array_unique($target_id);
-				$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
-				$targets 		= $this->CI->target_model->get_many($target_id);
-				if($targets){
-					foreach($targets as $key =>$value){
-						$target_list[$value->id] = $value;
+				
+				if($target_id){
+					$target_id 	= array_unique($target_id);
+					$targets 	= $this->CI->target_model->get_many($target_id);
+					if($targets){
+						foreach($targets as $key =>$value){
+							$target_list[$value->id] = $value;
+						}
 					}
 				}
-				if($transactions){
+				
+				
+				
+				if($transaction_id){
+					$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
 					foreach($transactions as $key => $value){
 						switch ($value->source) {
 							case SOURCE_TRANSFER_FEE: 
@@ -542,6 +548,7 @@ class Estatement_lib{
 						$list[$key] = $value;
 					}
 				}
+				
 				$data = array(
 					"edate" 		=> $edate,
 					"sdate" 		=> $sdate,
