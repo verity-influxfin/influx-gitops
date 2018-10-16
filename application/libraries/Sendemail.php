@@ -119,17 +119,22 @@ class Sendemail
 		return $this->send($admin_email,$title,$content);
 	}
 	
-	public function email_file_estatement($email="",$title="",$content="",$estatement,$estatement_detail){
+	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail=""){
 		if($email){
 			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
 			$this->CI->email->initialize($this->config);
-			$this->CI->email->clear();
+			$this->CI->email->clear(TRUE);
 			$this->CI->email->to($email);
 			$this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
 			$this->CI->email->subject($title);
 			$this->CI->email->message($content);
-			$this->CI->email->attach($estatement,"","estatement.pdf");
-			$this->CI->email->attach($estatement_detail,"","estatement_detail.pdf");
+			if($estatement!=""){
+				$this->CI->email->attach($estatement,"","estatement.pdf");
+			}
+			if($estatement_detail!=""){
+				$this->CI->email->attach($estatement_detail,"","estatement_detail.pdf");
+			}
+
 			$rs = $this->CI->email->send();
 			if($rs){
 				return true;
