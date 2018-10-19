@@ -77,7 +77,7 @@ class TestScript extends MY_Admin_Controller
             "bank_acc" 			=> $bankAcc,
         ];
         $this->payment_model->insert($param);
-
-        redirect("admin/TestScript");
+			
+        redirect(admin_url('TestScript'));
     }
 }

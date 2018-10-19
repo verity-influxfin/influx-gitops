@@ -12,7 +12,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-tasks fa-5x"></i>
+								<i class="fa fa-file-text fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge"><?=$target_count["approve"];?></div>
@@ -34,7 +34,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-tasks fa-5x"></i>
+								<i class="fa fa-shopping-cart fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge"><?=$target_count["bidding"];?></div>
@@ -56,7 +56,7 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-tasks fa-5x"></i>
+								<i class="fa fa-usd fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge"><?=$target_count["success"];?></div>
@@ -78,11 +78,77 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-3">
-								<i class="fa fa-tasks fa-5x"></i>
+								<i class="fa fa-wheelchair fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
 								<div class="huge"><?=$target_count["delay"];?></div>
 								<div>還款已逾期</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?=admin_url('Target/index?delay=1&status=5') ?>">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-file-text fa-5x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<div class="huge"><?=$target_count["approve"];?></div>
+								<div>待批覆上架</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?=admin_url('Target/waiting_verify') ?>">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-green">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-shopping-cart fa-5x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<div class="huge"><?=$target_count["success"];?></div>
+								<div>債權轉讓 - 已上架</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?=admin_url('Target/waiting_loan') ?>">
+						<div class="panel-footer">
+							<span class="pull-left">View Details</span>
+							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+							<div class="clearfix"></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6">
+				<div class="panel panel-yellow">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-3">
+								<i class="fa fa-usd fa-5x"></i>
+							</div>
+							<div class="col-xs-9 text-right">
+								<div class="huge"><?=$target_count["delay"];?></div>
+								<div>債權轉讓 - 待放款</div>
 							</div>
 						</div>
 					</div>

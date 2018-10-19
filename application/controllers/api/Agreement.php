@@ -9,7 +9,7 @@ class Agreement extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('platform/agreement_model');
+		$this->load->model('admin/agreement_model');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list','info'];
 		if (!in_array($method, $nonAuthMethods)) {

@@ -167,9 +167,6 @@ class Charge_lib
 								case SOURCE_AR_PRINCIPAL: 
 									$user_to_info[$value->investment_id]["remaining_principal"]	+= $value->amount;
 									break;
-								case SOURCE_PRINCIPAL: 
-									$user_to_info[$value->investment_id]["remaining_principal"]	-= $value->amount;
-									break;
 								case SOURCE_AR_FEES: 
 									if($value->limit_date <= $settlement_date){
 										$user_to_info[$value->investment_id]["platform_fee"]	+= $value->amount;

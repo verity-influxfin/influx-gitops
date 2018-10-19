@@ -508,6 +508,12 @@ class Account extends MY_Admin_Controller {
 					}
 					$list[$value->virtual_account] += $value->amount;
 				}
+				
+				foreach($list as $key => $value){
+					if($value==0){
+						unset($list[$key]);
+					}
+				}
 			}
 		}
 		

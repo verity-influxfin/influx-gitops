@@ -24,25 +24,32 @@ class Target extends MY_Admin_Controller {
 		$page_data 					= array("type"=>"list");
 		$input 						= $this->input->get(NULL, TRUE);
 		$where						= array();
+		$list						= array();
 		$page_data["product_name"]	= $this->product_model->get_name_list();
-		$fields 					= ['status','target_no','user_id','delay'];
+		$fields 					= ['status','target_no','user_id','delay','all'];
 		
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
-				$where[$field] = $input[$field];
+				if($field=='target_no'){
+					$where[$field.' like'] = '%'.$input[$field].'%';
+				}else{
+					$where[$field] = $input[$field];
+				}
 			}
 		}
-		$list 						= $this->target_model->get_many_by($where);
-		if($list){
-			foreach($list as $key => $value){
-				if($value->status==2){
-					$bank_account 		= $this->user_bankaccount_model->get_by(array(
-						"user_id"	=> $value->user_id,
-						"investor"	=> 0,
-						"status"	=> 1,
-						"verify"	=> 1,
-					));
-					$list[$key]->bank_account_verify = $bank_account?1:0;
+		if(!empty($where)){
+			$list 						= $this->target_model->get_many_by($where);
+			if($list){
+				foreach($list as $key => $value){
+					if($value->status==2){
+						$bank_account 		= $this->user_bankaccount_model->get_by(array(
+							"user_id"	=> $value->user_id,
+							"investor"	=> 0,
+							"status"	=> 1,
+							"verify"	=> 1,
+						));
+						$list[$key]->bank_account_verify = $bank_account?1:0;
+					}
 				}
 			}
 		}
@@ -56,7 +63,7 @@ class Target extends MY_Admin_Controller {
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/targets_list',$page_data);
+		$this->load->view('admin/target/targets_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
 
@@ -140,7 +147,7 @@ class Target extends MY_Admin_Controller {
 				
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title',$this->menu);
-				$this->load->view('admin/targets_edit',$page_data);
+				$this->load->view('admin/target/targets_edit',$page_data);
 				$this->load->view('admin/_footer');
 			}else{
 				alert("ERROR , id isn't exist",admin_url('target/index'));
@@ -221,7 +228,7 @@ class Target extends MY_Admin_Controller {
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/waiting_verify_target',$page_data);
+		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
 	
@@ -264,7 +271,7 @@ class Target extends MY_Admin_Controller {
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/waiting_loan_target',$page_data);
+		$this->load->view('admin/target/waiting_loan_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
 	
@@ -398,49 +405,7 @@ class Target extends MY_Admin_Controller {
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/targets_repayment',$page_data);
-		$this->load->view('admin/_footer');
-	}
-
-	public function assets(){
-		$page_data 					= array("type"=>"list");
-		$input 						= $this->input->get(NULL, TRUE);
-		$page_data["product_name"]	= $this->product_model->get_name_list();
-		$target_list 				= $this->target_model->get_many_by(array("status"=>array(5,10)));
-		$list 						= $this->investment_model->order_by("target_id","ASC")->get_many_by(array("status"=>array(3,10)));
-		$transfer_list 						= $this->transfer_model->get_many_by(array("status"=>10));
-		$school_list 				= array();
-		$user_list 					= array();
-		if($target_list){
-			$targets = array();
-			foreach($target_list as $key => $value){
-				$targets[$value->id] = $value;
-			}
-		}
-		if($transfer_list){
-			$transfers = array();
-			foreach($transfer_list as $key => $value){
-				$transfers[$value->investment_id] = $value;
-			}
-		}
-		if($list){
-			foreach($list as $key => $value){
-				$list[$key]->target = $targets[$value->target_id];
-			}
-		}
-		$page_data['instalment_list']		= $this->config->item('instalment');
-		$page_data['repayment_type']		= $this->config->item('repayment_type');
-		$page_data['list'] 					= $list;
-		$page_data['delay_list'] 			= $this->target_model->delay_list;
-		$page_data['status_list'] 			= $this->target_model->status_list;
-		$page_data['investment_status_list'] 	= $this->investment_model->status_list;
-		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
-		$page_data['school_list'] 				= $school_list;
-		$page_data['transfers'] 				= $transfers;
-
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/targets_assets',$page_data);
+		$this->load->view('admin/target/targets_repayment',$page_data);
 		$this->load->view('admin/_footer');
 	}
 	

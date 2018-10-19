@@ -54,8 +54,11 @@ class User extends MY_Admin_Controller {
 						$meta_data[$value->meta_key] = $value->meta_value;
 					}
 				}
-				
-				$bank_account 		= $this->user_bankaccount_model->get_many_by(array("user_id"=>$id));
+				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
+					"user_id"	=> $id,
+					"status"	=> 1,
+					"verify"	=> 1,
+				));
 				$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
 				$info = $this->user_model->get($id);
 				if($info){

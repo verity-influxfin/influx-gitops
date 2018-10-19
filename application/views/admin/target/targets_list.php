@@ -1,30 +1,17 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">還款中標的列表</h1>
+                    <h1 class="page-header">借款 - 全部列表</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
-				function checked_all(){
-					$('.targets').prop("checked", true);
-					check_checked();
-				}
-				
-				function check_checked(){
-					var ids					= "";
-					var repayment_export	= '<?=admin_url('target/repayment_export') ?>';
-					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
-					
-					$('.targets:checked').each(function() {
-						if(ids==""){
-							ids += this.value;
-						}else{
-							ids += ',' + this.value;
-						}		
-					});
-					$('#repayment_export').attr('href',repayment_export + '?ids=' + ids);
-					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+				function showChang(){
+					var user_id 			= $('#user_id').val();
+					var target_no 			= $('#target_no').val();
+					var delay 				= $('#delay :selected').val();
+					var status 				= $('#status :selected').val();
+					top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no;
 				}
 			</script>
             <!-- /.row -->
@@ -32,32 +19,57 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="repayment_export" href="<?=admin_url('target/repayment_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
-							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
+							<table>
+								<tr>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
+									<td>案號：</td>
+									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=""?$_GET['target_no']:""?>" id="target_no" /></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>狀態：</td>
+									<td>
+										<select id="status">
+											<option value="" >請選擇</option>
+											<? foreach($status_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? } ?>
+										</select>
+									</td>
+									<td>逾期：</td>
+									<td>
+										<select id="delay">
+											<option value="" >請選擇</option>
+											<? foreach($delay_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=""&&intval($_GET['delay'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? } ?>
+										</select>
+									</td>
+									<td>
+										<a href="javascript:showChang();" class="btn btn-default">查詢</a>
+									</td>
+								</tr>
+							</table>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
+                                            <th>案號</th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
-                                            <th>信用等級</th>
-                                            <th>學校名稱</th>
-                                            <th>學校科系</th>
                                             <th>申請金額</th>
                                             <th>核准金額</th>
 											<th>年化利率</th>
                                             <th>期數</th>
                                             <th>還款方式</th>
-                                            <th>每月回款</th>
-                                            <th>回款本息總額</th>
-                                            <th>放款日期</th>
                                             <th>逾期狀況</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
+                                            <th>邀請碼</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -69,28 +81,24 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-											 <td>
-												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
-												<?=isset($value->target_no)?$value->target_no:"" ?>
-											 </td>
+                                            <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-                                            <td><?=isset($value->credit_level)?$value->credit_level:"" ?></td>
-											<td><?=isset($school_list[$value->user_id]["school_name"])?$school_list[$value->user_id]["school_name"]:"" ?></td>
-                                            <td><?=isset($school_list[$value->user_id]["school_department"])?$school_list[$value->user_id]["school_department"]:"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate.'%':"" ?></td>
-                                            <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
+                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:"" ?></td>
+                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:"" ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
-                                            <td><?=isset($value->amortization_table["total_payment_m"])?$value->amortization_table["total_payment_m"]:"" ?></td>
-                                            <td><?=isset($value->amortization_table["total_payment"])?$value->amortization_table["total_payment"]:"" ?></td>
-                                            <td><?=isset($value->loan_date)?$value->loan_date:"" ?></td>
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
                                             <td>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<? 	if($value->status==2 && !$value->bank_account_verify){
+													echo '<p style="color:red;">金融帳號未驗證</p>';
+												}
+											?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

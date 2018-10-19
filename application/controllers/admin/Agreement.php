@@ -10,7 +10,7 @@ class Agreement extends MY_Admin_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('platform/agreement_model');
+        $this->load->model('admin/agreement_model');
     }
 
     public function index()

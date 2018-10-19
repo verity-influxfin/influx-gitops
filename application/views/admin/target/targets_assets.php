@@ -1,30 +1,17 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">債權列表</h1>
+                    <h1 class="page-header">債權 - 全部列表</h1>
                 </div>
                 <!-- /.col-lg-12 -->
-            </div>
+
+			</div>
 			<script type="text/javascript">
-				function checked_all(){
-					$('.targets').prop("checked", true);
-					check_checked();
-				}
-				
-				function check_checked(){
-					var ids					= "";
-					var repayment_export	= '<?=admin_url('target/repayment_export') ?>';
-					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
-					
-					$('.targets:checked').each(function() {
-						if(ids==""){
-							ids += this.value;
-						}else{
-							ids += ',' + this.value;
-						}		
-					});
-					$('#repayment_export').attr('href',repayment_export + '?ids=' + ids);
-					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+				function showChang(){
+					var user_id 			= $('#user_id').val();
+					var target_no 			= $('#target_no').val();
+					var status 				= $('#status :selected').val();
+					top.location = './index?status='+status+'&user_id='+user_id+'&target_no='+target_no;
 				}
 			</script>
             <!-- /.row -->
@@ -32,14 +19,42 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+							<table>
+								<tr>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
+									<td>案號：</td>
+									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=""?$_GET['target_no']:""?>" id="target_no" /></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>狀態：</td>
+									<td>
+										<select id="status">
+											<option value="" >請選擇</option>
+											<? foreach($investment_status_list as $key => $value){ 
+												if(in_array($key,$show_status)){
+											?>
+												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? }} ?>
+										</select>
+									</td>
+									<td></td>
+									<td>
+										<a href="javascript:showChang();" class="btn btn-default">查詢</a>
+									</td>
+									<td>
+									</td>
+								</tr>
+							</table>
 						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
+                                            <th>案號</th>
                                             <th>投資人會員 ID</th>
                                             <th>債權金額</th>
                                             <th>案件總額</th>
@@ -60,7 +75,7 @@
 											$count = 0;
 											foreach($list as $key => $value){
 												$count++;
-												$target = $value->target;
+												$target = $targets[$value->target_id];
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($target->user_id)?$target->user_id:"" ?>">
 											 <td>

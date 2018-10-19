@@ -56,6 +56,7 @@ $config['user_meta_fields']= array(
 		"school_name"			=> "學校名稱",
 		"school_system"			=> "學制",
 		"school_department"		=> "系所",
+		"school_major"			=> "學門",
 		"school_email"			=> "校內電子信箱",
 		"school_grade"			=> "年級",
 		"student_id"			=> "學號",
@@ -64,9 +65,6 @@ $config['user_meta_fields']= array(
 		"student_sip_account"	=> "SIP帳號",
 		"student_sip_password"	=> "SIP密碼",
 		"transcript_front"		=> "成績單",
-	),
-	"debit_card" => array(
-		"debit_card_status"		=> "金融卡認證",
 	),
 	"emergency" => array(
 		"emergency_status"		=> "緊急聯絡人",
