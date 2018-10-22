@@ -11,11 +11,14 @@ $config['admin_menu'] = array(
 		"waiting_verify"=> "待審批",
 		"waiting_loan"	=> "待放款",
 		"repayment"		=> "還款中",
+		"prepayment"	=> "提前還款",
 	),
-	"Transfer" 			=> array(
-		"parent_name"	=> "債權管理",
-		"parent_icon"	=> "fa-gavel",
-		"index"			=> "全部列表",
+	"Transfer" 						=> array(
+		"parent_name"				=> "債權管理",
+		"parent_icon"				=> "fa-gavel",
+		"index"						=> "全部列表",
+		"waiting_transfer"			=> "待收購",
+		"waiting_transfer_success"	=> "待放款",
 	),
 	"Risk" 				=> array("name"=>"風控專區","icon"=>"fa-briefcase"),
 	"Passbook" 	=> array(

@@ -149,8 +149,8 @@ class Transfer_lib{
 	}
 
 	
-	public function cancel_transfer($transfers){
-		if($transfers && $transfers->status==0){
+	public function cancel_transfer($transfers,$admin=0){
+		if($transfers){
 			$rs = $this->CI->transfer_model->update($transfers->id,array(
 				"status"	=> 8
 			));
@@ -160,7 +160,7 @@ class Transfer_lib{
 				);
 				$rs = $this->CI->investment_model->update($transfers->investment_id,$investment_param);
 				$this->CI->load->library('target_lib');
-				$this->CI->target_lib->insert_investment_change_log($transfers->investment_id,$investment_param);
+				$this->CI->target_lib->insert_investment_change_log($transfers->investment_id,$investment_param,0,$admin);
 				return true;
 			}
 		}
@@ -300,6 +300,27 @@ class Transfer_lib{
 				}
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	//待放款款項取消
+	function cancel_success($transfers,$admin=0){
+		if($transfers && $transfers->status==1){
+			$transfer_investments = $this->CI->transfer_investment_model->order_by("tx_datetime","asc")->get_many_by(array(
+				"transfer_id"	=> $transfers->id,
+				"status"		=> array("0","1","2")
+			));
+			$this->cancel_transfer($transfers,$admin);
+			if($transfer_investments){
+				foreach($transfer_investments as $key => $value){
+					$this->CI->transfer_investment_model->update($value->id,array("status"=>9));
+					if($value->frozen_status==1 && $value->frozen_id){
+						$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
+					}
+				}
+			}
+			return true;
 		}
 		return false;
 	}

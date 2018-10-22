@@ -89,7 +89,10 @@ class Prepayment_lib{
 			$param = array(
 				"target_id"			=> $target->id,
 				"settlement_date"	=> $info["settlement_date"],
-				"amount"			=> $info["total"]
+				"amount"			=> $info["total"],
+				"principal"			=> $info["remaining_principal"],
+				"interest"			=> $info["interest_payable"],
+				"damage"			=> $info["liquidated_damages"],
 			);
 			$rs = $this->CI->prepayment_model->insert($param);
 			if($rs){

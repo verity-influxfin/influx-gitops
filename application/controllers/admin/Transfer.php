@@ -5,18 +5,15 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Transfer extends MY_Admin_Controller {
 	
-	protected $edit_method = array("edit","verify_success","verify_failed","loan_success","loan_failed");
+	protected $edit_method = array();
 	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_model');
-		$this->load->model('user/user_meta_model');
-		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('user/virtual_account_model');
+		$this->load->model('loan/transfer_investment_model');
 		$this->load->model('loan/product_model');
-		$this->load->model('loan/credit_model');
-		$this->load->library('target_lib');
+		$this->load->library('transfer_lib');
 		$this->load->library('financial_lib');
  	}
 	
@@ -99,5 +96,106 @@ class Transfer extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+	public function waiting_transfer(){
+		$page_data 		= array("type"=>"list");
+		$list 			= array();
+		$transfers 		= array();
+		$targets 		= array();
+		$input 			= $this->input->get(NULL, TRUE);
+		$where			= array(
+			"status"	=> 0
+		);
+		$target_no		= "";
+		$list 	= $this->transfer_model->get_many_by($where);
+		if($list){
+			foreach($list as $key => $value){
+				$list[$key]->target 	= $this->target_model->get($value->target_id);
+				$list[$key]->investment = $this->investment_model->get($value->investment_id);
+			}
+		}
+
+		$page_data['instalment_list']			= $this->config->item('instalment');
+		$page_data['repayment_type']			= $this->config->item('repayment_type');
+		$page_data['list'] 						= $list;
+		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
+		$page_data['transfers'] 				= $transfers;
+		$page_data['targets'] 					= $targets;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/transfer/waiting_transfer',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	public function waiting_transfer_success(){
+		$page_data 		= array("type"=>"list");
+		$list 			= array();
+		$transfers 		= array();
+		$targets 		= array();
+		$input 			= $this->input->get(NULL, TRUE);
+		$where			= array(
+			"status"	=> 1
+		);
+		$target_no		= "";
+		$list 	= $this->transfer_model->get_many_by($where);
+		if($list){
+			foreach($list as $key => $value){
+				$list[$key]->target 	= $this->target_model->get($value->target_id);
+				$list[$key]->investment = $this->investment_model->get($value->investment_id);
+				$list[$key]->transfer_investment = $this->transfer_investment_model->get_by(array(
+					"transfer_id"	=> $value->id,
+					"status"		=> 2,
+				));
+			}
+		}
+
+		$page_data['instalment_list']			= $this->config->item('instalment');
+		$page_data['repayment_type']			= $this->config->item('repayment_type');
+		$page_data['list'] 						= $list;
+		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
+		$page_data['transfers'] 				= $transfers;
+		$page_data['targets'] 					= $targets;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/transfer/waiting_transfer_success',$page_data);
+		$this->load->view('admin/_footer');
+	}
+	
+	function transfer_success(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$ids 	= isset($get["ids"])&&$get["ids"]?explode(",",$get["ids"]):"";
+		if($ids && is_array($ids)){
+			$this->load->library('Transaction_lib');
+			foreach($ids as $key => $id){
+				$rs = $this->transaction_lib->transfer_success($id,$this->login_info->id);
+			}
+			echo "放行成功";die();
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
+	function transfer_cancel(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->transfer_model->get($id);
+			if($info && $info->status==1){
+				$this->load->library('transfer_lib');
+				$rs = $this->transfer_lib->cancel_success($info,$this->login_info->id);
+				if($rs){
+					echo "更新成功";die();
+				}else{
+					echo "更新失敗";die();
+				}
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
 }
 ?>

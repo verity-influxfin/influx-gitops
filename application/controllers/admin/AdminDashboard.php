@@ -17,33 +17,38 @@ class AdminDashboard extends MY_Admin_Controller {
 			"bidding"	=> 0,
 			"success"	=> 0,
 			"delay"		=> 0,
+			"prepayment"=> 0,
 		);
-		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5,10)));
+		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
 		if($target_list){
 			$this->load->model('user/user_bankaccount_model');
 			foreach($target_list as $key => $value){
-				if($value->delay==1 && $value->status==5){
-					$target_count["delay"] += 1;
-				}
-				if($value->status==2){
-					$bank_account 	= $this->user_bankaccount_model->get_by(array(
-						"user_id"	=> $value->user_id,
-						"investor"	=> 0,
-						"status"	=> 1,
-						"verify"	=> 1,
-					));
-					if($bank_account){
+				$bank_account 	= $this->user_bankaccount_model->get_by(array(
+					"user_id"	=> $value->user_id,
+					"investor"	=> 0,
+					"status"	=> 1,
+					"verify"	=> 1,
+				));
+				if($bank_account){
+					if($value->delay==1 && $value->status==5){
+						$target_count["delay"] += 1;
+					}
+					if($value->status==2){
 						$target_count["approve"] += 1;	
 					}
-				}
-				
-				if($value->status==3){
-					$target_count["bidding"] += 1;
-				}
-				
-				if($value->status==4){
-					$target_count["success"] += 1;
+					
+					if($value->status==3){
+						$target_count["bidding"] += 1;
+					}
+					
+					if($value->status==4){
+						$target_count["success"] += 1;
+					}
+					
+					if($value->sub_status==3 && $value->status==5){
+						$target_count["prepayment"] += 1;
+					}
 				}
 			}
 		}

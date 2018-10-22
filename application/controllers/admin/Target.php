@@ -539,5 +539,47 @@ class Target extends MY_Admin_Controller {
         $html .= '</tbody></table>';
 		echo $html;
 	}
+	
+	public function prepayment(){
+		$page_data 	= array("type"=>"list");
+		$input 		= $this->input->get(NULL, TRUE);
+		$where		= array(
+			"status"	=> array(5,10),
+			"sub_status"=> array(3,4),
+		);
+		$list		= array();
+		$fields 	= ['target_no','user_id'];
+		
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				if($field=='target_no'){
+					$where[$field.' like'] = '%'.$input[$field].'%';
+				}else{
+					$where[$field] = $input[$field];
+				}
+			}
+		}
+		if(!empty($where)){
+			$this->load->model('loan/prepayment_model');
+			$list 	= $this->target_model->order_by("sub_status","ASC")->get_many_by($where);
+			if($list){
+				foreach($list as $key => $value){
+					$list[$key]->prepayment = $this->prepayment_model->order_by("settlement_date","DESC")->get_by(array("target_id"=>$value->id));
+				}
+			}
+		}
+		$page_data['instalment_list']	= $this->config->item('instalment');
+		$page_data['repayment_type']	= $this->config->item('repayment_type');
+		$page_data['list'] 				= $list;
+		$page_data['status_list'] 		= $this->target_model->status_list;
+		$page_data['sub_list'] 			= $this->target_model->sub_list;
+		$page_data['name_list'] 		= $this->admin_model->get_name_list();
+
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/target/prepayment_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

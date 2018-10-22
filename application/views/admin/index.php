@@ -103,12 +103,12 @@
 								<i class="fa fa-file-text fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge"><?=$target_count["approve"];?></div>
-								<div>待批覆上架</div>
+								<div class="huge"><?=$target_count["prepayment"];?></div>
+								<div>申請提前還款</div>
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/waiting_verify') ?>">
+					<a href="<?=admin_url('Target/prepayment') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -130,7 +130,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/waiting_loan') ?>">
+					<a href="<?=admin_url('Transfer/waiting_transfer') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -152,7 +152,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/index?delay=1&status=5') ?>">
+					<a href="<?=admin_url('Transfer/waiting_transfer_success') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

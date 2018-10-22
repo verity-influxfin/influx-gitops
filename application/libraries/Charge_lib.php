@@ -311,7 +311,13 @@ class Charge_lib
 			if(!$transaction){
 				$this->CI->load->model('loan/investment_model');
 				$this->CI->load->library('Target_lib');
-				$this->CI->target_model->update($target->id,array("status"=>10));
+				if($target->sub_status==3){
+					$this->CI->target_model->update($target->id,array("status"=>10,"sub_status"=>4));
+				}else if($target->sub_status==1){
+					$this->CI->target_model->update($target->id,array("status"=>10,"sub_status"=>2));
+				}else{
+					$this->CI->target_model->update($target->id,array("status"=>10));
+				}
 				$this->CI->investment_model->update_by(array("target_id" => $target->id,"status"=> 3),array("status"=>10));
 				$this->CI->target_lib->insert_change_log($target->id,array("status"=>10),0,0);
 

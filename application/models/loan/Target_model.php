@@ -16,6 +16,14 @@ class Target_model extends MY_Model
 		9 =>	"申請失敗",
 		10 =>	"已結案",
 	);
+	public $sub_list   = array(
+		0 =>	"無",
+		1 =>	"轉貸中",
+		2 =>	"轉貸成功",
+		3 =>	"申請提還",
+		4 =>	"提還成功",
+	);
+
 	public $loan_list   = array(
 		0 =>	"無",
 		1 =>	"已出款",

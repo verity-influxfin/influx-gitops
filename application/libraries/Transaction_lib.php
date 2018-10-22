@@ -427,7 +427,7 @@ class Transaction_lib{
 	}
 	
 	//債轉成功
-	function transfer_success($transfer_id){
+	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
 		$transaction 	= array();
 		if($transfer_id){
@@ -473,6 +473,8 @@ class Transaction_lib{
 						if($new_investment){
 							
 							$this->CI->investment_model->update($investment->id,array("status"=>10,"transfer_status"=>2));
+							$this->CI->load->library('target_lib');
+							$this->CI->target_lib->insert_investment_change_log($investment->id,array("status"=>10,"transfer_status"=>2),0,$admin_id);
 							$this->CI->transfer_investment_model->update($transfer_investments->id,array("status"=>10));
 							$this->CI->frozen_amount_model->update($transfer_investments->frozen_id,array("status"=>0));
 							
