@@ -8,7 +8,7 @@
 				function toloan(){
 					var ids = "";
 					var target_no = "";
-					$('.targets:checked').each(function() {
+					$('.transfer:checked').each(function() {
 						if(ids==""){
 							ids += this.value;
 						}else{
@@ -52,6 +52,11 @@
 						}
 					}
 				}
+				
+				function checked_all(){
+					$('.transfer').prop("checked", true);
+					check_checked();
+				}
 			</script>
 			</div>
             <!-- /.row -->
@@ -64,10 +69,10 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>案號</th>
+                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
                                             <th>出讓人會員 ID</th>
                                             <th>受讓人會員 ID</th>
                                             <th>扣款時間</th>
@@ -93,8 +98,8 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
 											 <td>
+												<input class="transfer" type="checkbox" data-targetno="<?=isset($value->target->target_no)?$value->target->target_no:"" ?>" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<?=isset($value->target->target_no)?$value->target->target_no:"" ?>
-												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target->target_no)?$value->target->target_no:"" ?>" value="<?=isset($value->id)?$value->id:"" ?>" />
 											 </td>
                                             <td><?=isset($value->investment->user_id)&&$value->investment->user_id?$value->investment->user_id:"" ?></td>
                                             <td><?=isset($value->transfer_investment->user_id)&&$value->transfer_investment->user_id?$value->transfer_investment->user_id:"" ?></td>
