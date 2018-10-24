@@ -24,9 +24,7 @@ class Transfer extends MY_Admin_Controller {
 		$targets 		= array();
 		$input 			= $this->input->get(NULL, TRUE);
 		$show_status 	= array(2,3,10);
-		$where			= array(
-			"status"	=> $show_status
-		);
+		$where			= array();
 		$target_no		= "";
 		$fields 		= ['status','target_no','user_id'];
 		
@@ -41,7 +39,7 @@ class Transfer extends MY_Admin_Controller {
 		}
 		
 		if($target_no!="" || !empty($where)){
-			
+			$where["status"] = $show_status;
 			if(!empty($target_no)){
 				$target_ids 	= array();
 				$target_list 	= $this->target_model->get_many_by(array(
