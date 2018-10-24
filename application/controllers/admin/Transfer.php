@@ -39,7 +39,7 @@ class Transfer extends MY_Admin_Controller {
 		}
 		
 		if($target_no!="" || !empty($where)){
-			$where["status"] = $show_status;
+			$where["status"] = isset($where["status"])?$where["status"]:$show_status;
 			if(!empty($target_no)){
 				$target_ids 	= array();
 				$target_list 	= $this->target_model->get_many_by(array(
