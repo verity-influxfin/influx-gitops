@@ -5,17 +5,35 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+			<script type="text/javascript">
+				function showChang(){
+					var user_id = $('#user_id').val();
+					var phone 	= $('#phone').val();
+					var name 	= $('#name').val();
+					top.location = './index?id='+user_id+'&phone='+phone+'&name='+name;
+				}
+			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<span>會員列表</span>
+							<table>
+								<tr>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($_GET['id'])&&$_GET['id']!=""?$_GET['id']:""?>" id="user_id" /></td>	
+									<td>電話：</td>
+									<td><input type="text" value="<?=isset($_GET['phone'])&&$_GET['phone']!=""?$_GET['phone']:""?>" id="phone" /></td>
+									<td>姓名：</td>
+									<td><input type="text" value="<?=isset($_GET['name'])&&$_GET['name']!=""?$_GET['name']:""?>" id="name" /></td>
+									<td><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
+								</tr>
+							</table>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-paging">
+                                <table class="display responsive nowrap" width="100%">
                                     <thead>
                                         <tr>
                                             <th>會員 ID</th>

@@ -38,7 +38,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="display responsive nowrap" width="100%">
                                     <thead>
                                         <tr>
                                             <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
@@ -58,6 +58,7 @@
                                             <th>逾期狀況</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
+                                            <th>邀請碼</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -91,6 +92,7 @@
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+                                            <td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

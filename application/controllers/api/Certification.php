@@ -864,7 +864,15 @@ class Certification extends REST_Controller {
 			if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $content['phone'])){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
-		
+			
+			$phone_exist = $this->user_model->get_by(array(
+				"phone"		=> $content['phone'],
+				"status"	=> 1,
+			));
+			if($phone_exist){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			
 			$param		= array(
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification_id,

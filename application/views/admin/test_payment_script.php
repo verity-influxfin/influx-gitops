@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-2">
             <h3>匯款</h3>
-            <form action="insertPayment" method="post">
+            <form action="<?=admin_url('TestScript/insertPayment'); ?>" method="post">
                 <div class="form-group">
                     <label>金額</label>
                     <input type="number" class="form-control" name="amount">

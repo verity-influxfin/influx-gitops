@@ -440,7 +440,6 @@ class Target_lib{
 			"status" 		=> array(1,2)
 		));
 		$list = array();
-		
 		if($transactions){
 			foreach($transactions as $key => $value){
 				if($value->instalment_no && $value->source==SOURCE_AR_PRINCIPAL){

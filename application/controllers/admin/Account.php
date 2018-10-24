@@ -158,11 +158,14 @@ class Account extends MY_Admin_Controller {
 			foreach($user_list as $key => $value){
 				$user_name[$value->id] = $value->name;
 			}
-			$target_id 		= array_unique($target_id);
-			$target_list 	= $this->target_model->get_many($target_id);
+			
 			$target_no 		= array();
-			foreach($target_list as $key => $value){
-				$target_no[$value->id] = $value->target_no;
+			if($target_id){
+				$target_id 		= array_unique($target_id);
+				$target_list 	= $this->target_model->get_many($target_id);
+				foreach($target_list as $key => $value){
+					$target_no[$value->id] = $value->target_no;
+				}
 			}
 		
 			foreach($data as $key =>$value){

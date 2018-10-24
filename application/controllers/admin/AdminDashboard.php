@@ -7,6 +7,8 @@ class AdminDashboard extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
+		$this->load->model('loan/transfer_model');
+		$this->load->model('user/user_bankaccount_model');
 	}
 	
 	public function index()
@@ -18,11 +20,24 @@ class AdminDashboard extends MY_Admin_Controller {
 			"success"	=> 0,
 			"delay"		=> 0,
 			"prepayment"=> 0,
+			"transfer_bidding"=> 0,
+			"transfer_success"=> 0,
 		);
 		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5)));
+		$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
+		if($transfer_list){
+			foreach($transfer_list as $key => $value){
+				if($value->status==0){
+					$target_count["transfer_bidding"] += 1;
+				}
+				if($value->status==1){
+					$target_count["transfer_success"] += 1;
+				}
+			}
+		}
+		
 		if($target_list){
-			$this->load->model('user/user_bankaccount_model');
 			foreach($target_list as $key => $value){
 				$bank_account 	= $this->user_bankaccount_model->get_by(array(
 					"user_id"	=> $value->user_id,

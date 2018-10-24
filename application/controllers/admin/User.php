@@ -20,12 +20,24 @@ class User extends MY_Admin_Controller {
 	public function index(){
 		
 		$page_data 			= array("type"=>"list");
-		$list 				= $this->user_model->get_all();
-		$name_list	= array();
-		if(!empty($list)){
-			$page_data["list"] = $list;
+		$input 				= $this->input->get(NULL, TRUE);
+		$where				= array();
+		$list				= array();
+		$fields 			= ['id','name','phone'];
+		
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				if($field=='phone' || $field=='name'){
+					$where[$field.' like'] = '%'.$input[$field].'%';
+				}else{
+					$where[$field] = $input[$field];
+				}
+			}
 		}
-
+		if(!empty($where)){
+			$list 	= $this->user_model->get_many_by($where);
+		}
+		$page_data["list"] = $list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/users_list',$page_data);

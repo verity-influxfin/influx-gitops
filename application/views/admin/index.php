@@ -125,7 +125,7 @@
 								<i class="fa fa-shopping-cart fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge"><?=$target_count["success"];?></div>
+								<div class="huge"><?=$target_count["transfer_bidding"];?></div>
 								<div>債權轉讓 - 已上架</div>
 							</div>
 						</div>
@@ -147,7 +147,7 @@
 								<i class="fa fa-usd fa-5x"></i>
 							</div>
 							<div class="col-xs-9 text-right">
-								<div class="huge"><?=$target_count["delay"];?></div>
+								<div class="huge"><?=$target_count["transfer_success"];?></div>
 								<div>債權轉讓 - 待放款</div>
 							</div>
 						</div>

@@ -454,7 +454,7 @@ class Target extends MY_Admin_Controller {
 		$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
                 <th>申請金額</th><th>核准金額</th><th>年化利率</th><th>期數</th>
                 <th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
-                <th>逾期狀況</th><th>狀態</th><th>申請日期</th></tr></thead><tbody>';
+                <th>逾期狀況</th><th>狀態</th><th>申請日期</th><th>邀請碼</th></tr></thead><tbody>';
 
 		if(isset($list) && !empty($list)){
 			
@@ -478,6 +478,7 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$delay_list[$value->delay].'</td>';
 				$html .= '<td>'.$status_list[$value->status].'</td>';
 				$html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
+				$html .= '<td>'.$value->promote_code.'</td>';
 				$html .= '</tr>';
 			}
 		}
