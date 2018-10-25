@@ -646,6 +646,8 @@ class Recoveries extends REST_Controller {
 		
 		$withdraw = $this->transaction_lib->withdraw($user_id,intval($input['amount']));
 		if($withdraw){
+			$this->load->library('Sendemail');
+			$this->sendemail->admin_notification("新的一筆虛擬帳號提領 投資端會員ID:".$user_id,"新的一筆虛擬帳號提領 投資端會員ID:".$user_id);
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
 			$this->response(array('result' => 'ERROR','error' => NOT_ENOUGH_FUNDS ));

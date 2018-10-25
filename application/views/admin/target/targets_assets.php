@@ -51,7 +51,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%">
+                                <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
                                             <th>案號</th>

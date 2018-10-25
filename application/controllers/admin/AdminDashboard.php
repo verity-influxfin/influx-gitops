@@ -9,6 +9,7 @@ class AdminDashboard extends MY_Admin_Controller {
 		$this->load->model('user/user_contact_model');
 		$this->load->model('loan/transfer_model');
 		$this->load->model('user/user_bankaccount_model');
+		$this->load->model('transaction/withdraw_model');
 	}
 	
 	public function index()
@@ -22,6 +23,7 @@ class AdminDashboard extends MY_Admin_Controller {
 			"prepayment"=> 0,
 			"transfer_bidding"=> 0,
 			"transfer_success"=> 0,
+			"withdraw"	=> 0,
 		);
 		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5)));
 		$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
@@ -102,6 +104,14 @@ class AdminDashboard extends MY_Admin_Controller {
 		
 		foreach($target_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['loan']++;
+		}
+		
+		$list = $this->withdraw_model->get_many_by(array(
+			"status" 		=> array(0,2),
+			"frozen_id >" 	=> 0
+		));
+		if(!empty($list)){
+			$target_count["withdraw"]++;
 		}
 		
 		$data["chart_list"] 	= $chart_list;

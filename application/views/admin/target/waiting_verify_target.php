@@ -45,7 +45,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
                                             <th>案號</th>
