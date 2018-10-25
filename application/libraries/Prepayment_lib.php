@@ -96,6 +96,14 @@ class Prepayment_lib{
 			);
 			$rs = $this->CI->prepayment_model->insert($param);
 			if($rs){
+				$this->CI->load->model('user/virtual_account_model');
+				$virtual_account = $this->CI->virtual_account_model->get_by(array(
+					"status"			=> 1,
+					"investor"			=> 0,
+					"user_id"			=> $target->user_id
+				));
+				$this->CI->load->library('Notification_lib');
+				$this->CI->notification_lib->prepay_apply($target->user_id,$target->target_no,$info["total"],$info["settlement_date"],$virtual_account->virtual_account);
 				$update_data = array( "sub_status" => 3 );
 				$this->CI->load->library('Target_lib');
 				$this->CI->target_lib->insert_change_log($target->id,$update_data,0,0);

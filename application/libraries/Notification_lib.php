@@ -316,6 +316,46 @@ class Notification_lib{
 		);
 		
 		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+	
+	public function prepay_failed($user_id,$target_no){
+		$title 		= "【提前還款失敗通知】";
+		$content 	= "親愛的用戶：
+						您好！
+						您的提前還款申請失敗，若有疑問可洽詢手機ATM內客服或致電02-2507-9990(來電客服時間9:30~18:00，國定例假日為公休)。";
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+	
+	public function prepay_apply($user_id,$target_no,$amount=0,$date="",$virtual_account=""){
+		$title 		= "【提前還款須知項目】";
+		$content 	= "親愛的用戶：
+						您好！
+						您的借款 $target_no ，提前還款申請通過，提醒您在$date ".CLOSING_TIME."前匯款 $amount 元至 $virtual_account 帳戶，此後不再另行通知，請務必記得準時匯款，以免影響日後信用評分，感謝您的配合。";
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
 	

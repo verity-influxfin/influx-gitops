@@ -394,6 +394,8 @@ class Charge_lib
 							);
 							$this->CI->target_lib->insert_change_log($value->id,$update_data,0,0);
 							$this->CI->target_model->update($value->id,$update_data);
+							$this->CI->load->library('Notification_lib');
+							$this->CI->notification_lib->prepay_failed($value->user_id,$value->target_no);
 						}else{
 							$virtual_account = $this->CI->virtual_account_model->get_by(array(
 								"status"	=> 1,
