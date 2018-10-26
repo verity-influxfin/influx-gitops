@@ -189,7 +189,7 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
-													<td><p class="form-control-static"><?=$partner_type[$key]; ?></p></td>
+													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
 														<p class="form-control-static"><?=$apply; ?></p>
