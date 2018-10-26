@@ -2072,7 +2072,7 @@
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>access_token</p>"
+            "description": "<p>facebook : access_token <br> instagram : code</p>"
           }
         ]
       }
@@ -11610,8 +11610,7 @@
             "type": "String",
             "allowedValues": [
               "facebook",
-              "instagram",
-              "line"
+              "instagram"
             ],
             "optional": false,
             "field": "type",
@@ -11622,7 +11621,7 @@
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>access_token</p>"
+            "description": "<p>facebook : access_token <br> instagram : code</p>"
           }
         ]
       }
@@ -12860,7 +12859,7 @@
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>access_token</p>"
+            "description": "<p>facebook : access_token <br> instagram : code</p>"
           },
           {
             "group": "Parameter",

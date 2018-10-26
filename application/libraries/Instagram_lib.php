@@ -13,21 +13,66 @@ class Instagram_lib{
         $this->CI = &get_instance();
     }
 	
+	public function get_access_token($code="",$redirect_uri=""){
+		if(!empty($code)){
+			$param 	= array(
+				"client_id"		=> INSTAGRAM_CLIENT_ID,
+				"client_secret"	=> INSTAGRAM_CLIENT_SECRET,
+				"grant_type"	=> 'authorization_code',
+				"redirect_uri"	=> $redirect_uri,
+				"code"			=> $code,
+			);
+			$rs = curl_get('https://api.instagram.com/oauth/access_token',$param);
+			$data = json_decode($rs,TRUE);
+			if(isset($data['access_token']) && $data['access_token']){
+				return $data['access_token'];
+			}
+		}
+		return FALSE;
+	}
+	
 	public function get_info($access_token=""){
 		if(!empty($access_token)){
 			$data		= array();
 			$url 		= $this->graph_api_url."users/self/?access_token=".$access_token;
 			$rs 		= curl_get($url);
 			$rs			= json_decode($rs,TRUE);
-			if(isset($rs["data"]['id']) && $rs["data"]['id']){
-				$data["id"] 			= $rs["data"]['id'];
-				$data["username"] 		= $rs["data"]['username'];
-				$data["name"] 			= isset($rs["data"]['name'])?$rs["data"]['name']:"";
-				$data["counts"] 		= isset($rs["data"]['counts'])?$rs["data"]['counts']:"";
-				$data["picture"] 		= isset($rs["profile_picture"])?$rs["profile_picture"]:"";
+			if(isset($rs["meta"]["code"]) && $rs["meta"]["code"]=="200"){
+				$data["id"] 			= $rs["data"]["id"];
+				$data["username"] 		= $rs["data"]["username"];
+				$data["name"] 			= isset($rs["data"]["full_name"])?$rs["data"]["full_name"]:"";
+				$data["counts"] 		= isset($rs["data"]["counts"])?$rs["data"]["counts"]:"";
+				$data["picture"] 		= isset($rs["data"]["profile_picture"])?$rs["data"]["profile_picture"]:"";
+				$data["link"] 			= isset($rs["data"]["username"])?'https://www.instagram.com/'.$rs["data"]["username"]:"";
 				$data["access_token"] 	= $access_token;
+				$meta					= $this->get_media($access_token);	
+				$data["meta"]			= $meta;
 				return $data;
 			}
+		}
+		return FALSE;
+	}
+	
+	public function get_media($access_token=""){
+		if(!empty($access_token)){
+			$list	= array();
+			$url 	= $this->graph_api_url."users/self/media/recent/?count=30&access_token=".$access_token;
+			$rs 	= curl_get($url);
+			$rs		= json_decode($rs,TRUE);
+			if(isset($rs["meta"]["code"]) && $rs["meta"]["code"]=="200"){
+				if($rs["data"]){
+					foreach($rs["data"] as $key => $value){
+						$list[] = array(
+							"id"			=> $value['id'],
+							"picture"		=> $value['images']['low_resolution']['url'],
+							"created_time"	=> $value['created_time'],
+							"text"			=> $value['caption']['text'],
+							"likes"			=> $value['likes']['count'],
+						);
+					}
+				}
+			}
+			return $list;
 		}
 		return FALSE;
 	}

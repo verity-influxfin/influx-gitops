@@ -42,7 +42,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="<?=admin_url('Target/index?status=3') ?>">
+					<a href="<?=admin_url('Target/waiting_bidding') ?>">
 						<div class="panel-footer">
 							<span class="pull-left">View Details</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>

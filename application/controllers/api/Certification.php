@@ -1394,9 +1394,9 @@ class Certification extends REST_Controller {
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification["status"]==1){
 			$input 		= $this->input->post(NULL, TRUE);
+			$type  		= isset($input['type'])?$input['type']:"";
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			$content	= array();
 			 
 			//是否驗證過
 			$user_certification	= $this->certification_lib->get_certification_info($user_id,$certification_id,$investor);
@@ -1405,14 +1405,38 @@ class Certification extends REST_Controller {
 			}
 			
 			//必填欄位
-			$fields 	= ['type','access_token'];
+			switch ($type){
+				case "facebook":
+					$fields = ['access_token'];
+					break;
+				case "instagram":
+					$fields = ['access_token'];
+					break;
+				default:
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$content[$field] = $input[$field];
 				}
 			}
+
+			if($type=="facebook"){
+				$this->load->library('facebook_lib'); 
+				$info	 	= $this->facebook_lib->get_info($input["access_token"]);
+			}
+
+			if($type=="instagram"){
+				$this->load->library('instagram_lib'); 
+				$info 		= $this->instagram_lib->get_info($input["access_token"]);
+			}
+		
+			$content = array(
+				"type"			=> $type,
+				"info"			=> $info,
+				"access_token"	=> $input["access_token"],
+			);
 			
 			$param		= array(
 				"user_id"			=> $user_id,
@@ -1420,6 +1444,7 @@ class Certification extends REST_Controller {
 				"investor"			=> $investor,
 				"content"			=> json_encode($content),
 			);
+			
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->certification_lib->set_success($insert);

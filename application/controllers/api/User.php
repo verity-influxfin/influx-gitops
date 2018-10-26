@@ -423,14 +423,7 @@ class User extends REST_Controller {
 			$user_id  	= $this->instagram_lib->login($info);
 			$account  	= isset($info['id'])?$info['id']:"";
 		}
-		
-		if($type=="line"){
-			$this->load->library('line_lib'); 
-			$info 		= $this->line_lib->get_info($input["access_token"]);
-			$user_id  	= $this->line_lib->login($info);
-			$account  	= isset($info['id'])?$info['id']:"";
-		}
-		
+
 		if($user_id && $account){
 			$user_info = $this->user_model->get($user_id);	
 			if($user_info){
@@ -661,7 +654,7 @@ class User extends REST_Controller {
 	/**
      * @api {post} /user/bind 會員 綁定第三方帳號
      * @apiGroup User
-     * @apiParam {String=facebook,instagram,line} type 登入類型
+     * @apiParam {String=facebook,instagram} type 登入類型
      * @apiParam {String} access_token access_token
      *
      * @apiSuccess {json} result SUCCESS
@@ -721,9 +714,6 @@ class User extends REST_Controller {
 			case "instagram":
 				$fields = ['access_token'];
 				break; 
-			case "line":
-				$fields = ['access_token'];
-				break;  
 			default:
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
@@ -786,35 +776,7 @@ class User extends REST_Controller {
 					}
 				}
 			}
-			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
-		}
-		
-		if($type=="line"){
-			$this->load->library('line_lib'); 
-			
-			$meta  = $this->line_lib->get_user_meta($this->user_info->id);
-			if($meta){
-				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
-			}
-			
-			$debug_token = $this->line_lib->debug_token($input["access_token"]);
-			if($debug_token){
-				$info 			= $this->line_lib->get_info($input["access_token"]);
-				if($info){
-					$user_id 	= $this->line_lib->login($info);
-					if($user_id){
-						$this->response(array('result' => 'ERROR','error' => LINEID_EXIST ));
-					}else{
-						$rs 	= $this->line_lib->bind_user($this->user_info->id,$info);
-						if($rs){
-							$this->set_nickname($info);
-							$this->response(array('result' => 'SUCCESS'));
-						}else{
-							$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
-						}
-					}
-				}
-			}
+
 			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
 		}
     }

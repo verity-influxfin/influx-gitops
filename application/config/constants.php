@@ -228,8 +228,8 @@ defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, getenv('ENV_FB
 defined('FACEBOOK_APP_SECRET')      OR define('FACEBOOK_APP_SECRET'		, getenv('ENV_FB_CLIENT_SECRET'));
 
 //Instagram
-defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, '622ba30fa4524019a3b36fccd862b764');
-defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, '851c4c9b2622438cad669b0d12ce4709');
+defined('INSTAGRAM_CLIENT_ID')      OR define('INSTAGRAM_CLIENT_ID'		, getenv('ENV_IG_CLIENT_ID'));
+defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, getenv('ENV_IG_CLIENT_SECRET'));
 
 //Line
 defined('LINE_CHANNEL_ID')     	 	OR define('LINE_CHANNEL_ID'			, '1508139296');

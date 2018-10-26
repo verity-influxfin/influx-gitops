@@ -582,5 +582,50 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/prepayment_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function waiting_bidding(){
+		$page_data 					= array("type"=>"list");
+		$input 						= $this->input->get(NULL, TRUE);
+		$where						= array("status"=>3);
+		$page_data["product_name"]	= $this->product_model->get_name_list();
+		$list 						= $this->target_model->get_many_by($where);
+		$school_list 				= array();
+		$user_list 					= array();
+		$amortization_table 		= array();
+		if($list){
+			$this->load->model('log/Log_targetschange_model');
+			foreach($list as $key => $value){
+				$user_list[] = $value->user_id;
+				$target_change	= $this->Log_targetschange_model->get_by(array(
+					"target_id"		=> $value->id,
+					"status"		=> 3,
+				));
+				if($target_change){
+					$list[$key]->bidding_date = $target_change->created_at;
+				}
+			}
+			
+			$this->load->model('user/user_meta_model');
+			$users_school 	= $this->user_meta_model->get_many_by(array(
+				"meta_key" 	=> array("school_name","school_department"),
+				"user_id" 	=> $user_list,
+			));
+			if($users_school){
+				foreach($users_school as $key => $value){
+					$school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+				}
+			}
+		}
+		$page_data['instalment_list']	= $this->config->item('instalment');
+		$page_data['repayment_type']	= $this->config->item('repayment_type');
+		$page_data['list'] 				= $list;
+		$page_data['status_list'] 		= $this->target_model->status_list;
+		$page_data['school_list'] 		= $school_list;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/target/waiting_bidding_target',$page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

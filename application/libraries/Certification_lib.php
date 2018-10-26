@@ -436,6 +436,19 @@ class Certification_lib{
 							}
 						}
 					}
+				}else if($content["type"]=="instagram"){
+					$this->CI->load->library('instagram_lib'); 
+					$meta  = $this->CI->instagram_lib->get_user_meta($info->user_id);
+					if(!$meta){
+						$ig_info 		= $this->CI->instagram_lib->get_info($content["access_token"]);
+						if($ig_info){
+							$user_id 	= $this->CI->instagram_lib->login($ig_info);
+							if(!$user_id){
+								$this->CI->instagram_lib->bind_user($info->user_id,$ig_info);
+								$this->CI->user_model->update($info->user_id,array("nickname"=>$ig_info['name'],"picture"=>$ig_info['picture']));
+							}
+						}
+					}
 				}
 			
 				foreach($data as $key => $value){
