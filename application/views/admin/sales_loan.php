@@ -144,10 +144,11 @@
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan=7">合作商</td>
+												<td colspan="8">合作商</td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td rowspan="2">負責業務</td>
+												<td rowspan="2">類別</td>
 												<td rowspan="2">單位</td>
 												<td rowspan="2">借款中</td>
 												<td colspan="3">放款成功</td>
@@ -188,6 +189,7 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
+													<td><p class="form-control-static"><?=$partner_type[$key]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
 														<p class="form-control-static"><?=$apply; ?></p>
@@ -201,6 +203,7 @@
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
+												<td></td>
 												<td></td>
 												<td>合計</td>
 												<td><?=$sum["apply"]; ?></td>

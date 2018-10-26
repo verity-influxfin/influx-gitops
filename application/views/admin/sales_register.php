@@ -80,10 +80,11 @@
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
 											<tr style="background-color:#f5f5f5;">
-												<td colspan="5">合作商</td>
+												<td colspan="6">合作商</td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td>負責業務</td>
+												<td>類別</td>
 												<td>單位</td>
 												<td>註冊人數</td>
 												<td>FB登入</td>
@@ -99,6 +100,7 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
+													<td><p class="form-control-static"><?=$partner_type[$key]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
 														<p class="form-control-static"><?=$value["count"]?$value["count"]:0; ?></p>
@@ -110,6 +112,7 @@
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
+												<td></td>
 												<td></td>
 												<td>合計</td>
 												<td><?=$sum["count"]; ?></td>
