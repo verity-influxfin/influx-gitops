@@ -2072,7 +2072,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>facebook : access_token <br> instagram : code</p>"
+            "description": "<p>access_token</p>"
           }
         ]
       }
@@ -11621,7 +11621,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>facebook : access_token <br> instagram : code</p>"
+            "description": "<p>access_token</p>"
           }
         ]
       }
@@ -12859,7 +12859,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>facebook : access_token <br> instagram : code</p>"
+            "description": "<p>access_token</p>"
           },
           {
             "group": "Parameter",

@@ -119,6 +119,7 @@ class Account extends MY_Admin_Controller {
 		$user_id	= array();
 		$target_id	= array();
 		$damage_target	= array();
+		$lending_target	= array();
 		if(!empty($data)){
 			foreach($data as $key =>$value){
 				$user_id[] = $value->user_to;
@@ -359,7 +360,8 @@ class Account extends MY_Admin_Controller {
 					);
 				}
 				
-				if($value->source == SOURCE_LENDING){
+				if($value->source == SOURCE_LENDING && !in_array($value->target_id,$lending_target)){
+					$lending_target[] = $value->target_id;
 					$sub_list 		= array();
 					$user_to_info 	= array();
 					$platform_fee 	= 0;
