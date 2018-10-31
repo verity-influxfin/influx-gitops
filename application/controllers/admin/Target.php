@@ -69,9 +69,9 @@ class Target extends MY_Admin_Controller {
 
 	public function edit(){
 		$page_data 	= array("type"=>"edit");
-		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		$id = isset($get["id"])?intval($get["id"]):0;
+		$id 		= isset($get["id"])?intval($get["id"]):0;
+		$display 	= isset($get["display"])?intval($get["display"]):0;
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info){
@@ -146,7 +146,9 @@ class Target extends MY_Admin_Controller {
 				$page_data['loan_list'] 			= $this->target_model->loan_list;
 				
 				$this->load->view('admin/_header');
-				$this->load->view('admin/_title',$this->menu);
+				if(!$display){
+					$this->load->view('admin/_title',$this->menu);
+				}
 				$this->load->view('admin/target/targets_edit',$page_data);
 				$this->load->view('admin/_footer');
 			}else{
@@ -178,7 +180,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==2){
+			if($info && in_array($info->status,array(0,1,2))){
 				$this->target_lib->target_verify_failed($info,$this->login_info->id);
 				echo "更新成功";die();
 			}else{

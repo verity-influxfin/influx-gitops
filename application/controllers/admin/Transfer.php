@@ -194,6 +194,5 @@ class Transfer extends MY_Admin_Controller {
 			echo "查無此ID";die();
 		}
 	}
-	
 }
 ?>

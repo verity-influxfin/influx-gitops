@@ -62,11 +62,15 @@ class Certification extends MY_Admin_Controller {
 	
 	public function user_certification_edit(){
 		$page_data 	= array();
+		$back_url 	= admin_url('certification/user_certification_list');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
 		if(empty($post)){
-			$id = isset($get["id"])?intval($get["id"]):0;
+			$id 	= isset($get["id"])?intval($get["id"]):0;
+			$from 	= isset($get["from"])?$get["from"]:"";
+			if(!empty($from)){
+				$back_url = admin_url($from);
+			}
 			if($id){
 				$info = $this->user_certification_model->get($id);
 				if($info){
@@ -80,23 +84,29 @@ class Certification extends MY_Admin_Controller {
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 					$page_data['school_system'] 		= $this->config->item('school_system');
+					$page_data['from'] 					= $from;
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/certification/'.$certification['alias'],$page_data);
 					$this->load->view('admin/_footer');
 				}else{
-					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+					alert("ERROR , id isn't exist",$back_url);
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+				alert("ERROR , id isn't exist",$back_url);
 			}
 		}else{
 			if(!empty($post['id'])){
+				$from 	= isset($post["from"])?$post["from"]:"";
+				if(!empty($from)){
+					$back_url = admin_url($from);
+				}
+			
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
 					$certification = $this->certification[$info->certification_id];
 					if($certification['alias']=="debit_card"){
-						alert("金融帳號認證請至 金融帳號驗證區 操作",admin_url('certification/user_bankaccount_list'));
+						alert("金融帳號認證請至 金融帳號驗證區 操作",$back_url);
 					}else{
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
@@ -116,15 +126,15 @@ class Certification extends MY_Admin_Controller {
 					}
 
 					if($rs===true){
-						alert("更新成功",admin_url('certification/user_certification_list'));
+						alert("更新成功",$back_url);
 					}else{
-						alert("更新失敗，請洽工程師",admin_url('certification/user_certification_list'));
+						alert("更新失敗，請洽工程師",$back_url);
 					}
 				}else{
-					alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+					alert("ERROR , id isn't exist",$back_url);
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('certification/user_certification_list'));
+				alert("ERROR , id isn't exist",$back_url);
 			}
 		}
 	}

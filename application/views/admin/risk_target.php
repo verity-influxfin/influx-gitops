@@ -5,6 +5,37 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+			<script type="text/javascript">
+				function success(id,target_no){
+					if(confirm(target_no+" 確認審批上架？")){
+						if(id){
+							$.ajax({
+								url: '<?=admin_url('target/verify_success?id=')?>'+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+				
+				function failed(id,target_no){
+					if(confirm(target_no+" 確認退件？案件將自動取消")){
+						if(id){
+							$.ajax({
+								url: '<?=admin_url('target/verify_failed?id=')?>'+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -38,7 +69,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table  class="display responsive nowrap" width="100%" style="text-align: center;" id="dataTables-tables">
+                                <table class="table table-striped table-bordered table-hover" width="100%" style="text-align: center;">
                                     <thead>
                                         <tr>
                                             <th>案號</th>
@@ -57,14 +88,65 @@
                                     </thead>
                                     <tbody>
 									<?php 
+										$count = 0;
+										if(isset($certification_investor_list) && !empty($certification_investor_list)){
+											foreach($certification_investor_list as $key => $value){
+												$count++;
+									?>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?>">
+                                            <td>投資端</td>
+											<td>
+												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
+													<?=isset($key)?$key:"" ?>
+												</a>
+											</td><td></td><td></td><td></td>
+											<? 
+											if($certification){
+												foreach($certification as $k => $v){
+													echo '<td>';
+													if($value[$k]["user_status"]!=null){
+														$user_status 		= $value[$k]["user_status"];
+														$certification_id 	= $value[$k]["certification_id"];
+														
+														switch($user_status){
+															case '0': 
+																if(in_array($k,array(2,6))){
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																}else if($k==3){
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
+																}else{
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >金融驗證</a>';
+																}
+																break;
+															case '1':
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																break;
+															case '2': 
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																break;
+															default:
+																break;
+														}
+													}
+													echo '</td>';
+												}
+											}
+											?>
+                                            <td></td>                                          
+                                        </tr>                                    
+									<?php 
+										}}
+									?>
+									<?php 
 										if(isset($list) && !empty($list)){
-											$count = 0;
 											foreach($list as $key => $value){
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<?=isset($value->target_no)?$value->target_no:"" ?>
+												<a class="fancyframe" href="<?=admin_url('target/edit?display=1&id='.$value->id) ?>" >
+													<?=isset($value->target_no)?$value->target_no:"" ?>
+												</a>
 											</td>
 											<td>
 												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
@@ -72,28 +154,39 @@
 												</a>
 											</td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
-											<td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
+											<td>
+												<? 
+													if($value->status==2){
+														if($value->bank_account_verify){
+															echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">審批上架</button>';
+														}else{
+															echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >待金融驗證</a>';
+														}
+													}else{
+														echo isset($status_list[$value->status])?$status_list[$value->status]:"";
+													}
+												?>
+											</td>
 											<td><?=isset($value->updated_at)?date("Y-m-d H:i:s",$value->updated_at):"" ?></td>
 											<? if($certification){
 												foreach($certification as $k => $v){
 													echo '<td>';
-													if(isset($certification_list[$value->user_id]) && $certification_list[$value->user_id][$k]["user_status"]!=null){
-														$user_status 		= $certification_list[$value->user_id][$k]["user_status"];
-														$certification_id 	= $certification_list[$value->user_id][$k]["certification_id"];
+													if(isset($value->certification) && $value->certification[$k]["user_status"]!=null){
+														$certification_id 	= $value->certification[$k]["certification_id"];
 														
-														switch($user_status){
+														switch($value->certification[$k]["user_status"]){
 															case '0': 
 																if(in_array($k,array(2,6))){
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																}else{
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
 																}
 																break;
 															case '1':
-																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																break;
 															case '2': 
-																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).' ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																break;
 															default:
 																break;
@@ -103,7 +196,7 @@
 												}
 												}
 											?>
-                                            <td><button class="btn btn-outline btn-danger" onclick="rollback('.$value->id.')">退件</button></td>                                          
+                                            <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>                                          
                                         </tr>                                    
 									<?php 
 										}}

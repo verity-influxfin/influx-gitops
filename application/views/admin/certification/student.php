@@ -68,6 +68,7 @@
 													<? } ?>
 												</select>
 												<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+												<input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
                                         </fieldset>

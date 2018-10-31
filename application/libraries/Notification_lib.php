@@ -125,6 +125,23 @@ class Notification_lib{
 		return $rs;
 	}
 
+	public function target_verify_failed($user_id,$investor=0){
+		$title = "【驗證失敗】 您的資料驗證未通過";
+			$content = "您好！
+						很抱歉的通知，您的資料驗證未能通過，案件已取消，我們將會對您的申請信息進行嚴格保密，感謝您對普匯的信任。";
+
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+
 	public function target_verify_success($target){
 		$target_no = $target->target_no;
 		$title = "【借款驗證】 您申請的借款 $target_no 驗證已通過";

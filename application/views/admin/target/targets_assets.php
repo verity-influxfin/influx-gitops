@@ -13,6 +13,25 @@
 					var status 				= $('#status :selected').val();
 					top.location = './index?status='+status+'&user_id='+user_id+'&target_no='+target_no;
 				}
+
+				function checked_all(){
+					$('.investment').prop("checked", true);
+					check_checked();
+				}
+				
+				function check_checked(){
+					var ids					= "";
+					var amortization_export = '<?=admin_url('transfer/amortization_export') ?>';
+					
+					$('.investment:checked').each(function() {
+						if(ids==""){
+							ids += this.value;
+						}else{
+							ids += ',' + this.value;
+						}		
+					});
+					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -54,7 +73,7 @@
                                 <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>案號</th>
+                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
                                             <th>投資人會員 ID</th>
                                             <th>債權金額</th>
                                             <th>案件總額</th>
@@ -78,9 +97,10 @@
 												$target = $targets[$value->target_id];
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($target->user_id)?$target->user_id:"" ?>">
-											 <td>
+											<td>
 												<?=isset($target->target_no)?$target->target_no:"" ?>
-											 </td>
+												<input class="investment" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
+											</td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
                                             <td><?=isset($target->loan_amount)&&$target->loan_amount?$target->loan_amount:"" ?></td>

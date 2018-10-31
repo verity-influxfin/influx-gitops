@@ -119,30 +119,6 @@ class Target_lib{
 		return false;
 	}
 	
-	public function bankaccount_verify_failed($user_id = 0,$admin_id=0){
-		$user_info = $this->CI->user_model->get($user_id);
-		if(!empty($user_info)){
-			
-			$target_list 	= $this->CI->target_model->get_many_by(array(
-				"user_id"	=> $user_id,
-				"status"	=> array(1,2)
-			));
-			if($target_list){
-				foreach($target_list as $key => $value){
-					$param = array(
-						"loan_amount"		=> 0,
-						"status"			=> "9",
-						"remark"			=> "驗證失敗",
-					);
-					$this->CI->target_model->update($value->id,$param);
-					$this->insert_change_log($value->id,$param,0,$admin_id);
-					$this->CI->notification_lib->bankaccount_verify_failed($user_id);
-				}
-			}
-		}
-		return false;
-	}
-	
 	public function target_verify_success($target = array(),$admin_id=0){
 		if(!empty($target) && $target->status==2){
 			$param = [
@@ -166,7 +142,7 @@ class Target_lib{
 			);
 			$this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
-			$this->CI->notification_lib->bankaccount_verify_failed($target->user_id);
+			$this->CI->notification_lib->target_verify_failed($target->user_id);
 		}
 		return false;
 	}
