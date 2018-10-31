@@ -113,9 +113,13 @@
 																if(in_array($k,array(2,6))){
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																}else if($k==3){
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
+																	if($value[1]["user_status"]==1){
+																		echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >金融驗證</a>';
+																	}else{
+																		echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	}
 																}else{
-																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >金融驗證</a>';
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
 																}
 																break;
 															case '1':
