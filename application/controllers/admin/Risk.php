@@ -42,6 +42,12 @@ class Risk extends MY_Admin_Controller {
 			ksort($user_investor_list);
 			foreach($user_investor_list as $key => $value){
 				$certification_investor_list[$value] = $this->certification_lib->get_last_status($value,1);
+				if(isset($certification_investor_list[$value][3]['certification_id'])){
+					$bank_account 	= $this->user_bankaccount_model->get_by(array(
+						"user_certification_id"	=> $certification_investor_list[$value][3]['certification_id'],
+					));
+					$certification_investor_list[$value]["bank_account"]  = $bank_account;
+				}
 			}
 		}
 		
@@ -70,14 +76,12 @@ class Risk extends MY_Admin_Controller {
 			ksort($list);
 			foreach($list as $key => $value){
 				$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0);
-				if($value->status==2){
-					$bank_account 		= $this->user_bankaccount_model->get_by(array(
-						"user_id"	=> $value->user_id,
-						"investor"	=> 0,
-						"status"	=> 1,
-						"verify"	=> 1,
+				if(isset($list[$key]->certification[3]['certification_id'])){
+					$bank_account 	= $this->user_bankaccount_model->get_by(array(
+						"user_certification_id"	=> $list[$key]->certification[3]['certification_id'],
 					));
-					$list[$key]->bank_account_verify = $bank_account?1:0;
+					$list[$key]->bank_account 	 	 = $bank_account;
+					$list[$key]->bank_account_verify = $bank_account->verify==1?1:0;
 				}
 			}
 		}
