@@ -109,6 +109,7 @@
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td rowspan="2">負責業務</td>
+												<td rowspan="2">上層公司</td>
 												<td rowspan="2">類別</td>
 												<td rowspan="2">單位</td>
 												<td colspan="3">放款成功</td>
@@ -137,6 +138,7 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
+													<td><p class="form-control-static"><?=$partner_list[$key]->parent_id?$partner_list[$partner_list[$key]->parent_id]->company:""; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td><p class="form-control-static"><?=$success; ?></p></td>
@@ -145,6 +147,7 @@
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
+												<td></td>
 												<td></td>
 												<td></td>
 												<td>合計</td>
