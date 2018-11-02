@@ -257,5 +257,80 @@ class Sales extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+	public function bonus_report_detail(){
+		$get 		= $this->input->get(NULL, TRUE);
+		$type 		= isset($get['type'])&&$get['type']?$get['type']:date("Y-m-d");
+		$id 		= isset($get['id'])&&$get['id']?$get['id']:0;
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
+		$list		= array();
+		$target_list = array();
+		$name 		 = "";
+		$this->load->model('loan/product_model');
+
+		if($type="partner" && $id){
+			$info  = $this->partner_model->get($id);
+			if($info){
+				$name			= $info->company;
+				$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
+					"status"		=> array(5,10),
+					"loan_date >="	=> $sdate,
+					"loan_date <="	=> $edate,
+					"promote_code"  => $info->my_promote_code,
+				));
+			}
+		}
+
+		if($type="sales" && $id){
+			$info  = $this->admin_model->get($id);
+			if($info){
+				$name			= $info->name;
+				$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
+					"status"		=> array(5,10),
+					"loan_date >="	=> $sdate,
+					"loan_date <="	=> $edate,
+					"promote_code"  => $info->my_promote_code,
+				));
+			}
+		}
+		
+		if($type="platform"){
+			$name			= "無分類";
+			$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+			$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+			$partner_qrcode = array();
+			if($partner_list){
+				foreach($partner_list as $key => $value){
+					$partner_qrcode[$value->my_promote_code] = $value->id;
+				}
+			}
+			
+			$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
+				"status"		=> array(5,10),
+				"loan_date >="	=> $sdate,
+				"loan_date <="	=> $edate,
+				"promote_code NOT" => array_keys($admins_qrcode),
+				"promote_code NOT" => array_keys($partner_qrcode),
+			));
+		}
+		
+		if(!empty($target_list)){
+			foreach($target_list as $key => $value){
+				$list[] = $value;
+			}
+		}
+		
+		$page_data = array(
+			"list"			=> $list,
+			"name"			=> $name,
+			"sdate"			=> $sdate,
+			"edate"			=> $edate,
+			"product_name"	=> $this->product_model->get_name_list(),
+		);
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/sales_bonus_detail',$page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

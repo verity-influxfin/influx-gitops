@@ -23,9 +23,9 @@
 							<table>
 								<tr>
 									<td>放款日期區間：</td>
-									<td><input type="text" value="<?=$sdate=='all'?"":$sdate ?>" id="sdate" data-toggle="datepicker"  /></td>
+									<td><input type="text" value="<?=$sdate ?>" id="sdate" data-toggle="datepicker"  /></td>
 									<td>-</td>
-									<td><input type="text" value="<?=$edate=='all'?"":$edate ?>" id="edate" data-toggle="datepicker" /></td>
+									<td><input type="text" value="<?=$edate ?>" id="edate" data-toggle="datepicker" /></td>
 									<td><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
 								</tr>
 								<tr>
@@ -79,7 +79,11 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
+													<td>
+													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=sales&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
+														<p class="form-control-static"><?=$platform["success"]; ?></p>
+													</a>
+													</td>
 													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
 													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
 												</tr>
@@ -92,7 +96,11 @@
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td>無邀請碼</td>
-												<td><?=$platform["success"]; ?></td>
+												<td>
+												<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=platform&sdate='.$sdate.'&edate='.$edate) ?>" >
+													<p class="form-control-static"><?=$platform["success"]; ?></p>
+												</a>
+												</td>
 												<td><?=$platform["success_amount"]; ?></td>
 												<td><?=$platform["success_fee"]; ?></td>
 											</tr>
@@ -141,7 +149,11 @@
 													<td><p class="form-control-static"><?=$partner_list[$key]->parent_id?$partner_list[$partner_list[$key]->parent_id]->company:""; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
+													<td>
+													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=partner&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
+														<p class="form-control-static"><?=$success; ?></p>
+													</a>
+													</td>
 													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
 													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
 												</tr>
