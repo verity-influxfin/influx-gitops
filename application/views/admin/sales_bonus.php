@@ -124,12 +124,10 @@
 												foreach($list["partner"] as $key => $value){
 													$success_fee 	= 0;
 													$success_amount = 0;
-													foreach($target_status as $k => $v){
-														if($value){
-															foreach($value as $k => $target){
-																$success_fee 	+= $target['platform_fee'];
-																$success_amount += $target['loan_amount'];
-															}
+													if($value){
+														foreach($value as $k => $target){
+															$success_fee 	+= $target['platform_fee'];
+															$success_amount += $target['loan_amount'];
 														}
 													}
 													$success 	= count($value);

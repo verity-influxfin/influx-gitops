@@ -211,13 +211,11 @@ class Sales extends MY_Admin_Controller {
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
 					$list["partner"][$partner_qrcode[$value->promote_code]][] = array(
 						"id"			=> $value->id,
-						"amount"		=> $value->amount,
 						"loan_amount"	=> $value->loan_amount,
 						"platform_fee"	=> $value->platform_fee,
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
 					);
 				}
 				
@@ -230,7 +228,6 @@ class Sales extends MY_Admin_Controller {
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
 					);
 				}
 				
@@ -243,7 +240,6 @@ class Sales extends MY_Admin_Controller {
 						"loan_date"		=> $value->loan_date,
 						"status"		=> $value->status,
 						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
 					);
 				}
 			}
