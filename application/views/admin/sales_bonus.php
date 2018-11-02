@@ -81,7 +81,7 @@
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
 													<td>
 													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=sales&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
-														<p class="form-control-static"><?=$platform["success"]; ?></p>
+														<p class="form-control-static"><?=$success; ?></p>
 													</a>
 													</td>
 													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
