@@ -109,31 +109,31 @@
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$apply; ?></p>
+														<p class="form-control-static"><?=number_format($apply); ?></p>
 													</td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
-													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
-													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_amount); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_fee); ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$faile; ?></p>
+														<p class="form-control-static"><?=number_format($faile); ?></p>
 													</td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
-												<td><?=$sum["apply"]; ?></td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["success_amount"]; ?></td>
-												<td><?=$sum["success_fee"]; ?></td>
-												<td><?=$sum["faile"]; ?></td>
+												<td><?=number_format($sum["apply"]); ?></td>
+												<td><?=number_format($sum["success"]); ?></td>
+												<td><?=number_format($sum["success_amount"]); ?></td>
+												<td><?=number_format($sum["success_fee"]); ?></td>
+												<td><?=number_format($sum["faile"]); ?></td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td>無邀請碼</td>
-												<td><?=$platform["apply"]; ?></td>
-												<td><?=$platform["success"]; ?></td>
-												<td><?=$platform["success_amount"]; ?></td>
-												<td><?=$platform["success_fee"]; ?></td>
-												<td><?=$platform["faile"]; ?></td>
+												<td><?=number_format($platform["apply"]); ?></td>
+												<td><?=number_format($platform["success"]); ?></td>
+												<td><?=number_format($platform["success_amount"]); ?></td>
+												<td><?=number_format($platform["success_fee"]); ?></td>
+												<td><?=number_format($platform["faile"]); ?></td>
 											</tr>
 											</tbody>
 										</table>
@@ -192,13 +192,13 @@
 													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$apply; ?></p>
+														<p class="form-control-static"><?=number_format($apply); ?></p>
 													</td>
-													<td><p class="form-control-static"><?=$success; ?></p></td>
-													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
-													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_amount); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_fee); ?></p></td>
 													<td>
-														<p class="form-control-static"><?=$faile; ?></p>
+														<p class="form-control-static"><?=number_format($faile); ?></p>
 													</td>
 												</tr>
 											<? }} ?>
@@ -206,11 +206,11 @@
 												<td></td>
 												<td></td>
 												<td>合計</td>
-												<td><?=$sum["apply"]; ?></td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["success_amount"]; ?></td>
-												<td><?=$sum["success_fee"]; ?></td>
-												<td><?=$sum["faile"]; ?></td>
+												<td><?=number_format($sum["apply"]); ?></td>
+												<td><?=number_format($sum["success"]); ?></td>
+												<td><?=number_format($sum["success_amount"]); ?></td>
+												<td><?=number_format($sum["success_fee"]); ?></td>
+												<td><?=number_format($sum["faile"]); ?></td>
 											</tr>
 											</tbody>
 										</table>

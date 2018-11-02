@@ -81,28 +81,28 @@
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
 													<td>
 													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=sales&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
-														<p class="form-control-static"><?=$success; ?></p>
+														<p class="form-control-static"><?=number_format($success); ?></p>
 													</a>
 													</td>
-													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
-													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_amount); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_fee); ?></p></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["success_amount"]; ?></td>
-												<td><?=$sum["success_fee"]; ?></td>
+												<td><?=number_format($sum["success"]); ?></td>
+												<td><?=number_format($sum["success_amount"]); ?></td>
+												<td><?=number_format($sum["success_fee"]); ?></td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
 												<td>無邀請碼</td>
 												<td>
 												<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=platform&sdate='.$sdate.'&edate='.$edate) ?>" >
-													<p class="form-control-static"><?=$platform["success"]; ?></p>
+													<p class="form-control-static"><?=number_format($platform["success"]); ?></p>
 												</a>
 												</td>
-												<td><?=$platform["success_amount"]; ?></td>
-												<td><?=$platform["success_fee"]; ?></td>
+												<td><?=number_format($platform["success_amount"]); ?></td>
+												<td><?=number_format($platform["success_fee"]); ?></td>
 											</tr>
 											</tbody>
 										</table>
@@ -151,11 +151,11 @@
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
 													<td>
 													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=partner&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
-														<p class="form-control-static"><?=$success; ?></p>
+														<p class="form-control-static"><?=number_format($success); ?></p>
 													</a>
 													</td>
-													<td><p class="form-control-static"><?=$success_amount; ?></p></td>
-													<td><p class="form-control-static"><?=$success_fee; ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_amount); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($success_fee); ?></p></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
@@ -163,9 +163,9 @@
 												<td></td>
 												<td></td>
 												<td>合計</td>
-												<td><?=$sum["success"]; ?></td>
-												<td><?=$sum["success_amount"]; ?></td>
-												<td><?=$sum["success_fee"]; ?></td>
+												<td><?=number_format($sum["success"]); ?></td>
+												<td><?=number_format($sum["success_amount"]); ?></td>
+												<td><?=number_format($sum["success_fee"]); ?></td>
 											</tr>
 											</tbody>
 										</table>
