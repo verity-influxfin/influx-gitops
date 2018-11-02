@@ -93,14 +93,14 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$content		= $info->content;
 				$ocr 			= array();
-				$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image']);
-				$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image']);
+				$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+				$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
 				$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
 				$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
 				$answer			= array();
 				if($person_count==2 && $front_count==1){
 					foreach($person_token as $token){
-						$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0]);
+						$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
 					}
 					if(count($answer)==2){
 						if($answer[0]>$answer[1]){
@@ -118,7 +118,7 @@ class Certification_lib{
 					}
 				}else{
 					if($person_count==1 && $front_count==1){
-						$answer[] = $this->CI->faceplusplus_lib->token_compare($person_token[0],$front_token[0]);
+						$answer[] = $this->CI->faceplusplus_lib->token_compare($person_token[0],$front_token[0],$info->user_id);
 					}
 					$error = array("error"=>"人臉數量錯誤","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
 					$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));

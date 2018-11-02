@@ -178,5 +178,88 @@ class Sales extends MY_Admin_Controller {
 		$this->load->view('admin/sales_register',$page_data);
 		$this->load->view('admin/_footer');
 	}
+	
+	public function bonus_report(){
+		$get 		= $this->input->get(NULL, TRUE);
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
+		$page_data 		= array("sdate"=>$sdate,"edate"=>$edate);	
+		$list			= array();
+		$count 			= 0;
+		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
+		$admins_name 	= $this->admin_model->get_name_list();
+		$partner_type 	= $this->partner_type_model->get_name_list();
+		$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+		$partner_list_byid = array();
+		if($partner_list){
+			$partner_qrcode = array();
+			foreach($partner_list as $key => $value){
+				$partner_qrcode[$value->my_promote_code] = $value->id;
+				$partner_list_byid[$value->id] = $value;
+			}
+		}
+		
+		$target_list	= $this->target_model->get_many_by(array(
+			"status"		=> array(5,10),
+			"loan_date >="	=> $sdate,
+			"loan_date <="	=> $edate,
+		));
+
+		if(!empty($target_list)){
+			foreach($target_list as $key => $value){
+				$count++;
+				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
+					$list["partner"][$partner_qrcode[$value->promote_code]][] = array(
+						"id"			=> $value->id,
+						"amount"		=> $value->amount,
+						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
+						"loan_date"		=> $value->loan_date,
+						"status"		=> $value->status,
+						"promote_code"	=> $value->promote_code,
+						"created_date"	=> date("Y-m-d",$value->created_at),
+					);
+				}
+				
+				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
+					$list["sales"][$admins_qrcode[$value->promote_code]][] = array(
+						"id"			=> $value->id,
+						"amount"		=> $value->amount,
+						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
+						"loan_date"		=> $value->loan_date,
+						"status"		=> $value->status,
+						"promote_code"	=> $value->promote_code,
+						"created_date"	=> date("Y-m-d",$value->created_at),
+					);
+				}
+				
+				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list["platform"][] = array(
+						"id"			=> $value->id,
+						"amount"		=> $value->amount,
+						"loan_amount"	=> $value->loan_amount,
+						"platform_fee"	=> $value->platform_fee,
+						"loan_date"		=> $value->loan_date,
+						"status"		=> $value->status,
+						"promote_code"	=> $value->promote_code,
+						"created_date"	=> date("Y-m-d",$value->created_at),
+					);
+				}
+			}
+		}
+		$page_data["list"] 			= $list;
+		$page_data["count"] 		= $count;
+		$page_data["partner_list"] 	= $partner_list_byid;
+		$page_data["admins_name"] 	= $admins_name;
+		$page_data["partner_type"] 	= $partner_type;
+		$page_data["target_status"] = $this->target_model->status_list;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/sales_bonus',$page_data);
+		$this->load->view('admin/_footer');
+	}
+
 }
 ?>

@@ -62,6 +62,7 @@ $config['admin_menu'] = array(
 		"parent_icon"		=> "fa-thumbs-up",
 		"index"				=> "借款報表",
 		"register_report"	=> "註冊報表",
+		"bonus_report"		=> "獎金報表",
 	),
 	"Account" 				=> array(
 		"parent_name"		=> "財務作業",
