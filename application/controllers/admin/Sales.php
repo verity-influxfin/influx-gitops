@@ -268,7 +268,7 @@ class Sales extends MY_Admin_Controller {
 		$name 		 = "";
 		$this->load->model('loan/product_model');
 
-		if($type="partner" && $id){
+		if($type=="partner" && $id){
 			$info  = $this->partner_model->get($id);
 			if($info){
 				$name			= $info->company;
@@ -281,7 +281,7 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 
-		if($type="sales" && $id){
+		if($type=="sales" && $id){
 			$info  = $this->admin_model->get($id);
 			if($info){
 				$name			= $info->name;
@@ -294,7 +294,7 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		if($type="platform"){
+		if($type=="platform"){
 			$name			= "無分類";
 			$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 			$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
