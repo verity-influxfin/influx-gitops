@@ -309,8 +309,7 @@ class Sales extends MY_Admin_Controller {
 				"status"		=> array(5,10),
 				"loan_date >="	=> $sdate,
 				"loan_date <="	=> $edate,
-				"promote_code NOT" => array_keys($admins_qrcode),
-				"promote_code NOT" => array_keys($partner_qrcode),
+				"promote_code NOT" => array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode)),
 			));
 		}
 		
