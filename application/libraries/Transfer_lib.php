@@ -246,6 +246,8 @@ class Transfer_lib{
 							}
 							$this->CI->transfer_investment_model->update($value->id,$param);
 						}
+						$this->CI->load->library('Sendemail');
+						$this->CI->sendemail->admin_notification("債轉案件待放款 出讓人ID：".$investment->user_id,"債轉案件待放款 出讓人ID：".$investment->user_id." 案號：".$target->target_no);
 						return true;
 					}
 				}else{
