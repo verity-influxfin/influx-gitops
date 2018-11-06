@@ -504,7 +504,7 @@ class Account extends MY_Admin_Controller {
 			$pdf->SetFont('msungstdlight', '', 8);
 			$pdf->AddPage('L', 'A3');
 			$pdf->writeHTML($html, 1, 0, true, true, '');
-			$files = $pdf->Output("daily report_".date("Y-m-d"),"D");
+			$files = $pdf->Output("daily report_".date("Y-m-d").'.pdf',"D");
 		}else{
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
