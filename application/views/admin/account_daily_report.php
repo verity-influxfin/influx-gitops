@@ -2,7 +2,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">交易報表 
-						<a href="javascript:void(0)" target="_blank" onclick="toloan();" class="btn btn-primary float-right" >匯出</a>
+						<a href="<?=admin_url('Account/daily_report?display=pdf&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出PDF</a>
 					</h1>
 					
                 </div>
@@ -113,7 +113,7 @@
 												$count++;
 									?>
                                         <tr <?=$count%2==0?"style='background-color: #DCDCDC;'":""; ?>>
-                                            <td><?=isset($value["entering_date"])?$value["entering_date"]:"" ?></td>
+                                            <td rowspan="<?=isset($value["sub_list"])?count($value["sub_list"])+1:""?>"><?=isset($value["entering_date"])?$value["entering_date"]:"" ?></td>
                                             <td><?=isset($value["target_no"])?$value["target_no"]:"" ?></td>
                                             <td><?=isset($transaction_type_name[$value["source_type"]])?$transaction_type_name[$value["source_type"]]:"" ?></td>
                                             <td><?=isset($value["user_from"])?$value["user_from"]:"" ?></td>
@@ -150,7 +150,6 @@
 														$sum["else"]		+= isset($v["else"])&&$v["else"]?$v["else"]:0;
 											?>
 											<tr <?=$count%2==0?"style='background-color: #DCDCDC;'":""; ?> >
-												<td><?=isset($v["entering_date"])?$v["entering_date"]:"" ?></td>
 												<td><?=isset($v["target_no"])?$v["target_no"]:"" ?></td>
 												<td><?=isset($v["source_type"])?$transaction_type_name[$v["source_type"]]:"" ?></td>
 												<td><?=isset($v["user_from"])?$v["user_from"]:"" ?></td>
