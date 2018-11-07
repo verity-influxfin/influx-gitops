@@ -11,6 +11,7 @@ class Target extends REST_Controller {
         parent::__construct();
 		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
+		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list' ,'info'];
@@ -936,8 +937,8 @@ class Target extends REST_Controller {
 			}
 			
 			if(isset($input["national"]) && $input["national"]!='all' && $input["national"]!=''){
-				$school_list = file_get_contents("https://s3-ap-northeast-1.amazonaws.com/influxp2p/school_point_1.json");
-				$school_list = json_decode($school_list,true);
+				$this->config->load('school_points',TRUE);
+				$school_list = $this->config->item('school_points');
 				$where["national"] = $input["national"];
 				if($targets){
 					foreach($targets as $key => $value){
@@ -947,7 +948,7 @@ class Target extends REST_Controller {
 						));
 						
 						if($user_meta){
-							foreach($school_list as $key => $value){
+							foreach($school_list['school_points'] as $key => $value){
 								if(trim($user_meta->meta_value)==$value['name']){
 									$school_info = $value;
 									break;
