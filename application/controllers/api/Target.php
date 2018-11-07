@@ -765,7 +765,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
-	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+	 * @apiSuccess {String} XIRR 平均年利率(%)
      * @apiSuccess {json} contract 合約列表
 	 * @apiSuccessExample {json} SUCCESS
      *    {
@@ -946,11 +946,10 @@ class Target extends REST_Controller {
 							"user_id"	=> $value->user_id,
 							"meta_key"	=> "school_name"
 						));
-						
 						if($user_meta){
-							foreach($school_list['school_points'] as $key => $value){
-								if(trim($user_meta->meta_value)==$value['name']){
-									$school_info = $value;
+							foreach($school_list['school_points'] as $k => $v){
+								if(trim($user_meta->meta_value)==$v['name']){
+									$school_info = $v;
 									break;
 								}
 							}
@@ -963,7 +962,7 @@ class Target extends REST_Controller {
 					}
 				}
 			}
-			
+
 			if($targets){
 				$where["budget"] = $budget;
 				$data = array(
@@ -975,6 +974,7 @@ class Target extends REST_Controller {
 					'batch_id' 			=> "",
 					'contract' 			=> array(),
 				);
+				$numerator = $denominator = 0;
 				foreach($targets as $key => $value){
 					$next = $data['total_amount'] + $value->loan_amount;
 					if($next <= $budget){
@@ -989,10 +989,11 @@ class Target extends REST_Controller {
 						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
 						$data['contract'][] = $contract_data?$contract_data["content"]:"";
 						$content[] = $value->id;
-						$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
-						$data['XIRR'] += $amortization_schedule["XIRR"];
+						$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
+						$denominator 	+= $value->loan_amount * $value->instalment;
 					}
 				}
+
 				if($data['total_count']){
 					$param = array(
 						"user_id"	=> $user_id,
@@ -1003,7 +1004,7 @@ class Target extends REST_Controller {
 					$this->load->model('loan/batch_model');
 					$batch_id = $this->batch_model->insert($param);
 					if($batch_id){
-						$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
+						$data['XIRR'] = round($numerator/$denominator ,2);
 						$data['batch_id'] = $batch_id;
 						$this->response(array('result' => 'SUCCESS','data' => $data));
 					}else{
@@ -1033,7 +1034,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
-	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+	 * @apiSuccess {String} XIRR 平均年利率(%)
 	 * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -1091,6 +1092,7 @@ class Target extends REST_Controller {
 					'min_instalment' 	=> 0,
 					'XIRR' 				=> 0,
 				);
+				$numerator = $denominator = 0;
 				foreach($targets as $key => $value){
 					if($value->status == 3 ){
 						$investments = $this->investment_model->get_by(array("target_id"=>$value->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
@@ -1110,13 +1112,13 @@ class Target extends REST_Controller {
 								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
 									$data['min_instalment'] = $value->instalment;
 								}
-								$amortization_schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$date="",$value->repayment);
-								$data['XIRR'] += $amortization_schedule["XIRR"];
+								$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
+								$denominator 	+= $value->loan_amount * $value->instalment;
 							}
 						}
 					}
 				}
-				$data['XIRR'] = $data['total_count']>0?round($data['XIRR']/$data['total_count'] ,2):0;
+				$data['XIRR'] = $data['total_count']>0?round($numerator/$denominator ,2):0;
 				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
 			$this->response(array('result' => 'SUCCESS','data' => array(

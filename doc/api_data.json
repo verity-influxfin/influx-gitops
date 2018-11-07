@@ -8642,7 +8642,7 @@
             "type": "String",
             "optional": false,
             "field": "XIRR",
-            "description": "<p>平均內部報酬率(%)</p>"
+            "description": "<p>平均年利率(%)</p>"
           },
           {
             "group": "Success 200",
@@ -9661,7 +9661,7 @@
             "type": "String",
             "optional": false,
             "field": "XIRR",
-            "description": "<p>平均內部報酬率(%)</p>"
+            "description": "<p>平均年利率(%)</p>"
           }
         ]
       },
