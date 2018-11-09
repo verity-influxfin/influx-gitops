@@ -177,7 +177,17 @@
 												<? 
 													if($value->status==2){
 														if($value->bank_account_verify){
-															echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">審批上架</button>';
+															$all_pass = true;
+															foreach($value->certification as $k => $v){
+																if($v["user_status"]!=1){
+																	$all_pass = false;
+																}
+															}
+															if($all_pass){
+																echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">審批上架</button>';
+															}else{
+																echo isset($status_list[$value->status])?$status_list[$value->status]:"";
+															}
 														}else{
 															echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >待金融驗證</a>';
 														}
