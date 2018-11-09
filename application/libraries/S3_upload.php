@@ -112,6 +112,30 @@ class S3_upload {
 		return false;
     }
 	
+	public function image_by_data ($image_data="",$name="image.jpg",$user_id="",$type="test")
+    {
+		if (!empty($image_data)) {
+			$result = $this->client->putObject(array(
+				'Bucket' 		=> S3_BUCKET,
+				'Key'    		=> $type.'/rotate/'.$name,
+				'Body'   		=> $image_data
+			));
+			if(isset($result['ObjectURL'])){
+				$data = array(
+					"type"		=> $type,
+					"user_id"	=> $user_id,
+					"file_name"	=> $name,
+					"url"		=> $result['ObjectURL'],
+					"exif"		=> "rotate",
+				);
+				
+				$this->CI->log_image_model->insert($data);
+				return $result['ObjectURL'];
+			}
+        }
+		return false;
+    }
+	
 	public function image_list ()
     {
 		$result = $this->client->listObjects(array('Bucket' => S3_BUCKET));

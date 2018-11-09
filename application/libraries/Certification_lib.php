@@ -85,43 +85,118 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function idcard_verify($id){
-		if($id){
+	public function idcard_verify($info = array()){
+		if($info && $info->status ==0 && $info->certification_id==1){
 			$this->CI->load->library('Faceplusplus_lib');
-			$info = $this->CI->user_certification_model->get($id);
-			if($info && $info->status ==0 ){
-				$info->content 	= json_decode($info->content,true);
-				$content		= $info->content;
-				$ocr 			= array();
-				$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-				$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
-				$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
-				$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
-				$answer			= array();
-				if($person_count==2 && $front_count==1){
-					foreach($person_token as $token){
-						$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
-					}
-					if(count($answer)==2){
-						if($answer[0]>$answer[1]){
-							$tmp 		= $answer[0];
-							$answer[0] 	= $answer[1];
-							$answer[1] 	= $tmp;
-						}
-						if($answer[0]>=60 && $answer[1]>=90){
-							$error = array("error"=>"","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
-							$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
-						}else{
-							$error = array("error"=>"人臉比對分數不足","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
-							$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
-						}
+			$this->CI->load->library('Ocr_lib');
+			$content		= json_decode($info->content,true);
+			$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+			$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+			if(!$person_token){
+				$rotate = $this->face_rotate($content['person_image'],$info->user_id);
+				if($rotate){
+					$content['person_image'] 	= $rotate['url'];
+					$person_token				= $rotate['count'];
+				}
+			}
+			if(!$front_token){
+				$rotate = $this->face_rotate($content['front_image'],$info->user_id);
+				if($rotate){
+					$content['front_image'] 	= $rotate['url'];
+					$front_token				= $rotate['count'];
+				}
+			}
+			
+			$ocr = array();
+			/*$ocr["front_image"] 		= $this->CI->ocr_lib->identify($content['front_image']		,1031);
+			$ocr["back_image"] 			= $this->CI->ocr_lib->identify($content['back_image']		,1032);
+			$ocr["healthcard_image"] 	= $this->CI->ocr_lib->identify($content['healthcard_image']	,1030);*/
+			
+			$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
+			$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
+			$answer			= array();
+			$remark			= array(
+				"error"			=> array(),
+				"OCR"			=> $ocr,
+				"face"			=> array(),
+				"face_count"	=> array(
+					"person_count"	=> $person_count,
+					"front_count"	=> $front_count
+				),
+			);
+			$status 		= 3;
+			if($person_count > 0 && $front_count > 0 ){
+				foreach($person_token as $token){
+					$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
+				}
+				sort($answer);
+				$remark["face"] = $answer;
+				if(count($answer)==2){
+					if($answer[0]>=60 && $answer[1]>=90){
+						//$status = 1;
+					}else{
+						$remark["error"] = "人臉比對分數不足";
 					}
 				}else{
-					if($person_count==1 && $front_count==1){
-						$answer[] = $this->CI->faceplusplus_lib->token_compare($person_token[0],$front_token[0],$info->user_id);
-					}
-					$error = array("error"=>"人臉數量錯誤","OCR"=>$ocr,"face"=>$answer,"face_count"=>array("person_count"=>$person_count,"front_count"=>$front_count));
-					$this->CI->user_certification_model->update($id,array("remark"=>json_encode($error)));
+					$remark["error"] = "人臉數量錯誤";
+				}
+			}else{
+				$remark["error"] = "人臉數量錯誤";
+			}
+
+			$this->CI->user_certification_model->update($info->id,array(
+				"status"	=> $status,
+				"remark"	=> json_encode($remark),
+				"content"	=> json_encode($content),
+			));
+			return true;
+		}
+		return false;
+	}
+	
+	public function face_rotate($url="",$user_id=0){
+		$this->CI->load->library('faceplusplus_lib');
+		$this->CI->load->library('s3_upload');
+		$image 	= file_get_contents($url);
+		if($image){
+			for($i=1;$i<=3;$i++){
+				$src  	= imagecreatefromstring($image);
+				switch ($i) {
+					case 1:
+						$src = imagerotate($src, 90, 0);
+						break;
+					case 2:
+						$src = imagerotate($src, -90, 0);
+						break;
+					case 3:
+						$src = imagerotate($src, 180, 0);
+						break;
+				}
+				$output_w = $src_w = imagesx($src);
+				$output_h = $src_h = imagesy($src);
+				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
+					$output_w = IMAGE_MAX_WIDTH;
+					$output_h = intval($src_h / $src_w * IMAGE_MAX_WIDTH);
+				}else if($src_h > $src_w && $src_h > IMAGE_MAX_WIDTH){
+					$output_h = IMAGE_MAX_WIDTH;
+					$output_w = intval($src_w / $src_h * IMAGE_MAX_WIDTH);
+				}else if($src_h == $src_w && $src_h > IMAGE_MAX_WIDTH){
+					$output_h = IMAGE_MAX_WIDTH;
+					$output_w = IMAGE_MAX_WIDTH;
+				}
+				
+				$output = imagecreatetruecolor($output_w, $output_h);
+				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
+				
+				ob_start();
+				imagejpeg($output, NULL, 90);
+				$image_data = ob_get_contents();
+				ob_end_clean();
+				$base64 = base64_encode($image_data);
+				$count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,1);
+				if($count){
+					$url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,"id_card");
+					return array("count" => $count,"url" => $url);
 				}
 			}
 		}
@@ -536,24 +611,30 @@ class Certification_lib{
 		$count 			= 0;
 		$date			= get_entering_date();
 		$ids			= array();
-		$certification	= array();
-		foreach($this->certification as $key => $value){
-			if(in_array($value["alias"],array("email","student","emergency"))){
-				$certification[$value["alias"]] = $key;
-			}
-		}
-
 		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(
 			"status"			=> 0,
-			"certification_id"	=> array_values($certification),
+			"certification_id"	=> array(1,2,5,6),
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
-				if(in_array($value->certification_id,array($certification["email"],$certification["student"]))){
+				
+				//實名
+				if($value->certification_id == 1){
+					$this->idcard_verify($value);
+					$count++; 
+				}
+				
+				//學生、Email
+				if(in_array($value->certification_id,array(2,6))){
 					if(time()> ($value->created_at + 3600)){
 						$this->set_failed($value->id);
 						$count++; 
 					}
+				}
+				
+				//緊急聯絡人
+				if($value->certification_id == 5){
+					$count++; 
 				}
 			}
 		}

@@ -62,11 +62,42 @@ class Faceplusplus_lib{
 				"request"	=> $image,
 			);
 			$this->CI->log_faceplusplus_model->insert($log_data);
+			$rs			= json_decode($rs,TRUE);
+			if($rs && isset($rs["image_id"]) && count($rs["faces"])>0){
+				$token 	= array();
+				foreach($rs["faces"] as $key => $value){
+					$token[] = $value["face_token"];
+				}
+
+				return $token;
+			}
+		}
+		return FALSE;
+	}
+	
+	public function get_face_token_by_base64($image="",$user_id=0){
+		if(!empty($image)){
+			$url 			= $this->api_url."detect";
+			$data			= array(
+				"api_key"			=> FACEPLUSPLUS_KEY,
+				"api_secret"		=> FACEPLUSPLUS_SECRET,
+				"return_attributes"	=> "gender,age",
+				"image_base64"		=> $image
+			);
+			
+			$rs 		= curl_get($url,$data);
+			$log_data	= array(
+				"type"		=> "detect",
+				"user_id"	=> $user_id,
+				"response"	=> $rs,
+				"request"	=> $image,
+			);
+			$this->CI->log_faceplusplus_model->insert($log_data);
 			
 			$rs			= json_decode($rs,TRUE);
-			if($rs && isset($rs["image_id"]) && count($rs['faces'])>0){
+			if($rs && isset($rs["image_id"]) && count($rs["faces"])>0){
 				$token 		= array();
-				foreach($rs['faces'] as $key => $value){
+				foreach($rs["faces"] as $key => $value){
 					$token[] = $value["face_token"];
 				}
 

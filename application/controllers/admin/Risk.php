@@ -26,7 +26,7 @@ class Risk extends MY_Admin_Controller {
 		$user_investor_list 		= array();
 		$certification_investor_list = array();
 		$user_certification_list	= $this->user_certification_model->get_many_by(array(
-			"status"	=> 0,
+			"status"	=> array(0,3),
 		));
 		if($user_certification_list){
 			foreach($user_certification_list as $key => $value){

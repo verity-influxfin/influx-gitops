@@ -34,9 +34,9 @@ $config['admin_menu'] = array(
 		"parent_name"	=> "認證管理",
 		"parent_icon"	=> "fa-question-circle",
 		"index"			=> "認證方式列表",
-		"user_certification_list?status=0"		=> "會員認證審核",
-		"user_bankaccount_list?verify=2"=> "金融帳號認證",
-		"difficult_word_list"			=> "銀行困難字管理",
+		"user_certification_list?status=3"	=> "會員認證審核",
+		"user_bankaccount_list?verify=2"	=> "金融帳號認證",
+		"difficult_word_list"				=> "銀行困難字管理",
 	),
 	"Partner" 			=> array(
 		"parent_name"	=> "合作夥伴管理",

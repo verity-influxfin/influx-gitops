@@ -202,7 +202,6 @@ class Certification extends REST_Controller {
 			
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->idcard_verify($insert);// 7/31改人工
 				$this->load->library('Sendemail');
 				$investor_status = $investor?"出借端":"借款端";
 				$this->sendemail->admin_notification("新的一筆實名認證 ".$investor_status."會員ID:".$user_id,"有新的一筆實名認證 ".$investor_status."會員ID:".$user_id);

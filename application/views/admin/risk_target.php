@@ -122,23 +122,25 @@
 																case '2': 
 																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																	break;
+																case '3': 
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >金融驗證</a>';
+																	break;
 																default:
 																	break;
 															}
 														}else{
 															switch($user_status){
 																case '0': 
-																	if(in_array($k,array(2,6))){
-																		echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
-																	}else{
-																		echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
-																	}
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																	break;
 																case '1':
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																	break;
 																case '2': 
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																case '3': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
 																	break;
 																default:
 																	break;
@@ -201,23 +203,25 @@
 																case '2': 
 																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																	break;
+																case '3': 
+																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" class="btn btn-default btn-md" >驗證</a>';
+																	break;
 																default:
 																	break;
 															}
 														}else{
 															switch($value->certification[$k]["user_status"]){
 																case '0': 
-																	if(in_array($k,array(2,6))){
-																		echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
-																	}else{
-																		echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
-																	}
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																	break;
 																case '1':
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																	break;
 																case '2': 
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																case '3': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md" >驗證</a>';
 																	break;
 																default:
 																	break;
