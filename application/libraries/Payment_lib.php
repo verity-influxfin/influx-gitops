@@ -765,7 +765,7 @@ class Payment_lib{
 		return $data;
 	}
 	
-	public function script_daily_tax($sdate=""){
+	public function script_daily_tax(){
 		$this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Ezpay_lib');
 		$this->CI->load->model('transaction/transaction_model');
@@ -782,21 +782,12 @@ class Payment_lib{
 			SOURCE_PREPAYMENT_ALLOWANCE,
 		);
 
-		if(isset($sdate) && $sdate!="" && $sdate < $date){
-			$where	= array(
-				"entering_date >="	=> $sdate,
-				"entering_date <="	=> $date,
-				"source"			=> $source,
-				"status <>"			=> 0
-			);
-		}else{
-			$where	= array(
-				"entering_date"	=> $date,
-				"source"		=> $source,
-				"status <>"		=> 0
-			);
-		}
 
+		$where	= array(
+			"entering_date"	=> $date,
+			"source"		=> $source,
+			"status <>"		=> 0
+		);
 		$data 		= $this->CI->transaction_model->order_by("user_from","ASC")->get_many_by($where);
 		if($data && !empty($data)){
 			$tax_list 	= array();
