@@ -634,7 +634,7 @@ class Certification_lib{
 				
 				//緊急聯絡人
 				if($value->certification_id == 5){
-					$count++; 
+					$this->CI->user_certification_model->update($value->id,array("status"=>3));
 				}
 			}
 		}
