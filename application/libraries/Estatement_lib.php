@@ -20,13 +20,17 @@ class Estatement_lib{
 	public function get_estatement_investor($user_id=0,$sdate="",$edate=""){
 		$user_info = $this->CI->user_model->get($user_id);
 		if($user_info){
-			$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$user_id));
+			$virtual_account = $this->CI->virtual_account_model->get_by(array(
+				"status"	=> 1,
+				"investor"	=> 1,
+				"user_id"	=> $user_id
+			));
 			if($virtual_account){
-				$date_range	= entering_date_range($edate);
-				$edatetime	= $date_range?$date_range["edatetime"]:"";
-				$date_range	= entering_date_range($sdate);
-				$sdatetime	= $date_range?$date_range["sdatetime"]:"";
-				$total 		= $frozen = $interest = $interest_count = $allowance = $allowance_count = 0;
+				$date_range			= entering_date_range($edate);
+				$edatetime			= $date_range?$date_range["edatetime"]:"";
+				$date_range			= entering_date_range($sdate);
+				$sdatetime			= $date_range?$date_range["sdatetime"]:"";
+				$total 				= $frozen = $interest = $interest_count = $allowance = $allowance_count = 0;
 				$ar_principal 		= $ar_interest = $delay_ar_principal = $delay_ar_interest = $ar_total = 0;
 				$ar_principal_count = $ar_interest_count = $delay_ar_principal_count = $delay_ar_interest_count = $ar_total_count = 0;
 				if($edatetime){
@@ -48,7 +52,6 @@ class Estatement_lib{
 									$allowance_count++;
 								}
 							}
-							
 							$total += intval($value->amount);
 						}
 					}
@@ -181,6 +184,7 @@ class Estatement_lib{
 						$ar_total		= $ar_principal + $ar_interest + $delay_ar_principal + $delay_ar_interest;
 					}
 				}
+				
 				$data = array(
 					"edate" 					=> $edate,
 					"sdate" 					=> $sdate,
@@ -205,32 +209,36 @@ class Estatement_lib{
 					"virtual_account"			=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor', $data,TRUE);
-				$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","investor/".$edate);
-				if($url){
-					$param = array(
-						"user_id"	=> $user_id,
-						"type"		=> "estatement",
-						"investor"	=> 1,
-						"sdate"		=> $sdate,
-						"edate"		=> $edate,
-						"url"		=> $url,
-					);
-					$rs = $this->CI->user_estatement_model->insert($param);
-					return $rs;
-				}
+				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","investor/".$edate);
+				$param = array(
+					"user_id"	=> $user_id,
+					"type"		=> "estatement",
+					"investor"	=> 1,
+					"sdate"		=> $sdate,
+					"edate"		=> $edate,
+					"content"	=> $html,
+					"url"		=> "",
+				);
+				$rs = $this->CI->user_estatement_model->insert($param);
+				return $rs;
 			}
 		}
 		return false;
 	}
 	
 	public function get_estatement_borrower($user_id=0,$sdate="",$edate=""){
-		$user_info = $this->CI->user_model->get($user_id);
+		$user_info 	= $this->CI->user_model->get($user_id);
+		$product_id	= 1;
 		if($user_info){
-			$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account = $this->CI->virtual_account_model->get_by(array(
+				"status"	=> 1,
+				"investor"	=> 0,
+				"user_id"	=> $user_id
+			));
 			if($virtual_account){
-				$credit 	 = $this->CI->credit_lib->get_credit($user_id,1);
+				$credit 	 = $this->CI->credit_lib->get_credit($user_id,$product_id);
 				$used_credit = 0;
-				$target_list 	= $this->CI->target_model->get_many_by(array("product_id"=>1,"user_id"=>$user_id,"status <="=>5));
+				$target_list 	= $this->CI->target_model->get_many_by(array("product_id"=>$product_id,"user_id"=>$user_id,"status <="=>5));
 				if($target_list){
 					foreach($target_list as $key =>$value){
 						$used_credit += intval($value->loan_amount);
@@ -283,6 +291,24 @@ class Estatement_lib{
 						}
 					}
 					
+					$prepayment_count 	= 0;
+					$prepayment_amount 	= 0;
+					$prepayment_target	= array();
+					$transactions 	= $this->CI->transaction_model->get_many_by(array(
+						"entering_date <="	=> $edate,
+						"entering_date >="	=> $sdate,
+						"source"			=> SOURCE_PREPAYMENT_DAMAGE,
+						"user_from" 		=> $user_id,
+						"status" 			=> 2
+					));
+					if($transactions){
+						foreach($transactions as $key => $value){
+							$prepayment_count++;
+							$prepayment_amount += $value->amount;
+							$prepayment_target[] = $value->entering_date.'-'.$value->target_id;
+						}
+					}
+					
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
 						"source"			=> array(SOURCE_PRINCIPAL,SOURCE_INTEREST),
@@ -293,6 +319,9 @@ class Estatement_lib{
 						foreach($transactions as $key => $value){
 							if($value->entering_date>=$sdate && $value->entering_date<=$edate){
 								$normal_rapay += $value->amount;
+								if(in_array($value->entering_date.'-'.$value->target_id,$prepayment_target)){
+									$prepayment_amount += $value->amount;
+								}
 							}
 							switch ($value->source) {
 								case SOURCE_PRINCIPAL: 
@@ -316,22 +345,23 @@ class Estatement_lib{
 					"normal_amount"		=> number_format($normal_amount),
 					"normal_rapay"		=> number_format($normal_rapay),
 					"ar_principal"		=> number_format($ar_principal),
+					"prepayment_count"	=> number_format($prepayment_count),
+					"prepayment_amount"	=> number_format($prepayment_amount),
 					"virtual_account"	=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/borrower', $data,TRUE);
-				$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"借款人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","borrower/".$edate);
-				if($url){
-					$param = array(
-						"user_id"	=> $user_id,
-						"type"		=> "estatement",
-						"investor"	=> 0,
-						"sdate"		=> $sdate,
-						"edate"		=> $edate,
-						"url"		=> $url,
-					);
-					$rs = $this->CI->user_estatement_model->insert($param);
-					return $rs;
-				}
+				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"借款人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","borrower/".$edate);
+				$param = array(
+					"user_id"	=> $user_id,
+					"type"		=> "estatement",
+					"investor"	=> 0,
+					"sdate"		=> $sdate,
+					"edate"		=> $edate,
+					"content"	=> $html,
+					"url"		=> "",
+				);
+				$rs = $this->CI->user_estatement_model->insert($param);
+				return $rs;
 			}
 		}
 		return false;
@@ -340,7 +370,11 @@ class Estatement_lib{
 	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate=""){
 		$user_info = $this->CI->user_model->get($user_id);
 		if($user_info){
-			$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>1,"user_id"=>$user_id));
+			$virtual_account = $this->CI->virtual_account_model->get_by(array(
+				"status"	=> 1,
+				"investor"	=> 1,
+				"user_id"	=> $user_id
+			));
 			if($virtual_account){
 				$date_range	= entering_date_range($edate);
 				$edatetime	= $date_range?$date_range["edatetime"]:"";
@@ -384,8 +418,6 @@ class Estatement_lib{
 						}
 					}
 				}
-				
-				
 				
 				if($transaction_id){
 					$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
@@ -557,19 +589,18 @@ class Estatement_lib{
 					"list"			=> $list,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor_detail', $data,TRUE);
-				$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單明細-".$edate,$user_id."-estatementdetail-".$edate.".pdf","investor/".$edate);
-				if($url){
-					$param = array(
-						"user_id"	=> $user_id,
-						"type"		=> "estatementdetail",
-						"investor"	=> 1,
-						"sdate"		=> $sdate,
-						"edate"		=> $edate,
-						"url"		=> $url,
-					);
-					$rs = $this->CI->user_estatement_model->insert($param);
-					return $rs;
-				}
+				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單明細-".$edate,$user_id."-estatementdetail-".$edate.".pdf","investor/".$edate);
+				$param = array(
+					"user_id"	=> $user_id,
+					"type"		=> "estatementdetail",
+					"investor"	=> 1,
+					"sdate"		=> $sdate,
+					"edate"		=> $edate,
+					"content"	=> $html,
+					"url"		=> "",
+				);
+				$rs = $this->CI->user_estatement_model->insert($param);
+				return $rs;
 			}
 		}
 		return false;

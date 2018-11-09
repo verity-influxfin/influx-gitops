@@ -119,8 +119,8 @@
 					<tr>
 					  <td></td>
 					</tr>
-					<tr><td>·提還總金額：0 元</td></tr>
-					<tr><td>·筆數：0 筆</td></tr>
+					<tr><td>·提還總金額：{prepayment_amount} 元</td></tr>
+					<tr><td>·筆數：{prepayment_count} 筆</td></tr>
 					<tr><td></td></tr>
 				</table>
 			</td>
