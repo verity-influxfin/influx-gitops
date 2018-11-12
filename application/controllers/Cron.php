@@ -174,5 +174,23 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die("KO");
 	}
+
+	public function create_estatement_pdf()
+	{
+		$this->load->library('Estatement_lib'); 
+		$script  	= 10;
+		$start_time = time();
+		$count 		= $this->estatement_lib->script_create_estatement_pdf();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "create_estatement_pdf",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
 }
 

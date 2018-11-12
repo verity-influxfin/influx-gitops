@@ -209,7 +209,6 @@ class Estatement_lib{
 					"virtual_account"			=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor', $data,TRUE);
-				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","investor/".$edate);
 				$param = array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatement",
@@ -350,7 +349,6 @@ class Estatement_lib{
 					"virtual_account"	=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/borrower', $data,TRUE);
-				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"借款人對帳單-".$edate,$user_id."-estatement-".$edate.".pdf","borrower/".$edate);
 				$param = array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatement",
@@ -589,7 +587,6 @@ class Estatement_lib{
 					"list"			=> $list,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor_detail', $data,TRUE);
-				//$url 	= $this->upload_pdf($user_id,$html,$user_info->id_number,"投資人對帳單明細-".$edate,$user_id."-estatementdetail-".$edate.".pdf","investor/".$edate);
 				$param = array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatementdetail",
@@ -637,6 +634,130 @@ class Estatement_lib{
 			}
 		}
 		return false;
+	}
+	
+	function get_investor_user_list($sdate="",$edate=""){
+		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
+			$date_range			= entering_date_range($edate);
+			$edatetime			= $date_range?$date_range["edatetime"]:"";
+			$date_range			= entering_date_range($sdate);
+			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
+			$user_list 			= array();
+			if($edatetime){
+				$transaction 	= $this->CI->transaction_model->get_many_by(array(
+					"source" 				=> "1",
+					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
+					"entering_date <=" 		=> $edate,
+				));
+				if(!empty($transaction)){
+					foreach($transaction as $key => $value){
+						$user_list[$value->user_to] = $value->user_to;
+					}
+				}
+			}
+			return $user_list;
+		}
+		return false;
+	}
+	
+	function get_borrower_user_list($sdate="",$edate=""){
+		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
+			$this->CI->load->model('transaction/target_model');
+			$date_range			= entering_date_range($edate);
+			$edatetime			= $date_range?$date_range["edatetime"]:"";
+			$date_range			= entering_date_range($sdate);
+			$sdatetime			= $date_range?$date_range["sdatetime"]:"";
+			$user_list 			= array();
+			if($edatetime){
+				$target 		= $this->CI->target_model->get_many_by(array(
+					"status" 		=> array(5,10),
+					"loan_date <=" 	=> $edate,
+				));
+				if(!empty($target)){
+					foreach($target as $key => $value){
+						$user_list[$value->user_id] = $value->user_id;
+					}
+				}
+			}
+			return $user_list;
+		}
+		return false;
+	}
+	
+	function create_estatement_pdf($user_estatement= array()){
+		if($user_estatement->id && $user_estatement->url=="" && !empty($user_estatement->content)){
+			$url 		= "";
+			$user_info 	= $this->CI->user_model->get($user_estatement->user_id);
+			$edate 		= $user_estatement->edate;
+			$user_id 	= $user_estatement->user_id;
+			$html 		= $user_estatement->content;
+			switch($user_estatement->type){
+				case "estatement": 
+					if($user_estatement->investor){
+						$url = $this->upload_pdf(
+							$user_id,
+							$html,
+							$user_info->id_number,
+							"投資人對帳單-".$edate,
+							$user_id."-estatement-".$edate.".pdf",
+							"investor/".$edate
+						);
+					}else{
+						$url = $this->upload_pdf(
+							$user_id,
+							$html,
+							$user_info->id_number,
+							"借款人對帳單-".$edate,
+							$user_id."-estatement-".$edate.".pdf",
+							"borrower/".$edate
+						);
+					}
+					break;
+				case "estatementdetail":
+					if($user_estatement->investor){
+						$url = $this->upload_pdf(
+							$user_id,
+							$html,
+							$user_info->id_number,
+							"投資人對帳單明細-".$edate,
+							$user_id."-estatementdetail-".$edate.".pdf",
+							"investor/".$edate
+						);
+					}else{
+						$url = $this->upload_pdf(
+							$user_id,
+							$html,
+							$user_info->id_number,
+							"借款人對帳單明細-".$edate,
+							$user_id."-estatementdetail-".$edate.".pdf",
+							"borrower/".$edate
+						);
+					}
+					break;
+				default:
+					break;
+			}
+			
+			if(!empty($url)){
+				$this->CI->user_estatement_model->update($user_estatement->id,array("url" => $url));
+				return $url;
+			}
+		}
+		return false;
+	}
+	
+	function script_create_estatement_pdf(){
+		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
+			"url"	=> "",
+		));
+		$count = 0;
+		if($list){
+			foreach($list as $key=>$value){
+				$count++;
+				$this->create_estatement_pdf($value);
+			}
+		}
+		return $count;
 	}
 }
 
