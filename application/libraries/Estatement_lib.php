@@ -303,14 +303,13 @@ class Estatement_lib{
 					if($transactions){
 						foreach($transactions as $key => $value){
 							$prepayment_count++;
-							$prepayment_amount += $value->amount;
 							$prepayment_target[] = $value->entering_date.'-'.$value->target_id;
 						}
 					}
 					
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
-						"source"			=> array(SOURCE_PRINCIPAL,SOURCE_INTEREST),
+						"source"			=> array(SOURCE_PRINCIPAL,SOURCE_INTEREST,SOURCE_PREPAYMENT_DAMAGE),
 						"user_from" 		=> $user_id,
 						"status" 			=> 2
 					));
