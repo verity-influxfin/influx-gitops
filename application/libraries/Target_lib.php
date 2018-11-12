@@ -384,6 +384,7 @@ class Target_lib{
 			
 			$old_date = $target->loan_date;
 			$total 	= $target->loan_amount;
+			ksort($list);
 			foreach($list as $key => $value){
 				$list[$key]["days"] 				= get_range_days($old_date,$value["repayment_date"]);
 				$list[$key]["remaining_principal"] 	= $total;
@@ -462,6 +463,7 @@ class Target_lib{
 			
 			$old_date 	= $target->loan_date;
 			$total 		= $investment->loan_amount;
+			ksort($list);
 			foreach($list as $key => $value){
 				$list[$key]["days"] 				= get_range_days($old_date,$value["repayment_date"]);
 				$list[$key]["remaining_principal"] 	= $total;
