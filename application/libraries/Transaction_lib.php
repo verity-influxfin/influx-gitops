@@ -175,9 +175,8 @@ class Transaction_lib{
 	}
 	
 	//提領
-	public function withdraw($user_id,$amount=0){
+	public function withdraw($user_id,$amount=0,$investor=1){
 		if($user_id && $amount > 31 ){
-			$investor = 1; 
 			$virtual_account = $this->CI->virtual_account_model->get_by(array("status"=>1,"investor"=>$investor,"user_id"=>$user_id));
 			if($virtual_account){
 				$withdraw = false;

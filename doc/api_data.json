@@ -209,7 +209,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
           },
           {
             "group": "Success 200",
@@ -574,7 +574,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
           },
           {
             "group": "Success 200",
@@ -733,7 +733,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
           },
           {
             "group": "Success 200",
@@ -952,7 +952,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
           },
           {
             "group": "Success 200",
@@ -1132,7 +1132,7 @@
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗</p>"
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
           },
           {
             "group": "Success 200",

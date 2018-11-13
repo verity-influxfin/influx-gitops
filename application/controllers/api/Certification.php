@@ -226,7 +226,7 @@ class Certification extends REST_Controller {
      * @apiSuccess {String} id_card_place 發證地點
      * @apiSuccess {String} birthday 生日(民國) ex:1020101
      * @apiSuccess {String} address 地址
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
      * @apiSuccessExample {json} SUCCESS
@@ -477,7 +477,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} email 校內Email
 	 * @apiSuccess {String} front_image 學生證正面照
 	 * @apiSuccess {String} back_image 學生證背面照
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
      * @apiSuccessExample {json} SUCCESS
@@ -732,7 +732,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} bank_code 銀行代碼三碼
 	 * @apiSuccess {String} branch_code 分支機構代號四碼
 	 * @apiSuccess {String} bank_account 銀行帳號
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
      * @apiSuccessExample {json} SUCCESS
@@ -1283,7 +1283,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {Number} transportation 交通支出
 	 * @apiSuccess {Number} entertainment 娛樂支出
 	 * @apiSuccess {Number} other_expense 其他支出
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
      * @apiSuccessExample {json} SUCCESS
@@ -1463,7 +1463,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} type 認證類型
-	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗
+	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
      * @apiSuccessExample {json} SUCCESS
