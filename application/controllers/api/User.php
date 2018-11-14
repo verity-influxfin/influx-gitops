@@ -221,7 +221,7 @@ class User extends REST_Controller {
 		$input['investor'] = isset($input['investor'])&&$input['investor']?1:0;
 		if($input['investor']){
 			$data['status'] 			= 0;
-			$data['investor_status'] 	= 1;;
+			$data['investor_status'] 	= 1;
 		}else{
 			$data['investor_status'] 	= 0;
 			$data['status'] 			= 1;
