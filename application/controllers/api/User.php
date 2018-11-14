@@ -218,7 +218,8 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
 		
-		if(isset($input['investor']) && $input['investor']){
+		$input['investor'] = isset($input['investor'])&&$input['investor']?1:0;
+		if($input['investor']){
 			$data['status'] 			= 0;
 			$data['investor_status'] 	= 1;;
 		}else{

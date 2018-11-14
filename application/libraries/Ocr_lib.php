@@ -24,7 +24,7 @@ class Ocr_lib
 					2 => "id_number",
 					3 => "birthday",
 					4 => "code",
-					5 => "face",
+					//5 => "face",
 					
 				),
 				"1031" => array(
@@ -33,7 +33,7 @@ class Ocr_lib
 					3 => "birthday",
 					4 => "id_card_date",
 					5 => "id_number",
-					6 => "face",
+					//6 => "face",
 				),
 				"1032" => array(
 					1 => "father",

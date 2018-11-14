@@ -108,9 +108,9 @@ class Certification_lib{
 			}
 			
 			$ocr = array();
-			/*$ocr["front_image"] 		= $this->CI->ocr_lib->identify($content['front_image']		,1031);
+			$ocr["front_image"] 		= $this->CI->ocr_lib->identify($content['front_image']		,1031);
 			$ocr["back_image"] 			= $this->CI->ocr_lib->identify($content['back_image']		,1032);
-			$ocr["healthcard_image"] 	= $this->CI->ocr_lib->identify($content['healthcard_image']	,1030);*/
+			$ocr["healthcard_image"] 	= $this->CI->ocr_lib->identify($content['healthcard_image']	,1030);
 			
 			$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
 			$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
