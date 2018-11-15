@@ -175,4 +175,51 @@ class Credit_lib{
 		}
 		return false;
 	}
+	
+	public function delay_credit($user_id,$delay_days=0){
+		if($user_id && $delay_days > GRACE_PERIOD){
+			$param = array(
+				"user_id"			=> $user_id,
+				"status"			=> 1,
+			);
+			
+			$amount 		= 0;
+			$points 		= -1;
+			$level 			= 11;
+			
+			if($delay_days>30){
+				$points 	= -501;
+				$level 		= 12;
+			}
+			
+			if($delay_days>60){
+				$points 	= -1501;
+				$level 		= 13;
+			}
+			
+			$product_id = array();
+			$rs 		= $this->CI->credit_model->order_by("created_at","desc")->get_many_by($param);
+			if($rs){
+				foreach($rs as $key => $value){
+					$this->CI->credit_model->update($value->id,array("status"=>0));
+					$product_id[$value->product_id] = $value->product_id;
+				}
+
+				foreach($product_id as $key => $value){
+					$param = array(
+						"user_id"		=> $user_id,
+						"product_id"	=> $value,
+						"points"		=> $points,
+						"amount"		=> $amount,
+						"level"			=> $level,
+						
+					);
+					$rs = $this->CI->credit_model->insert($param);
+				}
+				
+				return $level;
+			}
+		}
+		return false;
+	}
 }

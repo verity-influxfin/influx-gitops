@@ -511,7 +511,6 @@ class Charge_lib
 					}
 				}
 			}
-			
 			$this->CI->target_model->update($target->id,$update_data);
 			if($delay_days > GRACE_PERIOD){
 				$this->handle_delay_target($target,$delay_days);
@@ -523,6 +522,13 @@ class Charge_lib
 	
 	public function handle_delay_target($target,$delay_days=0){
 		if($target->status == 5 && $delay_days > GRACE_PERIOD){
+			if(in_array($delay_days,array(8,31,61))){
+				$this->CI->load->library('credit_lib');
+				$level = $this->CI->credit_lib->delay_credit($target->user_id,$delay_days);
+				if($level){
+					$this->CI->target_model->update($target->id,array("credit_level"=>$level));
+				}
+			}
 			$date			= get_entering_date();
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
 				"target_id" => $target->id,
