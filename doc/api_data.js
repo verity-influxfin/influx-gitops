@@ -1546,6 +1546,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "size": "2..15",
             "optional": false,
             "field": "name",
             "description": "<p>緊急聯絡人姓名</p>"
@@ -1857,6 +1858,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "size": "2..15",
             "optional": false,
             "field": "name",
             "description": "<p>姓名</p>"

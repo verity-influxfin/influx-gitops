@@ -15,6 +15,7 @@ class Estatement_lib{
 		$this->CI->load->library('S3_upload');
 		$this->CI->load->library('parser');
 		$this->CI->load->library('credit_lib');
+		$this->CI->load->library('sendemail');
     }
  
 	public function get_estatement_investor($user_id=0,$sdate="",$edate=""){
@@ -740,6 +741,37 @@ class Estatement_lib{
 			if(!empty($url)){
 				$this->CI->user_estatement_model->update($user_estatement->id,array("url" => $url));
 				return $url;
+			}
+		}
+		return false;
+	}
+	
+	function send_estatement($estatement_id=0){
+		if($estatement_id){
+			$estatement = $this->CI->user_estatement_model->get($estatement_id);
+			if($estatement && $estatement->type=='estatement'){
+				$user_info = $this->CI->user_model->get($estatement->user_id);
+				if($user_info && $user_info->name && $user_info->email){
+					$estatement_detail = $this->CI->user_estatement_model->get_by(array(
+						"type"		=> "estatementdetail",
+						"user_id"	=> $estatement->user_id,
+						"investor"	=> $estatement->investor,
+						"sdate"		=> $estatement->sdate,
+						"edate"		=> $estatement->edate,
+					));
+					if($estatement_detail){
+						$estatement_detail_url = $estatement_detail->url;
+						$this->CI->user_estatement_model->update($estatement_detail->id,array("status"=>1));
+					}else{
+						$estatement_detail_url = "";
+					}
+					
+					$this->CI->user_estatement_model->update($estatement_id,array("status"=>1));
+					$estatement_url  		= $estatement->url;
+					$title = '【普匯金融科技對帳單】';
+					$content = '親愛的 '.$user_info->name.' 先生您好：<br> 　　茲寄送您107年9月綜合對帳單，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
+					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url);
+				}
 			}
 		}
 		return false;
