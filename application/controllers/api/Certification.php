@@ -89,7 +89,7 @@ class Certification extends REST_Controller {
 	/**
      * @api {post} /certification/idcard 認證 實名認證
      * @apiGroup Certification
-     * @apiParam {String} name 姓名
+     * @apiParam {String{2..15}} name 姓名
      * @apiParam {String} id_number 身分證字號
      * @apiParam {String} id_card_date 發證日期(民國) ex:1060707
      * @apiParam {String} id_card_place 發證地點
@@ -164,6 +164,14 @@ class Certification extends REST_Controller {
 				}else{
 					$content[$field] = $input[$field];
 				}
+			}
+			
+			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			
+			if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
 			//檢查身分證字號
@@ -804,7 +812,7 @@ class Certification extends REST_Controller {
 		/**
      * @api {post} /certification/emergency 認證 緊急聯絡人
      * @apiGroup Certification
-	 * @apiParam {String} name 緊急聯絡人姓名
+	 * @apiParam {String{2..15}} name 緊急聯絡人姓名
 	 * @apiParam {String} phone 緊急聯絡人電話
 	 * @apiParam {String} relationship 緊急聯絡人關係
 	 *
@@ -858,6 +866,17 @@ class Certification extends REST_Controller {
 				}else{
 					$content[$field] = $input[$field];
 				}
+			}
+			
+			$name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
+			if(in_array($content['name'],$name_limit)){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
 			if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $content['phone'])){
