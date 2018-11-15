@@ -53,7 +53,7 @@ class Subloan_lib{
 							$data['liquidated_damages'] 	+= $value->amount;
 							break;
 						case SOURCE_AR_DELAYINTEREST: 
-							$data['delay_interest_payable'] += $value->amount;
+							//$data['delay_interest_payable'] += $value->amount;
 							break;
 						default:
 							break;
@@ -76,7 +76,7 @@ class Subloan_lib{
 									$data["interest_payable"] + 
 									$data["liquidated_damages"] + 
 									$data["delay_interest_payable"];
-				$data["sub_loan_fees"] 	= intval(round( $total * SUB_LOAN_FEES / 100 ,0));
+				$data["sub_loan_fees"] 	= intval(round( $data["remaining_principal"] * SUB_LOAN_FEES / 100 ,0));
 				$total += $data["sub_loan_fees"];
 				$data["platform_fees"] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
 				$data["platform_fees"] 	= $data["platform_fees"] > PLATFORM_FEES_MIN?$data["platform_fees"]:PLATFORM_FEES_MIN;
@@ -239,7 +239,7 @@ class Subloan_lib{
 	
 	private function get_target_no(){
 		$code = "STS".date("Ymd").rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
-		$result = $this->target_model->get_by('target_no',$code);
+		$result = $this->CI->target_model->get_by('target_no',$code);
 		if ($result) {
 			return $this->get_target_no();
 		}else{
