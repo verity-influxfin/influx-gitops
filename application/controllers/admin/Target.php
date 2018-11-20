@@ -165,7 +165,12 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && $info->status==2){
-				$this->target_lib->target_verify_success($info,$this->login_info->id);
+				if($info->sub_status==8){
+					$this->load->library('subloan_lib');
+					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
+				}else{
+					$this->target_lib->target_verify_success($info,$this->login_info->id);
+				}
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();
@@ -181,7 +186,12 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info && in_array($info->status,array(0,1,2))){
-				$this->target_lib->target_verify_failed($info,$this->login_info->id);
+				if($info->sub_status==8){
+					$this->load->library('subloan_lib');
+					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id);
+				}else{
+					$this->target_lib->target_verify_failed($info,$this->login_info->id);
+				}
 				echo "更新成功";die();
 			}else{
 				echo "查無此ID";die();
@@ -250,7 +260,7 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==4 && $value->sub_status==0){
+				if($value->status==4){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						"user_id"	=> $value->user_id,
 						"investor"	=> 0,
@@ -296,12 +306,53 @@ class Target extends MY_Admin_Controller {
 		}
 	}
 	
+	function subloan_success(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
+				$this->load->library('Transaction_lib');
+				$rs = $this->transaction_lib->subloan_success($id,$this->login_info->id);
+				if($rs){
+					echo "更新成功";die();
+				}else{
+					echo "更新失敗";die();
+				}
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
+	function loan_return(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get["id"])?intval($get["id"]):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && $info->status==4){
+				$rs = $this->target_lib->cancel_success_target($info,$this->login_info->id);
+				if($rs){
+					echo "更新成功";die();
+				}else{
+					echo "更新失敗";die();
+				}
+			}else{
+				echo "查無此ID";die();
+			}
+		}else{
+			echo "查無此ID";die();
+		}
+	}
+	
 	function loan_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3){
+			if($info && $info->status==4 && $info->loan_status==3 && $info->sub_status==0){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_success($id,$this->login_info->id);
 				if($rs){
@@ -322,7 +373,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get["id"])?intval($get["id"]):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3){
+			if($info && $info->status==4 && $info->loan_status==3 && $info->sub_status==0){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_failed($id,$this->login_info->id);
 				echo "更新成功";die();

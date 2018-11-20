@@ -153,7 +153,12 @@ class Product extends REST_Controller {
 				$certification 			= array();
 				$value->certifications 	= json_decode($value->certifications,true);
 				if(isset($this->user_info->id) && $this->user_info->id){
-					$targets = $this->target_model->get_by(array("status <="=>1,"user_id"=>$this->user_info->id,"product_id"=>$value->id));
+					$targets = $this->target_model->get_by(array(
+						"status <="		=> 1,
+						"sub_status"	=> 0,
+						"user_id"		=> $this->user_info->id,
+						"product_id"	=> $value->id
+					));
 					if($targets){
 						$target['id'] 			= $targets->id;
 						$target['target_no'] 	= $targets->target_no;
@@ -560,7 +565,11 @@ class Product extends REST_Controller {
 				}
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
-				$bank_account = $this->user_bankaccount_model->get_by(array("status"=>1,"investor"=>$investor,"user_id"=>$user_id ));
+				$bank_account = $this->user_bankaccount_model->get_by(array(
+					"status"	=> 1,
+					"investor"	=> $investor,
+					"user_id"	=> $user_id 
+				));
 				if($bank_account){
 					if($bank_account->verify==0){
 						$this->user_bankaccount_model->update($bank_account->id,array("verify"=>2));
@@ -571,7 +580,7 @@ class Product extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 				}
 				
-				if($targets->status == 1){
+				if($targets->status == 1 && $targets->sub_status == 0){
 					$this->load->library('Sendemail');
 					$this->sendemail->admin_notification("案件待審批 會員ID：".$user_id,"案件待審批 會員ID：".$user_id." 案號：".$targets->target_no);
 					$rs = $this->target_lib->signing_target($targets->id,$param,$user_id);
@@ -993,7 +1002,7 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			if(in_array($targets->status,array(0,1,2))){
+			if(in_array($targets->status,array(0,1,2)) && $targets->sub_status == 0){
 				$rs = $this->target_lib->cancel_target($targets->id,$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{

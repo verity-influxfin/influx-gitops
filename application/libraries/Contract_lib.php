@@ -45,6 +45,17 @@ class Contract_lib{
 		}
 		return false;
 	}
+
+	public function update_contract( $id=0 , $data = array() ){
+		if($id && $data){
+			dump($data);
+			$param = array(
+				"content" 	=> json_encode($data) 
+			);
+			return $this->CI->contract_model->update($id,$param);
+		}
+		return false;
+	}
 	
 	public function pretransfer_contract($content = array() ){
 		if($content){

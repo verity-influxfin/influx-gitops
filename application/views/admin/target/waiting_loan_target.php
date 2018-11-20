@@ -45,6 +45,21 @@
 						}
 					}
 				}
+
+				function subloan_success(id){
+					if(confirm("確認放款？")){
+						if(id){
+							$.ajax({
+								url: './subloan_success?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
 				
 				function failed(id){
 					if(confirm("確認放款失敗？改回待出款")){
@@ -64,7 +79,14 @@
 				function rollback(id){
 					if(confirm("確認整案退回？得標者全數流標")){
 						if(id){
-							alert("功能實作中，請找IT");
+							$.ajax({
+								url: './loan_return?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
 						}
 					}
 				}
@@ -103,7 +125,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if($value->loan_status==2){ ?>
+												<? if($value->loan_status==2 && $value->sub_status==0){ ?>
 												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:"" ?>" value="<?=isset($value->id)?$value->id:"" ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->target_no)?$value->target_no:"" ?>
@@ -119,11 +141,17 @@
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:"" ?></td>
                                             <td>
 												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:"" ?>
-												<? if($value->loan_status==3){
+												<? if($value->loan_status==3 && $value->sub_status==0){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
-												} ?>
+												}else if($value->loan_status==2 && $value->sub_status==8){
+													if(time()<=$value->expire_time){
+														echo '<button class="btn btn-success" onclick="subloan_success('.$value->id.')">轉換產品放款</button>&nbsp;';
+													}
+													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
+												}
+												?>
 											</td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>

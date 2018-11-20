@@ -59,6 +59,7 @@
                                             <th>狀態
 											</th>
                                             <th>申請日期</th>
+                                            <th>備註</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -88,6 +89,7 @@
 												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+                                            <td><?=isset($value->remark)?$value->remark:"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

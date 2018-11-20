@@ -10,6 +10,7 @@ class Subloan_lib{
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('loan/subloan_model');
 		$this->CI->load->library('credit_lib');
+		$this->CI->load->library('target_lib');
     }
 
 	public function get_info($target=array()){
@@ -47,13 +48,10 @@ class Subloan_lib{
 							$remaining_principal[$value->user_to]	+= $value->amount;
 							break;
 						case SOURCE_AR_INTEREST: 
-							$interest_payable[$value->user_to]	+= $value->amount;			
+							$interest_payable[$value->user_to]		+= $value->amount;			
 							break;
 						case SOURCE_AR_DAMAGE: 
-							$data['liquidated_damages'] 	+= $value->amount;
-							break;
-						case SOURCE_AR_DELAYINTEREST: 
-							//$data['delay_interest_payable'] += $value->amount;
+							$data["liquidated_damages"] 			+= $value->amount;
 							break;
 						default:
 							break;
@@ -72,10 +70,10 @@ class Subloan_lib{
 						$data["interest_payable"] 	 += $v;
 					}
 				}
-				$total 			= 	$data["remaining_principal"] + 
-									$data["interest_payable"] + 
-									$data["liquidated_damages"] + 
-									$data["delay_interest_payable"];
+				$total 	= 	$data["remaining_principal"] + 
+							$data["interest_payable"] + 
+							$data["liquidated_damages"] + 
+							$data["delay_interest_payable"];
 				$data["sub_loan_fees"] 	= intval(round( $data["remaining_principal"] * SUB_LOAN_FEES / 100 ,0));
 				$total += $data["sub_loan_fees"];
 				$data["platform_fees"] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
@@ -88,9 +86,7 @@ class Subloan_lib{
 		return false;
 	}
 
-	
 	public function apply_subloan($target,$data){
-			
 		if($target && $target->status==5){
 			$info  = $this->get_info($target);
 			if($info){
@@ -99,6 +95,7 @@ class Subloan_lib{
 					"settlement_date"	=> $info["settlement_date"],
 					"amount"			=> $info["total"],
 					"platform_fee"		=> $info["platform_fees"],
+					"subloan_fee"		=> $info["sub_loan_fees"],
 					"instalment"		=> $data["instalment"],
 					"repayment"			=> $data["repayment"]
 				);
@@ -107,6 +104,7 @@ class Subloan_lib{
 					$param["new_target_id"] = $new_target_id;
 					$rs = $this->CI->subloan_model->insert($param);
 					if($rs){
+						$this->CI->target_lib->insert_change_log($target->id,array("sub_status"=>1),$target->user_id);
 						$this->CI->target_model->update($target->id,array("sub_status"=>1));
 						return $rs;
 					}
@@ -117,7 +115,6 @@ class Subloan_lib{
 	}
 
 	public function add_subloan_target($target,$subloan){
-		
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
 			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
@@ -128,7 +125,7 @@ class Subloan_lib{
 				}
 			}
 			if($credit){
-				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment);
+				$interest_rate	= $this->CI->credit_lib->get_rate($credit["level"],$subloan["instalment"]);
 				if($interest_rate){
 					$this->CI->load->library('contract_lib');
 					$contract_id	= $this->CI->contract_lib->sign_contract("lend",["",$user_id,$subloan["amount"],$interest_rate,""]);
@@ -142,13 +139,14 @@ class Subloan_lib{
 							"loan_amount"		=> $subloan["amount"],
 							"instalment"		=> $subloan["instalment"],
 							"repayment"			=> $subloan["repayment"],
-							"credit_level"		=> $credit['level'],
+							"credit_level"		=> $credit["level"],
 							"platform_fee"		=> $subloan["platform_fee"],
 							"interest_rate"		=> $interest_rate,
 							"contract_id"		=> $contract_id,
 							"status"			=> "1",
 							"sub_status"		=> "8",
-							"remark"			=> "轉換產品",
+							"remark"			=> $target->target_no.",轉換產品",
+							"expire_time"		=> strtotime($subloan["settlement_date"].' '.CLOSING_TIME),
 						);
 
 						$rs = $this->CI->target_model->insert($param);
@@ -167,13 +165,59 @@ class Subloan_lib{
 			if($target && $target->status==1){
 				$param = array(
 					"person_image"	=> $data["person_image"],
-					"launch_times"	=> 1,
-					"expire_time"	=> strtotime($subloan->settlement_date.' '.CLOSING_TIME),
-					"status"		=> 3,
+					"status"		=> 2,
 				);
 				$rs = $this->CI->target_model->update($target->id,$param);
 				if($rs){
+					$this->CI->target_lib->insert_change_log($target->id,$param,$target->user_id);
 					$this->CI->subloan_model->update($subloan->id,array("status"=>1));
+					return $rs;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function subloan_verify_success($target = array(),$admin_id=0){
+		if(!empty($target) && $target->status==2){
+			$subloan	= $this->CI->subloan_model->get_by(array(
+				"status"		=> 1,
+				"new_target_id"	=> $target->id
+			));
+			
+			if($subloan){
+				$param = array(
+					"status" 		=> 3 , 
+					"launch_times"	=> 1
+				);
+				$this->CI->target_model->update($target->id, $param);
+				$this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
+				$this->CI->subloan_model->update($subloan->id,array("status"=>2));
+				$this->CI->notification_lib->target_verify_success($target);
+			}
+		}
+		return false;
+	}
+	
+	public function subloan_verify_failed($new_target = array(),$admin_id=0){
+		if(!empty($new_target) && $new_target->status==2){
+			$subloan	= $this->CI->subloan_model->get_by(array(
+				"status"		=> 1,
+				"new_target_id"	=> $new_target->id
+			));
+			if($subloan){
+				$rs = $this->CI->subloan_model->update($subloan->id,array("status"=>9));
+				if($rs){
+					$param = array(
+						"loan_amount"		=> 0,
+						"status"			=> "9",
+						"remark"			=> $new_target->remark.",驗證失敗",
+					);
+					
+					$this->CI->target_lib->insert_change_log($subloan->target_id,array("sub_status"=>0),0,$admin_id);
+					$this->CI->target_lib->insert_change_log($subloan->new_target_id,$param,0,$admin_id);
+					$this->CI->target_model->update($subloan->target_id,array("sub_status"=>0));
+					$this->CI->target_model->update($subloan->new_target_id,$param);
 					return $rs;
 				}
 			}
@@ -184,16 +228,19 @@ class Subloan_lib{
 	//流標
 	public function auction_ended($target){
 		if($target->status == 3 && $target->expire_time < time()){
-			$where 		= array("status !="=>8,"new_target_id"=>$target->id);
-			$subloan	= $this->CI->subloan_model->get_by($where);
-			if($subloan && $subloan->status ==1){
+			$subloan	= $this->CI->subloan_model->get_by(array(
+				"status"		=> 2,
+				"new_target_id"	=> $target->id
+			));
+			if($subloan){
 				$old_target = $this->CI->target_model->get($subloan->target_id);
 				$info  		= $this->get_info($old_target);
 				if($info){
 					$subloan_param = array(
 						"settlement_date"	=> $info["settlement_date"],
 						"amount"			=> $info["total"],
-						"platform_fee"		=> $info["platform_fees"]
+						"platform_fee"		=> $info["platform_fees"],
+						"subloan_fee"		=> $info["sub_loan_fees"],
 					);
 				
 					$target_param = array(
@@ -204,10 +251,13 @@ class Subloan_lib{
 						"expire_time"		=> strtotime($info["settlement_date"].' '.CLOSING_TIME),
 						"invested"			=> 0,
 					);
-					$rs = $this->CI->subloan_model->update($subloan->id,$subloan_param);
-					if($rs){
-						$this->CI->target_model->update($target->id,$target_param);
-						return $rs;
+					$contract = $this->CI->contract_lib->update_contract($target->contract_id,["",$target->user_id,$info["total"],$target->interest_rate,""]);
+					if($contract){
+						$rs = $this->CI->subloan_model->update($subloan->id,$subloan_param);
+						if($rs){
+							$this->CI->target_model->update($target->id,$target_param);
+							return $rs;
+						}
 					}
 				}
 			}
@@ -216,8 +266,8 @@ class Subloan_lib{
 
 	public function get_subloan($target){
 		if($target){
-			$where 		= array("status !="=>8,"target_id"=>$target->id);
-			$subloan	= $this->CI->subloan_model->order_by("settlement_date","desc")->get_by($where);
+			$where 		= array("status not"=>array(8,9),"target_id"=>$target->id);
+			$subloan	= $this->CI->subloan_model->order_by("created_at","desc")->get_by($where);
 			if($subloan){
 				return $subloan;
 			}
@@ -225,10 +275,30 @@ class Subloan_lib{
 		return false;
 	}
 	
-	public function cancel_subloan($subloan){
-		if($subloan && $subloan->status==0){
+	public function subloan_success_return($new_target = array(),$admin_id=0){
+		if(!empty($new_target) && $new_target->status==4){
+			$subloan	= $this->CI->subloan_model->get_by(array(
+				"status"		=> 2,
+				"new_target_id"	=> $new_target->id
+			));
+			if($subloan){
+				$rs = $this->CI->subloan_model->update($subloan->id,array("status"=>9));
+				if($rs){
+					$this->CI->target_lib->insert_change_log($subloan->target_id,array("sub_status"=>0),0,$admin_id);
+					$this->CI->target_model->update($subloan->target_id,array("sub_status"=>0));
+					return $rs;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function cancel_subloan($subloan,$user_id=0,$admin_id=0){
+		if($subloan && in_array($subloan->status,array(0,1,2))){
 			$rs = $this->CI->subloan_model->update($subloan->id,array("status"=>8));
 			if($rs){
+				$this->CI->target_lib->insert_change_log($subloan->target_id,array("sub_status"=>0),$user_id,$admin_id);
+				$this->CI->target_lib->insert_change_log($subloan->new_target_id,array("status"=>8),$user_id,$admin_id);
 				$this->CI->target_model->update($subloan->target_id,array("sub_status"=>0));
 				$this->CI->target_model->update($subloan->new_target_id,array("status"=>8));
 				return $rs;

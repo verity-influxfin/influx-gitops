@@ -635,7 +635,6 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 			}
 			
-
 			//必填欄位
 			$fields 	= ['bank_code','branch_code','bank_account'];
 			foreach ($fields as $field) {

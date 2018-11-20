@@ -27,6 +27,23 @@ class Credit_lib{
 	}
 	
 	private function approve_1($user_id,$product_id){
+		$rs 	= $this->CI->credit_model->order_by("level","desc")->get_by(array(
+			"product_id" 	=> $product_id,
+			"user_id"		=> $user_id,
+			"status"		=> 1,
+			"points <"		=> 0,
+		));
+		if($rs){
+			$param		= array(
+				"product_id" 	=> $product_id,
+				"user_id"		=> $user_id,
+				"points"		=> $rs->points,
+				"level"			=> $rs->level,
+				"amount"		=> $rs->amount,
+			);
+			return $this->CI->credit_model->insert($param);
+		}
+		
 		$info 		= $this->CI->user_meta_model->get_many_by(array("user_id"=>$user_id));
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$data 		= array();

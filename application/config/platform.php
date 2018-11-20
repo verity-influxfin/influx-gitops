@@ -95,7 +95,7 @@ $config['instalment']= array(
 //還款方式
 $config['repayment_type']= array(
 	1=> "等額本息",
-	2=> "先息後本",
+//	2=> "先息後本",
 );
 
 //學制

@@ -42,6 +42,36 @@ class Target_lib{
 		return false;
 	}
 	
+	//全案退回
+	public function cancel_success_target($target,$admin_id=0){
+		if($target && $target->status==4){
+			$param = array(
+				"status"	=> 9,
+				"remark"	=> $target->remark.',整案退回',
+			);
+			$rs = $this->CI->target_model->update($target->id,$param);
+			$this->insert_change_log($target->id,$param,0,$admin_id);
+			$this->CI->load->model('loan/investment_model');
+			$this->CI->load->model('transaction/frozen_amount_model');
+			$investments = $this->CI->investment_model->get_many_by(array("target_id"=>$target->id,"status"=>array("0","1","2")));
+			if($investments){
+				foreach($investments as $key => $value){
+					$this->insert_investment_change_log($value->id,array("status"=>9),0,$admin_id);
+					$this->CI->investment_model->update($value->id,array("status"=>9));
+					if($value->frozen_status==1 && $value->frozen_id){
+						$this->CI->frozen_amount_model->update($value->frozen_id,array("status"=>0));
+					}
+				}
+			}
+			if($target->sub_status==8){
+				$this->CI->load->library('Subloan_lib');
+				$this->CI->subloan_lib->subloan_success_return($target,$admin_id);
+			}
+			return $rs;
+		}
+		return false;
+	}
+	
 	//取消
 	public function cancel_target($target_id,$user_id=0){
 		if($target_id){

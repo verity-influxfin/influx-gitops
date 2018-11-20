@@ -184,7 +184,11 @@
 																}
 															}
 															if($all_pass){
-																echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">審批上架</button>';
+																if($value->sub_status==8){
+																	echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">轉換產品上架</button>';
+																}else{
+																	echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">審批上架</button>';
+																}
 															}else{
 																echo isset($status_list[$value->status])?$status_list[$value->status]:"";
 															}
