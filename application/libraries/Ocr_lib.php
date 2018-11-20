@@ -54,7 +54,12 @@ class Ocr_lib
 					'arg2' => null,
 					'arg3' => 'jpg'
 				);
-			$rs 	= $client->__soapCall('doAllCardRecon', array('parameters' => $param));
+				
+			try {
+				$rs = $client->__soapCall('doAllCardRecon', array('parameters' => $param));
+			} catch (Exception $e) {
+				return false;
+			}
 			$return = str_replace("==@@","",$rs->return);
 			$xml 	= simplexml_load_string($return,null,LIBXML_NOCDATA);
 			$xml 	= json_decode(json_encode($xml),TRUE);
