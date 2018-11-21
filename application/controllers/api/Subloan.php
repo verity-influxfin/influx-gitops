@@ -230,7 +230,6 @@ class Subloan extends REST_Controller {
      */
 	public function apply_post()
     {
-		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
 		$input 				= $this->input->post(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$param				= array("user_id"=> $user_id);
