@@ -513,7 +513,7 @@ class Payment_lib{
 				$ids 		= array();
 				foreach($payments as $key => $value){
 					if($value->status==5 && $value->amount > 15){
-						$this->CI->payment_model->update($value->id,array("status"=>4));
+						$this->CI->payment_model->update($value->id,array("status"=>4,"refund_at"=>time()));
 						$amount 		= intval($value->amount);
 						$bank 			= bankaccount_substr($value->bank_acc);
 						$value->bank_id = substr($value->bank_id,0,3);

@@ -48,6 +48,7 @@
 											<th>對方戶名</th>
 											<th>虛擬帳號</th>
                                             <th>狀態</th>
+                                            <th>退款日期</th>
                                             <th>創建日期</th>
                                         </tr>
                                     </thead>
@@ -73,6 +74,7 @@
 											<td><?=isset($value->acc_name)?$value->acc_name:"" ?></td>
 											<td><?=isset($value->virtual_account)?$value->virtual_account:"" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
+                                            <td><?=isset($value->refund_at)?date("Y-m-d H:i:s",$value->refund_at):"" ?></td> 
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td> 
                                         </tr>                                        
 									<?php 
