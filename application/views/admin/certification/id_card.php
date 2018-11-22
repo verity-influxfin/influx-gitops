@@ -48,33 +48,20 @@
 									</div>									
 									<div class="form-group">
 										<label>備註</label>
-										<p class="form-control-static">
 										<? 
 											if($remark){
 												if($remark["error"]){
-													echo "錯誤：".$remark["error"]."<br>";
+													echo '<p style="color:red;" class="form-control-static">錯誤：'.$remark["error"].'</p>';
 												}
-												if($remark["OCR"]){
-													echo "OCR：<br>";
-												}
-												if($remark["face_count"]){
-													echo "個人照數量：";
-													echo isset($remark["face_count"]["person_count"])?$remark["face_count"]["person_count"]:0;
-													echo "<br>";
-													echo "證件照數量：";
-													echo isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;
-													echo "<br>";
-												}
-												
 												if($remark["face"] && is_array($remark["face"])){
-													echo "照片比對結果：";
+													echo '<p class="form-control-static">照片比對結果：';
 													foreach($remark["face"] as $key => $value){
 														echo $value."% ";
 													}
+													echo '</p>';
 												}
 											}
 										?>
-										</p>
 									</div>
 									<h1>審核</h1>
                                     <form role="form" method="post">
@@ -97,27 +84,70 @@
 									<fieldset disabled>
 										<div class="form-group">
 											<label for="disabledSelect">身分證正面照</label><br>
-											<a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
+											<table>
+												<tr>
+													<td rowspan="6">
+														<a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
+															<img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
+														</a>
+													</td>
+												</tr>
+												<tr><td>
+													<label>人臉數量：</label><?=isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;?><br>
+													<label>姓名：</label><?=isset($remark["OCR"]["front_image"]["name"])?$remark["OCR"]["front_image"]["name"]:"";?><br>
+													<label>生日：</label><?=isset($remark["OCR"]["front_image"]["birthday"])?$remark["OCR"]["front_image"]["birthday"]:"";?><br>
+													<label>換發日期：</label><?=isset($remark["OCR"]["front_image"]["id_card_date"])?$remark["OCR"]["front_image"]["id_card_date"]:"";?><br>
+													<label>身分證字號：</label><?=isset($remark["OCR"]["front_image"]["id_number"])?$remark["OCR"]["front_image"]["id_number"]:"";?>
+												</td></tr>
+											</table>
 										</div>
 										<div class="form-group">
 											<label for="disabledSelect">身分證背面照</label><br>
-											<a href="<?=isset($content['back_image'])?$content['back_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['back_image'])?$content['back_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
+											<table>
+												<tr>
+													<td rowspan="5">
+														<a href="<?=isset($content['back_image'])?$content['back_image']:""?>" data-fancybox="images">
+															<img src="<?=isset($content['back_image'])?$content['back_image']:""?>" style='width:100%;max-width:300px;'>
+														</a>
+													</td>
+												</tr>
+												<tr><td>
+													<label>父：</label><?=isset($remark["OCR"]["back_image"]["father"])?$remark["OCR"]["back_image"]["father"]:"";?><br>
+													<label>母：</label><?=isset($remark["OCR"]["back_image"]["mother"])?$remark["OCR"]["back_image"]["mother"]:"";?><br>
+													<label>配偶：</label><?=isset($remark["OCR"]["back_image"]["spouse"])?$remark["OCR"]["back_image"]["spouse"]:"";?><br>
+													<label>地址：</label><?=isset($remark["OCR"]["back_image"]["address"])?$remark["OCR"]["back_image"]["address"]:"";?>
+												</td></tr>
+											</table>
 										</div>
 										<div class="form-group">
 											<label for="disabledSelect">本人照</label><br>
-											<a href="<?=isset($content['person_image'])?$content['person_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['person_image'])?$content['person_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
+											<table>
+												<tr>
+													<td rowspan="2">
+														<a href="<?=isset($content['person_image'])?$content['person_image']:""?>" data-fancybox="images">
+															<img src="<?=isset($content['person_image'])?$content['person_image']:""?>" style='width:100%;max-width:300px;'>
+														</a>
+													</td>
+												</tr>
+												<tr><td><label>人臉數量：</label><?=isset($remark["face_count"]["person_count"])?$remark["face_count"]["person_count"]:0;?></td></tr>
+											</table>
 										</div>
 										<div class="form-group">
 											<label for="disabledSelect">健保卡照</label><br>
-											<a href="<?=isset($content['healthcard_image'])?$content['healthcard_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['healthcard_image'])?$content['healthcard_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
+											<table>
+												<tr>
+													<td rowspan="6">
+														<a href="<?=isset($content['healthcard_image'])?$content['healthcard_image']:""?>" data-fancybox="images">
+															<img src="<?=isset($content['healthcard_image'])?$content['healthcard_image']:""?>" style='width:100%;max-width:300px;'>
+														</a>
+													</td>
+												</tr>
+												<tr><td>
+													<label>姓名：</label><?=isset($remark["OCR"]["healthcard_image"]["name"])?$remark["OCR"]["healthcard_image"]["name"]:"";?><br>
+													<label>生日：</label><?=isset($remark["OCR"]["healthcard_image"]["birthday"])?$remark["OCR"]["healthcard_image"]["birthday"]:"";?><br>
+													<label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_image"]["id_number"])?$remark["OCR"]["healthcard_image"]["id_number"]:"";?>
+												</td></tr>
+											</table>
 										</div>
 									</fieldset>
 								</div>
