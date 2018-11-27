@@ -21,6 +21,7 @@
 				
 				function check_checked(){
 					var ids					= "";
+					var assets_export 		= '<?=admin_url('transfer/assets_export') ?>';
 					var amortization_export = '<?=admin_url('transfer/amortization_export') ?>';
 					
 					$('.investment:checked').each(function() {
@@ -30,7 +31,15 @@
 							ids += ',' + this.value;
 						}		
 					});
-					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+					
+					if(ids!=""){
+						$('#assets_export').attr('href',assets_export + '?ids=' + ids);
+						$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+					}else{
+						$('#assets_export').attr('href',"javascript:alert('請先選擇債權');");
+						$('#amortization_export').attr('href',"javascript:alert('請先選擇債權');");
+					}
+					
 				}
 			</script>
             <!-- /.row -->
@@ -40,7 +49,7 @@
                         <div class="panel-heading">
 							<table>
 								<tr>
-									<td>會員ID：</td>
+									<td>投資人ID：</td>
 									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
 									<td>案號：</td>
 									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=""?$_GET['target_no']:""?>" id="target_no" /></td>
@@ -66,6 +75,9 @@
 									</td>
 								</tr>
 							</table>
+							<a id="assets_export" href="javascript:alert('請先選擇債權');" target="_blank"  class="btn btn-primary float-right" >債權明細表</a>
+							<a id="amortization_export" href="javascript:alert('請先選擇債權');" target="_blank"  class="btn btn-primary float-right" >預期本息回款明細表</a>
+							
 						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -74,9 +86,13 @@
                                     <thead>
                                         <tr>
                                             <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
-                                            <th>投資人會員 ID</th>
+                                            <th>投資人 ID</th>
+                                            <th>借款人 ID</th>
                                             <th>債權金額</th>
                                             <th>案件總額</th>
+											<th>信用等級</th>
+											<th>學校名稱</th>
+                                            <th>學校科系</th>
 											<th>年化利率</th>
                                             <th>期數</th>
                                             <th>還款方式</th>
@@ -102,8 +118,12 @@
 												<input class="investment" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
 											</td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($target->user_id)?$target->user_id:"" ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
                                             <td><?=isset($target->loan_amount)&&$target->loan_amount?$target->loan_amount:"" ?></td>
+                                            <td><?=isset($target->credit_level)&&$target->credit_level?$target->credit_level:"" ?></td>
+											<td><?=isset($school_list[$target->user_id]["school_name"])?$school_list[$target->user_id]["school_name"]:"" ?></td>
+                                            <td><?=isset($school_list[$target->user_id]["school_department"])?$school_list[$target->user_id]["school_department"]:"" ?></td>
                                             <td><?=isset($target->interest_rate)&&$target->interest_rate?$target->interest_rate.'%':"" ?></td>
                                             <td><?=isset($target->instalment)?$target->instalment:"" ?></td>
                                             <td><?=isset($target->repayment)?$repayment_type[$target->repayment]:"" ?></td>

@@ -39,8 +39,11 @@ class Admin_model extends MY_Model
 		$list 	= $this->get_all();
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status ==1 )
+				if($value->status ==1 ){
 					$data[$value->id] = $value->name;
+				}else{
+					$data[$value->id] = $value->name.'(停權)';
+				}
 			}
 		}
 		return $data;
@@ -51,8 +54,7 @@ class Admin_model extends MY_Model
 		$list 	= $this->get_all();
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status ==1 )
-					$data[$value->my_promote_code] = $value->id;
+				$data[$value->my_promote_code] = $value->id;
 			}
 		}
 		return $data;

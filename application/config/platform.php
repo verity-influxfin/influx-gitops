@@ -18,8 +18,8 @@ $config['admin_menu'] = array(
 		"parent_name"				=> "債權管理",
 		"parent_icon"				=> "fa-gavel",
 		"index"						=> "全部列表",
-		"waiting_transfer"			=> "待收購",
-		"waiting_transfer_success"	=> "待放款",
+		"waiting_transfer"			=> "債轉待收購",
+		"waiting_transfer_success"	=> "債轉待放款",
 	),
 	"Risk" 				=> array("name"=>"風控專區","icon"=>"fa-briefcase"),
 	"Passbook" 	=> array(

@@ -460,7 +460,8 @@ class Target_lib{
 						"delay_interest"	=> 0,//應收延滯息
 						"days"				=> 0,//本期天數
 						"remaining_principal"=> 0,//期初本金
-						"repayment_date"	=> $limit_date//還款日
+						"repayment_date"	=> $limit_date,//還款日
+						"ar_fees"			=> 0,//應收回款手續費
 					); 
 				}
 			}
@@ -479,6 +480,9 @@ class Target_lib{
 					case SOURCE_DELAYINTEREST: 
 					case SOURCE_INTEREST: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
+						break;
+					case SOURCE_AR_FEES: 
+						$list[$value->instalment_no]['ar_fees'] += $value->amount;
 						break;
 					default:
 						break;
