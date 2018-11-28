@@ -307,6 +307,7 @@ class Account extends MY_Admin_Controller {
 									"interest"		=> 0,
 									"platform_fee"	=> 0,
 									"allowance"		=> 0,
+									"delay_interest"=> 0,
 								);
 							}
 							switch($v->source){

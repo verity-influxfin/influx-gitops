@@ -133,7 +133,7 @@ class Certification_lib{
 				$remark["face"] = $answer;
 				if(count($answer)==2){
 					if($answer[0]>=60 && $answer[1]>=90){
-						//$status = 1;
+						//$this->set_success($info->id);
 					}else{
 						$remark["error"] = "人臉比對分數不足";
 					}
@@ -150,6 +150,32 @@ class Certification_lib{
 				"content"	=> json_encode($content),
 			));
 			return true;
+		}
+		return false;
+	}
+	
+	public function emergency_verify($info = array()){
+		if($info && $info->status ==0 && $info->certification_id==5){
+			$content	= json_decode($info->content,true);
+			$name 		= $content["name"];
+			$idcard		= $this->get_certification_info($info->user_id,1,0);
+			if($idcard && $idcard->status==1){
+				$status 		= 3;
+				$id_card_remark = json_decode($idcard->remark,true);
+				if($id_card_remark && isset($id_card_remark["OCR"]["back_image"])){
+					$father = $id_card_remark["OCR"]["back_image"]["father"];
+					$mother = $id_card_remark["OCR"]["back_image"]["mother"];
+					if(in_array($name,array($father,$mother))){
+						$this->set_success($info->id);
+						return true;
+					}
+				}
+
+				$this->CI->user_certification_model->update($info->id,array(
+					"status"	=> $status,
+				));
+				return true;
+			}
 		}
 		return false;
 	}
@@ -634,7 +660,8 @@ class Certification_lib{
 				
 				//緊急聯絡人
 				if($value->certification_id == 5){
-					$this->CI->user_certification_model->update($value->id,array("status"=>3));
+					$this->emergency_verify($value);
+					$count++; 
 				}
 			}
 		}

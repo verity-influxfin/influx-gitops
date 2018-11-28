@@ -84,6 +84,10 @@ class Credit_lib{
 		if(isset($data['transcript_front']) && !empty($data['transcript_front'])){
 			$total += 100;
 		}
+		//緊急聯絡人
+		if(isset($data['emergency_relationship']) && $data['emergency_relationship']=='監護人'){
+			$total = $total - 400;//mantis 0000003
+		}
 		
 		$total = $user_info->sex=="M"?round($total*0.9):$total;
 		$param['points'] 	= $total;
