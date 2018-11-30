@@ -521,7 +521,7 @@ class Certification_lib{
 					$rs  = $this->CI->user_meta_model->update_by($param,array("meta_value"	=> $value));
 				}
 			}else{
-				if($content["type"]=="facebook"){
+				/*if($content["type"]=="facebook"){
 					$this->CI->load->library('facebook_lib'); 
 					$meta  = $this->CI->facebook_lib->get_user_meta($info->user_id);
 					if(!$meta){
@@ -550,7 +550,7 @@ class Certification_lib{
 							}
 						}
 					}
-				}
+				}*/
 			
 				foreach($data as $key => $value){
 					$param[] = array(
