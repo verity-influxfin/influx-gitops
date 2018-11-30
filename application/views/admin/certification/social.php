@@ -45,8 +45,43 @@
 											<button type="submit" class="btn btn-primary">送出</button>
                                         </fieldset>
                                     </form>
+									
                                 </div>
-                            </div>
+								<div class="col-lg-6">
+								<? if($content['type']=='instagram'){
+										$info = isset($content['info'])?$content['info']:array();
+									?>
+										<table style="text-align: center;width:100%" >
+											<tr>
+												<td rowspan="2">
+												<a href="<?=isset($info['picture'])?$info['picture']:""?>" data-fancybox="images">
+													<img src="<?=isset($info['picture'])?$info['picture']:""?>" alt="<?=isset($info['username'])?$info['username']:""?> 的大頭貼照">
+												</a>
+												</td>
+												<td><a href="<?=isset($info['link'])?$info['link']:""?>" target="_blank"><h1><?=isset($info['username'])?$info['username']:""?></h1></a></td>
+											</tr>
+											<tr>
+												<td><h4>
+												<?=isset($info['counts']['media'])?$info['counts']['media']:"0"?> 貼文 、
+												<?=isset($info['counts']['followed_by'])?$info['counts']['followed_by']:"0"?> 位追蹤者 、
+												<?=isset($info['counts']['follows'])?$info['counts']['follows']:"0"?> 追蹤中 、</h4></td>
+											</tr>
+										</table>
+
+									<? } ?>
+								</div>
+								<? if(isset($info['meta']) && count($info['meta'])>0){
+									foreach($info['meta'] as $key => $value){
+								?>
+									<div class="col-lg-3">
+										<p>讚數：<?=isset($value['likes'])?$value['likes']:""?>、發布日期：<?=isset($value['created_time'])?date("Y-m-d H:i:s",$value['created_time']):""?></p>
+										<a href="<?=isset($value['picture'])?$value['picture']:""?>" data-fancybox="images">
+											<img style="width:100%" src="<?=isset($value['picture'])?$value['picture']:""?>" >
+										</a>
+										<p><?=isset($value['text'])?$value['text']:""?></p>
+									</div>
+								<?}}else{ echo '<h4>無貼文</h4>';}?>
+							</div>
                             <!-- /.row (nested) -->
                         </div>
                         <!-- /.panel-body -->
