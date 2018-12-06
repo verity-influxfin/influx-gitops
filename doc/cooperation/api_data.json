@@ -2,7 +2,7 @@
   {
     "type": "get",
     "url": "/member/info",
-    "title": "合作商 個人資訊",
+    "title": "公司資訊",
     "group": "Member",
     "parameter": {
       "fields": {
@@ -26,7 +26,7 @@
             "type": "String",
             "optional": false,
             "field": "cooperation_token",
-            "description": "<p>SHA1(MD5(cooperation_id=xxxx+time=1543831102)+CooperationKEY)</p>"
+            "description": "<p>MD5(SHA1(cooperation_id &amp; time) + CooperationKEY)</p>"
           }
         ]
       }
@@ -40,13 +40,48 @@
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "company",
+            "description": "<p>公司名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>統一編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>負責人姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>負責人電話</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "my_promote_code",
+            "description": "<p>邀請碼</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n  \t\"nickname\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"transaction_password\": true,\n  \t\"investor\": 1,  \n  \t\"created_at\": \"1522651818\",     \n  \t\"updated_at\": \"1522653939\",     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
           "type": "json"
         }
       ]
@@ -59,7 +94,7 @@
   {
     "type": "post",
     "url": "/member/contact",
-    "title": "合作商 聯絡我們",
+    "title": "回報問題",
     "group": "Member",
     "parameter": {
       "fields": {
@@ -73,24 +108,24 @@
           },
           {
             "group": "Parameter",
-            "type": "file",
-            "optional": true,
-            "field": "image1",
-            "description": "<p>附圖1</p>"
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_id",
+            "description": "<p>CooperationID</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
-            "optional": true,
-            "field": "image2",
-            "description": "<p>附圖2</p>"
+            "type": "String",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Unix Timestamp</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
-            "optional": true,
-            "field": "image3",
-            "description": "<p>附圖3</p>"
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_token",
+            "description": "<p>MD5(SHA1(content &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
           }
         ]
       }
@@ -121,10 +156,10 @@
     "name": "PostMemberContact"
   },
   {
-    "type": "post",
-    "url": "/member/register",
-    "title": "合作商 註冊",
-    "group": "Member",
+    "type": "get",
+    "url": "/order/info",
+    "title": "訂單資訊",
+    "group": "Order",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -132,42 +167,22 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "phone",
-            "description": "<p>手機號碼</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "size": "6..",
-            "optional": false,
-            "field": "password",
-            "description": "<p>設定密碼</p>"
+            "field": "cooperation_id",
+            "description": "<p>CooperationID</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "code",
-            "description": "<p>簡訊驗證碼</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "number",
-            "allowedValues": [
-              "0",
-              "1"
-            ],
-            "optional": true,
-            "field": "investor",
-            "defaultValue": "0",
-            "description": "<p>1:投資端 0:借款端</p>"
+            "field": "time",
+            "description": "<p>Unix Timestamp</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
-            "field": "promote_code",
-            "description": "<p>邀請碼</p>"
+            "optional": false,
+            "field": "cooperation_token",
+            "description": "<p>MD5(SHA1(cooperation_id &amp; time) + CooperationKEY)</p>"
           }
         ]
       }
@@ -186,77 +201,402 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "token",
-            "description": "<p>request_token</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "number",
-            "optional": false,
-            "field": "first_time",
-            "description": "<p>是否首次本端</p>"
+            "field": "company",
+            "description": "<p>公司名稱</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "expiry_time",
-            "description": "<p>token時效</p>"
+            "field": "tax_id",
+            "description": "<p>統一編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>負責人姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>負責人電話</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "my_promote_code",
+            "description": "<p>邀請碼</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "301",
-            "description": "<p>會員已存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "303",
-            "description": "<p>驗證碼錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "312",
-            "description": "<p>密碼長度不足</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "301",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"301\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "303",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "312",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Member.php",
-    "groupTitle": "Member",
-    "name": "PostMemberRegister"
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order",
+    "name": "GetOrderInfo"
+  },
+  {
+    "type": "get",
+    "url": "/order/schedule",
+    "title": "還款計畫",
+    "group": "Order",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>總金額</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>期數</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "merchant_order_no",
+            "description": "<p>自訂編號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_id",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Unix Timestamp</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_token",
+            "description": "<p>MD5(SHA1(amount &amp; instalment &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>Request Token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "amortization_schedule",
+            "description": "<p>預計還款計畫</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.amount",
+            "description": "<p>借款金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.instalment",
+            "description": "<p>借款期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.rate",
+            "description": "<p>年利率</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.date",
+            "description": "<p>起始時間</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.total_payment",
+            "description": "<p>每月還款金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.leap_year",
+            "description": "<p>是否為閏年</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.year_days",
+            "description": "<p>本年日數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.XIRR",
+            "description": "<p>XIRR</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule",
+            "description": "<p>還款計畫</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.instalment",
+            "description": "<p>第幾期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.repayment_date",
+            "description": "<p>還款日</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.days",
+            "description": "<p>本期日數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.remaining_principal",
+            "description": "<p>剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.principal",
+            "description": "<p>還款本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.interest",
+            "description": "<p>還款利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.schedule.total_payment",
+            "description": "<p>本期還款金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.total",
+            "description": "<p>還款總計</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.total.principal",
+            "description": "<p>本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.total.interest",
+            "description": "<p>利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "amortization_schedule.total.total_payment",
+            "description": "<p>加總</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"amortization_schedule\": {\n      \"amount\": \"12000\",\n      \"instalment\": \"6\",\n      \"rate\": \"9\",\n      \"date\": \"2018-04-17\",\n      \"total_payment\": 2053,\n      \"leap_year\": false,\n      \"year_days\": 365,\n      \"XIRR\": 0.0939,\n      \"schedule\": {\n            \"1\": {\n              \"instalment\": 1,\n              \"repayment_date\": \"2018-06-10\",\n              \"days\": 54,\n              \"remaining_principal\": \"12000\",\n              \"principal\": 1893,\n              \"interest\": 160,\n              \"total_payment\": 2053\n          },\n          \"2\": {\n               \"instalment\": 2,\n              \"repayment_date\": \"2018-07-10\",\n              \"days\": 30,\n               \"remaining_principal\": 10107,\n               \"principal\": 1978,\n               \"interest\": 75,\n                \"total_payment\": 2053\n           },\n          \"3\": {\n                \"instalment\": 3,\n                \"repayment_date\": \"2018-08-10\",\n                \"days\": 31,\n                \"remaining_principal\": 8129,\n               \"principal\": 1991,\n               \"interest\": 62,\n                \"total_payment\": 2053\n            }\n        },\n       \"total\": {\n            \"principal\": 12000,\n            \"interest\": 391,\n            \"total_payment\": 12391\n        }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order",
+    "name": "GetOrderSchedule"
+  },
+  {
+    "type": "post",
+    "url": "/order/add",
+    "title": "新增訂單",
+    "group": "Order",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>總金額</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>期數</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "merchant_order_no",
+            "description": "<p>自訂編號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "item_name",
+            "description": "<p>商品名稱，多項商品時，以逗號分隔</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "item_count",
+            "description": "<p>商品數量，多項商品時，以逗號分隔</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "item_price",
+            "description": "<p>商品單價，多項商品時，以逗號分隔</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_id",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "time",
+            "description": "<p>Unix Timestamp</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "cooperation_token",
+            "description": "<p>MD5(SHA1(amount &amp; instalment &amp; merchant_order_no &amp; item_name &amp; item_count &amp; item_price &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "merchant_order_no",
+            "description": "<p>廠商自訂編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "order_no",
+            "description": "<p>訂單單號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>RequestToken</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"merchant_order_no\": \"A123456789\",\n\t\t\"order_no\": \"20180405113558632\",\n     \"request_token\": \"fcea920f7412b5da7be0cf42b8c93759\"\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order",
+    "name": "PostOrderAdd"
   }
 ]

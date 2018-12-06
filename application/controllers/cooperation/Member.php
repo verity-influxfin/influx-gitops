@@ -10,7 +10,7 @@ class Member extends REST_Controller {
     {
         parent::__construct();
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['register'];
+        $nonAuthMethods = [];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -22,31 +22,28 @@ class Member extends REST_Controller {
 	
 
 	 /**
-     * @api {get} /member/info 合作商 個人資訊
+     * @api {get} /member/info 公司資訊
      * @apiGroup Member
-     *
 	 * @apiParam {String} cooperation_id CooperationID
 	 * @apiParam {String} time Unix Timestamp
-	 * @apiParam {String} cooperation_token MD5(SHA1(cooperation_id=xxxx+time=1543831102)+CooperationKEY)
+	 * @apiParam {String} cooperation_token MD5(SHA1(cooperation_id & time) + CooperationKEY)
+	 *
      * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {String} company 公司名稱
+     * @apiSuccess {String} tax_id 統一編號
+     * @apiSuccess {String} name 負責人姓名
+     * @apiSuccess {String} phone 負責人電話
+     * @apiSuccess {String} my_promote_code 邀請碼
 	 *
      * @apiSuccessExample {json} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
-     *      	"id": "1",
-     *      	"name": "",
-     *      	"picture": "https://graph.facebook.com/2495004840516393/picture?type=large",
-     *      	"nickname": "陳霈",
+     *      	"company": "普匯金融科技股份有限公司",
+     *      	"tax_id": "68566881",
+     *      	"name": "陳霈",
      *      	"phone": "0912345678",
-     *      	"investor_status": "1",
-     *      	"my_promote_code": "9JJ12CQ5",
-     *      	"id_number": null,
-     *      	"transaction_password": true,
-     *      	"investor": 1,  
-     *      	"created_at": "1522651818",     
-     *      	"updated_at": "1522653939",     
-     *      	"expiry_time": "1522675539"     
+     *      	"my_promote_code": "9JJ12CQ5",  
 	 *      }
      *    }
      *
@@ -57,12 +54,12 @@ class Member extends REST_Controller {
 	
 	
 	/**
-     * @api {post} /member/contact 合作商 聯絡我們
+     * @api {post} /member/contact 回報問題
      * @apiGroup Member
 	 * @apiParam {String} content 內容
-     * @apiParam {file} [image1] 附圖1
-     * @apiParam {file} [image2] 附圖2
-     * @apiParam {file} [image3] 附圖3
+	 * @apiParam {String} cooperation_id CooperationID
+	 * @apiParam {String} time Unix Timestamp
+	 * @apiParam {String} cooperation_token MD5(SHA1(content & cooperation_id & time)+ CooperationKEY)
      *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
