@@ -125,10 +125,12 @@ class Notification_lib{
 		return $rs;
 	}
 
-	public function target_verify_failed($user_id,$investor=0){
-		$title = "【驗證失敗】 您的資料驗證未通過";
-			$content = "您好！
-						很抱歉的通知，您的資料驗證未能通過，案件已取消，我們將會對您的申請信息進行嚴格保密，感謝您對普匯的信任。";
+	public function target_verify_failed($user_id,$investor=0,$remark=""){
+		$title = "【審核申請失敗】";
+			$content = "親愛的用戶：
+您好！
+非常抱歉，您的借款審批未能通過，PuHey!將會對您的申請信息進行嚴格保密，非常感謝您的申請及對我們的信任。
+退件原因：".$remark;
 
 		$param = array(
 			"user_id"	=> $user_id,
@@ -137,11 +139,12 @@ class Notification_lib{
 			"content"	=> $content,
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
-		//$this->CI->load->library('Sendemail');
-		//$this->CI->sendemail->user_notification($user_id,$title,$content);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
 
+	
 	public function target_verify_success($target){
 		$target_no = $target->target_no;
 		$title = "【借款驗證】 您申請的借款 $target_no 驗證已通過";
@@ -158,6 +161,25 @@ class Notification_lib{
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->admin_notification("案件已上架 會員ID：".$target->user_id,"案件已上架 會員ID：".$target->user_id." 案號：".$target->target_no);
+		return $rs;
+	}
+	
+	public function subloan_verify_failed($user_id,$date="",$amount=0,$target_no="",$remark=""){
+		$title = "【產品轉換失敗通知】";
+			$content = "親愛的用戶：
+您好！
+您於 $date 申請的標的，金額 $amount 元，標的號 $target_no 產品轉換失敗，請儘速還款以免影響您的信用並造成不必要的損失，謝謝。
+退件原因：".$remark;
+
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
 	

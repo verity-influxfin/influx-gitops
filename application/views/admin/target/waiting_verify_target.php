@@ -24,8 +24,13 @@
 				function failed(id){
 					if(confirm("確認驗證失敗？案件將自動取消")){
 						if(id){
+							var p 		= prompt("請輸入退案原因，將自動通知使用者，不通知請按取消","");
+							var remark 	= "";
+							if(p){
+								remark = encodeURIComponent(p);
+							}
 							$.ajax({
-								url: './verify_failed?id='+id,
+								url: './verify_failed?id='+id+'&remark='+remark,
 								type: 'GET',
 								success: function(response) {
 									alert(response);

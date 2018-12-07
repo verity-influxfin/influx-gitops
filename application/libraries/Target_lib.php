@@ -163,16 +163,16 @@ class Target_lib{
 		return false;
 	}
 	
-	public function target_verify_failed($target = array(),$admin_id=0){
+	public function target_verify_failed($target = array(),$admin_id=0,$remark="審批不通過"){
 		if(!empty($target)){
 			$param = array(
 				"loan_amount"		=> 0,
 				"status"			=> "9",
-				"remark"			=> "驗證失敗",
+				"remark"			=> $remark,
 			);
 			$this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
-			$this->CI->notification_lib->target_verify_failed($target->user_id);
+			$this->CI->notification_lib->target_verify_failed($target->user_id,0,$remark);
 		}
 		return false;
 	}
@@ -579,6 +579,7 @@ class Target_lib{
 								$count++;
 								$param = array(
 									"status" => 9,
+									"remark" => $value->remark."系統自動取消"
 								);
 								$this->CI->target_model->update($value->id,$param);
 								$this->insert_change_log($target_id,$param);

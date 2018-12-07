@@ -236,6 +236,7 @@ class Transfer extends MY_Admin_Controller {
 			$html = '<table><thead><tr><th>還款日</th><th>還款本金</th><th>還款利息</th><th>還款合計</th><th>每期回款金額</th></tr></thead><tbody>';
 
 			if(isset($list) && !empty($list)){
+				ksort($list);
 				foreach($list as $key => $value){
 					$total 	= $value["principal"]+$value["interest"];
 					$profit = $value["principal"]+$value["interest"]-$value["ar_fees"];

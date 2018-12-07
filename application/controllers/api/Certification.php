@@ -1464,7 +1464,6 @@ class Certification extends REST_Controller {
 			
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));

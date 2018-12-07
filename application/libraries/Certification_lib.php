@@ -180,6 +180,17 @@ class Certification_lib{
 		return false;
 	}
 	
+	public function social_verify($info = array()){
+		if($info && $info->status ==0 && $info->certification_id==4){
+			$status = 3;
+			$this->CI->user_certification_model->update($info->id,array(
+				"status"	=> $status,
+			));
+			return true;
+		}
+		return false;
+	}
+	
 	public function face_rotate($url="",$user_id=0){
 		$this->CI->load->library('faceplusplus_lib');
 		$this->CI->load->library('s3_upload');
@@ -639,30 +650,29 @@ class Certification_lib{
 		$ids			= array();
 		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(
 			"status"			=> 0,
-			"certification_id"	=> array(1,2,5,6),
+			"certification_id"	=> array(1,2,4,5,6),
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
-				
-				//實名
-				if($value->certification_id == 1){
-					$this->idcard_verify($value);
-					$count++; 
+				switch($value->certification_id){
+					case 1: 
+						$this->idcard_verify($value);
+						break;
+					case 2: 
+					case 6:
+						if(time()> ($value->created_at + 3600)){
+							$this->set_failed($value->id);
+						}
+						break;
+					case 4:
+						$this->social_verify($value);
+					case 5: 
+						$this->emergency_verify($value);
+						break;
+					default:
+						break;
 				}
-				
-				//學生、Email
-				if(in_array($value->certification_id,array(2,6))){
-					if(time()> ($value->created_at + 3600)){
-						$this->set_failed($value->id);
-						$count++; 
-					}
-				}
-				
-				//緊急聯絡人
-				if($value->certification_id == 5){
-					$this->emergency_verify($value);
-					$count++; 
-				}
+				$count++; 
 			}
 		}
 		return $count;

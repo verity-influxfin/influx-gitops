@@ -199,7 +199,7 @@ class Subloan_lib{
 		return false;
 	}
 	
-	public function subloan_verify_failed($new_target = array(),$admin_id=0){
+	public function subloan_verify_failed($new_target = array(),$admin_id=0,$remark="審批不通過"){
 		if(!empty($new_target) && $new_target->status==2){
 			$subloan	= $this->CI->subloan_model->get_by(array(
 				"status"		=> 1,
@@ -211,13 +211,14 @@ class Subloan_lib{
 					$param = array(
 						"loan_amount"		=> 0,
 						"status"			=> "9",
-						"remark"			=> $new_target->remark.",驗證失敗",
+						"remark"			=> $new_target->remark.",".$remark,
 					);
 					
 					$this->CI->target_lib->insert_change_log($subloan->target_id,array("sub_status"=>0),0,$admin_id);
 					$this->CI->target_lib->insert_change_log($subloan->new_target_id,$param,0,$admin_id);
 					$this->CI->target_model->update($subloan->target_id,array("sub_status"=>0));
 					$this->CI->target_model->update($subloan->new_target_id,$param);
+					$this->CI->notification_lib->subloan_verify_failed($new_target->user_id,date("Y-m-d",$new_target->created_at),$new_target->amount,$new_target->target_no,$remark);
 					return $rs;
 				}
 			}
