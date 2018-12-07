@@ -51,11 +51,14 @@ class Transfer extends MY_Admin_Controller {
 					foreach($target_list as $key => $value){
 						$target_ids[] = $value->id;
 					}
+					$where["target_id"] = $target_ids;
 				}
-				$where["target_id"] = $target_ids;
 			}
 			
-			$list 	= $this->investment_model->order_by("target_id","ASC")->get_many_by($where);
+			if(isset($where["target_id"]) || isset($where["user_id"])){
+				$list 	= $this->investment_model->order_by("target_id","ASC")->get_many_by($where);
+			}
+
 			if($list){
 				$target_ids 	= array();
 				$ids 			= array();
