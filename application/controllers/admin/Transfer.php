@@ -77,6 +77,10 @@ class Transfer extends MY_Admin_Controller {
 					}
 				}
 				
+				foreach($list as $key => $value){
+					$list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id],$value);
+				}
+				
 				$this->load->model('user/user_meta_model');
 				$users_school 	= $this->user_meta_model->get_many_by(array(
 					"meta_key" 	=> array("school_name","school_department"),
@@ -146,8 +150,9 @@ class Transfer extends MY_Admin_Controller {
 					$amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id],$value);
 					$amortization_list 	= array_values($amortization_table["list"]);
 					$list[$key]->amortization_table = array(
-						"total_payment_m"	=> isset($amortization_list[0])?$amortization_list[0]["total_payment"]:0,
-						"total_payment"		=> $amortization_table["total_payment"],
+						"total_payment_m"		=> isset($amortization_list[0])?$amortization_list[0]["total_payment"]:0,
+						"total_payment"			=> $amortization_table["total_payment"],
+						"remaining_principal" 	=> $amortization_table["remaining_principal"],
 					);
 				}
 				
@@ -170,7 +175,7 @@ class Transfer extends MY_Admin_Controller {
 			header('Content-type:application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename=assets_'.date("Ymd").'.xls');
 			$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
-					<th>核准金額</th><th>債權金額</th><th>年化利率</th><th>期數</th>
+					<th>核准金額</th><th>債權金額</th><th>剩餘本金</th><th>年化利率</th><th>期數</th>
 					<th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
 					<th>逾期狀況</th><th>狀態</th></tr></thead><tbody>';
 
@@ -187,6 +192,7 @@ class Transfer extends MY_Admin_Controller {
 					$html .= '<td>'.$school_list[$target->user_id]["school_department"].'</td>';
 					$html .= '<td>'.$target->loan_amount.'</td>';
 					$html .= '<td>'.$value->loan_amount.'</td>';
+					$html .= '<td>'.$value->amortization_table["remaining_principal"].'</td>';
 					$html .= '<td>'.$target->interest_rate.'</td>';
 					$html .= '<td>'.$target->instalment.'</td>';
 					$html .= '<td>'.$repayment_type[$target->repayment].'</td>';
@@ -223,11 +229,13 @@ class Transfer extends MY_Admin_Controller {
 									"principal"	=> 0,
 									"interest"	=> 0,
 									"ar_fees"	=> 0,
+									"repayment"	=> 0,
 								);
 							}
-							$list[$v["repayment_date"]]["principal"] += $v["principal"];
-							$list[$v["repayment_date"]]["interest"] += $v["interest"];
-							$list[$v["repayment_date"]]["ar_fees"] += $v["ar_fees"];
+							$list[$v["repayment_date"]]["principal"] 	+= $v["principal"];
+							$list[$v["repayment_date"]]["interest"] 	+= $v["interest"];
+							$list[$v["repayment_date"]]["ar_fees"] 		+= $v["ar_fees"];
+							$list[$v["repayment_date"]]["repayment"] 	+= $v["repayment"];
 						}
 					}
 				}
@@ -236,7 +244,7 @@ class Transfer extends MY_Admin_Controller {
 
 			header('Content-type:application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename=repayment_schedule_'.date("Ymd").'.xls');
-			$html = '<table><thead><tr><th>還款日</th><th>還款本金</th><th>還款利息</th><th>還款合計</th><th>每期回款金額</th></tr></thead><tbody>';
+			$html = '<table><thead><tr><th>還款日</th><th>還款本金</th><th>還款利息</th><th>還款合計</th><th>已還款</th><th>每期回款金額</th></tr></thead><tbody>';
 
 			if(isset($list) && !empty($list)){
 				ksort($list);
@@ -248,6 +256,7 @@ class Transfer extends MY_Admin_Controller {
 					$html .= '<td>'.$value["principal"].'</td>';
 					$html .= '<td>'.$value["interest"].'</td>';
 					$html .= '<td>'.$total.'</td>';
+					$html .= '<td>'.$value["repayment"].'</td>';
 					$html .= '<td>'.$profit.'</td>';
 					$html .= '</tr>';
 				}

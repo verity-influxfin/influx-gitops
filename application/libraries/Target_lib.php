@@ -333,14 +333,15 @@ class Target_lib{
 	public function get_amortization_table($target=array()){
 
 		$schedule		= array(
-			"amount"		=> $target->loan_amount,
-			"instalment"	=> $target->instalment,
-			"rate"			=> $target->interest_rate,
-			"total_payment"	=> 0,
-			"date"			=> $target->loan_date,
-			"sub_loan_fees"	=> 0,
-			"platform_fees"	=> 0,
-			"list"			=> array(),
+			"amount"				=> $target->loan_amount,
+			"instalment"			=> $target->instalment,
+			"rate"					=> $target->interest_rate,
+			"total_payment"			=> 0,
+			"date"					=> $target->loan_date,
+			"sub_loan_fees"			=> 0,
+			"platform_fees"			=> 0,
+			"list"					=> array(),
+			"remaining_principal" 	=> $target->loan_amount,
 		);
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
 			"user_from"	=> $target->user_id,
@@ -399,6 +400,9 @@ class Target_lib{
 					case SOURCE_DAMAGE: 
 					case SOURCE_INTEREST: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
+						if($value->source==SOURCE_PRINCIPAL){
+							$schedule['remaining_principal'] -= $value->amount;
+						}
 						break;
 					default:
 						break;
@@ -433,14 +437,15 @@ class Target_lib{
 		$xirr_dates		= array($target->loan_date);
 		$xirr_value		= array($investment->loan_amount*(-1));
 		$schedule		= array(
-			"amount"		=> $investment->loan_amount,
-			"instalment"	=> $target->instalment,
-			"rate"			=> $target->interest_rate,
-			"total_payment"	=> 0,
-			"XIRR"			=> 0,
-			"date"			=> $target->loan_date,
+			"amount"				=> $investment->loan_amount,
+			"instalment"			=> $target->instalment,
+			"rate"					=> $target->interest_rate,
+			"total_payment"			=> 0,
+			"XIRR"					=> 0,
+			"date"					=> $target->loan_date,
+			"remaining_principal" 	=> $investment->loan_amount,
 		);
-
+		
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
 			"investment_id"	=> $investment->id,
 			"target_id" 	=> $target->id,
@@ -480,6 +485,9 @@ class Target_lib{
 					case SOURCE_DELAYINTEREST: 
 					case SOURCE_INTEREST: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
+						if($value->source==SOURCE_PRINCIPAL){
+							$schedule['remaining_principal'] -= $value->amount;
+						}
 						break;
 					case SOURCE_AR_FEES: 
 						$list[$value->instalment_no]['ar_fees'] += $value->amount;
@@ -508,7 +516,7 @@ class Target_lib{
 				$xirr_dates[] = $value["repayment_date"];
 				$xirr_value[] = $value["total_payment"];
 			}
-			
+
 			$schedule["XIRR"] = $this->CI->financial_lib->XIRR($xirr_value,$xirr_dates);
 		}
 		$schedule["list"] = $list;
