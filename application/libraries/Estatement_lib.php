@@ -727,8 +727,6 @@ class Estatement_lib{
 					);
 					$rs = $this->CI->user_estatement_model->insert($param);
 				}
-				
-				$rs = $this->CI->user_estatement_model->insert($param);
 				return $rs;
 			}
 		}
