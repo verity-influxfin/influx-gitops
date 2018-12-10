@@ -73,7 +73,7 @@ class Estatement_lib{
 					
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
-						"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST),
+						"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST,SOURCE_AR_DELAYINTEREST),
 						"user_to" 			=> $user_id,
 						"status" 			=> 1
 					));		
@@ -113,6 +113,10 @@ class Estatement_lib{
 										$investment['ar_interest'][$value->investment_id] = $value->investment_id;
 									}
 									break;
+								case SOURCE_AR_DELAYINTEREST:
+									$delay_ar_interest += $value->amount;
+									$investment['delay_ar_interest'][$value->investment_id] = $value->investment_id;
+									break;
 								default:
 									break;
 							}
@@ -134,7 +138,7 @@ class Estatement_lib{
 						}
 						$transactions 	= $this->CI->transaction_model->get_many_by(array(
 							"entering_date <="	=> $edate,
-							"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST),
+							"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST,SOURCE_AR_DELAYINTEREST),
 							"user_to" 			=> $user_id,
 							"status" 			=> array(0,2),
 							"updated_at >" 		=> strtotime($edatetime),
@@ -170,6 +174,10 @@ class Estatement_lib{
 												$ar_interest += $value->amount;
 												$investment['ar_interest'][$value->investment_id] = $value->investment_id;
 											}
+											break;
+										case SOURCE_AR_DELAYINTEREST:
+											$delay_ar_interest += $value->amount;
+											$investment['delay_ar_interest'][$value->investment_id] = $value->investment_id;
 											break;
 										default:
 											break;
@@ -210,16 +218,29 @@ class Estatement_lib{
 					"virtual_account"			=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor', $data,TRUE);
-				$param = array(
+				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatement",
 					"investor"	=> 1,
 					"sdate"		=> $sdate,
 					"edate"		=> $edate,
-					"content"	=> $html,
 					"url"		=> "",
-				);
-				$rs = $this->CI->user_estatement_model->insert($param);
+				));
+				if($update_estatement && $update_estatement->id){
+					$rs = $this->CI->user_estatement_model->update($update_estatement->id,array("content"=>$html));
+				}else{
+					$param = array(
+						"user_id"	=> $user_id,
+						"type"		=> "estatement",
+						"investor"	=> 1,
+						"sdate"		=> $sdate,
+						"edate"		=> $edate,
+						"content"	=> $html,
+						"url"		=> "",
+					);
+					$rs = $this->CI->user_estatement_model->insert($param);
+				}
+				
 				return $rs;
 			}
 		}
@@ -249,9 +270,10 @@ class Estatement_lib{
 				$edatetime	= $date_range?$date_range["edatetime"]:"";
 				$date_range	= entering_date_range($sdate);
 				$sdatetime	= $date_range?$date_range["sdatetime"]:"";
-				$normal_count = 0;
-				$total = $normal_amount = $normal_rapay = $ar_principal = 0;
-				$normal_target = array();
+				$normal_count 	= 0;
+				$total 			= $normal_amount = $normal_rapay = $ar_principal = 0;
+				$delay_rapay 	= $delay_amount = $delay_count = 0;
+				$normal_target 	= $delay_target = array();
 				if($edatetime){
 					$virtual_passbook = $this->CI->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
 						"virtual_account" 	=> $virtual_account->virtual_account,
@@ -264,33 +286,115 @@ class Estatement_lib{
 						}
 					}
 					
+					//目前逾期案
+					$transactions 	= $this->CI->transaction_model->get_many_by(array(
+						"limit_date <="		=> $edate,
+						"source"			=> SOURCE_AR_DAMAGE,
+						"user_from" 		=> $user_id,
+						"status" 			=> 1
+					));
+					if($transactions){
+						
+						foreach($transactions as $key => $value){
+							$delay_target[] = $value->target_id;
+							$delay_count++;
+						}
+						
+						$transactions 	= $this->CI->transaction_model->get_many_by(array(
+							"limit_date <="	=> $edate,
+							"source"			=> array(
+								SOURCE_AR_PRINCIPAL,
+								SOURCE_AR_INTEREST,
+								SOURCE_AR_DELAYINTEREST,
+								SOURCE_AR_DAMAGE,
+							),
+							"target_id"		=> $delay_target,
+							"user_from" 	=> $user_id,
+							"status" 		=> 1
+						));
+						if($transactions){
+							foreach($transactions as $key => $value){
+								$delay_amount += $value->amount;//逾期未還金額
+							}
+						}
+					}
+					
+					//本期逾期還款
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
+						"entering_date >="	=> $sdate,
+						"source"			=> SOURCE_DAMAGE,
+						"user_from" 		=> $user_id,
+						"status" 			=> 2
+					));
+					if($transactions){
+						foreach($transactions as $key => $value){
+							$delay_target[] = $value->target_id;
+							$delay_count++;
+						}
+						
+						$transactions 	= $this->CI->transaction_model->get_many_by(array(
+							"entering_date <="	=> $edate,
+							"entering_date >="	=> $sdate,
+							"source"			=> array(
+								SOURCE_PRINCIPAL,
+								SOURCE_INTEREST,
+								SOURCE_DELAYINTEREST,
+								SOURCE_DAMAGE,
+							),
+							"target_id"			=> $delay_target,
+							"user_from" 		=> $user_id,
+							"status" 			=> 2
+						));
+						if($transactions){
+							foreach($transactions as $key => $value){
+								$delay_rapay += $value->amount;//逾期已還金額
+							}
+						}
+					}
+					
+					//本期應還
+					$transactions 	= $this->CI->transaction_model->get_many_by(array(
+						"limit_date <="		=> $edate,
+						"limit_date >="		=> $sdate,
 						"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST),
 						"user_from" 		=> $user_id,
 						"status" 			=> array(1,2)
 					));
 					if($transactions){
 						foreach($transactions as $key => $value){
-							switch ($value->source) {
-								case SOURCE_AR_PRINCIPAL: 
-									$ar_principal += $value->amount;
-									if($value->limit_date>=$sdate && $value->limit_date<=$edate){
+							if(!in_array($value->target_id,$delay_target)){
+								switch ($value->source) {
+									case SOURCE_AR_PRINCIPAL: 
 										$normal_target[$value->target_id] = $value->target_id;
 										$normal_amount += $value->amount;
-									}
-									break;
-								case SOURCE_AR_INTEREST:
-									if($value->limit_date>=$sdate && $value->limit_date<=$edate){
+										break;
+									case SOURCE_AR_INTEREST:
 										$normal_amount += $value->amount;
-									}
-									break;
-								default:
-									break;
+										break;
+									default:
+										break;
+								}
+							}
+						}
+					}
+
+					//剩餘正常案本金
+					$transactions 	= $this->CI->transaction_model->get_many_by(array(
+						"entering_date <="	=> $edate,
+						"source"			=> SOURCE_AR_PRINCIPAL,
+						"user_from" 		=> $user_id,
+						"status" 			=> 1
+					));
+					if($transactions){
+						foreach($transactions as $key => $value){
+							if(!in_array($value->target_id,$delay_target)){
+								$ar_principal += $value->amount;
 							}
 						}
 					}
 					
+					//提前還款
 					$prepayment_count 	= 0;
 					$prepayment_amount 	= 0;
 					$prepayment_target	= array();
@@ -308,26 +412,24 @@ class Estatement_lib{
 						}
 					}
 					
+					//本期還款
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
-						"source"			=> array(SOURCE_PRINCIPAL,SOURCE_INTEREST,SOURCE_PREPAYMENT_DAMAGE),
+						"entering_date >="	=> $sdate,
+						"source"			=> array(
+							SOURCE_PRINCIPAL,
+							SOURCE_INTEREST,
+						),
 						"user_from" 		=> $user_id,
 						"status" 			=> 2
 					));
 					if($transactions){
 						foreach($transactions as $key => $value){
-							if($value->entering_date>=$sdate && $value->entering_date<=$edate){
+							if(!in_array($value->target_id,$delay_target)){
 								$normal_rapay += $value->amount;
 								if(in_array($value->entering_date.'-'.$value->target_id,$prepayment_target)){
 									$prepayment_amount += $value->amount;
 								}
-							}
-							switch ($value->source) {
-								case SOURCE_PRINCIPAL: 
-									$ar_principal -= $value->amount;
-									break;
-								default:
-									break;
 							}
 						}
 					}
@@ -340,25 +442,40 @@ class Estatement_lib{
 					"total"				=> number_format($total),
 					"credit_amount"		=> number_format($credit['amount']),
 					"used_credit"		=> number_format($used_credit),
-					"normal_count"		=> count($normal_target),
-					"normal_amount"		=> number_format($normal_amount),
-					"normal_rapay"		=> number_format($normal_rapay),
-					"ar_principal"		=> number_format($ar_principal),
+					"normal_count"		=> count($normal_target),//本期筆數
+					"normal_amount"		=> number_format($normal_amount),//本期應還金額
+					"normal_rapay"		=> number_format($normal_rapay),//本期已還金額
+					"ar_principal"		=> number_format($ar_principal),//剩餘本金總額
 					"prepayment_count"	=> number_format($prepayment_count),
 					"prepayment_amount"	=> number_format($prepayment_amount),
+					"delay_rapay"		=> number_format($delay_rapay),//逾期已還金額
+					"delay_amount"		=> number_format($delay_amount),//逾期未還金額
+					"delay_count"		=> $delay_count,//逾期筆數
 					"virtual_account"	=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/borrower', $data,TRUE);
-				$param = array(
+				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatement",
 					"investor"	=> 0,
 					"sdate"		=> $sdate,
 					"edate"		=> $edate,
-					"content"	=> $html,
 					"url"		=> "",
-				);
-				$rs = $this->CI->user_estatement_model->insert($param);
+				));
+				if($update_estatement && $update_estatement->id){
+					$rs = $this->CI->user_estatement_model->update($update_estatement->id,array("content"=>$html));
+				}else{
+					$param = array(
+						"user_id"	=> $user_id,
+						"type"		=> "estatement",
+						"investor"	=> 0,
+						"sdate"		=> $sdate,
+						"edate"		=> $edate,
+						"content"	=> $html,
+						"url"		=> "",
+					);
+					$rs = $this->CI->user_estatement_model->insert($param);
+				}
 				return $rs;
 			}
 		}
@@ -587,15 +704,30 @@ class Estatement_lib{
 					"list"			=> $list,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor_detail', $data,TRUE);
-				$param = array(
+				
+				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatementdetail",
 					"investor"	=> 1,
 					"sdate"		=> $sdate,
 					"edate"		=> $edate,
-					"content"	=> $html,
 					"url"		=> "",
-				);
+				));
+				if($update_estatement && $update_estatement->id){
+					$rs = $this->CI->user_estatement_model->update($update_estatement->id,array("content"=>$html));
+				}else{
+					$param = array(
+						"user_id"	=> $user_id,
+						"type"		=> "estatementdetail",
+						"investor"	=> 1,
+						"sdate"		=> $sdate,
+						"edate"		=> $edate,
+						"content"	=> $html,
+						"url"		=> "",
+					);
+					$rs = $this->CI->user_estatement_model->insert($param);
+				}
+				
 				$rs = $this->CI->user_estatement_model->insert($param);
 				return $rs;
 			}
