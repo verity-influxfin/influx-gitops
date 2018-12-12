@@ -16,7 +16,6 @@ class MY_Admin_Controller extends CI_Controller{
 		$this->load->model('admin/role_model');
 		$this->load->helper('admin');
 		$this->load->helper('cookie');
-		$this->load->library('encrypt');
 		$this->load->library('form_validation');
 		$this->login_info = check_admin();
 		$roles = $this->role_model->get_list();

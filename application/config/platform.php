@@ -21,7 +21,12 @@ $config['admin_menu'] = array(
 		"waiting_transfer"			=> "債轉待收購",
 		"waiting_transfer_success"	=> "債轉待放款",
 	),
-	"Risk" 				=> array("name"=>"風控專區","icon"=>"fa-briefcase"),
+	"Risk" 	=> array(
+		"parent_name"	=> "風控專區",
+		"parent_icon"	=> "fa-briefcase",
+		"index"			=> "風控審核",
+		"credit"		=> "信評管理",
+	),
 	"Passbook" 	=> array(
 		"parent_name"		=> "虛擬帳號管理",
 		"parent_icon"		=> "fa-star",

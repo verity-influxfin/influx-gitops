@@ -562,28 +562,39 @@ class Account extends MY_Admin_Controller {
 	}
 	
 	function estatement(){
-		$page_data 			= array("type"=>"list","list"=>array());
-		$input 				= $this->input->get(NULL, TRUE);
-		$where				= array();
-
-		//必填欄位
-		$fields 	= ['investor'];
+		$page_data 	= array("type"=>"list","list"=>array());
+		$input 		= $this->input->get(NULL, TRUE);
+		$list		= array();
+		$where		= array();
+		$sdate 		= isset($input['sdate'])&&$input['sdate']?$input['sdate']:'';
+		$edate 		= isset($input['edate'])&&$input['edate']?$input['edate']:'';
+		$fields 	= ['investor','user_id'];
+		
+		if($sdate && $edate && $edate > $sdate ){
+			$where	= array(
+				"sdate >="	=> $sdate,
+				"edate <="	=> $edate,
+			);
+		}
+		
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];
 			}
 		}
 		
-		$list = $this->user_estatement_model->get_many_by($where);
-		if($list){
-			foreach($list as $key => $value){
-				$user = $this->user_model->get($value->user_id);
-				$list[$key]->user_name 		= $user->name;
+		if(!empty($where)){
+			$list = $this->user_estatement_model->order_by("user_id","asc")->get_many_by($where);
+			if($list){
+				foreach($list as $key => $value){
+					$user = $this->user_model->get($value->user_id);
+					$list[$key]->user_name 		= $user->name;
+				}
 			}
 		}
 		
-		$this->load->model('admin/difficult_word_model');
-		
+		$page_data['sdate'] 		= $sdate;
+		$page_data['edate'] 		= $edate;
 		$page_data['list'] 			= $list?$list:array();
 		$page_data['investor_list'] = $this->user_estatement_model->investor_list;
 

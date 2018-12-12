@@ -7,8 +7,11 @@
             </div>
 			<script type="text/javascript">
 				function showChang(){
+					var user_id 			= $('#user_id').val();
+					var sdate 				= $('#sdate').val();
+					var edate 				= $('#edate').val();
 					var investor 			= $('#investor :selected').val();
-					top.location = './estatement?investor='+investor;
+					top.location = './estatement?investor='+investor+'&sdate='+sdate+'&edate='+edate+'&user_id='+user_id;
 				}
 			</script>
             <!-- /.row -->
@@ -16,13 +19,33 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							出借/借款：
-							<select id="investor" onchange="showChang();">
-								<option value="" >請選擇</option>
-								<? foreach($investor_list as $key => $value){ ?>
-									<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
-								<? } ?>
-							</select>
+							<table>
+								<tr>
+									<td>出借/借款：</td>
+									<td>
+									<select id="investor" >
+										<option value="" >請選擇</option>
+										<? foreach($investor_list as $key => $value){ ?>
+											<option value="<?=$key?>" <?=isset($_GET['investor'])&&$_GET['investor']!=""&&intval($_GET['investor'])==intval($key)?"selected":""?>><?=$value?></option>
+										<? } ?>
+									</select>
+									</td>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
+								</tr>
+								<tr>
+									<td>指定區間：</td>
+									<td><input type="text" value="<?=isset($sdate)&&$sdate?$sdate:'' ?>" id="sdate" data-toggle="datepicker"  /></td>
+									<td style="text-align: center;">-</td>
+									<td><input type="text" value="<?=isset($edate)&&$edate?$edate:'' ?>" id="edate" data-toggle="datepicker" /></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td style="text-align:right;"><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
+								</tr>
+							</table>
 						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

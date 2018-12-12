@@ -5,8 +5,11 @@ class Credit_model extends MY_Model
 	public $_table = 'credits';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
+	public $status_list   = array(
+		0 =>	"已失效",
+		1 =>	"有效"
+	);
 
-	
 	public function __construct()
 	{
 		parent::__construct();

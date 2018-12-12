@@ -222,20 +222,24 @@ class Credit_lib{
 			$rs 		= $this->CI->credit_model->order_by("created_at","desc")->get_many_by($param);
 			if($rs){
 				foreach($rs as $key => $value){
-					$this->CI->credit_model->update($value->id,array("status"=>0));
-					$product_id[$value->product_id] = $value->product_id;
+					if($value->level != $level){
+						$this->CI->credit_model->update($value->id,array("status"=>0));
+						$product_id[$value->product_id] = $value->product_id;
+					}
 				}
-
-				foreach($product_id as $key => $value){
-					$param = array(
-						"user_id"		=> $user_id,
-						"product_id"	=> $value,
-						"points"		=> $points,
-						"amount"		=> $amount,
-						"level"			=> $level,
-						
-					);
-					$rs = $this->CI->credit_model->insert($param);
+				
+				if($product_id){
+					foreach($product_id as $key => $value){
+						$param = array(
+							"user_id"		=> $user_id,
+							"product_id"	=> $value,
+							"points"		=> $points,
+							"amount"		=> $amount,
+							"level"			=> $level,
+							
+						);
+						$rs = $this->CI->credit_model->insert($param);
+					}
 				}
 				
 				return $level;

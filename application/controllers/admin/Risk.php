@@ -14,6 +14,7 @@ class Risk extends MY_Admin_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('user/user_certification_model');
 		$this->load->model('loan/product_model');
+		$this->load->model('loan/credit_model');
 		$this->load->library('target_lib');
 		$this->load->library('certification_lib');
  	}
@@ -98,6 +99,38 @@ class Risk extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 	
+	
+	function credit(){
+		$page_data 	= array('type'=>'list','list'=>array());
+		$input 		= $this->input->get(NULL, TRUE);
+		$list		= array();
+		$where		= array();
+		$fields 	= ['user_id'];
 
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!="") {
+				$where[$field] = $input[$field];
+			}
+		}
+		
+		if(!empty($where)){
+			$list = $this->credit_model->order_by('expire_time','desc')->get_many_by($where);
+			if($list){
+				foreach($list as $key => $value){
+					$user = $this->user_model->get($value->user_id);
+					$list[$key]->user_name 	= $user->name;
+				}
+			}
+		}
+
+		$page_data['list'] 			= $list;
+		$page_data['status_list']	= $this->credit_model->status_list;
+		$page_data['product_name']	= $this->product_model->get_name_list();
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/credit_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>
