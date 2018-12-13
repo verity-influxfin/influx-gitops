@@ -27,7 +27,7 @@ class Notification_lib{
 		return $rs;
 	}
 	
-	public function certification($user_id,$investor,$name,$status){
+	public function certification($user_id,$investor,$name,$status,$fail=""){
 		if($status==1){
 			$title = "【認證成功】 您的".$name."已通過";
 			$content = "您好！
@@ -35,9 +35,10 @@ class Notification_lib{
 		}
 		
 		if($status==2){
-			$title = "【認證失敗】 您的".$name."未通過";
+			$title = "【認證失敗】 您的".$name." 未通過";
 			$content = "您好！
-						您的".$name."未通過，請重新認證。";
+						您的 ".$name."未通過，請重新認證。
+						失敗原因：".$fail;
 		}
 		
 		$param = array(
@@ -47,6 +48,11 @@ class Notification_lib{
 			"content"	=> $content,
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
+		if($status==2){
+			$this->CI->load->library('Sendemail');
+			$this->CI->sendemail->user_notification($user_id,$title,$content);
+		}
+		
 		return $rs;
 	}
 	

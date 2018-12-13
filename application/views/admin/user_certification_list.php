@@ -7,10 +7,10 @@
             </div>
 			<script type="text/javascript">
 				function showChang(){
-					//var investor 			= $('#investor :selected').val();
+					var user_id 			= $('#user_id').val();
 					var certification_id 	= $('#certification_id :selected').val();
 					var status 				= $('#status :selected').val();
-					top.location = './user_certification_list?&certification_id='+certification_id+'&status='+status;
+					top.location = './user_certification_list?&certification_id='+certification_id+'&status='+status+'&user_id='+user_id;
 				}
 			</script>
             <!-- /.row -->
@@ -18,21 +18,22 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							會員 ID：<input type="text" value="" id="user_search" onkeypress="return number_only(event);" onkeyup="user_search()"/>
+							會員 ID：<input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" onkeypress="return number_only(event);" />
 							認證方式：
-							<select id="certification_id" onchange="showChang();">
+							<select id="certification_id">
 								<option value="" >請選擇</option>
 								<? foreach($certification_list as $key => $value){ ?>
 									<option value="<?=$key?>" <?=isset($_GET['certification_id'])&&$_GET['certification_id']==$key?"selected":""?>><?=$value?></option>
 								<? } ?>
 							</select>
 							狀態：
-							<select id="status" onchange="showChang();">
+							<select id="status">
 								<option value="" >請選擇</option>
 								<? foreach($status_list as $key => $value){ ?>
 									<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
 								<? } ?>
 							</select>
+							<a href="javascript:showChang();" class="btn btn-default">查詢</a>
 						</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

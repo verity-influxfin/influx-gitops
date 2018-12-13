@@ -39,7 +39,7 @@ $config['admin_menu'] = array(
 		"parent_name"	=> "認證管理",
 		"parent_icon"	=> "fa-question-circle",
 		"index"			=> "認證方式列表",
-		"user_certification_list?status=3"	=> "會員認證審核",
+		"user_certification_list"			=> "會員認證審核",
 		"user_bankaccount_list?verify=2"	=> "金融帳號認證",
 		"difficult_word_list"				=> "銀行困難字管理",
 	),
@@ -84,7 +84,7 @@ $config['admin_menu'] = array(
 if(ENVIRONMENT=="development"){
 	$config['admin_email'] = array('news@influxfin.com');
 }else{
-	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','mori2.tw@gmail.com','tim@influxfin.com','jenny@influxfin.com');
+	$config['admin_email'] = array('yaomu@influxfin.com','rogerkuo@influxfin.com','mori2.tw@gmail.com','tim@influxfin.com');
 } 
 
 //期數

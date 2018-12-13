@@ -36,22 +36,27 @@ class Certification extends MY_Admin_Controller {
 	}
 
 	public function user_certification_list(){
-		$page_data 			= array("type"=>"list","list"=>array());
-		$input 				= $this->input->get(NULL, TRUE);
-		$where				= array('certification_id !=' => 3);
-		$fields 			= ['investor','certification_id','status'];
+		$page_data 	= array("type"=>"list","list"=>array());
+		$input 		= $this->input->get(NULL, TRUE);
+		$list		= array();
+		$where		= array();
+		$fields 	= ['user_id','certification_id','status'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];
 			}
 		}
 		
-		$list					= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
-		if(!empty($list)){
-			$page_data['list'] = $list;
+		if(!empty($where)){
+			if(!isset($where['certification_id'])){
+				$where['certification_id !='] = 3;
+			}
+			$list	= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
 		}
-
+		
+		$page_data['list'] 					= $list;
 		$page_data['certification_list'] 	= $this->certification_name_list;
+		unset($page_data['certification_list'][3]);
 		$page_data['status_list'] 			= $this->user_certification_model->status_list;
 		$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 		$this->load->view('admin/_header');
@@ -98,6 +103,7 @@ class Certification extends MY_Admin_Controller {
 		}else{
 			if(!empty($post['id'])){
 				$from 	= isset($post["from"])?$post["from"]:"";
+				$fail 	= isset($post["fail"])?$post["fail"]:"";
 				if(!empty($from)){
 					$back_url = admin_url($from);
 				}
@@ -119,7 +125,7 @@ class Certification extends MY_Admin_Controller {
 						if($post['status']=="1"){
 							$rs = $this->certification_lib->set_success($post['id']);
 						}else if($post['status']=="2"){
-							$rs = $this->certification_lib->set_failed($post['id']);
+							$rs = $this->certification_lib->set_failed($post['id'],$fail);
 						}else{
 							$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
 						}

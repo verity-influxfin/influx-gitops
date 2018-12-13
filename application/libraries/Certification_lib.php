@@ -21,7 +21,7 @@ class Certification_lib{
 				"user_id"			=> $user_id,
 				"certification_id"	=> $certification_id,
 				"investor"			=> $investor,
-				"status !="			=> 2,// 8/10 by toy
+				"status !="			=> 2,
 				"expire_time >="	=> time(),
 			);
 			$certification = $this->CI->user_certification_model->order_by("created_at","desc")->get_by($param);
@@ -69,15 +69,17 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function set_failed($id){
+	public function set_failed($id,$fail=""){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
-				$info->content 	= json_decode($info->content,true);
+				$info->content 			= json_decode($info->content,true);
+				$info->remark 			= json_decode($info->remark,true);
+				$info->remark["fail"] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
-				$rs = $this->CI->user_certification_model->update($id,array("status"=>2));
+				$rs = $this->CI->user_certification_model->update($id,array("status"=>2,"remark"=>json_encode($info->remark)));
 				if($rs){
-					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2);
+					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
 				}
 				return $rs;
 			}
@@ -660,8 +662,8 @@ class Certification_lib{
 						break;
 					case 2: 
 					case 6:
-						if(time()> ($value->created_at + 3600)){
-							$this->set_failed($value->id);
+						if(time() > ($value->created_at + 3600)){
+							$this->set_failed($value->id,"未在有效時間內完成認證");
 						}
 						break;
 					case 4:

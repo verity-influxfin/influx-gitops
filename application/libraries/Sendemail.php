@@ -85,9 +85,13 @@ class Sendemail
 			
 			$rs = $this->CI->email_verify_model->get_by($param);
 			if($rs){
+				$this->CI->load->model('user/user_certification_model');
 				$this->CI->email_verify_model->update($rs->id,array("status"=>1));
-				$this->CI->load->library('Certification_lib');
-				$this->CI->certification_lib->set_success($rs->certification_id);
+				$certification = $this->CI->user_certification_model->get($rs->certification_id);
+				if($certification && $certification->status==0){
+					$this->CI->load->library('Certification_lib');
+					$this->CI->certification_lib->set_success($rs->certification_id);
+				}
 				return true;
 			}
 		}
