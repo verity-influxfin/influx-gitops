@@ -195,6 +195,7 @@ class Account extends MY_Admin_Controller {
 						"amount_to"				=> $value->amount_to,
 						"v_bank_account_to"		=> $value->v_bank_account_to,
 						"v_amount_to"			=> $value->v_amount_to,
+						"created_at"			=> $value->created_at,
 					);
 				}
 
@@ -223,6 +224,7 @@ class Account extends MY_Admin_Controller {
 						"v_bank_account_from"	=> $value->v_bank_account_from,
 						"v_amount_from"			=> $value->v_amount_from,
 						"sub_list"				=> $sub_list,
+						"created_at"			=> $value->created_at,
 					);
 				}
 
@@ -290,6 +292,7 @@ class Account extends MY_Admin_Controller {
 						"v_amount_from"			=> $amount,
 						"damages"				=> $damages,
 						"sub_list"				=> $sub_list,
+						"created_at"			=> $value->created_at,
 					);
 				}
 				
@@ -359,6 +362,7 @@ class Account extends MY_Admin_Controller {
 						"v_amount_from"			=> $amount,
 						"damages"				=> $damages,
 						"sub_list"				=> $sub_list,
+						"created_at"			=> $value->created_at,
 					);
 				}
 				
@@ -398,6 +402,7 @@ class Account extends MY_Admin_Controller {
 						"amount_to"				=> $amount,
 						"platform_fee"			=> $platform_fee,
 						"sub_list"				=> $sub_list,
+						"created_at"			=> $value->created_at,
 					);
 				}
 			}
@@ -459,7 +464,21 @@ class Account extends MY_Admin_Controller {
 						"v_bank_account_from"	=> $value->v_bank_account_from,
 						"v_amount_from"			=> $amount,
 						"sub_list"				=> $sub_list,
+						"created_at"			=> $value->created_at,
 					);
+				}
+			}
+			
+			$num = count($list);
+			for($i = 0 ; $i < $num ; $i++){
+				for ($j=$i+1;$j<$num;$j++) {
+					$a = $list[$i]["created_at"];
+					$b = $list[$j]["created_at"];
+					if( $a > $b ){
+						$tmp      = $list[$i];
+						$list[$i] = $list[$j];
+						$list[$j] = $tmp;
+					}
 				}
 			}
 			
@@ -476,7 +495,7 @@ class Account extends MY_Admin_Controller {
 				}
 			}
 		}
-
+		
 		$page_data['list'] 					= $list;
 		$page_data['transaction_source'] 	= $this->config->item('transaction_source');
 		$page_data['transaction_type_name'] = $this->config->item('transaction_type_name');
