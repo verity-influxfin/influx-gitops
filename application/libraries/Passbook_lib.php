@@ -119,10 +119,9 @@ class Passbook_lib{
 				}
 				$list[$value->virtual_account] += $value->amount;
 			}
-			
 			foreach($list as $key => $value){
 				if($value>=1000){
-					$this->CI->notification_lib->account_remaining($info[$key]->user_id);
+					$this->CI->notification_lib->account_remaining($info[$key]->user_id,$info[$key]->investor);
 					$count++;
 				}
 				
