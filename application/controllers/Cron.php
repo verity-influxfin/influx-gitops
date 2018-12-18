@@ -192,5 +192,23 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die("KO");
 	}
+	
+	public function alert_account_remaining()
+	{
+		$this->load->library('Passbook_lib'); 
+		$script  	= 11;
+		$start_time = time();
+		$count 		= $this->passbook_lib->script_alert_account_remaining();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "alert_account_remaining",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
 }
 

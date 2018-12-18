@@ -419,4 +419,20 @@ class Notification_lib{
 		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
+	
+	public function account_remaining($user_id){
+
+		$title 		= "【普匯金融科技提醒】";
+		$content 	= "親愛的會員：普匯平台提醒您，您在本平台的虛擬帳戶餘額超過1000元，如不投資或還款，請儘快匯出。普匯金融科技平台謝謝您的支持。";
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
 }

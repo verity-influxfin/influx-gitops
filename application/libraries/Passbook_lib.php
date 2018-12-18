@@ -77,8 +77,6 @@ class Passbook_lib{
 		return false;
 	}
 	
-
-	
 	//取得資金資料
 	public function get_passbook_list($virtual_account=""){
 		$list = array();
@@ -100,6 +98,37 @@ class Passbook_lib{
 			}
 		}
 		return $list;
+	}
+
+	//餘額大餘1000通知
+	public function script_alert_account_remaining(){
+		$count  	= 0;
+		$this->CI->load->model("user/virtual_account_model");
+		$this->CI->load->library("Notification_lib");
+		$virtual_passbook = $this->CI->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
+			"virtual_account <>" 	=> PLATFORM_VIRTUAL_ACCOUNT,
+			"tx_datetime <=" 		=> date("Y-m-d H:i:s"),
+		));
+		if(!empty($virtual_passbook)){
+			foreach($virtual_passbook as $key => $value){
+				if(!isset($list[$value->virtual_account])){
+					$list[$value->virtual_account] = 0;
+					$info[$value->virtual_account] = $this->CI->virtual_account_model->get_by(array(
+						"virtual_account" => $value->virtual_account
+					));
+				}
+				$list[$value->virtual_account] += $value->amount;
+			}
+			
+			foreach($list as $key => $value){
+				if($value>=1000){
+					$this->CI->notification_lib->account_remaining($info[$key]->user_id);
+					$count++;
+				}
+				
+			}
+		}
+		return $count;
 	}
 	
 }

@@ -125,7 +125,7 @@ class Transfer_lib{
 					);
 					$rs = $this->CI->investment_model->update($investment->id,$investment_param);
 					if($rs){
-						$this->CI->load->library('target_lib');
+						$this->CI->load->library("target_lib");
 						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
 						$param = array(
 							"target_id"				=> $investment->target_id,
@@ -159,7 +159,7 @@ class Transfer_lib{
 					"transfer_status"	=> 0,
 				);
 				$rs = $this->CI->investment_model->update($transfers->investment_id,$investment_param);
-				$this->CI->load->library('target_lib');
+				$this->CI->load->library("target_lib");
 				$this->CI->target_lib->insert_investment_change_log($transfers->investment_id,$investment_param,0,$admin);
 				return true;
 			}
@@ -246,7 +246,7 @@ class Transfer_lib{
 							}
 							$this->CI->transfer_investment_model->update($value->id,$param);
 						}
-						$this->CI->load->library('Sendemail');
+						$this->CI->load->library("Sendemail");
 						$this->CI->sendemail->admin_notification("債轉案件待放款 出讓人ID：".$investment->user_id,"債轉案件待放款 出讓人ID：".$investment->user_id." 案號：".$target->target_no);
 						return true;
 					}
