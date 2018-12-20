@@ -261,6 +261,40 @@ class Notification_lib{
 		return $rs;
 	}
 	
+	public function transfer_success($user_id,$investor,$buy=0,$target_no,$amount, $new_user_id,$date=""){
+		if($investor==1){
+			if($buy==1){
+				$title 		= "普匯金融科技【受讓成功】";
+				$content 	= "
+親愛的用戶：
+您好！
+親愛的用戶，您於 $date 受讓標的 $target_no ，金額 $amount 元，已成功受讓，還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
+			}else{
+				$title 		= "普匯金融科技【出讓成功】";
+				$content 	= "
+親愛的用戶：
+您好！
+親愛的用戶，您於 $date 出讓標的 $target_no ，金額 $amount 元，已成功出讓，還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
+			}
+		}else{
+			$title 		= "普匯金融科技【債權轉讓通知】";
+			$content 	= "
+您好！
+您於本平台的借款(使用者編號 $user_id ，借款案號 $target_no )，債權已轉讓與新債權人(使用者編號 $new_user_id )，您的還款方式仍按原有約定辦理，僅此通知。";
+		}
+		
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+	
 	public function unknown_refund($user_id){
 		$title 		= "【普匯金融科技安全通知】";
 		$content 	= "親愛的用戶：

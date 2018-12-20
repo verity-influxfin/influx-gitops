@@ -13,6 +13,7 @@ class Transaction_lib{
 		$this->CI->load->model('transaction/frozen_amount_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Passbook_lib');
+		$this->CI->load->library('Notification_lib');
     }
 
 	//取得資金資料
@@ -69,7 +70,6 @@ class Transaction_lib{
 						);
 						$transaction_id = $this->CI->transaction_model->insert($transaction);
 						if($transaction_id){
-							$this->CI->load->library('Notification_lib');
 							$this->CI->notification_lib->recharge_success($user_account->user_id,$user_account->investor);
 							$virtual_passbook = $this->CI->passbook_lib->enter_account($transaction_id,$payment->tx_datetime);
 							return $virtual_passbook;
@@ -230,7 +230,6 @@ class Transaction_lib{
 					$this->CI->load->model('user/user_bankaccount_model');
 					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 					if($user_bankaccount){
-						$this->CI->load->library('Notification_lib');
 						$this->CI->notification_lib->withdraw_success($withdraw->user_id,$withdraw->investor,$withdraw->amount,$user_bankaccount->bank_account);
 
 						//放款
@@ -280,7 +279,6 @@ class Transaction_lib{
 					if($user_bankaccount){
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
-						$this->CI->load->library('Notification_lib');
 						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
 						//手續費
 						$transaction[]	= array(
@@ -558,6 +556,10 @@ class Transaction_lib{
 									foreach($rs as $key => $value){
 										$this->CI->passbook_lib->enter_account($value);
 									}
+									
+									$this->CI->notification_lib->transfer_success($investment->user_id,1,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
+									$this->CI->notification_lib->transfer_success($transfer_investments->user_id,1,1,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
+									$this->CI->notification_lib->transfer_success($target->user_id,0,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
 								}
 							}
 						}
@@ -587,7 +589,6 @@ class Transaction_lib{
 					if($target_account){
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$target_account->virtual_account);
-						$this->CI->load->library('Notification_lib');
 						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$target_account->virtual_account);
 						
 						//轉換產品手續費
