@@ -14,95 +14,113 @@ class Transfer_lib{
 		$this->CI->load->library('contract_lib');
     }
 
-	public function get_pretransfer_info($investment){
+	/*
+	正常
+	債轉期間沒跨到還款日：依照前一次還款日期至結息日，日數計算利息
+	債轉期間有跨到還款日：結息日調整至還款日，利息為本期利息
+
+	逾期
+	債轉期間於寬限期內且沒有跨到逾期日：利息為上期利息金額
+	債轉期間於寬限期內且跨到逾期日：結息日調整至逾期前一日，利息為上期利息金額
+	逾期債轉：已發生利息 + 依照逾期日計算延滯息
+	*/
+	public function get_pretransfer_info($investment,$bargain_rate=0){
 		if($investment && $investment->status==3){
-			$entering_date		= get_entering_date();
-			$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.TRANSFER_RANGE_DAYS.' days'));
-			$target 			= $this->CI->target_model->get($investment->target_id);
-			$this->CI->load->model('transaction/transaction_model');
+			$this->CI->load->model("transaction/transaction_model");
+			$this->CI->load->library("Financial_lib");
 			$transaction 	= $this->CI->transaction_model->order_by("limit_date","asc")->get_many_by(array(
 				"investment_id"	=> $investment->id,
 				"status"		=> array(1,2)
 			));
-			if($transaction){
-				$instalment_paid 		= 0;//已還期數
-				$next_instalment 		= true;//下期
-				$principal				= 0;//本金
-				$interest				= 0;//利息
-				$platform_fee			= 0;//應付服務費
+			$target = $this->CI->target_model->get($investment->target_id);
+			
+			if($transaction && $target){
+				$principal			= 0;//本金
+				$interest			= 0;//利息
+				$delay_interest		= 0;//延滯息
+				$instalment_paid	= 0;//已還期數
+				$last_paid_date 	= $target->loan_date;//上次已還款日期
+				$next_pay_date 		= "";//下期還款日期
 				foreach($transaction as $key => $value){
-					if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
-						$instalment_paid = $value->instalment_no;
-					}
-				}
-				foreach($transaction as $key => $value){
-					if($value->status==1){
-						switch($value->source){
-							case SOURCE_AR_PRINCIPAL: 
-								$principal 		+= $value->amount;
-								break;
-							case SOURCE_AR_INTEREST: 
-								if($value->limit_date <= $settlement_date){
-									$interest	+= $value->amount;
-									if($value->limit_date == $settlement_date){
-										$next_instalment = false;
-									}
-								}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
-									$interest	+= $value->amount;
-								}
-								break;
-							case SOURCE_AR_FEES: 
-								if($value->limit_date <= $settlement_date){
-									$platform_fee	+= $value->amount;
-									if($value->limit_date == $settlement_date){
-										$next_instalment = false;
-									}
-								}else if($next_instalment && $value->limit_date > $settlement_date && $value->instalment_no==($instalment_paid+1)){
-									$platform_fee	+= $value->amount;
-								}
-								break;
-							default:
-								break;
+					if($value->source==SOURCE_AR_PRINCIPAL){
+						if($value->status==2 && $value->limit_date > $last_paid_date){
+							$last_paid_date 	= $value->limit_date;
+							$instalment_paid 	= $value->instalment_no;
+						}else if($value->status==1){
+							if($value->limit_date < $next_pay_date || $next_pay_date==""){
+								$next_pay_date = $value->limit_date;
+							}
+							$principal += $value->amount;
 						}
 					}
 				}
-				$total = $principal + $interest - $platform_fee;
+				
+				if($next_pay_date != "" && $last_paid_date != ""){
+					$entering_date		= get_entering_date();
+					$settlement_date 	= date("Y-m-d",strtotime($entering_date.' +'.TRANSFER_RANGE_DAYS.' days'));
+					//正常
+					if($settlement_date < $next_pay_date){
+						$range_days = get_range_days($last_paid_date,$settlement_date);
+						$interest 	= $this->CI->financial_lib->get_interest_by_days($range_days,$principal,$target->instalment,$target->interest_rate,$target->loan_date);
+					}else{
+						if($next_pay_date >= $entering_date && $next_pay_date <= $settlement_date){
+							//正常-跨到還款日
+							$settlement_date = $next_pay_date;
+						}else{
+							$range_days = get_range_days($next_pay_date,$settlement_date);
+							if($range_days > GRACE_PERIOD && $range_days <= (GRACE_PERIOD + TRANSFER_RANGE_DAYS)){
+								//逾期-跨到逾期日
+								$settlement_date = date("Y-m-d",strtotime($next_pay_date.' +'.GRACE_PERIOD.' days'));
+							}elseif($range_days > GRACE_PERIOD){
+								$delay_interest = $this->CI->financial_lib->get_delay_interest($principal,$range_days);
+							}
+						}
+					}
+					
+					foreach($transaction as $key => $value){
+						if($value->status==1 && $value->source==SOURCE_AR_INTEREST && $value->limit_date <= $settlement_date){
+							$interest += $value->amount;
+						}
+					}
 
-				$contract = $this->CI->contract_lib->pretransfer_contract([
-					$investment->user_id,
-					"",
-					$target->user_id,
-					$target->target_no,
-					$principal,
-					$principal,
-					$total,
-					$target->user_id,
-					$target->user_id,
-					$target->user_id,
-				]);
-				$instalment = $target->instalment - $instalment_paid;
-				$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
-				$data 		= array(
-					"total"						=> $total,
-					"instalment"				=> $instalment,//剩餘期數
-					"principal"					=> $principal,
-					"interest"					=> $interest,
-					"platform_fee"				=> $platform_fee,
-					"fee"						=> $fee,
-					"debt_transfer_contract" 	=> $contract,
-					"settlement_date"			=> $settlement_date,//結帳日
-				);
-				return $data;
+					$total = $principal + $interest + $delay_interest;
+					$total = intval(round($total * (100 + $bargain_rate) /100,0));
+					$contract = $this->CI->contract_lib->pretransfer_contract([
+						$investment->user_id,
+						"",
+						$target->user_id,
+						$target->target_no,
+						$principal,
+						$principal,
+						$total,
+						$target->user_id,
+						$target->user_id,
+						$target->user_id,
+					]);
+					$instalment = $target->instalment - $instalment_paid;
+					$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
+					$data 		= array(
+						"total"						=> $total,
+						"instalment"				=> $instalment,//剩餘期數
+						"principal"					=> $principal,
+						"interest"					=> $interest,
+						"delay_interest"			=> $delay_interest,
+						"bargain_rate"				=> $bargain_rate,
+						"fee"						=> $fee,
+						"debt_transfer_contract" 	=> $contract,
+						"settlement_date"			=> $settlement_date,//結帳日
+					);
+					return $data;
+				}
 			}
-
 		}
 		return false;
 	}
 	
-	public function apply_transfer($investment){
-		if($investment && $investment->status==3){
+	public function apply_transfer($investment,$bargain_rate=0){
+		if($investment && $investment->status==3 && $investment->transfer_status==0){
 			$target 	= $this->CI->target_model->get($investment->target_id);
-			$info  		= $this->get_pretransfer_info($investment);
+			$info  		= $this->get_pretransfer_info($investment,$bargain_rate);
 			if($info){
 				$principal 	= $info["principal"];
 				$total 		= $info["total"];
@@ -134,9 +152,10 @@ class Transfer_lib{
 							"amount"				=> $info["total"],
 							"principal"				=> $info["principal"],
 							"interest"				=> $info["interest"],
-							"platform_fee"			=> $info["platform_fee"],
+							"delay_interest"		=> $info["delay_interest"],
+							"bargain_rate"			=> $info["bargain_rate"],
 							"instalment"			=> $info["instalment"],
-							"expire_time"			=> strtotime("+2 days", time()),
+							"expire_time"			=> strtotime($info["settlement_date"].' '.CLOSING_TIME),
 							"contract_id"			=> $contract,
 						);
 						$res = $this->CI->transfer_model->insert($param);

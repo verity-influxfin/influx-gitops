@@ -196,6 +196,16 @@ class Financial_lib{
 		return 0;
 	}
 	
+	public function get_interest_by_days($days=0,$principal=0,$instalment=0,$rate=0,$date=""){
+		$interest = 0;
+		if($days && $principal && $instalment && $rate){
+			$leap_year	= $this->leap_year($date,$instalment);
+			$year_days 	= $leap_year?366:365;//今年日數
+			$interest 	= round( $principal * $rate / 100 * $days / $year_days ,0);
+		}
+		return $interest;
+	}
+	
 	private function PMT($rate=0,$instalment=0,$amount=0)
 	{
 		if($amount && $instalment && $rate){

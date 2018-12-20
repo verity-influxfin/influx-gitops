@@ -51,8 +51,8 @@ class Transfer extends REST_Controller {
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Transfer ID
-	 * @apiSuccess {String} amount 借款轉讓金額
-	 * @apiSuccess {String} instalment 借款剩餘期數
+	 * @apiSuccess {String} amount 債權轉讓金額
+	 * @apiSuccess {String} instalment 債權剩餘期數
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {json} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
@@ -210,8 +210,12 @@ class Transfer extends REST_Controller {
      *
 	 * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} id Transfer ID
-	 * @apiSuccess {String} amount 借款轉讓金額
-	 * @apiSuccess {String} instalment 借款剩餘期數
+	 * @apiSuccess {String} amount 債權轉讓金額
+	 * @apiSuccess {String} instalment 債權剩餘期數
+	 * @apiSuccess {String} principal 債權剩餘本金
+	 * @apiSuccess {String} interest 債權已發生利息
+	 * @apiSuccess {String} delay_interest 債權已發生延滯息
+	 * @apiSuccess {String} bargain_rate 增減價百分比
 	 * @apiSuccess {String} debt_transfer_contract 債權轉讓合約
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {json} target 原案資訊
@@ -246,6 +250,10 @@ class Transfer extends REST_Controller {
 	 *			"id":"1",
 	 *			"amount":"5000",
 	 *			"instalment":"12",
+	 *			"principal": "5000",
+     *			"interest": "36",
+     *			"delay_interest": "0",
+     *			"bargain_rate": "-5",
 	 *			"debt_transfer_contract":"我是合約！！",
 	 *			"expire_time":"1527865369",
      * 			"target":{
@@ -350,11 +358,14 @@ class Transfer extends REST_Controller {
 
 			$contract_data 	= $this->contract_lib->get_contract($transfer->contract_id);
 			$contract 		= isset($contract_data["content"])?$contract_data["content"]:"";
-
 			$data 	= array(
 				"id"			=> $transfer->id,
 				"amount"		=> $transfer->amount,
 				"instalment"	=> $transfer->instalment,
+				"principal"		=> $transfer->principal,
+				"interest"		=> $transfer->interest,
+				"delay_interest"=> $transfer->delay_interest,
+				"bargain_rate"	=> $transfer->bargain_rate,
 				"debt_transfer_contract" => $contract,
 				"expire_time"	=> $transfer->expire_time,
 			);

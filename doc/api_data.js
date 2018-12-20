@@ -10415,14 +10415,42 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "amount",
-            "description": "<p>借款轉讓金額</p>"
+            "description": "<p>債權轉讓金額</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "instalment",
-            "description": "<p>借款剩餘期數</p>"
+            "description": "<p>債權剩餘期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "principal",
+            "description": "<p>債權剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "interest",
+            "description": "<p>債權已發生利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "delay_interest",
+            "description": "<p>債權已發生延滯息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "bargain_rate",
+            "description": "<p>增減價百分比</p>"
           },
           {
             "group": "Success 200",
@@ -10611,7 +10639,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"instalment\":\"12\",\n\t\t\t\"debt_transfer_contract\":\"我是合約！！\",\n\t\t\t\"expire_time\":\"1527865369\",\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"status\":\"4\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"instalment\":\"12\",\n\t\t\t\"principal\": \"5000\",\n\t\t\t\"interest\": \"36\",\n\t\t\t\"delay_interest\": \"0\",\n\t\t\t\"bargain_rate\": \"-5\",\n\t\t\t\"debt_transfer_contract\":\"我是合約！！\",\n\t\t\t\"expire_time\":\"1527865369\",\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"status\":\"4\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      }\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -10731,14 +10759,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "amount",
-            "description": "<p>借款轉讓金額</p>"
+            "description": "<p>債權轉讓金額</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "instalment",
-            "description": "<p>借款剩餘期數</p>"
+            "description": "<p>債權剩餘期數</p>"
           },
           {
             "group": "Success 200",
