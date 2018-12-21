@@ -58,7 +58,11 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
+<<<<<<< HEAD
     "time": "2018-12-20T08:08:53.848Z",
+=======
+    "time": "2018-12-03T09:47:40.108Z",
+>>>>>>> cooperation
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
