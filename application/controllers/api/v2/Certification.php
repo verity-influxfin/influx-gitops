@@ -37,20 +37,20 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/list 認證 認證列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/list 認證 認證列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationList
      * @apiGroup Certification
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Certification ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} alias 代號
-	 * @apiSuccess {number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
+	 * @apiSuccess {Number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
 	 * 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -90,8 +90,8 @@ class Certification extends REST_Controller {
     }
 
 	/**
-     * @api {post} /certification/idcard 認證 實名認證
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/idcard 認證 實名認證
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationIdcard
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
@@ -106,8 +106,8 @@ class Certification extends REST_Controller {
      * @apiParam {file} person_image 本人照
      * @apiParam {file} healthcard_image 健保卡照
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -118,28 +118,28 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
      *     }
 	 *
      * @apiError 504 身分證字號格式錯誤
-     * @apiErrorExample {json} 504
+     * @apiErrorExample {Object} 504
      *     {
      *       "result": "ERROR",
      *       "error": "504"
      *     }
 	 *
      * @apiError 505 身分證字號已存在
-     * @apiErrorExample {json} 505
+     * @apiErrorExample {Object} 505
      *     {
      *       "result": "ERROR",
      *       "error": "505"
@@ -228,13 +228,13 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/idcard 認證 實名認證資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/idcard 認證 實名認證資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationIdcard
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} name 姓名
@@ -246,7 +246,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -268,14 +268,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -314,8 +314,8 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/student 認證 學生身份認證
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/student 認證 學生身份認證
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationStudent
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
@@ -332,8 +332,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {String} [sip_password] SIP密碼
      * @apiParam {file} [transcript_image] 成績單
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -344,35 +344,35 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
      *     }
 	 *
      * @apiError 510 此學號已被使用過
-     * @apiErrorExample {json} 510
+     * @apiErrorExample {Object} 510
      *     {
      *       "result": "ERROR",
      *       "error": "510"
      *     }
 	 *
      * @apiError 511 此學生Email已被使用過
-     * @apiErrorExample {json} 511
+     * @apiErrorExample {Object} 511
      *     {
      *       "result": "ERROR",
      *       "error": "511"
      *     }
 	 *
      * @apiError 204 Email格式錯誤
-     * @apiErrorExample {json} 204
+     * @apiErrorExample {Object} 204
      *     {
      *       "result": "ERROR",
      *       "error": "204"
@@ -482,13 +482,13 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/student 認證 學生身份認證資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/student 認證 學生身份認證資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationStudent
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} school 學校名稱
@@ -503,7 +503,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -525,14 +525,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -571,8 +571,8 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/debitcard 認證 金融帳號認證
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/debitcard 認證 金融帳號認證
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationDebitcard
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
@@ -582,8 +582,8 @@ class Certification extends REST_Controller {
      * @apiParam {file} front_image 金融卡正面照
      * @apiParam {file} back_image 金融卡背面照
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -594,42 +594,42 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
      *     }
 	 *
      * @apiError 506 銀行代碼長度錯誤
-     * @apiErrorExample {json} 506
+     * @apiErrorExample {Object} 506
      *     {
      *       "result": "ERROR",
      *       "error": "506"
      *     }
 	 *
      * @apiError 507 分支機構代號長度錯誤
-     * @apiErrorExample {json} 507
+     * @apiErrorExample {Object} 507
      *     {
      *       "result": "ERROR",
      *       "error": "507"
      *     }
 	 *
      * @apiError 508 銀行帳號長度錯誤
-     * @apiErrorExample {json} 508
+     * @apiErrorExample {Object} 508
      *     {
      *       "result": "ERROR",
      *       "error": "508"
      *     }
 	 *
      * @apiError 509 銀行帳號已存在
-     * @apiErrorExample {json} 509
+     * @apiErrorExample {Object} 509
      *     {
      *       "result": "ERROR",
      *       "error": "509"
@@ -747,13 +747,13 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/debitcard 認證 金融帳號認證資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/debitcard 認證 金融帳號認證資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationDebitcard
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} user_name User 姓名
 	 * @apiSuccess {String} certification_id Certification ID
@@ -763,7 +763,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -782,14 +782,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -830,8 +830,8 @@ class Certification extends REST_Controller {
     }
 	
 		/**
-     * @api {post} /certification/emergency 認證 緊急聯絡人
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/emergency 認證 緊急聯絡人
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationEmergency
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
@@ -839,8 +839,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {String} phone 緊急聯絡人電話
 	 * @apiParam {String} relationship 緊急聯絡人關係
 	 *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -851,14 +851,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
@@ -931,17 +931,17 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/emergency 認證 緊急聯絡人資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/emergency 認證 緊急聯絡人資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationEmergency
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} name 緊急聯絡人姓名
 	 * @apiSuccess {String} phone 緊急聯絡人電話
 	 * @apiSuccess {String} relationship 緊急聯絡人關係
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -960,14 +960,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -1006,15 +1006,15 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/email 認證 常用電子信箱
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/email 認證 常用電子信箱
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationEmail
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {String} email Email
 	 *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -1025,21 +1025,21 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
      *     }
 	 *
      * @apiError 204 Email格式錯誤
-     * @apiErrorExample {json} 204
+     * @apiErrorExample {Object} 204
      *     {
      *       "result": "ERROR",
      *       "error": "204"
@@ -1095,15 +1095,15 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/email 認證 常用電子信箱資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/email 認證 常用電子信箱資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationEmail
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} email Email
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -1120,14 +1120,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -1166,15 +1166,15 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/verifyemail 認證 認證電子信箱(學生身份、常用電子信箱)
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/verifyemail 認證 認證電子信箱(學生身份、常用電子信箱)
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationVerifyemail
      * @apiGroup Certification
 	 * @apiParam {String} type 認證Type
 	 * @apiParam {String} email Email
 	 * @apiParam {String} code 認證Code
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -1182,14 +1182,14 @@ class Certification extends REST_Controller {
 	 * @apiUse InputError
 	 *
      * @apiError 204 Email格式錯誤
-     * @apiErrorExample {json} 204
+     * @apiErrorExample {Object} 204
      *     {
      *       "result": "ERROR",
      *       "error": "204"
      *     }
      *
      * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
+     * @apiErrorExample {Object} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
@@ -1223,8 +1223,8 @@ class Certification extends REST_Controller {
     }
 	
 		/**
-     * @api {post} /certification/financial 認證 財務訊息認證
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/financial 認證 財務訊息認證
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationFinancial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
@@ -1239,8 +1239,8 @@ class Certification extends REST_Controller {
      * @apiParam {file} [creditcard_image] 信用卡帳單照
      * @apiParam {file} [passbook_image] 存摺內頁照
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -1251,14 +1251,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
@@ -1325,13 +1325,13 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/financial 認證 財務訊息認證資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/financial 認證 財務訊息認證資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationFinancial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {Number} parttime 打工收入
@@ -1345,7 +1345,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -1369,14 +1369,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"
@@ -1415,16 +1415,16 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /certification/social 認證 社交認證
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/certification/social 認證 社交認證
+	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationSocial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String=facebook,instagram} type 認證類型
      * @apiParam {String} access_token access_token
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -1435,14 +1435,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 502 此驗證已通過驗證
-     * @apiErrorExample {json} 502
+     * @apiErrorExample {Object} 502
      *     {
      *       "result": "ERROR",
      *       "error": "502"
@@ -1517,20 +1517,20 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/social 認證 社交認證資料
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/certification/social 認證 社交認證資料
+	 * @apiVersion 0.2.0
 	 * @apiName GetCertificationSocial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} type 認證類型
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
 	 * @apiSuccess {String} updated_at 最近更新日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -1554,14 +1554,14 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 501 此驗證尚未啟用
-     * @apiErrorExample {json} 501
+     * @apiErrorExample {Object} 501
      *     {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
 	 *
      * @apiError 503 尚未驗證過
-     * @apiErrorExample {json} 503
+     * @apiErrorExample {Object} 503
      *     {
      *       "result": "ERROR",
      *       "error": "503"

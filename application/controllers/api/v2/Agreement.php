@@ -34,32 +34,26 @@ class Agreement extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /agreement/list 協議 協議列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/agreement/list 協議 協議列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetAgreementList
      * @apiGroup Agreement
      *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} id Agreement ID
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} name 名稱
-	 * @apiSuccess {String} content 內容
 	 * @apiSuccess {String} alias 代號
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
      * 				"name":"用戶協議",
-     * 				"content":"用戶協議",
      * 				"alias":"user",
      * 			},
      * 			{
-     * 				"id":"2",
      * 				"name":"投資人協議",
-     * 				"content":"投資人協議",
      * 				"alias":"investor",
      * 			}
      * 			]
@@ -74,9 +68,7 @@ class Agreement extends REST_Controller {
 		if(!empty($agreement_list)){
 			foreach($agreement_list as $key => $value){
 				$list[] = array(
-					"id" 		=> $value->id,
 					"name" 		=> $value->name,
-					"content" 	=> $value->content,
 					"alias" 	=> $value->alias,
 				);
 			}
@@ -86,23 +78,21 @@ class Agreement extends REST_Controller {
 
 	
 	/**
-     * @api {get} /agreement/info/:alias 協議 協議書
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/agreement/info/:alias 協議 協議書
+	 * @apiVersion 0.2.0
 	 * @apiName GetAgreementInfo
      * @apiGroup Agreement
 	 * @apiParam {String} alias 代號
      *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} id Agreement ID
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} content 內容
 	 * @apiSuccess {String} alias 代號
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 	"result":"SUCCESS",
      * 		"data":{
-     * 			"id":"1",
      * 			"name":"用戶協議",
      * 			"content":"用戶協議",
      * 			"alias":"user",
@@ -110,7 +100,7 @@ class Agreement extends REST_Controller {
      * }
 	 *
      * @apiError 701 此協議書不存在
-     * @apiErrorExample {json} 701
+     * @apiErrorExample {Object} 701
      *     {
      *       "result": "ERROR",
      *       "error": "701"
@@ -122,7 +112,6 @@ class Agreement extends REST_Controller {
 			$agreement = $this->agreement_model->get_by(array("alias"=>$alias));
 			if($agreement && $agreement->status){
 				$data = array(
-					"id" 			=> $agreement->id,
 					"name" 			=> $agreement->name,
 					"content" 		=> $agreement->content,
 					"alias" 		=> $agreement->alias,

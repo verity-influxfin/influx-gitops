@@ -44,22 +44,22 @@ class Transfer extends REST_Controller {
 	
 
 	/**
-     * @api {get} /transfer/list 出借方 取得債權標的列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/transfer/list 出借方 取得債權標的列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetTransferList
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {String=credit_level,instalment,interest_rate} [orderby="credit_level"] 排序值
 	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Transfer ID
 	 * @apiSuccess {String} amount 債權轉讓金額
 	 * @apiSuccess {String} instalment 債權剩餘期數
 	 * @apiSuccess {String} expire_time 流標時間
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} target 原案資訊
+	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.target_no 案號
 	 * @apiSuccess {String} ctarget.redit_level 信用指數
 	 * @apiSuccess {String} target.user_id User ID
@@ -72,7 +72,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} target.created_at 申請日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -207,14 +207,14 @@ class Transfer extends REST_Controller {
     }
 
 	/**
-     * @api {get} /transfer/info/:id 出借方 取得債權標的資訊
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/transfer/info/:id 出借方 取得債權標的資訊
+	 * @apiVersion 0.2.0
 	 * @apiName GetTransferInfo
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id 投資ID
+	 * @apiParam {Number} id 投資ID
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Transfer ID
 	 * @apiSuccess {String} amount 債權轉讓金額
 	 * @apiSuccess {String} instalment 債權剩餘期數
@@ -224,7 +224,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} bargain_rate 增減價百分比
 	 * @apiSuccess {String} debt_transfer_contract 債權轉讓合約
 	 * @apiSuccess {String} expire_time 流標時間
-	 * @apiSuccess {json} target 原案資訊
+	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.id Target ID
 	 * @apiSuccess {String} target.target_no 標的號
 	 * @apiSuccess {String} target.user_id User ID
@@ -240,16 +240,16 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} target.created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} certification 借款人認證完成資訊
-	 * @apiSuccess {json} user 借款人基本資訊
+	 * @apiSuccess {Object} certification 借款人認證完成資訊
+	 * @apiSuccess {Object} user 借款人基本資訊
 	 * @apiSuccess {String} user.name 姓名
 	 * @apiSuccess {String} user.age 年齡
 	 * @apiSuccess {String} user.school_name 學校名稱
 	 * @apiSuccess {String} user.id_number 身分證字號
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -311,7 +311,7 @@ class Transfer extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 * @apiError 801 標的不存在
-     * @apiErrorExample {json} 801
+     * @apiErrorExample {Object} 801
      *     {
      *       "result": "ERROR",
      *       "error": "801"
@@ -403,16 +403,16 @@ class Transfer extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /transfer/apply 出借方 申請債權收購
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/transfer/apply 出借方 申請債權收購
+	 * @apiVersion 0.2.0
 	 * @apiName PostTransferApply
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} transfer_id 投資ID
+	 * @apiParam {Number} transfer_id 投資ID
 	 * 
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -424,56 +424,56 @@ class Transfer extends REST_Controller {
 	 * @apiUse NotInvestor
      *
 	 * @apiError 809 債權轉讓標的不存在
-     * @apiErrorExample {json} 809
+     * @apiErrorExample {Object} 809
      *     {
      *       "result": "ERROR",
      *       "error": "809"
      *     }
 	 *
      * @apiError 810 已申請收購
-     * @apiErrorExample {json} 810
+     * @apiErrorExample {Object} 810
      *     {
      *       "result": "ERROR",
      *       "error": "810"
      *     }
 	 *
      * @apiError 804 雙方不可同使用者
-     * @apiErrorExample {json} 804
+     * @apiErrorExample {Object} 804
      *     {
      *       "result": "ERROR",
      *       "error": "804"
      *     }
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
      *     }
 	 *
      * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {json} 212
+     * @apiErrorExample {Object} 212
      *     {
      *       "result": "ERROR",
      *       "error": "212"
@@ -554,27 +554,27 @@ class Transfer extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /transfer/applylist 出借方 債權申請紀錄列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/transfer/applylist 出借方 債權申請紀錄列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetTransferApplylist
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Transfer Investments ID
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款 9:流標 10:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} transfer 債轉標的資訊
+	 * @apiSuccess {Object} transfer 債轉標的資訊
 	 * @apiSuccess {String} transfer.id Transfer ID
 	 * @apiSuccess {String} transfer.amount 借款轉讓金額
 	 * @apiSuccess {String} transfer.instalment 借款剩餘期數
 	 * @apiSuccess {String} transfer.expire_time 流標時間
-	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.loan_amount 標的金額
 	 * @apiSuccess {String} target.target_no 案號
@@ -582,21 +582,21 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} target.invested 目前投標量
 	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {Object} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
 	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
-	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {Object} funds 資金資訊
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
 	 * @apiSuccess {String} funds.frozen 待交易餘額
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -655,28 +655,28 @@ class Transfer extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
@@ -782,29 +782,29 @@ class Transfer extends REST_Controller {
     }
  
  	/**
-     * @api {get} /transfer/batch 出借方 智能收購
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/transfer/batch 出借方 智能收購
 	 * @apiName GetTransferBatch
+	 * @apiVersion 0.2.0
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} budget 預算金額
-	 * @apiParam {number} [delay=0] 逾期標的 0:正常標的 1:逾期標的 default:0
-     * @apiParam {number} [user_id] 指定使用者ID
-	 * @apiParam {number} [interest_rate_s] 正常標的-利率區間下限(%)
-     * @apiParam {number} [interest_rate_e] 正常標的-利率區間上限(%)
-     * @apiParam {number} [instalment_s] 正常標的-剩餘期數區間下限(%)
-     * @apiParam {number} [instalment_e] 正常標的-剩餘期數區間上限(%)
+	 * @apiParam {Number} budget 預算金額
+	 * @apiParam {Number} [delay=0] 逾期標的 0:正常標的 1:逾期標的 default:0
+     * @apiParam {Number} [user_id] 指定使用者ID
+	 * @apiParam {Number} [interest_rate_s] 正常標的-利率區間下限(%)
+     * @apiParam {Number} [interest_rate_e] 正常標的-利率區間上限(%)
+     * @apiParam {Number} [instalment_s] 正常標的-剩餘期數區間下限(%)
+     * @apiParam {Number} [instalment_e] 正常標的-剩餘期數區間上限(%)
      * @apiParam {String} [credit_level=all] 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} batch_id 智能收購ID
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
 	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
-     * @apiSuccess {json} debt_transfer_contract 合約列表
-	 * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} debt_transfer_contract 合約列表
+	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -827,35 +827,35 @@ class Transfer extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
      *     }
 	 *
      * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {json} 212
+     * @apiErrorExample {Object} 212
      *     {
      *       "result": "ERROR",
      *       "error": "212"
@@ -1078,20 +1078,20 @@ class Transfer extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /transfer/batch/:batch_id 出借方 智能收購確認
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/transfer/batch/:batch_id 出借方 智能收購確認
+	 * @apiVersion 0.2.0
 	 * @apiName PostTransferBatch
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} batch_id 智能收購ID
+	 * @apiParam {Number} batch_id 智能收購ID
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
 	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
-	 * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -1109,14 +1109,14 @@ class Transfer extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
 	 * @apiError 811 智能收購不存在
-     * @apiErrorExample {json} 811
+     * @apiErrorExample {Object} 811
      *     {
      *       "result": "ERROR",
      *       "error": "811"
      *     }
 	 *
 	 * @apiError 812 對此智能收購無權限
-     * @apiErrorExample {json} 812
+     * @apiErrorExample {Object} 812
      *     {
      *       "result": "ERROR",
      *       "error": "812"

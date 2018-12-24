@@ -41,18 +41,17 @@ class Subloan extends REST_Controller {
 
 	
 	/**
-     * @api {get} /subloan/preapply/:id 借款方 產品轉換前資訊
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/subloan/preapply/:id 借款方 產品轉換前資訊
+	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanPreapply
      * @apiGroup Subloan
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} amount 金額
-	 * @apiSuccess {json} instalment 期數
-	 * @apiSuccess {json} repayment 還款方式
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} instalment 期數
+	 * @apiSuccess {Object} repayment 還款方式
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -97,14 +96,14 @@ class Subloan extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
@@ -112,14 +111,14 @@ class Subloan extends REST_Controller {
 	 *
 	 *
      * @apiError 407 目前狀態無法完成此動作(需逾期且過寬限期)
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 903 已申請提前還款或產品轉換
-     * @apiErrorExample {json} 903
+     * @apiErrorExample {Object} 903
      *     {
      *       "result": "ERROR",
      *       "error": "903"
@@ -171,17 +170,16 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /subloan/apply/ 借款方 產品轉換申請
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/subloan/apply/ 借款方 產品轉換申請
+	 * @apiVersion 0.2.0
 	 * @apiName PostSubloanApply
      * @apiGroup Subloan
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} target_id Target ID
-	 * @apiParam {number} instalment 申請期數
-	 * @apiParam {number} repayment 還款方式
+	 * @apiParam {Number} target_id Target ID
+	 * @apiParam {Number} instalment 申請期數
+	 * @apiParam {Number} repayment 還款方式
 	 * 
-	 * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS"
      *    }
@@ -193,42 +191,42 @@ class Subloan extends REST_Controller {
 	 *
 	 *
      * @apiError 403 不支援此期數
-     * @apiErrorExample {json} 403
+     * @apiErrorExample {Object} 403
      *     {
      *       "result": "ERROR",
      *       "error": "403"
      *     }
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作(需逾期且過寬限期)
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 409 不支援此還款方式
-     * @apiErrorExample {json} 409
+     * @apiErrorExample {Object} 409
      *     {
      *       "result": "ERROR",
      *       "error": "409"
      *     }
 	 *
      * @apiError 903 已申請提前還款或產品轉換
-     * @apiErrorExample {json} 903
+     * @apiErrorExample {Object} 903
      *     {
      *       "result": "ERROR",
      *       "error": "903"
@@ -286,14 +284,13 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /subloan/applyinfo/:id 借款方 產品轉換紀錄資訊
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/subloan/applyinfo/:id 借款方 產品轉換紀錄資訊
+	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanApplyinfo
      * @apiGroup Subloan
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} target_id Target ID
 	 * @apiSuccess {String} amount 產品轉換金額
 	 * @apiSuccess {String} instalment 期數
@@ -301,7 +298,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} settlement_date 結息日
 	 * @apiSuccess {String} status 產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗	
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} subloan_target 產品轉換產生的Target
+	 * @apiSuccess {Object} subloan_target 產品轉換產生的Target
 	 * @apiSuccess {String} subloan_target.id Target ID
 	 * @apiSuccess {String} subloan_target.target_no 案號
 	 * @apiSuccess {String} subloan_target.product_id Product ID
@@ -318,9 +315,9 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} subloan_target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} subloan_target.created_at 申請日期
 	 * @apiSuccess {String} subloan_target.contract 合約內容
-	 * @apiSuccess {json} subloan_target.product 產品資訊
+	 * @apiSuccess {Object} subloan_target.product 產品資訊
 	 * @apiSuccess {String} subloan_target.product.name 產品名稱
-	 * @apiSuccess {json} subloan_target.amortization_schedule 預計還款計畫(簽約後不出現)
+	 * @apiSuccess {Object} subloan_target.amortization_schedule 預計還款計畫(簽約後不出現)
 	 * @apiSuccess {String} subloan_target.amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} subloan_target.amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} subloan_target.amortization_schedule.rate 年利率
@@ -341,7 +338,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} subloan_target.amortization_schedule.total.principal 本金
 	 * @apiSuccess {String} subloan_target.amortization_schedule.total.interest 利息
 	 * @apiSuccess {String} subloan_target.amortization_schedule.total.total_payment 加總
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -425,21 +422,21 @@ class Subloan extends REST_Controller {
 	 * @apiUse IsInvestor
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 904 尚未申請產品轉換
-     * @apiErrorExample {json} 904
+     * @apiErrorExample {Object} 904
      *     {
      *       "result": "ERROR",
      *       "error": "904"
@@ -517,16 +514,15 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /subloan/signing 借款方 產品轉換簽約
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/subloan/signing 借款方 產品轉換簽約
+	 * @apiVersion 0.2.0
 	 * @apiName PostSubloanSigning
      * @apiGroup Subloan
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} target_id Targets ID
+	 * @apiParam {Number} target_id Targets ID
 	 * @apiParam {file} person_image 本人照
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -538,35 +534,35 @@ class Subloan extends REST_Controller {
 	 * @apiUse IsInvestor
      *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 206 人臉辨識不通過
-     * @apiErrorExample {json} 206
+     * @apiErrorExample {Object} 206
      *     {
      *       "result": "ERROR",
      *       "error": "206"
      *     }
 	 *
      * @apiError 904 尚未申請產品轉換
-     * @apiErrorExample {json} 904
+     * @apiErrorExample {Object} 904
      *     {
      *       "result": "ERROR",
      *       "error": "904"
@@ -634,15 +630,14 @@ class Subloan extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /subloan/cancel/:id 借款方 取消產品轉換
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/subloan/cancel/:id 借款方 取消產品轉換
+	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanCancel
      * @apiGroup Subloan
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -654,28 +649,28 @@ class Subloan extends REST_Controller {
      *
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 904 尚未申請產品轉換
-     * @apiErrorExample {json} 904
+     * @apiErrorExample {Object} 904
      *     {
      *       "result": "ERROR",
      *       "error": "904"

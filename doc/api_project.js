@@ -1,9 +1,10 @@
 define({
-  "name": "手機ATM API Doccument",
-  "version": "0.0.0",
-  "description": "手機ATM API，先做登入，若會員不存在則進行註冊流程<br>其他 API 皆需於 header 帶入 request_token",
-  "title": "手機ATM API Doccument",
-  "url": "https://api.influxfin.com/api",
+  "name": "普匯金融科技 手機ATM API文檔",
+  "version": "0.2.0",
+  "description": "web上線版本 0.1.0 (2018/08/03)<br>app上線版本 0.2.0 (開發中)",
+  "title": "普匯金融科技 手機ATM API文檔",
+  "url": "https://dev-api.influxfin.com/api",
+  "sampleUrl": "https://dev-api.influxfin.com/api",
   "order": [
     "User",
     "PostUserRegisterphone",
@@ -53,16 +54,11 @@ define({
     "GetNotificationInfoId",
     "GetNotificationReadall"
   ],
-  "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-<<<<<<< HEAD
-    "time": "2018-12-20T08:08:53.848Z",
-=======
-    "time": "2018-12-03T09:47:40.108Z",
->>>>>>> cooperation
+    "time": "2018-12-24T03:54:57.127Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

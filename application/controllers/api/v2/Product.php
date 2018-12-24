@@ -48,27 +48,27 @@ class Product extends REST_Controller {
 
 	
 	/**
-     * @api {get} /product/list 借款方 取得產品列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/product/list 借款方 取得產品列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetProductList
      * @apiGroup Product
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Product ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} rank 排序
-	 * @apiSuccess {json} instalment 可申請期數
-	 * @apiSuccess {json} repayment 可選還款方式
+	 * @apiSuccess {Object} instalment 可申請期數
+	 * @apiSuccess {Object} repayment 可選還款方式
 	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
 	 * @apiSuccess {String} loan_range_e 最高借款額度(元)
 	 * @apiSuccess {String} interest_rate_s 年利率下限(%)
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {json} target 申請資訊（未簽約）
-	 * @apiSuccess {json} certification 認證完成資訊
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} target 申請資訊（未簽約）
+	 * @apiSuccess {Object} certification 認證完成資訊
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -142,7 +142,7 @@ class Product extends REST_Controller {
 		$input 			= $this->input->get();
 		$data			= array();
 		$list			= array();
-		$where			= array("id"=>1 , "status" => 1 );
+		$where			= array( "status" => 1 );
 	
 		$product_list 	= $this->product_model->get_many_by($where);
 		if(isset($this->user_info->id) && $this->user_info->id){
@@ -213,14 +213,13 @@ class Product extends REST_Controller {
     }
 
 	/**
-     * @api {get} /product/info/:id 借款方 取得產品資訊
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/product/info/:id 借款方 取得產品資訊
+	 * @apiVersion 0.2.0
 	 * @apiName GetProductInfo
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id 產品ID
+	 * @apiParam {Number} id 產品ID
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Product ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
@@ -231,9 +230,9 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {json} instalment 可申請期數
-	 * @apiSuccess {json} repayment 還款方式
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} instalment 可申請期數
+	 * @apiSuccess {Object} repayment 還款方式
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -278,14 +277,14 @@ class Product extends REST_Controller {
 	 * @apiUse IsInvestor
 	 *
 	 * @apiError 401 產品不存在
-     * @apiErrorExample {json} 401
+     * @apiErrorExample {Object} 401
      *     {
      *       "result": "ERROR",
      *       "error": "401"
      *     }
 	 *
 	 * @apiError 408 未完成預先申請
-     * @apiErrorExample {json} 408
+     * @apiErrorExample {Object} 408
      *     {
      *       "result": "ERROR",
      *       "error": "401"
@@ -335,19 +334,18 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /product/apply 借款方 申請產品
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/product/apply 借款方 申請產品
+	 * @apiVersion 0.2.0
 	 * @apiName PostProductApply
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} product_id 產品ID
-     * @apiParam {number} amount 借款金額
-     * @apiParam {number} instalment 申請期數
+	 * @apiParam {Number} product_id 產品ID
+     * @apiParam {Number} amount 借款金額
+     * @apiParam {Number} instalment 申請期數
 	 * @apiParam {String} [promote_code] 邀請碼
 	 * 
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "target_id": "1",
@@ -360,28 +358,28 @@ class Product extends REST_Controller {
 	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
-     * @apiErrorExample {json} 401
+     * @apiErrorExample {Object} 401
      *     {
      *       "result": "ERROR",
      *       "error": "401"
      *     }
 	 *
      * @apiError 402 超過此產品可申請額度
-     * @apiErrorExample {json} 402
+     * @apiErrorExample {Object} 402
      *     {
      *       "result": "ERROR",
      *       "error": "402"
      *     }
 	 *
      * @apiError 403 不支援此期數
-     * @apiErrorExample {json} 403
+     * @apiErrorExample {Object} 403
      *     {
      *       "result": "ERROR",
      *       "error": "403"
      *     }
 	 *
      * @apiError 408 重複申請
-     * @apiErrorExample {json} 408
+     * @apiErrorExample {Object} 408
      *     {
      *       "result": "ERROR",
      *       "error": "408"
@@ -440,16 +438,15 @@ class Product extends REST_Controller {
     }
 
 	/**
-     * @api {post} /product/signing 借款方 申請簽約
-	 * @apiVersion 0.1.0
+     * @api {post} /v2/product/signing 借款方 申請簽約
+	 * @apiVersion 0.2.0
 	 * @apiName PostProductSigning
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} target_id Targets ID
+	 * @apiParam {Number} target_id Targets ID
 	 * @apiParam {file} person_image 本人照
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -461,56 +458,56 @@ class Product extends REST_Controller {
 	 * @apiUse IsInvestor
      *
 	 * @apiError 401 產品不存在
-     * @apiErrorExample {json} 401
+     * @apiErrorExample {Object} 401
      *     {
      *       "result": "ERROR",
      *       "error": "401"
      *     }
      *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 202 未通過所需的驗證
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 未綁定金融帳號
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 206 人臉辨識不通過
-     * @apiErrorExample {json} 206
+     * @apiErrorExample {Object} 206
      *     {
      *       "result": "ERROR",
      *       "error": "206"
      *     }
 	 *
      * @apiError 208 未滿20歲或大於35歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
@@ -606,17 +603,16 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /product/applylist 借款方 申請紀錄列表
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/product/applylist 借款方 申請紀錄列表
+	 * @apiVersion 0.2.0
 	 * @apiName GetProductApplylist
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} amount 申請金額
 	 * @apiSuccess {String} loan_amount 核准金額
@@ -629,7 +625,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -731,14 +727,13 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /product/applyinfo/:id 借款方 申請紀錄資訊
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/product/applyinfo/:id 借款方 申請紀錄資訊
+	 * @apiVersion 0.2.0
 	 * @apiName GetProductApplyinfo
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Target ID
 	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} product_id Product ID
@@ -755,14 +750,14 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
-	 * @apiSuccess {json} certification 認證完成資訊
-	 * @apiSuccess {json} credit 信用資訊
+	 * @apiSuccess {Object} product 產品資訊
+	 * @apiSuccess {Object} certification 認證完成資訊
+	 * @apiSuccess {Object} credit 信用資訊
 	 * @apiSuccess {String} credit.level 信用指數
 	 * @apiSuccess {String} credit.points 信用分數
 	 * @apiSuccess {String} credit.amount 總信用額度
 	 * @apiSuccess {String} credit.created_at 核准日期
-	 * @apiSuccess {json} amortization_schedule 預計還款計畫(簽約後不出現)
+	 * @apiSuccess {Object} amortization_schedule 預計還款計畫(簽約後不出現)
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} amortization_schedule.rate 年利率
@@ -783,7 +778,7 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.total.principal 本金
 	 * @apiSuccess {String} amortization_schedule.total.interest 利息
 	 * @apiSuccess {String} amortization_schedule.total.total_payment 加總
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -883,14 +878,14 @@ class Product extends REST_Controller {
 	 * @apiUse IsInvestor
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
@@ -970,15 +965,14 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /product/cancel/:id 借款方 取消申請
-	 * @apiVersion 0.1.0
+     * @api {get} /v2/product/cancel/:id 借款方 取消申請
+	 * @apiVersion 0.2.0
 	 * @apiName GetProductCancel
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -990,21 +984,21 @@ class Product extends REST_Controller {
      *
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
