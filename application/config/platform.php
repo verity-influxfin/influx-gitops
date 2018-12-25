@@ -26,6 +26,8 @@ $config['admin_menu'] = array(
 		"parent_icon"	=> "fa-briefcase",
 		"index"			=> "風控審核",
 		"credit"		=> "信評管理",
+		"loaned_wait_push" =>"貸後催收",
+		"loaned_wait_push?slist=1" => "貸後已催收列表",
 	),
 	"Passbook" 	=> array(
 		"parent_name"		=> "虛擬帳號管理",
