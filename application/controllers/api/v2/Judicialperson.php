@@ -9,15 +9,7 @@ class Judicialperson extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('user/virtual_account_model');
-		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('loan/product_model');
-		$this->load->model('loan/investment_model');
-		$this->load->model('transaction/transaction_model');
-		$this->load->library('Transaction_lib'); 
-		$this->load->library('Target_lib'); 
-		$this->load->library('Transfer_lib'); 
-		$this->load->library('Passbook_lib'); 
+		$this->load->model('user/judicial_person_model');
 		
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
@@ -48,61 +40,32 @@ class Judicialperson extends REST_Controller {
     }
 
 	/**
-     * @api {get} /v2/judicialperson/list 出借方 已綁定法人列表
+     * @api {get} /v2/judicialperson/list 出借方 已申請法人列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetJudicialpersonList
      * @apiGroup Judicialperson
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Investments ID
-	 * @apiSuccess {String} loan_amount 出借金額
-	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
-	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
-	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {Object} target 標的資訊
-	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} target.credit_level 信用指數
-	 * @apiSuccess {String} target.delay_days 逾期天數
-	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {Object} next_repayment 最近一期應還款
-	 * @apiSuccess {String} next_repayment.date 還款日
-	 * @apiSuccess {String} next_repayment.instalment 期數
-	 * @apiSuccess {String} next_repayment.amount 金額
+	 * @apiSuccess {String} company_type 公司類型
+	 * @apiSuccess {String} company 公司名稱
+	 * @apiSuccess {String} tax_id 公司統一編號
+	 * @apiSuccess {String} remark 備註
+	 * @apiSuccess {String} status 狀態 0:審核中 1:審核通過 2:審核失敗
+	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
-     * 				"amount":"50000",
-     * 				"loan_amount":"",
+     * 				"company_type":"1",
+     * 				"company":"50000",
+     * 				"tax_id":"",
+     * 				"remark":"3",
      * 				"status":"3",
      * 				"transfer_status":"0",
-     * 				"created_at":"1520421572",
-	 * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸"
-     * 				},
-     * 				"target": {
-     * 					"id": "19",
-     * 					"target_no": "1804233189",
-     * 					"credit_level": "4",
-     * 					"delay": "0",
-     * 					"delay_days": "0",
-     * 					"status": "5",
-     * 					"sub_status": "0"
-     * 				},
-	 * 	        	"next_repayment": {
-     * 	            	"date": "2018-06-10",
-     * 	            	"instalment": "1",
-     * 	            	"amount": "16890"
-     * 	        	}
+     * 				"created_at":"1520421572"
      * 			}
      * 			]
      * 		}
@@ -179,7 +142,7 @@ class Judicialperson extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /v2/judicialperson/info/:id 出借方 已綁定法人資訊
+     * @api {get} /v2/judicialperson/info/:id 出借方 已申請法人資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetJudicialpersonInfo
      * @apiGroup Judicialperson
