@@ -1,6 +1,6 @@
 <?php
 
-class debt_audit_model extends MY_Model
+class Debt_audit_model extends MY_Model
 {
 	public $_table = 'debt_audit';
 	public $before_create 	= array( 'before_data_c' );
