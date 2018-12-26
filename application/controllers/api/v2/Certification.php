@@ -16,7 +16,7 @@ class Certification extends REST_Controller {
 		$this->certification 	= $this->config->item('certifications');
         $nonAuthMethods = ['verifyemail'];
 		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -86,7 +86,7 @@ class Certification extends REST_Controller {
 		if(!empty($certification_list)){
 			$list = $certification_list;
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 
 	/**
@@ -150,7 +150,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -187,7 +187,7 @@ class Certification extends REST_Controller {
 			}
 
 			//檢查身分證字號
-			$id_number_used = $this->user_model->get_by(array( "id_number" => $input['id_number'] ));
+			$id_number_used = $this->user_model->get_by(array( 'id_number' => $input['id_number'] ));
 			if($id_number_used && $id_number_used->id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_IDNUMBER_EXIST ));
 			}
@@ -208,17 +208,17 @@ class Certification extends REST_Controller {
 			}
 
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('Sendemail');
-				$investor_status = $investor?"出借端":"借款端";
-				$this->sendemail->admin_notification("新的一筆實名認證 ".$investor_status."會員ID:".$user_id,"有新的一筆實名認證 ".$investor_status."會員ID:".$user_id);
+				$investor_status = $investor?'出借端':'借款端';
+				$this->sendemail->admin_notification('新的一筆實名認證 '.$investor_status.'會員ID:'.$user_id,'有新的一筆實名認證 '.$investor_status.'會員ID:'.$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -285,7 +285,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$data		= array();
@@ -293,12 +293,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address'];
 				foreach ($fields as $field) {
@@ -383,7 +383,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 2;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -446,7 +446,7 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
 					if($image){
 						$content[$field] = $image;
 					}else{
@@ -460,14 +460,14 @@ class Certification extends REST_Controller {
 			if (isset($_FILES['transcript_image']) && !empty($_FILES['transcript_image'])) {
 				$content['transcript_image'] = $this->s3_upload->image($_FILES,'transcript_image',$user_id,$certification["alias"]);
 			}else{
-				$content['transcript_image'] = "";
+				$content['transcript_image'] = '';
 			}
 			
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -542,7 +542,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 2;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$data		= array();
@@ -550,12 +550,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields 	= ['school','major','department','student_id','system','email','grade'];
 				foreach ($fields as $field) {
@@ -641,7 +641,7 @@ class Certification extends REST_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$certification_id 	= 3;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -674,10 +674,10 @@ class Certification extends REST_Controller {
 			}
 			
 			$where = array(
-				"investor"		=> $investor,
-				"bank_code"		=> $content["bank_code"],
-				"bank_account"	=> $content["bank_account"],
-				"status"		=> 1,
+				'investor'		=> $investor,
+				'bank_code'		=> $content['bank_code'],
+				'bank_account'	=> $content['bank_account'],
+				'status'		=> 1,
 			);
 			
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
@@ -689,7 +689,7 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
 					if($image){
 						$content[$field] = $image;
 					}else{
@@ -701,35 +701,35 @@ class Certification extends REST_Controller {
 			}
 
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"expire_time"		=> strtotime("+20 years"),
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'expire_time'		=> strtotime('+20 years'),
+				'content'			=> json_encode($content),
 			);
 			
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$bankaccount_info = array(
-					"user_id"		=> $user_id,
-					"investor"		=> $investor,
-					"user_certification_id"	=> $insert,
-					"bank_code"		=> $content["bank_code"],
-					"branch_code"	=> $content["branch_code"],
-					"bank_account"	=> $content["bank_account"],
-					"front_image"	=> $content["front_image"],
-					"back_image"	=> $content["back_image"],
+					'user_id'		=> $user_id,
+					'investor'		=> $investor,
+					'user_certification_id'	=> $insert,
+					'bank_code'		=> $content['bank_code'],
+					'branch_code'	=> $content['branch_code'],
+					'bank_account'	=> $content['bank_account'],
+					'front_image'	=> $content['front_image'],
+					'back_image'	=> $content['back_image'],
 				);
 				
 				if($investor){
 					$bankaccount_info['verify'] = 2;
 					$this->load->library('Sendemail');
-					$this->sendemail->admin_notification("新的一筆金融帳號驗證 出借端會員ID:".$user_id,"有新的一筆金融帳號驗證 出借端會員ID:".$user_id);
+					$this->sendemail->admin_notification('新的一筆金融帳號驗證 出借端會員ID:'.$user_id,'有新的一筆金融帳號驗證 出借端會員ID:'.$user_id);
 				}else{
 					$this->certification_lib->set_success($insert);
 					$target = $this->target_model->get_by(array(
-						"user_id"	=> $user_id,
-						"status"	=> 2,
+						'user_id'	=> $user_id,
+						'status'	=> 2,
 					));
 					if($target){
 						$bankaccount_info['verify'] = 2;
@@ -799,7 +799,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 3;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$user_name 	= $this->user_info->name;
@@ -808,13 +808,13 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"user_name"			=> $user_name,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'user_name'			=> $user_name,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields 	= ['bank_code','branch_code','bank_account'];
 				foreach ($fields as $field) {
@@ -869,7 +869,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 5;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -907,18 +907,18 @@ class Certification extends REST_Controller {
 			}
 			
 			$phone_exist = $this->user_model->get_by(array(
-				"phone"		=> $content['phone'],
-				"status"	=> 1,
+				'phone'		=> $content['phone'],
+				'status'	=> 1,
 			));
 			if($phone_exist){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
@@ -977,7 +977,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 5;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$data		= array();
@@ -985,12 +985,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields 	= ['name','phone','relationship'];
 				foreach ($fields as $field) {
@@ -1050,7 +1050,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 6;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -1077,10 +1077,10 @@ class Certification extends REST_Controller {
 			}
 		
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1145,12 +1145,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields 	= ['email'];
 				foreach ($fields as $field) {
@@ -1213,7 +1213,7 @@ class Certification extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 		}
 	
-		$rs = $this->sendemail->verify_code($input["type"],$input["email"],$input["code"]);
+		$rs = $this->sendemail->verify_code($input['type'],$input['email'],$input['code']);
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
@@ -1269,7 +1269,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 7;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -1296,22 +1296,22 @@ class Certification extends REST_Controller {
 			$file_fields 	= ['creditcard_image','passbook_image'];
 			foreach ($file_fields as $field) {
 				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification["alias"]);
+					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
 					if($image){
 						$content[$field] = $image;
 					}else{
-						$content[$field] = "";
+						$content[$field] = '';
 					}
 				}else{
-					$content[$field] = "";
+					$content[$field] = '';
 				}
 			}
 			
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1386,7 +1386,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 7;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$data		= array();
@@ -1394,12 +1394,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields = ['parttime','allowance','scholarship','other_income','restaurant','transportation','entertainment','other_expense'];
 				foreach ($fields as $field) {
@@ -1453,9 +1453,9 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 4;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
-			$type  		= isset($input['type'])?$input['type']:"";
+			$type  		= isset($input['type'])?$input['type']:'';
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			 
@@ -1467,10 +1467,10 @@ class Certification extends REST_Controller {
 			
 			//必填欄位
 			switch ($type){
-				case "facebook":
+				case 'facebook':
 					$fields = ['access_token'];
 					break;
-				case "instagram":
+				case 'instagram':
 					$fields = ['access_token'];
 					break;
 				default:
@@ -1483,27 +1483,27 @@ class Certification extends REST_Controller {
 				}
 			}
 
-			if($type=="facebook"){
+			if($type=='facebook'){
 				$this->load->library('facebook_lib'); 
-				$info	 	= $this->facebook_lib->get_info($input["access_token"]);
+				$info	 	= $this->facebook_lib->get_info($input['access_token']);
 			}
 
-			if($type=="instagram"){
+			if($type=='instagram'){
 				$this->load->library('instagram_lib'); 
-				$info 		= $this->instagram_lib->get_info($input["access_token"]);
+				$info 		= $this->instagram_lib->get_info($input['access_token']);
 			}
 		
 			$content = array(
-				"type"			=> $type,
-				"info"			=> $info,
-				"access_token"	=> $input["access_token"],
+				'type'			=> $type,
+				'info'			=> $info,
+				'access_token'	=> $input['access_token'],
 			);
 			
 			$param		= array(
-				"user_id"			=> $user_id,
-				"certification_id"	=> $certification_id,
-				"investor"			=> $investor,
-				"content"			=> json_encode($content),
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
 			);
 			
 			$insert = $this->user_certification_model->insert($param);
@@ -1571,7 +1571,7 @@ class Certification extends REST_Controller {
     {
 		$certification_id 	= 4;
 		$certification 		= $this->certification[$certification_id];
-		if($certification && $certification["status"]==1){
+		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$data		= array();
@@ -1579,12 +1579,12 @@ class Certification extends REST_Controller {
 			if($rs){
 				$content = $rs->content;
 				$data = array(
-					"user_id"			=> $rs->user_id,
-					"certification_id"	=> $rs->certification_id,
-					"status"			=> $rs->status,
-					"expire_time"		=> $rs->expire_time,
-					"created_at"		=> $rs->created_at,
-					"updated_at"		=> $rs->updated_at,
+					'user_id'			=> $rs->user_id,
+					'certification_id'	=> $rs->certification_id,
+					'status'			=> $rs->status,
+					'expire_time'		=> $rs->expire_time,
+					'created_at'		=> $rs->created_at,
+					'updated_at'		=> $rs->updated_at,
 				);
 				$fields = ['type'];
 				foreach ($fields as $field) {

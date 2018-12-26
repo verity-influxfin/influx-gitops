@@ -338,7 +338,7 @@ class User extends REST_Controller {
 				$token->auth_otp	= get_rand_token();
 				$token->expiry_time	= time()+REQUEST_TOKEN_EXPIRY;
 				$token->investor 	= $investor;
-				$request_token = AUTHORIZATION::generateUserToken($token);
+				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array("auth_otp"=>$token->auth_otp));
 				$this->log_userlogin_model->insert(array("account"=>$input['phone'],"investor"=>$investor ,"user_id"=>$user_info->id,"status"=>1));
 				if($first_time){
@@ -596,9 +596,9 @@ class User extends REST_Controller {
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
 			$this->load->library('sms_lib'); 
-			$rs = $this->sms_lib->verify_code($user_info->phone,$input["code"]);
+			$rs = $this->sms_lib->verify_code($user_info->phone,$input['code']);
 			if($rs){
-				$res = $this->user_model->update($user_info->id,array("password"=>$input['new_password']));
+				$res = $this->user_model->update($user_info->id,array('password'=>$input['new_password']));
 				if($res){
 					$this->response(array('result' => 'SUCCESS'));
 				}else{
@@ -727,10 +727,10 @@ class User extends REST_Controller {
 		$type  = isset($input['type'])?$input['type']:"";
 		
 		switch ($type){
-			case "facebook":
+			case 'facebook':
 				$fields = ['access_token'];
 				break; 
-			case "instagram":
+			case 'instagram':
 				$fields = ['access_token'];
 				break; 
 			default:
@@ -743,7 +743,7 @@ class User extends REST_Controller {
             }
         }
 		
-		if($type=="facebook"){
+		if($type=='facebook'){
 			$this->load->library('facebook_lib'); 
 			
 			$meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
@@ -751,9 +751,9 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 			}
 			
-			$debug_token = $this->facebook_lib->debug_token($input["access_token"]);
+			$debug_token = $this->facebook_lib->debug_token($input['access_token']);
 			if($debug_token){
-				$info 		= $this->facebook_lib->get_info($input["access_token"]);
+				$info 		= $this->facebook_lib->get_info($input['access_token']);
 				if($info){
 					$user_id 	= $this->facebook_lib->login($info);
 					if($user_id){
@@ -772,7 +772,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
 		}
 		
-		if($type=="instagram"){
+		if($type=='instagram'){
 			$this->load->library('instagram_lib'); 
 			
 			$meta  = $this->instagram_lib->get_user_meta($this->user_info->id);
@@ -780,7 +780,7 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 			}
 			
-			$info 			= $this->instagram_lib->get_info($input["access_token"]);
+			$info 			= $this->instagram_lib->get_info($input['access_token']);
 			if($info){
 				$user_id 	= $this->instagram_lib->login($info);
 				if($user_id){
@@ -801,12 +801,12 @@ class User extends REST_Controller {
     }
 	
 	private function set_nickname($info){
-		if($this->user_info->nickname=="" && $info['name']){
-			$this->user_model->update($this->user_info->id,array("nickname"=>$info['name']));
+		if($this->user_info->nickname=='' && $info['name']){
+			$this->user_model->update($this->user_info->id,array('nickname'=>$info['name']));
 		}
 		
-		if($this->user_info->picture=="" && $info['picture']){
-			$this->user_model->update($this->user_info->id,array("picture"=>$info['picture']));
+		if($this->user_info->picture=='' && $info['picture']){
+			$this->user_model->update($this->user_info->id,array('picture'=>$info['picture']));
 		}
 		return true;
 	}
@@ -918,7 +918,7 @@ class User extends REST_Controller {
 			}
         }
 		
-		if(strlen($input["new_password"]) < PASSWORD_LENGTH){
+		if(strlen($input['new_password']) < PASSWORD_LENGTH){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
 		
@@ -929,12 +929,12 @@ class User extends REST_Controller {
 			}
 			
 			$this->load->library('sms_lib'); 
-			$rs = $this->sms_lib->verify_code($user_info->phone,$data["code"]);
+			$rs = $this->sms_lib->verify_code($user_info->phone,$data['code']);
 			if(!$rs){
 				$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 			}
 			
-			$res = $this->user_model->update($user_info->id,array("password"=>$data['new_password']));
+			$res = $this->user_model->update($user_info->id,array('password'=>$data['new_password']));
 			if($res){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -1111,9 +1111,9 @@ class User extends REST_Controller {
 		$url 			= BORROW_URL.'?promote_code='.$promote_code;
 		$qrcode			= get_qrcode($url);
 		$data			= array(
-			"promote_code"	=> $promote_code,
-			"promote_url"	=> $url,
-			"promote_qrcode"=> $qrcode
+			'promote_code'	=> $promote_code,
+			'promote_url'	=> $url,
+			'promote_qrcode'=> $qrcode
 		);
 
 		$this->response(array('result' => 'SUCCESS','data'=>$data));

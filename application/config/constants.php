@@ -100,7 +100,11 @@ defined('NO_TRANSACTION_PASSWORD')  	OR define('NO_TRANSACTION_PASSWORD'		, 209)
 defined('TRANSACTION_PASSWORD_ERROR')  	OR define('TRANSACTION_PASSWORD_ERROR'	, 210); //交易密碼錯誤
 defined('NOT_ENOUGH_FUNDS')  			OR define('NOT_ENOUGH_FUNDS'			, 211); //可用餘額不足
 defined('NOT_VERIFIED_EMAIL')  			OR define('NOT_VERIFIED_EMAIL'			, 212); //沒通過認證Email
-
+defined('NOT_IN_CHARGE')  				OR define('NOT_IN_CHARGE'				, 213); //非公司負責人
+defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司已存在
+defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
+defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //請登入公司帳號
+defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //不支援公司帳號
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 

@@ -99,6 +99,14 @@ $config['instalment']= array(
 	24=> "24期",
 );
 
+//公司型態
+$config['company_type']= array(
+	1=> "獨資",
+	2=> "合夥",
+	3=> "有限公司",
+	4=> "股份有限公司",
+);
+
 //還款方式
 $config['repayment_type']= array(
 	1=> "等額本息",

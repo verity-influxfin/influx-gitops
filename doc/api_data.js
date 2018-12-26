@@ -5571,7 +5571,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/v2/judicialperson/list",
-    "title": "出借方 已申請法人列表",
+    "title": "法人會員 已申請法人列表",
     "version": "0.2.0",
     "name": "GetJudicialpersonList",
     "group": "Judicialperson",
@@ -5603,7 +5603,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "company_type",
-            "description": "<p>公司類型</p>"
+            "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
           },
           {
             "group": "Success 200",
@@ -5645,7 +5645,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"company_type\":\"股份有限公司\",\n\t\t\t\t\"company\":\"普匯金融科技股份有限公司\",\n\t\t\t\t\"tax_id\":\"68566881\",\n\t\t\t\t\"remark\":\"人員會盡快與您聯絡\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"company_type\":\"股份有限公司\",\n\t\t\t\t\"company\":\"普匯金融科技股份有限公司\",\n\t\t\t\t\"tax_id\":\"68566881\",\n\t\t\t\t\"remark\":\"盡快與您聯絡\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -5671,12 +5671,6 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "205",
-            "description": "<p>非出借端登入</p>"
           }
         ]
       },
@@ -5690,14 +5684,322 @@ define({ "api": [
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "Object"
-        },
-        {
-          "title": "205",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
-          "type": "Object"
         }
       ]
     }
+  },
+  {
+    "type": "post",
+    "url": "/v2/judicialperson/apply",
+    "title": "法人會員 申請法人身份",
+    "version": "0.2.0",
+    "name": "PostJudicialpersonApply",
+    "group": "Judicialperson",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "company_type",
+            "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "8",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>公司統一編號</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "202",
+            "description": "<p>未通過所需的驗證(實名驗證)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "208",
+            "description": "<p>未滿20歲</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "213",
+            "description": "<p>申請人非公司負責人</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "214",
+            "description": "<p>此公司已申請過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "202",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "208",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "214",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"214\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Judicialperson.php",
+    "groupTitle": "Judicialperson",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/apply"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/judicialperson/login",
+    "title": "法人會員 用戶登入",
+    "version": "0.2.0",
+    "name": "PostJudicialpersonLogin",
+    "group": "Judicialperson",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "8",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>公司統一編號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>手機號碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "6..",
+            "optional": false,
+            "field": "password",
+            "description": "<p>密碼</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>request_token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "first_time",
+            "description": "<p>是否首次本端</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "expiry_time",
+            "description": "<p>token時效</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "304",
+            "description": "<p>密碼錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "304",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Judicialperson.php",
+    "groupTitle": "Judicialperson",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/login"
+      }
+    ]
   },
   {
     "type": "get",
