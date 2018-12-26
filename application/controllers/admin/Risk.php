@@ -219,7 +219,7 @@ class Risk extends MY_Admin_Controller {
 		$page_data['meta']	= $meta_data;
 		$page_data['push_by_status_list'] 		= $this->debt_processing_model->push_by_status_list;
 		$page_data['result_status_list'] 		= $this->debt_processing_model->result_status_list;
-
+		
 		$this->load->view('admin/_header');
 		$this->load->view('admin/risk/risk_push_info',$page_data);
 		$this->load->view('admin/_footer');
@@ -262,7 +262,7 @@ class Risk extends MY_Admin_Controller {
 		$page_data['list']	=$list;		
 		$page_data['role_name']	=$role_name;
 		$page_data['product_level'] 		= $this->debt_audit_model->product_level;
-
+	
 		$this->load->view('admin/_header');
 		$this->load->view('admin/risk/risk_push_audit',$page_data);
 		$this->load->view('admin/_footer');
@@ -271,8 +271,14 @@ class Risk extends MY_Admin_Controller {
 		$this->load->model('admin/debt_audit_model');
 		$input 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
+		$delay_days	=$this->target_model->get($get["id"])->delay_days;
+		$last_push=$this->debt_audit_model->order_by("created_at","desc")->get_by(array("target_id"=> $get["id"]))->next_push;
 		$info = $this->target_model->get($get["id"]);	
-		$rs = $this->debt_audit_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $get["id"],"remark"=> $input["remark"],"product_level"=> $input["product_level"],"next_push"=> $input["next_push"],"result"=> $input["result"],"end_time"=> $input["end_time"]));
+		if(isset($last_push)){
+			$start_time=$last_push;
+		}
+		else{$start_time=time()-$delay_days*86400;}
+		$rs = $this->debt_audit_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $get["id"],"remark"=> $input["remark"],"product_level"=> $input["product_level"],"next_push"=> $input["next_push"],"result"=> $input["result"],"end_time"=> $input["end_time"],"start_time"=> $start_time));
 	}
 }
 ?>
