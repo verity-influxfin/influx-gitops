@@ -188,135 +188,7 @@ class Risk extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 	
-	public function push_target(){
-		$page_data 	= array("type"=>"edit");
-		$get 		= $this->input->get(NULL, TRUE);
-		$input		= $this->input->get(NULL, TRUE);
-		$target_id 	= isset($get["id"])?intval($get["id"]):0;
-		$display 	= isset($get["display"])?intval($get["display"]):0;
-		if($target_id){
-			$info = $this->target_model->get($target_id);
-			if($info){
-				$amortization_table 				= array();
-				$investments 						= array();
-				$investments 						= array();
-				$investments_amortization_table 	= array();
-				$investments_amortization_schedule 	= array();
-				if($info->status==5 || $info->status==10){
-					$amortization_table = $this->target_lib->get_amortization_table($info);
-					$investments = $this->investment_model->get_many_by(array("target_id"=>$info->id,"status"=>array(3,10)));
-					if($investments){
-						foreach($investments as $key =>$value){
-							$investments[$key]->user_info 		= $this->user_model->get($value->user_id);
-							$investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
-								"user_id"	=> $value->user_id,
-								"investor"	=> 1,
-								"status"	=> 1,
-							));
-							$investments_amortization_table[$value->id] = $this->target_lib->get_investment_amortization_table($info,$value);
-						}
-					}
-				}else if($info->status==4){
-					$investments = $this->investment_model->get_many_by(array("target_id"=>$info->id,"status"=>2));
-					if($investments){
-						foreach($investments as $key =>$value){
-							$investments[$key]->user_info 		= $this->user_model->get($value->user_id);
-							$investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
-								"user_id"	=> $value->user_id,
-								"investor"	=> 1,
-								"status"	=> 1,
-							));
-							$investments_amortization_schedule[$value->id] = $this->financial_lib->get_amortization_schedule(
-								$value->loan_amount,
-								$info->instalment,
-								$info->interest_rate,
-								date("Y-m-d"),
-								$info->repayment
-							);
-						}
-					}
-				}
 
-				$user_id 			= $info->user_id;
-				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
-					"user_id"	=> $user_id,
-					"investor"	=> 0,
-					"status"	=> 1,
-					"verify"	=> 1,
-				));
-				$virtual_account 	= $this->virtual_account_model->get_by(array(
-					"user_id"	=> $user_id,
-					"investor"	=> 0,
-					"status"	=> 1,
-				));
-				$bank_account_verify 	= $bank_account?1:0;
-				$credit_list			= $this->credit_model->get_many_by(array("user_id"=>$user_id));
-				$user_info 				= $this->user_model->get($user_id);
-				if(isset($input["slist"])&&$input["slist"]!=null){$page_data['slist']=$input["slist"];}
-				$page_data['data'] 					= $info;
-				$page_data['user_info'] 			= $user_info;
-				$page_data['amortization_table'] 	= $amortization_table;
-				$page_data['investments'] 			= $investments;
-				$page_data['investments_amortization_table'] 	= $investments_amortization_table;
-				$page_data['investments_amortization_schedule'] = $investments_amortization_schedule;
-				$page_data['credit_list'] 			= $credit_list;
-				$page_data['product_list'] 			= $this->product_model->get_name_list();
-				$page_data['bank_account_verify'] 	= $bank_account_verify;
-				$page_data['virtual_account'] 		= $virtual_account;
-				$page_data['instalment_list']		= $this->config->item('instalment');
-				$page_data['repayment_type']		= $this->config->item('repayment_type');
-				$page_data['status_list'] 			= $this->target_model->status_list;
-				$page_data['loan_list'] 			= $this->target_model->loan_list;
-				
-
-
-				$user_list 					= array();
-				$user_investor_list 		= array();
-				$certification_investor_list = array();
-
-				$targets = $this->target_model->get_many_by(array(
-					"user_id"	=> $user_id,
-					"id"=>$info->id
-				));
-				if($targets){
-					foreach($targets as $key => $value){
-						$list[$value->id] = $value;
-					}
-				}
-
-				if($list){
-					ksort($list);
-					foreach($list as $key => $value){
-						$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0);
-						if(isset($list[$key]->certification[3]['certification_id'])){
-							$bank_account 	= $this->user_bankaccount_model->get_by(array(
-								"user_certification_id"	=> $list[$key]->certification[3]['certification_id'],
-							));
-							$list[$key]->bank_account 	 	 = $bank_account;
-							$list[$key]->bank_account_verify = $bank_account->verify==1?1:0;
-						}
-					}
-				}
-
-				$page_data['list'] 					= $list;
-				$page_data['certification_investor_list'] 	= $certification_investor_list;
-				$page_data['certification'] 		= $this->config->item('certifications');
-				$page_data['status_list'] 			= $this->target_model->status_list;
-				$page_data['product_name']			= $this->product_model->get_name_list();
-
-				
-				$this->load->view('admin/_header');
-				$this->load->view('admin/risk/risk_targets_edit',$page_data);
-				$this->load->view('admin/_footer');
-
-				
-			}else{
-				alert("ERROR , id isn't exist",admin_url('admin/risk/loaned_wait_push'));
-			}
-		}else{
-			alert("ERROR , id isn't exist",admin_url('admin/risk/loaned_wait_push'));
-		}
-	}
 	public function push_info(){
 		$this->load->model('admin/debt_processing_model');
 		$this->load->model('user/user_meta_model');
@@ -324,7 +196,7 @@ class Risk extends MY_Admin_Controller {
 		$input 						= $this->input->get(NULL, TRUE);
 		$target_id					= isset($input["id"])?intval($input["id"]):0;
 		$list 						= array();
-		$list=$this->debt_processing_model->get_many_by(array("target_id"=> $target_id));
+		$list=$this->debt_processing_model->order_by("created_at","desc")->get_many_by(array("target_id"=> $target_id));
 		$user_id=$list[0]->user_id;
 		$meta_data 			= array();
 		$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$user_id));
@@ -353,19 +225,20 @@ class Risk extends MY_Admin_Controller {
 	}
 	public function push_info_add(){
 		$this->load->model('admin/debt_processing_model');
-		$input = $this->input->get(NULL, TRUE);
-		$info = $this->target_model->get($input["id"]);	
-		$rs = $this->debt_processing_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $input["id"],"contact_person"=> $input["a"],"contact_phone"=> $input["b"],"result"=> $input["c"],"push_by"=> $input["d"],"remark"=> $input["e"],"start_time"=> $input["f"],"end_time"=> $input["g"]));
+		$input 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		$info = $this->target_model->get($get["id"]);	
+		$rs = $this->debt_processing_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $get["id"],"contact_person"=> $input["contact_person"],"contact_phone"=> $input["contact_phone"],"result"=> $input["result"],"push_by"=> $input["push_by"],"remark"=> $input["remark"],"start_time"=> $input["start_time"],"end_time"=> $input["end_time"]));
 	}
 	public function push_info_remove(){
 		$this->load->model('admin/debt_processing_model');
-		$input = $this->input->get(NULL, TRUE);	
+		$input = $this->input->post(NULL, TRUE);	
 		$rs = $this->debt_processing_model->delete($input["id"]);
 	}	
 	public function push_info_update(){
 		$this->load->model('admin/debt_processing_model');
-		$input = $this->input->get(NULL, TRUE);
-		$rs = $this->debt_processing_model->update($input["id"],array("admin_id"=>$this->login_info->id,"contact_person"=> $input["a"],"contact_phone"=> $input["b"],"result"=> $input["c"],"push_by"=> $input["d"],"start_time"=> $input["e"],"end_time"=> $input["f"],"remark"=> $input["g"]));
+		$input 		= $this->input->post(NULL, TRUE);
+		$rs = $this->debt_processing_model->update($input["id"],array("admin_id"=>$this->login_info->id,"contact_person"=> $input["contact_person"],"contact_phone"=> $input["contact_phone"],"result"=> $input["result"],"push_by"=> $input["push_by"],"remark"=> $input["remark"],"start_time"=> $input["start_time"],"end_time"=> $input["end_time"]));
 	}
 	public function push_audit(){
 		$this->load->model('admin/debt_audit_model');
@@ -374,7 +247,7 @@ class Risk extends MY_Admin_Controller {
 		$input 						= $this->input->get(NULL, TRUE);
 		$target_id					= isset($input["id"])?intval($input["id"]):0;
 		$list 						= array();
-		$list=$this->debt_audit_model->get_many_by(array("target_id"=> $target_id));
+		$list=$this->debt_audit_model->order_by("created_at","desc")->get_many_by(array("target_id"=> $target_id));
 		
 		if($list){
 			foreach($list as $key => $value){
@@ -387,7 +260,7 @@ class Risk extends MY_Admin_Controller {
 		$page_data['id']	=$target_id;
 		$page_data['list']	=$list;		
 		$page_data['role_name']	=$role_name;
-		$page_data['status_list'] 		= $this->debt_audit_model->status_list;
+		$page_data['product_level'] 		= $this->debt_audit_model->product_level;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/risk/risk_push_audit',$page_data);
@@ -395,9 +268,10 @@ class Risk extends MY_Admin_Controller {
 	}
 	public function push_audit_add(){
 		$this->load->model('admin/debt_audit_model');
-		$input = $this->input->get(NULL, TRUE);
-		$info = $this->target_model->get($input["id"]);	
-		$rs = $this->debt_audit_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $input["id"],"remark"=> $input["a"],"product_level"=> $input["b"],"next_push"=> $input["c"],"result"=> $input["d"],"end_time"=> $input["e"]));
+		$input 		= $this->input->post(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
+		$info = $this->target_model->get($get["id"]);	
+		$rs = $this->debt_audit_model->insert(array("admin_id"=>$this->login_info->id,"user_id"=> $info->user_id,"target_id"=> $get["id"],"remark"=> $input["remark"],"product_level"=> $input["product_level"],"next_push"=> $input["next_push"],"result"=> $input["result"],"end_time"=> $input["end_time"]));
 	}
 }
 ?>

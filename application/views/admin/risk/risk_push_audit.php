@@ -24,7 +24,7 @@ body{
 .bcontent label {width:16%;}
 .bcontent form-control {display: inline-block;}
 .bcontent .row{padding-top:22px;}
-textarea{height:400px!important;}
+textarea{height: 300px!important;width: 100%!important;}
 .barLink a{
     display: inline-block;
     margin: 19px 9px;
@@ -66,8 +66,8 @@ tbody td{text-align:center;}
 		function isotime(timestamp){return new Date(parseInt(timestamp)).toISOString().substr(0,19);}
 		function nowtime(){return $.now()+28800000;}
 		function cvtime(timestamp){
-			var date=new Date(timestamp*1000),year=date.getFullYear(),month="0"+(date.getMonth()+1),day="0"+date.getDate(),hours=date.getHours(),minutes="0"+date.getMinutes(),seconds="0"+date.getSeconds();
-			return  year+'/'+month.substr(-2)+'/'+day.substr(-2)+' '+hours+':'+minutes.substr(-2)+':'+seconds.substr(-2);
+			var date=new Date(timestamp*1000),year=date.getFullYear(),month="0"+(date.getMonth()+1),day="0"+date.getDate(),hours="0"+date.getHours(),minutes="0"+date.getMinutes(),seconds="0"+date.getSeconds();
+			return  year+'/'+month.substr(-2)+'/'+day.substr(-2)+' '+hours.substr(-2)+':'+minutes.substr(-2)+':'+seconds.substr(-2);
 		}
 		function bopen(){$("#bpopup,#bwindow").addClass('bshow');$('#next_time').attr('min',isotime(nowtime()));}
 		function bclose(){$("#bpopup,#bwindow").removeClass('bshow');}
@@ -84,7 +84,7 @@ tbody td{text-align:center;}
 				input.val()==""?(a>3?sta=0:""):arr.push(input.val());
 			});
 			if(sta==1){$('#submit').hide();
-				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_audit_add')."?id=".(isset($id)?$id:"") ?>&a='+arr[0]+'&b='+arr[1]+'&c='+totimestamp(arr[2])+'&d='+arr[3]+'&e='+nowtime().toString().substr(0,10),success: function() {
+				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_audit_add')."?id=".(isset($id)?$id:"") ?>',data:'&remark='+arr[0]+'&product_level='+arr[1]+'&next_push='+totimestamp(arr[2])+'&result='+arr[3]+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
 					window.location= "<?=admin_url('risk/push_audit')."?id=".(isset($id)?$id:"") ?>";
 				}});								
 			}
@@ -105,7 +105,7 @@ tbody td{text-align:center;}
 								<div class="form-group" data-type="s">
 									<label>資產等級</label>
 									<select class="form-control">
-									<? foreach($status_list as $key => $value){ ?>
+									<? foreach($product_level as $key => $value){ ?>
 										<option value="<?=$key?>"><?=$value?></option>
 									<? } ?>
 									</select>
@@ -135,7 +135,7 @@ tbody td{text-align:center;}
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="barLink">
-					<a href="<? echo admin_url('risk/push_target')."?id=".$id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
+					<a href="<? echo admin_url('target/edit')."?risk=1&id=".$id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
 					<a href="<? echo admin_url('risk/push_info')."?id=".$id.(isset($slist)?"&slist=1":"") ?>">催收資訊</a>
 					<a class="active">催收審批</a>
 				</div>
@@ -160,7 +160,7 @@ tbody td{text-align:center;}
                                             <th>資產等級人工調整</th>
 											<th>下次催收時間</th>
                                             <th>處理結果</th>
-                                            <th>意見備註</th>
+                                            <th style="width: 50%;">意見備註</th>
                                            
                                         </tr>
                                     </thead>
@@ -174,7 +174,7 @@ tbody td{text-align:center;}
                                             <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
                                            	<td><?=isset($value->start_time)?$value->start_time:"" ?></td>
                                            	<td class="ent" time="<?=isset($value->end_time)?$value->end_time:"" ?>"><?=isset($value->end_time)?$value->end_time-28800:"" ?></td>
-                                           	<td><?=isset($value->product_level)?$status_list[$value->product_level]:"" ?></td>
+                                           	<td><?=isset($value->product_level)?$product_level[$value->product_level]:"" ?></td>
                                            	<td class="nex" time="<?=isset($value->next_push)?$value->next_push:"" ?>"><?=isset($value->next_push)?$value->next_push-28800:"" ?></td>
                                            	<td><?=isset($value->result)?$value->result:"" ?></td>
                                            	<td><?=isset($value->remark)?$value->remark:"" ?></td>

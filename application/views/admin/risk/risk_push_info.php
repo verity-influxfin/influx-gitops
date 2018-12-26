@@ -24,7 +24,7 @@ th:last-child{
 }
 #bwindow.brshow .brcontent .x{float:right;cursor:pointer;color:#5b554d;font-size: 22px;margin: -7px -14px 2px 0px;}
 #bwindow.brshow .brcontent .x:hover{color:#428bca;font-weight:bold;}
-textarea{height:160px!important;}
+textarea{height: 100px!important;width: 100%!important;}
 .brcontent label {width:16%;}
 .brcontent form-control {display: inline-block;}
 .brcontent .row{padding-top:22px;}
@@ -63,8 +63,8 @@ $(window).ready(function() {
 	function isotime(timestamp){return new Date(parseInt(timestamp)).toISOString().substr(0,19);}
 	function nowtime(){return $.now()+28800000;}
 	function cvtime(timestamp){
-		var date=new Date(timestamp*1000),year=date.getFullYear(),month="0"+(date.getMonth()+1),day="0"+date.getDate(),hours=date.getHours(),minutes="0"+date.getMinutes(),seconds="0"+date.getSeconds();
-		return  year+'/'+month.substr(-2)+'/'+day.substr(-2)+' '+hours+':'+minutes.substr(-2)+':'+seconds.substr(-2);
+		var date=new Date(timestamp*1000),year=date.getFullYear(),month="0"+(date.getMonth()+1),day="0"+date.getDate(),hours="0"+date.getHours(),minutes="0"+date.getMinutes(),seconds="0"+date.getSeconds();
+		return  year+'/'+month.substr(-2)+'/'+day.substr(-2)+' '+hours.substr(-2)+':'+minutes.substr(-2)+':'+seconds.substr(-2);
 	}
 	function bclose(){
 		$("#brpopup,#bwindow").removeClass('brshow');
@@ -74,7 +74,7 @@ $(window).ready(function() {
 		$('.brcontent .panel-heading').text((id=="create"?"新增":(id=="check"?"查看":"編輯"))+"處理過程");
 		id=="check"?item.attr('disabled',true):(item.attr('disabled',false),$('.wr,.ws,.form-group').show());
 		$(":selected").attr('selected', false);$('input,textarea').val('');$('#submit').hide();$('#start_time,#end_time').attr("readonly", true);
-		$('#start_time').attr('min',isotime(nowtime()));
+		$('#start_time,#end_time').attr('min',isotime(nowtime())).attr('max',isotime(nowtime()+2592000000));
 		if(id!="create"){
 			$('.form-group:not(.wr)').each(function(a,b){
 				var type=$(this).data('type'),
@@ -110,20 +110,20 @@ $(window).ready(function() {
 	});
 	$(document).off("click","#submit").on("click","#submit" , function(){
 		var arr=[],sta=1;
-		$('#end_time').val(isotime(nowtime()));
 		$('#submit').hide();
 		$.each($('input, select:not(:disabled),textarea'),function(a, b){
 			var input = $(this);
 			input.val()==""?(a==4?sta=0:""):arr.push(input.val());
 		});
 		if(sta==1){
-			if($('.brcontent .panel-heading').text().indexOf('新增')!=-1){	
-				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_add')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>&a='+arr[0]+'&b='+arr[1]+'&c='+arr[2]+'&d='+arr[3]+'&e='+arr[4]+'&f='+totimestamp(arr[5])+'&g='+totimestamp(arr[6]),success: function() {
+			if($('.brcontent .panel-heading').text().indexOf('新增')!=-1){$('#end_time').val(isotime(nowtime()));
+				$('#end_time').val(isotime(nowtime()));
+				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_add')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>',data:'contact_person='+arr[0]+'&contact_phone='+arr[1]+'&result='+arr[2]+'&push_by='+arr[3]+'&remark='+arr[4]+'&start_time='+totimestamp(arr[5])+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
 					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
 				}});								
 			}
 			else{
-				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_update')."?id=" ?>'+$(".brcontent .panel-heading").attr('id')+'&a='+arr[0]+'&b='+arr[1]+'&c='+arr[2]+'&d='+arr[3]+'&e='+arr[4]+'&f='+totimestamp(arr[5])+'&g='+totimestamp(arr[6]),success: function() {
+				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_update') ?>',data:'id='+$(".brcontent .panel-heading").attr('id')+'&contact_person='+arr[0]+'&contact_phone='+arr[1]+'&result='+arr[2]+'&push_by='+arr[3]+'&remark='+arr[4]+'&start_time='+totimestamp(arr[5])+'&end_time='+totimestamp($('#end_time').val()),success: function() {
 					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
 				}});					
 			}
@@ -134,7 +134,7 @@ $(window).ready(function() {
 		var r = confirm("是否要刪除該筆資料?");
 		  if (r == true) {
 			$('.del').attr('disabled',true);
-			$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_remove')."?id=" ?>'+$(this).closest('tr').attr('data-id'),success: function() {
+			$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_remove') ?>',data:'id='+$(this).closest('tr').attr('data-id'),success: function() {
 				window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
 			}});
 		  }
@@ -152,7 +152,7 @@ $(window).ready(function() {
 									<label>聯絡人</label>
 									<select class="form-control">
 										<option><?=isset($data->name)?$data->name:"";?></option>
-										<option><?=isset($meta["emergency_name"])?$meta["emergency_name"]:"" ?></option>
+										<option><?=isset($meta["emergency_name"])?$meta["emergency_name"]:"" ?>(緊急聯絡人)</option>
 									</select>
 								</div>
 								<div class="wr form-group" data-type="i">
@@ -209,7 +209,7 @@ $(window).ready(function() {
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="barLink">
-					<a href="<? echo admin_url('risk/push_target')."?id=".$list[0]->target_id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
+					<a href="<? echo admin_url('target/edit')."?risk=1&id=".$list[0]->target_id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
 					<a class="active">催收資訊</a>
 					<a href="<? echo admin_url('risk/push_audit')."?id=".$list[0]->target_id.(isset($slist)?"&slist=1":"") ?>">催收審批</a>
 				</div>
@@ -232,7 +232,7 @@ $(window).ready(function() {
                                             <th>跟進方式</th>
 											<th>開始時間</th>
                                             <th>結束時間</th>
-                                            <th>意見備註</th>
+                                            <th style="width: 35%;">意見備註</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>

@@ -13,9 +13,7 @@ body{
     text-decoration: none;
     color:black;
 }
-.barLink a:hover{
-    border-bottom: 3px #ccc solid;
-}
+.barLink a:hover {border-bottom: 3px #ccc solid;color: black!important;text-decoration: none!important;}
 .barLink a.active{
     border-bottom-color: #988977;
     cursor:auto;

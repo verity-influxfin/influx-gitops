@@ -25,7 +25,7 @@ body{
 					var status 				= $('#status :selected').val();
 					top.location = './loaned_wait_push?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no;
 				}
-				$(document).on("click",".panel-body .btn-default" , function(){window.open($(this).attr('href'),'貸後催收系統',config='left=100,scrollbars=yes');});		
+				//$(document).on("click",".panel-body .btn-default" , function(){window.open($(this).attr('href'),'貸後催收系統',config='left=100,scrollbars=yes');});		
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -101,7 +101,7 @@ body{
 											<td><?=isset($value->push_status)?$push_status_list[$value->push_status]:"" ?></td>
 											<td><?=isset($value->remark)?$value->remark:"" ?></td>
 											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
-											<td><div href="<? echo admin_url('risk/push_target')."?id=".$value->id.(isset($slist)?"&slist=1":"") ?>" class="btn btn-default">Detail</div></td> 
+											<td><div href="<? echo admin_url('target/edit')."?risk=1&id=".$value->id.(isset($slist)?"&slist=1":"") ?>" class="btn btn-default fancyframe">Detail</div></td> 
                                         </tr>                                        
 									<?php 
 										}}
