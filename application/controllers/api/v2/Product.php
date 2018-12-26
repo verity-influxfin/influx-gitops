@@ -15,7 +15,7 @@ class Product extends REST_Controller {
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
-            $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
 			$nonCheckMethods 	= ['list'];
 			if(in_array($method, $nonCheckMethods) && empty($token)){
