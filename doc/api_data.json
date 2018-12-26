@@ -5570,10 +5570,10 @@
   },
   {
     "type": "get",
-    "url": "/v2/recoveries/dashboard",
-    "title": "出借方 我的帳戶",
+    "url": "/v2/judicialperson/list",
+    "title": "出借方 已申請法人列表",
     "version": "0.2.0",
-    "name": "GetRecoveriesDashboard",
+    "name": "GetJudicialpersonList",
     "group": "Judicialperson",
     "header": {
       "fields": {
@@ -5602,148 +5602,50 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "remaining_principal",
-            "description": "<p>持有債權</p>"
+            "field": "company_type",
+            "description": "<p>公司類型</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "accounts_receivable",
-            "description": "<p>應收帳款</p>"
+            "field": "company",
+            "description": "<p>公司名稱</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "interest_receivable",
-            "description": "<p>應收利息</p>"
+            "field": "tax_id",
+            "description": "<p>公司統一編號</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "interest",
-            "description": "<p>已收利息收入</p>"
+            "field": "remark",
+            "description": "<p>備註</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "other_income",
-            "description": "<p>已收其他收入</p>"
+            "field": "status",
+            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗</p>"
           },
           {
             "group": "Success 200",
-            "type": "Object",
+            "type": "Number",
             "optional": false,
-            "field": "principal_level",
-            "description": "<p>標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "funds",
-            "description": "<p>資金資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "funds.total",
-            "description": "<p>資金總額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "funds.last_recharge_date",
-            "description": "<p>最後一次匯入日</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "funds.frozen",
-            "description": "<p>待交易餘額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "bank_account",
-            "description": "<p>綁定金融帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "bank_account.bank_code",
-            "description": "<p>銀行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "bank_account.branch_code",
-            "description": "<p>分行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "bank_account.bank_account",
-            "description": "<p>銀行帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "virtual_account",
-            "description": "<p>專屬虛擬帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_code",
-            "description": "<p>銀行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_code",
-            "description": "<p>分行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_name",
-            "description": "<p>銀行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_name",
-            "description": "<p>分行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.virtual_account",
-            "description": "<p>虛擬帳號</p>"
+            "field": "created_at",
+            "description": "<p>申請日期</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remaining_principal\": \"50000\",\n\t\t\t\"interest\": \"0\",\n\t\t\t\"accounts_receivable\": \"50751\",\n\t\t\t\"interest_receivable\": \"751\",\n\t\t\t\"other_income\": \"0\",\n\t\t\t\"principal_level\": {\n\t\t\t\t  \"1\": 0,\n\t\t\t\t  \"2\": 500,\n\t\t\t\t  \"3\": 0,\n\t\t\t\t  \"4\": 50000,\n\t\t\t\t  \"5\": 0,\n\t\t\t\t  \"6\": 0,\n\t\t\t\t  \"7\": 0,\n\t\t\t\t  \"8\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t \"total\": \"500\",\n\t\t\t\t \"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \"frozen\": \"0\"\n\t\t\t},\n\t        \"bank_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"1234\",\n\t            \"bank_account\": \"12345678910\"\n\t        },\n\t        \"virtual_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"0154\",\n\t            \"bank_name\": \"國泰世華商業銀行\",\n\t            \"branch_name\": \"信義分行\",\n\t            \"virtual_account\": \"56639100000001\"\n\t        }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"company_type\":\"股份有限公司\",\n\t\t\t\t\"company\":\"普匯金融科技股份有限公司\",\n\t\t\t\t\"tax_id\":\"68566881\",\n\t\t\t\t\"remark\":\"人員會盡快與您聯絡\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -5752,7 +5654,7 @@
     "groupTitle": "Judicialperson",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/v2/recoveries/dashboard"
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/list"
       }
     ],
     "error": {
@@ -10260,382 +10162,6 @@
         }
       ]
     },
-    "filename": "application/controllers/api/v2/Judicialperson.php",
-    "groupTitle": "Recoveries",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/recoveries/info/:id"
-      }
-    ]
-  },
-  {
-    "type": "get",
-    "url": "/v2/recoveries/info/:id",
-    "title": "出借方 已出借資訊",
-    "version": "0.2.0",
-    "name": "GetRecoveriesInfo",
-    "group": "Recoveries",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Investments ID</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Investments ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "loan_amount",
-            "description": "<p>出借金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "contract",
-            "description": "<p>合約內容</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_status",
-            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "transfer",
-            "description": "<p>債轉資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer.amount",
-            "description": "<p>債權轉讓本金</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer.transfer_fee",
-            "description": "<p>債權轉讓手續費</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer.contract",
-            "description": "<p>債權轉讓合約</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer.transfer_date",
-            "description": "<p>債權轉讓日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>申請日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "product",
-            "description": "<p>產品資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "product.name",
-            "description": "<p>產品名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "target",
-            "description": "<p>標的資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.delay",
-            "description": "<p>是否逾期 0:無 1:逾期中</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.credit_level",
-            "description": "<p>信用指數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.delay_days",
-            "description": "<p>逾期天數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.target_no",
-            "description": "<p>案號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.instalment",
-            "description": "<p>期數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.repayment",
-            "description": "<p>還款方式</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.status",
-            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.sub_status",
-            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "amortization_schedule",
-            "description": "<p>回款計畫</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.amount",
-            "description": "<p>借款金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.instalment",
-            "description": "<p>借款期數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.rate",
-            "description": "<p>年利率</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.date",
-            "description": "<p>起始時間</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.total_payment",
-            "description": "<p>每月還款金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule",
-            "description": "<p>回款計畫</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.instalment",
-            "description": "<p>第幾期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.repayment_date",
-            "description": "<p>還款日</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.days",
-            "description": "<p>本期日數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.principal",
-            "description": "<p>還款本金</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.interest",
-            "description": "<p>還款利息</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.total_payment",
-            "description": "<p>本期還款金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "amortization_schedule.schedule.repayment",
-            "description": "<p>已還款金額</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\",\n\t\t\t\t\"contract\":\"我是合約，我是合約\",\n\t\t\t\t\"transfer_date\": null\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \t\"1\": {\n                 \t\"instalment\": 1,\n                 \t\"repayment_date\": \"2018-06-10\",\n                 \t\"repayment\": 0,\n                 \t\"principal\": 1893,\n                 \t\"interest\": 160,\n                 \t\"total_payment\": 2053\n             \t},\n             \t\"2\": {\n                 \t\"instalment\": 2,\n                  \t\"repayment_date\": \"2018-07-10\",\n                  \t\"repayment\": 0,\n                  \t\"principal\": 1978,\n                  \t\"interest\": 75,\n                  \t\"total_payment\": 2053\n              \t},\n             \t\"3\": {\n                   \t\"instalment\": 3,\n                   \t\"repayment_date\": \"2018-08-10\",\n                   \t\"repayment\": 0,\n                   \t\"principal\": 1991,\n                   \t\"interest\": 62,\n                   \t\"total_payment\": 2053\n              \t}\n           \t}\n       \t}\n\t\t }\n   }",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "806",
-            "description": "<p>此申請不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "805",
-            "description": "<p>對此申請無權限</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "205",
-            "description": "<p>非出借端登入</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "806",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "805",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"805\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "205",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
     "filename": "application/controllers/api/v2/Recoveries.php",
     "groupTitle": "Recoveries",
     "sampleRequest": [
@@ -11187,221 +10713,6 @@
       ]
     },
     "filename": "application/controllers/api/v2/Recoveries.php",
-    "groupTitle": "Recoveries",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/recoveries/list"
-      }
-    ],
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "205",
-            "description": "<p>非出借端登入</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "205",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
-          "type": "Object"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
-    "url": "/v2/recoveries/list",
-    "title": "出借方 已出借列表",
-    "version": "0.2.0",
-    "name": "GetRecoveriesList",
-    "group": "Recoveries",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Investments ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "loan_amount",
-            "description": "<p>出借金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_status",
-            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>申請日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "product",
-            "description": "<p>產品資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "product.name",
-            "description": "<p>產品名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "target",
-            "description": "<p>標的資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.delay",
-            "description": "<p>是否逾期 0:無 1:逾期中</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.credit_level",
-            "description": "<p>信用指數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.delay_days",
-            "description": "<p>逾期天數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.target_no",
-            "description": "<p>案號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.status",
-            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.sub_status",
-            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "next_repayment",
-            "description": "<p>最近一期應還款</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "next_repayment.date",
-            "description": "<p>還款日</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "next_repayment.instalment",
-            "description": "<p>期數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "next_repayment.amount",
-            "description": "<p>金額</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"19\",\n\t\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\t\"status\": \"5\",\n\t\t\t\t\t\"sub_status\": \"0\"\n\t\t\t\t},\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Judicialperson.php",
     "groupTitle": "Recoveries",
     "sampleRequest": [
       {
