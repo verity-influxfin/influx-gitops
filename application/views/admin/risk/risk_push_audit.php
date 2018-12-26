@@ -51,7 +51,7 @@ textarea{height: 300px!important;width: 100%!important;}
 .empty{width:100%;text-align:center;}
 thead{background-color:#428bca;color:white;font-size:16px;}
 th{text-align:center;}
-tbody td{text-align:center;}
+tbody td{text-align:center;word-break:break-all;}
 .nr input{border:0px;-webkit-box-shadow: none;box-shadow: none;background-color:white!important;cursor:auto!important;}
 #page-wrapper{margin-left:0px;}
 </style>
@@ -84,8 +84,8 @@ tbody td{text-align:center;}
 				input.val()==""?(a>3?sta=0:""):arr.push(input.val());
 			});
 			if(sta==1){$('#submit').hide();
-				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_audit_add')."?id=".(isset($id)?$id:"") ?>',data:'&remark='+arr[0]+'&product_level='+arr[1]+'&next_push='+totimestamp(arr[2])+'&result='+arr[3]+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
-					window.location= "<?=admin_url('risk/push_audit')."?id=".(isset($id)?$id:"") ?>";
+				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_audit_add')."?id=".(isset($id)?$id:"").(isset($slist)?"&slist=1":"") ?>',data:'&remark='+arr[0]+'&product_level='+arr[1]+'&next_push='+totimestamp(arr[2])+'&result='+arr[3]+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
+					window.location= "<?=admin_url('risk/push_audit')."?id=".(isset($id)?$id:"").(isset($slist)?"&slist=1":"") ?>";
 				}});								
 			}
 

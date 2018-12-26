@@ -1,6 +1,6 @@
 <style type="text/css">
 body{
-	font-family: 微軟正黑體;
+	font-family: 微軟正黑體!important;
 }
 .barLink a{
     display: inline-block;
@@ -13,7 +13,7 @@ body{
     text-decoration: none;
     color:black;
 }
-.barLink a:hover {border-bottom: 3px #ccc solid;color: black!important;text-decoration: none!important;}
+.barLink a:hover,.barLink a:focus {border-bottom: 3px #ccc solid;color: black!important;text-decoration: none!important;}
 .barLink a.active{
     border-bottom-color: #988977;
     cursor:auto;

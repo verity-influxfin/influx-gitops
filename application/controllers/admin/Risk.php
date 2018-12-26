@@ -197,7 +197,7 @@ class Risk extends MY_Admin_Controller {
 		$target_id					= isset($input["id"])?intval($input["id"]):0;
 		$list 						= array();
 		$list=$this->debt_processing_model->order_by("created_at","desc")->get_many_by(array("target_id"=> $target_id));
-		$user_id=$list[0]->user_id;
+		$user_id=$this->target_model->get($target_id)->user_id;
 		$meta_data 			= array();
 		$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$user_id));
 		$info = $this->user_model->get($user_id);		
@@ -213,6 +213,7 @@ class Risk extends MY_Admin_Controller {
 			}
 		} 
 		if(isset($input["slist"])&&$input["slist"]!=null){$page_data['slist']=$input["slist"];}
+		$page_data['id']	=$target_id;
 		$page_data['list']	=$list;
 		$page_data['data']	= $info;
 		$page_data['meta']	= $meta_data;

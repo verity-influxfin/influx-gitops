@@ -47,7 +47,7 @@ textarea{height: 100px!important;width: 100%!important;}
 .r,.r:hover{background-color:whitesmoke;color:#ccc;border-color:#ddd;cursor:auto;}
 td{vertical-align:middle!important;}
 th{text-align:center;}
-tbody td{text-align:center;}
+tbody td{text-align:center;word-break:break-all;}
 .empty{width:100%;text-align:center;}
 thead{background-color:#555;color:white;font-size:16px;}
 #page-wrapper{margin-left:0px;}
@@ -118,13 +118,13 @@ $(window).ready(function() {
 		if(sta==1){
 			if($('.brcontent .panel-heading').text().indexOf('新增')!=-1){$('#end_time').val(isotime(nowtime()));
 				$('#end_time').val(isotime(nowtime()));
-				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_add')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>',data:'contact_person='+arr[0]+'&contact_phone='+arr[1]+'&result='+arr[2]+'&push_by='+arr[3]+'&remark='+arr[4]+'&start_time='+totimestamp(arr[5])+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
-					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
+				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_add')."?id=".(isset($id)?$id:"") ?>',data:'contact_person='+arr[0]+'&contact_phone='+arr[1]+'&result='+arr[2]+'&push_by='+arr[3]+'&remark='+arr[4]+'&start_time='+totimestamp(arr[5])+'&end_time='+totimestamp(isotime(nowtime())),success: function() {
+					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($id)?$id:"") ?>";
 				}});								
 			}
 			else{
 				$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_update') ?>',data:'id='+$(".brcontent .panel-heading").attr('id')+'&contact_person='+arr[0]+'&contact_phone='+arr[1]+'&result='+arr[2]+'&push_by='+arr[3]+'&remark='+arr[4]+'&start_time='+totimestamp(arr[5])+'&end_time='+totimestamp($('#end_time').val()),success: function() {
-					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
+					window.location= "<?=admin_url('risk/push_info')."?id=".(isset($id)?$id:"") ?>";
 				}});					
 			}
 		}
@@ -135,7 +135,7 @@ $(window).ready(function() {
 		  if (r == true) {
 			$('.del').attr('disabled',true);
 			$.ajax({type:'POST',async:true,url:'<?=admin_url('risk/push_info_remove') ?>',data:'id='+$(this).closest('tr').attr('data-id'),success: function() {
-				window.location= "<?=admin_url('risk/push_info')."?id=".(isset($list[0]->target_id)?$list[0]->target_id:"") ?>";
+				window.location= "<?=admin_url('risk/push_info')."?id=".(isset($id)?$id:"") ?>";
 			}});
 		  }
 	});	
@@ -152,7 +152,7 @@ $(window).ready(function() {
 									<label>聯絡人</label>
 									<select class="form-control">
 										<option><?=isset($data->name)?$data->name:"";?></option>
-										<option><?=isset($meta["emergency_name"])?$meta["emergency_name"]:"" ?>(緊急聯絡人)</option>
+										<option><?=isset($meta["emergency_name"])?$meta["emergency_name"]:"" ?> (緊急聯絡人)</option>
 									</select>
 								</div>
 								<div class="wr form-group" data-type="i">
@@ -209,9 +209,9 @@ $(window).ready(function() {
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="barLink">
-					<a href="<? echo admin_url('target/edit')."?risk=1&id=".$list[0]->target_id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
+					<a href="<? echo admin_url('target/edit')."?risk=1&id=".$id.(isset($slist)?"&slist=1":"") ?>">標的資訊</a>
 					<a class="active">催收資訊</a>
-					<a href="<? echo admin_url('risk/push_audit')."?id=".$list[0]->target_id.(isset($slist)?"&slist=1":"") ?>">催收審批</a>
+					<a href="<? echo admin_url('risk/push_audit')."?id=".$id.(isset($slist)?"&slist=1":"") ?>">催收審批</a>
 				</div>
 			</div>
 		</div>
