@@ -12,7 +12,7 @@ class Debt_audit_model extends MY_Model
 		$this->_database = $this->load->database('admin',TRUE);
  	}
 
-	public $status_list   = array(
+	public $product_level   = array(
 		0 =>	"觀察",
 		1 =>	"關注",
 		2 =>	"次級",
