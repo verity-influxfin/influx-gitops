@@ -57,7 +57,7 @@ tbody td{text-align:center;word-break:break-all;}
 </style>
 	<script>
 	$(window).ready(function() {
-		$.each($('.nex,.ent'),function(a, b){$(this).text(cvtime($(this).text()));});
+		$.each($('.nex,.ent,.stt'),function(a, b){$(this).text(cvtime($(this).text()));});
 	});
 		function form_onsubmit(){
 			return true;
@@ -172,10 +172,10 @@ tbody td{text-align:center;word-break:break-all;}
                                         <tr>
                                             <td><?=isset($value->admin_name)?$value->admin_name:"" ?></td>
                                             <td><?=isset($role_name[$value->role_id])?$role_name[$value->role_id]:"" ?></td>
-                                           	<td><?=isset($value->start_time)?$value->start_time:"" ?></td>
-                                           	<td class="ent" time="<?=isset($value->end_time)?$value->end_time:"" ?>"><?=isset($value->end_time)?$value->end_time-28800:"" ?></td>
+                                           	<td class="stt"><?=isset($value->start_time)?$value->start_time-28800:"" ?></td>
+                                           	<td class="ent"><?=isset($value->end_time)?$value->end_time-28800:"" ?></td>
                                            	<td><?=isset($value->product_level)?$product_level[$value->product_level]:"" ?></td>
-                                           	<td class="nex" time="<?=isset($value->next_push)?$value->next_push:"" ?>"><?=isset($value->next_push)?$value->next_push-28800:"" ?></td>
+                                           	<td class="nex"><?=isset($value->next_push)?$value->next_push-28800:"" ?></td>
                                            	<td><?=isset($value->result)?$value->result:"" ?></td>
                                            	<td><?=isset($value->remark)?$value->remark:"" ?></td>
                                         </tr>                                        
