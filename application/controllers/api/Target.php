@@ -49,10 +49,10 @@ class Target extends REST_Controller {
 	 * @apiParam {String=credit_level,instalment,interest_rate} [orderby="credit_level"] 排序值
 	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 標的號
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {String} credit_level 信用評等
 	 * @apiSuccess {String} user_id User ID
@@ -67,7 +67,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -151,9 +151,9 @@ class Target extends REST_Controller {
 	 * @apiVersion 0.1.0
 	 * @apiName GetTargetInfo
      * @apiGroup Target
-	 * @apiParam {number} id 標的ID
+	 * @apiParam {Number} id 標的ID
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Target ID
 	 * @apiSuccess {String} target_no 標的號
 	 * @apiSuccess {String} user_id User ID
@@ -172,15 +172,15 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} certification 借款人認證完成資訊
-	 * @apiSuccess {json} user 借款人基本資訊
+	 * @apiSuccess {Object} certification 借款人認證完成資訊
+	 * @apiSuccess {Object} user 借款人基本資訊
 	 * @apiSuccess {String} user.name 姓名
 	 * @apiSuccess {String} user.age 年齡
 	 * @apiSuccess {String} user.school_name 學校名稱
 	 * @apiSuccess {String} user.id_number 身分證字號
-	 * @apiSuccess {json} amortization_schedule 預計還款計畫
+	 * @apiSuccess {Object} amortization_schedule 預計還款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} amortization_schedule.rate 年化利率
@@ -202,7 +202,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.total.interest 利息
 	 * @apiSuccess {String} amortization_schedule.total.total_payment 加總
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -300,7 +300,7 @@ class Target extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 * @apiError 801 標的不存在
-     * @apiErrorExample {json} 801
+     * @apiErrorExample {Object} 801
      *     {
      *       "result": "ERROR",
      *       "error": "801"
@@ -390,12 +390,12 @@ class Target extends REST_Controller {
 	 * @apiName PostTargetApply
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} target_id 產品ID
-     * @apiParam {number} amount 出借金額
+	 * @apiParam {Number} target_id 產品ID
+     * @apiParam {Number} amount 出借金額
 	 * 
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -407,63 +407,63 @@ class Target extends REST_Controller {
 	 * @apiUse NotInvestor
      *
 	 * @apiError 801 標的不存在
-     * @apiErrorExample {json} 801
+     * @apiErrorExample {Object} 801
      *     {
      *       "result": "ERROR",
      *       "error": "801"
      *     }
 	 *
      * @apiError 802 金額過高或過低
-     * @apiErrorExample {json} 802
+     * @apiErrorExample {Object} 802
      *     {
      *       "result": "ERROR",
      *       "error": "802"
      *     }
 	 *
      * @apiError 803 已申請出借
-     * @apiErrorExample {json} 803
+     * @apiErrorExample {Object} 803
      *     {
      *       "result": "ERROR",
      *       "error": "803"
      *     }
 	 *
      * @apiError 804 雙方不可同使用者
-     * @apiErrorExample {json} 804
+     * @apiErrorExample {Object} 804
      *     {
      *       "result": "ERROR",
      *       "error": "804"
      *     }
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
      *     }
 	 *
      * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {json} 212
+     * @apiErrorExample {Object} 212
      *     {
      *       "result": "ERROR",
      *       "error": "212"
@@ -548,7 +548,7 @@ class Target extends REST_Controller {
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} amount 投標金額
 	 * @apiSuccess {String} loan_amount 得標金額
@@ -556,9 +556,9 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.loan_amount 標的金額
 	 * @apiSuccess {String} target.target_no 案號
@@ -566,21 +566,21 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} target.invested 目前投標量
 	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {Object} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
 	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
-	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {Object} funds 資金資訊
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
 	 * @apiSuccess {String} funds.frozen 待交易餘額
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -634,28 +634,28 @@ class Target extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
@@ -761,26 +761,26 @@ class Target extends REST_Controller {
 	 * @apiName GetTargetBatch
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} budget 預算金額
-     * @apiParam {number} [interest_rate_s] 利率區間下限(%)
-     * @apiParam {number} [interest_rate_e] 利率區間上限(%)
-     * @apiParam {number} [instalment_s] 期數區間下限(%)
-     * @apiParam {number} [instalment_e] 期數區間上限(%)
+	 * @apiParam {Number} budget 預算金額
+     * @apiParam {Number} [interest_rate_s] 利率區間下限(%)
+     * @apiParam {Number} [interest_rate_e] 利率區間上限(%)
+     * @apiParam {Number} [instalment_s] 期數區間下限(%)
+     * @apiParam {Number} [instalment_e] 期數區間上限(%)
      * @apiParam {String} [credit_level=all] 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8
      * @apiParam {String=all,0,1} [national=all] 信用評等 全部:all 私立:0 國立:1
      * @apiParam {String=all,0,1,2} [system=all] 學制 全部:all 0:大學 1:碩士 2:博士
      * @apiParam {String=all,F,M} [gender=all] 性別 全部:all 女性:F 男性:M
 	 * 
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} batch_id 智能出借ID
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
 	 * @apiSuccess {String} XIRR 平均年利率(%)
-     * @apiSuccess {json} contract 合約列表
-	 * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} contract 合約列表
+	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -803,35 +803,35 @@ class Target extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
      *     }
 	 *
      * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {json} 212
+     * @apiErrorExample {Object} 212
      *     {
      *       "result": "ERROR",
      *       "error": "212"
@@ -1043,15 +1043,15 @@ class Target extends REST_Controller {
 	 * @apiName PostTargetBatch
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} batch_id 智能出借ID
+	 * @apiParam {Number} batch_id 智能出借ID
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
 	 * @apiSuccess {String} XIRR 平均年利率(%)
-	 * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -1069,14 +1069,14 @@ class Target extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
 	 * @apiError 811 智能出借不存在
-     * @apiErrorExample {json} 811
+     * @apiErrorExample {Object} 811
      *     {
      *       "result": "ERROR",
      *       "error": "811"
      *     }
 	 *
 	 * @apiError 812 對此智能出借無權限
-     * @apiErrorExample {json} 812
+     * @apiErrorExample {Object} 812
      *     {
      *       "result": "ERROR",
      *       "error": "812"

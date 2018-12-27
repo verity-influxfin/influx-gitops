@@ -58,6 +58,7 @@ class MY_Admin_Controller extends CI_Controller{
 
 					$this->menu = array(
 						"role_info"		=> $this->role_info,
+						"role_name"		=> $role->name,
 						"login_info"	=> $this->login_info,
 						"active"		=> $this->router->fetch_class(),
 						"menu"			=> $admin_menu,

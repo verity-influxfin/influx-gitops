@@ -5,16 +5,43 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+			<script type="text/javascript">
+				function showChang(){
+					var user_id 			= $('#user_id').val();
+					var status 				= $('#status :selected').val();
+					top.location = './index?status='+status+'&user_id='+user_id;
+				}
+			</script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+							<table>
+								<tr>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($where['user_id'])&&$where['user_id']!=""?$where['user_id']:""?>" id="user_id" /></td>	
+								</tr>
+								<tr>								
+									<td>狀態：</td>
+									<td>
+										<select id="status">
+											<? foreach($status_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=isset($where['status'])&&$where['status']!=""&&intval($where['status'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? } ?>
+										</select>
+									</td>
+									<td></td>
+									<td>
+										<a href="javascript:showChang();" class="btn btn-default">查詢</a>
+									</td>
+								</tr>
+							</table>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="display responsive nowrap" width="100%" id="dataTables-tables">
+                                <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
                                             <th>會員 ID</th>

@@ -40,7 +40,7 @@ class Notification extends REST_Controller {
      * @apiGroup Notification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Notification ID
 	 * @apiSuccess {String} investor 1:投資端 0:借款端 2:共通
 	 * @apiSuccess {String} title 標題
@@ -49,7 +49,7 @@ class Notification extends REST_Controller {
 	 * @apiSuccess {String} created_at 創建日期
 	 
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -109,7 +109,7 @@ class Notification extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {String} id 代號
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Notification ID
 	 * @apiSuccess {String} investor 1:投資端 0:借款端 2:共通
 	 * @apiSuccess {String} title 標題
@@ -117,7 +117,7 @@ class Notification extends REST_Controller {
 	 * @apiSuccess {String} status 1:未讀 2:已讀
 	 * @apiSuccess {String} created_at 創建日期
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 	"result":"SUCCESS",
      * 		"data":{
@@ -134,7 +134,7 @@ class Notification extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 601 此消息不存在
-     * @apiErrorExample {json} 601
+     * @apiErrorExample {Object} 601
      *     {
      *       "result": "ERROR",
      *       "error": "601"
@@ -170,8 +170,8 @@ class Notification extends REST_Controller {
      * @apiGroup Notification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 	"result":"SUCCESS"
      * }

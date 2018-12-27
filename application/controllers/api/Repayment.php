@@ -50,10 +50,10 @@ class Repayment extends REST_Controller {
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} remaining_principal 現欠本金餘額
 	 * @apiSuccess {String} next_repayment 當期待還本息
-	 * @apiSuccess {json} user 用戶資訊
+	 * @apiSuccess {Object} user 用戶資訊
 	 * @apiSuccess {String} user.id User ID
 	 * @apiSuccess {String} user.name 姓名
 	 * @apiSuccess {String} user.picture 照片
@@ -63,17 +63,17 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} user.id_number 身分證字號
 	 * @apiSuccess {String} user.investor 1:投資端 0:借款端
 	 * @apiSuccess {String} user.my_promote_code 推廣碼
-	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {Object} funds 資金資訊
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
 	 * @apiSuccess {String} funds.frozen 待交易餘額
-	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -198,10 +198,10 @@ class Repayment extends REST_Controller {
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 案號
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} amount 申請金額
@@ -215,17 +215,17 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} next_repayment 最近一期應還款
+	 * @apiSuccess {Object} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
-	 * @apiSuccess {json} virtual_account 還款專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 還款專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -359,9 +359,9 @@ class Repayment extends REST_Controller {
 	 * @apiName GetRepaymentInfo
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} user_id User ID
@@ -378,23 +378,23 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {String} remaining_principal 剩餘本金
 	 * @apiSuccess {String} remaining_instalment 剩餘期數
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} fees 費用資料
+	 * @apiSuccess {Object} fees 費用資料
 	 * @apiSuccess {String} fees.sub_loan_fees 產品轉換手續費%
 	 * @apiSuccess {String} fees.liquidated_damages 違約金(提前還款)%
-	 * @apiSuccess {json} next_repayment 最近一期應還款
+	 * @apiSuccess {Object} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
 	 * @apiSuccess {String} next_repayment.list 明細
-	 * @apiSuccess {json} virtual_account 還款專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 還款專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-	 * @apiSuccess {json} amortization_schedule 還款計畫
+	 * @apiSuccess {Object} amortization_schedule 還款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} amortization_schedule.rate 年利率
@@ -411,7 +411,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
 	 * @apiSuccess {String} amortization_schedule.list.delay_interest 延滯息
 	 * @apiSuccess {String} amortization_schedule.list.liquidated_damages 違約金（提還費）
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -512,14 +512,14 @@ class Repayment extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
@@ -636,10 +636,10 @@ class Repayment extends REST_Controller {
 	 * @apiName GetRepaymentPrepayment
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
 	 *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 案號
 	 * @apiSuccess {String} user_id User ID
@@ -653,7 +653,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} prepayment 提前還款資訊
+	 * @apiSuccess {Object} prepayment 提前還款資訊
 	 * @apiSuccess {String} prepayment.remaining_principal 剩餘本金
 	 * @apiSuccess {String} prepayment.remaining_instalment 剩餘期數
 	 * @apiSuccess {String} prepayment.settlement_date 結息日
@@ -661,13 +661,13 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} prepayment.delay_interest_payable 應付延滯息
 	 * @apiSuccess {String} prepayment.interest_payable 應付利息
 	 * @apiSuccess {String} prepayment.total 合計
-	 * @apiSuccess {json} virtual_account 還款專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 還款專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -708,21 +708,21 @@ class Repayment extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
@@ -782,11 +782,11 @@ class Repayment extends REST_Controller {
 	 * @apiName PostRepaymentPrepayment
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} :id Targets ID
+	 * @apiParam {Number} :id Targets ID
 	 * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
 	 * 
-	 * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS"
      *    }
@@ -796,28 +796,28 @@ class Repayment extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"
      *     }
 	 *
      * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {json} 407
+     * @apiErrorExample {Object} 407
      *     {
      *       "result": "ERROR",
      *       "error": "407"
      *     }
 	 *
      * @apiError 903 已申請提前還款或產品轉換
-     * @apiErrorExample {json} 903
+     * @apiErrorExample {Object} 903
      *     {
      *       "result": "ERROR",
      *       "error": "903"
@@ -857,12 +857,12 @@ class Repayment extends REST_Controller {
 	 * @apiName GetRepaymentContract
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Targets ID
+	 * @apiParam {Number} id Targets ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} title 合約標題
 	 * @apiSuccess {String} contract 合約內容
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -880,14 +880,14 @@ class Repayment extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 404 此申請不存在
-     * @apiErrorExample {json} 404
+     * @apiErrorExample {Object} 404
      *     {
      *       "result": "ERROR",
      *       "error": "404"
      *     }
 	 *
      * @apiError 405 對此申請無權限
-     * @apiErrorExample {json} 405
+     * @apiErrorExample {Object} 405
      *     {
      *       "result": "ERROR",
      *       "error": "405"

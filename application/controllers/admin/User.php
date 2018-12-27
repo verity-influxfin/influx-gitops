@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class User extends MY_Admin_Controller {
 	
-	protected $edit_method = array("edit");
+	protected $edit_method = array('edit');
 	public $certification;
 	
 	public function __construct() {
@@ -19,14 +19,14 @@ class User extends MY_Admin_Controller {
 	
 	public function index(){
 		
-		$page_data 			= array("type"=>"list");
+		$page_data 			= array('type'=>'list');
 		$input 				= $this->input->get(NULL, TRUE);
 		$where				= array();
 		$list				= array();
 		$fields 			= ['id','name','phone'];
 		
 		foreach ($fields as $field) {
-			if (isset($input[$field])&&$input[$field]!="") {
+			if (isset($input[$field])&&$input[$field]!='') {
 				if($field=='phone' || $field=='name'){
 					$where[$field.' like'] = '%'.$input[$field].'%';
 				}else{
@@ -37,7 +37,7 @@ class User extends MY_Admin_Controller {
 		if(!empty($where)){
 			$list 	= $this->user_model->get_many_by($where);
 		}
-		$page_data["list"] = $list;
+		$page_data['list'] = $list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/users_list',$page_data);
@@ -45,12 +45,12 @@ class User extends MY_Admin_Controller {
 	}
 	
 	public function edit(){
-		$page_data 	= array("type"=>"edit");
+		$page_data 	= array('type'=>'edit');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		
 		if(empty($post)){
-			$id = isset($get["id"])?intval($get["id"]):0;
+			$id = isset($get['id'])?intval($get['id']):0;
 			if($id){
 				$certification_list = array();
 				if($this->certification){
@@ -60,18 +60,18 @@ class User extends MY_Admin_Controller {
 				}
 				
 				$meta_data 			= array();
-				$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$id));
+				$meta 				= $this->user_meta_model->get_many_by(array('user_id'=>$id));
 				if($meta){
 					foreach($meta as $key => $value){
 						$meta_data[$value->meta_key] = $value->meta_value;
 					}
 				}
 				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
-					"user_id"	=> $id,
-					"status"	=> 1,
-					"verify"	=> 1,
+					'user_id'	=> $id,
+					'status'	=> 1,
+					'verify'	=> 1,
 				));
-				$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
+				$credit_list		= $this->credit_model->get_many_by(array('user_id'=>$id));
 				$info = $this->user_model->get($id);
 				if($info){
 					$page_data['data'] 					= $info;
@@ -90,10 +90,10 @@ class User extends MY_Admin_Controller {
 					$this->load->view('admin/users_edit',$page_data);
 					$this->load->view('admin/_footer');
 				}else{
-					alert("ERROR , id isn't exist",admin_url('user/index'));
+					alert('ERROR , id is not exist',admin_url('user/index'));
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('user/index'));
+				alert('ERROR , id is not exist',admin_url('user/index'));
 			}
 		}else{
 			if(!empty($post['id'])){
@@ -105,12 +105,12 @@ class User extends MY_Admin_Controller {
 				}
 				$rs = $this->user_model->update($post['id'],$data);
 				if($rs===true){
-					alert("更新成功",admin_url('user/index'));
+					alert('更新成功',admin_url('user/index'));
 				}else{
-					alert("更新失敗，請洽工程師",admin_url('user/index'));
+					alert('更新失敗，請洽工程師',admin_url('user/index'));
 				}
 			}else{
-				alert("ERROR , id isn't exist",admin_url('user/index'));
+				alert('ERROR , id is not exist',admin_url('user/index'));
 			}
 		}
 	}
@@ -119,9 +119,9 @@ class User extends MY_Admin_Controller {
 
 	public function display(){
 
-		$page_data 	= array("type"=>"edit");
+		$page_data 	= array('type'=>'edit');
 		$get 		= $this->input->get(NULL, TRUE);
-		$id = isset($get["id"])?intval($get["id"]):0;
+		$id = isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$certification_list = array();
 			if($this->certification){
@@ -131,18 +131,18 @@ class User extends MY_Admin_Controller {
 			}
 		
 			$meta_data 			= array();
-			$meta 				= $this->user_meta_model->get_many_by(array("user_id"=>$id));
+			$meta 				= $this->user_meta_model->get_many_by(array('user_id'=>$id));
 			if($meta){
 				foreach($meta as $key => $value){
 					$meta_data[$value->meta_key] = $value->meta_value;
 				}
 			}
 			$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
-				"user_id"	=> $id,
-				"status"	=> 1,
-				"verify"	=> 1,
+				'user_id'	=> $id,
+				'status'	=> 1,
+				'verify'	=> 1,
 			));
-			$credit_list		= $this->credit_model->get_many_by(array("user_id"=>$id));
+			$credit_list		= $this->credit_model->get_many_by(array('user_id'=>$id));
 			$info = $this->user_model->get($id);
 			if($info){
 				$page_data['data'] 					= $info;
@@ -160,10 +160,10 @@ class User extends MY_Admin_Controller {
 				$this->load->view('admin/users_edit',$page_data);
 				$this->load->view('admin/_footer');
 			}else{
-				alert("ERROR , id isn't exist",admin_url('user/index'));
+				alert('ERROR , id is not exist',admin_url('user/index'));
 			}
 		}else{
-			alert("ERROR , id isn't exist",admin_url('user/index'));
+			alert('ERROR , id is not exist',admin_url('user/index'));
 		}
 	}
 }

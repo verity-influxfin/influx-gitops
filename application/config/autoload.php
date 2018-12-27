@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array("database","Financial_lib");
+$autoload['libraries'] = array('database','Financial_lib');
 
 /*
 | -------------------------------------------------------------------
@@ -103,7 +103,7 @@ $autoload['helper'] = array('jwt','url','file','std','authorization');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array("jwt","ip","platform","field_name");
+$autoload['config'] = array('jwt','ip','platform','field_name');
 
 /*
 | -------------------------------------------------------------------

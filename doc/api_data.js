@@ -112,7 +112,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -151,7 +151,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"name\":\"用戶協議\",\n\t\t\t\"content\":\"用戶協議\",\n\t\t\t\"alias\":\"user\",\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -170,7 +170,7 @@ define({ "api": [
         {
           "title": "701",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"701\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -243,7 +243,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -282,7 +282,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"用戶協議\",\n\t\t\t\t\"content\":\"用戶協議\",\n\t\t\t\t\"alias\":\"user\",\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"投資人協議\",\n\t\t\t\t\"content\":\"投資人協議\",\n\t\t\t\t\"alias\":\"investor\",\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -482,7 +482,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -556,7 +556,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"4\",\n  \t\"bank_code\": \"822\",\n  \t\"branch_code\": \"1234\",\n  \t\"bank_account\": \"149612222032\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -593,12 +593,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -752,7 +752,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -770,7 +770,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"email\": \"XXX\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -807,12 +807,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -980,7 +980,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -1012,7 +1012,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"name\": \"XXX\",\n  \t\"phone\": \"0912345678\",\n  \t\"relationship\": \"配偶\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -1049,12 +1049,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -1292,7 +1292,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -1394,7 +1394,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"8\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",\n  \t\"parttime\": 100,\n  \t\"allowance\": 200,\n  \t\"scholarship\": 300,\n  \t\"other_income\": 400,\n  \t\"restaurant\": 0,\n  \t\"transportation\": 1,\n  \t\"entertainment\": 2,\n  \t\"other_expense\": 3     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -1431,12 +1431,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -1660,7 +1660,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -1748,7 +1748,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",     \n  \t\"name\": \"toy\",\n  \t\"id_number\": \"G121111111\",\n  \t\"id_card_date\": \"1060707\",\n  \t\"id_card_place\": \"北市\",\n  \t\"birthday\": \"1020101\",\n  \t\"address\": \"全家就是我家\"\n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -1785,12 +1785,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -1950,7 +1950,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -1985,7 +1985,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "user_status",
             "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
@@ -1996,7 +1996,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"實名認證\",\n\t\t\t\t\"description\":\"實名認證\",\n\t\t\t\t\"alias\":\"id_card\",\n\t\t\t\t\"user_status\":1,\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"金融帳號認證\",\n\t\t\t\t\"description\":\"金融帳號認證\",\n\t\t\t\t\"alias\":\"debit_card\",\n\t\t\t\t\"user_status\":1,\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -2205,7 +2205,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -2258,7 +2258,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"8\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",\n  \t\"parttime\": 100,\n  \t\"allowance\": 200,\n  \t\"scholarship\": 300,\n  \t\"other_income\": 400,\n  \t\"restaurant\": 0,\n  \t\"transportation\": 1,\n  \t\"entertainment\": 2,\n  \t\"other_expense\": 3     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -2295,12 +2295,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -2545,7 +2545,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -2654,7 +2654,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"school\": \"國立宜蘭大學\",\n  \t\"department\": \"電機工程學系\",\n  \t\"grade\": \"1\",\n  \t\"student_id\": \"1496B032\", \n  \t\"email\": \"xxxxx@xxx.edu.com.tw\",     \n  \t\"system\": \"0\",     \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -2691,12 +2691,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "503",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -2997,7 +2997,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -3008,7 +3008,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -3081,32 +3081,32 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "506",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"506\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "507",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"507\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "508",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"508\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "509",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"509\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -3322,7 +3322,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -3333,7 +3333,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -3388,17 +3388,17 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "204",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -3633,7 +3633,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -3644,7 +3644,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -3693,12 +3693,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -4029,7 +4029,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -4040,7 +4040,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -4089,12 +4089,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -4449,7 +4449,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -4460,7 +4460,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -4521,22 +4521,22 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "504",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "505",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"505\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -4763,7 +4763,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -4774,7 +4774,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -4823,12 +4823,12 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -5232,7 +5232,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -5243,7 +5243,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -5310,27 +5310,27 @@ define({ "api": [
         {
           "title": "501",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "502",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "510",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"510\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "511",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"511\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "204",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -5504,7 +5504,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -5515,7 +5515,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -5546,12 +5546,12 @@ define({ "api": [
         {
           "title": "204",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -5600,7 +5600,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "company_type",
             "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
@@ -5714,6 +5714,12 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Number",
+            "allowedValues": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
             "optional": false,
             "field": "company_type",
             "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
@@ -6170,7 +6176,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -6223,7 +6229,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"investor\":\"1\",\n\t\t\t\"title\":\"用戶資料認證未通過\",\n\t\t\t\"content\":\"您好！ 您的資料認證未通過，請重新認證。\",\n\t\t\t\"status\":\"1\",\n\t\t\t\"created_at\":\"1519635711\"\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -6254,7 +6260,7 @@ define({ "api": [
         {
           "title": "601",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"601\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -6408,7 +6414,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -6461,7 +6467,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"investor\":\"1\",\n\t\t\t\t\"title\":\"用戶資料認證未通過\",\n\t\t\t\t\"content\":\"您好！ 您的資料認證未通過，請重新認證。\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"created_at\":\"1519635711\",\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"investor\":\"2\",\n\t\t\t\t\"title\":\"用戶實名認證通過\",\n\t\t\t\t\"content\":\"尊敬的用戶： 您好！ 您的實名認證已通過。\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1519635711\",\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -6593,7 +6599,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -6604,7 +6610,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\"result\":\"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -7090,7 +7096,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -7103,7 +7109,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -7222,21 +7228,21 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "certification",
             "description": "<p>認證完成資訊</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "credit",
             "description": "<p>信用資訊</p>"
@@ -7271,7 +7277,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "amortization_schedule",
             "description": "<p>預計還款計畫(簽約後不出現)</p>"
@@ -7422,7 +7428,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"contract\":\"我是合約\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -7465,12 +7471,12 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -7710,7 +7716,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -7738,7 +7744,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -7833,7 +7839,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"0,\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"target_no\": \"1803269713\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -8044,7 +8050,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -8057,7 +8063,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -8068,7 +8074,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -8123,17 +8129,17 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -8385,7 +8391,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>產品ID</p>"
@@ -8398,7 +8404,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -8475,14 +8481,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "instalment",
             "description": "<p>可申請期數</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "repayment",
             "description": "<p>還款方式</p>"
@@ -8493,7 +8499,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -8536,12 +8542,12 @@ define({ "api": [
         {
           "title": "401",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "408",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -8713,7 +8719,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -8748,14 +8754,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "instalment",
             "description": "<p>可申請期數</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "repayment",
             "description": "<p>可選還款方式</p>"
@@ -8804,14 +8810,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>申請資訊（未簽約）</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "certification",
             "description": "<p>認證完成資訊</p>"
@@ -8822,7 +8828,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t\t\"target\":{\n\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\t\"status\":\"0\",\n\t\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t},\n\t\t\t\t\"certification\":[\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"description\":\"實名認證\",\n\t\t\t\t\t\t\"alias\":\"id_card\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"description\":\"學生身份認證\",\n\t\t\t\t\t\t\"alias\":\"student\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -9042,21 +9048,21 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "product_id",
             "description": "<p>產品ID</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>借款金額</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "instalment",
             "description": "<p>申請期數</p>"
@@ -9076,7 +9082,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -9094,7 +9100,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"target_id\": \"1\",\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -9161,22 +9167,22 @@ define({ "api": [
         {
           "title": "401",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "402",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"402\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "403",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"403\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "408",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -9444,7 +9450,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "target_id",
             "description": "<p>Targets ID</p>"
@@ -9464,7 +9470,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -9475,7 +9481,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -9566,42 +9572,42 @@ define({ "api": [
         {
           "title": "401",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "206",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"206\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -9892,7 +9898,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -9934,14 +9940,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "principal_level",
             "description": "<p>標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "funds",
             "description": "<p>資金資訊</p>"
@@ -9969,7 +9975,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "bank_account",
             "description": "<p>綁定金融帳號</p>"
@@ -9997,7 +10003,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>專屬虛擬帳號</p>"
@@ -10043,7 +10049,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remaining_principal\": \"50000\",\n\t\t\t\"interest\": \"0\",\n\t\t\t\"accounts_receivable\": \"50751\",\n\t\t\t\"interest_receivable\": \"751\",\n\t\t\t\"other_income\": \"0\",\n\t\t\t\"principal_level\": {\n\t\t\t\t  \"1\": 0,\n\t\t\t\t  \"2\": 500,\n\t\t\t\t  \"3\": 0,\n\t\t\t\t  \"4\": 50000,\n\t\t\t\t  \"5\": 0,\n\t\t\t\t  \"6\": 0,\n\t\t\t\t  \"7\": 0,\n\t\t\t\t  \"8\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t \"total\": \"500\",\n\t\t\t\t \"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \"frozen\": \"0\"\n\t\t\t},\n\t        \"bank_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"1234\",\n\t            \"bank_account\": \"12345678910\"\n\t        },\n\t        \"virtual_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"0154\",\n\t            \"bank_name\": \"國泰世華商業銀行\",\n\t            \"branch_name\": \"信義分行\",\n\t            \"virtual_account\": \"56639100000001\"\n\t        }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -10497,7 +10503,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Investments ID</p>"
@@ -10510,7 +10516,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -10552,7 +10558,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "transfer",
             "description": "<p>債轉資訊</p>"
@@ -10594,7 +10600,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -10608,7 +10614,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
@@ -10671,7 +10677,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "amortization_schedule",
             "description": "<p>回款計畫</p>"
@@ -10773,7 +10779,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\",\n\t\t\t\t\"contract\":\"我是合約，我是合約\",\n\t\t\t\t\"transfer_date\": null\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \t\"1\": {\n                 \t\"instalment\": 1,\n                 \t\"repayment_date\": \"2018-06-10\",\n                 \t\"repayment\": 0,\n                 \t\"principal\": 1893,\n                 \t\"interest\": 160,\n                 \t\"total_payment\": 2053\n             \t},\n             \t\"2\": {\n                 \t\"instalment\": 2,\n                  \t\"repayment_date\": \"2018-07-10\",\n                  \t\"repayment\": 0,\n                  \t\"principal\": 1978,\n                  \t\"interest\": 75,\n                  \t\"total_payment\": 2053\n              \t},\n             \t\"3\": {\n                   \t\"instalment\": 3,\n                   \t\"repayment_date\": \"2018-08-10\",\n                   \t\"repayment\": 0,\n                   \t\"principal\": 1991,\n                   \t\"interest\": 62,\n                   \t\"total_payment\": 2053\n              \t}\n           \t}\n       \t}\n\t\t }\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -10816,12 +10822,12 @@ define({ "api": [
         {
           "title": "806",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "805",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"805\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -11088,7 +11094,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -11130,7 +11136,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -11144,7 +11150,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
@@ -11193,7 +11199,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "next_repayment",
             "description": "<p>最近一期應還款</p>"
@@ -11225,7 +11231,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"19\",\n\t\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\t\"status\": \"5\",\n\t\t\t\t\t\"sub_status\": \"0\"\n\t\t\t\t},\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -11467,7 +11473,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -11520,7 +11526,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"amount\":\"50500\",\n\t\t\t\t\"bank_amount\":\"50500\",\n\t\t\t\t\"remark\":\"source:3\",\n\t\t\t\t\"tx_datetime\":\"2018-05-08 15:38:07\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t\"action\":\"debit\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"amount\":\"-50000\",\n\t\t\t\t\"bank_amount\":\"500\",\n\t\t\t\t\"remark\":\"source:3\",\n\t\t\t\t\"tx_datetime\":\"2018-04-20 17:55:51\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t\"action\":\"credit\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -11569,12 +11575,12 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -11836,7 +11842,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -11871,7 +11877,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "debt_transfer_contract",
             "description": "<p>轉讓合約(多份)</p>"
@@ -11882,7 +11888,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \t\"data\": {\n          \"total_principal\": 50000,\n          \"total_fee\": 250,\n          \"max_instalment\": 3,\n          \"min_instalment\": 3,\n          \"debt_transfer_contract\": [\"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約\"]\n      }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -11943,22 +11949,22 @@ define({ "api": [
         {
           "title": "807",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"807\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "806",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "805",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"805\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "808",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"808\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -12185,7 +12191,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -12196,7 +12202,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -12257,22 +12263,22 @@ define({ "api": [
         {
           "title": "807",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"807\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "806",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "805",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"805\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "808",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"808\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -12511,7 +12517,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>提領金額</p>"
@@ -12531,7 +12537,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -12549,7 +12555,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -12616,27 +12622,27 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "210",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"210\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "211",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"211\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -12831,7 +12837,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -12844,7 +12850,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -12869,7 +12875,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"title\": \"借貸契約書\",\n\t\t\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -12912,12 +12918,12 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -13212,7 +13218,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -13233,7 +13239,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "user",
             "description": "<p>用戶資訊</p>"
@@ -13303,7 +13309,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "funds",
             "description": "<p>資金資訊</p>"
@@ -13331,7 +13337,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>專屬虛擬帳號</p>"
@@ -13377,7 +13383,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\t\"remaining_principal\": \"12345\",\n\t\t\t\t\"next_repayment_amount\": \"1588\",\n\t\t\t\t\"user\": {\n     \t\t\t\"id\": \"1\",\n     \t\t\t\"name\": \"\",\n     \t\t\t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n     \t\t\t\"nickname\": \"陳霈\",\n     \t\t\t\"phone\": \"0912345678\",\n     \t\t\t\"investor_status\": \"1\",\n     \t\t\t\"my_promote_code\": \"9JJ12CQ5\",\n     \t\t\t\"id_number\": null,\n     \t\t\t\"investor\": 1,  \n     \t\t\t\"created_at\": \"1522651818\",     \n     \t\t\t\"updated_at\": \"1522653939\"     \n\t\t\t\t},\n\t\t\t\t\"funds\": {\n\t\t\t\t \t\"total\": \"500\",\n\t\t\t\t \t\"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \t\"frozen\": \"0\"\n\t\t\t\t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56639100000001\"\n\t        \t}\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -13922,7 +13928,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -13935,7 +13941,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -14054,7 +14060,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -14068,7 +14074,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "fees",
             "description": "<p>費用資料</p>"
@@ -14089,7 +14095,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "next_repayment",
             "description": "<p>最近一期應還款</p>"
@@ -14124,7 +14130,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>還款專屬虛擬帳號</p>"
@@ -14166,7 +14172,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "amortization_schedule",
             "description": "<p>還款計畫</p>"
@@ -14289,7 +14295,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"remaining_principal\":\"50000\",\n\t\t\t\"remaining_instalment\":\"3\",\n\t\t\"product\":{\n\t\t\t\"id\":\"2\",\n\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\"alias\":\"FA\"\n\t\t},\n\t     \"fees\": {\n\t         \"sub_loan_fees\": \"1\",\n\t         \"liquidated_damages\": \"2\"\n\t     },\n\t     \"next_repayment\": {\n\t         \"date\": \"2018-06-10\",\n\t         \"instalment\": \"1\",\n\t         \"amount\": \"16890\",\n\t         \"list\": {\n\t             \"11\": {\n\t                 \"amount\": 16539,\n\t                 \"source_name\": \"應付借款本金\"\n\t             },\n\t             \"13\": {\n\t                 \"amount\": 351,\n\t                 \"source_name\": \"應付借款利息\"\n\t             }\n\t         }\n\t     },\n\t     \"virtual_account\": {\n\t         \"bank_code\": \"013\",\n\t         \"branch_code\": \"0154\",\n\t         \"bank_name\": \"國泰世華商業銀行\",\n\t         \"branch_name\": \"信義分行\",\n\t         \"virtual_account\": \"56631803269743\"\n\t     },\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"3\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"sub_loan_fees\": 0,\n          \"platform_fees\": 1500,\n          \"schedule\": {\n             \"1\": {\n                \t\"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"repayment\": 0,\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053,\n                 \"delay_interest\": 0,\n                 \"liquidated_damages\": 0\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                  \"repayment_date\": \"2018-07-10\",\n                  \"repayment\": 0,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                  \"total_payment\": 2053,\n                  \"delay_interest\": 0,\n                  \"liquidated_damages\": 0\n              },\n             \"3\": {\n                  \"instalment\": 3,\n                  \"repayment_date\": \"2018-08-10\",\n                  \"repayment\": 0,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                  \"total_payment\": 2053,\n                  \"delay_interest\": 0,\n                  \"liquidated_damages\": 0\n              }\n          }\n       }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -14332,12 +14338,12 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -14660,7 +14666,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -14681,7 +14687,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -14779,7 +14785,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "next_repayment",
             "description": "<p>最近一期應還款</p>"
@@ -14807,7 +14813,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>還款專屬虛擬帳號</p>"
@@ -14853,7 +14859,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"50000\",\n\t\t\t\t\"interest_rate\":\"8\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"delay_days\":\"0\",\n\t\t\t\t\"status\":\"5\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56631803269743\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -15256,7 +15262,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -15270,7 +15276,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -15368,7 +15374,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "prepayment",
             "description": "<p>提前還款資訊</p>"
@@ -15424,7 +15430,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>還款專屬虛擬帳號</p>"
@@ -15470,7 +15476,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"delay_days\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t     \"prepayment\": {\n\t         \"remaining_principal\": \"50000\",\n\t         \"remaining_instalment\": \"3\",\n\t         \"settlement_date\": \"2018-05-19\",\n\t         \"liquidated_damages\": \"1000\",\n\t         \"delay_interest_payable\": \"0\",\n\t         \"interest_payable\": \"450\",\n\t         \"total\": \"51450\"\n\t     },\n\t     \"virtual_account\": {\n\t         \"bank_code\": \"013\",\n\t         \"branch_code\": \"0154\",\n\t         \"bank_name\": \"國泰世華商業銀行\",\n\t         \"branch_name\": \"信義分行\",\n\t         \"virtual_account\": \"56631803269743\"\n\t     }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -15519,17 +15525,17 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -15728,7 +15734,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": ":id",
             "description": "<p>Targets ID</p>"
@@ -15742,7 +15748,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -15753,7 +15759,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\"\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -15808,22 +15814,22 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "903",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"903\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -16326,7 +16332,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -16339,7 +16345,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -16395,7 +16401,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "subloan_target",
             "description": "<p>產品轉換產生的Target</p>"
@@ -16514,7 +16520,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "subloan_target.product",
             "description": "<p>產品資訊</p>"
@@ -16528,7 +16534,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "subloan_target.amortization_schedule",
             "description": "<p>預計還款計畫(簽約後不出現)</p>"
@@ -16679,7 +16685,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target_id\":\"1\",\n\t\t\t\"amount\":\"53651\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\"settlement_date\":\"2018-05-26\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1527151277\",\n\t\t\t\"subloan_target\": {\n\t\t\t\t\"id\":\"35\",\n\t\t\t\t\"target_no\": \"1805247784\",\n\t\t\t\t\"product_id\":\"1\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"53651\",\n\t\t\t\t\"loan_amount\":\"53651\",\n\t\t\t\t\"platform_fee\":\"1610\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"sub_status\":\"8\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n      \t\t\"amortization_schedule\": {\n          \t\t\"amount\": \"12000\",\n          \t\t\"instalment\": \"6\",\n          \t\t\"rate\": \"9\",\n          \t\t\"date\": \"2018-04-17\",\n          \t\t\"total_payment\": 2053,\n          \t\t\"leap_year\": false,\n          \t\t\"year_days\": 365,\n          \t\t\"XIRR\": 0.0939,\n          \t\t\"schedule\": {\n               \t\t\"1\": {\n                 \t\t\"instalment\": 1,\n                 \t\t\"repayment_date\": \"2018-06-10\",\n                 \t\t\"days\": 54,\n                 \t\t\"remaining_principal\": \"12000\",\n                 \t\t\"principal\": 1893,\n                 \t\t\"interest\": 160,\n                 \t\t\"total_payment\": 2053\n             \t\t},\n             \t\t\"2\": {\n                  \t\t\"instalment\": 2,\n                 \t\t\"repayment_date\": \"2018-07-10\",\n                 \t\t\"days\": 30,\n                  \t\t\"remaining_principal\": 10107,\n                  \t\t\"principal\": 1978,\n                  \t\t\"interest\": 75,\n                   \t\t\"total_payment\": 2053\n              \t\t},\n             \t\t\"3\": {\n                   \t\t\"instalment\": 3,\n                   \t\t\"repayment_date\": \"2018-08-10\",\n                   \t\t\"days\": 31,\n                   \t\t\"remaining_principal\": 8129,\n                  \t\t\"principal\": 1991,\n                  \t\t\"interest\": 62,\n                   \t\t\"total_payment\": 2053\n               \t\t}\n           \t\t},\n          \t\t\"total\": {\n               \t\t\"principal\": 12000,\n               \t\t\"interest\": 391,\n               \t\t\"total_payment\": 12391\n           \t\t}\n       \t\t}\n\t\t\t}\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -16728,17 +16734,17 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "904",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"904\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -16934,7 +16940,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -16947,7 +16953,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -16958,7 +16964,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -17019,22 +17025,22 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "904",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"904\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -17245,7 +17251,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Targets ID</p>"
@@ -17258,7 +17264,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -17272,14 +17278,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "instalment",
             "description": "<p>期數</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "repayment",
             "description": "<p>還款方式</p>"
@@ -17290,7 +17296,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t       \"amount\": 51493,\n\t       \"instalment\": [\n\t       \t{\n\t       \t\t\"name\": \"3期\",\n\t       \t\t\"value\": 3\n\t       \t},\n\t       \t{\n\t       \t\t\"name\": \"6期\",\n\t       \t\t\"value\": 6\n\t       \t},\n\t       \t{\n\t       \t\t\"name\": \"12期\",\n\t       \t\t\"value\": 12\n\t       \t},\n\t       \t{\n\t       \t\t\"name\": \"18期\",\n\t       \t\t\"value\": 18\n\t       \t},\n\t       \t{\n\t       \t\t\"name\": \"24期\",\n\t       \t\t\"value\": 24\n\t       \t}\n\t       ],\n\t       \"repayment\": {\n\t       \t\t\"1\": {\n\t       \t\t\t\"name\": \"等額本息\",\n\t       \t\t\t\"value\": 1\n\t       \t\t},\n\t       \t\t\"2\": {\n\t       \t\t\t\"name\": \"先息後本\",\n\t       \t\t\t\"value\": 2\n\t       \t\t}\n\t       }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -17345,22 +17351,22 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "903",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"903\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -17592,21 +17598,21 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "target_id",
             "description": "<p>Target ID</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "instalment",
             "description": "<p>申請期數</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "repayment",
             "description": "<p>還款方式</p>"
@@ -17619,7 +17625,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -17630,7 +17636,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\"\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -17703,32 +17709,32 @@ define({ "api": [
         {
           "title": "403",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"403\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "409",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"409\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "903",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"903\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "207",
@@ -17958,7 +17964,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "target_id",
             "description": "<p>Targets ID</p>"
@@ -17978,7 +17984,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -17989,7 +17995,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -18062,27 +18068,27 @@ define({ "api": [
         {
           "title": "404",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "405",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "206",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"206\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "904",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"904\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -18494,7 +18500,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -18550,7 +18556,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -18564,7 +18570,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
@@ -18620,7 +18626,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "bank_account",
             "description": "<p>綁定金融帳號</p>"
@@ -18648,7 +18654,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>專屬虛擬帳號</p>"
@@ -18690,7 +18696,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "funds",
             "description": "<p>資金資訊</p>"
@@ -18722,7 +18728,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"19\",\n\t\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\t\"invested\": \"5000\",\n\t\t\t\t\t\"expire_time\": \"123456789\",\n\t\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\t\"status\": \"5\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t],\n\t        \"bank_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"1234\",\n\t            \"bank_account\": \"12345678910\"\n\t        },\n\t        \"virtual_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"0154\",\n\t            \"bank_name\": \"國泰世華商業銀行\",\n\t            \"branch_name\": \"信義分行\",\n\t            \"virtual_account\": \"56639100000001\"\n\t        },\n\t        \"funds\": {\n\t            \"total\": 500,\n\t            \"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t            \"frozen\": 0\n\t        }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -18777,22 +18783,22 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -19148,35 +19154,35 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "budget",
             "description": "<p>預算金額</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "interest_rate_s",
             "description": "<p>利率區間下限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "interest_rate_e",
             "description": "<p>利率區間上限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "instalment_s",
             "description": "<p>期數區間下限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "instalment_e",
             "description": "<p>期數區間上限(%)</p>"
@@ -19237,7 +19243,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -19286,7 +19292,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "contract",
             "description": "<p>合約列表</p>"
@@ -19297,7 +19303,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47,\n\t\t\t\"batch_id\": 2,\n\t\t\t\"contract\": [\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -19370,27 +19376,27 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "212",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -19881,7 +19887,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>標的ID</p>"
@@ -19894,7 +19900,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -20027,7 +20033,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -20041,14 +20047,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "certification",
             "description": "<p>借款人認證完成資訊</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "user",
             "description": "<p>借款人基本資訊</p>"
@@ -20083,7 +20089,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "amortization_schedule",
             "description": "<p>預計還款計畫</p>"
@@ -20234,7 +20240,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"credit_level\":\"4\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\": \"0\",\n\t\t\t\"delay_days\": \"0\",\n\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\"invested\": \"50000\",\n\t\t\t\"status\":\"4\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      },\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 9.39,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -20271,7 +20277,7 @@ define({ "api": [
         {
           "title": "801",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -20526,7 +20532,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -20547,7 +20553,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -20656,7 +20662,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"5000\",\n\t\t\t\t\"interest_rate\":\"12\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\t\"invested\": \"50000\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -20923,14 +20929,14 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "target_id",
             "description": "<p>產品ID</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>出借金額</p>"
@@ -20943,7 +20949,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -20954,7 +20960,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -21051,47 +21057,47 @@ define({ "api": [
         {
           "title": "801",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "802",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"802\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "803",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"803\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "804",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"804\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "212",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -21323,7 +21329,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "batch_id",
             "description": "<p>智能出借ID</p>"
@@ -21336,7 +21342,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -21382,7 +21388,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 50000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -21431,12 +21437,12 @@ define({ "api": [
         {
           "title": "811",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "812",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"812\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -21871,7 +21877,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -21920,7 +21926,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -21934,7 +21940,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "transfer",
             "description": "<p>債轉標的資訊</p>"
@@ -21969,7 +21975,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
@@ -22025,7 +22031,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "bank_account",
             "description": "<p>綁定金融帳號</p>"
@@ -22053,7 +22059,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "virtual_account",
             "description": "<p>專屬虛擬帳號</p>"
@@ -22095,7 +22101,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "funds",
             "description": "<p>資金資訊</p>"
@@ -22127,7 +22133,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"transfer\": {\n\t\t\t\t\t\"id\": \"1\",\n\t\t\t\t\t\"amount\": \"1804233189\",\n\t\t\t\t\t\"instalment\": \"5000\",\n\t\t\t\t\t\"expire_time\": \"123456789\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"19\",\n\t\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\t\"invested\": \"5000\",\n\t\t\t\t\t\"expire_time\": \"123456789\",\n\t\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\t\"status\": \"5\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t],\n\t        \"bank_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"1234\",\n\t            \"bank_account\": \"12345678910\"\n\t        },\n\t        \"virtual_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"0154\",\n\t            \"bank_name\": \"國泰世華商業銀行\",\n\t            \"branch_name\": \"信義分行\",\n\t            \"virtual_account\": \"56639100000001\"\n\t        },\n\t        \"funds\": {\n\t            \"total\": 500,\n\t            \"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t            \"frozen\": 0\n\t        }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -22182,22 +22188,22 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -22528,14 +22534,14 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "budget",
             "description": "<p>預算金額</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "delay",
             "defaultValue": "0",
@@ -22543,35 +22549,35 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "user_id",
             "description": "<p>指定使用者ID</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "interest_rate_s",
             "description": "<p>正常標的-利率區間下限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "interest_rate_e",
             "description": "<p>正常標的-利率區間上限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "instalment_s",
             "description": "<p>正常標的-剩餘期數區間下限(%)</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": true,
             "field": "instalment_e",
             "description": "<p>正常標的-剩餘期數區間上限(%)</p>"
@@ -22592,7 +22598,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -22641,7 +22647,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "debt_transfer_contract",
             "description": "<p>合約列表</p>"
@@ -22652,7 +22658,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47,\n\t\t\t\"batch_id\": 2,\n\t\t\t\"debt_transfer_contract\": [\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -22725,27 +22731,27 @@ define({ "api": [
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "212",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -23151,7 +23157,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>投資ID</p>"
@@ -23164,7 +23170,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -23234,7 +23240,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>原案資訊</p>"
@@ -23346,7 +23352,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -23360,14 +23366,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "certification",
             "description": "<p>借款人認證完成資訊</p>"
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "user",
             "description": "<p>借款人基本資訊</p>"
@@ -23406,7 +23412,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"instalment\":\"12\",\n\t\t\t\"principal\": \"5000\",\n\t\t\t\"interest\": \"36\",\n\t\t\t\"delay_interest\": \"0\",\n\t\t\t\"bargain_rate\": \"-5\",\n\t\t\t\"debt_transfer_contract\":\"我是合約！！\",\n\t\t\t\"expire_time\":\"1527865369\",\n\t\t\t\"target\":{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"status\":\"4\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      }\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -23443,7 +23449,7 @@ define({ "api": [
         {
           "title": "801",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -23768,7 +23774,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -23803,7 +23809,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "product",
             "description": "<p>產品資訊</p>"
@@ -23817,7 +23823,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>原案資訊</p>"
@@ -23912,7 +23918,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\": \"5000\",\n\t\t\t\t\"instalment\": \"12\",\n\t\t\t\t\"expire_time\": \"1527865369\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"2\",\n\t\t\t\t\t\"target_no\": \"1805281652\",\n\t\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\t\"user_id\": \"2\",\n\t\t\t\t\t\"loan_amount\": \"5000\",\n\t\t\t\t\t\"interest_rate\": \"10\",\n\t\t\t\t\t\"instalment\": \"12期\",\n\t\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\t\"delay\": \"1\",\n\t\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\t\"status\": \"5\",\n\t\t\t\t\t\"sub_status\": \"3\",\n\t\t\t\t\t\"created_at\": \"1527490889\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -24191,7 +24197,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "transfer_id",
             "description": "<p>投資ID</p>"
@@ -24204,7 +24210,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -24215,7 +24221,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -24306,42 +24312,42 @@ define({ "api": [
         {
           "title": "809",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"809\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "810",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"810\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "804",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"804\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "202",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "203",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "208",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "209",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "212",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -24573,7 +24579,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "batch_id",
             "description": "<p>智能收購ID</p>"
@@ -24586,7 +24592,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -24632,7 +24638,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 50000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -24681,12 +24687,12 @@ define({ "api": [
         {
           "title": "811",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "812",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"812\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -24743,7 +24749,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -24754,7 +24760,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n  \t\"expiry_time\": \"1522673418\"\n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -24910,7 +24916,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -24921,7 +24927,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -24952,7 +24958,7 @@ define({ "api": [
         {
           "title": "307",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "100",
@@ -25154,7 +25160,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -25210,7 +25216,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "investor",
             "description": "<p>1:投資端 0:借款端</p>"
@@ -25242,7 +25248,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n  \t\"nickname\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"transaction_password\": true,\n  \t\"investor\": 1,  \n  \t\"created_at\": \"1522651818\",     \n  \t\"updated_at\": \"1522653939\",     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -25408,7 +25414,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -25436,7 +25442,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "bonus_list",
             "description": "<p>獎勵列表(規劃中)</p>"
@@ -25447,7 +25453,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"promote_code\": \"D221BL0K\",\n  \t\"promote_url\": \"http://dev.influxfin.com?promote_code=D221BL0K\",\n  \t\"promote_qrcode\": \"http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200\",\n  \t\"bonus_list\": []\n  }\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -25706,7 +25712,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -25717,7 +25723,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -25778,27 +25784,27 @@ define({ "api": [
         {
           "title": "305",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "306",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "308",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "309",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "310",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -26018,7 +26024,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -26029,7 +26035,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -26145,7 +26151,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -26163,7 +26169,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"amount\": 50000\n\t\t}\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -26419,7 +26425,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -26430,7 +26436,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -26491,22 +26497,22 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "312",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -26738,7 +26744,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -26749,7 +26755,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -26804,17 +26810,17 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "311",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"311\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -27012,7 +27018,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -27023,7 +27029,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\"\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -27066,17 +27072,17 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "312",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -27284,7 +27290,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -27298,7 +27304,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
@@ -27316,7 +27322,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -27353,12 +27359,12 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -27605,7 +27611,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -27619,7 +27625,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
@@ -27637,7 +27643,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -27680,17 +27686,17 @@ define({ "api": [
         {
           "title": "301",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"301\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "312",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -27826,7 +27832,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -27837,7 +27843,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -27868,12 +27874,12 @@ define({ "api": [
         {
           "title": "301",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"301\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "307",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -28004,7 +28010,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -28015,7 +28021,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "{\n  \"result\": \"SUCCESS\",\n}",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -28046,12 +28052,12 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "307",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"307\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",
@@ -28260,7 +28266,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "Object",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -28274,7 +28280,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "first_time",
             "description": "<p>是否首次本端</p>"
@@ -28292,7 +28298,7 @@ define({ "api": [
         {
           "title": "SUCCESS",
           "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-          "type": "json"
+          "type": "Object"
         }
       ]
     },
@@ -28329,12 +28335,12 @@ define({ "api": [
         {
           "title": "302",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-          "type": "json"
+          "type": "Object"
         },
         {
           "title": "200",

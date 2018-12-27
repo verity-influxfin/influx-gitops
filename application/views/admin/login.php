@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>inFlux Admin</title>
+    <title>Pu-hey Admin</title>
     <!-- Bootstrap Core CSS -->
     <link href="<?=base_url()?>assets/admin/css/bootstrap.min.css" rel="stylesheet">
     <!-- MetisMenu CSS -->
@@ -33,8 +33,8 @@
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">請先登入</h3>
+                    <div class="panel-heading" style="text-align:center;">
+                        <img src="<?=base_url()?>assets/logo.png" alt="" width="200px" />
                     </div>
                     <div class="panel-body">
                         <form role="form" method="post" onsubmit="return form_onsubmit();" >
@@ -51,7 +51,7 @@
                                     </label>
                                 </div-->
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button type="submit" class="btn btn-lg btn-success btn-block">登入</a>
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">登入</a>
                             </fieldset>
                         </form>
                     </div>

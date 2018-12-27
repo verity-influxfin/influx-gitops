@@ -39,13 +39,13 @@ class Agreement extends REST_Controller {
 	 * @apiName GetAgreementList
      * @apiGroup Agreement
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Agreement ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} content 內容
 	 * @apiSuccess {String} alias 代號
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -92,13 +92,13 @@ class Agreement extends REST_Controller {
      * @apiGroup Agreement
 	 * @apiParam {String} alias 代號
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Agreement ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} content 內容
 	 * @apiSuccess {String} alias 代號
 
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      * {
      * 	"result":"SUCCESS",
      * 		"data":{
@@ -110,7 +110,7 @@ class Agreement extends REST_Controller {
      * }
 	 *
      * @apiError 701 此協議書不存在
-     * @apiErrorExample {json} 701
+     * @apiErrorExample {Object} 701
      *     {
      *       "result": "ERROR",
      *       "error": "701"

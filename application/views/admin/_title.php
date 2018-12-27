@@ -7,8 +7,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">inFlux Admin</a>
-                <p class="navbar-brand">Hi,<?=isset($login_info->name)?$login_info->name:""?></p>
+                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">
+					<img src="<?=base_url()?>assets/logo.png" alt="" width="110px" />
+				</a>
+                <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:""?> [ <?=isset($role_name)?$role_name:""?> ]</h5>
             </div>
             <!-- /.navbar-header -->
 
@@ -41,13 +43,13 @@
 								if(isset($value["name"])){
 					?>
 							<li class="<?=$active==$key?"active":""; ?>">
-								<a href="<?=admin_url($key.'/') ?>"><i class="fa <?=$value["icon"] ?> fa-fw"></i> <?=$value["name"] ?></a>
+								<a href="<?=admin_url($key.'/') ?>"><?=$value["name"] ?></a>
 							</li>
 					
 								<?}else{?>
                         
 							<li class="<?=$active==$key?"active":""; ?>">
-								<a href="#"><i class="fa <?=$value["parent_icon"] ?> fa-fw"></i><?=$value["parent_name"] ?><span class="fa arrow"></span></a>
+								<a href="#"><?=$value["parent_name"] ?><span class="fa arrow"></span></a>
 								<ul class="nav nav-second-level">
 									<? 
 										unset($value["parent_icon"],$value["parent_name"]);
@@ -62,7 +64,7 @@
 					<?}}}?>
 					<? if(is_development()){ ?>
 						<li class="">
-							<a href="<?=admin_url('TestScript/') ?>"><i class="fa fa-gavel fa-fw"></i> 測試工具</a>
+							<a href="<?=admin_url('TestScript/') ?>">測試工具</a>
 						</li>
 					<?}?>
                     </ul>

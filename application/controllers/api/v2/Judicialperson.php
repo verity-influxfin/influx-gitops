@@ -43,7 +43,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
+	 * @apiSuccess {Number} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
 	 * @apiSuccess {String} company 公司名稱
 	 * @apiSuccess {String} tax_id 公司統一編號
 	 * @apiSuccess {String} remark 備註
@@ -100,7 +100,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiName PostJudicialpersonApply
      * @apiGroup Judicialperson
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
+	 * @apiParam {Number=1,2,3,4} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
      * @apiParam {String{8}} tax_id 公司統一編號
 	 * 
 	 * 

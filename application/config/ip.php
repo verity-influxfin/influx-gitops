@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-if(ENVIRONMENT=="development"){
+if(ENVIRONMENT=='development'){
 	$config['access_ip_list']	= array(
 		'114.34.172.44',
 		'54.64.205.49',

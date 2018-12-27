@@ -55,28 +55,28 @@ class Recoveries extends REST_Controller {
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} remaining_principal 持有債權
 	 * @apiSuccess {String} accounts_receivable 應收帳款
 	 * @apiSuccess {String} interest_receivable 應收利息
 	 * @apiSuccess {String} interest 已收利息收入
 	 * @apiSuccess {String} other_income 已收其他收入
-	 * @apiSuccess {json} principal_level 標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良
-	 * @apiSuccess {json} funds 資金資訊
+	 * @apiSuccess {Object} principal_level 標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良
+	 * @apiSuccess {Object} funds 資金資訊
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
 	 * @apiSuccess {String} funds.frozen 待交易餘額
-	 * @apiSuccess {json} bank_account 綁定金融帳號
+	 * @apiSuccess {Object} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
 	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
-	 * @apiSuccess {json} virtual_account 專屬虛擬帳號
+	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
 	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
 	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
 	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -238,26 +238,26 @@ class Recoveries extends REST_Controller {
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.delay_days 逾期天數
 	 * @apiSuccess {String} target.target_no 案號
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {json} next_repayment 最近一期應還款
+	 * @apiSuccess {Object} next_repayment 最近一期應還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -368,23 +368,23 @@ class Recoveries extends REST_Controller {
 	 * @apiName GetRecoveriesInfo
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {number} id Investments ID
+	 * @apiParam {Number} id Investments ID
 	 * 
-	 * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} loan_amount 出借金額
 	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
-	 * @apiSuccess {json} transfer 債轉資訊
+	 * @apiSuccess {Object} transfer 債轉資訊
 	 * @apiSuccess {String} transfer.amount 債權轉讓本金
 	 * @apiSuccess {String} transfer.transfer_fee 債權轉讓手續費
 	 * @apiSuccess {String} transfer.contract 債權轉讓合約
 	 * @apiSuccess {String} transfer.transfer_date 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {json} product 產品資訊
+	 * @apiSuccess {Object} product 產品資訊
 	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {json} target 標的資訊
+	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.delay_days 逾期天數
@@ -393,7 +393,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} target.repayment 還款方式
 	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {json} amortization_schedule 回款計畫
+	 * @apiSuccess {Object} amortization_schedule 回款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} amortization_schedule.rate 年利率
@@ -407,7 +407,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.schedule.interest 還款利息
 	 * @apiSuccess {String} amortization_schedule.schedule.total_payment 本期還款金額
 	 * @apiSuccess {String} amortization_schedule.schedule.repayment 已還款金額
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
@@ -478,14 +478,14 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
 	 *
      * @apiError 806 此申請不存在
-     * @apiErrorExample {json} 806
+     * @apiErrorExample {Object} 806
      *     {
      *       "result": "ERROR",
      *       "error": "806"
      *     }
 	 *
      * @apiError 805 對此申請無權限
-     * @apiErrorExample {json} 805
+     * @apiErrorExample {Object} 805
      *     {
      *       "result": "ERROR",
      *       "error": "805"
@@ -572,12 +572,12 @@ class Recoveries extends REST_Controller {
 	 * @apiName PostRecoveriesWithdraw
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-     * @apiParam {number} amount 提領金額
+     * @apiParam {Number} amount 提領金額
      * @apiParam {String} transaction_password 交易密碼
 	 * 
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -588,35 +588,35 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
      *     }
 	 *
      * @apiError 209 未設置交易密碼
-     * @apiErrorExample {json} 209
+     * @apiErrorExample {Object} 209
      *     {
      *       "result": "ERROR",
      *       "error": "209"
      *     }
 	 *
      * @apiError 210 交易密碼錯誤
-     * @apiErrorExample {json} 210
+     * @apiErrorExample {Object} 210
      *     {
      *       "result": "ERROR",
      *       "error": "210"
      *     }
 	 *
      * @apiError 211 可用餘額不足
-     * @apiErrorExample {json} 211
+     * @apiErrorExample {Object} 211
      *     {
      *       "result": "ERROR",
      *       "error": "211"
@@ -672,14 +672,14 @@ class Recoveries extends REST_Controller {
 	 * @apiName GetRecoveriesPassbook
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} amount 金額
      * @apiSuccess {String} bank_amount 帳戶餘額
      * @apiSuccess {String} remark 備註
      * @apiSuccess {String} tx_datetime 交易時間
      * @apiSuccess {String} created_at 入帳時間
      * @apiSuccess {String} action debit:資產增加 credit:資產減少
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      * 		"data":{
@@ -710,14 +710,14 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {json} 203
+     * @apiErrorExample {Object} 203
      *     {
      *       "result": "ERROR",
      *       "error": "203"
@@ -756,13 +756,13 @@ class Recoveries extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String} ids Investments IDs ex: 1,3,10,21
 	 * 
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} total_principal 轉讓價金
      * @apiSuccess {String} total_fee 預計轉讓費用
      * @apiSuccess {String} max_instalment 最大剩餘期數
      * @apiSuccess {String} min_instalment 最小剩餘期數
-     * @apiSuccess {json} debt_transfer_contract 轉讓合約(多份)
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} debt_transfer_contract 轉讓合約(多份)
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      	"data": {
@@ -780,28 +780,28 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符
-     * @apiErrorExample {json} 807
+     * @apiErrorExample {Object} 807
      *     {
      *       "result": "ERROR",
      *       "error": "807"
      *     }
      *
      * @apiError 806 此申請不存在
-     * @apiErrorExample {json} 806
+     * @apiErrorExample {Object} 806
      *     {
      *       "result": "ERROR",
      *       "error": "806"
      *     }
 	 *
      * @apiError 805 對此申請無權限
-     * @apiErrorExample {json} 805
+     * @apiErrorExample {Object} 805
      *     {
      *       "result": "ERROR",
      *       "error": "805"
      *     }
 	 *
      * @apiError 808 已申請過債權轉出
-     * @apiErrorExample {json} 808
+     * @apiErrorExample {Object} 808
      *     {
      *       "result": "ERROR",
      *       "error": "808"
@@ -885,8 +885,8 @@ class Recoveries extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String} ids Investments IDs (複選使用逗號隔開1,3,10,21)
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -897,28 +897,28 @@ class Recoveries extends REST_Controller {
 	 * @apiUse NotInvestor
      *
      * @apiError 807 此申請狀態不符
-     * @apiErrorExample {json} 807
+     * @apiErrorExample {Object} 807
      *     {
      *       "result": "ERROR",
      *       "error": "807"
      *     }
      *
      * @apiError 806 此申請不存在
-     * @apiErrorExample {json} 806
+     * @apiErrorExample {Object} 806
      *     {
      *       "result": "ERROR",
      *       "error": "806"
      *     }
 	 *
      * @apiError 805 對此申請無權限
-     * @apiErrorExample {json} 805
+     * @apiErrorExample {Object} 805
      *     {
      *       "result": "ERROR",
      *       "error": "805"
      *     }
 	 *
      * @apiError 808 已申請過債權轉出
-     * @apiErrorExample {json} 808
+     * @apiErrorExample {Object} 808
      *     {
      *       "result": "ERROR",
      *       "error": "808"

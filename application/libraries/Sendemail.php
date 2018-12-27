@@ -57,13 +57,13 @@ class Sendemail
 				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
 			}
 			
-			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link),TRUE);
-			$subject = "手機ATM - 電子郵件認證";
+			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link),TRUE);
+			$subject = '手機ATM - 電子郵件認證';
 			$param = array(
-				"certification_id"	=> $certification_id,
-				"type" 				=> $type,
-				"email"				=> $email,
-				"code"				=> $code,
+				'certification_id'	=> $certification_id,
+				'type' 				=> $type,
+				'email'				=> $email,
+				'code'				=> $code,
 			);
 			$rs = $this->CI->email_verify_model->insert($param);
 			if($rs){

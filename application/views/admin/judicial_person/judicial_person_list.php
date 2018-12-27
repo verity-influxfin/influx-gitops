@@ -1,0 +1,95 @@
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">法人帳號 - 申請列表</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+			<script type="text/javascript">
+				function showChang(){
+					var user_id 		= $('#user_id').val();
+					var tax_id 			= $('#tax_id').val();
+					var status 			= $('#status :selected').val();
+					top.location = './index?status='+status+'&user_id='+user_id+'&tax_id='+tax_id;
+				}
+			</script>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+							<table>
+								<tr>
+									<td>會員ID：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
+									<td>統一編號：</td>
+									<td><input type="text" value="<?=isset($_GET['tax_id'])&&$_GET['tax_id']!=""?$_GET['tax_id']:""?>" id="tax_id" /></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>狀態：</td>
+									<td>
+										<select id="status">
+											<option value="" >請選擇</option>
+											<? foreach($status_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? } ?>
+										</select>
+									</td>
+									<td></td>
+									<td>
+										<a href="javascript:showChang();" class="btn btn-default">查詢</a>
+									</td>
+								</tr>
+							</table>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>統一編號</th>
+                                            <th>公司類型</th>
+                                            <th>公司名稱</th>
+                                            <th>申請人 ID</th>
+                                            <th>申請人</th>
+                                            <th>備註</th>
+                                            <th>狀態</th>
+											<th>申請日期</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									<?php 
+										if(isset($list) && !empty($list)){
+											$count = 0;
+											foreach($list as $key => $value){
+												$count++;
+									?>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list">
+                                            <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
+                                            <td><?=isset($company_type[$value->company_type])?$company_type[$value->company_type]:"" ?></td>
+                                            <td><?=isset($value->company)?$value->company:"" ?></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
+                                            <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
+											<td><?=isset($value->remark)?$value->remark:"" ?></td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+											<td><a href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+                                        </tr>                                        
+									<?php 
+										}}
+									?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        </div>
+        <!-- /#page-wrapper -->

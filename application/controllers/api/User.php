@@ -40,7 +40,7 @@ class User extends REST_Controller {
     /**
      * @apiDefine TokenError
      * @apiError 100 Token錯誤
-     * @apiErrorExample {json} 100
+     * @apiErrorExample {Object} 100
      *     {
      *       "result": "ERROR",
      *       "error": "100"
@@ -49,7 +49,7 @@ class User extends REST_Controller {
 	 /**
      * @apiDefine BlockUser
      * @apiError 101 帳戶已黑名單
-     * @apiErrorExample {json} 101
+     * @apiErrorExample {Object} 101
      *     {
      *       "result": "ERROR",
      *       "error": "101"
@@ -58,7 +58,7 @@ class User extends REST_Controller {
     /**
      * @apiDefine InputError
      * @apiError 200 參數錯誤
-     * @apiErrorExample {json} 200
+     * @apiErrorExample {Object} 200
      *     {
      *       "result": "ERROR",
      *       "error": "200"
@@ -67,7 +67,7 @@ class User extends REST_Controller {
 	 /**
      * @apiDefine InsertError
      * @apiError 201 新增時發生錯誤
-     * @apiErrorExample {json} 201
+     * @apiErrorExample {Object} 201
      *     {
      *       "result": "ERROR",
      *       "error": "201"
@@ -76,7 +76,7 @@ class User extends REST_Controller {
 	 /**
      * @apiDefine NotInvestor
      * @apiError 205 非出借端登入
-     * @apiErrorExample {json} 205
+     * @apiErrorExample {Object} 205
      *     {
      *       "result": "ERROR",
      *       "error": "205"
@@ -85,7 +85,7 @@ class User extends REST_Controller {
 	 /**
 	 * @apiDefine IsInvestor
      * @apiError 207 非借款端登入
-     * @apiErrorExample {json} 207
+     * @apiErrorExample {Object} 207
      *     {
      *       "result": "ERROR",
      *       "error": "207"
@@ -99,22 +99,22 @@ class User extends REST_Controller {
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *    }
 	 * @apiUse InputError
      *
      * @apiError 301 會員已存在
-     * @apiErrorExample {json} 301
+     * @apiErrorExample {Object} 301
      *     {
      *       "result": "ERROR",
      *       "error": "301"
      *     }
 	 *
      * @apiError 307 發送簡訊間隔過短
-     * @apiErrorExample {json} 307
+     * @apiErrorExample {Object} 307
      *     {
      *       "result": "ERROR",
      *       "error": "307"
@@ -161,11 +161,11 @@ class User extends REST_Controller {
      * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      * @apiParam {String} [promote_code] 邀請碼
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} token request_token
-	 * @apiSuccess {number} first_time 是否首次本端
+	 * @apiSuccess {Number} first_time 是否首次本端
 	 * @apiSuccess {String} expiry_time token時效
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -178,21 +178,21 @@ class User extends REST_Controller {
 	 * @apiUse InsertError
      *
      * @apiError 301 會員已存在
-     * @apiErrorExample {json} 301
+     * @apiErrorExample {Object} 301
      *     {
      *       "result": "ERROR",
      *       "error": "301"
      *     }
      *
      * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
+     * @apiErrorExample {Object} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
 	 *
 	 * @apiError 312 密碼長度不足
-     * @apiErrorExample {json} 312
+     * @apiErrorExample {Object} 312
      *     {
      *       "result": "ERROR",
      *       "error": "312"
@@ -272,11 +272,11 @@ class User extends REST_Controller {
      * @apiParam {String{6..}} password 密碼
 	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} token request_token
-	 * @apiSuccess {number} first_time 是否首次本端
+	 * @apiSuccess {Number} first_time 是否首次本端
 	 * @apiSuccess {String} expiry_time token時效
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -289,14 +289,14 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 304 密碼錯誤
-     * @apiErrorExample {json} 304
+     * @apiErrorExample {Object} 304
      *     {
      *       "result": "ERROR",
      *       "error": "304"
@@ -365,11 +365,11 @@ class User extends REST_Controller {
      * @apiParam {String} access_token access_token
 	 * @apiParam {number=0,1} [investor=0] 1:投資端 0:借款端
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} token request_token
-	 * @apiSuccess {number} first_time 是否首次本端
+	 * @apiSuccess {Number} first_time 是否首次本端
 	 * @apiSuccess {String} expiry_time token時效
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -383,14 +383,14 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 304 密碼錯誤
-     * @apiErrorExample {json} 304
+     * @apiErrorExample {Object} 304
      *     {
      *       "result": "ERROR",
      *       "error": "304"
@@ -485,8 +485,8 @@ class User extends REST_Controller {
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *    }
@@ -494,14 +494,14 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 *
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 307 發送簡訊間隔過短
-     * @apiErrorExample {json} 307
+     * @apiErrorExample {Object} 307
      *     {
      *       "result": "ERROR",
      *       "error": "307"
@@ -546,29 +546,29 @@ class User extends REST_Controller {
      * @apiParam {String} code 簡訊驗證碼
 	 * @apiParam {String{6..}} new_password 新密碼
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
 	 * @apiUse InputError
      * @apiUse InsertError
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
+     * @apiErrorExample {Object} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
 	 *
 	 * @apiError 312 密碼長度不足
-     * @apiErrorExample {json} 312
+     * @apiErrorExample {Object} 312
      *     {
      *       "result": "ERROR",
      *       "error": "312"
@@ -619,7 +619,7 @@ class User extends REST_Controller {
      * @apiGroup User
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id User ID
 	 * @apiSuccess {String} name 姓名
 	 * @apiSuccess {String} picture 照片
@@ -627,11 +627,11 @@ class User extends REST_Controller {
 	 * @apiSuccess {String} sex 性別
 	 * @apiSuccess {String} phone 手機號碼
 	 * @apiSuccess {String} id_number 身分證字號
-	 * @apiSuccess {number} investor 1:投資端 0:借款端
+	 * @apiSuccess {Number} investor 1:投資端 0:借款端
 	 * @apiSuccess {String} transaction_password 是否設置交易密碼
 	 * @apiSuccess {String} my_promote_code 推廣碼
 	 * @apiSuccess {String} expiry_time token時效
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -676,8 +676,8 @@ class User extends REST_Controller {
      * @apiParam {String=facebook,instagram} type 登入類型
      * @apiParam {String} access_token access_token
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -686,35 +686,35 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 305 access_token錯誤
-     * @apiErrorExample {json} 305
+     * @apiErrorExample {Object} 305
      *     {
      *       "result": "ERROR",
      *       "error": "305"
      *     }
      *
      * @apiError 306 此種類型已綁定過了
-     * @apiErrorExample {json} 306
+     * @apiErrorExample {Object} 306
      *     {
      *       "result": "ERROR",
      *       "error": "306"
      *     }
      *
      * @apiError 308 此FB帳號已綁定過
-     * @apiErrorExample {json} 308
+     * @apiErrorExample {Object} 308
      *     {
      *       "result": "ERROR",
      *       "error": "308"
      *     }
 	 *
      * @apiError 309 此IG帳號已綁定過
-     * @apiErrorExample {json} 309
+     * @apiErrorExample {Object} 309
      *     {
      *       "result": "ERROR",
      *       "error": "309"
      *     }
 	 *
      * @apiError 310 此LINE帳號已綁定過
-     * @apiErrorExample {json} 310
+     * @apiErrorExample {Object} 310
      *     {
      *       "result": "ERROR",
      *       "error": "310"
@@ -818,8 +818,8 @@ class User extends REST_Controller {
      * @apiGroup User
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *    }
@@ -828,7 +828,7 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
      *
      * @apiError 307 發送簡訊間隔過短
-     * @apiErrorExample {json} 307
+     * @apiErrorExample {Object} 307
      *     {
      *       "result": "ERROR",
      *       "error": "307"
@@ -865,8 +865,8 @@ class User extends REST_Controller {
      * @apiParam {String{6..}} new_password 新密碼
      * @apiParam {String} code 簡訊驗證碼
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -876,28 +876,28 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
+     * @apiErrorExample {Object} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
 	 *
 	 * @apiError 304 密碼錯誤
-     * @apiErrorExample {json} 304
+     * @apiErrorExample {Object} 304
      *     {
      *       "result": "ERROR",
      *       "error": "304"
      *     }
 	 *
 	 * @apiError 312 密碼長度不足
-     * @apiErrorExample {json} 312
+     * @apiErrorExample {Object} 312
      *     {
      *       "result": "ERROR",
      *       "error": "312"
@@ -955,8 +955,8 @@ class User extends REST_Controller {
      * @apiParam {String{6..}} new_password 新交易密碼
      * @apiParam {String} code 簡訊驗證碼
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -966,21 +966,21 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      * @apiError 302 會員不存在
-     * @apiErrorExample {json} 302
+     * @apiErrorExample {Object} 302
      *     {
      *       "result": "ERROR",
      *       "error": "302"
      *     }
      *
      * @apiError 303 驗證碼錯誤
-     * @apiErrorExample {json} 303
+     * @apiErrorExample {Object} 303
      *     {
      *       "result": "ERROR",
      *       "error": "303"
      *     }
 	 *
 	 * @apiError 311 交易密碼長度不足
-     * @apiErrorExample {json} 311
+     * @apiErrorExample {Object} 311
      *     {
      *       "result": "ERROR",
      *       "error": "311"
@@ -1030,8 +1030,8 @@ class User extends REST_Controller {
      * @apiGroup User
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
@@ -1069,8 +1069,8 @@ class User extends REST_Controller {
      * @apiParam {file} [image2] 附圖2
      * @apiParam {file} [image3] 附圖3
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -1123,9 +1123,9 @@ class User extends REST_Controller {
 	 * @apiParam {String} department 系所
 	 * @apiParam {String} grade 年級
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} amount 可貸款額度
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
 	 *		"data":{
@@ -1166,12 +1166,12 @@ class User extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiGroup User
      *
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} promote_code 推廣邀請碼
 	 * @apiSuccess {String} promote_url 推廣連結
 	 * @apiSuccess {String} promote_qrcode 推廣QR code
-	 * @apiSuccess {json} bonus_list 獎勵列表(規劃中)
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Object} bonus_list 獎勵列表(規劃中)
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "data": {
