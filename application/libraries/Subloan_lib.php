@@ -200,9 +200,9 @@ class Subloan_lib{
 	}
 	
 	public function subloan_verify_failed($new_target = array(),$admin_id=0,$remark="審批不通過"){
-		if(!empty($new_target) && $new_target->status==2){
+		if(!empty($new_target) && in_array($new_target->status,[1,2])){
 			$subloan	= $this->CI->subloan_model->get_by(array(
-				"status"		=> 1,
+				"status"		=> [0,1],
 				"new_target_id"	=> $new_target->id
 			));
 			if($subloan){
