@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">
-					<img src="<?=base_url()?>assets/logo.png" alt="" width="110px" />
+					<img src="<?=base_url()?>assets/logo.png" alt="" width="150px" />
 				</a>
                 <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:""?> [ <?=isset($role_name)?$role_name:""?> ]</h5>
             </div>
