@@ -120,10 +120,10 @@ class Repayment extends REST_Controller {
 		$remaining_principal 	= 0;
 		$next_repayment			= 0;
 		$user					= array();
-		$transaction 			= $this->transaction_model->order_by("limit_date","asc")->get_many_by(array(
-			"user_from"	=> $user_id,
-			"status"	=> "1",
-			"source" 	=> array(
+		$transaction 			= $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+			'user_from'	=> $user_id,
+			'status'	=> '1',
+			'source' 	=> array(
 				SOURCE_AR_PRINCIPAL,
 				SOURCE_AR_INTEREST,
 				SOURCE_AR_DAMAGE,
@@ -149,43 +149,43 @@ class Repayment extends REST_Controller {
 			}
 		}
 		
-		$virtual 			= $this->virtual_account_model->get_by(array("investor"=>0,"user_id"=>$user_id));
+		$virtual 			= $this->virtual_account_model->get_by(array('investor'=>0,'user_id'=>$user_id));
 		if($virtual){
 			$virtual_account	= array(
-				"bank_code"			=> CATHAY_BANK_CODE,
-				"branch_code"		=> CATHAY_BRANCH_CODE,
-				"bank_name"			=> CATHAY_BANK_NAME,
-				"branch_name"		=> CATHAY_BRANCH_NAME,
-				"virtual_account"	=> $virtual->virtual_account,
+				'bank_code'			=> CATHAY_BANK_CODE,
+				'branch_code'		=> CATHAY_BRANCH_CODE,
+				'bank_name'			=> CATHAY_BANK_NAME,
+				'branch_name'		=> CATHAY_BRANCH_NAME,
+				'virtual_account'	=> $virtual->virtual_account,
 			);
 			$this->load->library('Transaction_lib'); 
 			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		}else{
 			$funds			 = array(
-				"total"					=> 0,
-				"last_recharge_date"	=> "",
-				"frozen"				=> 0
+				'total'					=> 0,
+				'last_recharge_date'	=> '',
+				'frozen'				=> 0
 			);
 			$virtual_account	= array(
-				"bank_code"			=> "",
-				"branch_code"		=> "",
-				"bank_name"			=> "",
-				"branch_name"		=> "",
-				"virtual_account"	=> "",
+				'bank_code'			=> '',
+				'branch_code'		=> '',
+				'bank_name'			=> '',
+				'branch_name'		=> '',
+				'virtual_account'	=> '',
 			);
 		}
 		
 		$fields = $this->user_model->token_fields;
 		foreach($fields as $key => $field){
-			$user[$field] = $this->user_info->$field?$this->user_info->$field:"";
+			$user[$field] = $this->user_info->$field?$this->user_info->$field:'';
 		}
 		
 		$data	= array(
-			"remaining_principal"	=> $remaining_principal,
-			"next_repayment"		=> $next_repayment,
-			"user"					=> $user,
-			"funds"					=> $funds,
-			"virtual_account"		=> $virtual_account,
+			'remaining_principal'	=> $remaining_principal,
+			'next_repayment'		=> $next_repayment,
+			'user'					=> $user,
+			'funds'					=> $funds,
+			'virtual_account'		=> $virtual_account,
 		);
 		
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -275,8 +275,8 @@ class Repayment extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$param				= array(
-			"user_id"	=> $user_id,
-			"status"	=> array(5,10)
+			'user_id'	=> $user_id,
+			'status'	=> array(5,10)
 		);
 		$targets 			= $this->target_model->get_many_by($param);
 		$instalment_list 	= $this->config->item('instalment');
@@ -284,41 +284,41 @@ class Repayment extends REST_Controller {
 		$list				= array();
 		if(!empty($targets)){
 			$this->load->model('user/virtual_account_model');
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array('status'=>1,'investor'=>0,'user_id'=>$user_id));
 			$virtual_account		= array();
 			if($virtual_account_info){
 				$virtual_account		= array(
-					"bank_code"			=> CATHAY_BANK_CODE,
-					"branch_code"		=> CATHAY_BRANCH_CODE,
-					"bank_name"			=> CATHAY_BANK_NAME,
-					"branch_name"		=> CATHAY_BRANCH_NAME,
-					"virtual_account"	=> $virtual_account_info->virtual_account,
+					'bank_code'			=> CATHAY_BANK_CODE,
+					'branch_code'		=> CATHAY_BRANCH_CODE,
+					'bank_name'			=> CATHAY_BANK_NAME,
+					'branch_name'		=> CATHAY_BRANCH_NAME,
+					'virtual_account'	=> $virtual_account_info->virtual_account,
 				);
 			}
 			foreach($targets as $key => $value){
 				$next_repayment = array(
-					"date" 			=> "",
-					"instalment"	=> "",
-					"amount"		=> 0,
+					'date' 			=> '',
+					'instalment'	=> '',
+					'amount'		=> 0,
 				);
 
-				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array(
-					"target_id"	=> $value->id,
-					"user_from"	=> $user_id,
-					"status"	=> "1"
+				$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+					'target_id'	=> $value->id,
+					'user_from'	=> $user_id,
+					'status'	=> '1'
 				));
 				
 				if($transaction){
 					$first = true;
 					foreach($transaction as $k => $v){
 						if($first){
-							$next_repayment["date"] 		= $v->limit_date;
-							$next_repayment["instalment"] 	= $v->instalment_no;
+							$next_repayment['date'] 		= $v->limit_date;
+							$next_repayment['instalment'] 	= $v->instalment_no;
 							$first = false;
 						}
 
-						if($v->limit_date && $v->limit_date == $next_repayment["date"]){
-							$next_repayment["amount"] += $v->amount;
+						if($v->limit_date && $v->limit_date == $next_repayment['date']){
+							$next_repayment['amount'] += $v->amount;
 						}
 					}
 				}
@@ -326,31 +326,31 @@ class Repayment extends REST_Controller {
 				$this->load->model('loan/product_model');
 				$product_info 	= $this->product_model->get($value->product_id);
 				$product = array(
-					"id"				=> $product_info->id,
-					"name"				=> $product_info->name,
+					'id'				=> $product_info->id,
+					'name'				=> $product_info->name,
 				);
 
 				$list[] = array(
-					"id" 				=> $value->id,
-					"target_no" 		=> $value->target_no,
-					"product" 			=> $product,
-					"user_id" 			=> $value->user_id,
-					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
-					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
-					"instalment" 		=> $instalment_list[$value->instalment],
-					"repayment" 		=> $repayment_type[$value->repayment],
-					"remark" 			=> $value->remark, 
-					"delay" 			=> $value->delay,
-					"delay_days" 		=> $value->delay_days,
-					"status" 			=> $value->status,
-					"sub_status" 		=> $value->sub_status,
-					"created_at" 		=> $value->created_at,
-					"next_repayment" 	=> $next_repayment,
-					"virtual_account"	=> $virtual_account,
+					'id' 				=> $value->id,
+					'target_no' 		=> $value->target_no,
+					'product' 			=> $product,
+					'user_id' 			=> $value->user_id,
+					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
+					'interest_rate' 	=> $value->interest_rate?$value->interest_rate:'',
+					'instalment' 		=> $instalment_list[$value->instalment],
+					'repayment' 		=> $repayment_type[$value->repayment],
+					'remark' 			=> $value->remark, 
+					'delay' 			=> $value->delay,
+					'delay_days' 		=> $value->delay_days,
+					'status' 			=> $value->status,
+					'sub_status' 		=> $value->sub_status,
+					'created_at' 		=> $value->created_at,
+					'next_repayment' 	=> $next_repayment,
+					'virtual_account'	=> $virtual_account,
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 	
 	/**

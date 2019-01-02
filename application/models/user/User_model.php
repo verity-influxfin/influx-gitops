@@ -6,27 +6,27 @@ class User_model extends MY_Model
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
-		0 =>	"已停權",
-		1 =>	"正常"
+		0 =>	'已停權',
+		1 =>	'正常'
 	);
 	
 	public $block_status_list   = array(
-		0 =>	"正常",
-		1 =>	"人工停權",
-		2 =>	"系統停權",
+		0 =>	'正常',
+		1 =>	'人工停權',
+		2 =>	'系統停權',
 	);
 	
 	public $token_fields  = array(
-		"id",
-		"name",
-		"picture",
-		"nickname",
-		"sex",
-		"id_number",
-		"phone",
-		"my_promote_code",
-		"created_at",
-		"updated_at"
+		'id',
+		'name',
+		'picture',
+		'nickname',
+		'sex',
+		'id_number',
+		'phone',
+		'my_promote_code',
+		'created_at',
+		'updated_at'
 	);
 	
 	public function __construct()
@@ -37,7 +37,7 @@ class User_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-		$data["password"] 	= sha1($data["password"]);
+		$data['password'] 	= sha1($data['password']);
         $data['created_at'] = $data['updated_at'] = time();
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
@@ -45,12 +45,12 @@ class User_model extends MY_Model
 	
 	protected function before_data_u($data)
     {
-		if(isset($data["password"]) && !empty($data["password"])){
-			$data["password"] 	= sha1($data["password"]);
+		if(isset($data['password']) && !empty($data['password'])){
+			$data['password'] 	= sha1($data['password']);
 		}
 		
-		if(isset($data["transaction_password"]) && !empty($data["transaction_password"])){
-			$data["transaction_password"] 	= sha1($data["transaction_password"]);
+		if(isset($data['transaction_password']) && !empty($data['transaction_password'])){
+			$data['transaction_password'] 	= sha1($data['transaction_password']);
 		}
 		
         $data['updated_at'] = time();

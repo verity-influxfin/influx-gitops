@@ -129,6 +129,7 @@ defined('APPLY_ACTION_ERROR')  			OR define('APPLY_ACTION_ERROR'			, 406);
 defined('APPLY_STATUS_ERROR')  			OR define('APPLY_STATUS_ERROR'			, 407);
 defined('APPLY_EXIST')  				OR define('APPLY_EXIST'					, 408);
 defined('PRODUCT_REPAYMENT_ERROR')  	OR define('PRODUCT_REPAYMENT_ERROR'		, 409);
+defined('PRODUCT_TYPE_ERROR')  			OR define('PRODUCT_TYPE_ERROR'			, 410);
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
@@ -186,10 +187,12 @@ defined('DELAY_INTEREST')   		OR define('DELAY_INTEREST'			, 0.1); //延滯息%
 defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續費%
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
-defined('PREPAYMENT_ALLOWANCE_FEES') 	OR define('PREPAYMENT_ALLOWANCE_FEES'	, 1); //提還補貼%
-defined('GRACE_PERIOD') 			OR define('GRACE_PERIOD'					, 7); //寬限期
-defined('TRANSACTION_PASSWORD_LENGTH') 	OR define('TRANSACTION_PASSWORD_LENGTH'	, 6); //交易密碼長度
+defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%
+defined('GRACE_PERIOD') 					OR define('GRACE_PERIOD'					, 7); //寬限期
+defined('TRANSACTION_PASSWORD_LENGTH') 		OR define('TRANSACTION_PASSWORD_LENGTH'		, 6); //交易密碼長度
+defined('TRANSACTION_PASSWORD_LENGTH_MAX') 	OR define('TRANSACTION_PASSWORD_LENGTH_MAX'	, 50); //交易密碼長度
 defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'					, 6); //登入密碼長度
+defined('PASSWORD_LENGTH_MAX') 		OR define('PASSWORD_LENGTH_MAX'		, 50); //登入密碼長度
 defined('TARGET_APPROVE_LIMIT')   	OR define('TARGET_APPROVE_LIMIT'	, 5); //申請期限
 defined('TARGET_PROMOTE_LIMIT')   	OR define('TARGET_PROMOTE_LIMIT'	, 2); //邀請碼保留月數
 defined('PREPAYMENT_RANGE_DAYS')   	OR define('PREPAYMENT_RANGE_DAYS'	, 2); //提前還款結息天數

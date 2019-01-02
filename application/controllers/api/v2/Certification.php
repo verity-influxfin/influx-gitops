@@ -406,10 +406,10 @@ class Certification extends REST_Controller {
 			}
 
 			$content['system'] 			= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-			$content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
-			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
+			$content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:'';
+			$content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:'';
 
-			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!=".edu.tw") {
+			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
 			
@@ -1208,6 +1208,8 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
+		
+		$input['email'] = base64_decode($input['email']);
 		
 		if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));

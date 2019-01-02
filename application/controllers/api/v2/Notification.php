@@ -83,17 +83,21 @@ class Notification extends REST_Controller {
 		$user_id			= $this->user_info->id;
 		$investor			= $this->user_info->investor;
 		$data				= array();
-		$notification_list 	= $this->user_notification_model->order_by('created_at','desc')->get_many_by(array('user_id'=>$user_id,'status <>'=>'0','investor'=>array($investor,2)));
+		$notification_list 	= $this->user_notification_model->order_by('created_at','desc')->get_many_by(array(
+			'user_id'		=> $user_id,
+			'status <>'		=> '0',
+			'investor'		=> array($investor,2)
+		));
 		$list				= array();
 		if(!empty($notification_list)){
 			foreach($notification_list as $key => $value){
 				$list[] = array(
-					'id' 			=> $value->id,
-					'investor'		=> $value->investor,
-					'title' 		=> $value->title,
-					'content' 		=> $value->content,
-					'status' 		=> $value->status,
-					'created_at' 	=> $value->created_at,
+					'id' 		 => $value->id,
+					'investor'	 => $value->investor,
+					'title' 	 => $value->title,
+					'content' 	 => $value->content,
+					'status' 	 => $value->status,
+					'created_at' => $value->created_at,
 				);
 			}
 		}
@@ -144,7 +148,11 @@ class Notification extends REST_Controller {
 		$investor			= $this->user_info->investor;
 
 		if(!empty($id)){
-			$notification = $this->user_notification_model->get_by(array('user_id'=>$user_id,'id'=>$id,'status <>'=>'0'));
+			$notification = $this->user_notification_model->get_by(array(
+				'user_id'	=> $user_id,
+				'id'		=> $id,
+				'status <>'	=> '0'
+			));
 			if($notification && $notification->status){
 				$data = array(
 					'id' 			=> $notification->id,
@@ -181,7 +189,11 @@ class Notification extends REST_Controller {
     {
 		$user_id		= $this->user_info->id;
 		$investor		= $this->user_info->investor;
-		$notification 	= $this->user_notification_model->update_by(array('user_id'=>$user_id,'status'=>'1','investor'=>array($investor,2)),array('status'=>2));
+		$notification 	= $this->user_notification_model->update_by(array(
+			'user_id'	=> $user_id,
+			'status'	=> '1',
+			'investor'	=> array($investor,2)
+		),array( 'status' => 2 ));
 		$this->response(array('result' => 'SUCCESS'));
     }
 }

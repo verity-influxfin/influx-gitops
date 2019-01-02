@@ -6659,6 +6659,7 @@
     "version": "0.2.0",
     "name": "GetProductApplyinfo",
     "group": "Product",
+    "description": "<p>預計還款計畫欄位只在待簽約時出現。</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -6763,6 +6764,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "reason",
+            "description": "<p>借款原因</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "remark",
             "description": "<p>備註</p>"
           },
@@ -6848,7 +6856,7 @@
             "type": "Object",
             "optional": false,
             "field": "amortization_schedule",
-            "description": "<p>預計還款計畫(簽約後不出現)</p>"
+            "description": "<p>預計還款計畫</p>"
           },
           {
             "group": "Success 200",
@@ -6995,7 +7003,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"contract\":\"我是合約\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"reason\":\"\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"contract\":\"我是合約\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\"alias\":\"FA\"\n\t\t\t},\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -7601,6 +7609,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "reason",
+            "description": "<p>借款原因</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "remark",
             "description": "<p>備註</p>"
           },
@@ -7637,7 +7652,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"0,\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"target_no\": \"1803269713\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"0\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"reason\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"target_no\": \"1803269713\",\n\t\t\t\t\"product_id\":\"2\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\",\n\t\t\t\t\t\"description\":\"輕鬆學貸\",\n\t\t\t\t\t\"alias\":\"FA\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"platform_fee\":\"\",\n\t\t\t\t\"interest_rate\":\"\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"reason\":\"\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"0\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -8212,6 +8227,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "type",
+            "description": "<p>類型 1:信用貸款 2:分期付款</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "name",
             "description": "<p>名稱</p>"
           },
@@ -8290,7 +8312,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product\":\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"type\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t}\n\t\t}\n}",
           "type": "Object"
         }
       ]
@@ -8581,6 +8603,7 @@
     "version": "0.2.0",
     "name": "GetProductList",
     "group": "Product",
+    "description": "<p>登入狀態下，若已申請產品且申請狀態為未簽約，則提供申請資訊欄位及認證完成資訊。</p>",
     "success": {
       "fields": {
         "Success 200": [
@@ -8597,6 +8620,13 @@
             "optional": false,
             "field": "id",
             "description": "<p>Product ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>類型 1:信用貸款 2:分期付款</p>"
           },
           {
             "group": "Success 200",
@@ -8624,7 +8654,7 @@
             "type": "Object",
             "optional": false,
             "field": "instalment",
-            "description": "<p>可申請期數</p>"
+            "description": "<p>可選期數</p>"
           },
           {
             "group": "Success 200",
@@ -8680,7 +8710,7 @@
             "type": "Object",
             "optional": false,
             "field": "target",
-            "description": "<p>申請資訊（未簽約）</p>"
+            "description": "<p>申請資訊</p>"
           },
           {
             "group": "Success 200",
@@ -8694,7 +8724,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t\t\"target\":{\n\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\t\"status\":\"0\",\n\t\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t},\n\t\t\t\t\"certification\":[\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"description\":\"實名認證\",\n\t\t\t\t\t\t\"alias\":\"id_card\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"description\":\"學生身份認證\",\n\t\t\t\t\t\t\"alias\":\"student\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"type\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"12222\",\n\t\t\t\t\"loan_range_e\":\"14333333\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"14\",\n\t\t\t\t\"charge_platform\":\"0\",\n\t\t\t\t\"charge_platform_min\":\"0\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"3期\",\n\t\t\t\t      \"value\": 3\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"12期\",\n\t\t\t\t      \"value\": 12\n\t\t\t\t    },\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"24期\",\n\t\t\t\t      \"value\": 24\n\t\t\t\t    },\n\t\t\t\t],\n\t\t\t\t\"repayment\": [\n\t\t\t\t\t{\n\t\t\t\t      \"name\": \"等額本息\",\n\t\t\t\t      \"value\": 1\n\t\t\t\t    }\n\t\t\t\t],\n\t\t\t\t\"target\":{\n\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\t\"status\":\"0\",\n\t\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t},\n\t\t\t\t\"certification\":[\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"1\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"description\":\"實名認證\",\n\t\t\t\t\t\t\"alias\":\"id_card\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"description\":\"學生身份認證\",\n\t\t\t\t\t\t\"alias\":\"student\",\n\t\t\t\t\t\t\"user_status\":\"1\"\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
           "type": "Object"
         }
       ]
@@ -8847,6 +8877,7 @@
     "version": "0.2.0",
     "name": "PostProductApply",
     "group": "Product",
+    "description": "<p>此API只支援信用貸款類型產品。</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -8874,6 +8905,15 @@
           {
             "group": "Parameter",
             "type": "String",
+            "size": "0..128",
+            "optional": true,
+            "field": "reason",
+            "description": "<p>借款原因</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "0..16",
             "optional": true,
             "field": "promote_code",
             "description": "<p>邀請碼</p>"
@@ -8938,6 +8978,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "410",
+            "description": "<p>產品類型錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -8986,6 +9032,11 @@
         {
           "title": "408",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "410",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"410\"\n}",
           "type": "Object"
         },
         {
@@ -9226,6 +9277,7 @@
     "version": "0.2.0",
     "name": "PostProductSigning",
     "group": "Product",
+    "description": "<p>此API只支援信用貸款類型產品。</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -9292,6 +9344,12 @@
             "optional": false,
             "field": "407",
             "description": "<p>目前狀態無法完成此動作</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "410",
+            "description": "<p>產品類型錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -9368,6 +9426,11 @@
         {
           "title": "407",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "410",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"410\"\n}",
           "type": "Object"
         },
         {
@@ -19578,6 +19641,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "reason",
+            "description": "<p>借款原因</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "remark",
             "description": "<p>備註</p>"
           },
@@ -19810,7 +19880,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"credit_level\":\"4\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\": \"0\",\n\t\t\t\"delay_days\": \"0\",\n\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\"invested\": \"50000\",\n\t\t\t\"status\":\"4\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      },\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 9.39,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"credit_level\":\"4\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"contract\":\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\",\n\t\t\t\"reason\":\"\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\": \"0\",\n\t\t\t\"delay_days\": \"0\",\n\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\"invested\": \"50000\",\n\t\t\t\"status\":\"4\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t        \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"user\": {\n         \"name\": \"陳XX\",\n          \"age\": 28,\n          \"school_name\": \"國立宜蘭大學\",\n          \"id_number\": \"G1231XXXXX\"\n      },\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 9.39,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -20454,6 +20524,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "reason",
+            "description": "<p>借款原因</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "status",
             "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
           },
@@ -20476,7 +20553,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"5000\",\n\t\t\t\t\"interest_rate\":\"12\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\t\"invested\": \"50000\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"credit_level\":\"4\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"5000\",\n\t\t\t\t\"interest_rate\":\"12\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"expire_time\": \"1525449600\",\n\t\t\t\t\"invested\": \"50000\",\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -24805,7 +24882,7 @@
   {
     "type": "get",
     "url": "/v2/user/editpwphone",
-    "title": "會員 發送驗證簡訊 （修改密碼、交易密碼）",
+    "title": "會員 交易、修改密碼簡訊",
     "version": "0.2.0",
     "name": "GetUserEditpwphone",
     "group": "User",
@@ -25068,6 +25145,20 @@
           },
           {
             "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "company",
+            "description": "<p>1:法人帳號 0:自然人帳號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "incharge",
+            "description": "<p>1:負責人 0:代理人</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "transaction_password",
@@ -25092,7 +25183,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n  \t\"nickname\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"transaction_password\": true,\n  \t\"investor\": 1,  \n  \t\"created_at\": \"1522651818\",     \n  \t\"updated_at\": \"1522653939\",     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"id\": \"1\",\n  \t\"name\": \"\",\n  \t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n  \t\"nickname\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"investor_status\": \"1\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",\n  \t\"id_number\": null,\n  \t\"transaction_password\": true,\n  \t\"investor\": 1,  \n  \t\"company\": 0,  \n  \t\"incharge\": 0,  \n  \t\"created_at\": \"1522651818\",     \n  \t\"updated_at\": \"1522653939\",     \n  \t\"expiry_time\": \"1522675539\"     \n  }\n}",
           "type": "Object"
         }
       ]
@@ -25502,30 +25593,6 @@
     "version": "0.2.0",
     "name": "PostUserBind",
     "group": "User",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "facebook",
-              "instagram"
-            ],
-            "optional": false,
-            "field": "type",
-            "description": "<p>登入類型</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "access_token",
-            "description": "<p>access_token</p>"
-          }
-        ]
-      }
-    },
     "header": {
       "fields": {
         "Header": [
@@ -25535,6 +25602,19 @@
             "optional": false,
             "field": "request_token",
             "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>Facebook AccessToken</p>"
           }
         ]
       }
@@ -25572,25 +25652,13 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "306",
-            "description": "<p>此種類型已綁定過了</p>"
+            "description": "<p>已綁定過第三方帳號</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "308",
             "description": "<p>此FB帳號已綁定過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "309",
-            "description": "<p>此IG帳號已綁定過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "310",
-            "description": "<p>此LINE帳號已綁定過</p>"
           },
           {
             "group": "Error 4xx",
@@ -25626,16 +25694,6 @@
         {
           "title": "308",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "309",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "310",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
           "type": "Object"
         },
         {
@@ -26233,7 +26291,7 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "6..",
+            "size": "6..50",
             "optional": false,
             "field": "new_password",
             "description": "<p>新密碼</p>"
@@ -26274,12 +26332,6 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "302",
-            "description": "<p>會員不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "303",
             "description": "<p>驗證碼錯誤</p>"
           },
@@ -26293,7 +26345,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "312",
-            "description": "<p>密碼長度不足</p>"
+            "description": "<p>密碼長度錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -26322,11 +26374,6 @@
         ]
       },
       "examples": [
-        {
-          "title": "302",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "Object"
-        },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
@@ -26570,7 +26617,7 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "6..",
+            "size": "6..50",
             "optional": false,
             "field": "new_password",
             "description": "<p>新交易密碼</p>"
@@ -26611,12 +26658,6 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "302",
-            "description": "<p>會員不存在</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "303",
             "description": "<p>驗證碼錯誤</p>"
           },
@@ -26653,11 +26694,6 @@
         ]
       },
       "examples": [
-        {
-          "title": "302",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-          "type": "Object"
-        },
         {
           "title": "303",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"303\"\n}",
@@ -26879,7 +26915,7 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "6..",
+            "size": "6..50",
             "optional": false,
             "field": "new_password",
             "description": "<p>新密碼</p>"
@@ -26926,7 +26962,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "312",
-            "description": "<p>密碼長度不足</p>"
+            "description": "<p>密碼長度錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -27124,7 +27160,7 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "6..",
+            "size": "6..50",
             "optional": false,
             "field": "password",
             "description": "<p>密碼</p>"
@@ -27203,6 +27239,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "312",
+            "description": "<p>密碼長度錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -27223,6 +27265,11 @@
         {
           "title": "304",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "312",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
           "type": "Object"
         },
         {
@@ -27406,7 +27453,7 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "6..",
+            "size": "6..50",
             "optional": false,
             "field": "password",
             "description": "<p>設定密碼</p>"
@@ -27417,6 +27464,13 @@
             "optional": false,
             "field": "code",
             "description": "<p>簡訊驗證碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "access_token",
+            "description": "<p>Facebook AccessToken</p>"
           },
           {
             "group": "Parameter",
@@ -27433,6 +27487,7 @@
           {
             "group": "Parameter",
             "type": "String",
+            "size": "0..16",
             "optional": true,
             "field": "promote_code",
             "description": "<p>邀請碼</p>"
@@ -27500,7 +27555,19 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "312",
-            "description": "<p>密碼長度不足</p>"
+            "description": "<p>密碼長度錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "305",
+            "description": "<p>AccessToken無效</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "308",
+            "description": "<p>此FB帳號已綁定過</p>"
           },
           {
             "group": "Error 4xx",
@@ -27530,6 +27597,16 @@
         {
           "title": "312",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"312\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "305",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "308",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
           "type": "Object"
         },
         {
@@ -27721,7 +27798,7 @@
   {
     "type": "post",
     "url": "/v2/user/registerphone",
-    "title": "會員 發送驗證簡訊 (註冊)",
+    "title": "會員 註冊簡訊",
     "version": "0.2.0",
     "name": "PostUserRegisterphone",
     "group": "User",
@@ -27899,7 +27976,7 @@
   {
     "type": "post",
     "url": "/v2/user/smsloginphone",
-    "title": "會員 發送驗證簡訊（忘記密碼）",
+    "title": "會員 忘記密碼簡訊",
     "version": "0.2.0",
     "name": "PostUserSmsloginphone",
     "group": "User",
@@ -28087,20 +28164,9 @@
           {
             "group": "Parameter",
             "type": "String",
-            "allowedValues": [
-              "facebook",
-              "instagram"
-            ],
-            "optional": false,
-            "field": "type",
-            "description": "<p>登入類型</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>access_token</p>"
+            "description": "<p>Facebook AccessToken</p>"
           },
           {
             "group": "Parameter",

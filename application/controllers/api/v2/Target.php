@@ -16,7 +16,7 @@ class Target extends REST_Controller {
         $method = $this->router->fetch_method();
         $nonAuthMethods = ['list'];
 		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -64,6 +64,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {String} invested 目前投標量
+	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
 	 * @apiSuccess {String} created_at 申請日期
@@ -89,6 +90,7 @@ class Target extends REST_Controller {
      * 				"delay_days": "0",
      * 				"expire_time": "1525449600",
      * 				"invested": "50000",
+     * 				"reason": "",
      * 				"status":"3",
      * 				"created_at":"1520421572"
      * 			}
@@ -102,47 +104,47 @@ class Target extends REST_Controller {
 		$input 	= $this->input->get();
 		$data	= array();
 		$list	= array();
-		$where	= array( "status" => 3 );
+		$where	= array( 'status' => 3 );
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array("credit_level","instalment","interest_rate"))?$input['orderby']:"credit_level";
-		$sort				= isset($input['sort'])&&in_array($input['sort'],array("desc","asc"))?$input['sort']:"asc";
+		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
+		$sort				= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$target_list 		= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
 
 		if(!empty($target_list)){
 			$product_list = array();
-			$products = $this->product_model->get_many_by(array("status"=>1));
+			$products = $this->product_model->get_many_by(array('status'=>1));
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(
-						"id"			=> $value->id,
-						"name"			=> $value->name,
+						'id'			=> $value->id,
+						'name'			=> $value->name,
 					);
 				}
 			}
 
 			foreach($target_list as $key => $value){
 				$list[] = array(
-					"id" 				=> $value->id,
-					"target_no" 		=> $value->target_no,
-					"product" 			=> $product_list[$value->product_id],
-					"credit_level" 		=> $value->credit_level,
-					"user_id" 			=> $value->user_id,
-					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
-					"interest_rate" 	=> $value->interest_rate?$value->interest_rate:"",
-					"instalment" 		=> $instalment_list[$value->instalment],
-					"repayment" 		=> $repayment_type[$value->repayment],
-					"delay" 			=> $value->delay,
-					"delay_days" 		=> $value->delay_days,
-					"expire_time" 		=> $value->expire_time,
-					"invested" 			=> $value->invested,
-					"status" 			=> $value->status,
-					"sub_status" 		=> $value->sub_status,
-					"created_at" 		=> $value->created_at,
+					'id' 				=> $value->id,
+					'target_no' 		=> $value->target_no,
+					'product' 			=> $product_list[$value->product_id],
+					'credit_level' 		=> $value->credit_level,
+					'user_id' 			=> $value->user_id,
+					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
+					'interest_rate' 	=> $value->interest_rate?$value->interest_rate:'',
+					'instalment' 		=> $instalment_list[$value->instalment],
+					'repayment' 		=> $repayment_type[$value->repayment],
+					'delay' 			=> $value->delay,
+					'delay_days' 		=> $value->delay_days,
+					'expire_time' 		=> $value->expire_time,
+					'invested' 			=> $value->invested,
+					'status' 			=> $value->status,
+					'sub_status' 		=> $value->sub_status,
+					'created_at' 		=> $value->created_at,
 				);
 			}
 		}
-		$data["list"] = $list;
+		$data['list'] = $list;
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
@@ -169,6 +171,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {String} delay_days 逾期天數
 	 * @apiSuccess {String} expire_time 流標時間
 	 * @apiSuccess {String} invested 目前投標量
+	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
@@ -216,6 +219,7 @@ class Target extends REST_Controller {
      * 			"instalment":"3期",
      * 			"repayment":"等額本息",
      * 			"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！",
+     * 			"reason":"",
      * 			"remark":"",
      * 			"delay": "0",
      * 			"delay_days": "0",
@@ -319,8 +323,8 @@ class Target extends REST_Controller {
 		if(!empty($target) && in_array($target->status,array(3,4,5,10))){
 			$product_info = $this->product_model->get($target->product_id);
 			$product = array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
+				'id'			=> $product_info->id,
+				'name'			=> $product_info->name,
 			);
 			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
@@ -334,51 +338,51 @@ class Target extends REST_Controller {
 				}
 			}
 
-			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
 		
 			$user_info 	= $this->user_model->get($target->user_id); 
 			$user		= array();
 			if($user_info){
-				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."**";
+				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$age  		= get_age($user_info->birthday);
-				$user_meta 	= $this->user_meta_model->get_by(array("user_id"=>$target->user_id,"meta_key"=>"school_name"));
-				$school_name= $user_meta?$user_meta->meta_value:"";
-				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5)."*****":"";
+				$user_meta 	= $this->user_meta_model->get_by(array('user_id'=>$target->user_id,'meta_key'=>'school_name'));
+				$school_name= $user_meta?$user_meta->meta_value:'';
+				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
 				$user = array(
-					"name" 			=> $name,
-					"age"			=> $age,
-					"school_name"	=> $school_name,
-					"id_number"		=> $id_number,
+					'name' 			=> $name,
+					'age'			=> $age,
+					'school_name'	=> $school_name,
+					'id_number'		=> $id_number,
 				);
 			}
 			
 			
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
-			$contract 		= $contract_data?$contract_data["content"]:"";
+			$contract 		= $contract_data?$contract_data['content']:'';
 			$data = array(
-				"id" 				=> $target->id,
-				"target_no" 		=> $target->target_no,
-				"user_id" 			=> $target->user_id,
-				"loan_amount" 		=> $target->loan_amount,
-				"credit_level" 		=> $target->credit_level,
-				"interest_rate" 	=> $target->interest_rate,
-				"remark" 			=> $target->remark,
-				"instalment" 		=> $instalment_list[$target->instalment],
-				"repayment" 		=> $repayment_type[$target->repayment],
-				"contract" 			=> $contract,
-				"delay" 			=> $target->delay,
-				"delay_days" 		=> $target->delay_days,
-				"expire_time" 		=> $target->expire_time,
-				"invested" 			=> $target->invested,
-				"status" 			=> $target->status,
-				"sub_status" 		=> $target->sub_status,
-				"created_at" 		=> $target->created_at,
+				'id' 				=> $target->id,
+				'target_no' 		=> $target->target_no,
+				'user_id' 			=> $target->user_id,
+				'loan_amount' 		=> $target->loan_amount,
+				'credit_level' 		=> $target->credit_level,
+				'interest_rate' 	=> $target->interest_rate,
+				'remark' 			=> $target->remark,
+				'instalment' 		=> $instalment_list[$target->instalment],
+				'repayment' 		=> $repayment_type[$target->repayment],
+				'contract' 			=> $contract,
+				'delay' 			=> $target->delay,
+				'delay_days' 		=> $target->delay_days,
+				'expire_time' 		=> $target->expire_time,
+				'invested' 			=> $target->invested,
+				'status' 			=> $target->status,
+				'sub_status' 		=> $target->sub_status,
+				'created_at' 		=> $target->created_at,
 			);
 
-			$data["user"] 					= $user;
-			$data["product"] 				= $product;
-			$data["certification"] 			= $certification;
-			$data["amortization_schedule"] 	= $amortization_schedule;
+			$data['user'] 					= $user;
+			$data['product'] 				= $product;
+			$data['certification'] 			= $certification;
+			$data['amortization_schedule'] 	= $amortization_schedule;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
@@ -684,28 +688,28 @@ class Target extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		if($this->user_info->transaction_password==""){
+		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 		
 		$this->load->model('user/virtual_account_model');
-		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
+		$virtual		 	= $this->virtual_account_model->get_by(array('user_id'=>$user_id,'investor'=>$investor));
 		$virtual_account	= array(
-			"bank_code"			=> CATHAY_BANK_CODE,
-			"branch_code"		=> CATHAY_BRANCH_CODE,
-			"bank_name"			=> CATHAY_BANK_NAME,
-			"branch_name"		=> CATHAY_BRANCH_NAME,
-			"virtual_account"	=> $virtual->virtual_account,
+			'bank_code'			=> CATHAY_BANK_CODE,
+			'branch_code'		=> CATHAY_BRANCH_CODE,
+			'bank_name'			=> CATHAY_BANK_NAME,
+			'branch_name'		=> CATHAY_BRANCH_NAME,
+			'virtual_account'	=> $virtual->virtual_account,
 		);
 		$bank_account 		= array(
-			"bank_code"		=> $user_bankaccount->bank_code,
-			"branch_code"	=> $user_bankaccount->branch_code,
-			"bank_account"	=> $user_bankaccount->bank_account,
+			'bank_code'		=> $user_bankaccount->bank_code,
+			'branch_code'	=> $user_bankaccount->branch_code,
+			'bank_account'	=> $user_bankaccount->bank_account,
 		);
 		
 		$this->load->library('Transaction_lib');
 		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
-		$param				= array( "user_id"=> $user_id);
+		$param				= array( 'user_id'=> $user_id);
 		$investments		= $this->investment_model->get_many_by($param);
 		$list				= array();
 		if(!empty($investments)){
@@ -713,46 +717,46 @@ class Target extends REST_Controller {
 				
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
-					"id"			=> $target_info->id,
-					"loan_amount"	=> $target_info->loan_amount,
-					"target_no"		=> $target_info->target_no,
-					"invested"		=> $target_info->invested,
-					"expire_time"	=> $target_info->expire_time,
-					"delay"			=> $target_info->delay,
-					"status"		=> $target_info->status,
-					"sub_status"	=> $target_info->sub_status,
+					'id'			=> $target_info->id,
+					'loan_amount'	=> $target_info->loan_amount,
+					'target_no'		=> $target_info->target_no,
+					'invested'		=> $target_info->invested,
+					'expire_time'	=> $target_info->expire_time,
+					'delay'			=> $target_info->delay,
+					'status'		=> $target_info->status,
+					'sub_status'	=> $target_info->sub_status,
 				);
 				
 				$product_info = $this->product_model->get($target_info->product_id);
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					'id'			=> $product_info->id,
+					'name'			=> $product_info->name,
 				);
 				
-				$contract = "";
+				$contract = '';
 				if($value->contract_id){
 					$contract_data = $this->contract_lib->get_contract($value->contract_id);
-					$contract = $contract_data["content"];
+					$contract = $contract_data['content'];
 				}
 			
 				$list[] = array(
-					"id" 				=> $value->id,
-					"amount" 			=> $value->amount,
-					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
-					"contract" 			=> $contract,
-					"status" 			=> $value->status,
-					"transfer_status" 	=> $value->transfer_status,
-					"created_at" 		=> $value->created_at,
-					"product" 			=> $product,
-					"target" 			=> $target,
+					'id' 				=> $value->id,
+					'amount' 			=> $value->amount,
+					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
+					'contract' 			=> $contract,
+					'status' 			=> $value->status,
+					'transfer_status' 	=> $value->transfer_status,
+					'created_at' 		=> $value->created_at,
+					'product' 			=> $product,
+					'target' 			=> $target,
 				);
 			}
 		}
 		$this->response(array('result' => 'SUCCESS','data' => array(
-			"list" 				=> $list,
-			"bank_account"		=> $bank_account,
-			"virtual_account"	=> $virtual_account,
-			"funds"				=> $funds
+			'list' 				=> $list,
+			'bank_account'		=> $bank_account,
+			'virtual_account'	=> $virtual_account,
+			'funds'				=> $funds
 		)));
     }
  
@@ -846,9 +850,9 @@ class Target extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$where		= array(
-			"user_id !=" 	=> $user_id,
-			"status"		=> 3,
-			"invested"		=> 0
+			'user_id !=' 	=> $user_id,
+			'status'		=> 3,
+			'invested'		=> 0
 		);
 		
 		//必填欄位
@@ -859,16 +863,16 @@ class Target extends REST_Controller {
 		}
 
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==""){
+		if(empty($this->user_info->email) || $this->user_info->email==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 		}
 		
-		if($this->user_info->transaction_password==""){
+		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 
@@ -878,34 +882,34 @@ class Target extends REST_Controller {
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$bank_account = $this->user_bankaccount_model->get_by(array('investor'=>$investor,'status'=>1,'user_id'=>$user_id,'verify'=>1));
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
-			$where["interest_rate >="] = intval($input["interest_rate_s"]);
+		if(isset($input['interest_rate_s']) && intval($input['interest_rate_s'])>=0){
+			$where['interest_rate >='] = intval($input['interest_rate_s']);
 		}
 		
-		if(isset($input["interest_rate_e"]) && intval($input["interest_rate_e"])>0){
-			$where["interest_rate <="] = intval($input["interest_rate_e"]);
+		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
+			$where['interest_rate <='] = intval($input['interest_rate_e']);
 		}
 
-		if(isset($input["instalment_s"]) && intval($input["instalment_s"])>=0){
-			$where["instalment >="] = intval($input["instalment_s"]);
+		if(isset($input['instalment_s']) && intval($input['instalment_s'])>=0){
+			$where['instalment >='] = intval($input['instalment_s']);
 		}
 		
-		if(isset($input["instalment_e"]) && intval($input["instalment_e"])>0){
-			$where["instalment <="] = intval($input["instalment_e"]);
+		if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
+			$where['instalment <='] = intval($input['instalment_e']);
 		}
 		
-		if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
-			$where["credit_level"] = explode(",",$input["credit_level"]);
+		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
+			$where['credit_level'] = explode(',',$input['credit_level']);
 		}
 		
 		$targets = $this->target_model->get_many_by($where);
 		if($targets){
-			$investments = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,2,3)));
+			$investments = $this->investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,2,3)));
 			if($investments){
 				$investment_target = array();
 				foreach($investments as $key => $value){
@@ -919,28 +923,28 @@ class Target extends REST_Controller {
 				}
 			}
 			
-			if(isset($input["gender"]) && !empty($input["gender"]) && $input["gender"]!='all' ){
-				$where["gender"] = $input["gender"];
+			if(isset($input['gender']) && !empty($input['gender']) && $input['gender']!='all' ){
+				$where['gender'] = $input['gender'];
 				if($targets){
 					foreach($targets as $key => $value){
 						$target_user_info = $this->user_model->get($value->user_id);
-						if($target_user_info->sex != $input["gender"]){
+						if($target_user_info->sex != $input['gender']){
 							unset($targets[$key]);
 						}
 					}
 				}
 			}
 			
-			if(isset($input["system"]) && $input["system"]!='all' && $input["system"]!=''){
-				$where["system"] = $input["system"];
+			if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
+				$where['system'] = $input['system'];
 				if($targets){
 					foreach($targets as $key => $value){
 						$user_meta = $this->user_meta_model->get_by(array(
-							"user_id"	=> $value->user_id,
-							"meta_key"	=> "school_system"
+							'user_id'	=> $value->user_id,
+							'meta_key'	=> 'school_system'
 						));
 						if($user_meta){
-							if($user_meta->meta_value != $input["system"]){
+							if($user_meta->meta_value != $input['system']){
 								unset($targets[$key]);
 							}
 						}else{
@@ -950,15 +954,15 @@ class Target extends REST_Controller {
 				}
 			}
 			
-			if(isset($input["national"]) && $input["national"]!='all' && $input["national"]!=''){
+			if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
 				$this->config->load('school_points',TRUE);
 				$school_list = $this->config->item('school_points');
-				$where["national"] = $input["national"];
+				$where['national'] = $input['national'];
 				if($targets){
 					foreach($targets as $key => $value){
 						$user_meta = $this->user_meta_model->get_by(array(
-							"user_id"	=> $value->user_id,
-							"meta_key"	=> "school_name"
+							'user_id'	=> $value->user_id,
+							'meta_key'	=> 'school_name'
 						));
 						if($user_meta){
 							foreach($school_list['school_points'] as $k => $v){
@@ -967,7 +971,7 @@ class Target extends REST_Controller {
 									break;
 								}
 							}
-							if($school_info["national"]!=$input["national"]){
+							if($school_info['national']!=$input['national']){
 								unset($targets[$key]);
 							}
 						}else{
@@ -978,14 +982,14 @@ class Target extends REST_Controller {
 			}
 
 			if($targets){
-				$where["budget"] = $budget;
+				$where['budget'] = $budget;
 				$data = array(
 					'total_amount' 		=> 0,
 					'total_count' 		=> 0,
 					'max_instalment' 	=> 0,
 					'min_instalment' 	=> 0,
 					'XIRR' 				=> 0,
-					'batch_id' 			=> "",
+					'batch_id' 			=> '',
 					'contract' 			=> array(),
 				);
 				$numerator = $denominator = 0;
@@ -1001,7 +1005,7 @@ class Target extends REST_Controller {
 							$data['min_instalment'] = $value->instalment;
 						}
 						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-						$data['contract'][] = $contract_data?$contract_data["content"]:"";
+						$data['contract'][] = $contract_data?$contract_data['content']:'';
 						$content[] = $value->id;
 						$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
 						$denominator 	+= $value->loan_amount * $value->instalment;
@@ -1010,10 +1014,10 @@ class Target extends REST_Controller {
 
 				if($data['total_count']){
 					$param = array(
-						"user_id"	=> $user_id,
-						"type"		=> 0,
-						"filter"	=> json_encode($where),
-						"content"	=> json_encode($content),
+						'user_id'	=> $user_id,
+						'type'		=> 0,
+						'filter'	=> json_encode($where),
+						'content'	=> json_encode($content),
 					);
 					$this->load->model('loan/batch_model');
 					$batch_id = $this->batch_model->insert($param);
@@ -1033,7 +1037,7 @@ class Target extends REST_Controller {
 			'max_instalment' 	=> 0,
 			'min_instalment' 	=> 0,
 			'XIRR' 				=> 0,
-			'batch_id' 			=> "",
+			'batch_id' 			=> '',
 			'contract' 			=> array(),
 		)));
     }
@@ -1112,12 +1116,12 @@ class Target extends REST_Controller {
 				$numerator = $denominator = 0;
 				foreach($targets as $key => $value){
 					if($value->status == 3 ){
-						$investments = $this->investment_model->get_by(array("target_id"=>$value->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
+						$investments = $this->investment_model->get_by(array('target_id'=>$value->id,'user_id'=>$user_id,'status'=>array(0,1,2,3,10)));
 						if(!$investments){
 							$param = array(
-								"user_id" 	=> $user_id,
-								"target_id" => $value->id,
-								"amount" 	=> $value->loan_amount,
+								'user_id' 	=> $user_id,
+								'target_id' => $value->id,
+								'amount' 	=> $value->loan_amount,
 							);
 							$investment_id = $this->investment_model->insert($param);
 							if($investment_id){

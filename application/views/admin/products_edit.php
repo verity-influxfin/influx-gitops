@@ -50,6 +50,18 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <form role="form" method="post" onsubmit="return form_onsubmit();" > 
+										<div class="form-group">
+                                            <label>產品類型</label>
+                                            <select class="form-control" id="type" name="type">
+												<option value="" >請選擇</option>
+												<? 
+												if(isset($product_type) && !empty($product_type)){
+													foreach($product_type as $key => $value){
+												?>
+                                                <option value="<?=$key; ?>" <?=isset($data->type)&&intval($data->type)==intval($key)?"selected":""?>><?=$value; ?></option>
+												<? }} ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group">
                                             <label>名稱</label>
                                             <input id="name" name="name" class="form-control" placeholder="Enter Name" value="<?=isset($data->name)?$data->name:"";?>">
@@ -61,35 +73,25 @@
                                         </div>
                                         <div class="form-group">
                                             <label>簡介</label>
-											<textarea id="description" name="description" class="form-control" rows="3"><?=isset($data->description)?$data->description:"";?></textarea>
+											<textarea id="description" name="description" class="form-control" rows="10"><?=isset($data->description)?$data->description:"";?></textarea>
                                         </div>
-										<div class="form-group">
-                                            <label>產品縮寫</label> 
-                                            <input id="alias" name="alias" class="form-control" placeholder="Enter Alias" value="<?=isset($data->alias)?$data->alias:"";?>" >
-                                        </div>
-										<div class="form-group">
-                                            <label>產品分類</label>
-                                            <select class="form-control" id="category" name="category">
-												<? 
-												if(isset($category_list) && !empty($category_list)){
-													foreach($category_list as $key => $value){
-												?>
-                                                <option value="<?=$key; ?>"><?=$value; ?></option>
-												<? }} ?>
-                                            </select>
-                                        </div>
+
 										<div class="form-group">
                                             <label>借款額度</label> 
-                                            <input id="loan_range_s" name="loan_range_s" class="form-control" value="<?=isset($data->loan_range_s)?$data->loan_range_s:"";?>" >
-                                            <input id="loan_range_e" name="loan_range_e" class="form-control" value="<?=isset($data->loan_range_e)?$data->loan_range_e:"";?>" >
+                                            <input onkeyup="return ValidateNumber($(this),value)" type="number" name="loan_range_s" class="form-control" value="<?=isset($data->loan_range_s)?$data->loan_range_s:"";?>" >
+                                            <input onkeyup="return ValidateNumber($(this),value)" type="number" name="loan_range_e" class="form-control" value="<?=isset($data->loan_range_e)?$data->loan_range_e:"";?>" >
                                         </div>
 										<div class="form-group">
                                             <label>年利率下限（%）</label> 
-                                           <input id="interest_rate_s" name="interest_rate_s" class="form-control" value="<?=isset($data->interest_rate_s)?$data->interest_rate_s:"";?>" >
+                                           <input onkeyup="return ValidateNumber($(this),value)" type="number" name="interest_rate_s" class="form-control" value="<?=isset($data->interest_rate_s)?$data->interest_rate_s:"";?>" >
                                         </div>
 										<div class="form-group">
                                             <label>年利率下限（%）</label> 
-                                           <input id="interest_rate_e" name="interest_rate_e" class="form-control" value="<?=isset($data->interest_rate_e)?$data->interest_rate_e:"";?>" >
+                                           <input onkeyup="return ValidateNumber($(this),value)" type="number" name="interest_rate_e" class="form-control" value="<?=isset($data->interest_rate_e)?$data->interest_rate_e:"";?>" >
+                                        </div>
+										<div class="form-group">
+                                            <label>排序</label> 
+                                           <input onkeyup="return ValidateNumber($(this),value)" type="number" name="rank" class="form-control" value="<?=isset($data->rank)?$data->rank:"";?>" >
                                         </div>
 										<div class="form-group">
                                             <label>期數</label>
@@ -104,6 +106,17 @@
                                             </div>
 											<? }} ?>
 											<input type="hidden" name="instalment" id="instalment" value="<?=isset($data->instalment)?$data->instalment:"";?>" >
+                                        </div>
+										<div class="form-group">
+                                            <label>產品狀態</label>
+                                            <select class="form-control" id="status" name="status">
+												<? 
+												if(isset($status_list) && !empty($status_list)){
+													foreach($status_list as $key => $value){
+												?>
+                                                <option value="<?=$key; ?>" <?=isset($data->status)&&intval($data->status)==intval($key)?"selected":""?>><?=$value; ?></option>
+												<? }} ?>
+                                            </select>
                                         </div>
                                         <button type="submit" class="btn btn-default">送出</button>
                                     </form>

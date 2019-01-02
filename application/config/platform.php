@@ -100,6 +100,13 @@ $config['company_type']= array(
 	4=> '股份有限公司',
 );
 
+//產品型態
+$config['product_type']= array(
+	1=> '信用貸款',
+	2=> '分期付款',
+//	3=> '抵押貸款',
+);
+
 //還款方式
 $config['repayment_type']= array(
 	1=> '等額本息',

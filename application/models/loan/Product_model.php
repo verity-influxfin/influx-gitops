@@ -6,8 +6,8 @@ class Product_model extends MY_Model
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
-		0 =>	"下架中",
-		1 =>	"上架中"
+		0 =>	"停用中",
+		1 =>	"已啟用"
 	);
 	
 	public function __construct()

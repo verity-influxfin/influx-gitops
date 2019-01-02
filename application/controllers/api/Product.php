@@ -142,7 +142,7 @@ class Product extends REST_Controller {
 		$input 			= $this->input->get();
 		$data			= array();
 		$list			= array();
-		$where			= array("id"=>1 , "status" => 1 );
+		$where			= array( "id" => 1 , "status" => 1 );
 	
 		$product_list 	= $this->product_model->get_many_by($where);
 		if(isset($this->user_info->id) && $this->user_info->id){

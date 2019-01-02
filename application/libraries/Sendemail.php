@@ -52,9 +52,9 @@ class Sendemail
 			$type	 = 'email';
 			$code	 = md5($email.time());
 			if($investor){
-				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
+				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
 			}else{
-				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
+				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
 			}
 			
 			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link),TRUE);

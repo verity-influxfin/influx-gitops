@@ -1209,11 +1209,13 @@ class Certification extends REST_Controller {
 			}
 		}
 		
+		$input['email'] = base64_decode($input['email']);
+		
 		if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 		}
 	
-		$rs = $this->sendemail->verify_code($input["type"],$input["email"],$input["code"]);
+		$rs = $this->sendemail->verify_code($input['type'],$input['email'],$input['code']);
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
