@@ -10,7 +10,7 @@ class Judicialperson extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/judicial_person_model');
-		$this->load->library('financial_lib');
+		$this->load->library('Judicialperson_lib');
  	}
 	
 	public function index(){
@@ -76,18 +76,13 @@ class Judicialperson extends MY_Admin_Controller {
 		}
 	}
 
-	function verify_success(){
+	function apply_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
-			$info = $this->target_model->get($id);
-			if($info && $info->status==2){
-				if($info->sub_status==8){
-					$this->load->library('subloan_lib');
-					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
-				}else{
-					$this->target_lib->target_verify_success($info,$this->login_info->id);
-				}
+			$info = $this->judicial_person_model->get($id);
+			if($info && $info->status==0){
+				$this->judicialperson_lib->apply_success($id,$this->login_info->id);
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -97,19 +92,14 @@ class Judicialperson extends MY_Admin_Controller {
 		}
 	}
 	
-	function verify_failed(){
+	function apply_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		$remark = isset($get['remark'])?$get['remark']:'';
 		if($id){
-			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(0,1,2))){
-				if($info->sub_status==8){
-					$this->load->library('subloan_lib');
-					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
-				}else{
-					$this->target_lib->target_verify_failed($info,$this->login_info->id,$remark);
-				}
+			$info = $this->judicial_person_model->get($id);
+			if($info && $info->status==0){
+				$this->judicialperson_lib->apply_failed($id,$this->login_info->id,$remark);
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();

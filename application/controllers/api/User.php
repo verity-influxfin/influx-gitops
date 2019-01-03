@@ -28,6 +28,10 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -91,6 +95,15 @@ class User extends REST_Controller {
      *       "error": "207"
      *     }
      */
+	 /**
+	 * @apiDefine IsCompany
+     * @apiError 216 不支援法人帳號使用
+     * @apiErrorExample {Object} 216
+     *     {
+     *       "result": "ERROR",
+     *       "error": "216"
+     *     }
+	 */
 	 
 	/**
      * @api {post} /user/registerphone 會員 發送驗證簡訊 (註冊)

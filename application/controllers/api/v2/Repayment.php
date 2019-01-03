@@ -17,7 +17,7 @@ class Repayment extends REST_Controller {
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -37,7 +37,15 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			//暫不開放法人
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -110,6 +118,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      */
 	 	
@@ -268,6 +277,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      */
 	public function list_get()
@@ -284,7 +294,11 @@ class Repayment extends REST_Controller {
 		$list				= array();
 		if(!empty($targets)){
 			$this->load->model('user/virtual_account_model');
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array('status'=>1,'investor'=>0,'user_id'=>$user_id));
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array(
+				'status'	=> 1,
+				'investor'	=> 0,
+				'user_id'	=> $user_id
+			));
 			$virtual_account		= array();
 			if($virtual_account_info){
 				$virtual_account		= array(
@@ -510,6 +524,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -543,57 +558,66 @@ class Repayment extends REST_Controller {
 			$this->load->model('loan/product_model');
 			$product_info 	= $this->product_model->get($target->product_id);
 			$product 		= array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
+				'id'			=> $product_info->id,
+				'name'			=> $product_info->name,
 			);
 			
 			$this->load->model('user/virtual_account_model');
 			$virtual_account		= array();
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array(
+				'status'	=> 1,
+				'investor'	=> 0,
+				'user_id'	=> $user_id
+			));
 			if($virtual_account_info){
 				$virtual_account		= array(
-					"bank_code"			=> CATHAY_BANK_CODE,
-					"branch_code"		=> CATHAY_BRANCH_CODE,
-					"bank_name"			=> CATHAY_BANK_NAME,
-					"branch_name"		=> CATHAY_BRANCH_NAME,
-					"virtual_account"	=> $virtual_account_info->virtual_account,
+					'bank_code'			=> CATHAY_BANK_CODE,
+					'branch_code'		=> CATHAY_BRANCH_CODE,
+					'bank_name'			=> CATHAY_BANK_NAME,
+					'branch_name'		=> CATHAY_BRANCH_NAME,
+					'virtual_account'	=> $virtual_account_info->virtual_account,
 				);
 			}
 			$next_repayment = array(
-				"date" 			=> "",
-				"instalment"	=> "",
-				"amount"		=> 0,
-				"list"			=> array(),
+				'date' 			=> '',
+				'instalment'	=> '',
+				'amount'		=> 0,
+				'list'			=> array(),
 			);
 			
 			$fees = array(
-				//"debt_transfer_fees" => DEBT_TRANSFER_FEES,
-				"sub_loan_fees"		 => SUB_LOAN_FEES,
-				"liquidated_damages" => $target->damage_rate,
+				//'debt_transfer_fees' => DEBT_TRANSFER_FEES,
+				'sub_loan_fees'		 => SUB_LOAN_FEES,
+				'liquidated_damages' => $target->damage_rate,
 			);
 			
-			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target->id,"user_from"=>$user_id,"status"=>array(1,2)));
+			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+				'target_id'	=> $target->id,
+				'user_from'	=> $user_id,
+				'status'	=> array(1,2)
+			));
+			
 			$remaining_principal = 0;
 			
 			if($transaction){
 				$first = true;
 				foreach($transaction as $k => $v){
 					if($first && $v->status==1){
-						$next_repayment["date"] 		= $v->limit_date;
-						$next_repayment["instalment"] 	= $v->instalment_no;
+						$next_repayment['date'] 		= $v->limit_date;
+						$next_repayment['instalment'] 	= $v->instalment_no;
 						$first = false;
 					}
 
-					if($v->limit_date && $v->limit_date == $next_repayment["date"]){
-						$next_repayment["amount"] += $v->amount;
+					if($v->limit_date && $v->limit_date == $next_repayment['date']){
+						$next_repayment['amount'] += $v->amount;
 					}
 					
-					if($v->instalment_no == $next_repayment["instalment"]){
-						if(!isset($next_repayment["list"][$v->source]["amount"])){
-							$next_repayment["list"][$v->source]["amount"] = 0;
+					if($v->instalment_no == $next_repayment['instalment']){
+						if(!isset($next_repayment['list'][$v->source]['amount'])){
+							$next_repayment['list'][$v->source]['amount'] = 0;
 						}
-						$next_repayment["list"][$v->source]["amount"] += $v->amount;
-						$next_repayment["list"][$v->source]["source_name"] = $transaction_source[$v->source];
+						$next_repayment['list'][$v->source]['amount'] += $v->amount;
+						$next_repayment['list'][$v->source]['source_name'] = $transaction_source[$v->source];
 					}
 					
 					if($v->source == SOURCE_AR_PRINCIPAL){
@@ -607,23 +631,23 @@ class Repayment extends REST_Controller {
 
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
-				$data[$field] = isset($target->$field)?$target->$field:"";
-				if($field=="instalment"){
+				$data[$field] = isset($target->$field)?$target->$field:'';
+				if($field=='instalment'){
 					$data[$field] = $instalment_list[$target->$field];
 				}
 				
-				if($field=="repayment"){
+				if($field=='repayment'){
 					$data[$field] = $repayment_type[$target->$field];
 				}
 			}
 
-			$data["remaining_principal"] 	= $remaining_principal;
-			$data["remaining_instalment"] 	= $next_repayment["instalment"]?intval($target->instalment - $next_repayment["instalment"])+1:0;
-			$data["product"] 		 		= $product;
-			$data["virtual_account"] 		= $virtual_account;
-			$data["next_repayment"] 		= $next_repayment;
-			$data["fees"] 					= $fees;
-			$data["amortization_schedule"] 	= $this->target_lib->get_amortization_table($target);
+			$data['remaining_principal'] 	= $remaining_principal;
+			$data['remaining_instalment'] 	= $next_repayment['instalment']?intval($target->instalment - $next_repayment['instalment'])+1:0;
+			$data['product'] 		 		= $product;
+			$data['virtual_account'] 		= $virtual_account;
+			$data['next_repayment'] 		= $next_repayment;
+			$data['fees'] 					= $fees;
+			$data['amortization_schedule'] 	= $this->target_lib->get_amortization_table($target);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
@@ -707,6 +731,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -749,27 +774,31 @@ class Repayment extends REST_Controller {
 			
 			$this->load->model('user/virtual_account_model');
 			$virtual_account		= array();
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array("status"=>1,"investor"=>0,"user_id"=>$user_id));
+			$virtual_account_info 	= $this->virtual_account_model->get_by(array(
+				'status'	=> 1,
+				'investor'	=> 0,
+				'user_id'	=> $user_id
+			));
 			if($virtual_account_info){
 				$virtual_account		= array(
-					"bank_code"			=> CATHAY_BANK_CODE,
-					"branch_code"		=> CATHAY_BRANCH_CODE,
-					"bank_name"			=> CATHAY_BANK_NAME,
-					"branch_name"		=> CATHAY_BRANCH_NAME,
-					"virtual_account"	=> $virtual_account_info->virtual_account,
+					'bank_code'			=> CATHAY_BANK_CODE,
+					'branch_code'		=> CATHAY_BRANCH_CODE,
+					'bank_name'			=> CATHAY_BANK_NAME,
+					'branch_name'		=> CATHAY_BRANCH_NAME,
+					'virtual_account'	=> $virtual_account_info->virtual_account,
 				);
 			}
 			$fields = $this->target_model->simple_fields;
 			foreach($fields as $field){
-				$data[$field] = isset($target->$field)?$target->$field:"";
+				$data[$field] = isset($target->$field)?$target->$field:'';
 
-				if($field=="repayment"){
+				if($field=='repayment'){
 					$data[$field] = $repayment_type[$target->$field];
 				}
 			}
 
-			$data["prepayment"] 		= $this->prepayment_lib->get_prepayment_info($target);
-			$data["virtual_account"] 	= $virtual_account;
+			$data['prepayment'] 		= $this->prepayment_lib->get_prepayment_info($target);
+			$data['virtual_account'] 	= $virtual_account;
 
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -879,6 +908,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -910,24 +940,24 @@ class Repayment extends REST_Controller {
 
 			if(in_array($target->status,array(5,10))){
 				$where = array(
-					"target_id"	=> $target->id,
-					"status"	=> array(3,10)
+					'target_id'	=> $target->id,
+					'status'	=> array(3,10)
 				);
 				$investments = $this->investment_model->get_many_by($where);
 				if($investments){
 					foreach($investments as $key => $value){
 						$contract_data = $this->contract_lib->get_contract($value->contract_id);
-						$contract = $contract_data["content"];
-						$list[] = array("title"=>$contract_data["title"],"contract"=>$contract_data["content"]);
+						$contract = $contract_data['content'];
+						$list[] = array('title'=>$contract_data['title'],'contract'=>$contract_data['content']);
 					}
 				}
 			}else if(in_array($target->status,array(1,2,3,4))){
 				$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
-				$contract 		= $contract_data["content"];
-				$list[] 		= array("title"=>$contract_data["title"],"contract"=>$contract_data["content"]);
+				$contract 		= $contract_data['content'];
+				$list[] 		= array('title'=>$contract_data['title'],'contract'=>$contract_data['content']);
 			}
 
-			$data["list"] 	= $list;
+			$data['list'] 	= $list;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}

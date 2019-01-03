@@ -423,6 +423,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -445,6 +451,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -693,6 +704,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -715,6 +732,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -921,6 +943,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -943,6 +971,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -1233,6 +1266,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -1255,6 +1294,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -1601,6 +1645,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -1623,6 +1673,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -1908,6 +1963,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -1920,6 +1981,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -2146,6 +2212,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -2168,6 +2240,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -2486,6 +2563,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -2508,6 +2591,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -2864,6 +2952,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -2916,6 +3010,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -3235,6 +3334,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -3272,6 +3377,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -3536,6 +3646,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -3568,6 +3684,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -3884,6 +4005,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -3916,6 +4043,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -4293,6 +4425,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -4335,6 +4473,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -4381,6 +4524,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
+            "size": "10",
             "optional": false,
             "field": "id_number",
             "description": "<p>身分證字號</p>"
@@ -4670,6 +4814,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -4702,6 +4852,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -5052,6 +5207,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -5099,6 +5260,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -5569,6 +5735,282 @@ define({ "api": [
     ]
   },
   {
+    "type": "delete",
+    "url": "/v2/judicialperson/agent/:user_id",
+    "title": "法人會員 刪除代理人",
+    "version": "0.2.0",
+    "name": "DeleteJudicialpersonAgent",
+    "group": "Judicialperson",
+    "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>代理人UserID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "217",
+            "description": "<p>限法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "217",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"217\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Judicialperson.php",
+    "groupTitle": "Judicialperson",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/agent/:user_id"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/v2/judicialperson/agent",
+    "title": "法人會員 代理人名單",
+    "version": "0.2.0",
+    "name": "GetJudicialpersonAgent",
+    "group": "Judicialperson",
+    "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>代理人UserID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id_number",
+            "description": "<p>身分證字號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>新增日期</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"name\": \"曾志偉\",\n\t\t\t\t\"id_number\":\"A1234*****\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Judicialperson.php",
+    "groupTitle": "Judicialperson",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/agent"
+      }
+    ],
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "217",
+            "description": "<p>限法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "217",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"217\"\n}",
+          "type": "Object"
+        }
+      ]
+    }
+  },
+  {
     "type": "get",
     "url": "/v2/judicialperson/list",
     "title": "法人會員 已申請法人列表",
@@ -5671,6 +6113,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -5684,9 +6132,184 @@ define({ "api": [
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
           "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
         }
       ]
     }
+  },
+  {
+    "type": "post",
+    "url": "/v2/judicialperson/agent",
+    "title": "法人會員 新增代理人",
+    "version": "0.2.0",
+    "name": "PostJudicialpersonAgent",
+    "group": "Judicialperson",
+    "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "10",
+            "optional": false,
+            "field": "id_number",
+            "description": "<p>代理人身分證字號</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "302",
+            "description": "<p>會員不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "313",
+            "description": "<p>代理人已存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "504",
+            "description": "<p>身分證字號格式錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "217",
+            "description": "<p>限法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "302",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "313",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"313\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "504",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "217",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"217\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Judicialperson.php",
+    "groupTitle": "Judicialperson",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/judicialperson/agent"
+      }
+    ]
   },
   {
     "type": "post",
@@ -5779,12 +6402,6 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "213",
-            "description": "<p>申請人非公司負責人</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "214",
             "description": "<p>此公司已申請過</p>"
           },
@@ -5811,6 +6428,18 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -5828,11 +6457,6 @@ define({ "api": [
         {
           "title": "212",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "213",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
           "type": "json"
         },
         {
@@ -5858,6 +6482,16 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -5902,6 +6536,18 @@ define({ "api": [
             "optional": false,
             "field": "password",
             "description": "<p>密碼</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "investor",
+            "defaultValue": "1",
+            "description": "<p>1:投資端</p>"
           }
         ]
       }
@@ -5942,7 +6588,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
           "type": "Object"
         }
       ]
@@ -6659,6 +7305,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "GetProductApplyinfo",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>預計還款計畫欄位只在待簽約時出現。</p>",
     "parameter": {
       "fields": {
@@ -7040,6 +7699,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -7067,6 +7732,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -7517,6 +8187,19 @@ define({ "api": [
     "title": "借款方 申請紀錄列表",
     "version": "0.2.0",
     "name": "GetProductApplylist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "group": "Product",
     "success": {
       "fields": {
@@ -7684,6 +8367,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -7701,6 +8390,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -7914,6 +8608,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "GetProductCancel",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -7991,6 +8698,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -8028,6 +8741,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -8193,6 +8911,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "GetProductInfo",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -8349,6 +9080,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -8376,6 +9113,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -8603,6 +9345,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "GetProductList",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": true,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>登入狀態下，若已申請產品且申請狀態為未簽約，則提供申請資訊欄位及認證完成資訊。</p>",
     "success": {
       "fields": {
@@ -8744,6 +9499,19 @@ define({ "api": [
     "version": "0.1.0",
     "name": "GetProductList",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": true,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -8877,6 +9645,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "PostProductApply",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>此API只支援信用貸款類型產品。</p>",
     "parameter": {
       "fields": {
@@ -9010,6 +9791,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -9062,6 +9849,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -9277,6 +10069,19 @@ define({ "api": [
     "version": "0.2.0",
     "name": "PostProductSigning",
     "group": "Product",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>此API只支援信用貸款類型產品。</p>",
     "parameter": {
       "fields": {
@@ -9404,6 +10209,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -9476,6 +10287,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -12836,6 +13652,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -12863,6 +13685,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -13234,6 +14061,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -13251,6 +14084,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -13927,6 +14765,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -13954,6 +14798,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -14682,6 +15531,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -14699,6 +15554,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -15256,6 +16116,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -15288,6 +16154,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -16326,6 +17197,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -16358,6 +17235,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -16924,6 +17806,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -16966,6 +17854,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -17240,6 +18133,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -17277,6 +18176,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -17572,6 +18476,12 @@ define({ "api": [
             "optional": false,
             "field": "201",
             "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -17624,6 +18534,11 @@ define({ "api": [
         {
           "title": "201",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -17938,6 +18853,12 @@ define({ "api": [
             "optional": false,
             "field": "207",
             "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -17990,6 +18911,11 @@ define({ "api": [
         {
           "title": "207",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -23674,7 +24600,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "ctarget.redit_level",
+            "field": "target.credit_level",
             "description": "<p>信用指數</p>"
           },
           {
@@ -23916,7 +24842,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "ctarget.redit_level",
+            "field": "target.credit_level",
             "description": "<p>信用指數</p>"
           },
           {
@@ -24803,6 +25729,84 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v2/user/chagetoken",
+    "title": "會員 交換Token",
+    "version": "0.2.0",
+    "name": "GetUserChagetoken",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n  \t\"expiry_time\": \"1522673418\"\n  }\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/User.php",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/user/chagetoken"
+      }
+    ],
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/user/chagetoken",
     "title": "會員 交換Token",
     "version": "0.1.0",
@@ -24939,6 +25943,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -24956,6 +25966,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -25156,6 +26171,13 @@ define({ "api": [
             "optional": false,
             "field": "incharge",
             "description": "<p>1:負責人 0:代理人</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "agent",
+            "description": "<p>代理人User ID</p>"
           },
           {
             "group": "Success 200",
@@ -25437,7 +26459,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"promote_code\": \"D221BL0K\",\n  \t\"promote_url\": \"http://dev.influxfin.com?promote_code=D221BL0K\",\n  \t\"promote_qrcode\": \"http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200\",\n  \t\"bonus_list\": []\n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"promote_code\": \"D221BL0K\",\n  \t\"promote_url\": \"http://dev.influxfin.com?promote_code=D221BL0K\",\n  \t\"promote_qrcode\": \"http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200\"\n  }\n}",
           "type": "Object"
         }
       ]
@@ -25463,6 +26485,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -25475,6 +26503,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -25677,6 +26710,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -25709,6 +26748,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -26370,6 +27414,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -26407,6 +27457,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -26690,6 +27745,12 @@ define({ "api": [
             "optional": false,
             "field": "101",
             "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
           }
         ]
       },
@@ -26722,6 +27783,11 @@ define({ "api": [
         {
           "title": "101",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
           "type": "Object"
         }
       ]
@@ -27216,7 +28282,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
           "type": "Object"
         }
       ]
@@ -27531,7 +28597,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
           "type": "Object"
         }
       ]
@@ -28219,7 +29285,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
           "type": "Object"
         }
       ]

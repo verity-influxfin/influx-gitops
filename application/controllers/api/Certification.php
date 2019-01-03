@@ -31,6 +31,10 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -96,7 +100,7 @@ class Certification extends REST_Controller {
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
-     * @apiParam {String} id_number 身分證字號
+     * @apiParam {String{10}} id_number 身分證字號
      * @apiParam {String} id_card_date 發證日期(民國) ex:1060707
      * @apiParam {String} id_card_place 發證地點
      * @apiParam {String} birthday 生日(民國) ex:1020101

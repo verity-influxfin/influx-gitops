@@ -10,27 +10,6 @@ class Agreement extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('admin/agreement_model');
-        $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list','info'];
-		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
-            $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
-            if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
-            }
-			
-			$this->user_info = $this->user_model->get($tokenData->id);
-			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR',"error" => TOKEN_NOT_CORRECT ));
-			}
-
-			if($this->user_info->block_status != 0){
-				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-			}
-			
-			$this->user_info->investor 		= $tokenData->investor;
-			$this->user_info->expiry_time 	= $tokenData->expiry_time;
-        }
     }
 	
 	/**
@@ -69,19 +48,19 @@ class Agreement extends REST_Controller {
 	 
 	public function list_get()
     {
-		$agreement_list = $this->agreement_model->get_many_by(array("status"=>1));
+		$agreement_list = $this->agreement_model->get_many_by(array('status'=>1));
 		$list			= array();
 		if(!empty($agreement_list)){
 			foreach($agreement_list as $key => $value){
 				$list[] = array(
-					"id" 		=> $value->id,
-					"name" 		=> $value->name,
-					"content" 	=> $value->content,
-					"alias" 	=> $value->alias,
+					'id' 		=> $value->id,
+					'name' 		=> $value->name,
+					'content' 	=> $value->content,
+					'alias' 	=> $value->alias,
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS',"data" => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 
 	
@@ -119,18 +98,18 @@ class Agreement extends REST_Controller {
 	public function info_get($alias)
     {
 		if(!empty($alias)){
-			$agreement = $this->agreement_model->get_by(array("alias"=>$alias));
+			$agreement = $this->agreement_model->get_by(array('alias'=>$alias));
 			if($agreement && $agreement->status){
 				$data = array(
-					"id" 			=> $agreement->id,
-					"name" 			=> $agreement->name,
-					"content" 		=> $agreement->content,
-					"alias" 		=> $agreement->alias,
+					'id' 			=> $agreement->id,
+					'name' 			=> $agreement->name,
+					'content' 		=> $agreement->content,
+					'alias' 		=> $agreement->alias,
 				);
-				$this->response(array('result' => 'SUCCESS',"data" => $data ));
+				$this->response(array('result' => 'SUCCESS','data' => $data ));
 			}
 		}
-		$this->response(array('result' => 'ERROR',"error" => AGREEMENT_NOT_EXIST ));
+		$this->response(array('result' => 'ERROR','error' => AGREEMENT_NOT_EXIST ));
     }
 	
 }

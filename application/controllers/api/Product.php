@@ -39,6 +39,9 @@ class Product extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 				}
 
+				if(isset($tokenData->company) && $tokenData->company != 0 ){
+					$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+				}
 			
 				$this->user_info->investor 		= $tokenData->investor;
 				$this->user_info->expiry_time 	= $tokenData->expiry_time;
@@ -52,6 +55,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.1.0
 	 * @apiName GetProductList
      * @apiGroup Product
+	 * @apiHeader {String} [request_token] 登入後取得的 Request Token
      *
      * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Product ID

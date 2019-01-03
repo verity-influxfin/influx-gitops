@@ -37,6 +37,10 @@ class Transfer extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -61,7 +65,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} ctarget.redit_level 信用指數
+	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.user_id User ID
 	 * @apiSuccess {String} target.loan_amount 核准金額
 	 * @apiSuccess {String} target.interest_rate 核可利率

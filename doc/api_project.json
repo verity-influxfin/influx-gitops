@@ -1,7 +1,7 @@
 {
   "name": "普匯金融科技 手機ATM API文檔",
   "version": "0.2.0",
-  "description": "web上線版本 0.1.0 (2018/08/03)<br>app上線版本 0.2.0 (開發中)",
+  "description": "web上線版本 0.1.0 (2018/08/03)(不支援法人帳號)<br>app上線版本 0.2.0 (開發中)",
   "title": "普匯金融科技 手機ATM API文檔",
   "url": "https://dev-api.influxfin.com/api",
   "sampleUrl": "https://dev-api.influxfin.com/api",
@@ -58,7 +58,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-01-02T10:05:38.027Z",
+    "time": "2019-01-03T15:16:29.998Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

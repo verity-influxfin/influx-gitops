@@ -29,6 +29,9 @@ class Notification extends REST_Controller {
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }

@@ -9,7 +9,6 @@ class User extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('log/log_userlogin_model');
         $method 		= $this->router->fetch_method();
         $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest'];
         if (!in_array($method, $nonAuthMethods)) {
@@ -23,7 +22,7 @@ class User extends REST_Controller {
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-
+			
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
@@ -31,6 +30,7 @@ class User extends REST_Controller {
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -91,6 +91,33 @@ class User extends REST_Controller {
      *     {
      *       "result": "ERROR",
      *       "error": "207"
+     *     }
+     */
+	 /**
+	 * @apiDefine NotIncharge
+     * @apiError 213 非法人負責人
+     * @apiErrorExample {Object} 213
+     *     {
+     *       "result": "ERROR",
+     *       "error": "213"
+     *     }
+	 */
+	 /**
+	 * @apiDefine IsCompany
+     * @apiError 216 不支援法人帳號使用
+     * @apiErrorExample {Object} 216
+     *     {
+     *       "result": "ERROR",
+     *       "error": "216"
+     *     }
+	 */
+	 /**
+	 * @apiDefine NotCompany
+     * @apiError 217 限法人帳號使用
+     * @apiErrorExample {Object} 217
+     *     {
+     *       "result": "ERROR",
+     *       "error": "217"
      *     }
      */
 	 
@@ -170,7 +197,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time":1		
+	 * 			"first_time": 1		
      *      }
      *    }
 	 * @apiUse InputError
@@ -280,11 +307,19 @@ class User extends REST_Controller {
 					'investor'		=> $data['investor_status'],
 					'company'		=> 0,
 					'incharge'		=> 0,
+					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->facebook_lib->bind_user($insert,$facebook_info);
 				$this->notification_lib->first_login($insert,$input['investor']);
-				$this->response(array('result' => 'SUCCESS', 'data' => array( 'token' => $request_token, 'expiry_time'=>$token->expiry_time ,'first_time'=>1)));
+				$this->response(array(
+					'result' => 'SUCCESS',
+					'data' 	 => array( 
+						'token' 		=> $request_token,
+						'expiry_time'	=> $token->expiry_time,
+						'first_time'	=> 1
+					)
+				));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -312,7 +347,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time":1		
+	 * 			"first_time": 1		
      *      }
      *    }
 	 * @apiUse InputError
@@ -383,21 +418,29 @@ class User extends REST_Controller {
 					'investor'		=> $investor,
 					'company'		=> 0,
 					'incharge'		=> 0,
+					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->log_userlogin_model->insert(array('account'=>$input['phone'],'investor'=>$investor ,'user_id'=>$user_info->id,'status'=>1));
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
 				}
-				$this->response(array('result' => 'SUCCESS', 'data' => array( 'token' => $request_token,'expiry_time'=>$token->expiry_time,'first_time'=>$first_time) ));
+				$this->response(array(
+					'result' => 'SUCCESS',
+					'data' 	 => array( 
+						'token' 		=> $request_token,
+						'expiry_time'	=> $token->expiry_time,
+						'first_time'	=> $first_time
+					) 
+				));
 			}else{
-				$this->log_userlogin_model->insert(array('account'=>$input['phone'],'investor'=>$investor,'user_id'=>$user_info->id,'status'=>0));
+				$this->insert_login_log($input['phone'],$investor,0,$user_info->id);
 				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 			}
 		}else{
-			$this->log_userlogin_model->insert(array('account'=>$input['phone'],'investor'=>$investor,'status'=>0));
+			$this->insert_login_log($input['phone'],$investor,0,0);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
@@ -420,7 +463,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time":1		
+	 * 			"first_time": 1		
      *      }
      *    }
      *
@@ -458,7 +501,6 @@ class User extends REST_Controller {
 		$info	 	= $this->facebook_lib->get_info($input['access_token']);
 		$user_id  	= $this->facebook_lib->login($info);
 		$account  	= isset($info['id'])?$info['id']:'';
-
 		if($user_id && $account){
 			$user_info = $this->user_model->get($user_id);	
 			if($user_info){
@@ -484,22 +526,29 @@ class User extends REST_Controller {
 					'investor'		=> $investor,
 					'company'		=> 0,
 					'incharge'		=> 0,
+					'agent'			=> 0,
 				];
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->log_userlogin_model->insert(array('account'=>$account,'investor'=>$investor,'user_id'=>$user_id,'status'=>1));
+				$this->insert_login_log($account,$investor,1,$user_id);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
 				}
-				$this->response(array('result' => 'SUCCESS','data' => array('token'=>$request_token,'expiry_time'=>$token->expiry_time,'first_time'=>$first_time) ));
-
+				$this->response(array(
+					'result' => 'SUCCESS',
+					'data' 	 => array(
+						'token'			=> $request_token,
+						'expiry_time'	=> $token->expiry_time,
+						'first_time'	=> $first_time
+					)
+				));
 			}else{
-				$this->log_userlogin_model->insert(array('account'=>$account,'investor'=>$investor,'user_id'=>$user_id,'status'=>0));
+				$this->insert_login_log($account,$investor,0,$user_id);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
 		}else{
-			$this->log_userlogin_model->insert(array('account'=>$account,'investor'=>$investor,'status'=>0));
+			$this->insert_login_log($account,$investor,0,0);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
@@ -656,6 +705,7 @@ class User extends REST_Controller {
 	 * @apiSuccess {Number} investor 1:投資端 0:借款端
 	 * @apiSuccess {Number} company 1:法人帳號 0:自然人帳號
 	 * @apiSuccess {Number} incharge 1:負責人 0:代理人
+	 * @apiSuccess {Number} agent 代理人User ID
 	 * @apiSuccess {String} transaction_password 是否設置交易密碼
 	 * @apiSuccess {String} my_promote_code 推廣碼
 	 * @apiSuccess {String} expiry_time token時效
@@ -696,6 +746,7 @@ class User extends REST_Controller {
 		$data['investor'] 				= $this->user_info->investor;
 		$data['company'] 				= $this->user_info->company;
 		$data['incharge'] 				= $this->user_info->incharge;
+		$data['agent'] 					= $this->user_info->agent;
 		$data['expiry_time'] 			= $this->user_info->expiry_time;
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
@@ -717,6 +768,7 @@ class User extends REST_Controller {
 	 * @apiUse InputError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 305 access_token錯誤
      * @apiErrorExample {Object} 305
@@ -742,6 +794,7 @@ class User extends REST_Controller {
      */
 	public function bind_post()
     {
+		$this->not_support_company();
         $input 	= $this->input->post(NULL, TRUE);
 		$fields = ['access_token'];
         foreach ($fields as $field) {
@@ -803,6 +856,7 @@ class User extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 307 發送簡訊間隔過短
      * @apiErrorExample {Object} 307
@@ -815,6 +869,7 @@ class User extends REST_Controller {
 	 
 	public function editpwphone_get()
     {
+		$this->not_support_company();
         $input 		= $this->input->get(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$phone 		= $this->user_info->phone;
@@ -848,6 +903,7 @@ class User extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 303 驗證碼錯誤
      * @apiErrorExample {Object} 303
@@ -873,6 +929,7 @@ class User extends REST_Controller {
      */
 	public function editpw_post()
     {
+		$this->not_support_company();
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
 		$user_id 	= $this->user_info->id;
@@ -926,6 +983,7 @@ class User extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      * @apiError 303 驗證碼錯誤
      * @apiErrorExample {Object} 303
@@ -944,6 +1002,7 @@ class User extends REST_Controller {
      */
 	public function edittpw_post()
     {
+		$this->not_support_company();
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
 		$user_info 	= $this->user_info;
@@ -979,6 +1038,44 @@ class User extends REST_Controller {
     }
 	
 	/**
+     * @api {get} /v2/user/chagetoken 會員 交換Token
+	 * @apiVersion 0.2.0
+	 * @apiName GetUserChagetoken
+     * @apiGroup User
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
+     *      	"expiry_time": "1522673418"
+     *      }
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+     *
+     */
+	 
+	public function chagetoken_get()
+    {
+		$token = (object) [
+			'id'			=> $this->user_info->id,
+			'phone'			=> $this->user_info->id,
+			'auth_otp'		=> $this->user_info->auth_otp,
+			'expiry_time'	=> time() + REQUEST_RETOKEN_EXPIRY,
+			'investor'		=> $this->user_info->investor,
+			'company'		=> $this->user_info->company,
+			'incharge'		=> $this->user_info->incharge,
+			'agent'			=> $this->user_info->agent,
+		];
+		$request_token 		= AUTHORIZATION::generateUserToken($token);
+		$this->response(array('result' => 'SUCCESS','data' => array('token'=>$request_token,'expiry_time'=>$token->expiry_time) ));
+    }
+	
+	/**
      * @api {post} /v2/user/contact 會員 投訴與建議
 	 * @apiVersion 0.2.0
 	 * @apiName PostUserContact
@@ -1008,7 +1105,7 @@ class User extends REST_Controller {
         $input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array("user_id" => $user_id,"investor"=>$investor);
+		$param		= array('user_id' => $user_id,'investor'=>$investor);
 		if (empty($input['content'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}else{
@@ -1019,9 +1116,9 @@ class User extends REST_Controller {
 		$fields 	= ['image1','image2','image3'];
 		foreach ($fields as $field) {
             if(isset($_FILES[$field]) && !empty($_FILES[$field])){
-				$image[$field] = $this->s3_upload->image($_FILES,$field,$user_id,"contact");
+				$image[$field] = $this->s3_upload->image($_FILES,$field,$user_id,'contact');
 			}else{
-				$image[$field] = "";
+				$image[$field] = '';
 			}
         }
 		$param['image'] = json_encode($image);
@@ -1050,17 +1147,18 @@ class User extends REST_Controller {
      *      "data": {
      *      	"promote_code": "D221BL0K",
      *      	"promote_url": "http://dev.influxfin.com?promote_code=D221BL0K",
-     *      	"promote_qrcode": "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200",
-     *      	"bonus_list": []
+     *      	"promote_qrcode": "http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fdev.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200"
      *      }
      *    }
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      * 
      */
 	public function promote_get()
     {
+		$this->not_support_company();
 		$user_id 		= $this->user_info->id;
 		$promote_code	= $this->user_info->my_promote_code;
 		$url 			= BORROW_URL.'?promote_code='.$promote_code;
@@ -1082,5 +1180,21 @@ class User extends REST_Controller {
 		}else{
 			return $code;
 		}
+	}
+	
+	private function not_support_company(){
+		if($this->user_info->company != 0 ){
+			$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+		}
+	}
+	
+	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0){
+		$this->load->model('log/log_userlogin_model');
+		return $this->log_userlogin_model->insert(array(
+			'account'	=> $account,
+			'investor'	=> $investor,
+			'user_id'	=> $user_id,
+			'status'	=> $status
+		));
 	}
 }

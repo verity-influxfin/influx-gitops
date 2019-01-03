@@ -31,7 +31,15 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			//暫不開放法人
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -75,6 +83,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      */
 	 
 	public function list_get()
@@ -116,6 +125,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -266,6 +276,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -342,6 +353,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -523,6 +535,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -592,6 +605,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -780,6 +794,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -849,6 +864,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -958,6 +974,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1023,6 +1040,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1118,6 +1136,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1251,6 +1270,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1369,6 +1389,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1435,6 +1456,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -1554,6 +1576,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501

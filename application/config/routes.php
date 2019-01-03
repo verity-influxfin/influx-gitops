@@ -66,9 +66,30 @@ $route['api/repayment/info/(:num)'] 		= 'api/repayment/info/$1';
 $route['api/repayment/prepayment/(:num)'] 	= 'api/repayment/prepayment/$1';
 $route['api/repayment/contract/(:num)'] 	= 'api/repayment/contract/$1';
 
-$route['api/subloan/applyinfo/(:num)'] 	= 'api/subloan/applyinfo/$1';
-$route['api/subloan/cancel/(:num)'] 	= 'api/subloan/cancel/$1';
-$route['api/subloan/preapply/(:num)'] 	= 'api/subloan/preapply/$1';
+$route['api/subloan/applyinfo/(:num)'] 		= 'api/subloan/applyinfo/$1';
+$route['api/subloan/cancel/(:num)'] 		= 'api/subloan/cancel/$1';
+$route['api/subloan/preapply/(:num)'] 		= 'api/subloan/preapply/$1';
 
 $route['api/recoveries/info/(:num)'] 		= 'api/recoveries/info/$1';
 $route['api/transfer/info/(:num)'] 			= 'api/transfer/info/$1';
+
+
+$route['api/v2/target/info/(:num)'] 			= 'api/v2/target/info/$1';
+$route['api/v2/target/batch/(:num)'] 			= 'api/v2/target/batch/$1';
+$route['api/v2/product/info/(:num)'] 			= 'api/v2/product/info/$1';
+$route['api/v2/product/applyinfo/(:num)'] 		= 'api/v2/product/applyinfo/$1';
+$route['api/v2/product/cancel/(:num)'] 			= 'api/v2/product/cancel/$1';
+$route['api/v2/agreement/info/(:any)'] 			= 'api/v2/agreement/info/$1';
+$route['api/v2/notitication/info/(:num)'] 		= 'api/v2/notitication/info/$1';
+
+$route['api/v2/repayment/info/(:num)'] 			= 'api/v2/repayment/info/$1';
+$route['api/v2/repayment/prepayment/(:num)'] 	= 'api/v2/repayment/prepayment/$1';
+$route['api/v2/repayment/contract/(:num)'] 		= 'api/v2/repayment/contract/$1';
+
+$route['api/v2/subloan/applyinfo/(:num)'] 		= 'api/v2/subloan/applyinfo/$1';
+$route['api/v2/subloan/cancel/(:num)'] 			= 'api/v2/subloan/cancel/$1';
+$route['api/v2/subloan/preapply/(:num)'] 		= 'api/v2/subloan/preapply/$1';
+
+$route['api/v2/recoveries/info/(:num)'] 		= 'api/v2/recoveries/info/$1';
+$route['api/v2/transfer/info/(:num)'] 			= 'api/v2/transfer/info/$1';
+$route['api/v2/judicialperson/agent/(:num)'] 	= 'api/v2/judicialperson/agent/$1';

@@ -39,8 +39,15 @@ class Product extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 				}
 
+				//暫不開放法人
+				if(isset($tokenData->company) && $tokenData->company != 0 ){
+					$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+				}
 			
 				$this->user_info->investor 		= $tokenData->investor;
+				$this->user_info->company 		= $tokenData->company;
+				$this->user_info->incharge 		= $tokenData->incharge;
+				$this->user_info->agent 		= $tokenData->agent;
 				$this->user_info->expiry_time 	= $tokenData->expiry_time;
 			}
         }
@@ -52,6 +59,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductList
      * @apiGroup Product
+	 * @apiHeader {String} [request_token] 登入後取得的 Request Token
 	 * @apiDescription 登入狀態下，若已申請產品且申請狀態為未簽約，則提供申請資訊欄位及認證完成資訊。
      *
      * @apiSuccess {Object} result SUCCESS
@@ -225,6 +233,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductInfo
      * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id 產品ID
      *
      * @apiSuccess {Object} result SUCCESS
@@ -285,6 +294,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
 	 *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
@@ -351,6 +361,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName PostProductApply
      * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiDescription 此API只支援信用貸款類型產品。
 	 *
 	 * @apiParam {Number} product_id 產品ID
@@ -372,6 +383,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
@@ -475,6 +487,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName PostProductSigning
      * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiDescription 此API只支援信用貸款類型產品。
 	 *
 	 * @apiParam {Number} target_id Targets ID
@@ -491,6 +504,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
 	 * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
@@ -652,6 +666,7 @@ class Product extends REST_Controller {
      * @api {get} /v2/product/applylist 借款方 申請紀錄列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductApplylist
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiGroup Product
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
@@ -732,6 +747,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
      */
 	public function applylist_get()
@@ -781,6 +797,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductApplyinfo
      * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiDescription 預計還款計畫欄位只在待簽約時出現。
 	 *
 	 * @apiParam {Number} id Targets ID
@@ -930,6 +947,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -1023,6 +1041,7 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductCancel
      * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id Targets ID
 	 * 
      * @apiSuccess {Object} result SUCCESS
@@ -1035,6 +1054,7 @@ class Product extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
 	 *
      * @apiError 404 此申請不存在

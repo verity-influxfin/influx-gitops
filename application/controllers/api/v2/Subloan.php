@@ -34,7 +34,15 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			//暫不開放法人
+			if(isset($tokenData->company) && $tokenData->company != 0 ){
+				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -94,6 +102,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -188,6 +197,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse InsertError
+	 * @apiUse IsCompany
 	 *
 	 *
      * @apiError 403 不支援此期數
@@ -420,6 +430,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
 	 *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -532,6 +543,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
@@ -646,6 +658,7 @@ class Subloan extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
      *
 	 *
      * @apiError 404 此申請不存在

@@ -43,6 +43,9 @@ class Recoveries extends REST_Controller {
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -139,7 +142,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$user					= array();
-		$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("user_to"=>$user_id,"status"=>array(1,2)));
+		$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array('user_to'=>$user_id,'status'=>array(1,2)));
 		if($transaction){
 			$target_ids 		= array();
 			$target_level 		= array();
@@ -176,57 +179,57 @@ class Recoveries extends REST_Controller {
 				}
 			}
 		}
-		$virtual 			= $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
+		$virtual 			= $this->virtual_account_model->get_by(array('investor'=>1,'user_id'=>$user_id));
 		if($virtual){
 			$virtual_account	= array(
-				"bank_code"			=> CATHAY_BANK_CODE,
-				"branch_code"		=> CATHAY_BRANCH_CODE,
-				"bank_name"			=> CATHAY_BANK_NAME,
-				"branch_name"		=> CATHAY_BRANCH_NAME,
-				"virtual_account"	=> $virtual->virtual_account,
+				'bank_code'			=> CATHAY_BANK_CODE,
+				'branch_code'		=> CATHAY_BRANCH_CODE,
+				'bank_name'			=> CATHAY_BANK_NAME,
+				'branch_name'		=> CATHAY_BRANCH_NAME,
+				'virtual_account'	=> $virtual->virtual_account,
 			);
 			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		}else{
 			$funds			 = array(
-				"total"					=> 0,
-				"last_recharge_date"	=> "",
-				"frozen"				=> 0
+				'total'					=> 0,
+				'last_recharge_date'	=> '',
+				'frozen'				=> 0
 			);
 			$virtual_account	= array(
-				"bank_code"			=> "",
-				"branch_code"		=> "",
-				"bank_name"			=> "",
-				"branch_name"		=> "",
-				"virtual_account"	=> "",
+				'bank_code'			=> '',
+				'branch_code'		=> '',
+				'bank_name'			=> '',
+				'branch_name'		=> '',
+				'virtual_account'	=> '',
 			);
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$user_bankaccount 	= $this->user_bankaccount_model->get_by(array("investor"=>1,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$user_bankaccount 	= $this->user_bankaccount_model->get_by(array('investor'=>1,'status'=>1,'user_id'=>$user_id,'verify'=>1));
 		if($user_bankaccount){
 			$bank_account 		= array(
-				"bank_code"		=> $user_bankaccount->bank_code,
-				"branch_code"	=> $user_bankaccount->branch_code,
-				"bank_account"	=> $user_bankaccount->bank_account,
+				'bank_code'		=> $user_bankaccount->bank_code,
+				'branch_code'	=> $user_bankaccount->branch_code,
+				'bank_account'	=> $user_bankaccount->bank_account,
 			);
 		}else{
 			$bank_account 		= array(
-				"bank_code"		=> "",
-				"branch_code"	=> "",
-				"bank_account"	=> "",
+				'bank_code'		=> '',
+				'branch_code'	=> '',
+				'bank_account'	=> '',
 			);
 		}
 
 		$data			 = array(
-			"remaining_principal"	=> $remaining_principal,
-			"interest"				=> $interest,
-			"accounts_receivable"	=> $accounts_receivable,
-			"interest_receivable"	=> $interest_receivable,
-			"other_income"			=> $other_income,
-			"principal_level"		=> $principal_level,
-			"funds"					=> $funds,
-			"bank_account"			=> $bank_account,
-			"virtual_account"		=> $virtual_account,
+			'remaining_principal'	=> $remaining_principal,
+			'interest'				=> $interest,
+			'accounts_receivable'	=> $accounts_receivable,
+			'interest_receivable'	=> $interest_receivable,
+			'other_income'			=> $other_income,
+			'principal_level'		=> $principal_level,
+			'funds'					=> $funds,
+			'bank_account'			=> $bank_account,
+			'virtual_account'		=> $virtual_account,
 		);
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
@@ -302,7 +305,7 @@ class Recoveries extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
-		$param				= array( "user_id"=> $user_id,"status"=>array(3,10));
+		$param				= array( 'user_id'=> $user_id,'status'=>array(3,10));
 		$investments		= $this->investment_model->get_many_by($param);
 		$list				= array();
 		if(!empty($investments)){
@@ -310,56 +313,60 @@ class Recoveries extends REST_Controller {
 
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
-					"id"			=> $target_info->id,
-					"target_no"		=> $target_info->target_no,
-					"credit_level"	=> $target_info->credit_level,
-					"delay"			=> $target_info->delay,
-					"delay_days"	=> $target_info->delay_days,
-					"status"		=> $target_info->status,
-					"sub_status"	=> $target_info->sub_status,
+					'id'			=> $target_info->id,
+					'target_no'		=> $target_info->target_no,
+					'credit_level'	=> $target_info->credit_level,
+					'delay'			=> $target_info->delay,
+					'delay_days'	=> $target_info->delay_days,
+					'status'		=> $target_info->status,
+					'sub_status'	=> $target_info->sub_status,
 				);
 				
 				$next_repayment = array(
-					"date" 			=> "",
-					"instalment"	=> "",
-					"amount"		=> 0,
+					'date' 			=> '',
+					'instalment'	=> '',
+					'amount'		=> 0,
 				);
 
-				$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target_info->id,"user_to"=>$user_id,"status"=>"1"));
+				$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+					'target_id'	=> $target_info->id,
+					'user_to'	=> $user_id,
+					'status'	=> '1'
+				));
 				if($transaction){
 					$first = true;
 					foreach($transaction as $k => $v){
 						if($first){
-							$next_repayment["date"] 		= $v->limit_date;
-							$next_repayment["instalment"] 	= $v->instalment_no;
+							$next_repayment['date'] 		= $v->limit_date;
+							$next_repayment['instalment'] 	= $v->instalment_no;
 							$first = false;
 						}
 
-						if($v->limit_date && $v->limit_date == $next_repayment["date"]){
-							$next_repayment["amount"] += $v->amount;
+						if($v->limit_date && $v->limit_date == $next_repayment['date']){
+							$next_repayment['amount'] += $v->amount;
 						}
 					}
 				}
 				
 				$product_info = $this->product_model->get($target_info->product_id);
 				$product = array(
-					"id"				=> $product_info->id,
-					"name"				=> $product_info->name,
+					'id'				=> $product_info->id,
+					'name'				=> $product_info->name,
 				);
 				
 				$list[] = array(          
-					"id" 				=> $value->id,
-					"loan_amount" 		=> $value->loan_amount?$value->loan_amount:"",
-					"status" 			=> $value->status,
-					"transfer_status" 	=> $value->transfer_status,
-					"created_at" 		=> $value->created_at,
-					"product" 			=> $product,
-					"target" 			=> $target,
-					"next_repayment" 	=> $next_repayment,
+					'id' 				=> $value->id,
+					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
+					'status' 			=> $value->status,
+					'transfer_status' 	=> $value->transfer_status,
+					'created_at' 		=> $value->created_at,
+					'product' 			=> $product,
+					'target' 			=> $target,
+					'next_repayment' 	=> $next_repayment,
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
+		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 	
 	/**
@@ -505,19 +512,23 @@ class Recoveries extends REST_Controller {
 
 			$target_info = $this->target_model->get($investment->target_id);
 			$target = array(
-				"id"			=> $target_info->id,
-				"target_no"		=> $target_info->target_no,
-				"credit_level"	=> $target_info->credit_level,
-				"delay"			=> $target_info->delay,
-				"delay_days"	=> $target_info->delay_days,
-				"status"		=> $target_info->status,
-				"sub_status"	=> $target_info->sub_status,
-				"instalment" 	=> $instalment_list[$target_info->instalment],
-				"repayment" 	=> $repayment_type[$target_info->repayment],
+				'id'			=> $target_info->id,
+				'target_no'		=> $target_info->target_no,
+				'credit_level'	=> $target_info->credit_level,
+				'delay'			=> $target_info->delay,
+				'delay_days'	=> $target_info->delay_days,
+				'status'		=> $target_info->status,
+				'sub_status'	=> $target_info->sub_status,
+				'instalment' 	=> $instalment_list[$target_info->instalment],
+				'repayment' 	=> $repayment_type[$target_info->repayment],
 			);
 			
 			$repayment_detail = array();
-			$transaction = $this->transaction_model->order_by("limit_date","asc")->get_many_by(array("target_id"=>$target_info->id,"user_to"=>$user_id,"status"=>array(1,2)));
+			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+				'target_id'	=> $target_info->id,
+				'user_to'	=> $user_id,
+				'status'	=> array(1,2)
+			));
 			if($transaction){
 				foreach($transaction as $k => $v){
 					if(in_array($v->source,array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST))){
@@ -528,8 +539,8 @@ class Recoveries extends REST_Controller {
 			
 			$product_info 	= $this->product_model->get($target_info->product_id);
 			$product 		= array(
-				"id"	=> $product_info->id,
-				"name"	=> $product_info->name,
+				'id'	=> $product_info->id,
+				'name'	=> $product_info->name,
 			);
 			
 			$transfer 		= array();
@@ -537,28 +548,28 @@ class Recoveries extends REST_Controller {
 				$transfer_info = $this->transfer_lib->get_transfer_investments($investment->id);
 				if($transfer_info){
 					$contract_data 	= $this->contract_lib->get_contract($transfer_info->contract_id);
-					$contract 		= isset($contract_data["content"])?$contract_data["content"]:"";
+					$contract 		= isset($contract_data['content'])?$contract_data['content']:'';
 					$transfer = array(
-						"transfer_fee"	=> $transfer_info->transfer_fee,
-						"amount"		=> $transfer_info->amount,
-						"contract"		=> $contract,
-						"transfer_at"	=> $transfer_info->transfer_date,
+						'transfer_fee'	=> $transfer_info->transfer_fee,
+						'amount'		=> $transfer_info->amount,
+						'contract'		=> $contract,
+						'transfer_at'	=> $transfer_info->transfer_date,
 					);
 				}
 			}
 			
 			$investment_contract = $this->contract_lib->get_contract($investment->contract_id);
 			$data = array(
-				"id" 					=> $investment->id,
-				"loan_amount" 			=> $investment->loan_amount?$investment->loan_amount:"",
-				"contract" 				=> $investment_contract["content"],
-				"status" 				=> $investment->status,
-				"transfer_status" 		=> $investment->transfer_status,
-				"created_at" 			=> $investment->created_at,
-				"transfer" 				=> $transfer,
-				"product" 				=> $product,
-				"target" 				=> $target,
-				"amortization_schedule" => $this->target_lib->get_investment_amortization_table($target_info,$investment),
+				'id' 					=> $investment->id,
+				'loan_amount' 			=> $investment->loan_amount?$investment->loan_amount:'',
+				'contract' 				=> $investment_contract['content'],
+				'status' 				=> $investment->status,
+				'transfer_status' 		=> $investment->transfer_status,
+				'created_at' 			=> $investment->created_at,
+				'transfer' 				=> $transfer,
+				'product' 				=> $product,
+				'target' 				=> $target,
+				'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info,$investment),
 			);
 			
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -638,17 +649,22 @@ class Recoveries extends REST_Controller {
 		}
 		
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_Number) || $this->user_info->id_Number==""){
+		if(empty($this->user_info->id_Number) || $this->user_info->id_Number==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$bank_account = $this->user_bankaccount_model->get_by(array(
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		));
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		if($this->user_info->transaction_password==""){
+		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 		
@@ -659,7 +675,7 @@ class Recoveries extends REST_Controller {
 		$withdraw = $this->transaction_lib->withdraw($user_id,intval($input['amount']));
 		if($withdraw){
 			$this->load->library('Sendemail');
-			$this->sendemail->admin_notification("新的一筆虛擬帳號提領 投資端會員ID:".$user_id,"新的一筆虛擬帳號提領 投資端會員ID:".$user_id);
+			$this->sendemail->admin_notification('新的一筆虛擬帳號提領 投資端會員ID:'.$user_id,'新的一筆虛擬帳號提領 投資端會員ID:'.$user_id);
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
 			$this->response(array('result' => 'ERROR','error' => NOT_ENOUGH_FUNDS ));

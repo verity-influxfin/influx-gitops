@@ -6,6 +6,36 @@
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
+				function success(id){
+					if(confirm("確認審核通過？")){
+						if(id){
+							$.ajax({
+								url: './apply_success?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+				
+				function failed(id){
+					if(confirm("確認審核失敗？")){
+						if(id){
+							$.ajax({
+								url: './apply_failed?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+
 				function showChang(){
 					var user_id 		= $('#user_id').val();
 					var tax_id 			= $('#tax_id').val();
@@ -74,7 +104,12 @@
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
 											<td><?=isset($value->remark)?$value->remark:"" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<? if($value->status==0){ ?>
+												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
+												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
+											<? } ?>
+											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        

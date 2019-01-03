@@ -17,7 +17,7 @@ class Transfer extends REST_Controller {
         $method = $this->router->fetch_method();
         $nonAuthMethods = [];
 		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:"";
+            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -38,6 +38,9 @@ class Transfer extends REST_Controller {
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
+			$this->user_info->company 		= $tokenData->company;
+			$this->user_info->incharge 		= $tokenData->incharge;
+			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
@@ -61,7 +64,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} ctarget.redit_level 信用指數
+	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.user_id User ID
 	 * @apiSuccess {String} target.loan_amount 核准金額
 	 * @apiSuccess {String} target.interest_rate 核可利率
@@ -119,8 +122,8 @@ class Transfer extends REST_Controller {
 		
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array("credit_level","instalment","interest_rate"))?$input['orderby']:"";
-		$sort				= isset($input['sort'])&&in_array($input['sort'],array("desc","asc"))?$input['sort']:"asc";
+		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'';
+		$sort				= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$transfer 			= $this->transfer_lib->get_transfer_list();
 		
 		if(!empty($transfer)){
@@ -131,8 +134,8 @@ class Transfer extends REST_Controller {
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(
-						"id"			=> $value->id,
-						"name"			=> $value->name,
+						'id'			=> $value->id,
+						'name'			=> $value->name,
 					);
 				}
 			}
@@ -140,28 +143,28 @@ class Transfer extends REST_Controller {
 			foreach($transfer as $key => $value){
 				$target 				= $this->target_model->get($value->target_id);
 				$target_info = array(
-					"id" 				=> $target->id,
-					"target_no" 		=> $target->target_no,
-					"credit_level" 		=> $target->credit_level,
-					"user_id" 			=> $target->user_id,
-					"loan_amount" 		=> $target->loan_amount?$target->loan_amount:"",
-					"interest_rate" 	=> $target->interest_rate?$target->interest_rate:"",
-					"instalment" 		=> $instalment_list[$target->instalment],
-					"repayment" 		=> $repayment_type[$target->repayment],
-					"delay" 			=> $target->delay,
-					"delay_days" 		=> $target->delay_days,
-					"status" 			=> $target->status,
-					"sub_status" 		=> $target->sub_status,
-					"created_at" 		=> $target->created_at,
+					'id' 				=> $target->id,
+					'target_no' 		=> $target->target_no,
+					'credit_level' 		=> $target->credit_level,
+					'user_id' 			=> $target->user_id,
+					'loan_amount' 		=> $target->loan_amount?$target->loan_amount:'',
+					'interest_rate' 	=> $target->interest_rate?$target->interest_rate:'',
+					'instalment' 		=> $instalment_list[$target->instalment],
+					'repayment' 		=> $repayment_type[$target->repayment],
+					'delay' 			=> $target->delay,
+					'delay_days' 		=> $target->delay_days,
+					'status' 			=> $target->status,
+					'sub_status' 		=> $target->sub_status,
+					'created_at' 		=> $target->created_at,
 				);
 				$product	= $product_list[$target->product_id];
 				$list[] 	= array(
-					"id"			=> $value->id,
-					"amount"		=> $value->amount,
-					"instalment"	=> $value->instalment,
-					"expire_time"	=> $value->expire_time,
-					"product"		=> $product,
-					"target"		=> $target_info,
+					'id'			=> $value->id,
+					'amount'		=> $value->amount,
+					'instalment'	=> $value->instalment,
+					'expire_time'	=> $value->expire_time,
+					'product'		=> $product,
+					'target'		=> $target_info,
 				);
 			}
 			
@@ -202,7 +205,7 @@ class Transfer extends REST_Controller {
 				}
 			}
 		}
-		$data["list"] = $list;
+		$data['list'] = $list;
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
@@ -331,8 +334,8 @@ class Transfer extends REST_Controller {
 			$this->load->model('loan/product_model');
 			$product_info 	= $this->product_model->get($target->product_id);
 			$product = array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
+				'id'			=> $product_info->id,
+				'name'			=> $product_info->name,
 			);
 			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
@@ -349,53 +352,53 @@ class Transfer extends REST_Controller {
 			$user_info 	= $this->user_model->get($target->user_id); 
 			$user		= array();
 			if($user_info){
-				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."XX";
+				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'XX';
 				$age  		= get_age($user_info->birthday);
-				$user_meta 	= $this->user_meta_model->get_by(array("user_id"=>$target->user_id,"meta_key"=>"school_name"));
-				$school_name= $user_meta?$user_meta->meta_value:"";
-				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5)."XXXXX":"";
+				$user_meta 	= $this->user_meta_model->get_by(array('user_id'=>$target->user_id,'meta_key'=>'school_name'));
+				$school_name= $user_meta?$user_meta->meta_value:'';
+				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'XXXXX':'';
 				$user = array(
-					"name" 			=> $name,
-					"age"			=> $age,
-					"school_name"	=> $school_name,
-					"id_number"		=> $id_number,
+					'name' 			=> $name,
+					'age'			=> $age,
+					'school_name'	=> $school_name,
+					'id_number'		=> $id_number,
 				);
 			}
 
 			$contract_data 	= $this->contract_lib->get_contract($transfer->contract_id);
-			$contract 		= isset($contract_data["content"])?$contract_data["content"]:"";
+			$contract 		= isset($contract_data['content'])?$contract_data['content']:'';
 			$data 	= array(
-				"id"			=> $transfer->id,
-				"amount"		=> $transfer->amount,
-				"instalment"	=> $transfer->instalment,
-				"principal"		=> $transfer->principal,
-				"interest"		=> $transfer->interest,
-				"delay_interest"=> $transfer->delay_interest,
-				"bargain_rate"	=> $transfer->bargain_rate,
-				"debt_transfer_contract" => $contract,
-				"expire_time"	=> $transfer->expire_time,
+				'id'			=> $transfer->id,
+				'amount'		=> $transfer->amount,
+				'instalment'	=> $transfer->instalment,
+				'principal'		=> $transfer->principal,
+				'interest'		=> $transfer->interest,
+				'delay_interest'=> $transfer->delay_interest,
+				'bargain_rate'	=> $transfer->bargain_rate,
+				'debt_transfer_contract' => $contract,
+				'expire_time'	=> $transfer->expire_time,
 			);
 				
-			$data["target"] = array(
-				"id" 				=> $target->id,
-				"target_no" 		=> $target->target_no,
-				"user_id" 			=> $target->user_id,
-				"loan_amount" 		=> $target->loan_amount,
-				"credit_level" 		=> $target->credit_level,
-				"interest_rate" 	=> $target->interest_rate,
-				"remark" 			=> $target->remark,
-				"instalment" 		=> $instalment_list[$target->instalment],
-				"repayment" 		=> $repayment_type[$target->repayment],
-				"delay" 			=> $target->delay,
-				"delay_days" 		=> $target->delay_days,
-				"status" 			=> $target->status,
-				"sub_status" 		=> $target->sub_status,
-				"created_at" 		=> $target->created_at,
+			$data['target'] = array(
+				'id' 				=> $target->id,
+				'target_no' 		=> $target->target_no,
+				'user_id' 			=> $target->user_id,
+				'loan_amount' 		=> $target->loan_amount,
+				'credit_level' 		=> $target->credit_level,
+				'interest_rate' 	=> $target->interest_rate,
+				'remark' 			=> $target->remark,
+				'instalment' 		=> $instalment_list[$target->instalment],
+				'repayment' 		=> $repayment_type[$target->repayment],
+				'delay' 			=> $target->delay,
+				'delay_days' 		=> $target->delay_days,
+				'status' 			=> $target->status,
+				'sub_status' 		=> $target->sub_status,
+				'created_at' 		=> $target->created_at,
 			);
 
-			$data["user"] 			= $user;
-			$data["product"] 		= $product;
-			$data["certification"] 	= $certification;
+			$data['user'] 			= $user;
+			$data['product'] 		= $product;
+			$data['certification'] 	= $certification;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
@@ -486,7 +489,7 @@ class Transfer extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array("user_id"=> $user_id);
+		$param		= array('user_id'=> $user_id);
 		
 		//必填欄位
 		$fields 	= ['transfer_id'];
@@ -501,19 +504,19 @@ class Transfer extends REST_Controller {
 		
 		$transfer = $this->transfer_lib->get_transfer($input['transfer_id']);
 		if($transfer && $transfer->status == 0 ){
-			$param["amount"] = $transfer->amount;
+			$param['amount'] = $transfer->amount;
 			$investment = $this->investment_model->get($transfer->investment_id);
 			if( $user_id == $investment->user_id ){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 			}
 
 			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
+			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 			
 			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==""){
+			if(empty($this->user_info->email) || $this->user_info->email==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
 			
@@ -521,11 +524,15 @@ class Transfer extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
 			
-			if($this->user_info->transaction_password==""){
+			if($this->user_info->transaction_password==''){
 				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 			}
 			
-			$transfer_investment = $this->transfer_investment_model->get_by(array("transfer_id"=>$input['transfer_id'],"user_id"=>$user_id,"status"=>array(0,1,10)));
+			$transfer_investment = $this->transfer_investment_model->get_by(array(
+				'transfer_id'	=> $input['transfer_id'],
+				'user_id'		=> $user_id,
+				'status'		=> array(0,1,10)
+			));
 			if($transfer_investment){
 				$this->response(array('result' => 'ERROR','error' => TRANSFER_APPLY_EXIST ));
 			}
@@ -533,10 +540,10 @@ class Transfer extends REST_Controller {
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
 			$this->load->model('user/user_bankaccount_model');
 			$bank_account = $this->user_bankaccount_model->get_by(array(
-				"investor"	=> $investor,
-				"status"	=> 1,
-				"user_id"	=> $user_id,
-				"verify"	=> 1
+				'investor'	=> $investor,
+				'status'	=> 1,
+				'user_id'	=> $user_id,
+				'verify'	=> 1
 			));
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
@@ -699,85 +706,93 @@ class Transfer extends REST_Controller {
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
-		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$user_bankaccount = $this->user_bankaccount_model->get_by(array(
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		));
 		if(!$user_bankaccount){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		if($this->user_info->transaction_password==""){
+		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 		
 		$this->load->model('user/virtual_account_model');
-		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
+		$virtual	= $this->virtual_account_model->get_by(array(
+		'user_id'	=> $user_id,
+		'investor'	=> $investor
+		));
 		$virtual_account	= array(
-			"bank_code"			=> CATHAY_BANK_CODE,
-			"branch_code"		=> CATHAY_BRANCH_CODE,
-			"bank_name"			=> CATHAY_BANK_NAME,
-			"branch_name"		=> CATHAY_BRANCH_NAME,
-			"virtual_account"	=> $virtual->virtual_account,
+			'bank_code'			=> CATHAY_BANK_CODE,
+			'branch_code'		=> CATHAY_BRANCH_CODE,
+			'bank_name'			=> CATHAY_BANK_NAME,
+			'branch_name'		=> CATHAY_BRANCH_NAME,
+			'virtual_account'	=> $virtual->virtual_account,
 		);
 		$bank_account 		= array(
-			"bank_code"		=> $user_bankaccount->bank_code,
-			"branch_code"	=> $user_bankaccount->branch_code,
-			"bank_account"	=> $user_bankaccount->bank_account,
+			'bank_code'		=> $user_bankaccount->bank_code,
+			'branch_code'	=> $user_bankaccount->branch_code,
+			'bank_account'	=> $user_bankaccount->bank_account,
 		);
 		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
-		$param				= array( "user_id"=> $user_id);
+		$param				= array( 'user_id'=> $user_id);
 		$transfer_investment = $this->transfer_investment_model->get_many_by($param);
 		$list				= array();
 		if(!empty($transfer_investment)){
 			foreach($transfer_investment as $key => $value){
 				$transfer_info 		= $this->transfer_lib->get_transfer($value->transfer_id);
 				$transfer		= array(
-					"id"			=> $transfer_info->id,
-					"amount"		=> $transfer_info->amount,
-					"instalment"	=> $transfer_info->instalment,
-					"expire_time"	=> $transfer_info->expire_time,
+					'id'			=> $transfer_info->id,
+					'amount'		=> $transfer_info->amount,
+					'instalment'	=> $transfer_info->instalment,
+					'expire_time'	=> $transfer_info->expire_time,
 				);
 
 				$target_info 	= $this->target_model->get($transfer_info->target_id);
 				$target = array(
-					"id"			=> $target_info->id,
-					"loan_amount"	=> $target_info->loan_amount,
-					"target_no"		=> $target_info->target_no,
-					"invested"		=> $target_info->invested,
-					"expire_time"	=> $target_info->expire_time,
-					"delay"			=> $target_info->delay,
-					"status"		=> $target_info->status,
-					"sub_status"	=> $target_info->sub_status,
+					'id'			=> $target_info->id,
+					'loan_amount'	=> $target_info->loan_amount,
+					'target_no'		=> $target_info->target_no,
+					'invested'		=> $target_info->invested,
+					'expire_time'	=> $target_info->expire_time,
+					'delay'			=> $target_info->delay,
+					'status'		=> $target_info->status,
+					'sub_status'	=> $target_info->sub_status,
 				);
 				$this->load->model('loan/product_model');
 				$product_info = $this->product_model->get($target_info->product_id);
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					'id'			=> $product_info->id,
+					'name'			=> $product_info->name,
 				);
 				
-				$contract = "";
+				$contract = '';
 				if($value->contract_id){
 					$contract_data = $this->contract_lib->get_contract($value->contract_id);
-					$contract = $contract_data["content"];
+					$contract = $contract_data['content'];
 				}
 			
 				$list[] = array(
-					"id" 				=> $value->id,
-					"amount" 			=> $value->amount,
-					"loan_amount" 		=> in_array($value->status,array(2,10))?$value->amount:"",
-					"contract" 			=> $contract,
-					"status" 			=> $value->status,
-					"created_at" 		=> $value->created_at,
-					"product" 			=> $product,
-					"transfer" 			=> $transfer,
-					"target" 			=> $target,
+					'id' 				=> $value->id,
+					'amount' 			=> $value->amount,
+					'loan_amount' 		=> in_array($value->status,array(2,10))?$value->amount:'',
+					'contract' 			=> $contract,
+					'status' 			=> $value->status,
+					'created_at' 		=> $value->created_at,
+					'product' 			=> $product,
+					'transfer' 			=> $transfer,
+					'target' 			=> $target,
 				);
 			}
 		}
 		$this->response(array('result' => 'SUCCESS','data' => array(
-			"list" 				=> $list,
-			"bank_account"		=> $bank_account,
-			"virtual_account"	=> $virtual_account,
-			"funds"				=> $funds
+			'list' 				=> $list,
+			'bank_account'		=> $bank_account,
+			'virtual_account'	=> $virtual_account,
+			'funds'				=> $funds
 		)));
     }
  
@@ -869,8 +884,8 @@ class Transfer extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$where		= array(
-			"user_id !="	=> $user_id,
-			"status"		=> 5,
+			'user_id !='	=> $user_id,
+			'status'		=> 5,
 		);
 		
 		//必填欄位
@@ -887,23 +902,28 @@ class Transfer extends REST_Controller {
 		}
 		
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		
 		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==""){
+		if(empty($this->user_info->email) || $this->user_info->email==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$bank_account = $this->user_bankaccount_model->get_by(array(
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		));
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		if($this->user_info->transaction_password==""){
+		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
 
@@ -914,35 +934,35 @@ class Transfer extends REST_Controller {
 		$transfer 	= $this->transfer_lib->get_transfer_list();
 		if($transfer){
 			if($delay){
-				$where["delay_days >"] 	= GRACE_PERIOD;
-				if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
-					$where["credit_level"] = explode(",",$input["credit_level"]);
+				$where['delay_days >'] 	= GRACE_PERIOD;
+				if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
+					$where['credit_level'] = explode(',',$input['credit_level']);
 				}
 			}else{
 				
-				$where["delay_days <="] = GRACE_PERIOD;
-				if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
-					$where["interest_rate >="] = intval($input["interest_rate_s"]);
+				$where['delay_days <='] = GRACE_PERIOD;
+				if(isset($input['interest_rate_s']) && intval($input['interest_rate_s'])>=0){
+					$where['interest_rate >='] = intval($input['interest_rate_s']);
 				}
 				
-				if(isset($input["interest_rate_e"]) && intval($input["interest_rate_e"])>0){
-					$where["interest_rate <="] = intval($input["interest_rate_e"]);
+				if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
+					$where['interest_rate <='] = intval($input['interest_rate_e']);
 				}
 
-				if(isset($input["instalment_s"]) && intval($input["instalment_s"])>=0){
+				if(isset($input['instalment_s']) && intval($input['instalment_s'])>=0){
 					if($transfer){
 						foreach($transfer as $key => $value){
-							if($value->instalment<intval($input["instalment_s"])){
+							if($value->instalment<intval($input['instalment_s'])){
 								unset($transfer[$key]);
 							}
 						}
 					}
 				}
 				
-				if(isset($input["instalment_e"]) && intval($input["instalment_e"])>0){
+				if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
 					if($transfer){
 						foreach($transfer as $key => $value){
-							if($value->instalment>intval($input["instalment_e"])){
+							if($value->instalment>intval($input['instalment_e'])){
 								unset($transfer[$key]);
 							}
 						}
@@ -950,7 +970,11 @@ class Transfer extends REST_Controller {
 				}
 			}
 			if($transfer){
-				$investment = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>3,"transfer_status"=>1));
+				$investment = $this->investment_model->get_many_by(array(
+					'user_id'			=> $user_id,
+					'status'			=> 3,
+					'transfer_status'	=> 1
+				));
 				if($investment){
 					
 					$investment_ids = array();
@@ -966,7 +990,7 @@ class Transfer extends REST_Controller {
 			}
 			
 			if($transfer && isset($input['user_id']) && intval($input['user_id'])>0){
-				$investment = $this->investment_model->get_many_by(array("user_id"=>$input['user_id'],"status"=>3,"transfer_status"=>1));
+				$investment = $this->investment_model->get_many_by(array('user_id'=>$input['user_id'],'status'=>3,'transfer_status'=>1));
 				$investment_ids = array();
 				if($investment){
 					foreach($investment as $key => $value){
@@ -983,7 +1007,7 @@ class Transfer extends REST_Controller {
 			}
 			
 			if($transfer){
-				$transfer_investment = $this->transfer_investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,10)));
+				$transfer_investment = $this->transfer_investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,10)));
 				if($transfer_investment){
 					$transfer_investment_target = array();
 					foreach($transfer_investment as $key => $value){
@@ -1004,7 +1028,7 @@ class Transfer extends REST_Controller {
 					$target_ids[] = $value->target_id;
 				}
 				
-				$where["id"] 	= $target_ids;
+				$where['id'] 	= $target_ids;
 				$targets = $this->target_model->get_many_by($where);
 				if($targets){
 					$target_ids 	= array();
@@ -1014,14 +1038,14 @@ class Transfer extends REST_Controller {
 						$target_list[$value->id] = $value;
 					}
 					
-					$where["budget"] = $budget;
+					$where['budget'] = $budget;
 					$data = array(
 						'total_amount' 		=> 0,
 						'total_count' 		=> 0,
 						'max_instalment' 	=> 0,
 						'min_instalment' 	=> 0,
 						'XIRR' 				=> 0,
-						'batch_id' 			=> "",
+						'batch_id' 			=> '',
 						'debt_transfer_contract' => array(),
 					);
 					foreach($transfer as $key => $value){
@@ -1038,20 +1062,20 @@ class Transfer extends REST_Controller {
 									$data['min_instalment'] = $value->instalment;
 								}
 								$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-								$data['debt_transfer_contract'][] = $contract_data?$contract_data["content"]:"";
+								$data['debt_transfer_contract'][] = $contract_data?$contract_data['content']:'';
 								$content[] = $value->id;
 								$target = $target_list[$value->target_id];
 								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
-								$data['XIRR'] += $amortization_schedule["XIRR"];
+								$data['XIRR'] += $amortization_schedule['XIRR'];
 							}
 						}
 					}
 					if($data['total_count']){
 						$param = array(
-							"user_id"	=> $user_id,
-							"type"		=> 1,
-							"filter"	=> json_encode($filter),
-							"content"	=> json_encode($content),
+							'user_id'	=> $user_id,
+							'type'		=> 1,
+							'filter'	=> json_encode($filter),
+							'content'	=> json_encode($content),
 						);
 						$this->load->model('loan/batch_model');
 						$batch_id = $this->batch_model->insert($param);
@@ -1072,7 +1096,7 @@ class Transfer extends REST_Controller {
 			'max_instalment' 	=> 0,
 			'min_instalment' 	=> 0,
 			'XIRR' 				=> 0,
-			'batch_id' 			=> "",
+			'batch_id' 			=> '',
 			'debt_transfer_contract' => array(),
 		)));
     }
@@ -1138,7 +1162,7 @@ class Transfer extends REST_Controller {
 			}
 			
 			$transfer_ids 	= json_decode($batch->content,true);
-			$transfer 		= $this->transfer_lib->get_transfer_list(array("id"=>$transfer_ids,"status"=>0));
+			$transfer 		= $this->transfer_lib->get_transfer_list(array('id'=>$transfer_ids,'status'=>0));
 			if($transfer){
 				$data = array(
 					'total_amount' 		=> 0,
@@ -1149,12 +1173,16 @@ class Transfer extends REST_Controller {
 				);
 				foreach($transfer as $key => $value){
 					if($value->status == 0 ){
-						$investments = $this->transfer_investment_model->get_by(array("transfer_id"=>$value->id,"user_id"=>$user_id,"status"=>array(0,1,10)));
+						$investments = $this->transfer_investment_model->get_by(array(
+							'transfer_id'	=> $value->id,
+							'user_id'		=> $user_id,
+							'status'		=> array(0,1,10)
+						));
 						if(!$investments){
 							$param = array(
-								"user_id" 		=> $user_id,
-								"transfer_id" 	=> $value->id,
-								"amount" 		=> $value->amount,
+								'user_id' 		=> $user_id,
+								'transfer_id' 	=> $value->id,
+								'amount' 		=> $value->amount,
 							);
 							$investment_id = $this->transfer_investment_model->insert($param);
 							if($investment_id){
@@ -1168,7 +1196,7 @@ class Transfer extends REST_Controller {
 								}
 								$target = $this->target_model->get($value->target_id);
 								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
-								$data['XIRR'] += $amortization_schedule["XIRR"];
+								$data['XIRR'] += $amortization_schedule['XIRR'];
 							}
 						}
 					}

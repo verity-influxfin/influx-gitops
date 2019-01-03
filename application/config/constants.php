@@ -103,8 +103,8 @@ defined('NOT_VERIFIED_EMAIL')  			OR define('NOT_VERIFIED_EMAIL'			, 212); //沒
 defined('NOT_IN_CHARGE')  				OR define('NOT_IN_CHARGE'				, 213); //非公司負責人
 defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司已存在
 defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
-defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //請登入公司帳號
-defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //不支援公司帳號
+defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司帳號
+defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -118,6 +118,7 @@ defined('IGID_EXIST')  					OR define('IGID_EXIST'					, 309);
 defined('LINEID_EXIST')  				OR define('LINEID_EXIST'				, 310);
 defined('TRANSACTIONPW_LEN_ERROR')  	OR define('TRANSACTIONPW_LEN_ERROR'		, 311);
 defined('PASSWORD_LENGTH_ERROR')  		OR define('PASSWORD_LENGTH_ERROR'		, 312);
+defined('AGENT_EXIST')  				OR define('AGENT_EXIST'					, 313);//代理人已存在
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
