@@ -32,7 +32,7 @@ class Certification extends REST_Controller {
 			}
 			
 			//暫不開放法人
-			if(isset($tokenData->company) && $tokenData->company != 0 ){
+			if(isset($tokenData->company) && $tokenData->company != 0 && $method != 'debitcard' ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
 			
@@ -525,6 +525,7 @@ class Certification extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationDebitcard
      * @apiGroup Certification
+	 * @apiDescription 法人登入時，只有負責人情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {String{3}} bank_code 銀行代碼三碼
 	 * @apiParam {String{4}} branch_code 分支機構代號四碼
@@ -542,7 +543,7 @@ class Certification extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
-	 * @apiUse IsCompany
+	 * @apiUse NotIncharge
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -598,6 +599,10 @@ class Certification extends REST_Controller {
 			$investor 	= $this->user_info->investor;
 			$content	= array();
 
+			if($this->user_info->company==1 && $this->user_info->incharge != 1){
+				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
+			}
+			
 			//是否驗證過
 			$this->was_verify($certification_id);
 			

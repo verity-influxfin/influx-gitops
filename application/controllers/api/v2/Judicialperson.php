@@ -541,6 +541,147 @@ class Judicialperson extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
+	/**
+     * @api {post} /v2/judicialperson/cooperation 法人經銷 申請為經銷商
+	 * @apiVersion 0.2.0
+	 * @apiName PostJudicialpersonCooperation
+     * @apiGroup Judicialperson
+	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
+	 * @apiParam {file} facade_image 店門正面照
+	 * @apiParam {file} store_image 店內正面照
+	 * @apiParam {file} front_image 銀行流水帳正面
+	 * @apiParam {file} passbook_image 銀行流水帳內頁
+	 * 
+     * @apiSuccess {json} result SUCCESS
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotIncharge
+	 * @apiUse NotCompany
+     *
+     * @apiError 314 已申請過經銷商
+     * @apiErrorExample {Object} 314
+     *     {
+     *       "result": "ERROR",
+     *       "error": "314"
+     *     }
+	 *
+     */
+	public function cooperation_post()
+    {
+		$this->not_incharge();
+		$input 	= $this->input->post(NULL, TRUE);
+		$this->load->model('user/cooperation_model');
+		$this->load->library('S3_upload');
+		
+		$cooperation = $this->cooperation_model->get_by(array(
+			'company_user_id'	=> $this->user_info->id,
+		));
+		
+		if($cooperation && $cooperation->status != 2){
+			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
+		}
+		
+		//上傳檔案欄位
+		$content		= [];
+		$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
+		foreach ($file_fields as $field) {
+			if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+				$image 	= $this->s3_upload->image($_FILES,$field,$this->user_info->id,'cooperation');
+				if($image){
+					$content[$field] = $image;
+				}else{
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+		}
+
+		if($cooperation){
+			$rs = $this->cooperation_model->update($cooperation->id,array(
+				'status'	=> 0,
+				'content'	=> json_encode($content)
+			));
+		}else{
+			$param	= array(
+				'company_user_id'	=> $this->user_info->id,
+				'content'			=> json_encode($content),
+				'cooperation_id'	=> 'CO'.$this->user_info->id_number,
+				'cooperation_key'	=> SHA1('CO'.$this->user_info->id_number.time())
+			);
+			$rs = $this->cooperation_model->insert($param);
+		}
+		
+		if($rs){
+			$this->response(array('result' => 'SUCCESS'));
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+		}
+    }
+	
+	/**
+     * @api {get} /v2/judicialperson/cooperation 法人經銷 查詢經銷申請
+	 * @apiVersion 0.2.0
+	 * @apiName GetJudicialpersonCooperation
+     * @apiGroup Judicialperson
+	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * 
+     * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} remark 備註
+	 * @apiSuccess {String} status 狀態 0:審核中 1:審核通過 2:審核失敗
+     * @apiSuccessExample {json} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"remark":"",
+     * 			"status": "1"
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotIncharge
+	 * @apiUse NotCompany
+     *
+     * @apiError 315 未申請過經銷商
+     * @apiErrorExample {Object} 315
+     *     {
+     *       "result": "ERROR",
+     *       "error": "315"
+     *     }
+	 *
+     */
+	public function cooperation_get()
+    {
+		$this->not_incharge();
+		$this->load->model('user/cooperation_model');
+
+		
+		$cooperation = $this->cooperation_model->get_by(array(
+			'company_user_id'	=> $this->user_info->id,
+		));
+		if($cooperation){
+			$data = array(
+				'status'	=> $cooperation->status,
+				'remark'	=> $cooperation->remark,
+			);
+		}else{
+			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
+		}
+		
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
+    }
+	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0){
 		$this->load->model('log/log_userlogin_model');
 		return $this->log_userlogin_model->insert(array(

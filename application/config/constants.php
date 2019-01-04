@@ -119,6 +119,8 @@ defined('LINEID_EXIST')  				OR define('LINEID_EXIST'				, 310);
 defined('TRANSACTIONPW_LEN_ERROR')  	OR define('TRANSACTIONPW_LEN_ERROR'		, 311);
 defined('PASSWORD_LENGTH_ERROR')  		OR define('PASSWORD_LENGTH_ERROR'		, 312);
 defined('AGENT_EXIST')  				OR define('AGENT_EXIST'					, 313);//代理人已存在
+defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314);//已申請過經銷商
+defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315);//沒申請過經銷商
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
