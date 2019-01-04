@@ -21,6 +21,8 @@ class Judicialperson_lib{
 				));
 				if(!$exist){
 					$user_param = array(
+						'name'				=> $judicial_person->company,
+						'nickname'			=> $judicial_person->company,
 						'password'			=> md5($judicial_person->user_id),
 						'phone'				=> $judicial_person->tax_id,
 						'id_number'			=> $judicial_person->tax_id,
