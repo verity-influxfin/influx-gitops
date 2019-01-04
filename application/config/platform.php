@@ -177,13 +177,16 @@ $config['credit_level']= array(
 );
 
 $config['certifications']= array(
-	1 => array('id'=>1,'alias'=>'id_card'	,'name'=>'實名認證'		,'status'=>1,'description'=>'驗證個人身份資訊'),
-	2 => array('id'=>2,'alias'=>'student'	,'name'=>'學生身份認證'	,'status'=>1,'description'=>'驗證學生身份'),
-	3 => array('id'=>3,'alias'=>'debit_card','name'=>'金融帳號認證'	,'status'=>1,'description'=>'驗證個人金融帳號'),
-	4 => array('id'=>4,'alias'=>'social'	,'name'=>'社交認證'		,'status'=>1,'description'=>'個人社交帳號認證'),
-	5 => array('id'=>5,'alias'=>'emergency'	,'name'=>'緊急聯絡人'		,'status'=>1,'description'=>'設定緊急連絡人資訊'),
-	6 => array('id'=>6,'alias'=>'email'		,'name'=>'常用電子信箱'	,'status'=>1,'description'=>'驗證常用E-Mail位址'),
-	7 => array('id'=>7,'alias'=>'financial'	,'name'=>'財務訊息認證'	,'status'=>1,'description'=>'提供財務訊息資訊'	),
+	1 	=> array('id'=>1,'alias'=>'idcard'			,'name'=>'實名認證'		,'status'=>1,'description'=>'驗證個人身份資訊'),
+	2 	=> array('id'=>2,'alias'=>'student'			,'name'=>'學生身份認證'	,'status'=>1,'description'=>'驗證學生身份'),
+	3 	=> array('id'=>3,'alias'=>'debitcard'		,'name'=>'金融帳號認證'	,'status'=>1,'description'=>'驗證個人金融帳號'),
+	4 	=> array('id'=>4,'alias'=>'social'			,'name'=>'社交認證'		,'status'=>1,'description'=>'個人社交帳號認證'),
+	5 	=> array('id'=>5,'alias'=>'emergency'		,'name'=>'緊急聯絡人'		,'status'=>1,'description'=>'設定緊急連絡人資訊'),
+	6 	=> array('id'=>6,'alias'=>'email'			,'name'=>'常用電子信箱'	,'status'=>1,'description'=>'驗證常用E-Mail位址'),
+	7 	=> array('id'=>7,'alias'=>'financial'		,'name'=>'財務訊息認證'	,'status'=>1,'description'=>'提供財務訊息資訊'	),
+	8 	=> array('id'=>8,'alias'=>'diploma'			,'name'=>'最高學歷認證'	,'status'=>1,'description'=>'提供最高學歷畢業資訊'	),
+	9 	=> array('id'=>9,'alias'=>'investigation'	,'name'=>'聯合徵信認證'	,'status'=>1,'description'=>'提供聯合徵信資訊'	),
+	10 	=> array('id'=>10,'alias'=>'job'			,'name'=>'工作認證'		,'status'=>1,'description'=>'提供工作訊息資訊'	),
 );
 
 $config['school_major_point']= array(

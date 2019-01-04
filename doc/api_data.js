@@ -296,180 +296,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v2/certification/debitcard",
-    "title": "認證 金融帳號認證資料",
-    "version": "0.2.0",
-    "name": "GetCertificationDebitcard",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_name",
-            "description": "<p>User 姓名</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "certification_id",
-            "description": "<p>Certification ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "bank_code",
-            "description": "<p>銀行代碼三碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "branch_code",
-            "description": "<p>分支機構代號四碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "bank_account",
-            "description": "<p>銀行帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>創建日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最近更新日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"4\",\n  \t\"bank_code\": \"822\",\n  \t\"branch_code\": \"1234\",\n  \t\"bank_account\": \"149612222032\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/debitcard"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/certification/debitcard",
     "title": "認證 金融帳號認證資料",
     "version": "0.1.0",
@@ -633,124 +459,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v2/certification/email",
-    "title": "認證 常用電子信箱資料",
-    "version": "0.2.0",
-    "name": "GetCertificationEmail",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"email\": \"XXX\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/email"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/certification/email",
     "title": "認證 常用電子信箱資料",
     "version": "0.1.0",
@@ -853,138 +561,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/certification/email"
-      }
-    ]
-  },
-  {
-    "type": "get",
-    "url": "/v2/certification/emergency",
-    "title": "認證 緊急聯絡人資料",
-    "version": "0.2.0",
-    "name": "GetCertificationEmergency",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "name",
-            "description": "<p>緊急聯絡人姓名</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "phone",
-            "description": "<p>緊急聯絡人電話</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "relationship",
-            "description": "<p>緊急聯絡人關係</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"8\",\n  \t\"certification_id\": \"6\",\n  \t\"name\": \"XXX\",\n  \t\"phone\": \"0912345678\",\n  \t\"relationship\": \"配偶\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/emergency"
       }
     ]
   },
@@ -1106,208 +682,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/certification/emergency"
-      }
-    ]
-  },
-  {
-    "type": "get",
-    "url": "/v2/certification/financial",
-    "title": "認證 財務訊息認證資料",
-    "version": "0.2.0",
-    "name": "GetCertificationFinancial",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "certification_id",
-            "description": "<p>Certification ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "parttime",
-            "description": "<p>打工收入</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "allowance",
-            "description": "<p>零用錢收入</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "scholarship",
-            "description": "<p>獎學金收入</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "other_income",
-            "description": "<p>其他收入</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "restaurant",
-            "description": "<p>餐飲支出</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "transportation",
-            "description": "<p>交通支出</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "entertainment",
-            "description": "<p>娛樂支出</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "other_expense",
-            "description": "<p>其他支出</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>創建日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最近更新日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"8\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",\n  \t\"parttime\": 100,\n  \t\"allowance\": 200,\n  \t\"scholarship\": 300,\n  \t\"other_income\": 400,\n  \t\"restaurant\": 0,\n  \t\"transportation\": 1,\n  \t\"entertainment\": 2,\n  \t\"other_expense\": 3     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/financial"
       }
     ]
   },
@@ -1504,194 +878,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v2/certification/idcard",
-    "title": "認證 實名認證資料",
-    "version": "0.2.0",
-    "name": "GetCertificationIdcard",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "certification_id",
-            "description": "<p>Certification ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "name",
-            "description": "<p>姓名</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id_number",
-            "description": "<p>身分證字號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id_card_date",
-            "description": "<p>發證日期(民國) ex:1060707</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id_card_place",
-            "description": "<p>發證地點</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "birthday",
-            "description": "<p>生日(民國) ex:1020101</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "address",
-            "description": "<p>地址</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>創建日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最近更新日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",     \n  \t\"name\": \"toy\",\n  \t\"id_number\": \"G121111111\",\n  \t\"id_card_date\": \"1060707\",\n  \t\"id_card_place\": \"北市\",\n  \t\"birthday\": \"1020101\",\n  \t\"address\": \"全家就是我家\"\n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/idcard"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/certification/idcard",
     "title": "認證 實名認證資料",
     "version": "0.1.0",
@@ -1864,6 +1050,145 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/certification/idcard"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/v2/certification/:alias",
+    "title": "認證 取得認證資料",
+    "version": "0.2.0",
+    "name": "GetCertificationIndex",
+    "group": "Certification",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "certification_id",
+            "description": "<p>Certification ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>創建日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "updated_at",
+            "description": "<p>最近更新日期</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"certification_id\": \"3\", \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",     \n  \t\"name\": \"toy\",\n  \t\"id_number\": \"G121111111\",\n  \t\"id_card_date\": \"1060707\",\n  \t\"id_card_place\": \"北市\",\n  \t\"birthday\": \"1020101\",\n  \t\"address\": \"全家就是我家\"\n  }\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "503",
+            "description": "<p>尚未驗證過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "503",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Certification.php",
+    "groupTitle": "Certification",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/certification/:alias"
       }
     ]
   },
@@ -2106,159 +1431,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v2/certification/social",
-    "title": "認證 社交認證資料",
-    "version": "0.2.0",
-    "name": "GetCertificationSocial",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "certification_id",
-            "description": "<p>Certification ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "type",
-            "description": "<p>認證類型</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>創建日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最近更新日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"8\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",\n  \t\"parttime\": 100,\n  \t\"allowance\": 200,\n  \t\"scholarship\": 300,\n  \t\"other_income\": 400,\n  \t\"restaurant\": 0,\n  \t\"transportation\": 1,\n  \t\"entertainment\": 2,\n  \t\"other_expense\": 3     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/social"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/certification/social",
     "title": "認證 社交認證資料",
     "version": "0.1.0",
@@ -2396,215 +1568,6 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/certification/social"
-      }
-    ]
-  },
-  {
-    "type": "get",
-    "url": "/v2/certification/student",
-    "title": "認證 學生身份認證資料",
-    "version": "0.2.0",
-    "name": "GetCertificationStudent",
-    "group": "Certification",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "certification_id",
-            "description": "<p>Certification ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "school",
-            "description": "<p>學校名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "system",
-            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "major",
-            "description": "<p>學門</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "department",
-            "description": "<p>系所</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "grade",
-            "description": "<p>年級</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "student_id",
-            "description": "<p>學號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "email",
-            "description": "<p>校內Email</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "front_image",
-            "description": "<p>學生證正面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "back_image",
-            "description": "<p>學生證背面照</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>創建日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最近更新日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"3\",\n  \t\"school\": \"國立宜蘭大學\",\n  \t\"department\": \"電機工程學系\",\n  \t\"grade\": \"1\",\n  \t\"student_id\": \"1496B032\", \n  \t\"email\": \"xxxxx@xxx.edu.com.tw\",     \n  \t\"system\": \"0\",     \n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\"     \n  }\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "501",
-            "description": "<p>此驗證尚未啟用</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "503",
-            "description": "<p>尚未驗證過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "501",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "503",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Certification.php",
-    "groupTitle": "Certification",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/certification/student"
       }
     ]
   },
@@ -3234,6 +2197,205 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/certification/debitcard"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/certification/diploma",
+    "title": "認證 最高學歷認證",
+    "version": "0.2.0",
+    "name": "PostCertificationDiploma",
+    "group": "Certification",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "school",
+            "description": "<p>學校名稱</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
+            "field": "system",
+            "defaultValue": "0",
+            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "diploma_image",
+            "description": "<p>畢業證書照</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "510",
+            "description": "<p>此學號已被使用過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "511",
+            "description": "<p>此學生Email已被使用過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "204",
+            "description": "<p>Email格式錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "510",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"510\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "511",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"511\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "204",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Certification.php",
+    "groupTitle": "Certification",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/certification/diploma"
       }
     ]
   },
@@ -4714,6 +3876,346 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v2/certification/investigation",
+    "title": "認證 聯合徵信認證",
+    "version": "0.2.0",
+    "name": "PostCertificationInvestigation",
+    "group": "Certification",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
+            "field": "return_type",
+            "defaultValue": "0",
+            "description": "<p>回寄方式 0:不需寄回 1:Email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "postal_image",
+            "description": "<p>郵遞回單照</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Certification.php",
+    "groupTitle": "Certification",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/certification/investigation"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/certification/job",
+    "title": "認證 工作認證",
+    "version": "0.2.0",
+    "name": "PostCertificationJob",
+    "group": "Certification",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "company",
+            "description": "<p>公司名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>公司統一編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "labor_image",
+            "description": "<p>勞健保卡</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "business_image",
+            "description": "<p>名片/工作證明</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "passbook_image",
+            "description": "<p>存摺內頁照</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": false,
+            "field": "auxiliary_image",
+            "description": "<p>收入輔助證明</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "501",
+            "description": "<p>此驗證尚未啟用</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "502",
+            "description": "<p>此驗證已通過驗證</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "501",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "502",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Certification.php",
+    "groupTitle": "Certification",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/certification/job"
+      }
+    ]
+  },
+  {
+    "type": "post",
     "url": "/v2/certification/social",
     "title": "認證 社交認證",
     "version": "0.2.0",
@@ -4739,7 +4241,6 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "allowedValues": [
-              "facebook",
               "instagram"
             ],
             "optional": false,
@@ -4751,7 +4252,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "access_token",
-            "description": "<p>access_token</p>"
+            "description": "<p>Instagram AccessToken</p>"
           }
         ]
       }
@@ -5110,14 +4611,14 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "sip_account",
             "description": "<p>SIP帳號</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "sip_password",
             "description": "<p>SIP密碼</p>"
           },
@@ -5737,7 +5238,7 @@ define({ "api": [
   {
     "type": "delete",
     "url": "/v2/judicialperson/agent/:user_id",
-    "title": "法人會員 刪除代理人",
+    "title": "法人代理 刪除代理人",
     "version": "0.2.0",
     "name": "DeleteJudicialpersonAgent",
     "group": "Judicialperson",
@@ -5884,7 +5385,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/v2/judicialperson/agent",
-    "title": "法人會員 代理人名單",
+    "title": "法人代理 代理人名單",
     "version": "0.2.0",
     "name": "GetJudicialpersonAgent",
     "group": "Judicialperson",
@@ -6144,7 +5645,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/v2/judicialperson/agent",
-    "title": "法人會員 新增代理人",
+    "title": "法人代理 新增代理人",
     "version": "0.2.0",
     "name": "PostJudicialpersonAgent",
     "group": "Judicialperson",

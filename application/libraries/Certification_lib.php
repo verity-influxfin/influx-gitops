@@ -69,6 +69,22 @@ class Certification_lib{
 		return false;
 	}
 	
+	public function verify($info){
+		if($info && $info->status != 1){
+			$certification 	= $this->certification[$info->certification_id];
+			$method			= $certification['alias'].'_verify';
+			if(method_exists($this, $method)){
+				$rs = $this->$method($info);
+			}else{
+				$rs = $this->CI->user_certification_model->update($info->id,array(
+					'status'	=> 3,
+				));
+			}
+			return $rs;
+		}
+		return false;
+	}
+	
 	public function set_failed($id,$fail=''){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
@@ -182,17 +198,6 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function social_verify($info = array()){
-		if($info && $info->status ==0 && $info->certification_id==4){
-			$status = 3;
-			$this->CI->user_certification_model->update($info->id,array(
-				'status'	=> $status,
-			));
-			return true;
-		}
-		return false;
-	}
-	
 	public function face_rotate($url='',$user_id=0){
 		$this->CI->load->library('faceplusplus_lib');
 		$this->CI->load->library('s3_upload');
@@ -242,7 +247,7 @@ class Certification_lib{
 		return false;
 	}
 	
-	private function id_card_success($info){
+	private function idcard_success($info){
 		if($info){
 			$content 	= $info->content;
 			//檢查身分證字號
@@ -376,7 +381,7 @@ class Certification_lib{
 		return false;
 	}
 	
-	private function debit_card_success($info){
+	private function debitcard_success($info){
 		if($info){
 			$content 	= $info->content;
 			$exist 		= $this->CI->user_meta_model->get_by(array(
@@ -559,12 +564,85 @@ class Certification_lib{
 		return false;
 	}
 	
+	private function diploma_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				'diploma_status'	=> 1,
+				'diploma_name'		=> $content['school'],
+				'diploma_system'	=> $content['system'],
+				'diploma_image'		=> $content['diploma_image'],
+			);
+
+			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'diploma_status'));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array('meta_value'	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+						'meta_value'	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
+				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private function investigation_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= array(
+				'investigation_status'	=> 1,
+			);
+
+			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'investigation_status'));
+			if($exist){
+				foreach($data as $key => $value){
+					$param = array(
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+					);
+					$rs  = $this->CI->user_meta_model->update_by($param,array('meta_value'	=> $value));
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = array(
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+						'meta_value'	=> $value
+					);
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
+				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public function get_status($user_id,$investor=0){
 		if($user_id){
 			$certification = array();
 			if($investor){
 				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],array('id_card','debit_card','email','emergency'))){
+					if(in_array($value['alias'],array('idcard','debitcard','email','emergency'))){
 						$certification[$key] = $value;
 					}
 				}
@@ -595,7 +673,7 @@ class Certification_lib{
 			$certification = array();
 			if($investor){
 				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],array('id_card','debit_card','email','emergency'))){
+					if(in_array($value['alias'],array('idcard','debitcard','email','emergency'))){
 						$certification[$key] = $value;
 					}
 				}
@@ -627,27 +705,20 @@ class Certification_lib{
 		$date			= get_entering_date();
 		$ids			= array();
 		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(
-			'status'			=> 0,
-			'certification_id'	=> array(1,2,4,5,6),
+			'status'				=> 0,
+			'certification_id !='	=> 3,
 		));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
-					case 1: 
-						$this->idcard_verify($value);
-						break;
 					case 2: 
 					case 6:
 						if(time() > ($value->created_at + 3600)){
 							$this->set_failed($value->id,'未在有效時間內完成認證');
 						}
 						break;
-					case 4:
-						$this->social_verify($value);
-					case 5: 
-						$this->emergency_verify($value);
-						break;
 					default:
+						$this->verify($value);
 						break;
 				}
 				$count++; 

@@ -5,7 +5,16 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Certification extends MY_Admin_Controller {
 	
-	protected $edit_method = array("add","edit","user_certification_edit","user_bankaccount_edit","user_bankaccount_failed","user_bankaccount_success","difficult_word_add","difficult_word_edit");
+	protected $edit_method = array(
+		'add',
+		'edit',
+		'user_certification_edit',
+		'user_bankaccount_edit',
+		'user_bankaccount_failed',
+		'user_bankaccount_success',
+		'difficult_word_add',
+		'difficult_word_edit'
+	);
 	public $certification;
 	public $certification_name_list;
 	
@@ -22,11 +31,11 @@ class Certification extends MY_Admin_Controller {
 	
 	public function index(){
 		
-		$page_data 	= array("type"=>"list");
+		$page_data 	= array('type'=>'list');
 		$list 		= $this->certification;
 		$name_list	= array();
 		if(!empty($list)){
-			$page_data["list"] 			= $list;
+			$page_data['list'] 			= $list;
 		}
 
 		$this->load->view('admin/_header');
@@ -36,13 +45,13 @@ class Certification extends MY_Admin_Controller {
 	}
 
 	public function user_certification_list(){
-		$page_data 	= array("type"=>"list","list"=>array());
+		$page_data 	= array('type'=>'list','list'=>array());
 		$input 		= $this->input->get(NULL, TRUE);
 		$list		= array();
 		$where		= array();
 		$fields 	= ['user_id','certification_id','status'];
 		foreach ($fields as $field) {
-			if (isset($input[$field])&&$input[$field]!="") {
+			if (isset($input[$field])&&$input[$field]!='') {
 				$where[$field] = $input[$field];
 			}
 		}
@@ -51,7 +60,7 @@ class Certification extends MY_Admin_Controller {
 			if(!isset($where['certification_id'])){
 				$where['certification_id !='] = 3;
 			}
-			$list	= $this->user_certification_model->order_by("id","ASC")->get_many_by($where);
+			$list	= $this->user_certification_model->order_by('id','ASC')->get_many_by($where);
 		}
 		
 		$page_data['list'] 					= $list;
@@ -71,8 +80,8 @@ class Certification extends MY_Admin_Controller {
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		if(empty($post)){
-			$id 	= isset($get["id"])?intval($get["id"]):0;
-			$from 	= isset($get["from"])?$get["from"]:"";
+			$id 	= isset($get['id'])?intval($get['id']):0;
+			$from 	= isset($get['from'])?$get['from']:'';
 			if(!empty($from)){
 				$back_url = admin_url($from);
 			}
@@ -95,15 +104,15 @@ class Certification extends MY_Admin_Controller {
 					$this->load->view('admin/certification/'.$certification['alias'],$page_data);
 					$this->load->view('admin/_footer');
 				}else{
-					alert("ERROR , id isn't exist",$back_url);
+					alert('ERROR , id is not exist',$back_url);
 				}
 			}else{
-				alert("ERROR , id isn't exist",$back_url);
+				alert('ERROR , id is not exist',$back_url);
 			}
 		}else{
 			if(!empty($post['id'])){
-				$from 	= isset($post["from"])?$post["from"]:"";
-				$fail 	= isset($post["fail"])?$post["fail"]:"";
+				$from 	= isset($post['from'])?$post['from']:'';
+				$fail 	= isset($post['fail'])?$post['fail']:'';
 				if(!empty($from)){
 					$back_url = admin_url($from);
 				}
@@ -111,8 +120,8 @@ class Certification extends MY_Admin_Controller {
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
 					$certification = $this->certification[$info->certification_id];
-					if($certification['alias']=="debit_card"){
-						alert("金融帳號認證請至 金融帳號驗證區 操作",$back_url);
+					if($certification['alias']=='debitcard'){
+						alert('金融帳號認證請至 金融帳號驗證區 操作',$back_url);
 					}else{
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
@@ -122,25 +131,25 @@ class Certification extends MY_Admin_Controller {
 							'change_admin'			=> $this->login_info->id,
 						));
 						
-						if($post['status']=="1"){
+						if($post['status']=='1'){
 							$rs = $this->certification_lib->set_success($post['id']);
-						}else if($post['status']=="2"){
+						}else if($post['status']=='2'){
 							$rs = $this->certification_lib->set_failed($post['id'],$fail);
 						}else{
-							$rs = $this->user_certification_model->update($post['id'],array("status"=>intval($post['status'])));
+							$rs = $this->user_certification_model->update($post['id'],array('status'=>intval($post['status'])));
 						}
 					}
 
 					if($rs===true){
-						alert("更新成功",$back_url);
+						alert('更新成功',$back_url);
 					}else{
-						alert("更新失敗，請洽工程師",$back_url);
+						alert('更新失敗，請洽工程師',$back_url);
 					}
 				}else{
-					alert("ERROR , id isn't exist",$back_url);
+					alert('ERROR , id is not exist',$back_url);
 				}
 			}else{
-				alert("ERROR , id isn't exist",$back_url);
+				alert('ERROR , id is not exist',$back_url);
 			}
 		}
 	}

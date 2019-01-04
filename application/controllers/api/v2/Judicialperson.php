@@ -324,7 +324,7 @@ class Judicialperson extends REST_Controller {
 	}
 	
 	/**
-     * @api {post} /v2/judicialperson/agent 法人會員 新增代理人
+     * @api {post} /v2/judicialperson/agent 法人代理 新增代理人
 	 * @apiVersion 0.2.0
 	 * @apiName PostJudicialpersonAgent
      * @apiGroup Judicialperson
@@ -420,7 +420,7 @@ class Judicialperson extends REST_Controller {
     }
 	
 	/**
-     * @api {delete} /v2/judicialperson/agent/:user_id 法人會員 刪除代理人
+     * @api {delete} /v2/judicialperson/agent/:user_id 法人代理 刪除代理人
 	 * @apiVersion 0.2.0
 	 * @apiName DeleteJudicialpersonAgent
      * @apiGroup Judicialperson
@@ -482,7 +482,7 @@ class Judicialperson extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /v2/judicialperson/agent 法人會員 代理人名單
+     * @api {get} /v2/judicialperson/agent 法人代理 代理人名單
 	 * @apiVersion 0.2.0
 	 * @apiName GetJudicialpersonAgent
      * @apiGroup Judicialperson
