@@ -238,6 +238,26 @@ class Notification_lib{
 		return $rs;
 	}
 	
+	public function subloan_success($user_id,$target_no,$amount=0){
+		$title 		= "【轉換產品成功】 您的借款 $target_no 已發放成功";
+		$content 	= "親愛的用戶：
+					您好！
+					您的借款 $target_no ，借款金額 $amount 元已經完成產品轉換，已為你清償原借款。
+					相關繳款訊息請登錄手機ATM查詢。普匯金融科技提醒你，準時繳款可以避免違約罰款產生。
+					敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號。";
+
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> 0,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,$content);
+		return $rs;
+	}
+	
 	public function recharge_success($user_id,$investor){
 		if($investor==1){
 			$title 		= "普匯金融科技【資金匯入通知】";
