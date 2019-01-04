@@ -589,8 +589,7 @@ class Transaction_lib{
 					if($target_account){
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$target_account->virtual_account);
-						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$target_account->virtual_account);
-						
+						$this->CI->notification_lib->subloan_success($target->user_id,$target->target_no,$target->loan_amount)
 						//轉換產品手續費
 						$transaction[]	= array(
 							"source"			=> SOURCE_SUBLOAN_FEE,
