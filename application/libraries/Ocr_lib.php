@@ -45,7 +45,7 @@ class Ocr_lib
 					7 => "code",
 				),
 			);
-			$client 		= new SoapClient(OCR_API_URL);
+			
 			$file_content 	= base64_encode( file_get_contents($image) );
 			$file_content 	= $file_content."==##" . $type . "==##" . '' . "==##" . 'null';
 			$param 	= array(
@@ -56,7 +56,8 @@ class Ocr_lib
 				);
 				
 			try {
-				$rs = $client->__soapCall('doAllCardRecon', array('parameters' => $param));
+				$client = new SoapClient(OCR_API_URL);
+				$rs 	= $client->__soapCall('doAllCardRecon', array('parameters' => $param));
 			} catch (Exception $e) {
 				return false;
 			}
