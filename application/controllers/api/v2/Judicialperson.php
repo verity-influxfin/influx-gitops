@@ -561,6 +561,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
+	 * @apiParam {String} server_ip 綁定伺服器IP，多組時，以逗號分隔
 	 * @apiParam {file} facade_image 店門正面照
 	 * @apiParam {file} store_image 店內正面照
 	 * @apiParam {file} front_image 銀行流水帳正面
@@ -602,6 +603,10 @@ class Judicialperson extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
 		}
 		
+		if (empty($input['server_ip'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+
 		//上傳檔案欄位
 		$content		= [];
 		$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
@@ -627,8 +632,9 @@ class Judicialperson extends REST_Controller {
 			$param	= array(
 				'company_user_id'	=> $this->user_info->id,
 				'content'			=> json_encode($content),
+				'server_ip'			=> trim($input['server_ip']),
 				'cooperation_id'	=> 'CO'.$this->user_info->id_number,
-				'cooperation_key'	=> SHA1('CO'.$this->user_info->id_number.time())
+				'cooperation_key'	=> SHA1(COOPER_KEY.$this->user_info->id_number.time())
 			);
 			$rs = $this->cooperation_model->insert($param);
 		}
@@ -649,12 +655,14 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
      * @apiSuccess {json} result SUCCESS
+	 * @apiSuccess {String} server_ip 綁定伺服器IP
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:審核中 1:審核通過 2:審核失敗
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
+     * 			"server_ip": "192.168.0.1",
      * 			"remark":"",
      * 			"status": "1"
      * 		}
@@ -684,6 +692,7 @@ class Judicialperson extends REST_Controller {
 		));
 		if($cooperation){
 			$data = array(
+				'server_ip'	=> $cooperation->server_ip,
 				'status'	=> $cooperation->status,
 				'remark'	=> $cooperation->remark,
 			);

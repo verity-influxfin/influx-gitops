@@ -5547,6 +5547,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "server_ip",
+            "description": "<p>綁定伺服器IP</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "remark",
             "description": "<p>備註</p>"
           },
@@ -5562,7 +5569,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\"\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"server_ip\": \"192.168.0.1\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\"\n\t\t}\n   }",
           "type": "json"
         }
       ]
@@ -6156,6 +6163,13 @@ define({ "api": [
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "server_ip",
+            "description": "<p>綁定伺服器IP，多組時，以逗號分隔</p>"
+          },
           {
             "group": "Parameter",
             "type": "file",

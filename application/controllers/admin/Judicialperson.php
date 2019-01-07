@@ -10,6 +10,7 @@ class Judicialperson extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/judicial_person_model');
+		$this->load->model('user/cooperation_model');
 		$this->load->library('Judicialperson_lib');
  	}
 	
@@ -54,8 +55,6 @@ class Judicialperson extends MY_Admin_Controller {
 			$info = $this->judicial_person_model->get($id);
 			if($info){
 				$this->load->library('Gcis_lib'); 
-				$company_data = $this->gcis_lib->account_info($info->tax_id);
-				$shareholders = $this->gcis_lib->get_shareholders($info->tax_id);
 				$user_info 					= $this->user_model->get($info->user_id);
 				$info->user_name			= $user_info->name;
 				$page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
@@ -109,5 +108,104 @@ class Judicialperson extends MY_Admin_Controller {
 		}
 	}
 	
+	public function cooperation(){
+		$page_data 	= array('type'=>'list');
+		$input 		= $this->input->get(NULL, TRUE);
+		$where		= array();
+		$list		= array();
+		$fields 	= ['status','company_user_id','tax_id'];
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!='') {
+				if($field=='tax_id'){
+					$tax_user = $this->user_model->get_by(array('id_number like'=>'%'.$input[$field].'%'));
+					if($tax_user){
+						$where['company_user_id'] = $tax_user->id;
+					}
+				}else{
+					$where[$field] = $input[$field];
+				}
+			}
+		}
+
+		if(!empty($where)){
+			$list = $this->cooperation_model->get_many_by($where);
+			if($list){
+				foreach($list as $key => $value){
+					$user_info 	= $this->user_model->get($value->company_user_id);
+					$list[$key]->user_name 	= $user_info?$user_info->name:"";
+					$list[$key]->tax_id 	= $user_info?$user_info->id_number:"";
+				}
+			}
+		}
+
+		$page_data['list'] 				= $list;
+		$page_data['status_list'] 		= $this->cooperation_model->status_list;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/judicial_person/cooperation_list',$page_data);
+		$this->load->view('admin/_footer');
+	}
+
+	public function cooperation_edit(){
+		$page_data 	= array('type'=>'edit');
+		$get 		= $this->input->get(NULL, TRUE);
+		$id 		= isset($get['id'])?intval($get['id']):0;
+		if($id){
+			$info = $this->cooperation_model->get($id);
+			if($info){
+				$user_info 	= $this->user_model->get($info->company_user_id);
+				$this->load->library('Gcis_lib'); 
+				$page_data['company_data'] 	= $this->gcis_lib->account_info($user_info->id_number);
+				$page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($user_info->id_number);
+				$page_data['user_info'] 	= $user_info;
+				$page_data['data'] 			= $info;
+				$page_data['content'] 		= json_decode($info->content,true);
+				$page_data['status_list'] 	= $this->cooperation_model->status_list;
+				$page_data['company_type'] 	= $this->config->item('company_type');
+				$this->load->view('admin/_header');
+				$this->load->view('admin/_title',$this->menu);
+				$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
+				$this->load->view('admin/_footer');
+			}else{
+				alert('查無此ID',admin_url('judicialperson/cooperation'));
+			}
+		}else{
+			alert('查無此ID',admin_url('judicialperson/cooperation'));
+		}
+	}
+
+	function cooperation_success(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get['id'])?intval($get['id']):0;
+		if($id){
+			$info = $this->cooperation_model->get($id);
+			if($info && $info->status==0){
+				$this->judicialperson_lib->cooperation_success($id,$this->login_info->id);
+				echo '更新成功';die();
+			}else{
+				echo '查無此ID';die();
+			}
+		}else{
+			echo '查無此ID';die();
+		}
+	}
+	
+	function cooperation_failed(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get['id'])?intval($get['id']):0;
+		$remark = isset($get['remark'])?$get['remark']:'';
+		if($id){
+			$info = $this->cooperation_model->get($id);
+			if($info && $info->status==0){
+				$this->judicialperson_lib->cooperation_failed($id,$this->login_info->id,$remark);
+				echo '更新成功';die();
+			}else{
+				echo '查無此ID';die();
+			}
+		}else{
+			echo '查無此ID';die();
+		}
+	}
 }
 ?>

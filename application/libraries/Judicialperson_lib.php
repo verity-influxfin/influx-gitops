@@ -9,6 +9,7 @@ class Judicialperson_lib{
         $this->CI = &get_instance();
 		$this->CI->load->model('user/judicial_person_model');
 		$this->CI->load->model('user/judicial_agent_model');
+		$this->CI->load->model('user/cooperation_model');
     }
 	
 	//審核成功
@@ -68,6 +69,32 @@ class Judicialperson_lib{
 					'status'	=> 2,
 				);
 				return $this->CI->judicial_person_model->update($person_id,$param);
+			}
+		}
+		return false;
+	}
+	
+	//經銷商審核成功
+	function cooperation_success($cooperation_id,$admin_id=0){
+		if($cooperation_id){
+			$cooperation = $this->CI->cooperation_model->get($cooperation_id);
+			if( $cooperation && $cooperation->status == 0){
+				$this->CI->cooperation_model->update($cooperation_id,array('status' => 1));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//經銷商審核失敗
+	function cooperation_failed($cooperation_id,$admin_id=0){
+		if($cooperation_id){
+			$cooperation = $this->CI->cooperation_model->get($cooperation_id);
+			if( $cooperation && $cooperation->status == 0){
+				$param = array(
+					'status'	=> 2,
+				);
+				return $this->CI->cooperation_model->update($cooperation_id,$param);
 			}
 		}
 		return false;
