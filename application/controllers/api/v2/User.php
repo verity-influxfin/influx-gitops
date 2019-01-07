@@ -27,6 +27,17 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
+			if($this->request->method != 'get'){
+				$this->load->model('log/log_request_model');
+				$this->log_request_model->insert(array(
+					'method' 	=> $this->request->method,
+					'url'	 	=> $this->uri->uri_string(),
+					'investor'	=> $tokenData->investor,
+					'user_id'	=> $tokenData->id,
+					'agent'		=> $tokenData->agent,
+				));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;

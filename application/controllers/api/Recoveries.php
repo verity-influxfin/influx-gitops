@@ -46,6 +46,17 @@ class Recoveries extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
 			
+			if($this->request->method != 'get'){
+				$this->load->model('log/log_request_model');
+				$this->log_request_model->insert(array(
+					'method' 	=> $this->request->method,
+					'url'	 	=> $this->uri->uri_string(),
+					'investor'	=> $tokenData->investor,
+					'user_id'	=> $tokenData->id,
+					'agent'		=> isset($tokenData->agent)?$tokenData->agent:0,
+				));
+			}
+			
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }

@@ -13,6 +13,7 @@ class Judicialperson extends REST_Controller {
 		$this->load->model('user/judicial_agent_model');
 		
         $method = $this->router->fetch_method();
+        $class 	= $this->router->fetch_class();
         $nonAuthMethods = ['login'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
@@ -25,9 +26,20 @@ class Judicialperson extends REST_Controller {
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-			
+
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+			}
+
+			if($this->request->method != 'get'){
+				$this->load->model('log/log_request_model');
+				$this->log_request_model->insert(array(
+					'method' 	=> $this->request->method,
+					'url'	 	=> $this->uri->uri_string(),
+					'investor'	=> $tokenData->investor,
+					'user_id'	=> $tokenData->id,
+					'agent'		=> $tokenData->agent,
+				));
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;

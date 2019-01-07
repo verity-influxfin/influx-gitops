@@ -122,7 +122,7 @@ $config['school_system']= array(
 
 //科目名稱
 $config['transaction_source']= array(
-	1	=> '儲值',
+	1	=> '代收',
 	2	=> '提領',
 	3	=> '出借款',
 	4	=> '平台服務費',
@@ -150,7 +150,7 @@ $config['transaction_source']= array(
 );
 
 $config['transaction_type_name']= array(
-	'recharge'		=> '儲值',
+	'recharge'		=> '代收',
 	'withdraw'		=> '提領',
 	'lending'		=> '放款',
 	'subloan'		=> '產品轉換',
