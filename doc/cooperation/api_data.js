@@ -1,42 +1,61 @@
 define({ "api": [
   {
     "type": "get",
-    "url": "/member/info",
-    "title": "公司資訊",
-    "group": "Member",
-    "parameter": {
+    "url": "/cooperation/info",
+    "title": "Company Information",
+    "group": "Cooperation",
+    "version": "0.1.0",
+    "name": "GetCooperationInformation",
+    "header": {
       "fields": {
-        "Parameter": [
+        "Header": [
           {
-            "group": "Parameter",
+            "group": "Header",
             "type": "String",
             "optional": false,
-            "field": "cooperation_id",
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
             "description": "<p>CooperationID</p>"
           },
           {
-            "group": "Parameter",
-            "type": "String",
+            "group": "Header",
+            "type": "Number",
             "optional": false,
-            "field": "time",
+            "field": "Timestamp",
             "description": "<p>Unix Timestamp</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_token",
-            "description": "<p>MD5(SHA1(cooperation_id &amp; time) + CooperationKEY)</p>"
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
     },
     "success": {
       "fields": {
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "String",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -46,56 +65,137 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "company",
-            "description": "<p>公司名稱</p>"
+            "description": "<p>Company</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "tax_id",
-            "description": "<p>統一編號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "name",
-            "description": "<p>負責人姓名</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "phone",
-            "description": "<p>負責人電話</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "my_promote_code",
-            "description": "<p>邀請碼</p>"
+            "description": "<p>tax ID number</p>"
           }
         ]
       },
       "examples": [
         {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\"\n  }\n}",
           "type": "json"
         }
       ]
     },
-    "version": "0.0.0",
-    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Member.php",
-    "groupTitle": "Member",
-    "name": "GetMemberInfo"
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Cooperation.php",
+    "groupTitle": "Cooperation",
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "post",
-    "url": "/member/contact",
-    "title": "回報問題",
-    "group": "Member",
+    "url": "/cooperation/contact",
+    "title": "Contact Us",
+    "group": "Cooperation",
+    "version": "0.1.0",
+    "name": "PostCooperationContact",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + content + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -104,28 +204,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "content",
-            "description": "<p>內容</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_id",
-            "description": "<p>CooperationID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "time",
-            "description": "<p>Unix Timestamp</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_token",
-            "description": "<p>MD5(SHA1(content &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
+            "description": "<p>Content</p>"
           }
         ]
       }
@@ -135,7 +214,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "String",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
@@ -144,48 +223,136 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\"\n}",
           "type": "json"
         }
       ]
     },
-    "version": "0.0.0",
-    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Member.php",
-    "groupTitle": "Member",
-    "name": "PostMemberContact"
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ],
+        "409": [
+          {
+            "group": "409",
+            "optional": false,
+            "field": "InsertError",
+            "description": "<p>Insert Error.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "InsertError",
+          "content": "HTTP/1.1 409 Not Found\n{\n  \"error\": \"InsertError\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Cooperation.php",
+    "groupTitle": "Cooperation"
   },
   {
     "type": "get",
     "url": "/order/info",
-    "title": "訂單資訊",
+    "title": "Order Information",
     "group": "Order",
-    "parameter": {
+    "version": "0.1.0",
+    "name": "GetOrderInfo",
+    "header": {
       "fields": {
-        "Parameter": [
+        "Header": [
           {
-            "group": "Parameter",
+            "group": "Header",
             "type": "String",
             "optional": false,
-            "field": "cooperation_id",
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
             "description": "<p>CooperationID</p>"
           },
           {
-            "group": "Parameter",
-            "type": "String",
+            "group": "Header",
+            "type": "Number",
             "optional": false,
-            "field": "time",
+            "field": "Timestamp",
             "description": "<p>Unix Timestamp</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_token",
-            "description": "<p>MD5(SHA1(cooperation_id &amp; time) + CooperationKEY)</p>"
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
     },
     "success": {
       "fields": {
@@ -236,66 +403,307 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
           "type": "json"
         }
       ]
     },
-    "version": "0.0.0",
     "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
     "groupTitle": "Order",
-    "name": "GetOrderInfo"
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/order/list",
+    "title": "Order List",
+    "group": "Order",
+    "version": "0.1.0",
+    "name": "GetOrderList",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "json",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "company",
+            "description": "<p>公司名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>統一編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>負責人姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "phone",
+            "description": "<p>負責人電話</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "my_promote_code",
+            "description": "<p>邀請碼</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"company\": \"普匯金融科技股份有限公司\",\n  \t\"tax_id\": \"68566881\",\n  \t\"name\": \"陳霈\",\n  \t\"phone\": \"0912345678\",\n  \t\"my_promote_code\": \"9JJ12CQ5\",  \n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order",
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "get",
     "url": "/order/schedule",
-    "title": "還款計畫",
+    "title": "Repayment Schedule",
     "group": "Order",
+    "version": "0.1.0",
+    "name": "GetOrderSchedule",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>總金額</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "instalment",
             "description": "<p>期數</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "merchant_order_no",
-            "description": "<p>自訂編號</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_id",
-            "description": "<p>CooperationID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "time",
-            "description": "<p>Unix Timestamp</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_token",
-            "description": "<p>MD5(SHA1(amount &amp; instalment &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
           }
         ]
       }
@@ -468,35 +876,137 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"amortization_schedule\": {\n      \"amount\": \"12000\",\n      \"instalment\": \"6\",\n      \"rate\": \"9\",\n      \"date\": \"2018-04-17\",\n      \"total_payment\": 2053,\n      \"leap_year\": false,\n      \"year_days\": 365,\n      \"XIRR\": 0.0939,\n      \"schedule\": {\n            \"1\": {\n              \"instalment\": 1,\n              \"repayment_date\": \"2018-06-10\",\n              \"days\": 54,\n              \"remaining_principal\": \"12000\",\n              \"principal\": 1893,\n              \"interest\": 160,\n              \"total_payment\": 2053\n          },\n          \"2\": {\n               \"instalment\": 2,\n              \"repayment_date\": \"2018-07-10\",\n              \"days\": 30,\n               \"remaining_principal\": 10107,\n               \"principal\": 1978,\n               \"interest\": 75,\n                \"total_payment\": 2053\n           },\n          \"3\": {\n                \"instalment\": 3,\n                \"repayment_date\": \"2018-08-10\",\n                \"days\": 31,\n                \"remaining_principal\": 8129,\n               \"principal\": 1991,\n               \"interest\": 62,\n                \"total_payment\": 2053\n            }\n        },\n       \"total\": {\n            \"principal\": 12000,\n            \"interest\": 391,\n            \"total_payment\": 12391\n        }\n  }\n}",
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"amortization_schedule\": {\n      \t\"amount\": \"12000\",\n      \t\"instalment\": \"6\",\n      \t\"rate\": \"9\",\n      \t\"date\": \"2018-04-17\",\n     \t \t\"total_payment\": 2053,\n     \t \t\"leap_year\": false,\n      \t\"year_days\": 365,\n      \t\"XIRR\": 0.0939,\n      \t\"schedule\": {\n          \t\"1\": {\n              \t\"instalment\": 1,\n              \t\"repayment_date\": \"2018-06-10\",\n              \t\"days\": 54,\n              \t\"remaining_principal\": \"12000\",\n              \t\"principal\": 1893,\n              \t\"interest\": 160,\n              \t\"total_payment\": 2053\n          \t},\n          \t\"2\": {\n               \t\"instalment\": 2,\n              \t\"repayment_date\": \"2018-07-10\",\n              \t\"days\": 30,\n               \t\"remaining_principal\": 10107,\n               \t\"principal\": 1978,\n               \t\"interest\": 75,\n                \t\"total_payment\": 2053\n           \t},\n          \t\"3\": {\n                \t\"instalment\": 3,\n                \t\"repayment_date\": \"2018-08-10\",\n                \t\"days\": 31,\n                \t\"remaining_principal\": 8129,\n               \t\"principal\": 1991,\n               \t\"interest\": 62,\n                \t\"total_payment\": 2053\n            \t}\n        \t},\n       \t\"total\": {\n          \t\"principal\": 12000,\n            \t\"interest\": 391,\n            \t\"total_payment\": 12391\n        \t}\n  \t}\n\t}\n}",
           "type": "json"
         }
       ]
     },
-    "version": "0.0.0",
     "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
     "groupTitle": "Order",
-    "name": "GetOrderSchedule"
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "post",
-    "url": "/order/add",
-    "title": "新增訂單",
+    "url": "/order/create",
+    "title": "Create Order",
     "group": "Order",
+    "version": "0.1.0",
+    "name": "PostOrderCreate",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>總金額</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "instalment",
             "description": "<p>期數</p>"
@@ -517,38 +1027,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "item_count",
             "description": "<p>商品數量，多項商品時，以逗號分隔</p>"
           },
           {
             "group": "Parameter",
-            "type": "number",
+            "type": "Number",
             "optional": false,
             "field": "item_price",
             "description": "<p>商品單價，多項商品時，以逗號分隔</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_id",
-            "description": "<p>CooperationID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "time",
-            "description": "<p>Unix Timestamp</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "cooperation_token",
-            "description": "<p>MD5(SHA1(amount &amp; instalment &amp; merchant_order_no &amp; item_name &amp; item_count &amp; item_price &amp; cooperation_id &amp; time)+ CooperationKEY)</p>"
           }
         ]
       }
@@ -588,15 +1077,84 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"merchant_order_no\": \"A123456789\",\n\t\t\"order_no\": \"20180405113558632\",\n     \"request_token\": \"fcea920f7412b5da7be0cf42b8c93759\"\n   }",
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n   {\n     \"result\": \"SUCCESS\",\n\t\t\"merchant_order_no\": \"A123456789\",\n\t\t\"order_no\": \"20180405113558632\",\n     \"request_token\": \"fcea920f7412b5da7be0cf42b8c93759\"\n   }",
           "type": "json"
         }
       ]
     },
-    "version": "0.0.0",
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ],
+        "409": [
+          {
+            "group": "409",
+            "optional": false,
+            "field": "InsertError",
+            "description": "<p>Insert Error.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "InsertError",
+          "content": "HTTP/1.1 409 Not Found\n{\n  \"error\": \"InsertError\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    },
     "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
-    "groupTitle": "Order",
-    "name": "PostOrderAdd"
+    "groupTitle": "Order"
   }
 ] });

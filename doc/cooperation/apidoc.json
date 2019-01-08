@@ -1,10 +1,9 @@
 {
-	"name": "普匯金融科技 - 合作商文檔",
-	"version": "0.0.0",
-	"description": "合作商串接 API，請先完成註冊，<br>其他 API 皆需於 header 帶入 cooperation_token",
-	"title": "普匯金融科技 - 合作商文檔",
+	"name": "Pu-hey - API Documentation",
+	"version": "0.1.0",
+	"description": "須註冊Pu-hey平台申請取得 CooperationID、CooperationKey",
+	"title": "Pu-hey - API Documentation",
 	"url": "https://api.influxfin.com/cooperation",
 	"order": [
-		"Member"
 	]
 }

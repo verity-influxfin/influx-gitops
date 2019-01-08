@@ -443,7 +443,7 @@ class Notification_lib{
 		$title 		= "【提前還款須知項目】";
 		$content 	= "親愛的用戶：
 						您好！
-						您的借款 $target_no ，提前還款申請通過，提醒您在$date ".CLOSING_TIME."前匯款 $amount 元至 $virtual_account 帳戶，此後不再另行通知，請務必記得準時匯款，以免影響日後信用評分，感謝您的配合。";
+						您的借款 $target_no ，提前還款申請通過，提醒您在 $date 23:59:59 前匯款 $amount 元至 $virtual_account 帳戶，此後不再另行通知，請務必記得準時匯款，以免影響日後信用評分，感謝您的配合。";
 		
 		$param = array(
 			"user_id"	=> $user_id,

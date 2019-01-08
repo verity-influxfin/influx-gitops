@@ -182,7 +182,6 @@ defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //
 defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY'	, 21600); //request_token時效
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY'	, 10800); //換request_token時效
 defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY'			, 10); //固定還款日
-defined('CLOSING_TIME')   			OR define('CLOSING_TIME'			, '12:00:00'); //關帳時間
 defined('DEBT_TRANSFER_FEES')   	OR define('DEBT_TRANSFER_FEES'		, 0.5); //債轉手續費%
 defined('SUB_LOAN_FEES')   			OR define('SUB_LOAN_FEES'			, 1); //轉貸手續費%
 defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 5); //違約金%
@@ -298,3 +297,4 @@ defined('SES_SMTP_PASSWORD')   		OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SE
 defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_PDF_OWNER_PASSWORD'));
 
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_JWT_KEY'));
+defined('COOPER_TIMEOUT')   		OR define('COOPER_TIMEOUT'			, 180);

@@ -83,7 +83,7 @@
 		return $rs;
 	}
 
-	function alert($msg="", $url="", $second=0) {
+	function alert($msg='', $url='', $second=0) {
 		if(empty($second)){
 			if(!empty($msg)) {
 				echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script language="javascript">alert("'.$msg.'");</script>';
@@ -132,13 +132,13 @@
 
 	function is_development()
 	{
-		if(ENVIRONMENT=="development"){
+		if(ENVIRONMENT=='development'){
 			return true;
 		}
 		return false;
 	}
 	
-	function check_cardid($cardid="") {
+	function check_cardid($cardid='') {
 		if(!empty($cardid)){
 			$alphabet =['A'=>'10','B'=>'11','C'=>'12','D'=>'13','E'=>'14','F'=>'15','G'=>'16','H'=>'17','I'=>'34',
 						'J'=>'18','K'=>'19','L'=>'20','M'=>'21','N'=>'22','O'=>'35','P'=>'23','Q'=>'24','R'=>'25',
@@ -171,7 +171,10 @@
 		$len 		 	= strlen($bank_account);
 		$bank_code 		= substr($bank_account,0,3);
 		$bank_account	= substr($bank_account,3,$len-3);
-		return array("bank_code"=>$bank_code,"bank_account"=>intval($bank_account));
+		return array(
+			'bank_code'		=> $bank_code,
+			'bank_account'	=> intval($bank_account)
+		);
 	}
 
 	function get_rand_token(){
@@ -229,22 +232,24 @@
 	}
 
 	function get_entering_date() {
-		$entering_date 	= time() >= strtotime(date("Y-m-d").' '.CLOSING_TIME)?date("Y-m-d",strtotime('+1 day')):date("Y-m-d");
+		$entering_date 	= date('Y-m-d');
 		return $entering_date;
 	}
 	
-	function entering_date_range($date="") {
+	function entering_date_range($date='') {
 		if($date){
-			$sdate 	= date("Y-m-d",strtotime($date.' -1 day')).' '.CLOSING_TIME;
-			$temp 	= date("Y-m-d",strtotime($date)).' '.CLOSING_TIME;
-			$edate 	= date("Y-m-d H:i:s",strtotime($temp.' -1 second'));
-			return array("sdatetime"=>$sdate,"edatetime"=>$edate);
+			$sdate 	= date('Y-m-d',strtotime($date)).' 00:00:00';
+			$edate 	= date('Y-m-d',strtotime($date)).' 23:59:59';
+			return [
+				'sdatetime' => $sdate,
+				'edatetime' => $edate
+			];
 		}
 		return false;
 	}
 	
 	function get_qrcode($url){
-		return "https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=".urlencode($url)."&chs=500x500";
+		return 'https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl='.urlencode($url).'&chs=500x500';
 	}
 	
 	function nf_to_wf($strs){  //全形半形轉換

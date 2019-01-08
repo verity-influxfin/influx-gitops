@@ -7,9 +7,9 @@ define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
 	
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date="",$repayment_type=1){
+	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1){
 		if($amount && $instalment && $rate && $repayment_type){
-			$date 	= empty($date)?date("Y-m-d"):$date;
+			$date 	= empty($date)?date('Y-m-d'):$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
 				$rs = $this->$method($amount,$instalment,$rate,$date);
@@ -30,13 +30,13 @@ class Financial_lib{
 			$leap_year	= $this->leap_year($date,$instalment);
 			$year_days = $leap_year?366:365;//今年日數
 			$schedule	= array(
-				"amount"		=> $amount,
-				"instalment"	=> $instalment,
-				"rate"			=> $rate,
-				"date"			=> $date,
-				"total_payment"	=> $total_payment,
-				"leap_year"		=> $leap_year,
-				"year_days"		=> $year_days
+				'amount'		=> $amount,
+				'instalment'	=> $instalment,
+				'rate'			=> $rate,
+				'date'			=> $date,
+				'total_payment'	=> $total_payment,
+				'leap_year'		=> $leap_year,
+				'year_days'		=> $year_days
 			);
 			
 			$list 		= array();
@@ -44,10 +44,10 @@ class Financial_lib{
 			for( $i=1; $i <= $instalment; $i++ ){
 				$odate 		= $date;
 				//還款日
-				$ym 		= date("Y-m",strtotime($date));
-				$date 		= date("Y-m-",strtotime($ym." + 1 month")).REPAYMENT_DAY;
-				if($i==1 && $odate > date("Y-m-",strtotime($odate)).REPAYMENT_DAY){
-					$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+				$ym 		= date('Y-m',strtotime($date));
+				$date 		= date('Y-m-',strtotime($ym.' + 1 month')).REPAYMENT_DAY;
+				if($i==1 && $odate > date('Y-m-',strtotime($odate)).REPAYMENT_DAY){
+					$date 		= date('Y-m-',strtotime($date.' + 1 month')).REPAYMENT_DAY;
 				}
 				//本期日數
 				$days  		= get_range_days($odate,$date);
@@ -67,13 +67,13 @@ class Financial_lib{
 				$t_min		+= $interest + $principal;
 				
 				$list[$i] = array(	
-					"instalment"			=> $i,
-					"repayment_date"		=> $date,
-					"days"					=> $days,
-					"remaining_principal"	=> $amount,
-					"principal"				=> $principal,
-					"interest"				=> $interest,
-					"total_payment"			=> $total_payment,
+					'instalment'			=> $i,
+					'repayment_date'		=> $date,
+					'days'					=> $days,
+					'remaining_principal'	=> $amount,
+					'principal'				=> $principal,
+					'interest'				=> $interest,
+					'total_payment'			=> $total_payment,
 				);	
 				$xirr_dates[] = $date;
 				$xirr_value[] = $total_payment;
@@ -83,9 +83,9 @@ class Financial_lib{
 			$schedule['XIRR']		= $this->XIRR($xirr_value,$xirr_dates);
 			$schedule['schedule'] 	= $list;
 			$schedule['total'] 		= array(
-				"principal"		=> $t_amount,
-				"interest"		=> $t_interest,
-				"total_payment"	=> $t_min,
+				'principal'		=> $t_amount,
+				'interest'		=> $t_interest,
+				'total_payment'	=> $t_min,
 			);
 			return $schedule;
 		}
@@ -101,13 +101,13 @@ class Financial_lib{
 		$leap_year	= $this->leap_year($date,$instalment);
 		$year_days = $leap_year?366:365;//今年日數
 		$schedule	= array(
-			"amount"		=> $amount,
-			"instalment"	=> $instalment,
-			"rate"			=> $rate,
-			"date"			=> $date,
-			"total_payment"	=> "",
-			"leap_year"		=> $leap_year,
-			"year_days"		=> $year_days
+			'amount'		=> $amount,
+			'instalment'	=> $instalment,
+			'rate'			=> $rate,
+			'date'			=> $date,
+			'total_payment'	=> '',
+			'leap_year'		=> $leap_year,
+			'year_days'		=> $year_days
 		);
 		
 		$list 		= array();
@@ -115,10 +115,10 @@ class Financial_lib{
 		for( $i=1; $i <= $instalment; $i++ ){
 			$odate 		= $date;
 			//還款日
-			$ym 		= date("Y-m",strtotime($date));
-			$date 		= date("Y-m-",strtotime($ym." + 1 month")).REPAYMENT_DAY;
-			if($i==1 && $odate > date("Y-m-",strtotime($odate)).REPAYMENT_DAY){
-				$date 		= date("Y-m-",strtotime($date." + 1 month")).REPAYMENT_DAY;
+			$ym 		= date('Y-m',strtotime($date));
+			$date 		= date('Y-m-',strtotime($ym.' + 1 month')).REPAYMENT_DAY;
+			if($i==1 && $odate > date('Y-m-',strtotime($odate)).REPAYMENT_DAY){
+				$date 		= date('Y-m-',strtotime($date.' + 1 month')).REPAYMENT_DAY;
 			}
 
 			//本期日數
@@ -139,13 +139,13 @@ class Financial_lib{
 			$t_min		+= $interest + $principal;
 			
 			$list[$i] = array(	
-				"instalment"			=> $i,
-				"repayment_date"		=> $date,
-				"days"					=> $days,
-				"remaining_principal"	=> $amount,
-				"principal"				=> $principal,
-				"interest"				=> $interest,
-				"total_payment"			=> $total_payment,
+				'instalment'			=> $i,
+				'repayment_date'		=> $date,
+				'days'					=> $days,
+				'remaining_principal'	=> $amount,
+				'principal'				=> $principal,
+				'interest'				=> $interest,
+				'total_payment'			=> $total_payment,
 			);	
 			$xirr_dates[] = $date;
 			$xirr_value[] = $total_payment;
@@ -155,22 +155,22 @@ class Financial_lib{
 		$schedule['XIRR']		= $this->XIRR($xirr_value,$xirr_dates);
 		$schedule['schedule'] 	= $list;
 		$schedule['total'] 		= array(
-			"principal"		=> $t_amount,
-			"interest"		=> $t_interest,
-			"total_payment"	=> $t_min,
+			'principal'		=> $t_amount,
+			'interest'		=> $t_interest,
+			'total_payment'	=> $t_min,
 		);
 		return $schedule;
 	}
 	
-	public function leap_year($date="",$instalment=0){
+	public function leap_year($date='',$instalment=0){
 		if($date && $instalment){
 			//驗證閏年
 			$leap_year	= FALSE;
 			for($i=1;$i<=$instalment;$i++){
-				$sdate 	= date("Y-m-d",strtotime($date));
-				$date 	= date("Y-m-d",strtotime($date." + 1 month"));
-				if(date("L",strtotime($sdate))=="1" || date("L",strtotime($date))=="1"){
-					$cdate = date("Y",strtotime($date)).'-02-29';
+				$sdate 	= date('Y-m-d',strtotime($date));
+				$date 	= date('Y-m-d',strtotime($date.' + 1 month'));
+				if(date('L',strtotime($sdate))=='1' || date('L',strtotime($date))=='1'){
+					$cdate = date('Y',strtotime($date)).'-02-29';
 					if( $sdate <= $cdate && $date >= $cdate ){
 						$leap_year = TRUE;
 					}
@@ -196,7 +196,7 @@ class Financial_lib{
 		return 0;
 	}
 	
-	public function get_interest_by_days($days=0,$principal=0,$instalment=0,$rate=0,$date=""){
+	public function get_interest_by_days($days=0,$principal=0,$instalment=0,$rate=0,$date=''){
 		$interest = 0;
 		if($days && $principal && $instalment && $rate){
 			$leap_year	= $this->leap_year($date,$instalment);
