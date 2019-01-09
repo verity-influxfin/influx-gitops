@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Passbook extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','withdraw_loan','loan_success','loan_failed','unknown_refund');
+	protected $edit_method = array('withdraw_loan','loan_success','loan_failed','unknown_refund','withdraw_by_admin');
 	
 	public function __construct() {
 		parent::__construct();
@@ -48,6 +48,7 @@ class Passbook extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?$get['id']:'';
 		if($id==PLATFORM_VIRTUAL_ACCOUNT){
 			$virtual_account = new stdClass();
+			$virtual_account->id = PLATFORM_VIRTUAL_ACCOUNT;
 			$virtual_account->virtual_account = PLATFORM_VIRTUAL_ACCOUNT;
 			$virtual_account->user_id 		= 0;
 			$virtual_account->investor 		= 0;
@@ -80,7 +81,14 @@ class Passbook extends MY_Admin_Controller {
 		$get 				=	 $this->input->get(NULL, TRUE);
 		$account 			= isset($get['virtual_account'])?$get['virtual_account']:'';
 		$virtual_account 	= $this->virtual_account_model->get_by(array('virtual_account'=>$account));
-		if($virtual_account || $account ==PLATFORM_VIRTUAL_ACCOUNT){
+		if($account==PLATFORM_VIRTUAL_ACCOUNT){
+			$virtual_account = new stdClass();
+			$virtual_account->id = PLATFORM_VIRTUAL_ACCOUNT;
+			$virtual_account->virtual_account = PLATFORM_VIRTUAL_ACCOUNT;
+			$virtual_account->user_id 		= 0;
+			$virtual_account->investor 		= 0;
+		}
+		if($virtual_account){
 			$list 				= $this->passbook_lib->get_passbook_list($account);
 			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$account));
 			$frozen_type 		= $this->frozen_amount_model->type_list;
@@ -224,6 +232,38 @@ class Passbook extends MY_Admin_Controller {
 			}
 		}else{
 			echo '查無此ID';die();
+		}
+	}
+	
+	function withdraw_by_admin(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get['id'])?intval($get['id']):0;
+		$amount = isset($get['amount'])?intval($get['amount']):0;
+		if($amount > 31){
+			if( $id==PLATFORM_VIRTUAL_ACCOUNT ){
+				$this->load->library('Transaction_lib');
+				$rs = $this->transaction_lib->platform_withdraw($amount);
+				if($rs){
+					echo '更新成功，請至提領放款';die();
+				}else{
+					echo '更新失敗';die();
+				}
+			}else{
+				$virtual_account 	= $this->virtual_account_model->get($id);
+				if($virtual_account){
+					$this->load->library('Transaction_lib');
+					$rs = $this->transaction_lib->withdraw($virtual_account->user_id,$amount,$virtual_account->investor);
+					if($rs){
+						echo '更新成功，請至提領放款';die();
+					}else{
+						echo '更新失敗';die();
+					}
+				}else{
+					echo '查無此ID';die();
+				}
+			}
+		}else{
+			echo '金額過小';die();
 		}
 	}
 }

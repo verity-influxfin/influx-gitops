@@ -420,63 +420,102 @@ class Payment_lib{
 				$ids 		= array();
 				foreach($withdraws as $key => $value){
 					if($value->status==0 && $value->frozen_id>0){
-						$user_info = $this->CI->user_model->get($value->user_id);
-						if($user_info){
-							$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
-								"user_id"		=> $value->user_id,
-								"investor"		=> $value->investor,
-								"status"		=> 1,
-								"verify"		=> 1
-							));
-							if($bankaccount){
-								$this->CI->withdraw_model->update($value->id,array("status"=>2));
-								$amount = intval($value->amount);
-								$ids[] 	= $value->id;
-								
-								$name_list = mb_str_split($user_info->name);
-								if($name_list){
-									$name = "";
-									foreach($name_list as $k => $v){
-										if(!iconv('UTF-8', 'BIG-5', $v)){
-											$v = isset($word_list[$v])?$word_list[$v]:"";
-										}
-										$name .= $v;
-									}
-									$user_info->name = $name;
-								}
-
-								$data = array(
-									"code"			=> "0",
-									"upload_date"	=> "",
-									"entering_date"	=> date("Ymd"),
-									"t_type"		=> "SPU",
-									"t_code"		=> "",
-									"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
-									"bankacc_from"	=> CATHAY_CUST_ACCNO,
-									"tax_from"		=> CATHAY_CUST_ID,
-									"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
-									"TWD"			=> "TWD",
-									"plus"			=> "+",
-									"amount"		=> $amount,//靠左補0
-									"bankcode_to"	=> $bankaccount->bank_code.$bankaccount->branch_code,
-									"bankacc_to"	=> $bankaccount->bank_account,
-									"tax_to"		=> "",
-									"name_to"		=> nf_to_wf($user_info->name),
-									"alert_to"		=> "0",
-									"email_to"		=> "",
-									"fee_type"		=> "13",
-									"invoice_num"	=> "",
-									"remark"		=> nf_to_wf("提領放款"),
-								);
+						if($value->user_id==0 && $value->virtual_account==PLATFORM_VIRTUAL_ACCOUNT){
+							$this->CI->withdraw_model->update($value->id,array("status"=>2));
+							$amount = intval($value->amount);
+							$ids[] 	= $value->id;
+							$data = array(
+								"code"			=> "0",
+								"upload_date"	=> "",
+								"entering_date"	=> date("Ymd"),
+								"t_type"		=> "SPU",
+								"t_code"		=> "",
+								"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+								"bankacc_from"	=> CATHAY_CUST_ACCNO,
+								"tax_from"		=> CATHAY_CUST_ID,
+								"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+								"TWD"			=> "TWD",
+								"plus"			=> "+",
+								"amount"		=> $amount,//靠左補0
+								"bankcode_to"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+								"bankacc_to"	=> '015035006602',
+								"tax_to"		=> CATHAY_CUST_ID,
+								"name_to"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+								"alert_to"		=> '0',
+								"email_to"		=> '',
+								"fee_type"		=> '13',
+								"invoice_num"	=> '',
+								"remark"		=> nf_to_wf('提領放款'),
+							);
+						
+							$data = $this->check_len($data);
 							
-								$data = $this->check_len($data);
+							if($content != ""){
+								$content .= "\n";
+							}
+							
+							foreach($data as $key => $value){
+								$content .= $value;
+							}
+						}else{
+							$user_info = $this->CI->user_model->get($value->user_id);
+							if($user_info){
+								$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
+									"user_id"		=> $value->user_id,
+									"investor"		=> $value->investor,
+									"status"		=> 1,
+									"verify"		=> 1
+								));
+								if($bankaccount){
+									$this->CI->withdraw_model->update($value->id,array("status"=>2));
+									$amount = intval($value->amount);
+									$ids[] 	= $value->id;
+									
+									$name_list = mb_str_split($user_info->name);
+									if($name_list){
+										$name = "";
+										foreach($name_list as $k => $v){
+											if(!iconv('UTF-8', 'BIG-5', $v)){
+												$v = isset($word_list[$v])?$word_list[$v]:"";
+											}
+											$name .= $v;
+										}
+										$user_info->name = $name;
+									}
+
+									$data = array(
+										"code"			=> "0",
+										"upload_date"	=> "",
+										"entering_date"	=> date("Ymd"),
+										"t_type"		=> "SPU",
+										"t_code"		=> "",
+										"bankcode_from"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
+										"bankacc_from"	=> CATHAY_CUST_ACCNO,
+										"tax_from"		=> CATHAY_CUST_ID,
+										"name_from"		=> nf_to_wf(CATHAY_COMPANY_NAME),
+										"TWD"			=> "TWD",
+										"plus"			=> "+",
+										"amount"		=> $amount,//靠左補0
+										"bankcode_to"	=> $bankaccount->bank_code.$bankaccount->branch_code,
+										"bankacc_to"	=> $bankaccount->bank_account,
+										"tax_to"		=> "",
+										"name_to"		=> nf_to_wf($user_info->name),
+										"alert_to"		=> "0",
+										"email_to"		=> "",
+										"fee_type"		=> "13",
+										"invoice_num"	=> "",
+										"remark"		=> nf_to_wf("提領放款"),
+									);
 								
-								if($content != ""){
-									$content .= "\n";
-								}
-								
-								foreach($data as $key => $value){
-									$content .= $value;
+									$data = $this->check_len($data);
+									
+									if($content != ""){
+										$content .= "\n";
+									}
+									
+									foreach($data as $key => $value){
+										$content .= $value;
+									}
 								}
 							}
 						}

@@ -210,6 +210,37 @@ class Transaction_lib{
 		return false;
 	}
 
+	//平台提領
+	public function platform_withdraw($amount=0){
+		if($amount > 31 ){
+			$withdraw = false;
+			$funds = $this->get_virtual_funds(PLATFORM_VIRTUAL_ACCOUNT);
+			$total = $funds['total'] - $funds['frozen'];
+			if(intval($total)-intval($amount)>=0){
+				$param = array(
+					"type"				=> 3,
+					"virtual_account"	=> PLATFORM_VIRTUAL_ACCOUNT,
+					"amount"			=> intval($amount),
+					"tx_datetime"		=> date("Y-m-d :H:i:s"),
+				);
+				$rs = $this->CI->frozen_amount_model->insert($param);
+				if($rs){
+					$data = array(
+						"user_id"			=> 0,
+						"investor"			=> 0,
+						"virtual_account" 	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> $amount,
+						"frozen_id"			=> $rs,
+					);
+					$this->CI->load->model('transaction/withdraw_model');
+					$withdraw = $this->CI->withdraw_model->insert($data);
+				}
+			}
+			return $withdraw;
+		}
+		return false;
+	}
+	
 	//提領成功
 	function withdraw_success($withdraw_id){
 		$date 			= get_entering_date();
@@ -218,38 +249,60 @@ class Transaction_lib{
 			$this->CI->load->model('transaction/withdraw_model');
 			$withdraw = $this->CI->withdraw_model->get($withdraw_id);
 			if( $withdraw && $withdraw->status == 2 ){
-				$virtual_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$withdraw->user_id,"virtual_account"=>$withdraw->virtual_account,"status"=>1));
-				if($virtual_account){
-					$where = array(
-						"user_id"	=> $withdraw->user_id,
-						"status"	=> 1,
-						"verify"	=> 1,
-						"investor"	=> $withdraw->investor
+				if($withdraw->user_id==0 && $withdraw->virtual_account==PLATFORM_VIRTUAL_ACCOUNT){
+					//放款
+					$transaction		= array(
+						"source"			=> SOURCE_WITHDRAW,
+						"entering_date"		=> $date,
+						"user_from"			=> $withdraw->user_id,
+						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
+						"amount"			=> intval($withdraw->amount),
+						"user_to"			=> $withdraw->user_id,
+						"bank_account_to"	=> '015035006602',
+						"status"			=> 2
 					);
 
-					$this->CI->load->model('user/user_bankaccount_model');
-					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
-					if($user_bankaccount){
-						$this->CI->notification_lib->withdraw_success($withdraw->user_id,$withdraw->investor,$withdraw->amount,$user_bankaccount->bank_account);
-
-						//放款
-						$transaction		= array(
-							"source"			=> SOURCE_WITHDRAW,
-							"entering_date"		=> $date,
-							"user_from"			=> $withdraw->user_id,
-							"bank_account_from"	=> $virtual_account->virtual_account,
-							"amount"			=> intval($withdraw->amount),
-							"user_to"			=> $withdraw->user_id,
-							"bank_account_to"	=> $user_bankaccount->bank_account,
-							"status"			=> 2
+					$rs  = $this->CI->transaction_model->insert($transaction);
+					if($rs){
+						$this->CI->withdraw_model->update($withdraw_id,array("status"=>1,"transaction_id"=>$rs));
+						$this->CI->frozen_amount_model->update($withdraw->frozen_id,array("status"=>0));
+						$this->CI->passbook_lib->enter_account($rs);
+						return true;
+					}
+				}else{
+					$virtual_account 	= $this->CI->virtual_account_model->get_by(array("user_id"=>$withdraw->user_id,"virtual_account"=>$withdraw->virtual_account,"status"=>1));
+					if($virtual_account){
+						$where = array(
+							"user_id"	=> $withdraw->user_id,
+							"status"	=> 1,
+							"verify"	=> 1,
+							"investor"	=> $withdraw->investor
 						);
 
-						$rs  = $this->CI->transaction_model->insert($transaction);
-						if($rs){
-							$this->CI->withdraw_model->update($withdraw_id,array("status"=>1,"transaction_id"=>$rs));
-							$this->CI->frozen_amount_model->update($withdraw->frozen_id,array("status"=>0));
-							$this->CI->passbook_lib->enter_account($rs);
-							return true;
+						$this->CI->load->model('user/user_bankaccount_model');
+						$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+						if($user_bankaccount){
+							$this->CI->notification_lib->withdraw_success($withdraw->user_id,$withdraw->investor,$withdraw->amount,$user_bankaccount->bank_account);
+
+							//放款
+							$transaction		= array(
+								"source"			=> SOURCE_WITHDRAW,
+								"entering_date"		=> $date,
+								"user_from"			=> $withdraw->user_id,
+								"bank_account_from"	=> $virtual_account->virtual_account,
+								"amount"			=> intval($withdraw->amount),
+								"user_to"			=> $withdraw->user_id,
+								"bank_account_to"	=> $user_bankaccount->bank_account,
+								"status"			=> 2
+							);
+
+							$rs  = $this->CI->transaction_model->insert($transaction);
+							if($rs){
+								$this->CI->withdraw_model->update($withdraw_id,array("status"=>1,"transaction_id"=>$rs));
+								$this->CI->frozen_amount_model->update($withdraw->frozen_id,array("status"=>0));
+								$this->CI->passbook_lib->enter_account($rs);
+								return true;
+							}
 						}
 					}
 				}
