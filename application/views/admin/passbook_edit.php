@@ -19,7 +19,29 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							虛擬帳戶：<?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'平台帳號' ?>
+							<table>
+								<? if ($virtual_account->virtual_account == PLATFORM_VIRTUAL_ACCOUNT){?>
+								<tr>
+									<td>虛擬帳戶：：</td>
+									<td><?=PLATFORM_VIRTUAL_ACCOUNT ?></td>	
+								</tr>
+								<tr>
+									<td>戶名：</td>
+									<td>平台虛擬帳號</td>
+									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+								</tr>
+								<? }else{ ?>
+								<tr>
+									<td>虛擬帳戶：：</td>
+									<td><?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'' ?></td>
+								</tr>
+								<tr>	
+									<td>戶名：</td>
+									<td><?=isset($user_info->name)?$user_info->name:'' ?></td>
+									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+								</tr>
+								<? } ?>
+							</table>
                         </div>
                         <div class="panel-body">
                             <div class="row">

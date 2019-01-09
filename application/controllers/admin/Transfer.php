@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Transfer extends MY_Admin_Controller {
 	
-	protected $edit_method = array();
+	protected $edit_method = array('assets_export','amortization_export','transfer_success','transfer_cancel');
 	
 	public function __construct() {
 		parent::__construct();

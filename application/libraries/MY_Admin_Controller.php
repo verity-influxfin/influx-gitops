@@ -14,6 +14,7 @@ class MY_Admin_Controller extends CI_Controller{
 		}
 		$this->load->model('admin/admin_model');
 		$this->load->model('admin/role_model');
+		$this->load->model('log/log_admin_model');
 		$this->load->helper('admin');
 		$this->load->helper('cookie');
 		$this->load->library('form_validation');
@@ -23,44 +24,54 @@ class MY_Admin_Controller extends CI_Controller{
 		$method = $this->router->fetch_method();
 		$class 	= ucfirst($this->router->fetch_class());
 		$nonAuthMethods = ['login'];
-        if ($class != "Admin" || ($method != "login" && $method != "logout")) {
+        if ($class != 'Admin' || ($method != 'login' && $method != 'logout')) {
 			if(empty($this->login_info)){
 				redirect(admin_url('Admin/login'), 'refresh');
 				die();
 			}else{
-				if($class != "TestScript"){
+				if($class != 'TestScript'){
 					$role = $roles[$this->login_info->role_id];
 					$role->permission 	= json_decode($role->permission,TRUE);
-					if($class == "AdminDashboard"){
-						$this->role_info 	= array("r"=>1,"u"=>1);
+					if($class == 'AdminDashboard'){
+						$this->role_info 	= array('r'=>1,'u'=>1);
 					}else{
 						$this->role_info 	= $role->permission[$class];
 					}
 					
-					if($this->role_info["r"]==0){
-						alert("權限不足。",admin_url('AdminDashboard/'));
+					if($this->role_info['r']==0){
+						alert('權限不足。',admin_url('AdminDashboard/'));
 						die();
 					}
 					
-					if($this->role_info["u"]==0 && in_array($method,$this->edit_method)){
-						alert("權限不足。",admin_url($class.'/'));
+					if($this->role_info['u']==0 && in_array($method,$this->edit_method)){
+						alert('權限不足。',admin_url($class.'/'));
 						die();
 					}
 					
 					$admin_menu = $this->config->item('admin_menu');
 					foreach($admin_menu as $key => $value){
-						if($key != "AdminDashboard"){
-							if(!isset($role->permission[$key]) || $role->permission[$key]["r"]==0){
+						if($key != 'AdminDashboard'){
+							if(!isset($role->permission[$key]) || $role->permission[$key]['r']==0){
 								unset($admin_menu[$key]);
 							}
 						}
 					}
+					
+					if(in_array($method,$this->edit_method)){
+						$this->log_admin_model->insert(array(
+							'admin_id' 		=> $this->login_info->id,
+							'url'	 		=> $this->uri->uri_string(),
+							'get_param'		=> json_encode($this->input->get(NULL, TRUE)),
+							'post_param'	=> json_encode($this->input->post(NULL, TRUE)),
+						));
+					}
+					
 
 					$this->menu = array(
-						"role_info"		=> $this->role_info,
-						"login_info"	=> $this->login_info,
-						"active"		=> $this->router->fetch_class(),
-						"menu"			=> $admin_menu,
+						'role_info'		=> $this->role_info,
+						'login_info'	=> $this->login_info,
+						'active'		=> $this->router->fetch_class(),
+						'menu'			=> $admin_menu,
 					);
 				}
 			}
