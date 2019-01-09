@@ -1,8 +1,20 @@
 
 	<script>
-	
-		function form_onsubmit(){
-			return true;
+		function withdraw_by_admin(id,target_no){
+			var x 	= prompt("請輸入金額","0");
+			var amount = parseInt(x);
+			if(amount>31){
+				$.ajax({
+					url: '<?=admin_url('passbook/withdraw_by_admin?id='.$virtual_account->id)?>&amount='+amount,
+					type: 'GET',
+					success: function(response) {
+						alert(response);
+						location.reload();
+					}
+				});
+			}else{
+				alert("金額過小");
+			}
 		}
 	</script>
 
@@ -19,7 +31,36 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							虛擬帳戶：<?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'平台帳號' ?>
+							<table>
+								<? if ($virtual_account->virtual_account == PLATFORM_VIRTUAL_ACCOUNT){?>
+								<tr>
+									<td>虛擬帳戶：：</td>
+									<td><?=PLATFORM_VIRTUAL_ACCOUNT ?></td>	
+								</tr>
+								<tr>
+									<td>戶名：</td>
+									<td>平台虛擬帳號</td>
+									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+								</tr>
+								<? }else{ ?>
+								<tr>
+									<td>虛擬帳戶：：</td>
+									<td><?=isset($virtual_account->virtual_account)?$virtual_account->virtual_account:'' ?></td>
+									<td></td><td></td>
+								</tr>
+								<tr>	
+									<td>戶名：</td>
+									<td><?=isset($user_info->name)?$user_info->name:'' ?></td>
+									<td>會員ID:<?=isset($virtual_account->user_id)?$virtual_account->user_id:'' ?></td>
+									<td><?=isset($virtual_account->investor)?$investor_list[$virtual_account->investor]:'' ?></td>
+								</tr>
+								<? } ?>
+								<? if(isset($_GET['id']) && $_GET['id']==$virtual_account->id){?>
+								<tr>	
+									<td><button type="button" onclick="withdraw_by_admin();" class="btn btn-default btn-md">後台提領</button></td>
+								</tr>
+								<? } ?>
+							</table>
                         </div>
                         <div class="panel-body">
                             <div class="row">
