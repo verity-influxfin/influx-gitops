@@ -438,7 +438,7 @@ class Payment_lib{
 								"plus"			=> "+",
 								"amount"		=> $amount,//靠左補0
 								"bankcode_to"	=> CATHAY_BANK_CODE.CATHAY_BRANCH_CODE,
-								"bankacc_to"	=> '015035006602',
+								"bankacc_to"	=> CATHAY_COMPANY_ACCOUNT,
 								"tax_to"		=> CATHAY_CUST_ID,
 								"name_to"		=> nf_to_wf(CATHAY_COMPANY_NAME),
 								"alert_to"		=> '0',

@@ -258,7 +258,7 @@ class Transaction_lib{
 						"bank_account_from"	=> PLATFORM_VIRTUAL_ACCOUNT,
 						"amount"			=> intval($withdraw->amount),
 						"user_to"			=> $withdraw->user_id,
-						"bank_account_to"	=> '015035006602',
+						"bank_account_to"	=> CATHAY_COMPANY_ACCOUNT,
 						"status"			=> 2
 					);
 
