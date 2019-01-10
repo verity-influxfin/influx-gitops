@@ -293,4 +293,25 @@
 	function mb_str_split($str){
 		return preg_split('/(?<!^)(?!$)/u', $str );
 	}
+	//民國轉西元
+	function r_to_ad($str){
+		
+		if($str == date('Y-m-d',strtotime($str))){
+			return $str;
+		}
+		
+		if($str == preg_replace('/[^\d]/','',$str)){
+			return date('Y-m-d',strtotime($str+19110000));
+		}else{
+			$arr = [];
+			preg_match_all('/\d+/',$str,$arr);
+			if($arr[0] && count($arr[0])==3){
+				$y = $arr[0][0]+1911;
+				$m = $arr[0][1];
+				$d = $arr[0][2];
+				return date('Y-m-d',strtotime("$y-$m-$d"));
+			}
+			return false;
+		}
+	}
 ?>

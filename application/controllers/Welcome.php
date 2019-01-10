@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Welcome extends CI_Controller {
 	
 	function index(){
+		
 		$id 	= 'CO68566881';
 		$key 	= '1a1de1cc3efc7cecb50bcc7216c352c8';
 		$time 	= time();

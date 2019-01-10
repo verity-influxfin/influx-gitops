@@ -103,38 +103,46 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function idcard_verify($info = array()){
+	public function idcard_verify($info = []){
 		if($info && $info->status ==0 && $info->certification_id==1){
 			$this->CI->load->library('Faceplusplus_lib');
 			$this->CI->load->library('Ocr_lib');
-			$content		= json_decode($info->content,true);
-			$person_token 	= $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-			$front_token 	= $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
-			if(!$person_token){
-				$rotate = $this->face_rotate($content['person_image'],$info->user_id);
-				if($rotate){
-					$content['person_image'] 	= $rotate['url'];
-					$person_token				= $rotate['count'];
-				}
-			}
-			if(!$front_token){
-				$rotate = $this->face_rotate($content['front_image'],$info->user_id);
-				if($rotate){
-					$content['front_image'] 	= $rotate['url'];
-					$front_token				= $rotate['count'];
-				}
-			}
-			
-			$ocr = array();
+			$content				 = json_decode($info->content,true);
+			$person_token 			 = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+			$front_token 			 = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+			$ocr 					 = [];
 			$ocr['front_image'] 	 = $this->CI->ocr_lib->identify($content['front_image']		,1031);
 			$ocr['back_image'] 		 = $this->CI->ocr_lib->identify($content['back_image']		,1032);
-			$ocr['healthcard_image'] = $this->CI->ocr_lib->identify($content['healthcard_image']	,1030);
-			
+			$ocr['healthcard_image'] = $this->CI->ocr_lib->identify($content['healthcard_image'],1030);
+			$error 		= '';
+			$check_list = ['name','id_number','id_card_date','birthday','address'];
+			$check_name = ['姓名','身分證字號','發證日','生日','地址'];
+			foreach($check_list as $k => $v){
+				if(in_array($v,['birthday','id_card_date'])){
+					$content[$v] = r_to_ad($content[$v]);
+					if(isset($ocr['front_image'][$v])){
+						$ocr['front_image'][$v] 	= r_to_ad($ocr['front_image'][$v]);
+					}
+					if(isset($ocr['healthcard_image'][$v])){
+						$ocr['healthcard_image'][$v] = r_to_ad($ocr['healthcard_image'][$v]);
+					}
+				}
+				if(isset($ocr['front_image'][$v]) && trim($content[$v]) != trim($ocr['front_image'][$v]) ){
+					$error .= '身分證'.$check_name[$k].'錯誤<br>';
+				}
+				if(isset($ocr['back_image'][$v]) && trim($content[$v]) != trim($ocr['back_image'][$v]) ){
+					$error .= '身分證'.$check_name[$k].'錯誤<br>';
+				}
+				if(isset($ocr['healthcard_image'][$v]) && trim($content[$v]) != trim($ocr['healthcard_image'][$v]) ){
+					$error .= '健保卡'.$check_name[$k].'錯誤<br>';
+				}
+			}
+
 			$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
 			$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
 			$answer			= array();
 			$remark			= array(
-				'error'			=> array(),
+				'error'			=> $error,
 				'OCR'			=> $ocr,
 				'face'			=> array(),
 				'face_count'	=> array(
@@ -142,7 +150,7 @@ class Certification_lib{
 					'front_count'	=> $front_count
 				),
 			);
-			$status 		= 3;
+
 			if($person_count > 0 && $front_count > 0 ){
 				foreach($person_token as $token){
 					$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
@@ -150,23 +158,30 @@ class Certification_lib{
 				sort($answer);
 				$remark['face'] = $answer;
 				if(count($answer)==2){
-					if($answer[0]>=60 && $answer[1]>=90){
-						//$this->set_success($info->id);
-					}else{
-						$remark['error'] = '人臉比對分數不足';
+					if($answer[0]<60 || $answer[1]<90){
+						$remark['error'] .= '人臉比對分數不足';
 					}
 				}else{
-					$remark['error'] = '人臉數量錯誤';
+					$remark['error'] .= '人臉數量錯誤';
 				}
 			}else{
-				$remark['error'] = '人臉數量錯誤';
+				$remark['error'] .= '人臉數量錯誤';
 			}
 
-			$this->CI->user_certification_model->update($info->id,array(
-				'status'	=> $status,
-				'remark'	=> json_encode($remark),
-				'content'	=> json_encode($content),
-			));
+			if($remark['error']==''){
+				$this->CI->user_certification_model->update($info->id,array(
+					'remark'	=> json_encode($remark),
+					'content'	=> json_encode($content),
+				));
+				$this->set_success($info->id);
+			}else{
+				$this->CI->user_certification_model->update($info->id,array(
+					'status'	=> 3,
+					'remark'	=> json_encode($remark),
+					'content'	=> json_encode($content),
+				));
+			}
+
 			return true;
 		}
 		return false;
@@ -198,7 +213,7 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function face_rotate($url='',$user_id=0){
+	/*public function face_rotate($url='',$user_id=0){
 		$this->CI->load->library('faceplusplus_lib');
 		$this->CI->load->library('s3_upload');
 		$image 	= file_get_contents($url);
@@ -245,7 +260,7 @@ class Certification_lib{
 			}
 		}
 		return false;
-	}
+	}*/
 	
 	private function idcard_success($info){
 		if($info){
@@ -293,13 +308,7 @@ class Certification_lib{
 						'address'			=> $content['address'],
 					);
 				}else{
-					$birthday 	= trim($content['birthday']);
 					$sex		= substr($content['id_number'],1,1)==1?'M':'F';
-					if(strlen($birthday)==7 || strlen($birthday)==6){
-						$birthday = $birthday + 19110000;
-						$birthday = date('Y-m-d',strtotime($birthday));
-						
-					}
 					$user_info = array(
 						'name'				=> $content['name'],
 						'sex'				=> $sex,
@@ -307,7 +316,7 @@ class Certification_lib{
 						'id_card_date'		=> $content['id_card_date'],
 						'id_card_place'		=> $content['id_card_place'],
 						'address'			=> $content['address'],
-						'birthday'			=> $birthday,
+						'birthday'			=> $content['birthday'],
 					);
 					
 					$virtual_data[] = array(
