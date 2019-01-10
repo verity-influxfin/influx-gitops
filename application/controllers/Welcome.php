@@ -11,7 +11,7 @@ class Welcome extends CI_Controller {
 		echo $id.'<br>';
 		echo $time.'<br>';
 		
-		$content = 'toy';
+		$content = '';
 		
 		$authorization = SHA1($id.$content.$time);
 		$authorization = MD5($authorization.$key);

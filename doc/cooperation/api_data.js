@@ -88,14 +88,6 @@ define({ "api": [
     "groupTitle": "Cooperation",
     "error": {
       "fields": {
-        "400": [
-          {
-            "group": "400",
-            "optional": false,
-            "field": "RequiredArguments",
-            "description": "<p>Required Arguments.</p>"
-          }
-        ],
         "401": [
           {
             "group": "401",
@@ -130,11 +122,6 @@ define({ "api": [
         {
           "title": "TimeOut",
           "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "RequiredArguments",
-          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
           "type": "json"
         },
         {
@@ -639,6 +626,202 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/order/product",
+    "title": "Product List",
+    "group": "Order",
+    "version": "0.1.0",
+    "name": "GetOrderProduct",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Product ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Product Name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "rank",
+            "description": "<p>Rank</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>Number Of Instalment</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "loan_range_s",
+            "description": "<p>Minimum Loan Amount</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "loan_range_e",
+            "description": "<p>Maximum Loan Amount</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_s",
+            "description": "<p>Minimum Interest Rate(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_e",
+            "description": "<p>Maximum Interest Rate(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "charge_platform",
+            "description": "<p>Platform Fee Rate(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "charge_platform_min",
+            "description": "<p>Minimum Platform Fee</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"name\":\"學生區\",\n\t\t\t\t\"description\":\"學生區\",\n\t\t\t\t\"rank\":\"0\",\n\t\t\t\t\"loan_range_s\":\"5000\",\n\t\t\t\t\"loan_range_e\":\"120000\",\n\t\t\t\t\"interest_rate_s\":\"12\",\n\t\t\t\t\"interest_rate_e\":\"20\",\n\t\t\t\t\"charge_platform\":\"3\",\n\t\t\t\t\"charge_platform_min\":\"500\",\n\t\t\t\t\"instalment\": [\n\t\t\t\t\t3,\n\t\t\t\t    6,\n\t\t\t\t    12,\n\t\t\t\t    18,\n\t\t\t\t    24\n\t\t\t\t  ]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order",
+    "error": {
+      "fields": {
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/order/schedule",
     "title": "Repayment Schedule",
     "group": "Order",
@@ -694,9 +877,10 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Number",
+            "size": "5000-300000",
             "optional": false,
             "field": "amount",
-            "description": "<p>總金額</p>"
+            "description": "<p>金額</p>"
           },
           {
             "group": "Parameter",
@@ -713,17 +897,10 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "json",
+            "type": "String",
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>Request Token</p>"
           },
           {
             "group": "Success 200",
@@ -1000,9 +1177,10 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Number",
+            "size": "5000-300000",
             "optional": false,
             "field": "amount",
-            "description": "<p>總金額</p>"
+            "description": "<p>金額</p>"
           },
           {
             "group": "Parameter",
@@ -1027,14 +1205,14 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "item_count",
             "description": "<p>商品數量，多項商品時，以逗號分隔</p>"
           },
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "item_price",
             "description": "<p>商品單價，多項商品時，以逗號分隔</p>"
@@ -1078,7 +1256,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n   {\n     \"result\": \"SUCCESS\",\n\t\t\"merchant_order_no\": \"A123456789\",\n\t\t\"order_no\": \"20180405113558632\",\n     \"request_token\": \"fcea920f7412b5da7be0cf42b8c93759\"\n   }",
+          "content": "    HTTP/1.1 200 OK\n   {\n     \"result\": \"SUCCESS\",\n\t\t\"merchant_order_no\": \"123456789\",\n\t\t\"order_no\": \"20180405113558632\",\n     \"request_token\": \"fcea920f7412b5da7be0cf42b8c93759\"\n   }",
           "type": "json"
         }
       ]

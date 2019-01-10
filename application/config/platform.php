@@ -35,7 +35,7 @@ $config['admin_menu'] = array(
 	'Judicialperson' 	=> array(
 		'parent_name'				=> '法人帳號管理',
 		'index?status=0'			=> '申請列表',
-		'cooperation'				=> '經銷商申請',
+		'cooperation?cooperation=2'	=> '經銷商申請',
 	),
 	'Certification' => array(
 		'parent_name'				=> '認證管理',

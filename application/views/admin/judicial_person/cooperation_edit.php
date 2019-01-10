@@ -23,8 +23,8 @@
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label>申請人 ID</label>
-									<a class="fancyframe" href="<?=admin_url('User/display?id='.$data->company_user_id) ?>" >
-										<p><?=isset($data->company_user_id)?$data->company_user_id:"" ?></p>
+									<a class="fancyframe" href="<?=admin_url('User/display?id='.$data->user_id) ?>" >
+										<p><?=isset($data->user_id)?$data->user_id:"" ?></p>
 									</a>
 								</div>
 								<div class="form-group">
@@ -37,7 +37,7 @@
 								</div>
 								<div class="form-group">
 									<label>IP列表</label><br>
-									<textarea style="width:100%" class="form-control-static"><?=isset($data->server_ip)?$data->server_ip:"" ?></textarea>
+									<textarea style="width:100%" class="form-control-static"><?=isset($data->cooperation_server_ip)?$data->cooperation_server_ip:"" ?></textarea>
 								</div>	
 								<div class="form-group">
 									<label>備註</label>
@@ -47,9 +47,9 @@
 								<form role="form" method="post">
 									<fieldset>
 										<div class="form-group">
-											<select id="status" name="status" class="form-control" onchange="check_fail();" >
-												<? foreach($status_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=$data->status==$key?"selected":""?>><?=$value?></option>
+											<select id="cooperation" name="cooperation" class="form-control" onchange="check_fail();" >
+												<? foreach($cooperation_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=$data->cooperation==$key?"selected":""?>><?=$value?></option>
 												<? } ?>
 											</select>
 											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >

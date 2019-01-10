@@ -5562,7 +5562,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "status",
-            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗</p>"
+            "description": "<p>狀態 0:未開通 1:已開通 2:審核中</p>"
           }
         ]
       },
@@ -5705,7 +5705,14 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
+            "optional": false,
+            "field": "cooperation",
+            "description": "<p>經銷商功能 0:未開通 1:已開通 2:審核中</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
             "optional": false,
             "field": "status",
             "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗</p>"
@@ -5989,6 +5996,53 @@ define({ "api": [
             "optional": false,
             "field": "tax_id",
             "description": "<p>公司統一編號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "cooperation",
+            "defaultValue": "0",
+            "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "server_ip",
+            "description": "<p>綁定伺服器IP，多組時，以逗號分隔(經銷商必填)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": true,
+            "field": "facade_image",
+            "description": "<p>店門正面照(經銷商必填)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": true,
+            "field": "store_image",
+            "description": "<p>店內正面照(經銷商必填)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": true,
+            "field": "front_image",
+            "description": "<p>銀行流水帳正面(經銷商必填)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "file",
+            "optional": true,
+            "field": "passbook_image",
+            "description": "<p>銀行流水帳內頁(經銷商必填)</p>"
           }
         ]
       }

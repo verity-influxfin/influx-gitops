@@ -51,6 +51,92 @@ class Order extends REST_Controller {
 			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
     }
+	
+	/**
+     * @api {get} /order/product Product List
+     * @apiGroup Order
+	 * @apiVersion 0.1.0
+	 * @apiName GetOrderProduct
+	 * @apiHeader {String} Authorization Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)
+	 * @apiHeaderExample {String} Authorization
+	 * Bearer fcea920f7412b5da7be0cf42b8c93759
+	 * @apiHeader {String} CooperationID CooperationID
+	 * @apiHeaderExample {String} CooperationID
+	 * CO12345678
+	 * @apiHeader {Number} Timestamp Unix Timestamp
+	 * @apiHeaderExample {Number} Timestamp
+	 * 1546932175
+     *
+     * @apiSuccess {String} result SUCCESS
+	 * @apiSuccess {String} id Product ID
+	 * @apiSuccess {String} name Product Name
+	 * @apiSuccess {String} description Description
+	 * @apiSuccess {String} rank Rank
+	 * @apiSuccess {Object} instalment Number Of Instalment
+	 * @apiSuccess {Number} loan_range_s Minimum Loan Amount
+	 * @apiSuccess {Number} loan_range_e Maximum Loan Amount
+	 * @apiSuccess {Number} interest_rate_s Minimum Interest Rate(%)
+	 * @apiSuccess {Number} interest_rate_e Maximum Interest Rate(%)
+	 * @apiSuccess {Number} charge_platform Platform Fee Rate(%)
+	 * @apiSuccess {Number} charge_platform_min Minimum Platform Fee
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 				{
+     * 				"id":"1",
+     * 				"name":"學生區",
+     * 				"description":"學生區",
+     * 				"rank":"0",
+     * 				"loan_range_s":"5000",
+     * 				"loan_range_e":"120000",
+     * 				"interest_rate_s":"12",
+     * 				"interest_rate_e":"20",
+     * 				"charge_platform":"3",
+     * 				"charge_platform_min":"500",
+	 * 				"instalment": [
+     *					3,
+     * 				    6,
+     * 				    12,
+     * 				    18,
+     * 				    24
+     * 				  ]
+     * 				}
+     * 			]
+     * 		}
+     * }
+     * 
+	 * @apiUse AuthorizationRequired
+	 * @apiUse TimeOut
+	 * @apiUse CooperationNotFound
+     */
+	 	
+	public function product_get()
+    {
+		$list			= array();
+		$this->load->model('loan/product_model');
+		$product_list 	= $this->product_model->order_by('rank','asc')->get_many_by(array('type'=>2 ,'status' => 1 ));
+		if(!empty($product_list)){
+			foreach($product_list as $key => $value){
+				$list[] = array(
+					'id' 					=> $value->id,
+					'name' 					=> $value->name,
+					'description' 			=> $value->description,
+					'rank'					=> $value->rank,
+					'loan_range_s'			=> $value->loan_range_s,
+					'loan_range_e'			=> $value->loan_range_e,
+					'interest_rate_s'		=> $value->interest_rate_s,
+					'interest_rate_e'		=> $value->interest_rate_e,
+					'charge_platform'		=> PLATFORM_FEES,
+					'charge_platform_min'	=> PLATFORM_FEES_MIN,
+					'instalment'			=> json_decode($value->instalment,TRUE)
+				);
+			}
+		}
+		$data['list'] = $list;
+		$this->response(array('result' => 'SUCCESS','data' => $data ));
+    }
 
 	/**
      * @api {get} /order/schedule Repayment Schedule
@@ -67,11 +153,11 @@ class Order extends REST_Controller {
 	 * @apiHeaderExample {Number} Timestamp
 	 * 1546932175
 	 *
-	 * @apiParam {Number} amount 總金額
+	 * @apiParam {Number} product_id Product ID
+	 * @apiParam {Number{5000-300000}} amount 金額
 	 * @apiParam {Number} instalment 期數
      *
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccess {String} request_token Request Token
+     * @apiSuccess {String} result SUCCESS
 	 * @apiSuccess {json} amortization_schedule 預計還款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
@@ -170,12 +256,13 @@ class Order extends REST_Controller {
 	 * @apiHeaderExample {Number} Timestamp
 	 * 1546932175
 	 *
-	 * @apiParam {Number} amount 總金額
+	 * @apiParam {Number} product_id Product ID
+	 * @apiParam {Number{5000-300000}} amount 金額
 	 * @apiParam {Number} instalment 期數
 	 * @apiParam {String} merchant_order_no 自訂編號
 	 * @apiParam {String} item_name 商品名稱，多項商品時，以逗號分隔
-	 * @apiParam {Number} item_count 商品數量，多項商品時，以逗號分隔
-	 * @apiParam {Number} item_price 商品單價，多項商品時，以逗號分隔
+	 * @apiParam {String} item_count 商品數量，多項商品時，以逗號分隔
+	 * @apiParam {String} item_price 商品單價，多項商品時，以逗號分隔
 	 *
      * @apiSuccess {json} result SUCCESS
      * @apiSuccess {String} merchant_order_no 廠商自訂編號
@@ -185,7 +272,7 @@ class Order extends REST_Controller {
 	 *     HTTP/1.1 200 OK
      *    {
      *      "result": "SUCCESS",
-	 *		"merchant_order_no": "A123456789",
+	 *		"merchant_order_no": "123456789",
 	 *		"order_no": "20180405113558632",
      *      "request_token": "fcea920f7412b5da7be0cf42b8c93759"
      *    }

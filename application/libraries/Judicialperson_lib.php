@@ -51,7 +51,10 @@ class Judicialperson_lib{
 						);
 						$this->CI->load->model('user/virtual_account_model');
 						$this->CI->virtual_account_model->insert_many($virtual_data);
-						$this->CI->judicial_person_model->update($person_id,array('status' => 1));
+						$this->CI->judicial_person_model->update($person_id,array(
+							'status' 			=> 1,
+							'company_user_id'	=> $user_id
+						));
 						return true;
 					}
 				}
@@ -75,26 +78,34 @@ class Judicialperson_lib{
 	}
 	
 	//經銷商審核成功
-	function cooperation_success($cooperation_id,$admin_id=0){
-		if($cooperation_id){
-			$cooperation = $this->CI->cooperation_model->get($cooperation_id);
-			if( $cooperation && $cooperation->status == 0){
-				$this->CI->cooperation_model->update($cooperation_id,array('status' => 1));
-				return true;
+	function cooperation_success($person_id,$admin_id=0){
+		if($person_id){
+			$judicial_person = $this->CI->judicial_person_model->get($person_id);
+			if( $judicial_person && $judicial_person->status == 1 && $judicial_person->cooperation == 2){
+				$this->CI->judicial_person_model->update($person_id,['cooperation'=>1]);
+				$param	= array(
+					'company_user_id'	=> $judicial_person->company_user_id,
+					'server_ip'			=> $judicial_person->cooperation_server_ip,
+					'status'			=> 1,
+					'cooperation_id'	=> 'CO'.$judicial_person->tax_id,
+					'cooperation_key'	=> SHA1(COOPER_KEY.$judicial_person->tax_id.time())
+				);
+				$rs = $this->CI->cooperation_model->insert($param);
+				return $rs;
 			}
 		}
 		return false;
 	}
 
 	//經銷商審核失敗
-	function cooperation_failed($cooperation_id,$admin_id=0){
-		if($cooperation_id){
-			$cooperation = $this->CI->cooperation_model->get($cooperation_id);
-			if( $cooperation && $cooperation->status == 0){
+	function cooperation_failed($person_id,$admin_id=0){
+		if($person_id){
+			$judicial_person = $this->CI->judicial_person_model->get($person_id);
+			if( $judicial_person && $judicial_person->status == 1 && $judicial_person->cooperation == 2){
 				$param = array(
-					'status'	=> 2,
+					'cooperation'	=> 0,
 				);
-				return $this->CI->cooperation_model->update($cooperation_id,$param);
+				return $this->CI->judicial_person_model->update($person_id,$param);
 			}
 		}
 		return false;

@@ -37,10 +37,10 @@
 				}
 
 				function showChang(){
-					var company_user_id = $('#company_user_id').val();
+					var user_id = $('#user_id').val();
 					var tax_id 			= $('#tax_id').val();
-					var status 			= $('#status :selected').val();
-					top.location = './cooperation?status='+status+'&company_user_id='+company_user_id+'&tax_id='+tax_id;
+					var cooperation 	= $('#cooperation :selected').val();
+					top.location = './cooperation?cooperation='+cooperation+'&user_id='+user_id+'&tax_id='+tax_id;
 				}
 			</script>
             <!-- /.row -->
@@ -51,7 +51,7 @@
 							<table>
 								<tr>
 									<td>法人會員ID：</td>
-									<td><input type="text" value="<?=isset($_GET['company_user_id'])&&$_GET['company_user_id']!=""?$_GET['company_user_id']:""?>" id="company_user_id" /></td>	
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
 									<td>統一編號：</td>
 									<td><input type="text" value="<?=isset($_GET['tax_id'])&&$_GET['tax_id']!=""?$_GET['tax_id']:""?>" id="tax_id" /></td>
 									<td></td>
@@ -59,10 +59,10 @@
 								<tr>
 									<td>狀態：</td>
 									<td>
-										<select id="status">
+										<select id="cooperation">
 											<option value="" >請選擇</option>
-											<? foreach($status_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+											<? foreach($cooperation_list as $key => $value){ ?>
+												<option value="<?=$key?>" <?=isset($_GET['cooperation'])&&$_GET['cooperation']!=""&&intval($_GET['cooperation'])==intval($key)?"selected":""?>><?=$value?></option>
 											<? } ?>
 										</select>
 									</td>
@@ -98,10 +98,10 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list">
                                             <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
-                                            <td><?=isset($value->company_user_id)?$value->company_user_id:"" ?></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
 											<td><?=isset($value->remark)?$value->remark:"" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-											<? if($value->status==0){ ?>
+                                            <td><?=isset($cooperation_list[$value->cooperation])?$cooperation_list[$value->cooperation]:"" ?>
+											<? if($value->cooperation==2){ ?>
 												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
 												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
 											<? } ?>

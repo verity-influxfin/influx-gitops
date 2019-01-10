@@ -11,6 +11,12 @@ class Judicial_person_model extends MY_Model
 		2 =>	"審核失敗"
 	);
 	
+	public $cooperation_list   = array(
+		0 =>	"未開通",
+		1 =>	"已開通",
+		2 =>	"審核中"
+	);
+	
 	public function __construct()
 	{
 		parent::__construct();

@@ -113,33 +113,27 @@ class Judicialperson extends MY_Admin_Controller {
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= array();
 		$list		= array();
-		$fields 	= ['status','company_user_id','tax_id'];
+		
+		$fields 	= ['cooperation','user_id','tax_id'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
-				if($field=='tax_id'){
-					$tax_user = $this->user_model->get_by(array('id_number like'=>'%'.$input[$field].'%'));
-					if($tax_user){
-						$where['company_user_id'] = $tax_user->id;
-					}
-				}else{
-					$where[$field] = $input[$field];
-				}
+				$where[$field] = $input[$field];
 			}
 		}
 
 		if(!empty($where)){
-			$list = $this->cooperation_model->get_many_by($where);
+			$where['status'] = 1;
+			$list = $this->judicial_person_model->get_many_by($where);
 			if($list){
 				foreach($list as $key => $value){
-					$user_info 	= $this->user_model->get($value->company_user_id);
-					$list[$key]->user_name 	= $user_info?$user_info->name:"";
-					$list[$key]->tax_id 	= $user_info?$user_info->id_number:"";
+					$user_info 	= $this->user_model->get($value->user_id);
+					$list[$key]->user_name = $user_info?$user_info->name:"";
 				}
 			}
 		}
 
 		$page_data['list'] 				= $list;
-		$page_data['status_list'] 		= $this->cooperation_model->status_list;
+		$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -152,17 +146,17 @@ class Judicialperson extends MY_Admin_Controller {
 		$get 		= $this->input->get(NULL, TRUE);
 		$id 		= isset($get['id'])?intval($get['id']):0;
 		if($id){
-			$info = $this->cooperation_model->get($id);
+			$info = $this->judicial_person_model->get($id);
 			if($info){
-				$user_info 	= $this->user_model->get($info->company_user_id);
+				$user_info 					= $this->user_model->get($info->user_id);
 				$this->load->library('Gcis_lib'); 
-				$page_data['company_data'] 	= $this->gcis_lib->account_info($user_info->id_number);
-				$page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($user_info->id_number);
+				$page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
+				$page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
 				$page_data['user_info'] 	= $user_info;
 				$page_data['data'] 			= $info;
-				$page_data['content'] 		= json_decode($info->content,true);
-				$page_data['status_list'] 	= $this->cooperation_model->status_list;
-				$page_data['company_type'] 	= $this->config->item('company_type');
+				$page_data['content'] 		= json_decode($info->cooperation_content,true);
+				$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
+				$page_data['company_type'] 		= $this->config->item('company_type');
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title',$this->menu);
 				$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
@@ -179,8 +173,8 @@ class Judicialperson extends MY_Admin_Controller {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
-			$info = $this->cooperation_model->get($id);
-			if($info && $info->status==0){
+			$info = $this->judicial_person_model->get($id);
+			if($info && $info->status==1 && $info->cooperation==2){
 				$this->judicialperson_lib->cooperation_success($id,$this->login_info->id);
 				echo '更新成功';die();
 			}else{
@@ -196,8 +190,8 @@ class Judicialperson extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		$remark = isset($get['remark'])?$get['remark']:'';
 		if($id){
-			$info = $this->cooperation_model->get($id);
-			if($info && $info->status==0){
+			$info = $this->judicial_person_model->get($id);
+			if($info && $info->status==1 && $info->cooperation==2){
 				$this->judicialperson_lib->cooperation_failed($id,$this->login_info->id,$remark);
 				echo '更新成功';die();
 			}else{

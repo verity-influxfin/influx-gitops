@@ -62,7 +62,8 @@ class Judicialperson extends REST_Controller {
 	 * @apiSuccess {String} company 公司名稱
 	 * @apiSuccess {String} tax_id 公司統一編號
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:審核中 1:審核通過 2:審核失敗
+	 * @apiSuccess {Number} cooperation 經銷商功能 0:未開通 1:已開通 2:審核中
+	 * @apiSuccess {Number} status 狀態 0:審核中 1:審核通過 2:審核失敗
 	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -102,6 +103,7 @@ class Judicialperson extends REST_Controller {
 					'company' 			=> $value->company,
 					'tax_id' 			=> $value->tax_id,
 					'remark' 			=> $value->remark,
+					'cooperation' 		=> $value->cooperation,
 					'status' 			=> $value->status,
 					'created_at' 		=> $value->created_at
 				);
@@ -119,6 +121,12 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number=1,2,3,4} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
      * @apiParam {String{8}} tax_id 公司統一編號
+     * @apiParam {Number=0,1} [cooperation=0] 0:法人帳號 1:法人經銷商帳號
+	 * @apiParam {String} [server_ip] 綁定伺服器IP，多組時，以逗號分隔(經銷商必填)
+	 * @apiParam {file} [facade_image] 店門正面照(經銷商必填)
+	 * @apiParam {file} [store_image] 店內正面照(經銷商必填)
+	 * @apiParam {file} [front_image] 銀行流水帳正面(經銷商必填)
+	 * @apiParam {file} [passbook_image] 銀行流水帳內頁(經銷商必填)
 	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -180,16 +188,16 @@ class Judicialperson extends REST_Controller {
 				$param[$field] = $input[$field];
 			}
 		}
-		
+		$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
 		if($param['tax_id'] && strlen($param['tax_id'])==8){
 
 			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
+			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 			
 			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==""){
+			if(empty($this->user_info->email) || $this->user_info->email==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
 		
@@ -212,12 +220,51 @@ class Judicialperson extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => COMPANY_EXIST ));
 			}
 			
-			$insert = $this->judicial_person_model->insert($param);
-			if($insert){
+			if($param['cooperation']==2){
+				if (empty($input['server_ip'])) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+				//上傳檔案欄位
+				$content		= [];
+				$this->load->library('S3_upload');
+				$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
+				foreach ($file_fields as $field) {
+					if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
+						$image 	= $this->s3_upload->image($_FILES,$field,$this->user_info->id,'cooperation');
+						if($image){
+							$content[$field] = $image;
+						}else{
+							$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+						}
+					}else{
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					}
+				}
+				
+				$param['cooperation_content'] 	= json_encode($content);
+				$param['cooperation_server_ip'] = trim($input['server_ip']);
+			}
+
+			
+			$exist = $this->judicial_person_model->get_by(array(
+				'user_id'=> $user_id,
+				'tax_id' => $param['tax_id'],
+				'status' => 2
+			));
+			
+			if($exist){
+				$param['status'] = 0;
+				$rs = $this->judicial_person_model->update($exist->id,$param);
+			}else{
+				$rs = $this->judicial_person_model->insert($param);
+			}
+			
+			if($rs){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
+			
 		}
 		
 		$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -322,7 +369,11 @@ class Judicialperson extends REST_Controller {
 							$this->load->library('notification_lib'); 
 							$this->notification_lib->first_login($user_info->id,$investor);
 						}
-						$this->response(array('result' => 'SUCCESS', 'data' => array( 'token' => $request_token,'expiry_time'=>$token->expiry_time,'first_time'=>$first_time) ));
+						$this->response(array('result' => 'SUCCESS', 'data' => array( 
+							'token' 		=> $request_token,
+							'expiry_time'	=> $token->expiry_time,
+							'first_time'	=> $first_time
+						)));
 					}
 				}
 				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id);
@@ -592,17 +643,15 @@ class Judicialperson extends REST_Controller {
     {
 		$this->not_incharge();
 		$input 	= $this->input->post(NULL, TRUE);
-		$this->load->model('user/cooperation_model');
 		$this->load->library('S3_upload');
-		
-		$cooperation = $this->cooperation_model->get_by(array(
-			'company_user_id'	=> $this->user_info->id,
+
+		$judicial_person = $this->judicial_person_model->get_by(array(
+			'company_user_id' 	=> $this->user_info->id,
 		));
-		
-		if($cooperation && $cooperation->status != 2){
+		if($judicial_person && $judicial_person->cooperation != 0){
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
 		}
-		
+
 		if (empty($input['server_ip'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
@@ -623,20 +672,13 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 
-		if($cooperation){
-			$rs = $this->cooperation_model->update($cooperation->id,array(
-				'status'	=> 0,
-				'content'	=> json_encode($content)
-			));
-		}else{
+		if($judicial_person){
 			$param	= array(
-				'company_user_id'	=> $this->user_info->id,
-				'content'			=> json_encode($content),
-				'server_ip'			=> trim($input['server_ip']),
-				'cooperation_id'	=> 'CO'.$this->user_info->id_number,
-				'cooperation_key'	=> SHA1(COOPER_KEY.$this->user_info->id_number.time())
+				'cooperation'			=> 2,
+				'cooperation_content'	=> json_encode($content),
+				'cooperation_server_ip'	=> trim($input['server_ip']),
 			);
-			$rs = $this->cooperation_model->insert($param);
+			$rs = $this->judicial_person_model->update($judicial_person->id,$param);
 		}
 		
 		if($rs){
@@ -657,7 +699,7 @@ class Judicialperson extends REST_Controller {
      * @apiSuccess {json} result SUCCESS
 	 * @apiSuccess {String} server_ip 綁定伺服器IP
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:審核中 1:審核通過 2:審核失敗
+	 * @apiSuccess {String} status 狀態 0:未開通 1:已開通 2:審核中
      * @apiSuccessExample {json} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -684,17 +726,16 @@ class Judicialperson extends REST_Controller {
 	public function cooperation_get()
     {
 		$this->not_incharge();
-		$this->load->model('user/cooperation_model');
 
-		
-		$cooperation = $this->cooperation_model->get_by(array(
-			'company_user_id'	=> $this->user_info->id,
+		$judicial_person = $this->judicial_person_model->get_by(array(
+			'company_user_id' 	=> $this->user_info->id,
 		));
-		if($cooperation){
+		
+		if($judicial_person){
 			$data = array(
-				'server_ip'	=> $cooperation->server_ip,
-				'status'	=> $cooperation->status,
-				'remark'	=> $cooperation->remark,
+				'server_ip'	=> $judicial_person->cooperation_server_ip,
+				'status'	=> $judicial_person->cooperation,
+				'remark'	=> $judicial_person->remark,
 			);
 		}else{
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));

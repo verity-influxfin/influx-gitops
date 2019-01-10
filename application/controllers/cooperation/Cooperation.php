@@ -129,7 +129,6 @@ class Cooperation extends REST_Controller {
      *
 	 * @apiUse AuthorizationRequired
 	 * @apiUse TimeOut
-	 * @apiUse RequiredArguments
 	 * @apiUse CooperationNotFound
 	 *
      */
