@@ -8924,12 +8924,6 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "408",
-            "description": "<p>未完成預先申請</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
           },
@@ -8956,11 +8950,6 @@ define({ "api": [
       "examples": [
         {
           "title": "401",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "408",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
           "type": "Object"
         },
@@ -9143,12 +9132,6 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "408",
-            "description": "<p>未完成預先申請</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
           },
@@ -9169,11 +9152,6 @@ define({ "api": [
       "examples": [
         {
           "title": "401",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "408",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
           "type": "Object"
         },

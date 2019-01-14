@@ -13,10 +13,12 @@
 	"require": {
 		"php": ">=5.3.7",
 		"aws/aws-sdk-php": "3.*",
-		"tecnickcom/tcpdf": "6.*"
+		"tecnickcom/tcpdf": "6.*",
+		"google/cloud-vision": "^0.19"
 	},
 	"suggest": {
-		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
+		"paragonie/random_compat": "Provides better randomness in PHP 5.x",
+		"ext-bcmath": "Need to support JSON deserialization"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "1.1.*",

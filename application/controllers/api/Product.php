@@ -298,13 +298,6 @@ class Product extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "401"
      *     }
-	 *
-	 * @apiError 408 未完成預先申請
-     * @apiErrorExample {Object} 408
-     *     {
-     *       "result": "ERROR",
-     *       "error": "401"
-     *     }
      */
 	 
 	public function info_get($id)

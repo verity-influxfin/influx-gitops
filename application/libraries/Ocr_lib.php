@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 class Ocr_lib
 {
 	
@@ -80,5 +81,38 @@ class Ocr_lib
 		}
 		return false;
     }
+	
+	public function google_document($url = ''){
+		$image 	 = file_get_contents($url);
+		$content = [];
+		try {
+			$imageAnnotator = new ImageAnnotatorClient();
+			$response 		= $imageAnnotator->documentTextDetection($image);
+			$annotation 	= $response->getFullTextAnnotation();
+		} catch (Exception $e) {
+			return $content;
+		}
+
+		if ($annotation) {
+			$content = [];
+			foreach ($annotation->getPages() as $page) {
+				foreach ($page->getBlocks() as $block) {
+					$block_text = '';
+					foreach ($block->getParagraphs() as $paragraph) {
+						foreach ($paragraph->getWords() as $word) {
+							foreach ($word->getSymbols() as $symbol) {
+								$block_text .= $symbol->getText();
+							}
+							$block_text .= ' ';
+						}
+						$block_text .= "\n";
+					}
+					$content[] = $block_text;
+				}
+			}
+			$imageAnnotator->close();
+		}
+		return $content; 
+	}
 	
 }

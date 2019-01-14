@@ -19,6 +19,22 @@ class Log_adminlogin_model extends MY_Model
     {
         $data['created_at'] = time();
         $data['created_ip'] = get_ip();
+		
+		$this->load->library('user_agent');
+		if ($this->agent->is_browser()){
+			$agent = $this->agent->browser().' '.$this->agent->version();
+		}elseif ($this->agent->is_robot()){
+			$agent = $this->agent->robot();
+		}elseif ($this->agent->is_mobile()){
+			$agent = $this->agent->mobile();
+		}else{
+			$agent = 'Unidentified User Agent';
+		}
+		$data['client'] = json_encode([
+			'agent'		=> $agent,
+			'platform'	=> $this->agent->platform(),
+		]);
+		
         return $data;
     } 	
 	
