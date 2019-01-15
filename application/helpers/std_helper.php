@@ -232,8 +232,7 @@
 	}
 
 	function get_entering_date() {
-		$entering_date 	= date('Y-m-d');
-		return $entering_date;
+		return date('Y-m-d');
 	}
 	
 	function entering_date_range($date='') {

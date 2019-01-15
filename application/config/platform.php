@@ -101,6 +101,78 @@ $config['company_type']= array(
 	4=> '股份有限公司',
 );
 
+//產品列表
+$config['product_list']= [
+	1 => [
+		'id'				=> 1,
+		'type'				=> 1,
+		'name'				=> '學生貸',
+		'loan_range_s'		=> 5000,
+		'loan_range_e'		=> 120000,
+		'interest_rate_s'	=> 5,
+		'interest_rate_e'	=> 20,
+		'certifications'	=> [1,2,3,4,5,6,7],
+		'instalment'		=> [3,6,12,18,24],
+		'repayment'			=> [1],
+		'description'		=> '
+普匯學生貸
+計畫留學、創業或者實現更多理想嗎？
+需要資金卻無法向銀行聲請借款嗎？
+普匯陪你一起實現夢想'
+	],
+	2 => [
+		'id'				=> 2,
+		'type'				=> 2,
+		'name'				=> '學生分期',
+		'loan_range_s'		=> 5000,
+		'loan_range_e'		=> 120000,
+		'interest_rate_s'	=> 5,
+		'interest_rate_e'	=> 20,
+		'certifications'	=> [1,2,3,4,5,6,7],
+		'instalment'		=> [3,6,12,18,24],
+		'repayment'			=> [1],
+		'description'		=> '
+普匯學生貸
+計畫留學、創業或者實現更多理想嗎？
+需要資金卻無法向銀行聲請借款嗎？
+普匯陪你一起實現夢想'
+	],
+	3 => [
+		'id'				=> 3,
+		'type'				=> 1,
+		'name'				=> '新鮮人貸',
+		'loan_range_s'		=> 10000,
+		'loan_range_e'		=> 200000,
+		'interest_rate_s'	=> 5,
+		'interest_rate_e'	=> 20,
+		'certifications'	=> [1,2,3,4,5,6,7],
+		'instalment'		=> [3,6,12,18,24],
+		'repayment'			=> [1],
+		'description'		=> '
+普匯學生貸
+計畫留學、創業或者實現更多理想嗎？
+需要資金卻無法向銀行聲請借款嗎？
+普匯陪你一起實現夢想'
+	],
+	4 => [
+		'id'				=> 4,
+		'type'				=> 2,
+		'name'				=> '新鮮人分期',
+		'loan_range_s'		=> 10000,
+		'loan_range_e'		=> 200000,
+		'interest_rate_s'	=> 5,
+		'interest_rate_e'	=> 20,
+		'certifications'	=> [1,2,3,4,5,6,7],
+		'instalment'		=> [3,6,12,18,24],
+		'repayment'			=> [1],
+		'description'		=> '
+普匯學生貸
+計畫留學、創業或者實現更多理想嗎？
+需要資金卻無法向銀行聲請借款嗎？
+普匯陪你一起實現夢想'
+	],
+];
+
 //產品型態
 $config['product_type']= array(
 	1=> '信用貸款',

@@ -30,6 +30,10 @@ class Cooperation extends REST_Controller {
 			]);
 			if($cooperation){
 				$this->cooperation_info = $cooperation;
+				$ips = explode(',',$cooperation->server_ip);
+				if(!in_array(get_ip(),$ips)){
+					$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
+				}
 			}else{
 				$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 			}
@@ -54,13 +58,25 @@ class Cooperation extends REST_Controller {
 		
 		
 		//$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
+		//$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
 		//$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
+		//$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
 		//$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
-		//$this->response(['error' =>'InsertError'],REST_Controller::CONFLICT);//409 新增錯誤
-		//$this->response(['error' =>'OrderNOExists'],REST_Controller::CONFLICT);//409 單號存在
+		//$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+		//$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
+		//$this->response(['error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
 		//$this->response(['error' =>'TimeOut'],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
     }
 
+	/**
+     * @apiDefine RequiredArguments
+	 * @apiError (400) RequiredArguments Required Arguments.
+	 * @apiErrorExample RequiredArguments
+	 *     HTTP/1.1 400 Not Found
+	 *     {
+	 *       "error": "RequiredArguments"
+	 *     }
+     */
 	/**
      * @apiDefine AuthorizationRequired
 	 * @apiError (401) AuthorizationRequired Authorization Required.
@@ -70,6 +86,15 @@ class Cooperation extends REST_Controller {
 	 *       "error": "AuthorizationRequired"
 	 *     }
      */
+	 /**
+     * @apiDefine IllegalIP
+	 * @apiError (401) IllegalIP Illegal IP Address.
+	 * @apiErrorExample IllegalIP
+	 *     HTTP/1.1 401 Not Found
+	 *     {
+	 *       "error": "IllegalIP"
+	 *     }
+     */
 	/**
      * @apiDefine TimeOut
 	 * @apiError (403) TimeOut Time Out.
@@ -77,15 +102,6 @@ class Cooperation extends REST_Controller {
 	 *     HTTP/1.1 403 Not Found
 	 *     {
 	 *       "error": "TimeOut"
-	 *     }
-     */
-	 /**
-     * @apiDefine RequiredArguments
-	 * @apiError (400) RequiredArguments Required Arguments.
-	 * @apiErrorExample RequiredArguments
-	 *     HTTP/1.1 400 Not Found
-	 *     {
-	 *       "error": "RequiredArguments"
 	 *     }
      */
 	 /**
@@ -117,7 +133,7 @@ class Cooperation extends REST_Controller {
      * @apiSuccess {String} company Company
      * @apiSuccess {String} tax_id tax ID number
 	 *
-     * @apiSuccessExample {json} Success-Response:
+     * @apiSuccessExample {Object} Success-Response:
 	 *     HTTP/1.1 200 OK
      *    {
      *      "result": "SUCCESS",
@@ -128,6 +144,7 @@ class Cooperation extends REST_Controller {
      *    }
      *
 	 * @apiUse AuthorizationRequired
+	 * @apiUse IllegalIP
 	 * @apiUse TimeOut
 	 * @apiUse CooperationNotFound
 	 *
@@ -160,13 +177,14 @@ class Cooperation extends REST_Controller {
 	 * @apiParam {String} content Content
      *
      * @apiSuccess {String} result SUCCESS
-     * @apiSuccessExample {json} Success-Response:
+     * @apiSuccessExample {Object} Success-Response:
 	 *     HTTP/1.1 200 OK
      *    {
      *      "result": "SUCCESS"
      *    }
      * 
 	 * @apiUse AuthorizationRequired
+	 * @apiUse IllegalIP
 	 * @apiUse TimeOut
 	 * @apiUse RequiredArguments
 	 * @apiUse CooperationNotFound
@@ -198,7 +216,7 @@ class Cooperation extends REST_Controller {
 		if($insert){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
-			$this->response(['error' =>'InsertError'],REST_Controller::CONFLICT);//409 新增錯誤
+			$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
 		}
     }
 	

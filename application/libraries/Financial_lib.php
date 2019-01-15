@@ -9,7 +9,7 @@ class Financial_lib{
 	
 	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1){
 		if($amount && $instalment && $rate && $repayment_type){
-			$date 	= empty($date)?date('Y-m-d'):$date;
+			$date 	= empty($date)?get_entering_date():$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
 				$rs = $this->$method($amount,$instalment,$rate,$date);

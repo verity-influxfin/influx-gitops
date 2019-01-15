@@ -3,7 +3,17 @@
 	"version": "0.1.0",
 	"description": "須註冊Pu-hey平台申請取得 CooperationID、CooperationKey",
 	"title": "Pu-hey - API Documentation",
-	"url": "https://api.influxfin.com/cooperation",
+	"url": "https://dev-api.influxfin.com/cooperation",
 	"order": [
+		"Cooperation",
+		"GetCooperationInformation",
+		"PostCooperationContact",
+		"Order",
+		"GetOrderProduct",
+		"GetOrderSchedule",
+		"PostOrderCreate",
+		"PostOrderCancel",
+		"GetOrderInfo",
+		"GetOrderList"
 	]
 }

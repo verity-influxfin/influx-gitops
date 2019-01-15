@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 	
-	function index(){
+	function tool(){
 		$id 	= 'CO68566881';
 		$key 	= 'ae2d208d6c4cac0ef1c1080b338920c0';
 		$time 	= time();
@@ -12,7 +12,8 @@ class Welcome extends CI_Controller {
 		echo $id.'<br>';
 		echo $time.'<br>';
 		
-		$content = '';
+		$content = "854896151651";
+		//amount + instalment + item_count + item_name + item_price + merchant_order_no + phone + product_id
 		
 		$authorization = SHA1($id.$content.$time);
 		$authorization = MD5($authorization.$key);
