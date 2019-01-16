@@ -177,17 +177,19 @@
 													<?=isset($value->user_id)?$value->user_id:"" ?>
 												</a>
 											</td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
 											<td>
 												<? 
 													if($value->status==2){
 														if($value->bank_account_verify){
 															$all_pass = true;
+															
 															foreach($value->certification as $k => $v){
-																if($v["user_status"]!=1){
+																if(in_array($v['id'],$product_list[$value->product_id]['certifications']) && $v['user_status']!=1){
 																	$all_pass = false;
 																}
 															}
+															
 															if($all_pass){
 																if($value->sub_status==8){
 																	echo '<button class="btn btn-success" onclick="success('.$value->id.','."'".$value->target_no."'".')">轉換產品上架</button>';

@@ -22,27 +22,27 @@
 							<table>
 								<tr>
 									<td>會員ID：</td>
-									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>	
 									<td>案號：</td>
-									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=""?$_GET['target_no']:""?>" id="target_no" /></td>
+									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" /></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>狀態：</td>
 									<td>
 										<select id="status">
-											<option value="" >請選擇</option>
+											<option value='' >請選擇</option>
 											<? foreach($status_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=""&&intval($_GET['status'])==intval($key)?"selected":""?>><?=$value?></option>
+												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
 											<? } ?>
 										</select>
 									</td>
 									<td>逾期：</td>
 									<td>
 										<select id="delay">
-											<option value="" >請選擇</option>
+											<option value='' >請選擇</option>
 											<? foreach($delay_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=""&&intval($_GET['delay'])==intval($key)?"selected":""?>><?=$value?></option>
+												<option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=''&&intval($_GET['delay'])==intval($key)?"selected":''?>><?=$value?></option>
 											<? } ?>
 										</select>
 									</td>
@@ -81,26 +81,26 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-                                            <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
-                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-                                            <td><?=isset($value->amount)?$value->amount:"" ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:"" ?></td>
-                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:"" ?></td>
-                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
-                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
+                                            <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
+                                            <td><?=isset($value->amount)?$value->amount:'' ?></td>
+                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
+                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:'' ?></td>
+                                            <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
+                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
+                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
                                             <td>
-											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 											<? 	if($value->status==2 && !$value->bank_account_verify){
 													echo '<p style="color:red;">金融帳號未驗證</p>';
 												}
 											?>
 											</td>
-                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><?=isset($value->remark)?$value->remark:"" ?></td>
-											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
+											<td><?=isset($value->remark)?$value->remark:'' ?></td>
+											<td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

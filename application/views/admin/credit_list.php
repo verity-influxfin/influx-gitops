@@ -50,16 +50,16 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
-											<td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-											<td><?=isset($value->user_name)?$value->user_name:"" ?></td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
-                                            <td><?=isset($value->level)?$value->level:"" ?></td>
-                                            <td><?=isset($value->points)?$value->points:"" ?></td>
-                                            <td><?=isset($value->amount)?$value->amount:"" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
-                                            <td><?=isset($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"" ?></td>
-                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
+											<td><?=isset($value->user_id)?$value->user_id:'' ?></td>
+											<td><?=isset($value->user_name)?$value->user_name:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($value->level)?$value->level:'' ?></td>
+                                            <td><?=isset($value->points)?$value->points:'' ?></td>
+                                            <td><?=isset($value->amount)?$value->amount:'' ?></td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
+                                            <td><?=isset($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):'' ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                         </tr>                                        
 									<?php 
 										}}

@@ -61,7 +61,6 @@ class Repayment extends REST_Controller {
         }
     }
 	
-
 	/**
      * @api {get} /v2/repayment/dashboard 借款端 我的還款
 	 * @apiVersion 0.2.0
@@ -70,22 +69,12 @@ class Repayment extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} remaining_principal 現欠本金餘額
-	 * @apiSuccess {String} next_repayment 當期待還本息
-	 * @apiSuccess {Object} user 用戶資訊
-	 * @apiSuccess {String} user.id User ID
-	 * @apiSuccess {String} user.name 姓名
-	 * @apiSuccess {String} user.picture 照片
-	 * @apiSuccess {String} user.nickname 暱稱
-	 * @apiSuccess {String} user.sex 性別
-	 * @apiSuccess {String} user.phone 手機號碼
-	 * @apiSuccess {String} user.id_number 身分證字號
-	 * @apiSuccess {String} user.investor 1:投資端 0:借款端
-	 * @apiSuccess {String} user.my_promote_code 推廣碼
+	 * @apiSuccess {Number} remaining_principal 現欠本金餘額
+	 * @apiSuccess {Number} next_repayment 當期待還本息
 	 * @apiSuccess {Object} funds 資金資訊
-	 * @apiSuccess {String} funds.total 資金總額
+	 * @apiSuccess {Number} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
-	 * @apiSuccess {String} funds.frozen 待交易餘額
+	 * @apiSuccess {Number} funds.frozen 待交易餘額
 	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
 	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
 	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
@@ -98,23 +87,10 @@ class Repayment extends REST_Controller {
      * 		"data":{
      * 				"remaining_principal": "12345",
      * 				"next_repayment_amount": "1588",
-	 * 				"user": {
-	 *      			"id": "1",
-     *      			"name": "",
-     *      			"picture": "https://graph.facebook.com/2495004840516393/picture?type=large",
-     *      			"nickname": "陳霈",
-     *      			"phone": "0912345678",
-     *      			"investor_status": "1",
-     *      			"my_promote_code": "9JJ12CQ5",
-     *      			"id_number": null,
-     *      			"investor": 1,  
-     *      			"created_at": "1522651818",     
-     *      			"updated_at": "1522653939"     
-	 * 				},
      * 				"funds": {
-     * 				 	"total": "500",
+     * 				 	"total": 500,
      * 				 	"last_recharge_date": "2018-05-03 19:15:42",
-     * 				 	"frozen": "0"
+     * 				 	"frozen": 0
      * 				},
      * 	        	"virtual_account": {
      * 	            	"bank_code": "013",
@@ -139,16 +115,15 @@ class Repayment extends REST_Controller {
 		$user_id 	 			= $this->user_info->id;
 		$remaining_principal 	= 0;
 		$next_repayment			= 0;
-		$user					= array();
 		$transaction 			= $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
 			'user_from'	=> $user_id,
 			'status'	=> '1',
-			'source' 	=> array(
+			'source' 	=> [
 				SOURCE_AR_PRINCIPAL,
 				SOURCE_AR_INTEREST,
 				SOURCE_AR_DAMAGE,
 				SOURCE_AR_DELAYINTEREST
-			), 
+			], 
 		));
 		
 		if($transaction){
@@ -179,9 +154,9 @@ class Repayment extends REST_Controller {
 				'virtual_account'	=> $virtual->virtual_account,
 			);
 			$this->load->library('Transaction_lib'); 
-			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
+			$funds 	= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		}else{
-			$funds			 = array(
+			$funds	= array(
 				'total'					=> 0,
 				'last_recharge_date'	=> '',
 				'frozen'				=> 0
@@ -195,15 +170,9 @@ class Repayment extends REST_Controller {
 			);
 		}
 		
-		$fields = $this->user_model->token_fields;
-		foreach($fields as $key => $field){
-			$user[$field] = $this->user_info->$field?$this->user_info->$field:'';
-		}
-		
 		$data	= array(
 			'remaining_principal'	=> $remaining_principal,
 			'next_repayment'		=> $next_repayment,
-			'user'					=> $user,
 			'funds'					=> $funds,
 			'virtual_account'		=> $virtual_account,
 		);
@@ -221,8 +190,6 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Targets ID
 	 * @apiSuccess {String} target_no 案號
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {String} user_id User ID
 	 * @apiSuccess {String} amount 申請金額
 	 * @apiSuccess {String} loan_amount 核准金額
@@ -239,12 +206,6 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
-	 * @apiSuccess {Object} virtual_account 還款專屬虛擬帳號
-	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
-	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
-	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
-	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
-	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -253,10 +214,7 @@ class Repayment extends REST_Controller {
      * 			{
      * 				"id":"1",
      * 				"target_no": "1803269743",
-     * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸"
-     * 				},
+     * 				"product_id": 1,
      * 				"user_id":"1",
      * 				"loan_amount":"50000",
      * 				"interest_rate":"8",
@@ -272,13 +230,6 @@ class Repayment extends REST_Controller {
      * 	            	"date": "2018-06-10",
      * 	            	"instalment": "1",
      * 	            	"amount": "16890"
-     * 	        	},
-	 * 	        	"virtual_account": {
-     * 	            	"bank_code": "013",
-     * 	            	"branch_code": "0154",
-     * 	            	"bank_name": "國泰世華商業銀行",
-     * 	            	"branch_name": "信義分行",
-     * 	            	"virtual_account": "56631803269743"
      * 	        	}
      * 			}
      * 			]
@@ -300,26 +251,8 @@ class Repayment extends REST_Controller {
 			'status'	=> array(5,10)
 		);
 		$targets 			= $this->target_model->get_many_by($param);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
 		$list				= array();
 		if(!empty($targets)){
-			$this->load->model('user/virtual_account_model');
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array(
-				'status'	=> 1,
-				'investor'	=> 0,
-				'user_id'	=> $user_id
-			));
-			$virtual_account		= array();
-			if($virtual_account_info){
-				$virtual_account		= array(
-					'bank_code'			=> CATHAY_BANK_CODE,
-					'branch_code'		=> CATHAY_BRANCH_CODE,
-					'bank_name'			=> CATHAY_BANK_NAME,
-					'branch_name'		=> CATHAY_BRANCH_NAME,
-					'virtual_account'	=> $virtual_account_info->virtual_account,
-				);
-			}
 			foreach($targets as $key => $value){
 				$next_repayment = array(
 					'date' 			=> '',
@@ -348,22 +281,15 @@ class Repayment extends REST_Controller {
 					}
 				}
 				
-				$this->load->model('loan/product_model');
-				$product_info 	= $this->product_model->get($value->product_id);
-				$product = array(
-					'id'				=> $product_info->id,
-					'name'				=> $product_info->name,
-				);
-
 				$list[] = array(
 					'id' 				=> $value->id,
 					'target_no' 		=> $value->target_no,
-					'product' 			=> $product,
+					'product_id' 		=> $value->product_id,
 					'user_id' 			=> $value->user_id,
-					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
-					'interest_rate' 	=> $value->interest_rate?$value->interest_rate:'',
-					'instalment' 		=> $instalment_list[$value->instalment],
-					'repayment' 		=> $repayment_type[$value->repayment],
+					'loan_amount' 		=> $value->loan_amount,
+					'interest_rate' 	=> $value->interest_rate,
+					'instalment' 		=> $value->instalment,
+					'repayment' 		=> $value->repayment,
 					'remark' 			=> $value->remark, 
 					'delay' 			=> $value->delay,
 					'delay_days' 		=> $value->delay_days,
@@ -371,7 +297,6 @@ class Repayment extends REST_Controller {
 					'sub_status' 		=> $value->sub_status,
 					'created_at' 		=> $value->created_at,
 					'next_repayment' 	=> $next_repayment,
-					'virtual_account'	=> $virtual_account,
 				);
 			}
 		}
@@ -565,13 +490,6 @@ class Repayment extends REST_Controller {
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
-
-			$this->load->model('loan/product_model');
-			$product_info 	= $this->product_model->get($target->product_id);
-			$product 		= array(
-				'id'			=> $product_info->id,
-				'name'			=> $product_info->name,
-			);
 			
 			$this->load->model('user/virtual_account_model');
 			$virtual_account		= array();
@@ -654,7 +572,6 @@ class Repayment extends REST_Controller {
 
 			$data['remaining_principal'] 	= $remaining_principal;
 			$data['remaining_instalment'] 	= $next_repayment['instalment']?intval($target->instalment - $next_repayment['instalment'])+1:0;
-			$data['product'] 		 		= $product;
 			$data['virtual_account'] 		= $virtual_account;
 			$data['next_repayment'] 		= $next_repayment;
 			$data['fees'] 					= $fees;
@@ -697,12 +614,6 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} prepayment.delay_interest_payable 應付延滯息
 	 * @apiSuccess {String} prepayment.interest_payable 應付利息
 	 * @apiSuccess {String} prepayment.total 合計
-	 * @apiSuccess {Object} virtual_account 還款專屬虛擬帳號
-	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
-	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
-	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
-	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
-	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -728,13 +639,6 @@ class Repayment extends REST_Controller {
      * 	         "delay_interest_payable": "0",
      * 	         "interest_payable": "450",
      * 	         "total": "51450"
-     * 	     },
-	 * 	     "virtual_account": {
-     * 	         "bank_code": "013",
-     * 	         "branch_code": "0154",
-     * 	         "bank_name": "國泰世華商業銀行",
-     * 	         "branch_name": "信義分行",
-     * 	         "virtual_account": "56631803269743"
      * 	     }
      * 		}
      *    }
@@ -783,22 +687,6 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$this->load->model('user/virtual_account_model');
-			$virtual_account		= array();
-			$virtual_account_info 	= $this->virtual_account_model->get_by(array(
-				'status'	=> 1,
-				'investor'	=> 0,
-				'user_id'	=> $user_id
-			));
-			if($virtual_account_info){
-				$virtual_account		= array(
-					'bank_code'			=> CATHAY_BANK_CODE,
-					'branch_code'		=> CATHAY_BRANCH_CODE,
-					'bank_name'			=> CATHAY_BANK_NAME,
-					'branch_name'		=> CATHAY_BRANCH_NAME,
-					'virtual_account'	=> $virtual_account_info->virtual_account,
-				);
-			}
 			$fields = $this->target_model->simple_fields;
 			foreach($fields as $field){
 				$data[$field] = isset($target->$field)?$target->$field:'';
@@ -808,9 +696,7 @@ class Repayment extends REST_Controller {
 				}
 			}
 
-			$data['prepayment'] 		= $this->prepayment_lib->get_prepayment_info($target);
-			$data['virtual_account'] 	= $virtual_account;
-
+			$data['prepayment'] = $this->prepayment_lib->get_prepayment_info($target);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}

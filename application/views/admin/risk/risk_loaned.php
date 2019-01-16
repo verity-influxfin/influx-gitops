@@ -82,7 +82,7 @@ body{
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:"" ?></td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>

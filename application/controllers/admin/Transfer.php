@@ -12,7 +12,6 @@ class Transfer extends MY_Admin_Controller {
 		$this->load->model('loan/investment_model');
 		$this->load->model('loan/transfer_model');
 		$this->load->model('loan/transfer_investment_model');
-		$this->load->model('loan/product_model');
 		$this->load->library('target_lib');
 		$this->load->library('transfer_lib');
 		$this->load->library('financial_lib');
@@ -126,10 +125,10 @@ class Transfer extends MY_Admin_Controller {
 		$targets 		= array();
 		$school_list 	= array();
 		if($ids && is_array($ids)){
-			$product_name			= $this->product_model->get_name_list();
-			$list 					= $this->investment_model->order_by("target_id","ASC")->get_many($ids);
-			$user_list 				= array();
-			$amortization_table 	= array();
+			$product_list		= $this->config->item('product_list');
+			$list 				= $this->investment_model->order_by("target_id","ASC")->get_many($ids);
+			$user_list 			= [];
+			$amortization_table = [];
 			if($list){
 				$target_ids 	= array();
 				$user_list 		= array();
@@ -185,7 +184,7 @@ class Transfer extends MY_Admin_Controller {
 					$target = $targets[$value->target_id];
 					$html .= '<tr>';
 					$html .= '<td>'.$target->target_no.'</td>';
-					$html .= '<td>'.$product_name[$target->product_id].'</td>';
+					$html .= '<td>'.$product_list[$target->product_id]['name'].'</td>';
 					$html .= '<td>'.$target->user_id.'</td>';
 					$html .= '<td>'.$target->credit_level.'</td>';
 					$html .= '<td>'.$school_list[$target->user_id]["school_name"].'</td>';
@@ -215,7 +214,6 @@ class Transfer extends MY_Admin_Controller {
 		$ids 			= isset($get["ids"])&&$get["ids"]?explode(",",$get["ids"]):"";
 		$list 			= array();
 		if($ids && is_array($ids)){
-			$product_name			= $this->product_model->get_name_list();
 			$investments 			= $this->investment_model->order_by("target_id","ASC")->get_many($ids);
 			$amortization_table 	= array();
 			if($investments){

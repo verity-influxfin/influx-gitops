@@ -9,7 +9,6 @@ class Product extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/product_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
         $method = $this->router->fetch_method();
@@ -74,19 +73,18 @@ class Product extends REST_Controller {
 	 * @apiDescription 登入狀態下，若已申請產品且申請狀態為未簽約，則提供申請資訊欄位及認證完成資訊。
      *
      * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Product ID
-	 * @apiSuccess {String} type 類型 1:信用貸款 2:分期付款
+	 * @apiSuccess {Number} id Product ID
+	 * @apiSuccess {Number} type 類型 1:信用貸款 2:分期付款
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} rank 排序
-	 * @apiSuccess {Object} instalment 可選期數
-	 * @apiSuccess {Object} repayment 可選還款方式
-	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
-	 * @apiSuccess {String} loan_range_e 最高借款額度(元)
-	 * @apiSuccess {String} interest_rate_s 年利率下限(%)
-	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
-	 * @apiSuccess {String} charge_platform 平台服務費(%)
-	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
+	 * @apiSuccess {Object} instalment 可選期數 0:其他
+	 * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
+	 * @apiSuccess {Number} loan_range_s 最低借款額度(元)
+	 * @apiSuccess {Number} loan_range_e 最高借款額度(元)
+	 * @apiSuccess {Number} interest_rate_s 年利率下限(%)
+	 * @apiSuccess {Number} interest_rate_e 年利率上限(%)
+	 * @apiSuccess {Number} charge_platform 平台服務費(%)
+	 * @apiSuccess {Number} charge_platform_min 平台最低服務費(元)	
 	 * @apiSuccess {Object} target 申請資訊
 	 * @apiSuccess {Object} certification 認證完成資訊
      * @apiSuccessExample {Object} SUCCESS
@@ -95,60 +93,49 @@ class Product extends REST_Controller {
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
-     * 				"type":"1",
+     * 				"id":1,
+     * 				"type":1,
      * 				"name":"學生區",
      * 				"description":"學生區",
-     * 				"rank":"0",
-     * 				"loan_range_s":"12222",
-     * 				"loan_range_e":"14333333",
-     * 				"interest_rate_s":"12",
-     * 				"interest_rate_e":"14",
-     * 				"charge_platform":"0",
-     * 				"charge_platform_min":"0",
+     * 				"loan_range_s":12222,
+     * 				"loan_range_e":14333333,
+     * 				"interest_rate_s":12,
+     * 				"interest_rate_e":14,
+     * 				"charge_platform":0,
+     * 				"charge_platform_min":0,
 	 * 				"instalment": [
-	 * 					{
-     * 				      "name": "3期",
-     * 				      "value": 3
-     * 				    },
-	 * 					{
-     * 				      "name": "12期",
-     * 				      "value": 12
-     * 				    },
-	 * 					{
-     * 				      "name": "24期",
-     * 				      "value": 24
-     * 				    },
-	 * 				],
+     *					3,
+     * 				    6,
+     * 				    12,
+     * 				    18,
+     * 				    24
+     * 				  ]
 	 * 				"repayment": [
-	 * 					{
-     * 				      "name": "等額本息",
-     * 				      "value": 1
-     * 				    }
-	 * 				],
+     *					1
+     * 				  ],
 	 * 				"target":{
-     * 					"id":"1",
+     * 					"id":1,
      * 					"target_no": "1803269743",
-     * 					"amount":"5000",
-     * 					"loan_amount":"",
-     * 					"status":"0",
-     * 					"instalment":"3期",
+     * 					"amount":5000,
+     * 					"loan_amount":0,
+     * 					"status":0,
+     * 					"instalment":3,
      * 					"created_at":"1520421572"
      * 				},
 	 * 				"certification":[
 	 * 					{
-     * 						"id":"1",
+     * 						"id":1,
      * 						"name": "實名認證",
      * 						"description":"實名認證",
      * 						"alias":"id_card",
-     * 						"user_status":"1"
+     * 						"user_status":1
      * 					},
 	 * 					{
-     * 						"id":"2",
+     * 						"id":2,
      * 						"name": "學生身份認證",
      * 						"description":"學生身份認證",
      * 						"alias":"student",
-     * 						"user_status":"1"
+     * 						"user_status":1
      * 					}
 	 * 				]
      * 			}
@@ -159,84 +146,64 @@ class Product extends REST_Controller {
 	 	
 	public function list_get()
     {
-		$instalment_list= $this->config->item('instalment');
-		$repayment_type = $this->config->item('repayment_type');
-		$input 			= $this->input->get();
-		$data			= array();
-		$list			= array();
-	
-		$product_list 	= $this->product_model->order_by('rank','asc')->get_many_by(array( 'status' => 1 ));
+		$list			= [];
+		$product_list 	= $this->config->item('product_list');
 		if(isset($this->user_info->id) && $this->user_info->id){
 			$certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
 		}
 		
 		if(!empty($product_list)){
 			foreach($product_list as $key => $value){
-				$target 				= array();
-				$certification 			= array();
-				$value->certifications 	= json_decode($value->certifications,true);
+				$target 				= [];
+				$certification 			= [];
 				if(isset($this->user_info->id) && $this->user_info->id){
 					$targets = $this->target_model->get_by(array(
 						'status <='		=> 1,
 						'sub_status'	=> 0,
 						'user_id'		=> $this->user_info->id,
-						'product_id'	=> $value->id
+						'product_id'	=> $value['id']
 					));
 					if($targets){
-						$target['id'] 			= $targets->id;
-						$target['target_no'] 	= $targets->target_no;
-						$target['status'] 		= $targets->status;
-						$target['amount'] 		= $targets->amount;
-						$target['loan_amount'] 	= $targets->loan_amount;
-						$target['created_at'] 	= $targets->created_at;
-						$target['instalment'] 	= $instalment_list[$targets->instalment];
+						$target = [
+							'id'			=> intval($targets->id),
+							'target_no'		=> $targets->target_no,
+							'status'		=> intval($targets->status),
+							'amount'		=> intval($targets->amount),
+							'loan_amount'	=> intval($targets->loan_amount),
+							'created_at'	=> intval($targets->created_at),
+							'instalment'	=> intval($targets->instalment),
+						];
 						
 						if(!empty($certification_list)){
 							foreach($certification_list as $k => $v){
-								if(in_array($k,$value->certifications)){
+								if(in_array($k,$value['certifications'])){
 									$certification[] = $v;
 								}
 							}
 						}
 					}
 				}
-
-				$instalment = json_decode($value->instalment,TRUE);
-				if($instalment){
-					foreach($instalment as $k => $v){
-						$instalment[$k] = array('name'=>$instalment_list[$v],'value'=>$v);
-					}
-				}
-				
-				$repayment = json_decode($value->repayment,TRUE);
-				if($repayment){
-					foreach($repayment as $k => $v){
-						$repayment[$k] = array('name'=>$repayment_type[$v],'value'=>$v);
-					}
-				}
-				
 				
 				$list[] = array(
-					'id' 					=> $value->id,
-					'type' 					=> $value->type,
-					'name' 					=> $value->name,
-					'description' 			=> $value->description,
-					'rank'					=> $value->rank,
-					'loan_range_s'			=> $value->loan_range_s,
-					'loan_range_e'			=> $value->loan_range_e,
-					'interest_rate_s'		=> $value->interest_rate_s,
-					'interest_rate_e'		=> $value->interest_rate_e,
+					'id' 					=> $value['id'],
+					'type' 					=> $value['type'],
+					'name' 					=> $value['name'],
+					'description' 			=> $value['description'],
+					'loan_range_s'			=> $value['loan_range_s'],
+					'loan_range_e'			=> $value['loan_range_e'],
+					'interest_rate_s'		=> $value['interest_rate_s'],
+					'interest_rate_e'		=> $value['interest_rate_e'],
 					'charge_platform'		=> PLATFORM_FEES,
 					'charge_platform_min'	=> PLATFORM_FEES_MIN,
-					'instalment'			=> $instalment,
-					'repayment'				=> $repayment,
+					'instalment'			=> $value['instalment'],
+					'repayment'				=> $value['repayment'],
 					'target'				=> $target,
 					'certification'			=> $certification,
 				);
 			}
 		}
-		$data['list'] = $list;
-		$this->response(array('result' => 'SUCCESS','data' => $data ));
+
+		$this->response(array('result' => 'SUCCESS','data' => ['list' => $list] ));
     }
 
 	/**
@@ -252,21 +219,18 @@ class Product extends REST_Controller {
 	 * @apiSuccess {String} type 類型 1:信用貸款 2:分期付款
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} rank 排序
 	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
 	 * @apiSuccess {String} loan_range_e 最高借款額度(元)
 	 * @apiSuccess {String} interest_rate_s 年利率下限(%)
 	 * @apiSuccess {String} interest_rate_e 年利率上限(%)
 	 * @apiSuccess {String} charge_platform 平台服務費(%)
 	 * @apiSuccess {String} charge_platform_min 平台最低服務費(元)	
-	 * @apiSuccess {Object} instalment 可申請期數
-	 * @apiSuccess {Object} repayment 還款方式
+	 * @apiSuccess {Object} instalment 可選期數 0:其他
+	 * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
      * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"product":
-     * 			{
      * 				"id":"1",
      * 				"type":"1",
      * 				"name":"學生區",
@@ -297,8 +261,7 @@ class Product extends REST_Controller {
      * 				      "name": "等額本息",
      * 				      "value": 1
      * 				    }
-	 * 				],
-     * 			}
+	 * 				]
      * 		}
      * }
 	 *
@@ -318,41 +281,21 @@ class Product extends REST_Controller {
 	public function info_get($id)
     {
 		if($id){
-			$data			= array();
-			$product 		= $this->product_model->get(intval($id));
-			$user_id 		= $this->user_info->id;
-			$instalment_list= $this->config->item('instalment');
-			$repayment_type = $this->config->item('repayment_type');
-			if($product && $product->status == 1 ){
-				$product->certifications 	= json_decode($product->certifications,TRUE);
-				
-				$instalment = json_decode($product->instalment,TRUE);
-				if($instalment){
-					foreach($instalment as $k => $v){
-						$instalment[$k] = array('name'=>$instalment_list[$v],'value'=>$v);
-					}
-				}
-				
-				$repayment = json_decode($product->repayment,TRUE);
-				if($repayment){
-					foreach($repayment as $k => $v){
-						$repayment[$k] = array('name'=>$repayment_type[$v],'value'=>$v);
-					}	
-				}
-
-				$data['product'] = array(
-					'id' 					=> $product->id,
-					'name' 					=> $product->name,
-					'description' 			=> $product->description,
-					'rank'					=> $product->rank,
-					'loan_range_s'			=> $product->loan_range_s,
-					'loan_range_e'			=> $product->loan_range_e,
-					'interest_rate_s'		=> $product->interest_rate_s,
-					'interest_rate_e'		=> $product->interest_rate_e,
+			$data			= [];
+			$product_list 	= $this->config->item('product_list');
+			if(isset($product_list[$id])){
+				$data = array(
+					'id' 					=> $product_list[$id]['id'],
+					'name' 					=> $product_list[$id]['name'],
+					'description' 			=> $product_list[$id]['description'],
+					'loan_range_s'			=> $product_list[$id]['loan_range_s'],
+					'loan_range_e'			=> $product_list[$id]['loan_range_e'],
+					'interest_rate_s'		=> $product_list[$id]['interest_rate_s'],
+					'interest_rate_e'		=> $product_list[$id]['interest_rate_e'],
 					'charge_platform'		=> PLATFORM_FEES,
 					'charge_platform_min'	=> PLATFORM_FEES_MIN,
-					'instalment'			=> $instalment,
-					'repayment'				=> $repayment,
+					'instalment'			=> $product_list[$id]['instalment'],
+					'repayment'				=> $product_list[$id]['repayment'],
 				);
 				$this->response(array('result' => 'SUCCESS','data' => $data ));
 			}
@@ -375,12 +318,14 @@ class Product extends REST_Controller {
 	 * @apiParam {String{0..16}} [promote_code] 邀請碼
 	 * 
      * @apiSuccess {Object} result SUCCESS
-     * @apiSuccess {String} target_id Targets ID
+     * @apiSuccess {Number} target_id Targets ID
      * @apiSuccessExample {Object} SUCCESS
-     *    {
-     *      "result": "SUCCESS",
-     *      "target_id": "1",
-     *    }
+     * {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"target_id": 1
+     * 		}
+     * }
 	 *
 	 * @apiUse InputError
 	 * @apiUse InsertError
@@ -429,7 +374,10 @@ class Product extends REST_Controller {
     {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
-		$param		= array( 'user_id' => $user_id, 'damage_rate' => LIQUIDATED_DAMAGES );
+		$param		= [
+			'user_id' => $user_id,
+			'damage_rate' => LIQUIDATED_DAMAGES
+		];
 		
 		//必填欄位
 		$fields 	= ['product_id','amount','instalment'];
@@ -441,44 +389,42 @@ class Product extends REST_Controller {
 			}
 		}
 		
-		$param['promote_code'] 	= isset($input['promote_code'])?$input['promote_code']:'';
 		$param['reason'] 		= isset($input['reason'])?$input['reason']:'';
+		$param['promote_code'] 	= isset($input['promote_code'])?$input['promote_code']:'';
 
 		//邀請碼保留月
-		$limit_date 	= date('Y-m-d',strtotime('-'.TARGET_PROMOTE_LIMIT.' month'));
-		$create_date 	= date('Y-m-d',$this->user_info->created_at);
-		if($limit_date <= $create_date && $this->user_info->promote_code!=''){
+		if(strtotime('-'.TARGET_PROMOTE_LIMIT.' month') <= $this->user_info->created_at && $this->user_info->promote_code != ''){
 			$param['promote_code'] = $this->user_info->promote_code;
 		}
-		
-		$product 		= $this->product_model->get($input['product_id']);
-		if($product && $product->status == 1 ){
+
+		$product_list 	= $this->config->item('product_list');
+		$product 		= isset($product_list[$input['product_id']])?$product_list[$input['product_id']]:[];
+		if($product){
 			
-			if($product->type != 1){
+			if($product['type'] != 1){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
 			}
 			
-			$product->instalment = json_decode($product->instalment,TRUE);
-			if(!in_array($input['instalment'],$product->instalment)){
+			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
-			if($input['amount'] < $product->loan_range_s || $input['amount'] > $product->loan_range_e){
+			if($input['amount'] < $product['loan_range_s'] || $input['amount'] > $product['loan_range_e']){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
 			}
 
-			$target = $this->target_model->get_by(array(
+			$exist = $this->target_model->get_by(array(
 				'status <='		=> 1,
 				'user_id'		=> $user_id,
-				'product_id'	=> $product->id
+				'product_id'	=> $product['id']
 			));
-			if($target){
+			if($exist){
 				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
 			}
 
 			$insert = $this->target_lib->add_target($param);
 			if($insert){
-				$this->response(array('result' => 'SUCCESS','target_id'=>$insert));
+				$this->response(array('result' => 'SUCCESS','data'=>['target_id'=> $insert ]));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -582,52 +528,47 @@ class Product extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array('status'=>2);
+		$param		= ['status'=>2];
 		
 		//必填欄位
-		$fields 	= ['target_id'];
-		foreach ($fields as $field) {
-			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}else{
-				$param[$field] = intval($input[$field]);
-			}
+		if (empty($input['target_id'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
 		//上傳檔案欄位
-		$file_fields 	= ['person_image'];
-		foreach ($file_fields as $field) {
-			if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-				$image 	= $this->s3_upload->image($_FILES,$field,$user_id,'signing_target');
-				if($image){
-					$param[$field] = $image;
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}
+		if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+			$image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+			if($image){
+				$param['person_image'] = $image;
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
-		$targets 	= $this->target_model->get($param['target_id']);
-		if(!empty($targets)){
 
-			if($targets->user_id != $user_id){
+		$target 	= $this->target_model->get($input['target_id']);
+		if(!empty($target)){
+
+			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
-			$product = $this->product_model->get($targets->product_id);
-			if($product && $product->status == 1 ){
-				
-				if($product->type != 1){
+			if($target->status != 1 || $target->sub_status != 0){
+				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
+			}
+			
+			$product_list 	= $this->config->item('product_list');
+			$product 		= $product_list[$target->product_id];
+			if($product){
+				if($product['type'] != 1){
 					$this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
 				}
 			
 				//檢查認證 NOT_VERIFIED
-				$product->certifications 	= json_decode($product->certifications,TRUE);
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product->certifications) && $value['user_status']!=1){
+					if(in_array($key,$product['certifications']) && $value['user_status']!=1){
 						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}
@@ -645,21 +586,13 @@ class Product extends REST_Controller {
 				if($bank_account){
 					if($bank_account->verify==0){
 						$this->user_bankaccount_model->update($bank_account->id,array('verify'=>2));
-						$this->load->library('Sendemail');
-						$this->sendemail->admin_notification('新的一筆金融帳號驗證 借款端會員ID:'.$user_id,'有新的一筆金融帳號驗證 借款端會員ID:'.$user_id);
 					}
 				}else{
 					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 				}
 				
-				if($targets->status == 1 && $targets->sub_status == 0){
-					$this->load->library('Sendemail');
-					$this->sendemail->admin_notification('案件待審批 會員ID：'.$user_id,'案件待審批 會員ID：'.$user_id.' 案號：'.$targets->target_no);
-					$rs = $this->target_lib->signing_target($targets->id,$param,$user_id);
-					$this->response(array('result' => 'SUCCESS'));
-				}else{
-					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
-				}
+				$this->target_lib->signing_target($target->id,$param,$user_id);
+				$this->response(array('result' => 'SUCCESS'));
 			}
 			$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
 		}
@@ -674,75 +607,44 @@ class Product extends REST_Controller {
      * @apiGroup Product
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Targets ID
+	 * @apiSuccess {Number} id Targets ID
 	 * @apiSuccess {String} target_no 案號
-	 * @apiSuccess {String} product_id Product ID
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} amount 申請金額
-	 * @apiSuccess {String} loan_amount 核准金額
-	 * @apiSuccess {String} platform_fee 平台服務費
-	 * @apiSuccess {String} interest_rate 年化利率
-	 * @apiSuccess {String} instalment 期數
-	 * @apiSuccess {String} repayment 還款方式
+	 * @apiSuccess {Number} product_id Product ID
+	 * @apiSuccess {Number} user_id User ID
+	 * @apiSuccess {Number} amount 申請金額
+	 * @apiSuccess {Number} loan_amount 核准金額
+	 * @apiSuccess {Number} platform_fee 平台服務費
+	 * @apiSuccess {Number} interest_rate 年化利率
+	 * @apiSuccess {Number} instalment 期數 0:其他
+	 * @apiSuccess {Number} repayment 還款方式 1:等額本息
 	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {String} created_at 申請日期
+	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
-     * 				"target_no": "1803269743",
-     * 				"product_id":"2",
-     * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸",
-     * 					"description":"輕鬆學貸",
-     * 					"alias":"FA"
-     * 				},
-     * 				"user_id":"1",
-     * 				"amount":"5000",
-     * 				"loan_amount":"",
-     * 				"platform_fee":"",
-     * 				"interest_rate":"0",
-     * 				"instalment":"3期",
-     * 				"repayment":"等額本息",
-     * 				"reason":"",
-     * 				"remark":"",
-     * 				"delay":"0",
-     * 				"status":"0",
-     * 				"sub_status":"0",
-     * 				"created_at":"1520421572"
-     * 			},
-     * 			{
-     * 				"id":"2",
-     * 				"target_no": "1803269713",
-     * 				"product_id":"2",
-     * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸",
-     * 					"description":"輕鬆學貸",
-     * 					"alias":"FA"
-     * 				},
-     * 				"user_id":"1",
-     * 				"amount":"5000",
-     * 				"loan_amount":"",
-     * 				"platform_fee":"",
-     * 				"interest_rate":"",
-     * 				"instalment":"3期",
-     * 				"repayment":"等額本息",
-     * 				"reason":"",
-     * 				"remark":"",
-     * 				"delay":"0",
-     * 				"status":"0",
-     * 				"sub_status":"0",
-     * 				"created_at":"1520421572"
+     * 				"id": 5,
+     * 				"target_no": "STN2019010484186",
+     * 				"product_id": 1,
+     * 				"user_id": 1,
+     * 				"amount": 5000,
+     * 				"loan_amount": 0,
+     * 				"platform_fee": 500,
+     * 				"interest_rate": 0,
+     * 				"instalment": 3,
+     * 				"repayment": 1,
+     * 				"reason": "",
+     * 				"remark": "系統自動取消",
+     * 				"delay": 0,
+     * 				"status": 9,
+     * 				"sub_status": 0,
+     * 				"created_at": 1546591486
      * 			}
      * 			]
      * 		}
@@ -766,30 +668,24 @@ class Product extends REST_Controller {
 		$list				= array();
 		if(!empty($targets)){
 			foreach($targets as $key => $value){
-				$product_info = $this->product_model->get($value->product_id);
-				$product = array(
-					'id'			=> $product_info->id,
-					'name'			=> $product_info->name,
-				);
 				
 				$list[] = array(
-					'id' 				=> $value->id,
+					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
-					'product_id' 		=> $value->product_id,
-					'product' 			=> $product,
-					'user_id' 			=> $value->user_id,
-					'amount' 			=> $value->amount,
-					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
-					'platform_fee' 		=> $value->platform_fee?$value->platform_fee:'',
-					'interest_rate' 	=> $value->interest_rate?$value->interest_rate:'',
-					'instalment' 		=> $instalment_list[$value->instalment],
-					'repayment' 		=> $repayment_type[$value->repayment],
+					'product_id' 		=> intval($value->product_id),
+					'user_id' 			=> intval($value->user_id),
+					'amount' 			=> intval($value->amount),
+					'loan_amount' 		=> intval($value->loan_amount),
+					'platform_fee' 		=> intval($value->platform_fee),
+					'interest_rate' 	=> intval($value->interest_rate),
+					'instalment' 		=> intval($value->instalment),
+					'repayment' 		=> intval($value->repayment),
 					'reason' 			=> $value->reason, 
 					'remark' 			=> $value->remark, 
-					'delay' 			=> $value->delay,
-					'status' 			=> $value->status,
-					'sub_status' 		=> $value->sub_status,
-					'created_at' 		=> $value->created_at,
+					'delay' 			=> intval($value->delay),
+					'status' 			=> intval($value->status),
+					'sub_status' 		=> intval($value->sub_status),
+					'created_at' 		=> intval($value->created_at),
 				);
 			}
 		}
@@ -807,24 +703,24 @@ class Product extends REST_Controller {
 	 * @apiParam {Number} id Targets ID
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Target ID
+	 * @apiSuccess {Number} id Target ID
 	 * @apiSuccess {String} target_no 案號
-	 * @apiSuccess {String} product_id Product ID
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} amount 申請金額
-	 * @apiSuccess {String} loan_amount 核准金額
-	 * @apiSuccess {String} platform_fee 平台服務費
-	 * @apiSuccess {String} interest_rate 核可利率
-	 * @apiSuccess {String} instalment 期數
-	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} contract 合約內容
+	 * @apiSuccess {Number} product_id Product ID
+	 * @apiSuccess {Number} user_id User ID
+	 * @apiSuccess {Number} amount 申請金額
+	 * @apiSuccess {Number} loan_amount 核准金額
+	 * @apiSuccess {Number} platform_fee 平台服務費
+	 * @apiSuccess {Number} interest_rate 核可利率
+	 * @apiSuccess {Number} instalment 期數 0:其他
+	 * @apiSuccess {Number} repayment 還款方式 1:等額本息
 	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
+	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} delay_days 逾期天數
+	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Number} created_at 申請日期
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {Object} certification 認證完成資訊
 	 * @apiSuccess {Object} credit 信用資訊
 	 * @apiSuccess {String} credit.level 信用指數
@@ -864,8 +760,8 @@ class Product extends REST_Controller {
      * 			"loan_amount":"12000",
      * 			"platform_fee":"1500",
      * 			"interest_rate":"9",
-     * 			"instalment":"3期",
-     * 			"repayment":"等額本息",
+     * 			"instalment":"3",
+     * 			"repayment":"1",
      * 			"reason":"",
      * 			"remark":"",
      * 			"delay":"0",
@@ -873,12 +769,6 @@ class Product extends REST_Controller {
      * 			"sub_status":"0",
      * 			"created_at":"1520421572",
      * 			"contract":"我是合約",
-     * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸",
-     * 				"description":"輕鬆學貸",
-     * 				"alias":"FA"
-     * 			},
 	 * 			"credit":{
      * 				"level":"1",
      * 				"points":"1985",
@@ -974,26 +864,19 @@ class Product extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
 		$target 			= $this->target_model->get($target_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
-		$data				= array();
 		if(!empty($target)){
+			
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
-
-			$product_info = $this->product_model->get($target->product_id);
-			$product = array(
-				'id'			=> $product_info->id,
-				'name'			=> $product_info->name,
-				'description'	=> $product_info->description,
-			);
-			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
-			$certification					= array();
-			$certification_list				= $this->certification_lib->get_status($user_id,$investor);
+			
+			$product_list 		= $this->config->item('product_list');
+			$product 			= $product_list[$target->product_id];
+			$certification		= [];
+			$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info->certifications)){
+					if(in_array($key,$product['certifications'])){
 						$certification[] = $value;
 					}
 				}
@@ -1004,11 +887,7 @@ class Product extends REST_Controller {
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
 			}
 			
-			$credit_info 	= $this->credit_lib->get_credit($user_id,$product_info->id); 
-			$credit			= array();
-			if($credit_info){
-				$credit = $credit_info;
-			}
+			$credit 	= $this->credit_lib->get_credit($user_id,$target->product_id); 
 			
 			$contract = '';
 			if($target->contract_id){
@@ -1017,23 +896,29 @@ class Product extends REST_Controller {
 				$contract = $contract_data['content'];
 			}
 			
-			$fields = $this->target_model->detail_fields;
-			foreach($fields as $field){
-				$data[$field] = isset($target->$field)?$target->$field:'';
-				if($field=='instalment'){
-					$data[$field] = $instalment_list[$target->$field];
-				}
-				
-				if($field=='repayment'){
-					$data[$field] = $repayment_type[$target->$field];
-				}
-			}
-
-			$data['contract'] 				= $contract;
-			$data['credit'] 				= $credit;
-			$data['product'] 				= $product;
-			$data['certification'] 			= $certification;
-			$data['amortization_schedule'] 	= $amortization_schedule;
+			$data = array(
+				'id' 				=> intval($target->id),
+				'target_no' 		=> $target->target_no,
+				'product_id' 		=> intval($target->product_id),
+				'user_id' 			=> intval($target->user_id),
+				'amount' 			=> intval($target->amount),
+				'loan_amount' 		=> intval($target->loan_amount),
+				'platform_fee' 		=> intval($target->platform_fee),
+				'interest_rate' 	=> intval($target->interest_rate),
+				'instalment' 		=> intval($target->instalment),
+				'repayment' 		=> intval($target->repayment),
+				'reason' 			=> $target->reason, 
+				'remark' 			=> $target->remark, 
+				'delay' 			=> intval($target->delay),
+				'delay_days' 		=> intval($target->delay_days),
+				'status' 			=> intval($target->status),
+				'sub_status' 		=> intval($target->sub_status),
+				'created_at' 		=> intval($target->created_at),
+				'contract'			=> $contract,
+				'credit'			=> $credit,
+				'certification'		=> $certification,
+				'amortization_schedule'	=> $amortization_schedule,
+			);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}

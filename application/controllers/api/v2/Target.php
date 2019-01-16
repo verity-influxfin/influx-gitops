@@ -9,7 +9,6 @@ class Target extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
@@ -64,50 +63,52 @@ class Target extends REST_Controller {
 	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Targets ID
+	 * @apiSuccess {Number} id Targets ID
 	 * @apiSuccess {String} target_no 標的號
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
-	 * @apiSuccess {String} credit_level 信用評等
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} loan_amount 核准金額
-	 * @apiSuccess {String} interest_rate 年化利率
-	 * @apiSuccess {String} instalment 期數
-	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} delay_days 逾期天數
-	 * @apiSuccess {String} expire_time 流標時間
-	 * @apiSuccess {String} invested 目前投標量
+	 * @apiSuccess {Number} product_id 產品ID
+	 * @apiSuccess {Number} credit_level 信用評等
+	 * @apiSuccess {Number} user_id User ID
+	 * @apiSuccess {Object} user 借款人基本資訊
+	 * @apiSuccess {String} user.sex 性別 F/M
+	 * @apiSuccess {Number} user.age 年齡
+	 * @apiSuccess {String} user.company_name 單位名稱
+	 * @apiSuccess {Number} loan_amount 核准金額
+	 * @apiSuccess {Number} interest_rate 年化利率
+	 * @apiSuccess {Number} instalment 期數
+	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} expire_time 流標時間
+	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {String} created_at 申請日期
+	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
+	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
-     * 			{
-     * 				"id":"1",
-     * 				"target_no": "1803269743",
-     * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸"
-     * 				},
-	 * 				"credit_level":"4",
-     * 				"user_id":"1",
-     * 				"loan_amount":"5000",
-     * 				"interest_rate":"12",
-     * 				"instalment":"3期",
-     * 				"repayment":"等額本息",
-     * 				"delay": "0",
-     * 				"delay_days": "0",
-     * 				"expire_time": "1525449600",
-     * 				"invested": "50000",
-     * 				"reason": "",
-     * 				"status":"3",
-     * 				"created_at":"1520421572"
-     * 			}
+     * 				{
+     * 					"id": 30,
+     * 					"target_no": "STN2019011414457",
+     * 					"product_id": 1,
+     * 					"credit_level": 6,
+     * 					"user_id": 1,
+     * 					"user": {
+     * 						"sex": "M",
+     * 						"age": 29,
+     * 						"company_name": "國立宜蘭大學"
+     * 					},
+     * 					"loan_amount": 5000,
+     * 					"interest_rate": 10,
+     * 					"instalment": 3,
+     * 					"repayment": 1,
+     * 					"expire_time": 1547792055,
+     * 					"invested": 0,
+     * 					"reason": "",
+     * 					"status": 3,
+     * 					"sub_status": 0,
+     * 					"created_at": 1547455529
+     * 				}
      * 			]
      * 		}
      *    }
@@ -115,51 +116,54 @@ class Target extends REST_Controller {
 	 	
 	public function list_get()
     {
-		$input 	= $this->input->get();
-		$data	= array();
-		$list	= array();
-		$where	= array( 'status' => 3 );
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
-		$orderby 			= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
-		$sort				= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
-		$target_list 		= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
-
+		$input 			= $this->input->get();
+		$list			= [];
+		$where			= array( 'status' => 3 );
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
+		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
+		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
+		$product_list 	= $this->config->item('product_list');
 		if(!empty($target_list)){
-			$product_list = array();
-			$products = $this->product_model->get_many_by(array('status'=>1));
-			if($products){
-				foreach($products as $key => $value){
-					$product_list[$value->id] = array(
-						'id'			=> $value->id,
-						'name'			=> $value->name,
+			foreach($target_list as $key => $value){
+				$user_info 	= $this->user_model->get($value->user_id); 
+				$user		= [];
+				if($user_info){
+					$age  = get_age($user_info->birthday);
+					if($product_list[$value->product_id]['identity']==1){
+						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
+					}else{
+						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'company_name']);
+					}
+					
+					$user = array(
+						'sex' 			=> $user_info->sex,
+						'age'			=> $age,
+						'company_name'	=> $user_meta?$user_meta->meta_value:'',
 					);
 				}
-			}
-
-			foreach($target_list as $key => $value){
+				
 				$list[] = array(
-					'id' 				=> $value->id,
+					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
-					'product' 			=> $product_list[$value->product_id],
-					'credit_level' 		=> $value->credit_level,
-					'user_id' 			=> $value->user_id,
-					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
-					'interest_rate' 	=> $value->interest_rate?$value->interest_rate:'',
-					'instalment' 		=> $instalment_list[$value->instalment],
-					'repayment' 		=> $repayment_type[$value->repayment],
-					'delay' 			=> $value->delay,
-					'delay_days' 		=> $value->delay_days,
-					'expire_time' 		=> $value->expire_time,
-					'invested' 			=> $value->invested,
-					'status' 			=> $value->status,
-					'sub_status' 		=> $value->sub_status,
-					'created_at' 		=> $value->created_at,
+					'product_id' 		=> intval($value->product_id),
+					'credit_level' 		=> intval($value->credit_level),
+					'user_id' 			=> intval($value->user_id),
+					'user' 				=> $user,
+					'loan_amount' 		=> intval($value->loan_amount),
+					'interest_rate' 	=> intval($value->interest_rate),
+					'instalment' 		=> intval($value->instalment),
+					'repayment' 		=> intval($value->repayment),
+					'expire_time' 		=> intval($value->expire_time),
+					'invested' 			=> intval($value->invested),
+					'reason' 			=> $value->reason,
+					'status' 			=> intval($value->status),
+					'sub_status' 		=> intval($value->sub_status),
+					'created_at' 		=> intval($value->created_at),
 				);
 			}
 		}
-		$data['list'] = $list;
-		$this->response(array('result' => 'SUCCESS','data' => $data ));
+
+		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
     }
 
 	/**
@@ -167,151 +171,147 @@ class Target extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetTargetInfo
      * @apiGroup Target
+	 * @apiDescription 限架上案件
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id 標的ID
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Target ID
+	 * @apiSuccess {Number} id Target ID
 	 * @apiSuccess {String} target_no 標的號
-	 * @apiSuccess {String} user_id User ID
-	 * @apiSuccess {String} loan_amount 借款金額
-	 * @apiSuccess {String} credit_level 信用評等
-	 * @apiSuccess {String} interest_rate 年化利率
-	 * @apiSuccess {String} total_interest 總利息
-	 * @apiSuccess {String} instalment 期數
-	 * @apiSuccess {String} repayment 還款方式
-	 * @apiSuccess {String} contract 合約內容
-	 * @apiSuccess {String} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} delay_days 逾期天數
-	 * @apiSuccess {String} expire_time 流標時間
-	 * @apiSuccess {String} invested 目前投標量
+	 * @apiSuccess {Number} product_id 產品ID
+	 * @apiSuccess {Number} user_id User ID
+	 * @apiSuccess {Number} loan_amount 借款金額
+	 * @apiSuccess {Number} credit_level 信用評等
+	 * @apiSuccess {Number} interest_rate 年化利率
+	 * @apiSuccess {Number} instalment 期數
+	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} expire_time 流標時間
+	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {String} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
+	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
+	 * @apiSuccess {Number} created_at 申請日期
+	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {Object} certification 借款人認證完成資訊
 	 * @apiSuccess {Object} user 借款人基本資訊
 	 * @apiSuccess {String} user.name 姓名
-	 * @apiSuccess {String} user.age 年齡
-	 * @apiSuccess {String} user.school_name 學校名稱
 	 * @apiSuccess {String} user.id_number 身分證字號
+	 * @apiSuccess {Number} user.age 年齡
+	 * @apiSuccess {String} user.sex 性別 F/M
+	 * @apiSuccess {String} user.company_name 單位名稱
 	 * @apiSuccess {Object} amortization_schedule 預計還款計畫
-	 * @apiSuccess {String} amortization_schedule.amount 借款金額
-	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
-	 * @apiSuccess {String} amortization_schedule.rate 年化利率
+	 * @apiSuccess {Number} amortization_schedule.amount 借款金額
+	 * @apiSuccess {Number} amortization_schedule.instalment 借款期數
+	 * @apiSuccess {Number} amortization_schedule.rate 年化利率
 	 * @apiSuccess {String} amortization_schedule.date 起始時間
-	 * @apiSuccess {String} amortization_schedule.total_payment 每月還款金額
-	 * @apiSuccess {String} amortization_schedule.leap_year 是否為閏年
-	 * @apiSuccess {String} amortization_schedule.year_days 本年日數
-	 * @apiSuccess {String} amortization_schedule.XIRR 內部報酬率(%)
-	 * @apiSuccess {String} amortization_schedule.schedule 還款計畫
-	 * @apiSuccess {String} amortization_schedule.schedule.instalment 第幾期
+	 * @apiSuccess {Number} amortization_schedule.total_payment 每月還款金額
+	 * @apiSuccess {Boolean} amortization_schedule.leap_year 是否為閏年
+	 * @apiSuccess {Number} amortization_schedule.year_days 本年日數
+	 * @apiSuccess {Number} amortization_schedule.XIRR 內部報酬率(%)
+	 * @apiSuccess {Object} amortization_schedule.schedule 還款計畫
+	 * @apiSuccess {Number} amortization_schedule.schedule.instalment 第幾期
 	 * @apiSuccess {String} amortization_schedule.schedule.repayment_date 還款日
-	 * @apiSuccess {String} amortization_schedule.schedule.days 本期日數
-	 * @apiSuccess {String} amortization_schedule.schedule.remaining_principal 剩餘本金
-	 * @apiSuccess {String} amortization_schedule.schedule.principal 還款本金
-	 * @apiSuccess {String} amortization_schedule.schedule.interest 還款利息
-	 * @apiSuccess {String} amortization_schedule.schedule.total_payment 本期還款金額
-	 * @apiSuccess {String} amortization_schedule.total 還款總計
-	 * @apiSuccess {String} amortization_schedule.total.principal 本金
-	 * @apiSuccess {String} amortization_schedule.total.interest 利息
-	 * @apiSuccess {String} amortization_schedule.total.total_payment 加總
+	 * @apiSuccess {Number} amortization_schedule.schedule.days 本期日數
+	 * @apiSuccess {Number} amortization_schedule.schedule.remaining_principal 剩餘本金
+	 * @apiSuccess {Number} amortization_schedule.schedule.principal 還款本金
+	 * @apiSuccess {Number} amortization_schedule.schedule.interest 還款利息
+	 * @apiSuccess {Number} amortization_schedule.schedule.total_payment 本期還款金額
+	 * @apiSuccess {Object} amortization_schedule.total 還款總計
+	 * @apiSuccess {Number} amortization_schedule.total.principal 本金
+	 * @apiSuccess {Number} amortization_schedule.total.interest 利息
+	 * @apiSuccess {Number} amortization_schedule.total.total_payment 加總
 
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"id":"1",
-     * 			"target_no": "1803269743",
-     * 			"user_id":"1",
-     * 			"loan_amount":"12000",
-	 * 			"credit_level":"4",
-     * 			"interest_rate":"9",
-     * 			"instalment":"3期",
-     * 			"repayment":"等額本息",
-     * 			"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！",
+     * 			"id":30,
+     * 			"target_no":"STN2019011414457",
+     * 			"product_id":1,
+     * 			"user_id":1,
+     * 			"loan_amount":5000,
+     * 			"credit_level":6,
+     * 			"interest_rate":10,
      * 			"reason":"",
      * 			"remark":"",
-     * 			"delay": "0",
-     * 			"delay_days": "0",
-     * 			"expire_time": "1525449600",
-     * 			"invested": "50000",
-     * 			"status":"4",
-     * 			"sub_status":"0",
-     * 			"created_at":"1520421572",
-     * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸"
-     * 			},
+     * 			"instalment":3,
+     * 			"repayment":1,
+     * 			"expire_time":1547792055,
+     * 			"invested":0,
+     * 			"status":3,
+     * 			"sub_status":0,
+     * 			"created_at":1547455529,
+     * 			"contract":"我就是合約啊",
+     *	        "user": {
+     *           	"name": "陳**",
+     *           	"id_number": "A1154*****",
+     *           	"sex": "M",
+     *           	"age": 29,
+     *           	"company_name": "國立宜蘭大學"
+     *          },
      *	        "certification": [
      *           	{
-     *           	     "id": "1",
-     *           	     "name": "身分證認證",
-     *           	     "description": "身分證認證",
-     *           	     "alias": "id_card",
-     *            	    "user_status": "1"
+     *           	    "id": 1,
+     *           	    "alias": "idcard",
+     *           	    "name": "實名認證",
+     *           	    "status": 1,
+     *           	    "description": "驗證個人身份資訊",
+     *           	    "user_status": 1,
      *           	},
      *           	{
-     *           	    "id": "2",
-     *            	    "name": "學生證認證",
-     *           	    "description": "學生證認證",
-     *            	   "alias": "student",
-     *            	   "user_status": "1"
+     *           	    "id": 2,
+     *           	    "alias": "student",
+     *           	    "name": "學生身份認證",
+     *           	    "status": 1,
+     *           	    "description": "驗證學生身份",
+     *           	    "user_status": 1,
      *           	}
      *           ],
-     *       "user": {
-      *          "name": "陳XX",
-     *           "age": 28,
-     *           "school_name": "國立宜蘭大學",
-     *           "id_number": "G1231XXXXX"
-     *       },
-  	 *       "amortization_schedule": {
-  	 *           "amount": "12000",
-  	 *           "instalment": "6",
-  	 *           "rate": "9",
-  	 *           "date": "2018-04-17",
-  	 *           "total_payment": 2053,
-  	 *           "leap_year": false,
-  	 *           "year_days": 365,
-  	 *           "XIRR": 9.39,
-  	 *           "schedule": {
- 	 *                "1": {
-   	 *                  "instalment": 1,
-   	 *                  "repayment_date": "2018-06-10",
-   	 *                  "days": 54,
-   	 *                  "remaining_principal": "12000",
-   	 *                  "principal": 1893,
-   	 *                  "interest": 160,
-   	 *                  "total_payment": 2053
-   	 *              },
-   	 *              "2": {
-  	 *                   "instalment": 2,
-   	 *                  "repayment_date": "2018-07-10",
-   	 *                  "days": 30,
-  	 *                   "remaining_principal": 10107,
-  	 *                   "principal": 1978,
-  	 *                   "interest": 75,
- 	 *                    "total_payment": 2053
-  	 *               },
-   	 *              "3": {
- 	 *                    "instalment": 3,
- 	 *                    "repayment_date": "2018-08-10",
- 	 *                    "days": 31,
- 	 *                    "remaining_principal": 8129,
-  	 *                   "principal": 1991,
-  	 *                   "interest": 62,
- 	 *                    "total_payment": 2053
- 	 *                }
- 	 *            },
-  	 *           "total": {
- 	 *                "principal": 12000,
- 	 *                "interest": 391,
- 	 *                "total_payment": 12391
-	 *            }
-	 *        }
+     *	        "amortization_schedule": {
+     *           	"amount": 5000,
+     *           	"instalment": 3,
+     *           	"rate": 10,
+     *           	"date": "2019-01-16",
+     *           	"total_payment": 1695,
+     *           	"leap_year": false,
+     *           	"year_days": 365,
+     *           	"XIRR": 10.51,
+     *           	"schedule": {
+     *           		"1": {
+     *           			"instalment": 1,
+     *           			"repayment_date": "2019-03-10",
+     *           			"days": 53,
+     *           			"remaining_principal": 5000,
+     *           			"principal": 1622,
+     *           			"interest": 73,
+     *           			"total_payment": 1695
+     *           		},
+     *           		"2": {
+     *           			"instalment": 2,
+     *           			"repayment_date": "2019-04-10",
+     *           			"days": 31,
+     *           			"remaining_principal": 3378,
+     *           			"principal": 1666,
+     *           			"interest": 29,
+     *           			"total_payment": 1695
+     *           		},
+     *           		"3": {
+     *           			"instalment": 3,
+     *           			"repayment_date": "2019-05-10",
+     *           			"days": 30,
+     *           			"remaining_principal": 1712,
+     *           			"principal": 1712,
+     *           			"interest": 14,
+     *           			"total_payment": 1726
+     *           		}
+     *           	},
+     *           	"total": {
+     *           		"principal": 5000,
+     *           		"interest": 116,
+     *           		"total_payment": 5116
+     *           	}
+     *	        }
      * 		}
      *    }
 	 *
@@ -329,24 +329,19 @@ class Target extends REST_Controller {
 	public function info_get($target_id)
     {
 		$input 				= $this->input->get(NULL, TRUE);
-		//$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
-		if(!empty($target) && in_array($target->status,array(3,4,5,10))){
-			$product_info = $this->product_model->get($target->product_id);
-			$product = array(
-				'id'			=> $product_info->id,
-				'name'			=> $product_info->name,
-			);
-			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
-			$certification					= array();
+		if(!empty($target) && in_array($target->status,[3,4])){
+			
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target->product_id];
+			$certification	= [];
 			$this->load->library('Certification_lib');
-			$certification_list				= $this->certification_lib->get_status($target->user_id);
+			$certification_list	= $this->certification_lib->get_status($target->user_id);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info->certifications)){
+					if(in_array($key,$product_info['certifications'])){
+						unset($value['certification_id']);
 						$certification[] = $value;
 					}
 				}
@@ -355,48 +350,50 @@ class Target extends REST_Controller {
 			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
 		
 			$user_info 	= $this->user_model->get($target->user_id); 
-			$user		= array();
+			$user		= [];
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
-				$age  		= get_age($user_info->birthday);
-				$user_meta 	= $this->user_meta_model->get_by(array('user_id'=>$target->user_id,'meta_key'=>'school_name'));
-				$school_name= $user_meta?$user_meta->meta_value:'';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
+				$age  		= get_age($user_info->birthday);
+				if($product_info['identity']==1){
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
+				}else{
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'company_name']);
+				}
+				
 				$user = array(
 					'name' 			=> $name,
-					'age'			=> $age,
-					'school_name'	=> $school_name,
 					'id_number'		=> $id_number,
+					'sex' 			=> $user_info->sex,
+					'age'			=> $age,
+					'company_name'	=> $user_meta?$user_meta->meta_value:'',
 				);
 			}
-			
-			
+
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data['content']:'';
 			$data = array(
-				'id' 				=> $target->id,
+				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
-				'user_id' 			=> $target->user_id,
-				'loan_amount' 		=> $target->loan_amount,
-				'credit_level' 		=> $target->credit_level,
-				'interest_rate' 	=> $target->interest_rate,
+				'product_id' 		=> intval($target->product_id),
+				'user_id' 			=> intval($target->user_id),
+				'loan_amount' 		=> intval($target->loan_amount),
+				'credit_level' 		=> intval($target->credit_level),
+				'interest_rate' 	=> intval($target->interest_rate),
+				'reason' 			=> $target->reason,
 				'remark' 			=> $target->remark,
-				'instalment' 		=> $instalment_list[$target->instalment],
-				'repayment' 		=> $repayment_type[$target->repayment],
+				'instalment' 		=> intval($target->instalment),
+				'repayment' 		=> intval($target->repayment),
+				'expire_time' 		=> intval($target->expire_time),
+				'invested' 			=> intval($target->invested),
+				'status' 			=> intval($target->status),
+				'sub_status' 		=> intval($target->sub_status),
+				'created_at' 		=> intval($target->created_at),
 				'contract' 			=> $contract,
-				'delay' 			=> $target->delay,
-				'delay_days' 		=> $target->delay_days,
-				'expire_time' 		=> $target->expire_time,
-				'invested' 			=> $target->invested,
-				'status' 			=> $target->status,
-				'sub_status' 		=> $target->sub_status,
-				'created_at' 		=> $target->created_at,
+				'user' 				=> $user,
+				'certification' 	=> $certification,
+				'amortization_schedule' => $amortization_schedule,
 			);
-
-			$data['user'] 					= $user;
-			$data['product'] 				= $product;
-			$data['certification'] 			= $certification;
-			$data['amortization_schedule'] 	= $amortization_schedule;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
@@ -491,11 +488,10 @@ class Target extends REST_Controller {
      */
 	public function apply_post()
     {
-
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array("user_id"=> $user_id);
+		$param		= ['user_id' => $user_id];
 		
 		//必填欄位
 		$fields 	= ['target_id','amount'];
@@ -503,15 +499,14 @@ class Target extends REST_Controller {
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
-				$input[$field] = intval($input[$field]);
-				$param[$field] = $input[$field];
+				$param[$field] = intval($input[$field]);
 			}
 		}
 
-		$target = $this->target_model->get($input['target_id']);
+		$target = $this->target_model->get($param['target_id']);
 		if($target && $target->status == 3 ){
 			
-			if( $input['amount'] < TARGET_AMOUNT_MIN || $input['amount'] > $target->loan_amount ){
+			if( $param['amount'] < TARGET_AMOUNT_MIN || $param['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
 			}
 
@@ -520,12 +515,12 @@ class Target extends REST_Controller {
 			}
 
 			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
+			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
 			
 			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==""){
+			if(empty($this->user_info->email) || $this->user_info->email==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
 		
@@ -535,17 +530,26 @@ class Target extends REST_Controller {
 
 			//檢查金融卡綁定 NO_BANK_ACCOUNT
 			$this->load->model('user/user_bankaccount_model');
-			$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+			$bank_account = $this->user_bankaccount_model->get_by([
+				'investor'	=> $investor,
+				'status'	=> 1,
+				'user_id'	=> $user_id,
+				'verify'	=> 1
+			]);
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 			}
 			
-			if($this->user_info->transaction_password==""){
+			if($this->user_info->transaction_password==''){
 				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 			}
 
-			$investments = $this->investment_model->get_by(array("target_id"=>$target->id,"user_id"=>$user_id,"status"=>array(0,1,2,3,10)));
-			if($investments){
+			$exist = $this->investment_model->get_by([
+				'target_id'	=> $target->id,
+				'user_id'	=> $user_id,
+				'status'	=> [0,1,2,3,10]
+			]);
+			if($exist){
 				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
 			}
 			
@@ -556,7 +560,6 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		
 		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
     }
 	
@@ -566,85 +569,62 @@ class Target extends REST_Controller {
 	 * @apiName GetTargetApplylist
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
+	 * @apiDescription 只顯示 待付款 待結標 待放款 狀態的申請
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Investments ID
-	 * @apiSuccess {String} amount 投標金額
-	 * @apiSuccess {String} loan_amount 得標金額
+	 * @apiSuccess {Number} amount 投標金額
+	 * @apiSuccess {Number} loan_amount 得標金額
+	 * @apiSuccess {Number} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {String} contract 合約內容
-	 * @apiSuccess {String} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
-	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
-	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {Object} target 標的資訊
-	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} target.loan_amount 標的金額
-	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} target.expire_time 流標時間
-	 * @apiSuccess {String} target.invested 目前投標量
-	 * @apiSuccess {String} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {Object} bank_account 綁定金融帳號
-	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
-	 * @apiSuccess {String} bank_account.branch_code 分行代碼
-	 * @apiSuccess {String} bank_account.bank_account 銀行帳號
-	 * @apiSuccess {Object} virtual_account 專屬虛擬帳號
-	 * @apiSuccess {String} virtual_account.bank_code 銀行代碼
-	 * @apiSuccess {String} virtual_account.branch_code 分行代碼
-	 * @apiSuccess {String} virtual_account.bank_name 銀行名稱
-	 * @apiSuccess {String} virtual_account.branch_name 分行名稱
-	 * @apiSuccess {String} virtual_account.virtual_account 虛擬帳號
-	 * @apiSuccess {Object} funds 資金資訊
-	 * @apiSuccess {String} funds.total 資金總額
-	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
-	 * @apiSuccess {String} funds.frozen 待交易餘額
+	 * @apiSuccess {Number} target.id 產品ID
+	 * @apiSuccess {String} target.target_no 標的案號
+	 * @apiSuccess {Number} target.product_id 產品ID
+	 * @apiSuccess {Number} target.user_id User ID
+	 * @apiSuccess {Number} target.loan_amount 標的金額
+	 * @apiSuccess {Number} target.credit_level 信用評等
+	 * @apiSuccess {Number} target.interest_rate 年化利率
+	 * @apiSuccess {String} target.reason 借款原因
+	 * @apiSuccess {String} target.remark 備註
+	 * @apiSuccess {Number} target.instalment 期數
+	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.expire_time 流標時間
+	 * @apiSuccess {Number} target.invested 目前投標量
+	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
-     * 				"amount":"5000",
-     * 				"loan_amount":"",
-	 * 				"contract":"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊",
-     * 				"status":"3",
-     * 				"transfer_status":"0",
-     * 				"created_at":"1520421572",
-	 * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸",
-     * 					"description":"輕鬆學貸",
-     * 					"alias":"FA"
-     * 				},
+     * 				"amount": 5000,
+     * 				"loan_amount": 5000,
+     * 				"loan_amount": 0,
+     * 				"status": 0,
+     * 				"created_at": 1547626406,
+     * 				"contract": "",
      * 				"target": {
-     * 					"id": "19",
-     * 					"target_no": "1804233189",
-     * 					"invested": "5000",
-     * 					"expire_time": "123456789",
-     * 					"delay": "0",
-     * 					"status": "5"
+     * 					"id": 18,
+     * 					"target_no": "STN2019011430611",
+     * 					"product_id": 1,
+     * 					"user_id": 19,
+     * 					"loan_amount": 5000,
+     * 					"credit_level": 3,
+     * 					"interest_rate": 8,
+     * 					"reason": "",
+     * 					"remark": "",
+     * 					"instalment": 6,
+     * 					"repayment": 1,
+     * 					"expire_time": 1547618700,
+     * 					"invested": 0,
+     * 					"status": 3,
+     * 					"sub_status": 0
      * 				}
      * 			}
-     * 			],
-     * 	        "bank_account": {
-     * 	            "bank_code": "013",
-     * 	            "branch_code": "1234",
-     * 	            "bank_account": "12345678910"
-     * 	        },
-     * 	        "virtual_account": {
-     * 	            "bank_code": "013",
-     * 	            "branch_code": "0154",
-     * 	            "bank_name": "國泰世華商業銀行",
-     * 	            "branch_name": "信義分行",
-     * 	            "virtual_account": "56639100000001"
-     * 	        },
-     * 	        "funds": {
-     * 	            "total": 500,
-     * 	            "last_recharge_date": "2018-05-03 19:15:42",
-     * 	            "frozen": 0
-     * 	        }
+     * 			]
      * 		}
      *    }
 	 *
@@ -652,101 +632,38 @@ class Target extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
-     * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {Object} 202
-     *     {
-     *       "result": "ERROR",
-     *       "error": "202"
-     *     }
-	 *
-     * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {Object} 203
-     *     {
-     *       "result": "ERROR",
-     *       "error": "203"
-     *     }
-	 *
-     * @apiError 208 未滿20歲
-     * @apiErrorExample {Object} 208
-     *     {
-     *       "result": "ERROR",
-     *       "error": "208"
-     *     }
-	 *
-     * @apiError 209 未設置交易密碼
-     * @apiErrorExample {Object} 209
-     *     {
-     *       "result": "ERROR",
-     *       "error": "209"
-     *     }
      */
 	public function applylist_get()
     {
-		$input 				= $this->input->get(NULL, TRUE);
-		$user_id 			= $this->user_info->id;
-		$investor 			= $this->user_info->investor;
-
-		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-		}
-
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-		}
-
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$user_bankaccount = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
-		if(!$user_bankaccount){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-		}
-		
-		$this->load->model('user/virtual_account_model');
-		$virtual		 	= $this->virtual_account_model->get_by(array('user_id'=>$user_id,'investor'=>$investor));
-		$virtual_account	= array(
-			'bank_code'			=> CATHAY_BANK_CODE,
-			'branch_code'		=> CATHAY_BRANCH_CODE,
-			'bank_name'			=> CATHAY_BANK_NAME,
-			'branch_name'		=> CATHAY_BRANCH_NAME,
-			'virtual_account'	=> $virtual->virtual_account,
-		);
-		$bank_account 		= array(
-			'bank_code'		=> $user_bankaccount->bank_code,
-			'branch_code'	=> $user_bankaccount->branch_code,
-			'bank_account'	=> $user_bankaccount->bank_account,
-		);
-		
-		$this->load->library('Transaction_lib');
-		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
-		$param				= array( 'user_id'=> $user_id);
-		$investments		= $this->investment_model->get_many_by($param);
-		$list				= array();
+		$input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+		$investments	= $this->investment_model->get_many_by([
+			'user_id' 	=> $user_id,
+			'status'	=> [0,1,2]
+		]);
+		$list			= [];
 		if(!empty($investments)){
 			foreach($investments as $key => $value){
-				
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
-					'id'			=> $target_info->id,
-					'loan_amount'	=> $target_info->loan_amount,
+					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
-					'invested'		=> $target_info->invested,
-					'expire_time'	=> $target_info->expire_time,
-					'delay'			=> $target_info->delay,
-					'status'		=> $target_info->status,
-					'sub_status'	=> $target_info->sub_status,
+					'product_id'	=> intval($target_info->product_id),
+					'user_id' 		=> intval($target_info->user_id),
+					'loan_amount'	=> intval($target_info->loan_amount),
+					'credit_level' 	=> intval($target_info->credit_level),
+					'interest_rate' => intval($target_info->interest_rate),
+					'reason' 		=> $target_info->reason,
+					'remark' 		=> $target_info->remark,
+					'instalment' 	=> intval($target_info->instalment),
+					'repayment' 	=> intval($target_info->repayment),
+					'expire_time'	=> intval($target_info->expire_time),
+					'invested'		=> intval($target_info->invested),
+					'status'		=> intval($target_info->status),
+					'sub_status'	=> intval($target_info->sub_status),
 				);
-				
-				$product_info = $this->product_model->get($target_info->product_id);
-				$product = array(
-					'id'			=> $product_info->id,
-					'name'			=> $product_info->name,
-				);
-				
+
 				$contract = '';
 				if($value->contract_id){
 					$contract_data = $this->contract_lib->get_contract($value->contract_id);
@@ -754,24 +671,16 @@ class Target extends REST_Controller {
 				}
 			
 				$list[] = array(
-					'id' 				=> $value->id,
-					'amount' 			=> $value->amount,
-					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
+					'amount' 			=> intval($value->amount),
+					'loan_amount' 		=> intval($value->loan_amount),
+					'status' 			=> intval($value->status),
+					'created_at' 		=> intval($value->created_at),
 					'contract' 			=> $contract,
-					'status' 			=> $value->status,
-					'transfer_status' 	=> $value->transfer_status,
-					'created_at' 		=> $value->created_at,
-					'product' 			=> $product,
 					'target' 			=> $target,
 				);
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array(
-			'list' 				=> $list,
-			'bank_account'		=> $bank_account,
-			'virtual_account'	=> $virtual_account,
-			'funds'				=> $funds
-		)));
+		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ]));
     }
  
  	/**

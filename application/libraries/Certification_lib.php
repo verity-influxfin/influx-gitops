@@ -26,6 +26,13 @@ class Certification_lib{
 			);
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
+				$certification->id 					= intval($certification->id);
+				$certification->user_id 			= intval($certification->user_id);
+				$certification->investor 			= intval($certification->investor);
+				$certification->status 				= intval($certification->status);
+				$certification->certification_id 	= intval($certification->certification_id);
+				$certification->created_at 			= intval($certification->created_at);
+				$certification->updated_ip 			= intval($certification->updated_ip);
 				$certification->content = json_decode($certification->content,true);
 				return $certification;
 			}
@@ -43,6 +50,13 @@ class Certification_lib{
 			);
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
+				$certification->id 					= intval($certification->id);
+				$certification->user_id 			= intval($certification->user_id);
+				$certification->investor 			= intval($certification->investor);
+				$certification->status 				= intval($certification->status);
+				$certification->certification_id 	= intval($certification->certification_id);
+				$certification->created_at 			= intval($certification->created_at);
+				$certification->updated_ip 			= intval($certification->updated_ip);
 				$certification->content = json_decode($certification->content,true);
 				return $certification;
 			}

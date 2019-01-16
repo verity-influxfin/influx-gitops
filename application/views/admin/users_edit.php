@@ -155,7 +155,7 @@
 												<tr>
 													<td><p class="form-control-static">產品</p></td>
 													<td>
-														<p class="form-control-static"><?=isset($value->product_id)?$product_list[$value->product_id]:"";?></p>
+														<p class="form-control-static"><?=isset($value->product_id)?$product_list[$value->product_id]['name']:"";?></p>
 													</td>
 													<td><p class="form-control-static">信用等級</p></td>
 													<td>

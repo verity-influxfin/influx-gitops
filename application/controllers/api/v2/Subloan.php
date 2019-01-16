@@ -149,8 +149,6 @@ class Subloan extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
 		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
@@ -165,23 +163,14 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$this->load->model('loan/product_model');
-			$product 	= $this->product_model->get($target->product_id);
-			$instalment = json_decode($product->instalment,TRUE);
-			foreach($instalment as $k => $v){
-				$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
-			}
-			
-			$repayment = array();
-			foreach($repayment_type as $k => $v){
-				$repayment[$k] = array("name"=>$v,"value"=>$k);
-			}
-			
-			$info 		= $this->subloan_lib->get_info($target);
-			$data		= array(
-				"amount" 		=> $info["total"],
-				"instalment"	=> $instalment,
-				"repayment"		=> $repayment
+			$product_list 	= $this->config->item('product_list');
+			$product 		= $product_list[$target->product_id];
+		
+			$info 			= $this->subloan_lib->get_info($target);
+			$data			= array(
+				'amount' 		=> $info['total'],
+				'instalment'	=> $product['instalment'],
+				'repayment'		=> $product['repayment'],
 			);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -257,7 +246,7 @@ class Subloan extends REST_Controller {
     {
 		$input 				= $this->input->post(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
-		$param				= array("user_id"=> $user_id);
+		$param				= array('user_id'=> $user_id);
 		$repayment_type 	= $this->config->item('repayment_type');
 		//必填欄位
 		$fields 	= ['target_id','instalment','repayment'];
@@ -269,7 +258,7 @@ class Subloan extends REST_Controller {
 			}
 		}
 		
-		$target = $this->target_model->get($input["target_id"]);
+		$target = $this->target_model->get($input['target_id']);
 		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
@@ -283,10 +272,9 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 			
-			$this->load->model('loan/product_model');
-			$product 			 = $this->product_model->get($target->product_id);
-			$product->instalment = json_decode($product->instalment,TRUE);
-			if(!in_array($input['instalment'],$product->instalment)){
+			$product_list 	= $this->config->item('product_list');
+			$product 		= $product_list[$target->product_id];
+			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
@@ -386,10 +374,6 @@ class Subloan extends REST_Controller {
      * 				"status":"1",
      * 				"sub_status":"8",
      * 				"created_at":"1520421572",
-     * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸"
-     * 				},
   	 *       		"amortization_schedule": {
   	 *           		"amount": "12000",
   	 *           		"instalment": "6",
@@ -469,8 +453,6 @@ class Subloan extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
 		$subloan_target		= array();
 		if(!empty($target)){
@@ -484,52 +466,36 @@ class Subloan extends REST_Controller {
 			}
 			
 			$data = array(
-				"target_id"			=> $subloan->target_id,
-				"amount"			=> $subloan->amount,
-				"instalment"		=> $instalment_list[$subloan->instalment],
-				"repayment"			=> $repayment_type[$subloan->repayment],
-				"settlement_date"	=> $subloan->settlement_date,
-				"status"			=> $subloan->status,
-				"created_at"		=> $subloan->created_at,
+				'target_id'			=> $subloan->target_id,
+				'amount'			=> $subloan->amount,
+				'instalment'		=> $instalment_list[$subloan->instalment],
+				'repayment'			=> $repayment_type[$subloan->repayment],
+				'settlement_date'	=> $subloan->settlement_date,
+				'status'			=> $subloan->status,
+				'created_at'		=> $subloan->created_at,
 			);
 			
 			$new_target  = $this->target_model->get($subloan->new_target_id);
 
 			$amortization_schedule = array();
 			if($new_target->status==1){
-				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target->instalment,$new_target->interest_rate,$date="",$new_target->repayment);
+				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target->instalment,$new_target->interest_rate,$date='',$new_target->repayment);
 			}
 			
-			$contract = "";
+			$contract = '';
 			if($new_target->contract_id){
 				$this->load->library('Contract_lib');
 				$contract_data = $this->contract_lib->get_contract($new_target->contract_id);
-				$contract = $contract_data["content"];
+				$contract = $contract_data['content'];
 			}
 			
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
-				$subloan_target[$field] = isset($new_target->$field)?$new_target->$field:"";
-				if($field=="instalment"){
-					$subloan_target[$field] = $instalment_list[$new_target->$field];
-				}
-				
-				if($field=="repayment"){
-					$subloan_target[$field] = $repayment_type[$new_target->$field];
-				}
-				if($field=="product_id"){
-					$this->load->model('loan/product_model');
-					$product_info = $this->product_model->get($new_target->product_id);
-					$product = array(
-						"id"			=> $product_info->id,
-						"name"			=> $product_info->name,
-					);
-				}
+				$subloan_target[$field] = isset($new_target->$field)?$new_target->$field:'';
 			}
-			$subloan_target["contract"] 				= $contract;
-			$subloan_target["product"] 					= $product;
-			$subloan_target["amortization_schedule"] 	= $amortization_schedule;
-			$data["subloan_target"]						= $subloan_target;
+			$subloan_target['contract'] 				= $contract;
+			$subloan_target['amortization_schedule'] 	= $amortization_schedule;
+			$data['subloan_target']						= $subloan_target;
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));

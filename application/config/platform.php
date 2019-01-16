@@ -106,6 +106,7 @@ $config['product_list']= [
 	1 => [
 		'id'				=> 1,
 		'type'				=> 1,
+		'identity'			=> 1,
 		'name'				=> '學生貸',
 		'loan_range_s'		=> 5000,
 		'loan_range_e'		=> 120000,
@@ -123,6 +124,7 @@ $config['product_list']= [
 	2 => [
 		'id'				=> 2,
 		'type'				=> 2,
+		'identity'			=> 1,
 		'name'				=> '學生分期',
 		'loan_range_s'		=> 5000,
 		'loan_range_e'		=> 120000,
@@ -140,6 +142,7 @@ $config['product_list']= [
 	3 => [
 		'id'				=> 3,
 		'type'				=> 1,
+		'identity'			=> 2,
 		'name'				=> '新鮮人貸',
 		'loan_range_s'		=> 10000,
 		'loan_range_e'		=> 200000,
@@ -157,6 +160,7 @@ $config['product_list']= [
 	4 => [
 		'id'				=> 4,
 		'type'				=> 2,
+		'identity'			=> 2,
 		'name'				=> '新鮮人分期',
 		'loan_range_s'		=> 10000,
 		'loan_range_e'		=> 200000,
@@ -178,6 +182,12 @@ $config['product_type']= array(
 	1=> '信用貸款',
 	2=> '分期付款',
 //	3=> '抵押貸款',
+);
+
+//產品型態
+$config['product_identity']= array(
+	1=> '學生',
+	2=> '社會新鮮人',
 );
 
 //還款方式

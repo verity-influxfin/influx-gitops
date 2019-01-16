@@ -10,7 +10,6 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a href="<?=admin_url('product/add') ?>" class="btn btn-primary float-right" >新增產品</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -20,36 +19,28 @@
                                         <tr>
                                             <th>NO.</th>
                                             <th>產品類型</th>
+                                            <th>身份類型</th>
                                             <th>名稱</th>
+                                            <th>簡介</th>
                                             <th>借款額度</th>
-                                            <th>年利率下限（%）</th>
-											<th>年利率上限（%）</th>
-                                            <th>排序</th>
-                                            <th>狀態</th>
-                                            <th>創建日期</th>
-                                            <th>創建者</th>
-                                            <th>修改</th>
+                                            <th>年利率（%）</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 									<?php 
-										if(isset($list) && !empty($list)){
+										if(isset($product_list) && !empty($product_list)){
 											$count = 0;
-											foreach($list as $key => $value){
+											foreach($product_list as $key => $value){
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
-                                            <td><?=isset($product_type[$value->type])?$product_type[$value->type]:"" ?></td>
-                                            <td><?=isset($value->name)?$value->name:"" ?></td>
-											<td><?=isset($value->loan_range_s)?$value->loan_range_s:"" ?> - <?=isset($value->loan_range_e)?$value->loan_range_e:"" ?></td>
-											<td><?=isset($value->interest_rate_s)?$value->interest_rate_s:"" ?></td>
-											<td><?=isset($value->interest_rate_e)?$value->interest_rate_e:"" ?></td>
-											<td><?=isset($value->rank)?$value->rank:"" ?></td>
-											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
-											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
-											<td><a href="<?=admin_url('product/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
+                                            <td><?=isset($value['id'])?$value['id']:'' ?></td>
+                                            <td><?=isset($product_type[$value['type']])?$product_type[$value['type']]:'' ?></td>
+                                            <td><?=isset($product_identity[$value['identity']])?$product_identity[$value['identity']]:'' ?></td>
+                                            <td><?=isset($value['name'])?$value['name']:'' ?></td>
+                                            <td><p><?=isset($value['description'])?$value['description']:'' ?></p></td>
+											<td><?=isset($value['loan_range_s'])?$value['loan_range_s']:'' ?> - <?=isset($value['loan_range_e'])?$value['loan_range_e']:'' ?></td>
+											<td><?=isset($value['interest_rate_s'])?$value['interest_rate_s']:'' ?> - <?=isset($value['interest_rate_e'])?$value['interest_rate_e']:'' ?></td>
                                         </tr>                                        
 									<?php 
 										}}

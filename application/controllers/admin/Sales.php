@@ -15,16 +15,16 @@ class Sales extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$get 		= $this->input->get(NULL, TRUE);
-		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
-		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
-		$page_data 		= array("sdate"=>$sdate,"edate"=>$edate);	
+		$get 			= $this->input->get(NULL, TRUE);
+		$sdate 			= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 			= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= array('sdate'=>$sdate,'edate'=>$edate);	
 		$list			= array();
 		$count 			= 0;
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
-		$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
 		$partner_list_byid = array();
 		if($partner_list){
 			$partner_qrcode = array();
@@ -39,59 +39,59 @@ class Sales extends MY_Admin_Controller {
 			$target_list	= $this->target_model->get_all();
 		}else{
 			$target_list	= $this->target_model->get_many_by(array(
-				"created_at >="	=> strtotime($sdate.' 00:00:00'),
-				"created_at <="	=> strtotime($edate.' 23:59:59'),
+				'created_at >='	=> strtotime($sdate.' 00:00:00'),
+				'created_at <='	=> strtotime($edate.' 23:59:59'),
 			));
 		}
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
 				$count++;
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
-					$list["partner"][$partner_qrcode[$value->promote_code]][$value->status][] = array(
-						"id"			=> $value->id,
-						"amount"		=> $value->amount,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
+					$list['partner'][$partner_qrcode[$value->promote_code]][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
 					);
 				}
 				
 				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
-					$list["sales"][$admins_qrcode[$value->promote_code]][$value->status][] = array(
-						"id"			=> $value->id,
-						"amount"		=> $value->amount,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
+					$list['sales'][$admins_qrcode[$value->promote_code]][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
 					);
 				}
 				
-				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
-					$list["platform"][$value->status][] = array(
-						"id"			=> $value->id,
-						"amount"		=> $value->amount,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
-						"created_date"	=> date("Y-m-d",$value->created_at),
+				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list['platform'][$value->status][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
+						'created_date'	=> date('Y-m-d',$value->created_at),
 					);
 				}
 			}
 		}
-		$page_data["list"] 			= $list;
-		$page_data["count"] 		= $count;
-		$page_data["partner_list"] 	= $partner_list_byid;
-		$page_data["admins_name"] 	= $admins_name;
-		$page_data["partner_type"] 	= $partner_type;
-		$page_data["target_status"] = $this->target_model->status_list;
+		$page_data['list'] 			= $list;
+		$page_data['count'] 		= $count;
+		$page_data['partner_list'] 	= $partner_list_byid;
+		$page_data['admins_name'] 	= $admins_name;
+		$page_data['partner_type'] 	= $partner_type;
+		$page_data['target_status'] = $this->target_model->status_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -102,12 +102,12 @@ class Sales extends MY_Admin_Controller {
 	public function register_report(){
 		$page_data 		= array();	
 		$list			= array();
-		$max_date 		= "";
-		$min_date 		= "";
+		$max_date 		= '';
+		$min_date 		= '';
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
-		$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
 		$partner_list_byid = array();
 		if($partner_list){
 			$partner_qrcode = array();
@@ -117,8 +117,8 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
-		$user_list		= $this->user_model->get_many_by(array("status"=>1));
-		$school_list 	= $this->user_meta_model->get_many_by(array("meta_key"=>"student_status"));
+		$user_list		= $this->user_model->get_many_by(array('status'=>1));
+		$school_list 	= $this->user_meta_model->get_many_by(array('meta_key'=>'student_status'));
 		if(!empty($user_list)){
 			
 			if(!empty($school_list)){
@@ -134,44 +134,44 @@ class Sales extends MY_Admin_Controller {
 				$user_list[$key]->fb 		= $value->nickname?1:0;
 			}
 			
-			$list = array("platform"=>array("count"=>0,"school"=>0,"fb"=>0));
+			$list = array('platform'=>array('count'=>0,'school'=>0,'fb'=>0));
 			foreach($user_list as $key => $value){
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
-					$list["partner"][$partner_qrcode[$value->promote_code]]["count"] ++;
+					$list['partner'][$partner_qrcode[$value->promote_code]]['count'] ++;
 					if($value->school)
-						$list["partner"][$partner_qrcode[$value->promote_code]]["school"] ++;
+						$list['partner'][$partner_qrcode[$value->promote_code]]['school'] ++;
 					if($value->fb)
-						$list["partner"][$partner_qrcode[$value->promote_code]]["fb"] ++;
+						$list['partner'][$partner_qrcode[$value->promote_code]]['fb'] ++;
 				}
 
 				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
-					@$list["sales"][$admins_qrcode[$value->promote_code]]["count"] ++;
+					@$list['sales'][$admins_qrcode[$value->promote_code]]['count'] ++;
 					if($value->school)
-						@$list["sales"][$admins_qrcode[$value->promote_code]]["school"] ++;
+						@$list['sales'][$admins_qrcode[$value->promote_code]]['school'] ++;
 					if($value->fb)
-						@$list["sales"][$admins_qrcode[$value->promote_code]]["fb"] ++;
+						@$list['sales'][$admins_qrcode[$value->promote_code]]['fb'] ++;
 				}
 				
-				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
-					$list["platform"]["count"] ++;
+				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list['platform']['count'] ++;
 					if($value->school)
-						$list["platform"]["school"] ++;
+						$list['platform']['school'] ++;
 					if($value->fb)
-						$list["platform"]["fb"] ++;
+						$list['platform']['fb'] ++;
 				}
 				
-				if($max_date=="" || $max_date<$value->created_at)
+				if($max_date=='' || $max_date<$value->created_at)
 					$max_date = $value->created_at;
-				if($min_date=="" || $min_date>$value->created_at)
+				if($min_date=='' || $min_date>$value->created_at)
 					$min_date = $value->created_at;
 			}
 		}
-		$page_data["list"] 			= $list;
-		$page_data["partner_list"] 	= $partner_list_byid;
-		$page_data["admins_name"] 	= $admins_name;
-		$page_data["partner_type"] 	= $partner_type;
-		$page_data["max_date"] 		= $max_date?date("Y-m-d",$max_date):"";
-		$page_data["min_date"] 		= $min_date?date("Y-m-d",$min_date):"";
+		$page_data['list'] 			= $list;
+		$page_data['partner_list'] 	= $partner_list_byid;
+		$page_data['admins_name'] 	= $admins_name;
+		$page_data['partner_type'] 	= $partner_type;
+		$page_data['max_date'] 		= $max_date?date('Y-m-d',$max_date):'';
+		$page_data['min_date'] 		= $min_date?date('Y-m-d',$min_date):'';
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -181,15 +181,15 @@ class Sales extends MY_Admin_Controller {
 	
 	public function bonus_report(){
 		$get 		= $this->input->get(NULL, TRUE);
-		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
-		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
-		$page_data 		= array("sdate"=>$sdate,"edate"=>$edate);	
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= array('sdate'=>$sdate,'edate'=>$edate);	
 		$list			= array();
 		$count 			= 0;
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
-		$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
 		$partner_list_byid = array();
 		if($partner_list){
 			$partner_qrcode = array();
@@ -200,56 +200,56 @@ class Sales extends MY_Admin_Controller {
 		}
 		
 		$target_list	= $this->target_model->get_many_by(array(
-			"status"		=> array(5,10),
-			"loan_date >="	=> $sdate,
-			"loan_date <="	=> $edate,
+			'status'		=> array(5,10),
+			'loan_date >='	=> $sdate,
+			'loan_date <='	=> $edate,
 		));
 
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
 				$count++;
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
-					$list["partner"][$partner_qrcode[$value->promote_code]][] = array(
-						"id"			=> $value->id,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
+					$list['partner'][$partner_qrcode[$value->promote_code]][] = array(
+						'id'			=> $value->id,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
 					);
 				}
 				
 				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
-					$list["sales"][$admins_qrcode[$value->promote_code]][] = array(
-						"id"			=> $value->id,
-						"amount"		=> $value->amount,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
+					$list['sales'][$admins_qrcode[$value->promote_code]][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
 					);
 				}
 				
-				if($value->promote_code=="" || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
-					$list["platform"][] = array(
-						"id"			=> $value->id,
-						"amount"		=> $value->amount,
-						"loan_amount"	=> $value->loan_amount,
-						"platform_fee"	=> $value->platform_fee,
-						"loan_date"		=> $value->loan_date,
-						"status"		=> $value->status,
-						"promote_code"	=> $value->promote_code,
+				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+					$list['platform'][] = array(
+						'id'			=> $value->id,
+						'amount'		=> $value->amount,
+						'loan_amount'	=> $value->loan_amount,
+						'platform_fee'	=> $value->platform_fee,
+						'loan_date'		=> $value->loan_date,
+						'status'		=> $value->status,
+						'promote_code'	=> $value->promote_code,
 					);
 				}
 			}
 		}
-		$page_data["list"] 			= $list;
-		$page_data["count"] 		= $count;
-		$page_data["partner_list"] 	= $partner_list_byid;
-		$page_data["admins_name"] 	= $admins_name;
-		$page_data["partner_type"] 	= $partner_type;
-		$page_data["target_status"] = $this->target_model->status_list;
+		$page_data['list'] 			= $list;
+		$page_data['count'] 		= $count;
+		$page_data['partner_list'] 	= $partner_list_byid;
+		$page_data['admins_name'] 	= $admins_name;
+		$page_data['partner_type'] 	= $partner_type;
+		$page_data['target_status'] = $this->target_model->status_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -259,45 +259,44 @@ class Sales extends MY_Admin_Controller {
 
 	public function bonus_report_detail(){
 		$get 		= $this->input->get(NULL, TRUE);
-		$type 		= isset($get['type'])&&$get['type']?$get['type']:date("Y-m-d");
+		$type 		= isset($get['type'])&&$get['type']?$get['type']:date('Y-m-d');
 		$id 		= isset($get['id'])&&$get['id']?$get['id']:0;
-		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date("Y-m-d");
-		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date("Y-m-d");
+		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
 		$list		= array();
 		$target_list = array();
-		$name 		 = "";
-		$this->load->model('loan/product_model');
+		$name 		 = '';
 
-		if($type=="partner" && $id){
+		if($type=='partner' && $id){
 			$info  = $this->partner_model->get($id);
 			if($info){
 				$name			= $info->company;
-				$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
-					"status"		=> array(5,10),
-					"loan_date >="	=> $sdate,
-					"loan_date <="	=> $edate,
-					"promote_code"  => $info->my_promote_code,
+				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+					'status'		=> array(5,10),
+					'loan_date >='	=> $sdate,
+					'loan_date <='	=> $edate,
+					'promote_code'  => $info->my_promote_code,
 				));
 			}
 		}
 
-		if($type=="sales" && $id){
+		if($type=='sales' && $id){
 			$info  = $this->admin_model->get($id);
 			if($info){
 				$name			= $info->name;
-				$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
-					"status"		=> array(5,10),
-					"loan_date >="	=> $sdate,
-					"loan_date <="	=> $edate,
-					"promote_code"  => $info->my_promote_code,
+				$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+					'status'		=> array(5,10),
+					'loan_date >='	=> $sdate,
+					'loan_date <='	=> $edate,
+					'promote_code'  => $info->my_promote_code,
 				));
 			}
 		}
 		
-		if($type=="platform"){
-			$name			= "無分類";
+		if($type=='platform'){
+			$name			= '無分類';
 			$admins_qrcode 	= $this->admin_model->get_qrcode_list();
-			$partner_list 	= $this->partner_model->get_many_by(array("status"=>1));
+			$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
 			$partner_qrcode = array();
 			if($partner_list){
 				foreach($partner_list as $key => $value){
@@ -305,11 +304,11 @@ class Sales extends MY_Admin_Controller {
 				}
 			}
 			
-			$target_list	= $this->target_model->order_by("loan_date")->get_many_by(array(
-				"status"		=> array(5,10),
-				"loan_date >="	=> $sdate,
-				"loan_date <="	=> $edate,
-				"promote_code NOT" => array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode)),
+			$target_list	= $this->target_model->order_by('loan_date')->get_many_by(array(
+				'status'			=> [5,10],
+				'loan_date >='		=> $sdate,
+				'loan_date <='		=> $edate,
+				'promote_code NOT' 	=> array_merge(array_keys($admins_qrcode),array_keys($partner_qrcode)),
 			));
 		}
 		
@@ -320,11 +319,11 @@ class Sales extends MY_Admin_Controller {
 		}
 		
 		$page_data = array(
-			"list"			=> $list,
-			"name"			=> $name,
-			"sdate"			=> $sdate,
-			"edate"			=> $edate,
-			"product_name"	=> $this->product_model->get_name_list(),
+			'list'			=> $list,
+			'name'			=> $name,
+			'sdate'			=> $sdate,
+			'edate'			=> $edate,
+			'product_list'	=> $this->config->item('product_list'),
 		);
 
 		$this->load->view('admin/_header');

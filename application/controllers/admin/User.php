@@ -12,7 +12,6 @@ class User extends MY_Admin_Controller {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('loan/product_model');
 		$this->load->model('loan/credit_model');
 		$this->certification = $this->config->item('certifications');
  	}
@@ -81,7 +80,7 @@ class User extends MY_Admin_Controller {
 					$page_data['school_system'] 		= $this->config->item('school_system');
 					$page_data['certification_list'] 	= $certification_list;
 					$page_data['credit_list'] 			= $credit_list;
-					$page_data['product_list'] 			= $this->product_model->get_name_list();
+					$page_data['product_list']			= $this->config->item('product_list');
 					$page_data['bank_account'] 			= $bank_account;
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
@@ -152,7 +151,7 @@ class User extends MY_Admin_Controller {
 				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
-				$page_data['product_list'] 			= $this->product_model->get_name_list();
+				$page_data['product_list']			= $this->config->item('product_list');
 				$page_data['bank_account'] 			= $bank_account;
 				$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 				$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;

@@ -12,12 +12,12 @@
 				}
 				
 				function check_checked(){
-					var ids					= "";
+					var ids					= '';
 					var repayment_export	= '<?=admin_url('target/repayment_export') ?>';
 					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
 					
 					$('.targets:checked').each(function() {
-						if(ids==""){
+						if(ids==''){
 							ids += this.value;
 						}else{
 							ids += ',' + this.value;
@@ -69,30 +69,30 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
 											 <td>
-												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
-												<?=isset($value->target_no)?$value->target_no:"" ?>
+												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:'' ?>" />
+												<?=isset($value->target_no)?$value->target_no:'' ?>
 											 </td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
-                                            <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-                                            <td><?=isset($value->credit_level)?$value->credit_level:"" ?></td>
-											<td><?=isset($school_list[$value->user_id]["school_name"])?$school_list[$value->user_id]["school_name"]:"" ?></td>
-                                            <td><?=isset($school_list[$value->user_id]["school_department"])?$school_list[$value->user_id]["school_department"]:"" ?></td>
-                                            <td><?=isset($value->amount)?$value->amount:"" ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate.'%':"" ?></td>
-                                            <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
-                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:"" ?></td>
-                                            <td><?=isset($value->amortization_table["total_payment_m"])?$value->amortization_table["total_payment_m"]:"" ?></td>
-                                            <td><?=isset($value->amortization_table["total_payment"])?$value->amortization_table["total_payment"]:"" ?></td>
-                                            <td><?=isset($value->loan_date)?$value->loan_date:"" ?></td>
-                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
+                                            <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
+											<td><?=isset($school_list[$value->user_id]["school_name"])?$school_list[$value->user_id]["school_name"]:'' ?></td>
+                                            <td><?=isset($school_list[$value->user_id]["school_department"])?$school_list[$value->user_id]["school_department"]:'' ?></td>
+                                            <td><?=isset($value->amount)?$value->amount:'' ?></td>
+                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
+                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate.'%':'' ?></td>
+                                            <td><?=isset($value->instalment)?$value->instalment:'' ?></td>
+                                            <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
+                                            <td><?=isset($value->amortization_table["total_payment_m"])?$value->amortization_table["total_payment_m"]:'' ?></td>
+                                            <td><?=isset($value->amortization_table["total_payment"])?$value->amortization_table["total_payment"]:'' ?></td>
+                                            <td><?=isset($value->loan_date)?$value->loan_date:'' ?></td>
+                                            <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
                                             <td>
-											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 											</td>
-                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-                                            <td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
+                                            <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

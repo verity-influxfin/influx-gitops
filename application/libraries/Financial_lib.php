@@ -21,7 +21,9 @@ class Financial_lib{
 
 	//取得攤還表 - 等額本息
 	private function amortization_schedule_1($amount,$instalment,$rate,$date){
-
+		$amount 	= intval($amount);
+		$instalment = intval($instalment);
+		$rate 		= intval($rate);
 		$total_payment 		= $this->PMT($rate,$instalment,$amount);
 		if($total_payment){
 			$xirr_dates		= array($date);

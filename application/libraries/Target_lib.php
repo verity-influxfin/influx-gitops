@@ -572,12 +572,11 @@ class Target_lib{
 			$rs = $this->CI->target_model->update_many($ids,array('script_status'=>$script));
 			if($rs){
 				foreach($list as $product_id => $targets){
-					$this->CI->load->model('loan/product_model');
-					$product 				= $this->CI->product_model->get($product_id);
-					$product_certification 	= json_decode($product->certifications,true);
+					$product_list 			= $this->CI->config->item('product_list');
+					$product_certification 	= $product_list[$product_id]['certifications'];
 					foreach($targets as $target_id => $value){
 						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0);
-						$finish		 	= true;
+						$finish		 		= true;
 						foreach($certifications as $certification){
 							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
 								$finish	= false;

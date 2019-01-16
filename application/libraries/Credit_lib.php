@@ -142,10 +142,10 @@ class Credit_lib{
 			$rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
 			if($rs){
 				$data = array(
-					'level'		 => $rs->level,
-					'points'	 => $rs->points,
-					'amount'	 => $rs->amount,
-					'created_at' => $rs->created_at,
+					'level'		 => intval($rs->level),
+					'points'	 => intval($rs->points),
+					'amount'	 => intval($rs->amount),
+					'created_at' => intval($rs->created_at),
 				);
 				return $data;
 			}

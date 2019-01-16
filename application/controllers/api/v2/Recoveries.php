@@ -11,7 +11,6 @@ class Recoveries extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Transaction_lib'); 
@@ -258,9 +257,8 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {Object} target 標的資訊
+	 * @apiSuccess {Number} target.product_id 產品ID
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.delay_days 逾期天數
@@ -283,10 +281,6 @@ class Recoveries extends REST_Controller {
      * 				"status":"3",
      * 				"transfer_status":"0",
      * 				"created_at":"1520421572",
-	 * 				"product":{
-     * 					"id":"2",
-     * 					"name":"輕鬆學貸"
-     * 				},
      * 				"target": {
      * 					"id": "19",
      * 					"target_no": "1804233189",
@@ -326,6 +320,7 @@ class Recoveries extends REST_Controller {
 				$target = array(
 					'id'			=> $target_info->id,
 					'target_no'		=> $target_info->target_no,
+					'product_id' 	=> intval($target_info->product_id),
 					'credit_level'	=> $target_info->credit_level,
 					'delay'			=> $target_info->delay,
 					'delay_days'	=> $target_info->delay_days,
@@ -359,19 +354,12 @@ class Recoveries extends REST_Controller {
 					}
 				}
 				
-				$product_info = $this->product_model->get($target_info->product_id);
-				$product = array(
-					'id'				=> $product_info->id,
-					'name'				=> $product_info->name,
-				);
-				
 				$list[] = array(          
 					'id' 				=> $value->id,
 					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
 					'status' 			=> $value->status,
 					'transfer_status' 	=> $value->transfer_status,
 					'created_at' 		=> $value->created_at,
-					'product' 			=> $product,
 					'target' 			=> $target,
 					'next_repayment' 	=> $next_repayment,
 				);
@@ -400,9 +388,8 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} transfer.contract 債權轉讓合約
 	 * @apiSuccess {String} transfer.transfer_date 債權轉讓日期
 	 * @apiSuccess {String} created_at 申請日期
-	 * @apiSuccess {Object} product 產品資訊
-	 * @apiSuccess {String} product.name 產品名稱
 	 * @apiSuccess {Object} target 標的資訊
+	 * @apiSuccess {Number} target.product_id 產品ID
 	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} target.credit_level 信用指數
 	 * @apiSuccess {String} target.delay_days 逾期天數
@@ -440,10 +427,6 @@ class Recoveries extends REST_Controller {
      * 				"transfer_fee":"25",
      * 				"contract":"我是合約，我是合約",
      * 				"transfer_date": null
-     * 			},
-	 * 			"product":{
-     * 				"id":"2",
-     * 				"name":"輕鬆學貸"
      * 			},
      * 			"target": {
      * 				"id": "19",
@@ -525,6 +508,7 @@ class Recoveries extends REST_Controller {
 			$target = array(
 				'id'			=> $target_info->id,
 				'target_no'		=> $target_info->target_no,
+				'product_id'		=> $target_info->product_id,
 				'credit_level'	=> $target_info->credit_level,
 				'delay'			=> $target_info->delay,
 				'delay_days'	=> $target_info->delay_days,
@@ -547,12 +531,6 @@ class Recoveries extends REST_Controller {
 					}
 				}
 			}
-			
-			$product_info 	= $this->product_model->get($target_info->product_id);
-			$product 		= array(
-				'id'	=> $product_info->id,
-				'name'	=> $product_info->name,
-			);
 			
 			$transfer 		= array();
 			if($investment->transfer_status!=0){
@@ -578,7 +556,6 @@ class Recoveries extends REST_Controller {
 				'transfer_status' 		=> $investment->transfer_status,
 				'created_at' 			=> $investment->created_at,
 				'transfer' 				=> $transfer,
-				'product' 				=> $product,
 				'target' 				=> $target,
 				'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info,$investment),
 			);

@@ -12,7 +12,7 @@ class Welcome extends CI_Controller {
 		echo $id.'<br>';
 		echo $time.'<br>';
 		
-		$content = "854896151651";
+		$content = "";
 		//amount + instalment + item_count + item_name + item_price + merchant_order_no + phone + product_id
 		
 		$authorization = SHA1($id.$content.$time);

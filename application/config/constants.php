@@ -299,4 +299,4 @@ defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_P
 
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_JWT_KEY'));
 defined('GOOGLE_APPLICATION_CREDENTIALS')  OR define('GOOGLE_APPLICATION_CREDENTIALS', getenv('GOOGLE_APPLICATION_CREDENTIALS'));
-defined('COOPER_TIMEOUT')   		OR define('COOPER_TIMEOUT'			, 90);
+defined('COOPER_TIMEOUT')   		OR define('COOPER_TIMEOUT'			, 3600);

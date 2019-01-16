@@ -7,21 +7,21 @@
             </div>
 			<script type="text/javascript">
 				function toloan(){
-					var ids = "";
-					var target_no = "";
+					var ids = '';
+					var target_no = '';
 					$('.targets:checked').each(function() {
-						if(ids==""){
+						if(ids==''){
 							ids += this.value;
 						}else{
 							ids += ',' + this.value;
 						}	
-						if(target_no==""){
+						if(target_no==''){
 							target_no += $(this).attr("data-targetno");
 						}else{
 							target_no += ',' + $(this).attr("data-targetno");
 						}							
 					});
-					if(ids==""){
+					if(ids==''){
 						alert("請先選擇欲放款案件");
 						return false;
 					}
@@ -126,21 +126,21 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
 												<? if($value->loan_status==2 && $value->sub_status==0){ ?>
-												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:"" ?>" value="<?=isset($value->id)?$value->id:"" ?>" />
+												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:'' ?>" value="<?=isset($value->id)?$value->id:'' ?>" />
 												<? } ?>
-												&nbsp;<?=isset($value->target_no)?$value->target_no:"" ?>
+												&nbsp;<?=isset($value->target_no)?$value->target_no:'' ?>
 											</td>
-                                            <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
                                             <td>
 												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
-													<?=isset($value->user_id)?$value->user_id:"" ?>
+													<?=isset($value->user_id)?$value->user_id:'' ?>
 												</a>
 											</td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:"" ?></td>
-                                            <td><?=isset($value->platform_fee)&&$value->platform_fee?$value->platform_fee:"" ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:"" ?></td>
+                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
+                                            <td><?=isset($value->platform_fee)&&$value->platform_fee?$value->platform_fee:'' ?></td>
+                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:'' ?></td>
                                             <td>
-												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:"" ?>
+												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:'' ?>
 												<? if($value->loan_status==3 && $value->sub_status==0){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
@@ -153,8 +153,8 @@
 												}
 												?>
 											</td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
-                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
+                                            <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

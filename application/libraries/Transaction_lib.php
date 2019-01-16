@@ -17,18 +17,18 @@ class Transaction_lib{
     }
 
 	//取得資金資料
-	public function get_virtual_funds($virtual_account=""){
+	public function get_virtual_funds($virtual_account=''){
 		if($virtual_account){
 			$total  = 0;
 			$frozen = 0;
-			$last_recharge_date	= "";
+			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array("virtual_account" => $virtual_account));
-			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array("virtual_account" => $virtual_account,"status" => 1));
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
+			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array('virtual_account' => $virtual_account,'status' => 1));
 			if($virtual_passbook){
 				foreach($virtual_passbook as $key => $value){
 					$total = $total + intval($value->amount);
-					if($value->tx_datetime > $last_recharge_date){
+					if(intval($value->amount) > 0 && $value->tx_datetime > $last_recharge_date){
 						$last_recharge_date = $value->tx_datetime;
 					}
 				}
@@ -40,7 +40,7 @@ class Transaction_lib{
 				}
 			}
 			
-			return array("total"=>$total,"last_recharge_date"=>$last_recharge_date,"frozen"=>$frozen);
+			return array('total'=>$total,'last_recharge_date'=>$last_recharge_date,'frozen'=>$frozen);
 		}
 		return false;
 	}
