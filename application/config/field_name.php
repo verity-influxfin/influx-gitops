@@ -1,47 +1,4 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-$config['user_fields']= array(
-	"id"				=> "User ID",
-	"name"				=> "姓名",
-	"sex"				=> "性別",
-	"id_number"			=> "身分證字號",
-	"id_card_date"		=> "發證日期",
-	"id_card_place"		=> "發證地點",
-	"phone"				=> "電話",
-	"address"			=> "地址",
-	"email"				=> "Email",
-	"birthday"			=> "生日",
-	"status"			=> "借款端帳號",
-	"investor_status"	=> "出借端帳號",
-	"block_status"		=> "黑名單",
-	"promote_code"		=> "性別",
-	"created_at"		=> "註冊日期",
-	"created_ip"		=> "註冊IP",
-);
-
-$config['target_fields']= array(
-	"id"				=> "Target ID",
-	"target_no"			=> "案號",
-	"product_id"		=> "Product ID",
-	"user_id"			=> "User ID",
-	"amount"			=> "申請金額",
-	"credit_level"		=> "核准時信用等級",
-	"loan_amount"		=> "核准金額",
-	"interest_rate"		=> "核可利率",
-	"instalment"		=> "期數",
-	"repayment"			=> "還款方式",
-	"bank_code"			=> "借款人收款銀行代碼",
-	"branch_code"		=> "借款人收款分行代碼",
-	"bank_account"		=> "借款人收款帳號",
-	"virtual_account"	=> "還款虛擬帳號",
-	"remark"			=> "備註",
-	"contract"			=> "合約內容",
-	"person_image"		=> "證件自拍照",
-	"delay"				=> "是否逾期",
-	"delay_days"		=> "逾期天數",
-	"status"			=> "狀態",
-	"loan_status"		=> "放款狀態",
-	"created_at"		=> "申請時間",
-);
 
 $config['user_meta_fields']= array(
 	"id_card" 	=> array(

@@ -577,7 +577,6 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} loan_amount 得標金額
 	 * @apiSuccess {Number} status 投標狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {Number} created_at 申請日期
-	 * @apiSuccess {String} contract 合約內容
 	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {Number} target.id 產品ID
 	 * @apiSuccess {String} target.target_no 標的案號
@@ -586,8 +585,6 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} target.loan_amount 標的金額
 	 * @apiSuccess {Number} target.credit_level 信用評等
 	 * @apiSuccess {Number} target.interest_rate 年化利率
-	 * @apiSuccess {String} target.reason 借款原因
-	 * @apiSuccess {String} target.remark 備註
 	 * @apiSuccess {Number} target.instalment 期數
 	 * @apiSuccess {Number} target.repayment 還款方式
 	 * @apiSuccess {Number} target.expire_time 流標時間
@@ -601,11 +598,9 @@ class Target extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"amount": 5000,
-     * 				"loan_amount": 5000,
      * 				"loan_amount": 0,
      * 				"status": 0,
      * 				"created_at": 1547626406,
-     * 				"contract": "",
      * 				"target": {
      * 					"id": 18,
      * 					"target_no": "STN2019011430611",
@@ -614,8 +609,6 @@ class Target extends REST_Controller {
      * 					"loan_amount": 5000,
      * 					"credit_level": 3,
      * 					"interest_rate": 8,
-     * 					"reason": "",
-     * 					"remark": "",
      * 					"instalment": 6,
      * 					"repayment": 1,
      * 					"expire_time": 1547618700,
@@ -654,8 +647,6 @@ class Target extends REST_Controller {
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
 					'interest_rate' => intval($target_info->interest_rate),
-					'reason' 		=> $target_info->reason,
-					'remark' 		=> $target_info->remark,
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
 					'expire_time'	=> intval($target_info->expire_time),
@@ -663,19 +654,12 @@ class Target extends REST_Controller {
 					'status'		=> intval($target_info->status),
 					'sub_status'	=> intval($target_info->sub_status),
 				);
-
-				$contract = '';
-				if($value->contract_id){
-					$contract_data = $this->contract_lib->get_contract($value->contract_id);
-					$contract = $contract_data['content'];
-				}
 			
 				$list[] = array(
 					'amount' 			=> intval($value->amount),
 					'loan_amount' 		=> intval($value->loan_amount),
 					'status' 			=> intval($value->status),
 					'created_at' 		=> intval($value->created_at),
-					'contract' 			=> $contract,
 					'target' 			=> $target,
 				);
 			}

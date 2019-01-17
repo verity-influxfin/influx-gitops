@@ -10376,45 +10376,66 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "remaining_principal",
-            "description": "<p>持有債權</p>"
+            "field": "payable",
+            "description": "<p>待匯款</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "accounts_receivable",
             "description": "<p>應收帳款</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "interest_receivable",
+            "field": "accounts_receivable.payable",
+            "description": "<p>應收本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable.interest",
             "description": "<p>應收利息</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "interest",
-            "description": "<p>已收利息收入</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "other_income",
-            "description": "<p>已收其他收入</p>"
+            "field": "accounts_receivable.delay_interest",
+            "description": "<p>應收延滯息</p>"
           },
           {
             "group": "Success 200",
             "type": "Object",
             "optional": false,
-            "field": "principal_level",
-            "description": "<p>標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良</p>"
+            "field": "income",
+            "description": "<p>收入</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.interest",
+            "description": "<p>已收利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.delay_interest",
+            "description": "<p>已收延滯息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.other",
+            "description": "<p>已收補貼</p>"
           },
           {
             "group": "Success 200",
@@ -10519,7 +10540,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remaining_principal\": \"50000\",\n\t\t\t\"interest\": \"0\",\n\t\t\t\"accounts_receivable\": \"50751\",\n\t\t\t\"interest_receivable\": \"751\",\n\t\t\t\"other_income\": \"0\",\n\t\t\t\"principal_level\": {\n\t\t\t\t  \"1\": 0,\n\t\t\t\t  \"2\": 500,\n\t\t\t\t  \"3\": 0,\n\t\t\t\t  \"4\": 50000,\n\t\t\t\t  \"5\": 0,\n\t\t\t\t  \"6\": 0,\n\t\t\t\t  \"7\": 0,\n\t\t\t\t  \"8\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t \"total\": \"500\",\n\t\t\t\t \"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \"frozen\": \"0\"\n\t\t\t},\n\t        \"bank_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"1234\",\n\t            \"bank_account\": \"12345678910\"\n\t        },\n\t        \"virtual_account\": {\n\t            \"bank_code\": \"013\",\n\t            \"branch_code\": \"0154\",\n\t            \"bank_name\": \"國泰世華商業銀行\",\n\t            \"branch_name\": \"信義分行\",\n\t            \"virtual_account\": \"56639100000001\"\n\t        }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"payable\": \"50000\",\n\t\t\t\"accounts_receivable\": {\n\t\t\t\t\"principal\": 40000,\n\t\t\t\t\"interest\": 1280,\n\t\t\t\t\"delay_interest\": 0\n\t\t\t},\n\t\t\t\"income\": {\n\t\t\t\t\"interest\": 0,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"other\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t\"total\": 960000,\n\t\t\t\t\"last_recharge_date\": \"2019-01-14 14:12:10\",\n\t\t\t\t\"frozen\": 0\n\t\t\t},\n\t\t\t\"bank_account\": {\n\t\t\t\t\"bank_code\": \"004\",\n\t\t\t\t\"branch_code\": \"0037\",\n\t\t\t\t\"bank_account\": \"123123123132\"\n\t\t\t},\n\t\t\t\"virtual_account\": {\n\t\t\t\t\"bank_code\": \"013\",\n\t\t\t\t\"branch_code\": \"0154\",\n\t\t\t\t\"bank_name\": \"國泰世華商業銀行\",\n\t\t\t\t\"branch_name\": \"信義分行\",\n\t\t\t\t\"virtual_account\": \"56639164278638\"\n\t\t\t}\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -10804,6 +10825,298 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v2/recoveries/finish",
+    "title": "出借方 已結案債權列表",
+    "version": "0.2.0",
+    "name": "GetRecoveriesFinish",
+    "group": "Recoveries",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Investments ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "loan_amount",
+            "description": "<p>債權金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "status",
+            "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "transfer_status",
+            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "target",
+            "description": "<p>標的資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.id",
+            "description": "<p>產品ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.target_no",
+            "description": "<p>標的案號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.product_id",
+            "description": "<p>產品ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.user_id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.loan_amount",
+            "description": "<p>標的金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.credit_level",
+            "description": "<p>信用評等</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.interest_rate",
+            "description": "<p>年化利率</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.instalment",
+            "description": "<p>期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.repayment",
+            "description": "<p>還款方式</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.delay",
+            "description": "<p>是否逾期 0:無 1:逾期中</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.delay_days",
+            "description": "<p>逾期天數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.loan_date",
+            "description": "<p>放款日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.last_date",
+            "description": "<p>結案日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.status",
+            "description": "<p>標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.sub_status",
+            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "income",
+            "description": "<p>收入</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.principal",
+            "description": "<p>已收本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.interest",
+            "description": "<p>已收利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.delay_interest",
+            "description": "<p>已收延滯息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.other",
+            "description": "<p>已收補貼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "income.transfer",
+            "description": "<p>債轉價金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "invest",
+            "description": "<p>投資</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "invest.date",
+            "description": "<p>投資日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "invest.amount",
+            "description": "<p>投資金額</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"income\": {\n\t\t\t\t\t\"principal\": 0,\n\t\t\t\t\t\"interest\": 0,\n\t\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\t\"other\": 0,\n\t\t\t\t\t\"transfer\": \"5003\"\n\t\t\t\t},\n\t\t\t\t\"invest\": {\n\t\t\t\t\t\"date\": \"2019-01-05\",\n\t\t\t\t\t\"amount\": \"5000\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Recoveries.php",
+    "groupTitle": "Recoveries",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/recoveries/finish"
+      }
+    ],
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "205",
+            "description": "<p>非出借端登入</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "205",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
+          "type": "Object"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/v2/recoveries/info/:id",
     "title": "出借方 已出借資訊",
     "version": "0.2.0",
@@ -10926,22 +11239,15 @@ define({ "api": [
             "group": "Success 200",
             "type": "Object",
             "optional": false,
-            "field": "product",
-            "description": "<p>產品資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "product.name",
-            "description": "<p>產品名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.product_id",
+            "description": "<p>產品ID</p>"
           },
           {
             "group": "Success 200",
@@ -11102,7 +11408,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\",\n\t\t\t\t\"contract\":\"我是合約，我是合約\",\n\t\t\t\t\"transfer_date\": null\n\t\t\t},\n\t\t\t\"product\":{\n\t\t\t\t\"id\":\"2\",\n\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \t\"1\": {\n                 \t\"instalment\": 1,\n                 \t\"repayment_date\": \"2018-06-10\",\n                 \t\"repayment\": 0,\n                 \t\"principal\": 1893,\n                 \t\"interest\": 160,\n                 \t\"total_payment\": 2053\n             \t},\n             \t\"2\": {\n                 \t\"instalment\": 2,\n                  \t\"repayment_date\": \"2018-07-10\",\n                  \t\"repayment\": 0,\n                  \t\"principal\": 1978,\n                  \t\"interest\": 75,\n                  \t\"total_payment\": 2053\n              \t},\n             \t\"3\": {\n                   \t\"instalment\": 3,\n                   \t\"repayment_date\": \"2018-08-10\",\n                   \t\"repayment\": 0,\n                   \t\"principal\": 1991,\n                   \t\"interest\": 62,\n                   \t\"total_payment\": 2053\n              \t}\n           \t}\n       \t}\n\t\t }\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\",\n\t\t\t\t\"contract\":\"我是合約，我是合約\",\n\t\t\t\t\"transfer_date\": null\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \t\"1\": {\n                 \t\"instalment\": 1,\n                 \t\"repayment_date\": \"2018-06-10\",\n                 \t\"repayment\": 0,\n                 \t\"principal\": 1893,\n                 \t\"interest\": 160,\n                 \t\"total_payment\": 2053\n             \t},\n             \t\"2\": {\n                 \t\"instalment\": 2,\n                  \t\"repayment_date\": \"2018-07-10\",\n                  \t\"repayment\": 0,\n                  \t\"principal\": 1978,\n                  \t\"interest\": 75,\n                  \t\"total_payment\": 2053\n              \t},\n             \t\"3\": {\n                   \t\"instalment\": 3,\n                   \t\"repayment_date\": \"2018-08-10\",\n                   \t\"repayment\": 0,\n                   \t\"principal\": 1991,\n                   \t\"interest\": 62,\n                   \t\"total_payment\": 2053\n              \t}\n           \t}\n       \t}\n\t\t }\n   }",
           "type": "Object"
         }
       ]
@@ -11557,7 +11863,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/v2/recoveries/list",
-    "title": "出借方 已出借列表",
+    "title": "出借方 還款中債權列表",
     "version": "0.2.0",
     "name": "GetRecoveriesList",
     "group": "Recoveries",
@@ -11596,7 +11902,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "loan_amount",
-            "description": "<p>出借金額</p>"
+            "description": "<p>債權金額</p>"
           },
           {
             "group": "Success 200",
@@ -11614,27 +11920,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>申請日期</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "product",
-            "description": "<p>產品資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "product.name",
-            "description": "<p>產品名稱</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Object",
             "optional": false,
             "field": "target",
@@ -11642,21 +11927,77 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.id",
+            "description": "<p>產品ID</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
+            "optional": false,
+            "field": "target.target_no",
+            "description": "<p>標的案號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.product_id",
+            "description": "<p>產品ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.user_id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.loan_amount",
+            "description": "<p>標的金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.credit_level",
+            "description": "<p>信用評等</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.interest_rate",
+            "description": "<p>年化利率</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.instalment",
+            "description": "<p>期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.repayment",
+            "description": "<p>還款方式</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
             "optional": false,
             "field": "target.delay",
             "description": "<p>是否逾期 0:無 1:逾期中</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.credit_level",
-            "description": "<p>信用指數</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "target.delay_days",
             "description": "<p>逾期天數</p>"
@@ -11665,29 +12006,29 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "target.target_no",
-            "description": "<p>案號</p>"
+            "field": "target.loan_date",
+            "description": "<p>放款日期</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "target.status",
-            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+            "description": "<p>標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "target.sub_status",
-            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
+            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
           },
           {
             "group": "Success 200",
             "type": "Object",
             "optional": false,
             "field": "next_repayment",
-            "description": "<p>最近一期應還款</p>"
+            "description": "<p>最近一期還款</p>"
           },
           {
             "group": "Success 200",
@@ -11709,13 +12050,41 @@ define({ "api": [
             "optional": false,
             "field": "next_repayment.amount",
             "description": "<p>金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "accounts_receivable",
+            "description": "<p>應收帳款</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable.payable",
+            "description": "<p>應收本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable.interest",
+            "description": "<p>應收利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable.delay_interest",
+            "description": "<p>應收延滯息</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": \"19\",\n\t\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\t\"status\": \"5\",\n\t\t\t\t\t\"sub_status\": \"0\"\n\t\t\t\t},\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"next_repayment\": {\n\t\t\t\t\t\"date\": \"2019-03-10\",\n\t\t\t\t\t\"instalment\": 1,\n\t\t\t\t\t\"amount\": 1687\n\t\t\t\t},\n\t\t\t\t\"accounts_receivable\": {\n\t\t\t\t\t\"principal\": 5000,\n\t\t\t\t\t\"interest\": 83,\n\t\t\t\t\t\"delay_interest\": 0\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -13693,87 +14062,17 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "remaining_principal",
             "description": "<p>現欠本金餘額</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "next_repayment",
             "description": "<p>當期待還本息</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "user",
-            "description": "<p>用戶資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.id",
-            "description": "<p>User ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.name",
-            "description": "<p>姓名</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.picture",
-            "description": "<p>照片</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.nickname",
-            "description": "<p>暱稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.sex",
-            "description": "<p>性別</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.phone",
-            "description": "<p>手機號碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.id_number",
-            "description": "<p>身分證字號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.investor",
-            "description": "<p>1:投資端 0:借款端</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "user.my_promote_code",
-            "description": "<p>推廣碼</p>"
           },
           {
             "group": "Success 200",
@@ -13784,7 +14083,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "funds.total",
             "description": "<p>資金總額</p>"
@@ -13798,7 +14097,7 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "funds.frozen",
             "description": "<p>待交易餘額</p>"
@@ -13850,7 +14149,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\t\"remaining_principal\": \"12345\",\n\t\t\t\t\"next_repayment_amount\": \"1588\",\n\t\t\t\t\"user\": {\n     \t\t\t\"id\": \"1\",\n     \t\t\t\"name\": \"\",\n     \t\t\t\"picture\": \"https://graph.facebook.com/2495004840516393/picture?type=large\",\n     \t\t\t\"nickname\": \"陳霈\",\n     \t\t\t\"phone\": \"0912345678\",\n     \t\t\t\"investor_status\": \"1\",\n     \t\t\t\"my_promote_code\": \"9JJ12CQ5\",\n     \t\t\t\"id_number\": null,\n     \t\t\t\"investor\": 1,  \n     \t\t\t\"created_at\": \"1522651818\",     \n     \t\t\t\"updated_at\": \"1522653939\"     \n\t\t\t\t},\n\t\t\t\t\"funds\": {\n\t\t\t\t \t\"total\": \"500\",\n\t\t\t\t \t\"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \t\"frozen\": \"0\"\n\t\t\t\t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56639100000001\"\n\t        \t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\t\"remaining_principal\": \"12345\",\n\t\t\t\t\"next_repayment_amount\": \"1588\",\n\t\t\t\t\"funds\": {\n\t\t\t\t \t\"total\": 500,\n\t\t\t\t \t\"last_recharge_date\": \"2018-05-03 19:15:42\",\n\t\t\t\t \t\"frozen\": 0\n\t\t\t\t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56639100000001\"\n\t        \t}\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -15149,20 +15448,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "product",
-            "description": "<p>產品資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "product.name",
-            "description": "<p>產品名稱</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "user_id",
@@ -15272,55 +15557,13 @@ define({ "api": [
             "optional": false,
             "field": "next_repayment.amount",
             "description": "<p>金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "virtual_account",
-            "description": "<p>還款專屬虛擬帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_code",
-            "description": "<p>銀行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_code",
-            "description": "<p>分行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_name",
-            "description": "<p>銀行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_name",
-            "description": "<p>分行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.virtual_account",
-            "description": "<p>虛擬帳號</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"50000\",\n\t\t\t\t\"interest_rate\":\"8\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"delay_days\":\"0\",\n\t\t\t\t\"status\":\"5\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t},\n\t        \t\"virtual_account\": {\n\t            \t\"bank_code\": \"013\",\n\t            \t\"branch_code\": \"0154\",\n\t            \t\"bank_name\": \"國泰世華商業銀行\",\n\t            \t\"branch_name\": \"信義分行\",\n\t            \t\"virtual_account\": \"56631803269743\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"loan_amount\":\"50000\",\n\t\t\t\t\"interest_rate\":\"8\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"delay_days\":\"0\",\n\t\t\t\t\"status\":\"5\",\n\t\t\t\t\"sub_status\":\"0\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t        \t\"next_repayment\": {\n\t            \t\"date\": \"2018-06-10\",\n\t            \t\"instalment\": \"1\",\n\t            \t\"amount\": \"16890\"\n\t        \t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -15846,55 +16089,13 @@ define({ "api": [
             "optional": false,
             "field": "prepayment.total",
             "description": "<p>合計</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "virtual_account",
-            "description": "<p>還款專屬虛擬帳號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_code",
-            "description": "<p>銀行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_code",
-            "description": "<p>分行代碼</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.bank_name",
-            "description": "<p>銀行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.branch_name",
-            "description": "<p>分行名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "virtual_account.virtual_account",
-            "description": "<p>虛擬帳號</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"delay_days\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t     \"prepayment\": {\n\t         \"remaining_principal\": \"50000\",\n\t         \"remaining_instalment\": \"3\",\n\t         \"settlement_date\": \"2018-05-19\",\n\t         \"liquidated_damages\": \"1000\",\n\t         \"delay_interest_payable\": \"0\",\n\t         \"interest_payable\": \"450\",\n\t         \"total\": \"51450\"\n\t     },\n\t     \"virtual_account\": {\n\t         \"bank_code\": \"013\",\n\t         \"branch_code\": \"0154\",\n\t         \"bank_name\": \"國泰世華商業銀行\",\n\t         \"branch_name\": \"信義分行\",\n\t         \"virtual_account\": \"56631803269743\"\n\t     }\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"repayment\":\"等額本息\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"delay_days\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t     \"prepayment\": {\n\t         \"remaining_principal\": \"50000\",\n\t         \"remaining_instalment\": \"3\",\n\t         \"settlement_date\": \"2018-05-19\",\n\t         \"liquidated_damages\": \"1000\",\n\t         \"delay_interest_payable\": \"0\",\n\t         \"interest_payable\": \"450\",\n\t         \"total\": \"51450\"\n\t     }\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -16975,7 +17176,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target_id\":\"1\",\n\t\t\t\"amount\":\"53651\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\"settlement_date\":\"2018-05-26\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1527151277\",\n\t\t\t\"subloan_target\": {\n\t\t\t\t\"id\":\"35\",\n\t\t\t\t\"target_no\": \"1805247784\",\n\t\t\t\t\"product_id\":\"1\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"53651\",\n\t\t\t\t\"loan_amount\":\"53651\",\n\t\t\t\t\"platform_fee\":\"1610\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"sub_status\":\"8\",\n\t\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\t\"product\":{\n\t\t\t\t\t\"id\":\"2\",\n\t\t\t\t\t\"name\":\"輕鬆學貸\"\n\t\t\t\t},\n      \t\t\"amortization_schedule\": {\n          \t\t\"amount\": \"12000\",\n          \t\t\"instalment\": \"6\",\n          \t\t\"rate\": \"9\",\n          \t\t\"date\": \"2018-04-17\",\n          \t\t\"total_payment\": 2053,\n          \t\t\"leap_year\": false,\n          \t\t\"year_days\": 365,\n          \t\t\"XIRR\": 0.0939,\n          \t\t\"schedule\": {\n               \t\t\"1\": {\n                 \t\t\"instalment\": 1,\n                 \t\t\"repayment_date\": \"2018-06-10\",\n                 \t\t\"days\": 54,\n                 \t\t\"remaining_principal\": \"12000\",\n                 \t\t\"principal\": 1893,\n                 \t\t\"interest\": 160,\n                 \t\t\"total_payment\": 2053\n             \t\t},\n             \t\t\"2\": {\n                  \t\t\"instalment\": 2,\n                 \t\t\"repayment_date\": \"2018-07-10\",\n                 \t\t\"days\": 30,\n                  \t\t\"remaining_principal\": 10107,\n                  \t\t\"principal\": 1978,\n                  \t\t\"interest\": 75,\n                   \t\t\"total_payment\": 2053\n              \t\t},\n             \t\t\"3\": {\n                   \t\t\"instalment\": 3,\n                   \t\t\"repayment_date\": \"2018-08-10\",\n                   \t\t\"days\": 31,\n                   \t\t\"remaining_principal\": 8129,\n                  \t\t\"principal\": 1991,\n                  \t\t\"interest\": 62,\n                   \t\t\"total_payment\": 2053\n               \t\t}\n           \t\t},\n          \t\t\"total\": {\n               \t\t\"principal\": 12000,\n               \t\t\"interest\": 391,\n               \t\t\"total_payment\": 12391\n           \t\t}\n       \t\t}\n\t\t\t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target_id\":\"1\",\n\t\t\t\"amount\":\"53651\",\n\t\t\t\"instalment\":\"3期\",\n\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\"settlement_date\":\"2018-05-26\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"created_at\":\"1527151277\",\n\t\t\t\"subloan_target\": {\n\t\t\t\t\"id\":\"35\",\n\t\t\t\t\"target_no\": \"1805247784\",\n\t\t\t\t\"product_id\":\"1\",\n\t\t\t\t\"user_id\":\"1\",\n\t\t\t\t\"amount\":\"53651\",\n\t\t\t\t\"loan_amount\":\"53651\",\n\t\t\t\t\"platform_fee\":\"1610\",\n\t\t\t\t\"interest_rate\":\"9\",\n\t\t\t\t\"instalment\":\"3期\",\n\t\t\t\t\"repayment\":\"先息後本\",\n\t\t\t\t\"remark\":\"\",\n\t\t\t\t\"delay\":\"0\",\n\t\t\t\t\"status\":\"1\",\n\t\t\t\t\"sub_status\":\"8\",\n\t\t\t\t\"created_at\":\"1520421572\",\n      \t\t\"amortization_schedule\": {\n          \t\t\"amount\": \"12000\",\n          \t\t\"instalment\": \"6\",\n          \t\t\"rate\": \"9\",\n          \t\t\"date\": \"2018-04-17\",\n          \t\t\"total_payment\": 2053,\n          \t\t\"leap_year\": false,\n          \t\t\"year_days\": 365,\n          \t\t\"XIRR\": 0.0939,\n          \t\t\"schedule\": {\n               \t\t\"1\": {\n                 \t\t\"instalment\": 1,\n                 \t\t\"repayment_date\": \"2018-06-10\",\n                 \t\t\"days\": 54,\n                 \t\t\"remaining_principal\": \"12000\",\n                 \t\t\"principal\": 1893,\n                 \t\t\"interest\": 160,\n                 \t\t\"total_payment\": 2053\n             \t\t},\n             \t\t\"2\": {\n                  \t\t\"instalment\": 2,\n                 \t\t\"repayment_date\": \"2018-07-10\",\n                 \t\t\"days\": 30,\n                  \t\t\"remaining_principal\": 10107,\n                  \t\t\"principal\": 1978,\n                  \t\t\"interest\": 75,\n                   \t\t\"total_payment\": 2053\n              \t\t},\n             \t\t\"3\": {\n                   \t\t\"instalment\": 3,\n                   \t\t\"repayment_date\": \"2018-08-10\",\n                   \t\t\"days\": 31,\n                   \t\t\"remaining_principal\": 8129,\n                  \t\t\"principal\": 1991,\n                  \t\t\"interest\": 62,\n                   \t\t\"total_payment\": 2053\n               \t\t}\n           \t\t},\n          \t\t\"total\": {\n               \t\t\"principal\": 12000,\n               \t\t\"interest\": 391,\n               \t\t\"total_payment\": 12391\n           \t\t}\n       \t\t}\n\t\t\t}\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -18996,13 +19197,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "contract",
-            "description": "<p>合約內容</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Object",
             "optional": false,
             "field": "target",
@@ -19059,20 +19253,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.reason",
-            "description": "<p>借款原因</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.remark",
-            "description": "<p>備註</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "target.instalment",
@@ -19118,7 +19298,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"amount\": 5000,\n\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\"loan_amount\": 0,\n\t\t\t\t\"status\": 0,\n\t\t\t\t\"created_at\": 1547626406,\n\t\t\t\t\"contract\": \"\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 18,\n\t\t\t\t\t\"target_no\": \"STN2019011430611\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 8,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"remark\": \"\",\n\t\t\t\t\t\"instalment\": 6,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"expire_time\": 1547618700,\n\t\t\t\t\t\"invested\": 0,\n\t\t\t\t\t\"status\": 3,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"amount\": 5000,\n\t\t\t\t\"loan_amount\": 0,\n\t\t\t\t\"status\": 0,\n\t\t\t\t\"created_at\": 1547626406,\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 18,\n\t\t\t\t\t\"target_no\": \"STN2019011430611\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 8,\n\t\t\t\t\t\"instalment\": 6,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"expire_time\": 1547618700,\n\t\t\t\t\t\"invested\": 0,\n\t\t\t\t\t\"status\": 3,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]

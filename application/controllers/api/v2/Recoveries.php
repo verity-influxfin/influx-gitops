@@ -69,12 +69,15 @@ class Recoveries extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} remaining_principal 持有債權
-	 * @apiSuccess {String} accounts_receivable 應收帳款
-	 * @apiSuccess {String} interest_receivable 應收利息
-	 * @apiSuccess {String} interest 已收利息收入
-	 * @apiSuccess {String} other_income 已收其他收入
-	 * @apiSuccess {Object} principal_level 標的等級應收帳款 1~5:正常 6:觀察 7:次級 8:不良
+	 * @apiSuccess {Number} payable 待匯款
+	 * @apiSuccess {Object} accounts_receivable 應收帳款
+	 * @apiSuccess {Number} accounts_receivable.payable 應收本金
+	 * @apiSuccess {Number} accounts_receivable.interest 應收利息
+	 * @apiSuccess {Number} accounts_receivable.delay_interest 應收延滯息
+	 * @apiSuccess {Object} income 收入
+	 * @apiSuccess {Number} income.interest 已收利息
+	 * @apiSuccess {Number} income.delay_interest 已收延滯息
+	 * @apiSuccess {Number} income.other 已收補貼
 	 * @apiSuccess {Object} funds 資金資訊
 	 * @apiSuccess {String} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
@@ -93,38 +96,34 @@ class Recoveries extends REST_Controller {
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"remaining_principal": "50000",
-     * 			"interest": "0",
-     * 			"accounts_receivable": "50751",
-     * 			"interest_receivable": "751",
-     * 			"other_income": "0",
-     * 			"principal_level": {
-     * 				  "1": 0,
-     * 				  "2": 500,
-     * 				  "3": 0,
-     * 				  "4": 50000,
-     * 				  "5": 0,
-     * 				  "6": 0,
-     * 				  "7": 0,
-     * 				  "8": 0
+     * 			"payable": "50000",
+     * 			"accounts_receivable": {
+     * 				"principal": 40000,
+     * 				"interest": 1280,
+     * 				"delay_interest": 0
+     * 			},
+     * 			"income": {
+     * 				"interest": 0,
+     * 				"delay_interest": 0,
+     * 				"other": 0
      * 			},
      * 			"funds": {
-     * 				 "total": "500",
-     * 				 "last_recharge_date": "2018-05-03 19:15:42",
-     * 				 "frozen": "0"
+     * 				"total": 960000,
+     * 				"last_recharge_date": "2019-01-14 14:12:10",
+     * 				"frozen": 0
      * 			},
-     * 	        "bank_account": {
-     * 	            "bank_code": "013",
-     * 	            "branch_code": "1234",
-     * 	            "bank_account": "12345678910"
-     * 	        },
-     * 	        "virtual_account": {
-     * 	            "bank_code": "013",
-     * 	            "branch_code": "0154",
-     * 	            "bank_name": "國泰世華商業銀行",
-     * 	            "branch_name": "信義分行",
-     * 	            "virtual_account": "56639100000001"
-     * 	        }
+     * 			"bank_account": {
+     * 				"bank_code": "004",
+     * 				"branch_code": "0037",
+     * 				"bank_account": "123123123132"
+     * 			},
+     * 			"virtual_account": {
+     * 				"bank_code": "013",
+     * 				"branch_code": "0154",
+     * 				"bank_name": "國泰世華商業銀行",
+     * 				"branch_name": "信義分行",
+     * 				"virtual_account": "56639164278638"
+     * 			}
      * 		}
      *    }
 	 *
@@ -138,58 +137,61 @@ class Recoveries extends REST_Controller {
     {
 		$input 		 			= $this->input->get();
 		$user_id 	 			= $this->user_info->id;
-		$remaining_principal 	= 0;
-		$accounts_receivable	= 0;
-		$interest_receivable	= 0;
-		$interest				= 0;
-		$other_income			= 0;
-		$credit_level 			= $this->config->item('credit_level');
-		$principal_level		= array();
-		if($credit_level){
-			foreach($credit_level as $level => $value){
-				$principal_level[$level] = 0;
+		$payable 	 			= 0;
+		$accounts_receivable	= [
+			'principal'		=> 0,
+			'interest'		=> 0,
+			'delay_interest'=> 0,
+		];
+		$income					= [
+			'interest'		=> 0,
+			'delay_interest'=> 0,
+			'other'			=> 0,
+		];
+		
+		$transaction = $this->transaction_model->get_many_by(array(
+			'user_to'	=> $user_id,
+			'status'	=> [1,2]
+		));
+		if($transaction){
+			foreach($transaction as $key => $value){
+				if($value->status==1){
+					switch($value->source){
+						case SOURCE_AR_PRINCIPAL: 
+							$accounts_receivable['principal'] 		+= $value->amount;
+							break;
+						case SOURCE_AR_INTEREST: 
+							$accounts_receivable['interest'] 		+= $value->amount;
+							break;
+						case SOURCE_AR_DELAYINTEREST: 
+							$accounts_receivable['delay_interest'] 	+= $value->amount;
+							break;
+						default:
+							break;
+					}
+				}
+				if($value->status==2){
+					switch($value->source){
+						case SOURCE_INTEREST: 
+							$income['interest'] 		+= $value->amount;
+							break;
+						case SOURCE_DELAYINTEREST: 
+							$income['delay_interest'] 	+= $value->amount;
+							break;
+						case SOURCE_PREPAYMENT_ALLOWANCE: 
+							$income['other'] 			+= $value->amount;
+							break;
+						default:
+							break;
+					}
+				}
 			}
 		}
 		
-		$user					= array();
-		$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array('user_to'=>$user_id,'status'=>array(1,2)));
-		if($transaction){
-			$target_ids 		= array();
-			$target_level 		= array();
-			foreach($transaction as $key => $value){
-				if($value->target_id && !in_array($value->target_id,$target_ids)){
-					$target_ids[] = $value->target_id;
-				}
-			}
-			
-			if(!empty($target_ids)){
-				$targets = $this->target_model->get_many($target_ids);
-				foreach($targets as $key => $value){
-					$target_level[$value->id] = $value->credit_level;
-				}
-			}
-			
-			foreach($transaction as $key => $value){
-				if($value->source == SOURCE_AR_PRINCIPAL && $value->status==1){
-					$remaining_principal += $value->amount;
-					$accounts_receivable += $value->amount;
-					$principal_level[$target_level[$value->target_id]] += $value->amount;
-				}
-				if($value->source == SOURCE_AR_INTEREST && $value->status==1){
-					$interest_receivable += $value->amount;
-					$accounts_receivable += $value->amount;
-				}
-				
-				if(in_array($value->source,array(SOURCE_INTEREST,SOURCE_DELAYINTEREST))&& $value->status==2){
-					$interest += $value->amount;
-				}
-
-				if($value->source ==SOURCE_PREPAYMENT_ALLOWANCE && $value->status==2){
-					$other_income += $value->amount;
-				}
-			}
-		}
-		$virtual 			= $this->virtual_account_model->get_by(array('investor'=>1,'user_id'=>$user_id));
+		$virtual 	= $this->virtual_account_model->get_by([
+			'investor'	=>1,
+			'user_id'	=>$user_id
+		]);
 		if($virtual){
 			$virtual_account	= array(
 				'bank_code'			=> CATHAY_BANK_CODE,
@@ -199,6 +201,27 @@ class Recoveries extends REST_Controller {
 				'virtual_account'	=> $virtual->virtual_account,
 			);
 			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
+			
+			$investments = $this->investment_model->get_many_by([
+				'user_id' 	=> $user_id,
+				'status'	=> 0
+			]);
+			if($investments){
+				foreach($investments as $key => $value){
+					$payable += $value->amount;
+				}
+			}
+			
+			$this->load->model('loan/transfer_investment_model');
+			$transfer_investment = $this->transfer_investment_model->get_many_by([
+				'user_id'	=> $user_id,
+				'status'	=> 0
+			]);
+			if($transfer_investment){
+				foreach($transfer_investment as $key => $value){
+					$payable += $value->amount;
+				}
+			}
 		}else{
 			$funds			 = array(
 				'total'					=> 0,
@@ -215,7 +238,12 @@ class Recoveries extends REST_Controller {
 		}
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$user_bankaccount 	= $this->user_bankaccount_model->get_by(array('investor'=>1,'status'=>1,'user_id'=>$user_id,'verify'=>1));
+		$user_bankaccount 	= $this->user_bankaccount_model->get_by([
+			'investor'	=> 1,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		]);
 		if($user_bankaccount){
 			$bank_account 		= array(
 				'bank_code'		=> $user_bankaccount->bank_code,
@@ -231,12 +259,9 @@ class Recoveries extends REST_Controller {
 		}
 
 		$data			 = array(
-			'remaining_principal'	=> $remaining_principal,
-			'interest'				=> $interest,
+			'payable'				=> $payable,
 			'accounts_receivable'	=> $accounts_receivable,
-			'interest_receivable'	=> $interest_receivable,
-			'other_income'			=> $other_income,
-			'principal_level'		=> $principal_level,
+			'income'				=> $income,
 			'funds'					=> $funds,
 			'bank_account'			=> $bank_account,
 			'virtual_account'		=> $virtual_account,
@@ -245,7 +270,7 @@ class Recoveries extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /v2/recoveries/list 出借方 已出借列表
+     * @api {get} /v2/recoveries/list 出借方 還款中債權列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetRecoveriesList
      * @apiGroup Recoveries
@@ -253,22 +278,32 @@ class Recoveries extends REST_Controller {
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
-	 * @apiSuccess {String} loan_amount 出借金額
+	 * @apiSuccess {String} loan_amount 債權金額
 	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
 	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
-	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {Object} target 標的資訊
+	 * @apiSuccess {Number} target.id 產品ID
+	 * @apiSuccess {String} target.target_no 標的案號
 	 * @apiSuccess {Number} target.product_id 產品ID
-	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} target.credit_level 信用指數
-	 * @apiSuccess {String} target.delay_days 逾期天數
-	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
-	 * @apiSuccess {Object} next_repayment 最近一期應還款
+	 * @apiSuccess {Number} target.user_id User ID
+	 * @apiSuccess {Number} target.loan_amount 標的金額
+	 * @apiSuccess {Number} target.credit_level 信用評等
+	 * @apiSuccess {Number} target.interest_rate 年化利率
+	 * @apiSuccess {Number} target.instalment 期數
+	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} target.delay_days 逾期天數
+	 * @apiSuccess {String} target.loan_date 放款日期
+	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
+	 * @apiSuccess {Object} next_repayment 最近一期還款
 	 * @apiSuccess {String} next_repayment.date 還款日
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
+	 * @apiSuccess {Object} accounts_receivable 應收帳款
+	 * @apiSuccess {Number} accounts_receivable.payable 應收本金
+	 * @apiSuccess {Number} accounts_receivable.interest 應收利息
+	 * @apiSuccess {Number} accounts_receivable.delay_interest 應收延滯息
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -280,21 +315,32 @@ class Recoveries extends REST_Controller {
      * 				"loan_amount":"",
      * 				"status":"3",
      * 				"transfer_status":"0",
-     * 				"created_at":"1520421572",
      * 				"target": {
-     * 					"id": "19",
-     * 					"target_no": "1804233189",
-     * 					"credit_level": "4",
-     * 					"delay": "0",
-     * 					"delay_days": "0",
-     * 					"status": "5",
-     * 					"sub_status": "0"
+     * 					"id": 9,
+     * 					"target_no": "STN2019011414213",
+     * 					"product_id": 1,
+     * 					"user_id": 19,
+     * 					"loan_amount": 5000,
+     * 					"credit_level": 3,
+     * 					"interest_rate": 7,
+     * 					"instalment": 3,
+     * 					"repayment": 1,
+     * 					"delay": 0,
+     * 					"delay_days": 0,
+     * 					"loan_date": "2019-01-14",
+     * 					"status": 5,
+     * 					"sub_status": 0
      * 				},
-	 * 	        	"next_repayment": {
-     * 	            	"date": "2018-06-10",
-     * 	            	"instalment": "1",
-     * 	            	"amount": "16890"
-     * 	        	}
+     * 				"next_repayment": {
+     * 					"date": "2019-03-10",
+     * 					"instalment": 1,
+     * 					"amount": 1687
+     * 				},
+     * 				"accounts_receivable": {
+     * 					"principal": 5000,
+     * 					"interest": 83,
+     * 					"delay_interest": 0
+     * 				}
      * 			}
      * 			]
      * 		}
@@ -310,58 +356,283 @@ class Recoveries extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
-		$param				= array( 'user_id'=> $user_id,'status'=>array(3,10));
-		$investments		= $this->investment_model->get_many_by($param);
-		$list				= array();
+		$investments		= $this->investment_model->get_many_by([
+			'user_id'	=> $user_id,
+			'status'	=> 3
+		]);
+		$list				= [];
 		if(!empty($investments)){
+			$instalment_data = [];
+			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by([
+				'user_to'	=> $user_id,
+				'status'	=> 1
+			]);
+			if($transaction){
+				foreach($transaction as $key => $value){
+					if(!isset($instalment_data[$value->investment_id])){
+						$instalment_data[$value->investment_id] = [
+							'next_repayment' => [
+								'date' 			=> $value->limit_date,
+								'instalment'	=> intval($value->instalment_no),
+								'amount'		=> 0,
+							],
+							'accounts_receivable'	=> [
+								'principal'		=> 0,
+								'interest'		=> 0,
+								'delay_interest'=> 0,
+							]
+						];
+					}
+					if($value->limit_date == $instalment_data[$value->investment_id]['next_repayment']['date']){
+						$instalment_data[$value->investment_id]['next_repayment']['amount'] += $value->amount;
+					}
+					switch($value->source){
+						case SOURCE_AR_PRINCIPAL: 
+							$instalment_data[$value->investment_id]['accounts_receivable']['principal'] 	+= $value->amount;
+							break;
+						case SOURCE_AR_INTEREST: 
+							$instalment_data[$value->investment_id]['accounts_receivable']['interest'] 		+= $value->amount;
+							break;
+						case SOURCE_AR_DELAYINTEREST: 
+							$instalment_data[$value->investment_id]['accounts_receivable']['delay_interest']+= $value->amount;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		
 			foreach($investments as $key => $value){
-
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
-					'id'			=> $target_info->id,
+					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
-					'product_id' 	=> intval($target_info->product_id),
-					'credit_level'	=> $target_info->credit_level,
-					'delay'			=> $target_info->delay,
-					'delay_days'	=> $target_info->delay_days,
-					'status'		=> $target_info->status,
-					'sub_status'	=> $target_info->sub_status,
+					'product_id'	=> intval($target_info->product_id),
+					'user_id' 		=> intval($target_info->user_id),
+					'loan_amount'	=> intval($target_info->loan_amount),
+					'credit_level' 	=> intval($target_info->credit_level),
+					'interest_rate' => intval($target_info->interest_rate),
+					'instalment' 	=> intval($target_info->instalment),
+					'repayment' 	=> intval($target_info->repayment),
+					'delay'			=> intval($target_info->delay),
+					'delay_days'	=> intval($target_info->delay_days),
+					'loan_date'		=> $target_info->loan_date,
+					'status'		=> intval($target_info->status),
+					'sub_status'	=> intval($target_info->sub_status),
 				);
 				
-				$next_repayment = array(
-					'date' 			=> '',
-					'instalment'	=> '',
-					'amount'		=> 0,
+				$list[] = array(
+					'id' 					=> intval($value->id),
+					'loan_amount' 			=> intval($value->loan_amount),
+					'status' 				=> intval($value->status),
+					'transfer_status' 		=> intval($value->transfer_status),
+					'target' 				=> $target,
+					'next_repayment' 		=> $instalment_data[$value->id]['next_repayment'],
+					'accounts_receivable' 	=> $instalment_data[$value->id]['accounts_receivable'],
 				);
+			}
+		}
+		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
+    }
 
-				$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
-					'target_id'	=> $target_info->id,
-					'user_to'	=> $user_id,
-					'status'	=> '1'
-				));
+	/**
+     * @api {get} /v2/recoveries/finish 出借方 已結案債權列表
+	 * @apiVersion 0.2.0
+	 * @apiName GetRecoveriesFinish
+     * @apiGroup Recoveries
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * 
+	 * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {String} id Investments ID
+	 * @apiSuccess {String} loan_amount 債權金額
+	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
+	 * @apiSuccess {Object} target 標的資訊
+	 * @apiSuccess {Number} target.id 產品ID
+	 * @apiSuccess {String} target.target_no 標的案號
+	 * @apiSuccess {Number} target.product_id 產品ID
+	 * @apiSuccess {Number} target.user_id User ID
+	 * @apiSuccess {Number} target.loan_amount 標的金額
+	 * @apiSuccess {Number} target.credit_level 信用評等
+	 * @apiSuccess {Number} target.interest_rate 年化利率
+	 * @apiSuccess {Number} target.instalment 期數
+	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} target.delay_days 逾期天數
+	 * @apiSuccess {String} target.loan_date 放款日期
+	 * @apiSuccess {String} target.last_date 結案日期
+	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
+	 * @apiSuccess {Object} income 收入
+	 * @apiSuccess {Number} income.principal 已收本金
+	 * @apiSuccess {Number} income.interest 已收利息
+	 * @apiSuccess {Number} income.delay_interest 已收延滯息
+	 * @apiSuccess {Number} income.other 已收補貼
+	 * @apiSuccess {Number} income.transfer 債轉價金
+	 * @apiSuccess {Object} invest 投資
+	 * @apiSuccess {Number} invest.date 投資日期
+	 * @apiSuccess {Number} invest.amount 投資金額
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 			{
+     * 				"id":"1",
+     * 				"amount":"50000",
+     * 				"loan_amount":"",
+     * 				"status":"3",
+     * 				"transfer_status":"0",
+     * 				"target": {
+     * 					"id": 9,
+     * 					"target_no": "STN2019011414213",
+     * 					"product_id": 1,
+     * 					"user_id": 19,
+     * 					"loan_amount": 5000,
+     * 					"credit_level": 3,
+     * 					"interest_rate": 7,
+     * 					"instalment": 3,
+     * 					"repayment": 1,
+     * 					"delay": 0,
+     * 					"delay_days": 0,
+     * 					"loan_date": "2019-01-14",
+     * 					"status": 5,
+     * 					"sub_status": 0
+     * 				},
+     * 				"income": {
+     * 					"principal": 0,
+     * 					"interest": 0,
+     * 					"delay_interest": 0,
+     * 					"other": 0,
+     * 					"transfer": "5003"
+     * 				},
+     * 				"invest": {
+     * 					"date": "2019-01-05",
+     * 					"amount": "5000"
+     * 				}
+     * 			}
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+     *
+     */
+	public function finish_get()
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$investor 			= $this->user_info->investor;
+		$investments		= $this->investment_model->get_many_by([
+			'user_id'	=> $user_id,
+			'status'	=> 10
+		]);
+		$list				= [];
+		$last_date			= [];
+		if(!empty($investments)){
+			$instalment_income = [];
+			$transaction = $this->transaction_model->order_by('entering_date','desc')->get_many_by([
+				'user_to'	=> $user_id,
+				'status'	=> 2
+			]);
+			if($transaction){
+				foreach($transaction as $key => $value){
+					if(!isset($instalment_income[$value->investment_id])){
+						$instalment_income[$value->investment_id] = [
+							'principal'		=> 0,
+							'interest'		=> 0,
+							'delay_interest'=> 0,
+							'other'			=> 0,
+							'transfer'		=> 0,
+						];
+						$last_date[$value->investment_id] = $value->entering_date;
+					}
+					switch($value->source){
+						case SOURCE_PRINCIPAL: 
+							$instalment_income[$value->investment_id]['principal'] 	+= $value->amount;
+							break;
+						case SOURCE_INTEREST: 
+							$instalment_income[$value->investment_id]['interest'] 	+= $value->amount;
+							break;
+						case SOURCE_DELAYINTEREST: 
+							$instalment_income[$value->investment_id]['delay_interest'] += $value->amount;
+							break;
+						case SOURCE_PREPAYMENT_ALLOWANCE: 
+							$instalment_income[$value->investment_id]['other'] 		+= $value->amount;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		
+			foreach($investments as $key => $value){
+
+				$instalment_invest = [
+					'date'		=> '',
+					'amount'	=> 0,
+				];
+				$transaction = $this->transaction_model->get_by([
+					'source'		=> [SOURCE_TRANSFER,SOURCE_LENDING],
+					'user_from'		=> $user_id,
+					'target_id'		=> $value->target_id,
+					'investment_id'	=> $value->id,
+					'status'		=> 2
+				]);
 				if($transaction){
-					$first = true;
-					foreach($transaction as $k => $v){
-						if($first){
-							$next_repayment['date'] 		= $v->limit_date;
-							$next_repayment['instalment'] 	= $v->instalment_no;
-							$first = false;
-						}
-
-						if($v->limit_date && $v->limit_date == $next_repayment['date']){
-							$next_repayment['amount'] += $v->amount;
-						}
+					$instalment_invest = [
+						'date'		=> $transaction->entering_date,
+						'amount'	=> $transaction->amount,
+					];
+				}
+				
+				if(!isset($instalment_income[$value->id])){
+					$instalment_income[$value->id] = [
+						'principal'		=> 0,
+						'interest'		=> 0,
+						'delay_interest'=> 0,
+						'other'			=> 0,
+						'transfer'		=> 0,
+					];
+				}
+				
+				if($value->transfer_status==2){
+					$transfer_info = $this->transfer_lib->get_transfer_investments($value->id);
+					if($transfer_info && $transfer_info->status==10){
+						$instalment_income[$value->id]['transfer'] = $transfer_info->amount;
+						$last_date[$value->id] = $transfer_info->transfer_date;
 					}
 				}
 				
-				$list[] = array(          
-					'id' 				=> $value->id,
-					'loan_amount' 		=> $value->loan_amount?$value->loan_amount:'',
-					'status' 			=> $value->status,
-					'transfer_status' 	=> $value->transfer_status,
-					'created_at' 		=> $value->created_at,
+				$target_info = $this->target_model->get($value->target_id);
+				$target = array(
+					'id'			=> intval($target_info->id),
+					'target_no'		=> $target_info->target_no,
+					'product_id'	=> intval($target_info->product_id),
+					'user_id' 		=> intval($target_info->user_id),
+					'loan_amount'	=> intval($target_info->loan_amount),
+					'credit_level' 	=> intval($target_info->credit_level),
+					'interest_rate' => intval($target_info->interest_rate),
+					'instalment' 	=> intval($target_info->instalment),
+					'repayment' 	=> intval($target_info->repayment),
+					'delay'			=> intval($target_info->delay),
+					'delay_days'	=> intval($target_info->delay_days),
+					'loan_date'		=> $target_info->loan_date,
+					'last_date'		=> $last_date[$value->id],
+					'status'		=> intval($target_info->status),
+					'sub_status'	=> intval($target_info->sub_status),
+				);
+				
+				$list[] = array(
+					'id' 				=> intval($value->id),
+					'loan_amount' 		=> intval($value->loan_amount),
+					'status' 			=> intval($value->status),
+					'transfer_status' 	=> intval($value->transfer_status),
 					'target' 			=> $target,
-					'next_repayment' 	=> $next_repayment,
+					'income' 			=> $instalment_income[$value->id],
+					'invest' 			=> $instalment_invest,
 				);
 			}
 		}

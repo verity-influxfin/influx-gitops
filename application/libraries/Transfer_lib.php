@@ -209,7 +209,7 @@ class Transfer_lib{
 	public function get_transfer_investments($investment_id){
 		
 		if($investment_id){
-			$transfer = $this->CI->transfer_model->get_by(array('investment_id'=>$investment_id));
+			$transfer = $this->CI->transfer_model->order_by('created_at','desc')->get_by(array('investment_id'=>$investment_id));
 			return $transfer;
 		}
 		return false;

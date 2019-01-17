@@ -148,7 +148,7 @@ class Recoveries extends REST_Controller {
 		$credit_level 			= $this->config->item('credit_level');
 		$principal_level		= array();
 		if($credit_level){
-			foreach($credit_level as $level => $value){
+			foreach($credit_level as $key => $level){
 				$principal_level[$level] = 0;
 			}
 		}
