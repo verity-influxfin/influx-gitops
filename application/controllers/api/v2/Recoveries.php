@@ -460,7 +460,6 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {Number} target.delay_days 逾期天數
 	 * @apiSuccess {String} target.loan_date 放款日期
-	 * @apiSuccess {String} target.last_date 結案日期
 	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
 	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
 	 * @apiSuccess {Object} income 收入
@@ -470,7 +469,8 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {Number} income.other 已收補貼
 	 * @apiSuccess {Number} income.transfer 債轉價金
 	 * @apiSuccess {Object} invest 投資
-	 * @apiSuccess {Number} invest.date 投資日期
+	 * @apiSuccess {Number} invest.start_date 開始投資日期
+	 * @apiSuccess {Number} invest.end_date 結束投資日期
 	 * @apiSuccess {Number} invest.amount 投資金額
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -507,7 +507,8 @@ class Recoveries extends REST_Controller {
      * 					"transfer": "5003"
      * 				},
      * 				"invest": {
-     * 					"date": "2019-01-05",
+     * 					"start_date": "2019-01-05",
+     * 					"end_date": "2019-01-17",
      * 					"amount": "5000"
      * 				}
      * 			}
@@ -569,24 +570,23 @@ class Recoveries extends REST_Controller {
 			}
 		
 			foreach($investments as $key => $value){
-
-				$instalment_invest = [
-					'date'		=> '',
-					'amount'	=> 0,
-				];
-				$transaction = $this->transaction_model->get_by([
-					'source'		=> [SOURCE_TRANSFER,SOURCE_LENDING],
-					'user_from'		=> $user_id,
-					'target_id'		=> $value->target_id,
-					'investment_id'	=> $value->id,
-					'status'		=> 2
-				]);
-				if($transaction){
-					$instalment_invest = [
-						'date'		=> $transaction->entering_date,
-						'amount'	=> $transaction->amount,
-					];
-				}
+				$target_info = $this->target_model->get($value->target_id);
+				$target = array(
+					'id'			=> intval($target_info->id),
+					'target_no'		=> $target_info->target_no,
+					'product_id'	=> intval($target_info->product_id),
+					'user_id' 		=> intval($target_info->user_id),
+					'loan_amount'	=> intval($target_info->loan_amount),
+					'credit_level' 	=> intval($target_info->credit_level),
+					'interest_rate' => intval($target_info->interest_rate),
+					'instalment' 	=> intval($target_info->instalment),
+					'repayment' 	=> intval($target_info->repayment),
+					'delay'			=> intval($target_info->delay),
+					'delay_days'	=> intval($target_info->delay_days),
+					'loan_date'		=> $target_info->loan_date,
+					'status'		=> intval($target_info->status),
+					'sub_status'	=> intval($target_info->sub_status),
+				);
 				
 				if(!isset($instalment_income[$value->id])){
 					$instalment_income[$value->id] = [
@@ -606,24 +606,22 @@ class Recoveries extends REST_Controller {
 					}
 				}
 				
-				$target_info = $this->target_model->get($value->target_id);
-				$target = array(
-					'id'			=> intval($target_info->id),
-					'target_no'		=> $target_info->target_no,
-					'product_id'	=> intval($target_info->product_id),
-					'user_id' 		=> intval($target_info->user_id),
-					'loan_amount'	=> intval($target_info->loan_amount),
-					'credit_level' 	=> intval($target_info->credit_level),
-					'interest_rate' => intval($target_info->interest_rate),
-					'instalment' 	=> intval($target_info->instalment),
-					'repayment' 	=> intval($target_info->repayment),
-					'delay'			=> intval($target_info->delay),
-					'delay_days'	=> intval($target_info->delay_days),
-					'loan_date'		=> $target_info->loan_date,
-					'last_date'		=> $last_date[$value->id],
-					'status'		=> intval($target_info->status),
-					'sub_status'	=> intval($target_info->sub_status),
-				);
+				$instalment_invest = [
+					'start_date'	=> '',
+					'end_date'		=> $last_date[$value->id],
+					'amount'		=> 0,
+				];
+				$transaction = $this->transaction_model->get_by([
+					'source'		=> [SOURCE_TRANSFER,SOURCE_LENDING],
+					'user_from'		=> $user_id,
+					'target_id'		=> $value->target_id,
+					'investment_id'	=> $value->id,
+					'status'		=> 2
+				]);
+				if($transaction){
+					$instalment_invest['start_date']= $transaction->entering_date;
+					$instalment_invest['amount'] 	= $transaction->amount;
+				}
 				
 				$list[] = array(
 					'id' 				=> intval($value->id),
@@ -898,7 +896,6 @@ class Recoveries extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-
 		//必填欄位
 		$fields 	= ['amount','transaction_password'];
 		foreach ($fields as $field) {
@@ -933,8 +930,6 @@ class Recoveries extends REST_Controller {
 		
 		$withdraw = $this->transaction_lib->withdraw($user_id,intval($input['amount']));
 		if($withdraw){
-			$this->load->library('Sendemail');
-			$this->sendemail->admin_notification('新的一筆虛擬帳號提領 投資端會員ID:'.$user_id,'新的一筆虛擬帳號提領 投資端會員ID:'.$user_id);
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
 			$this->response(array('result' => 'ERROR','error' => NOT_ENOUGH_FUNDS ));
@@ -947,34 +942,32 @@ class Recoveries extends REST_Controller {
 	 * @apiName GetRecoveriesPassbook
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
      * @apiSuccess {Object} result SUCCESS
-     * @apiSuccess {String} amount 金額
+     * @apiSuccess {Number} amount 金額
      * @apiSuccess {String} bank_amount 帳戶餘額
      * @apiSuccess {String} remark 備註
      * @apiSuccess {String} tx_datetime 交易時間
-     * @apiSuccess {String} created_at 入帳時間
-     * @apiSuccess {String} action debit:資產增加 credit:資產減少
+     * @apiSuccess {Number} created_at 入帳時間
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      * 		"data":{
      * 			"list":[
-     * 			{
-     * 				"amount":"50500",
-     * 				"bank_amount":"50500",
-     * 				"remark":"source:3",
-     * 				"tx_datetime":"2018-05-08 15:38:07",
-     * 				"created_at":"1520421572"
-     * 				"action":"debit"
-     * 			},
-     * 			{
-     * 				"amount":"-50000",
-     * 				"bank_amount":"500",
-     * 				"remark":"source:3",
-     * 				"tx_datetime":"2018-04-20 17:55:51",
-     * 				"created_at":"1520421572"
-     * 				"action":"credit"
-     * 			}
+     * 				{
+     * 					"amount": 1000000,
+     * 					"bank_amount": 1000000,
+     * 					"remark": "平台代收",
+     * 					"tx_datetime": "2019-01-14 14:12:10",
+     * 					"created_at": 1547446336
+     * 				},
+     * 				{
+     * 					"amount": -5000,
+     * 					"bank_amount": 995000,
+     * 					"remark": "出借款",
+     * 					"tx_datetime": "2019-01-14 14:13:00",
+     * 					"created_at": 1547446380
+     * 				}
      * 			]
      * 		}
      *    }
@@ -1004,23 +997,44 @@ class Recoveries extends REST_Controller {
 		$input 		= $this->input->get(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$data		= array();
-
+		$list		= [];
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_Number) || $this->user_info->id_Number==""){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
-			
+		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
+		$bank_account = $this->user_bankaccount_model->get_by([
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		]);
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
 		
-		$virtual_account = $this->virtual_account_model->get_by(array("investor"=>1,"user_id"=>$user_id));
-		$list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
-
-		$this->response(array('result' => 'SUCCESS','data' => array("list" => $list) ));
+		$virtual_account = $this->virtual_account_model->get_by([
+			'investor'	=> 1,
+			'user_id'	=> $user_id
+		]);
+		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+		if($passbook_list){
+			$transaction_source = $this->config->item('transaction_source');
+			foreach($passbook_list as $key => $value){
+				$value['remark'] = json_decode($value['remark'],TRUE);
+				$remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
+				$list[] = [
+					'amount' 		=> $value['amount'],
+					'bank_amount'	=> $value['bank_amount'],
+					'remark'		=> $remark,
+					'tx_datetime'	=> $value['tx_datetime'],
+					'created_at'	=> $value['created_at'],
+				];
+			}
+		}
+		
+		$this->response(array('result' => 'SUCCESS','data' => ['list' => $list]));
     }
 	
 	/**
@@ -1030,22 +1044,42 @@ class Recoveries extends REST_Controller {
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String} ids Investments IDs ex: 1,3,10,21
+     * @apiParam {Float{-20.0~20.0}} [bargain_rate=0] 增減價比率(%)
 	 * 
      * @apiSuccess {Object} result SUCCESS
-     * @apiSuccess {String} total_principal 轉讓價金
-     * @apiSuccess {String} total_fee 預計轉讓費用
-     * @apiSuccess {String} max_instalment 最大剩餘期數
-     * @apiSuccess {String} min_instalment 最小剩餘期數
-     * @apiSuccess {Object} debt_transfer_contract 轉讓合約(多份)
+     * @apiSuccess {Number} count 筆數
+     * @apiSuccess {Number} amount 轉讓價金
+     * @apiSuccess {Number} principal 剩餘本金
+     * @apiSuccess {Number} interest 已發生利息
+     * @apiSuccess {Number} delay_interest 已發生延滯息
+     * @apiSuccess {Number} fee 預計轉讓手續費
+     * @apiSuccess {Number} max_instalment 最大剩餘期數
+     * @apiSuccess {Number} min_instalment 最小剩餘期數
+     * @apiSuccess {String} settlement_date 結息日
+     * @apiSuccess {Float} bargain_rate 增減價比率(%)
+     * @apiSuccess {Float} interest_rate 平均年表利率(%)
+     * @apiSuccess {Number} accounts_receivable 應收帳款
+     * @apiSuccess {Object} contract 轉讓合約(多份)
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      	"data": {
-     *              "total_principal": 50000,
-     *              "total_fee": 250,
-     *              "max_instalment": 3,
+     *              "count": 4,
+     *              "amount": 15015,
+     *              "principal": 15000,
+     *              "interest": 15,
+     *              "delay_interest": 0,
+     *              "fee": 75,
+     *              "max_instalment": 12,
      *              "min_instalment": 3,
-     *              "debt_transfer_contract": ["我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"]
+     *              "settlement_date": "2019-01-19",
+     *              "bargain_rate": 5.1,
+     *              "interest_rate": 8.38,
+     *              "accounts_receivable": 15477,
+     *              "contract": [
+     *              	"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約",
+     *              	"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"
+     *              ]
      *          }
      *    }
 	 * 
@@ -1081,6 +1115,13 @@ class Recoveries extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "808"
      *     }
+	 *
+     * @apiError 813 價金過高
+     * @apiErrorExample {Object} 813
+     *     {
+     *       "result": "ERROR",
+     *       "error": "813"
+     *     }
      */
 	public function pretransfer_post()
     {
@@ -1092,13 +1133,13 @@ class Recoveries extends REST_Controller {
 		if (empty($input['ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
-		$ids 	= explode(",",$input['ids']);
+		$bargain_rate = isset($input['bargain_rate'])?round(floatval($input['bargain_rate']),1):0;
+		$ids 	= explode(',',$input['ids']);
 		$count 	= count($ids);
 		if(!empty($ids)){
 			foreach($ids as $key => $id){
 				$id = intval($id);
-				if(empty($id)){
+				if(intval($id)<=0 ){
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
@@ -1106,14 +1147,29 @@ class Recoveries extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
+		if($bargain_rate < -20 || $bargain_rate > 20){
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
 		$investments = $this->investment_model->get_many($ids);
 
 		if(count($investments)==count($ids)){
-			$total_principal 		= 0;
-			$total_fee		 		= 0;
-			$max_instalment	 		= 0;
-			$min_instalment	 		= 0;
-			$debt_transfer_contract = array();
+			$data = [
+				'count' 	 			=> 0,
+				'amount' 	 			=> 0,
+				'principal' 	 		=> 0,
+				'interest' 		 		=> 0,
+				'delay_interest' 		=> 0,
+				'fee' 			 		=> 0,
+				'max_instalment' 		=> 0,
+				'min_instalment' 		=> 0,
+				'settlement_date' 		=> '',
+				'bargain_rate' 			=> $bargain_rate,
+				'interest_rate' 		=> 0,
+				'accounts_receivable' 	=> 0,
+				'contract' 		 		=> [],
+			];
+
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
 					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
@@ -1125,28 +1181,43 @@ class Recoveries extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
 				}
 			}
+			$interest_rate_n = 0;
+			$interest_rate_d = 0;
 			foreach( $investments as $key => $value ){
-				$info = $this->transfer_lib->get_pretransfer_info($value);
+				$target = $this->target_model->get($value->target_id);
+				$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
+				$interest_rate_d += $value->loan_amount*$target->instalment;
+				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
 				if($info){
-					$total_principal 	+= $info["total"];
-					$total_fee 			+= $info["fee"];
-					$debt_transfer_contract[] = $info["debt_transfer_contract"];
-					if($max_instalment < $info["instalment"]){
-						$max_instalment = $info["instalment"];
+					$data['count']++;
+					$data['amount'] 			+= $info['total'];
+					$data['principal'] 			+= $info['principal'];
+					$data['interest'] 			+= $info['interest'];
+					$data['delay_interest'] 	+= $info['delay_interest'];
+					$data['fee'] 				+= $info['fee'];
+					$data['accounts_receivable'] += $info['accounts_receivable'];
+					$data['contract'][] 	= $info['debt_transfer_contract'];
+
+					if($data['max_instalment'] < $info['instalment']){
+						$data['max_instalment'] = $info['instalment'];
 					}
-					if($min_instalment > $info["instalment"] || $min_instalment==0){
-						$min_instalment = $info["instalment"];
+					if($data['min_instalment'] > $info['instalment'] || $data['min_instalment']==0){
+						$data['min_instalment'] = $info['instalment'];
+					}
+					if($data['settlement_date'] > $info['settlement_date'] || $data['settlement_date']==''){
+						$data['settlement_date'] = $info['settlement_date'];
 					}
 				}
 			}
-
-			$data = array(
-				"total_principal"			=> $total_principal,
-				"total_fee"					=> $total_fee,
-				"max_instalment"			=> $max_instalment,
-				"min_instalment"			=> $min_instalment,
-				"debt_transfer_contract" 	=> $debt_transfer_contract,
-			);
+			
+			if($interest_rate_n && $interest_rate_d){
+				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
+			}
+			
+			if($data['amount']>$data['accounts_receivable']){
+				$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+			}
+			
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
@@ -1159,6 +1230,9 @@ class Recoveries extends REST_Controller {
      * @apiGroup Recoveries
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String} ids Investments IDs (複選使用逗號隔開1,3,10,21)
+	 * @apiParam {Float{-20..20}} [bargain_rate=0] 增減價比率(%)
+	 * @apiParam {Number{0,1}} [combination=0] 是否整包
+	 * @apiParam {String{4,12}} [password] 設置密碼
 	 * 
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -1198,6 +1272,20 @@ class Recoveries extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "808"
      *     }
+	 *
+     * @apiError 813 價金過高
+     * @apiErrorExample {Object} 813
+     *     {
+     *       "result": "ERROR",
+     *       "error": "813"
+     *     }
+	 *
+     * @apiError 814 整包狀態不一致
+     * @apiErrorExample {Object} 814
+     *     {
+     *       "result": "ERROR",
+     *       "error": "814"
+     *     }
      */
 	public function transfer_post()
     {
@@ -1211,7 +1299,21 @@ class Recoveries extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
-		$ids = explode(",",$input['ids']);
+		$bargain_rate 	= isset($input['bargain_rate'])?round(floatval($input['bargain_rate']),1):0;
+		if($bargain_rate < -20 || $bargain_rate > 20){
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		$combination 	= isset($input['combination'])&&intval($input['combination'])?1:0;
+		$combination_id = 0;
+		$password 		= isset($input['password'])?$input['password']:'';
+		if($combination==1 && $password != ''){
+			if(strlen($password) < 4 || strlen($password) > 12){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+		}
+		
+		$ids = explode(',',$input['ids']);
 		if(!empty($ids)){
 			foreach($ids as $key => $id){
 				$id = intval($id);
@@ -1237,8 +1339,85 @@ class Recoveries extends REST_Controller {
 				}
 			}
 			
+			if($combination==1){
+				$data = [
+					'password' 	 			=> $password,
+					'transfer_fee' 			=> 0,
+					'count' 	 			=> 0,
+					'amount' 	 			=> 0,
+					'principal' 	 		=> 0,
+					'interest' 		 		=> 0,
+					'max_instalment' 		=> 0,
+					'min_instalment' 		=> 0,
+					'delay_interest' 		=> 0,
+					'bargain_rate' 			=> $bargain_rate,
+					'interest_rate' 		=> 0,
+					'accounts_receivable' 	=> 0,
+				];
+				$first_investment 	 = current($investments);
+				$first_info 		 = $this->transfer_lib->get_pretransfer_info($first_investment,$bargain_rate);
+				$interest_rate_n = 0;
+				$interest_rate_d = 0;
+				if($first_info['delay_interest']>0){
+					$delay = 1;
+				}else{
+					$delay = 0;
+				}
+			
+				foreach( $investments as $key => $value ){
+					$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+					if($delay==1 && $info['delay_interest']==0){
+						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
+					}
+					if($delay==0 && $info['delay_interest']>0){
+						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
+					}
+					if($info['settlement_date'] != $first_info['settlement_date']){
+						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
+					}
+					
+					$target = $this->target_model->get($value->target_id);
+					$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
+					$interest_rate_d += $value->loan_amount*$target->instalment;
+
+
+					$data['count']++;
+					$data['amount'] 			+= $info['total'];
+					$data['principal'] 			+= $info['principal'];
+					$data['interest'] 			+= $info['interest'];
+					$data['delay_interest'] 	+= $info['delay_interest'];
+					$data['transfer_fee'] 		+= $info['fee'];
+					$data['accounts_receivable'] += $info['accounts_receivable'];
+					if($data['max_instalment'] < $info['instalment']){
+						$data['max_instalment'] = $info['instalment'];
+					}
+					if($data['min_instalment'] > $info['instalment'] || $data['min_instalment']==0){
+						$data['min_instalment'] = $info['instalment'];
+					}
+				}
+
+				if($data['amount'] > $data['accounts_receivable']){
+					$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+				}
+				if($interest_rate_n && $interest_rate_d){
+					$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
+				}
+				
+				$this->load->model('loan/transfer_combination_model');
+				$combination_id = $this->transfer_combination_model->insert($data);
+			}else{
+				if($bargain_rate > 0){
+					foreach( $investments as $key => $value ){
+						$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+						if($info['total'] > $info['accounts_receivable']){
+							$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+						}
+					}
+				}
+			}
+			
 			foreach( $investments as $key => $value ){
-				$rs = $this->transfer_lib->apply_transfer($value);
+				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id);
 			}
 			
 			$this->response(array('result' => 'SUCCESS'));

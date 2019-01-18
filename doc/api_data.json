@@ -10974,13 +10974,6 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.last_date",
-            "description": "<p>結案日期</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "target.status",
@@ -11046,8 +11039,15 @@
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "invest.date",
-            "description": "<p>投資日期</p>"
+            "field": "invest.start_date",
+            "description": "<p>開始投資日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "invest.end_date",
+            "description": "<p>結束投資日期</p>"
           },
           {
             "group": "Success 200",
@@ -11061,7 +11061,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"income\": {\n\t\t\t\t\t\"principal\": 0,\n\t\t\t\t\t\"interest\": 0,\n\t\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\t\"other\": 0,\n\t\t\t\t\t\"transfer\": \"5003\"\n\t\t\t\t},\n\t\t\t\t\"invest\": {\n\t\t\t\t\t\"date\": \"2019-01-05\",\n\t\t\t\t\t\"amount\": \"5000\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"income\": {\n\t\t\t\t\t\"principal\": 0,\n\t\t\t\t\t\"interest\": 0,\n\t\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\t\"other\": 0,\n\t\t\t\t\t\"transfer\": \"5003\"\n\t\t\t\t},\n\t\t\t\t\"invest\": {\n\t\t\t\t\t\"start_date\": \"2019-01-05\",\n\t\t\t\t\t\"end_date\": \"2019-01-17\",\n\t\t\t\t\t\"amount\": \"5000\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -12385,7 +12385,7 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "amount",
             "description": "<p>金額</p>"
@@ -12413,24 +12413,17 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "created_at",
             "description": "<p>入帳時間</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "action",
-            "description": "<p>debit:資產增加 credit:資產減少</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"amount\":\"50500\",\n\t\t\t\t\"bank_amount\":\"50500\",\n\t\t\t\t\"remark\":\"source:3\",\n\t\t\t\t\"tx_datetime\":\"2018-05-08 15:38:07\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t\"action\":\"debit\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"amount\":\"-50000\",\n\t\t\t\t\"bank_amount\":\"500\",\n\t\t\t\t\"remark\":\"source:3\",\n\t\t\t\t\"tx_datetime\":\"2018-04-20 17:55:51\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t\t\"action\":\"credit\"\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n     \"result\": \"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"amount\": 1000000,\n\t\t\t\t\t\"bank_amount\": 1000000,\n\t\t\t\t\t\"remark\": \"平台代收\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-14 14:12:10\",\n\t\t\t\t\t\"created_at\": 1547446336\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"amount\": -5000,\n\t\t\t\t\t\"bank_amount\": 995000,\n\t\t\t\t\t\"remark\": \"出借款\",\n\t\t\t\t\t\"tx_datetime\": \"2019-01-14 14:13:00\",\n\t\t\t\t\t\"created_at\": 1547446380\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -12710,6 +12703,15 @@
             "optional": false,
             "field": "ids",
             "description": "<p>Investments IDs ex: 1,3,10,21</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Float",
+            "size": "-20.0~20.0",
+            "optional": true,
+            "field": "bargain_rate",
+            "defaultValue": "0",
+            "description": "<p>增減價比率(%)</p>"
           }
         ]
       }
@@ -12726,37 +12728,93 @@
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "total_principal",
+            "field": "count",
+            "description": "<p>筆數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "amount",
             "description": "<p>轉讓價金</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "total_fee",
-            "description": "<p>預計轉讓費用</p>"
+            "field": "principal",
+            "description": "<p>剩餘本金</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
+            "optional": false,
+            "field": "interest",
+            "description": "<p>已發生利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "delay_interest",
+            "description": "<p>已發生延滯息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "fee",
+            "description": "<p>預計轉讓手續費</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
             "optional": false,
             "field": "max_instalment",
             "description": "<p>最大剩餘期數</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "min_instalment",
             "description": "<p>最小剩餘期數</p>"
           },
           {
             "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "settlement_date",
+            "description": "<p>結息日</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "bargain_rate",
+            "description": "<p>增減價比率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "interest_rate",
+            "description": "<p>平均年表利率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable",
+            "description": "<p>應收帳款</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Object",
             "optional": false,
-            "field": "debt_transfer_contract",
+            "field": "contract",
             "description": "<p>轉讓合約(多份)</p>"
           }
         ]
@@ -12764,7 +12822,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \t\"data\": {\n          \"total_principal\": 50000,\n          \"total_fee\": 250,\n          \"max_instalment\": 3,\n          \"min_instalment\": 3,\n          \"debt_transfer_contract\": [\"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約\"]\n      }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \t\"data\": {\n          \"count\": 4,\n          \"amount\": 15015,\n          \"principal\": 15000,\n          \"interest\": 15,\n          \"delay_interest\": 0,\n          \"fee\": 75,\n          \"max_instalment\": 12,\n          \"min_instalment\": 3,\n          \"settlement_date\": \"2019-01-19\",\n          \"bargain_rate\": 5.1,\n          \"interest_rate\": 8.38,\n          \"accounts_receivable\": 15477,\n          \"contract\": [\n          \t\"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約\",\n          \t\"我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約\"\n          ]\n      }\n}",
           "type": "Object"
         }
       ]
@@ -12795,6 +12853,12 @@
             "optional": false,
             "field": "808",
             "description": "<p>已申請過債權轉出</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "813",
+            "description": "<p>價金過高</p>"
           },
           {
             "group": "Error 4xx",
@@ -12841,6 +12905,11 @@
         {
           "title": "808",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"808\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "813",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"813\"\n}",
           "type": "Object"
         },
         {
@@ -13094,6 +13163,32 @@
             "optional": false,
             "field": "ids",
             "description": "<p>Investments IDs (複選使用逗號隔開1,3,10,21)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Float",
+            "size": "-20..20",
+            "optional": true,
+            "field": "bargain_rate",
+            "defaultValue": "0",
+            "description": "<p>增減價比率(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "size": "0,1",
+            "optional": true,
+            "field": "combination",
+            "defaultValue": "0",
+            "description": "<p>是否整包</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "4,12",
+            "optional": true,
+            "field": "password",
+            "description": "<p>設置密碼</p>"
           }
         ]
       }
@@ -13148,6 +13243,18 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "813",
+            "description": "<p>價金過高</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "814",
+            "description": "<p>整包狀態不一致</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
           },
@@ -13190,6 +13297,16 @@
         {
           "title": "808",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"808\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "813",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"813\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "814",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"814\"\n}",
           "type": "Object"
         },
         {

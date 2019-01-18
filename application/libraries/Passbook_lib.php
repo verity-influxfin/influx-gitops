@@ -40,36 +40,42 @@ class Passbook_lib{
     }
 
 	//入帳
-	public function enter_account($transaction_id,$tx_datetime=""){
+	public function enter_account($transaction_id,$tx_datetime=''){
 		if($transaction_id){
-			$tx_datetime	= empty($tx_datetime)?date("Y-m-d H:i:s"):date("Y-m-d H:i:s",strtotime($tx_datetime));
+			$tx_datetime	= empty($tx_datetime)?date('Y-m-d H:i:s'):date('Y-m-d H:i:s',strtotime($tx_datetime));
 			$transaction 	= $this->CI->transaction_model->get($transaction_id);
 			if($transaction && in_array($transaction->source,$this->credit) && $transaction->status==2 && $transaction->passbook_status==0 ){
-				$this->CI->transaction_model->update($transaction_id,array("passbook_status"=>2));//lock
+				$this->CI->transaction_model->update($transaction_id,['passbook_status'=>2]);//lock
 
 				if(is_virtual_account($transaction->bank_account_to)){
 					$param[] = array(
-						"virtual_account"	=> $transaction->bank_account_to,
-						"transaction_id"	=> $transaction_id,
-						"amount"			=> intval($transaction->amount),
-						"remark"			=> json_encode(array("source"=>$transaction->source,"target_id"=>$transaction->target_id)),
-						"tx_datetime"		=> $tx_datetime,
+						'virtual_account'	=> $transaction->bank_account_to,
+						'transaction_id'	=> $transaction_id,
+						'amount'			=> intval($transaction->amount),
+						'remark'			=> json_encode([
+							'source'	=> $transaction->source,
+							'target_id'	=> $transaction->target_id
+						]),
+						'tx_datetime'		=> $tx_datetime,
 					);
 				}
 				
 				if(is_virtual_account($transaction->bank_account_from)){
 					$param[] = array(
-						"virtual_account"	=> $transaction->bank_account_from,
-						"transaction_id"	=> $transaction_id,
-						"amount"			=> intval($transaction->amount)*(-1),
-						"remark"			=> json_encode(array("source"=>$transaction->source,"target_id"=>$transaction->target_id)),
-						"tx_datetime"		=> $tx_datetime,
+						'virtual_account'	=> $transaction->bank_account_from,
+						'transaction_id'	=> $transaction_id,
+						'amount'			=> intval($transaction->amount)*(-1),
+						'remark'			=> json_encode([
+							'source'	=> $transaction->source,
+							'target_id'	=> $transaction->target_id
+						]),
+						'tx_datetime'		=> $tx_datetime,
 					);
 				}
 
 				$virtual_passbook = $this->CI->virtual_passbook_model->insert_many($param);
 				if($virtual_passbook){
-					$this->CI->transaction_model->update($transaction_id,array("passbook_status"=>1));
+					$this->CI->transaction_model->update($transaction_id,array('passbook_status'=>1));
 					return $virtual_passbook;
 				}
 			}
@@ -78,21 +84,23 @@ class Passbook_lib{
 	}
 	
 	//取得資金資料
-	public function get_passbook_list($virtual_account=""){
-		$list = array();
+	public function get_passbook_list($virtual_account=''){
+		$list = [];
 		if($virtual_account){
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by("tx_datetime,created_at","asc")->get_many_by(array("virtual_account"=>$virtual_account));
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
+				'virtual_account' => $virtual_account
+			]);
 			if($virtual_passbook){
 				$total 	= 0;
 				foreach($virtual_passbook as $key => $value){
 					$total	+= $value->amount;
 					$list[] = array(
-						"amount" 		=> $value->amount,
-						"bank_amount"	=> $total,
-						"remark"		=> $value->remark,
-						"tx_datetime"	=> $value->tx_datetime,
-						"created_at"	=> $value->created_at,
-						"action"		=> $value->amount>0?"debit":"credit",
+						'amount' 		=> intval($value->amount),
+						'bank_amount'	=> $total,
+						'remark'		=> $value->remark,
+						'tx_datetime'	=> $value->tx_datetime,
+						'created_at'	=> intval($value->created_at),
+						'action'		=> intval($value->amount)>0?'debit':'credit',
 					);
 				}
 			}
@@ -103,18 +111,18 @@ class Passbook_lib{
 	//餘額大餘1000通知
 	public function script_alert_account_remaining(){
 		$count  	= 0;
-		$this->CI->load->model("user/virtual_account_model");
-		$this->CI->load->library("Notification_lib");
-		$virtual_passbook = $this->CI->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
-			"virtual_account <>" 	=> PLATFORM_VIRTUAL_ACCOUNT,
-			"tx_datetime <=" 		=> date("Y-m-d H:i:s"),
+		$this->CI->load->model('user/virtual_account_model');
+		$this->CI->load->library('Notification_lib');
+		$virtual_passbook = $this->CI->virtual_passbook_model->order_by('virtual_account','ASC')->get_many_by(array(
+			'virtual_account <>' 	=> PLATFORM_VIRTUAL_ACCOUNT,
+			'tx_datetime <=' 		=> date('Y-m-d H:i:s'),
 		));
 		if(!empty($virtual_passbook)){
 			foreach($virtual_passbook as $key => $value){
 				if(!isset($list[$value->virtual_account])){
 					$list[$value->virtual_account] = 0;
 					$info[$value->virtual_account] = $this->CI->virtual_account_model->get_by(array(
-						"virtual_account" => $value->virtual_account
+						'virtual_account' => $value->virtual_account
 					));
 				}
 				$list[$value->virtual_account] += $value->amount;

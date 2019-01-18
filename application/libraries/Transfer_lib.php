@@ -30,17 +30,18 @@ class Transfer_lib{
 			$this->CI->load->library('Financial_lib');
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by(array(
 				'investment_id'	=> $investment->id,
-				'status'		=> array(1,2)
+				'status'		=> [1,2]
 			));
 			$target = $this->CI->target_model->get($investment->target_id);
 			
 			if($transaction && $target){
-				$principal			= 0;//本金
-				$interest			= 0;//利息
-				$delay_interest		= 0;//延滯息
-				$instalment_paid	= 0;//已還期數
-				$last_paid_date 	= $target->loan_date;//上次已還款日期
-				$next_pay_date 		= '';//下期還款日期
+				$principal				= 0;//本金
+				$interest				= 0;//利息
+				$delay_interest			= 0;//延滯息
+				$instalment_paid		= 0;//已還期數
+				$accounts_receivable	= 0;//應收帳款
+				$last_paid_date 		= $target->loan_date;//上次已還款日期
+				$next_pay_date 			= '';//下期還款日期
 				foreach($transaction as $key => $value){
 					if($value->source==SOURCE_AR_PRINCIPAL){
 						if($value->status==2 && $value->limit_date > $last_paid_date){
@@ -81,8 +82,12 @@ class Transfer_lib{
 						if($value->status==1 && $value->source==SOURCE_AR_INTEREST && $value->limit_date <= $settlement_date){
 							$interest += $value->amount;
 						}
+						if($value->status==1 && $value->source==SOURCE_AR_INTEREST){
+							$accounts_receivable += $value->amount;
+						}
 					}
 
+					$accounts_receivable = $accounts_receivable + $principal + $delay_interest;
 					$total = $principal + $interest + $delay_interest;
 					$total = intval(round($total * (100 + $bargain_rate) /100,0));
 					$contract = $this->CI->contract_lib->pretransfer_contract([
@@ -101,12 +106,13 @@ class Transfer_lib{
 					$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
 					$data 		= array(
 						'total'						=> $total,
-						'instalment'				=> $instalment,//剩餘期數
-						'principal'					=> $principal,
-						'interest'					=> $interest,
-						'delay_interest'			=> $delay_interest,
+						'instalment'				=> intval($instalment),//剩餘期數
+						'principal'					=> intval($principal),
+						'interest'					=> intval($interest),
+						'delay_interest'			=> intval($delay_interest),
 						'bargain_rate'				=> $bargain_rate,
-						'fee'						=> $fee,
+						'accounts_receivable'		=> intval($accounts_receivable),
+						'fee'						=> intval($fee),
 						'debt_transfer_contract' 	=> $contract,
 						'settlement_date'			=> $settlement_date,//結帳日
 					);
@@ -117,7 +123,7 @@ class Transfer_lib{
 		return false;
 	}
 	
-	public function apply_transfer($investment,$bargain_rate=0){
+	public function apply_transfer($investment,$bargain_rate=0,$combination=0){
 		if($investment && $investment->status==3 && $investment->transfer_status==0){
 			$target 	= $this->CI->target_model->get($investment->target_id);
 			$info  		= $this->get_pretransfer_info($investment,$bargain_rate);
@@ -145,7 +151,7 @@ class Transfer_lib{
 					if($rs){
 						$this->CI->load->library('target_lib');
 						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
-						$param = array(
+						$param = [
 							'target_id'				=> $investment->target_id,
 							'investment_id'			=> $investment->id,
 							'transfer_fee'			=> $info['fee'],
@@ -155,9 +161,11 @@ class Transfer_lib{
 							'delay_interest'		=> $info['delay_interest'],
 							'bargain_rate'			=> $info['bargain_rate'],
 							'instalment'			=> $info['instalment'],
+							'accounts_receivable'	=> $info['accounts_receivable'],
 							'expire_time'			=> strtotime($info['settlement_date'].' 23:59:59'),
+							'combination'			=> $combination,
 							'contract_id'			=> $contract,
-						);
+						];
 						$res = $this->CI->transfer_model->insert($param);
 						return $res;
 					}
@@ -167,7 +175,6 @@ class Transfer_lib{
 		return false;
 	}
 
-	
 	public function cancel_transfer($transfers,$admin=0){
 		if($transfers){
 			$rs = $this->CI->transfer_model->update($transfers->id,array(

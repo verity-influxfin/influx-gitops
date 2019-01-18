@@ -53,9 +53,12 @@ class Agreement extends MY_Admin_Controller
             $this->agreement_model->insert($param);
             $this->redirectToIndex();
         } else {
+			$viewData  = array(
+				'type' => 'insert'
+			);
             $this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
-			$this->load->view('admin/agreement');
+			$this->load->view('admin/agreement',$viewData);
 			$this->load->view('admin/_footer');
         }
     }
