@@ -72,9 +72,11 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Number} principal 剩餘本金
 	 * @apiSuccess {Number} interest 已發生利息
 	 * @apiSuccess {Number} delay_interest 已發生延滯利息
-	 * @apiSuccess {Number} bargain_rate 議價比例(%)
+	 * @apiSuccess {Float} bargain_rate 增減價比率(%)
 	 * @apiSuccess {Number} instalment 剩餘期數
+	 * @apiSuccess {Number} combination Combination ID
 	 * @apiSuccess {Number} expire_time 流標時間
+	 * @apiSuccess {Number} accounts_receivable 應收帳款
 	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.target_no 案號
 	 * @apiSuccess {Number} target.product_id 產品ID
@@ -94,21 +96,37 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Object} target.user 借款人基本資訊
 	 * @apiSuccess {Number} target.user.age 年齡
 	 * @apiSuccess {String} target.user.sex 性別 F/M
+	 * @apiSuccess {Object} combination_list 整包債權列表
+     * @apiSuccess {Number} combination_list.id Combination ID
+     * @apiSuccess {String} combination_list.combination_no 整包轉讓號
+     * @apiSuccess {Boolean} combination_list.password 是否需要密碼
+     * @apiSuccess {Number} combination_list.count 筆數
+     * @apiSuccess {Number} combination_list.amount 整包轉讓價金
+     * @apiSuccess {Number} combination_list.principal 整包剩餘本金
+     * @apiSuccess {Number} combination_list.interest 整包已發生利息
+     * @apiSuccess {Number} combination_list.delay_interest 整包已發生延滯息
+     * @apiSuccess {Number} combination_list.max_instalment 最大剩餘期數
+     * @apiSuccess {Number} combination_list.min_instalment 最小剩餘期數
+     * @apiSuccess {Float} combination_list.bargain_rate 增減價比率(%)
+     * @apiSuccess {Float} combination_list.interest_rate 平均年表利率(%)
+     * @apiSuccess {Number} combination_list.accounts_receivable 整包應收帳款
+	 
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id": 3,
-     * 				"amount": 5002,
+     * 				"id": 17,
+     * 				"amount": 4010,
      * 				"principal": 5000,
-     * 				"interest": 2,
+     * 				"interest": 6,
      * 				"delay_interest": 0,
-     * 				"bargain_rate": 0,
-     * 				"instalment": 3,
-     * 				"combination": 0,
-     * 				"expire_time": 1547654399,
+     * 				"bargain_rate": -19.9,
+     * 				"instalment": 18,
+     * 				"combination": 2,
+     * 				"expire_time": 1547913599,
+     * 				"accounts_receivable": 5398,
      * 				"target": {
      * 					"id": 9,
      * 					"target_no": "STN2019011414213",
@@ -132,6 +150,23 @@ class Transfer extends REST_Controller {
      * 					}
      * 				}
      * 			}
+     * 			],
+     * 			"combination_list": [
+     * 			{
+     * 				"id": 2,
+     * 				"combination_no": "PKG1547810358209546",
+     * 				"password": false,
+     * 				"count": 3,
+     * 				"amount": 12028,
+     * 				"principal": 15000,
+     * 				"interest": 16,
+     * 				"max_instalment": 18,
+     * 				"min_instalment": 3,
+     * 				"delay_interest": 0,
+     * 				"bargain_rate": -19.9,
+     * 				"interest_rate": 8.56,
+     * 				"accounts_receivable": 15626
+     * 			}
      * 			]
      * 		}
      *    }
@@ -145,6 +180,8 @@ class Transfer extends REST_Controller {
     {
 		$input 			= $this->input->get();
 		$list			= [];
+		$combination_list = [];
+		$combination_ids = [];
 		$product_list 	= $this->config->item('product_list');
 		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'';
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
@@ -189,13 +226,42 @@ class Transfer extends REST_Controller {
 					'principal'			=> intval($value->principal),
 					'interest'			=> intval($value->interest),
 					'delay_interest'	=> intval($value->delay_interest),
-					'bargain_rate'		=> intval($value->bargain_rate),
+					'bargain_rate'		=> floatval($value->bargain_rate),
 					'instalment'		=> intval($value->instalment),
 					'combination'		=> intval($value->combination),
 					'expire_time'		=> intval($value->expire_time),
+					'accounts_receivable'	=> intval($value->accounts_receivable),
 					'target'			=> $target_info,
 				];
+				if($value->combination > 0){
+					$combination_ids[$value->combination] = $value->combination;
+				}
 			}
+			
+			if(!empty($combination_ids)){
+				$this->load->model('loan/transfer_combination_model');
+				$combinations = $this->transfer_combination_model->get_many($combination_ids);
+				if($combinations){
+					foreach($combinations as $key => $value){
+						$combination_list[] 	= [
+							'id'				=> intval($value->id),
+							'combination_no'	=> $value->combination_no,
+							'password'			=> empty($value->password)?false:true,
+							'count'				=> intval($value->count),
+							'amount'			=> intval($value->amount),
+							'principal'			=> intval($value->principal),
+							'interest'			=> intval($value->interest),
+							'max_instalment'	=> intval($value->max_instalment),
+							'min_instalment'	=> intval($value->min_instalment),
+							'delay_interest'	=> intval($value->delay_interest),
+							'bargain_rate'		=> floatval($value->bargain_rate),
+							'interest_rate'		=> floatval($value->interest_rate),
+							'accounts_receivable'	=> intval($value->accounts_receivable),
+						];
+					}
+				}
+			}
+			
 			
 			if(!empty($orderby) && !empty($sort) && !empty($list)){
 				$num = count($list);
@@ -234,8 +300,7 @@ class Transfer extends REST_Controller {
 				}
 			}
 		}
-
-		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
+		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ,'combination_list' => $combination_list] ));
     }
 
 	/**
@@ -252,9 +317,10 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Number} principal 剩餘本金
 	 * @apiSuccess {Number} interest 已發生利息
 	 * @apiSuccess {Number} delay_interest 已發生延滯利息
-	 * @apiSuccess {Number} bargain_rate 議價比例(%)
+	 * @apiSuccess {Float} bargain_rate 增減價比率(%)
 	 * @apiSuccess {Number} instalment 剩餘期數
 	 * @apiSuccess {Number} expire_time 流標時間
+	 * @apiSuccess {Number} accounts_receivable 應收帳款
 	 * @apiSuccess {String} contract 債轉合約
 	 * @apiSuccess {Object} target 原案資訊
 	 * @apiSuccess {String} target.target_no 案號
@@ -293,6 +359,7 @@ class Transfer extends REST_Controller {
      * 			"instalment": 3,
      * 			"combination": 0,
      * 			"expire_time": 1547654399,
+     * 			"accounts_receivable": 5145,
      * 			"contract": "我是合約",
      * 			"target": {
      * 				"id": 9,
@@ -426,10 +493,11 @@ class Transfer extends REST_Controller {
 				'principal'			=> intval($transfer->principal),
 				'interest'			=> intval($transfer->interest),
 				'delay_interest'	=> intval($transfer->delay_interest),
-				'bargain_rate'		=> intval($transfer->bargain_rate),
+				'bargain_rate'		=> floatval($transfer->bargain_rate),
 				'instalment'		=> intval($transfer->instalment),
 				'combination'		=> intval($transfer->combination),
 				'expire_time'		=> intval($transfer->expire_time),
+				'accounts_receivable'=> intval($transfer->accounts_receivable),
 				'contract'			=> $contract,
 				'target'			=> $target_info
 			];
@@ -444,8 +512,12 @@ class Transfer extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName PostTransferApply
      * @apiGroup Transfer
+	 *
+	 * @apiDescription 可收購多筆，若為整包債轉，一次只能單筆，否則回覆債權轉讓標的不存在
+	 *
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} transfer_id 投資ID
+	 * @apiParam {Number} transfer_ids 投資IDs IDs ex: 1,3,10,21
+	 * @apiParam {String{4,12}} [password] 整包債轉密碼
 	 * 
 	 * 
      * @apiSuccess {Object} result SUCCESS
@@ -523,74 +595,139 @@ class Transfer extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$param		= array('user_id'=> $user_id);
-		
+		$param		= [];
+		$password 	= isset($input['password'])?$input['password']:'';
 		//必填欄位
-		$fields 	= ['transfer_id'];
-		foreach ($fields as $field) {
-			if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}else{
-				$input[$field] = intval($input[$field]);
-				$param[$field] = $input[$field];
-			}
+		
+		if (empty($input['transfer_ids'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
-		$transfer = $this->transfer_lib->get_transfer($input['transfer_id']);
-		if($transfer && $transfer->status == 0 ){
-			$param['amount'] = $transfer->amount;
-			$investment = $this->investment_model->get($transfer->investment_id);
-			if( $user_id == $investment->user_id ){
-				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+		$transfer_ids 	= explode(',',$input['transfer_ids']);
+		$count 			= count($transfer_ids);
+		if(!empty($transfer_ids)){
+			foreach($transfer_ids as $key => $id){
+				$id = intval($id);
+				if(intval($id)<=0 ){
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
 			}
-
-			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
-			
-			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-			}
-			
-			if(get_age($this->user_info->birthday) < 20){
-				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-			}
-			
-			if($this->user_info->transaction_password==''){
-				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-			}
-			
-			$transfer_investment = $this->transfer_investment_model->get_by(array(
-				'transfer_id'	=> $input['transfer_id'],
-				'user_id'		=> $user_id,
-				'status'		=> array(0,1,10)
-			));
-			if($transfer_investment){
-				$this->response(array('result' => 'ERROR','error' => TRANSFER_APPLY_EXIST ));
-			}
-			
-			//檢查金融卡綁定 NO_BANK_ACCOUNT
-			$this->load->model('user/user_bankaccount_model');
-			$bank_account = $this->user_bankaccount_model->get_by(array(
-				'investor'	=> $investor,
-				'status'	=> 1,
-				'user_id'	=> $user_id,
-				'verify'	=> 1
-			));
-			if(!$bank_account){
-				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-			}
-
-			$insert = $this->transfer_investment_model->insert($param);
-			if($insert){
-				$this->response(array('result' => 'SUCCESS'));
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
+		//檢查認證 NOT_VERIFIED
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+		}
+		
+		//檢查認證 NOT_VERIFIED_EMAIL
+		if(empty($this->user_info->email) || $this->user_info->email==''){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+		}
+		
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+		}
+		
+		if($this->user_info->transaction_password==''){
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$bank_account = $this->user_bankaccount_model->get_by(array(
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		));
+		if(!$bank_account){
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+		}
+		
+		$transfer_investment = $this->transfer_investment_model->get_by([
+			'transfer_id'	=> $transfer_ids,
+			'user_id'		=> $user_id,
+			'status'		=> [0,1,10]
+		]);
+		if($transfer_investment){
+			$this->response(array('result' => 'ERROR','error' => TRANSFER_APPLY_EXIST ));
+		}
+		
+		$transfers = $this->transfer_lib->get_transfer_many($transfer_ids);
+		if(count($transfers)==count($transfer_ids)){
+			if(count($transfers)>1){
+				$param = [];
+				foreach($transfers as $key => $value){
+					if($value->combination==0 && $value->status == 0 ){
+						$investment = $this->investment_model->get($value->investment_id);
+						if( $user_id == $investment->user_id ){
+							$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+						}
+						$param[] = [
+							'transfer_id'	=> $value->id,
+							'user_id'		=> $user_id,
+							'amount'		=> $value->amount,
+						];
+					}else{
+						$this->response(array('result' => 'ERROR','error' => TRANSFER_NOT_EXIST ));
+					}
+				}
+				
+				if($param){
+					$insert = $this->transfer_investment_model->insert_many($param);
+					if($insert){
+						$this->response(array('result' => 'SUCCESS'));
+					}else{
+						$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+					}
+				}
+			}else{
+				$param 		= [];
+				$transfer 	= current($transfers);
+				if($transfer->status==0){
+					$investment = $this->investment_model->get($transfer->investment_id);
+					if( $user_id == $investment->user_id ){
+						$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+					}
+					
+					if($transfer->combination==0){
+						$param = [
+							'transfer_id'	=> $transfer->id,
+							'user_id'		=> $user_id,
+							'amount'		=> $transfer->amount,
+						];
+						$insert = $this->transfer_investment_model->insert($param);
+						if($insert){
+							$this->response(array('result' => 'SUCCESS'));
+						}else{
+							$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+						}
+					}else{
+						$param = [];
+						$transfer_list = $this->transfer_lib->get_transfer_list(['status'=>0,'combination'=>$transfer->combination]);
+						if($transfer_list){
+							foreach($transfer_list as $key => $value){
+								$param[] = [
+									'transfer_id'	=> $value->id,
+									'user_id'		=> $user_id,
+									'amount'		=> $value->amount,
+								];
+							}
+						}
+						if($param){
+							$insert = $this->transfer_investment_model->insert_many($param);
+							if($insert){
+								$this->response(array('result' => 'SUCCESS'));
+							}else{
+								$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+							}
+						}
+					}
+				}
+			}
+		}
 		$this->response(array('result' => 'ERROR','error' => TRANSFER_NOT_EXIST ));
     }
 	
@@ -616,9 +753,10 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Number} transfer.principal 剩餘本金
 	 * @apiSuccess {Number} transfer.interest 已發生利息
 	 * @apiSuccess {Number} transfer.delay_interest 已發生延滯利息
-	 * @apiSuccess {Number} transfer.bargain_rate 議價比例(%)
+	 * @apiSuccess {Float} transfer.bargain_rate 增減價比率(%)
 	 * @apiSuccess {Number} transfer.instalment 剩餘期數
 	 * @apiSuccess {Number} transfer.expire_time 流標時間
+	 * @apiSuccess {Number} transfer.accounts_receivable 應收帳款
 	 * @apiSuccess {Object} target 標的資訊
 	 * @apiSuccess {Number} target.id 產品ID
 	 * @apiSuccess {String} target.target_no 標的案號
@@ -691,10 +829,11 @@ class Transfer extends REST_Controller {
 					'principal'			=> intval($transfer_info->principal),
 					'interest'			=> intval($transfer_info->interest),
 					'delay_interest'	=> intval($transfer_info->delay_interest),
-					'bargain_rate'		=> intval($transfer_info->bargain_rate),
+					'bargain_rate'		=> floatval($transfer_info->bargain_rate),
 					'instalment'		=> intval($transfer_info->instalment),
 					'combination'		=> intval($transfer_info->combination),
 					'expire_time'		=> intval($transfer_info->expire_time),
+					'accounts_receivable' => intval($transfer_info->accounts_receivable),
 				];
 			
 				$target_info = $this->target_model->get($transfer_info->target_id);
@@ -725,7 +864,7 @@ class Transfer extends REST_Controller {
 				$list[] = array(
 					'id' 				=> intval($value->id),
 					'amount' 			=> intval($value->amount),
-					'loan_amount' 		=> in_array($value->status,array(2,10))?intval($value->amount):0,
+					'loan_amount' 		=> in_array($value->status,[2,10])?intval($value->amount):0,
 					'status' 			=> intval($value->status),
 					'created_at' 		=> intval($value->created_at),
 					'contract' 			=> $contract,

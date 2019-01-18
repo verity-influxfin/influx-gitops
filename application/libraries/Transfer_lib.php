@@ -194,33 +194,36 @@ class Transfer_lib{
 	}
 	
 	public function get_transfer_list($where = array('status' => 0)){
-		$list 	= array();
-		$rs = $this->CI->transfer_model->get_many_by($where);
+		$list 	= [];
+		$rs 	= $this->CI->transfer_model->get_many_by($where);
 		if($rs){
 			$list = $rs;
 		}
 		return $list;
 	}
 	
-
+	public function get_transfer_many($ids=[]){
+		$list = [];
+		if($ids && is_array($ids)){
+			$list = $this->CI->transfer_model->get_many($ids);
+		}
+		return $list;
+	}
+	
 	public function get_transfer($id){
-		
 		if($id){
 			$transfer = $this->CI->transfer_model->get($id);
 			return $transfer;
 		}
 		return false;
-		
 	}
 	
 	public function get_transfer_investments($investment_id){
-		
 		if($investment_id){
 			$transfer = $this->CI->transfer_model->order_by('created_at','desc')->get_by(array('investment_id'=>$investment_id));
 			return $transfer;
 		}
 		return false;
-		
 	}
 	
 	//判斷流標或結標或凍結款項

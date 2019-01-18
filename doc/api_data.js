@@ -22586,10 +22586,10 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "Float",
             "optional": false,
             "field": "transfer.bargain_rate",
-            "description": "<p>議價比例(%)</p>"
+            "description": "<p>增減價比率(%)</p>"
           },
           {
             "group": "Success 200",
@@ -22604,6 +22604,13 @@ define({ "api": [
             "optional": false,
             "field": "transfer.expire_time",
             "description": "<p>流標時間</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.accounts_receivable",
+            "description": "<p>應收帳款</p>"
           },
           {
             "group": "Success 200",
@@ -23792,10 +23799,10 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "Float",
             "optional": false,
             "field": "bargain_rate",
-            "description": "<p>議價比例(%)</p>"
+            "description": "<p>增減價比率(%)</p>"
           },
           {
             "group": "Success 200",
@@ -23810,6 +23817,13 @@ define({ "api": [
             "optional": false,
             "field": "expire_time",
             "description": "<p>流標時間</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable",
+            "description": "<p>應收帳款</p>"
           },
           {
             "group": "Success 200",
@@ -23977,7 +23991,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\": 3,\n\t\t\t\"amount\": 5002,\n\t\t\t\"principal\": 5000,\n\t\t\t\"interest\": 2,\n\t\t\t\"delay_interest\": 0,\n\t\t\t\"bargain_rate\": 0,\n\t\t\t\"instalment\": 3,\n\t\t\t\"combination\": 0,\n\t\t\t\"expire_time\": 1547654399,\n\t\t\t\"contract\": \"我是合約\",\n\t\t\t\"target\": {\n\t\t\t\t\"id\": 9,\n\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\"user_id\": 19,\n\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"repayment\": 1,\n\t\t\t\t\"delay\": 0,\n\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"remark\": \"\",\n\t\t\t\t\"status\": 5,\n\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\"user\": {\n\t\t\t\t\t\"name\": \"你**\",\n\t\t\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\"age\": 30,\n\t\t\t\t\t\"company_name\": \"國立政治大學\"\n\t\t\t\t},\n\t\t\t\t\"certification\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 1,\n\t\t\t\t\t\t\"alias\": \"idcard\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證個人身份資訊\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 2,\n\t\t\t\t\t\t\"alias\": \"student\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證學生身份\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\": 3,\n\t\t\t\"amount\": 5002,\n\t\t\t\"principal\": 5000,\n\t\t\t\"interest\": 2,\n\t\t\t\"delay_interest\": 0,\n\t\t\t\"bargain_rate\": 0,\n\t\t\t\"instalment\": 3,\n\t\t\t\"combination\": 0,\n\t\t\t\"expire_time\": 1547654399,\n\t\t\t\"accounts_receivable\": 5145,\n\t\t\t\"contract\": \"我是合約\",\n\t\t\t\"target\": {\n\t\t\t\t\"id\": 9,\n\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\"user_id\": 19,\n\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"repayment\": 1,\n\t\t\t\t\"delay\": 0,\n\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"remark\": \"\",\n\t\t\t\t\"status\": 5,\n\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\"user\": {\n\t\t\t\t\t\"name\": \"你**\",\n\t\t\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\"age\": 30,\n\t\t\t\t\t\"company_name\": \"國立政治大學\"\n\t\t\t\t},\n\t\t\t\t\"certification\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 1,\n\t\t\t\t\t\t\"alias\": \"idcard\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證個人身份資訊\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 2,\n\t\t\t\t\t\t\"alias\": \"student\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證學生身份\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -24484,10 +24498,10 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "Number",
+            "type": "Float",
             "optional": false,
             "field": "bargain_rate",
-            "description": "<p>議價比例(%)</p>"
+            "description": "<p>增減價比率(%)</p>"
           },
           {
             "group": "Success 200",
@@ -24500,8 +24514,22 @@ define({ "api": [
             "group": "Success 200",
             "type": "Number",
             "optional": false,
+            "field": "combination",
+            "description": "<p>Combination ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
             "field": "expire_time",
             "description": "<p>流標時間</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "accounts_receivable",
+            "description": "<p>應收帳款</p>"
           },
           {
             "group": "Success 200",
@@ -24635,13 +24663,111 @@ define({ "api": [
             "optional": false,
             "field": "target.user.sex",
             "description": "<p>性別 F/M</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "combination_list",
+            "description": "<p>整包債權列表</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.id",
+            "description": "<p>Combination ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "combination_list.combination_no",
+            "description": "<p>整包轉讓號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "combination_list.password",
+            "description": "<p>是否需要密碼</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.count",
+            "description": "<p>筆數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.amount",
+            "description": "<p>整包轉讓價金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.principal",
+            "description": "<p>整包剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.interest",
+            "description": "<p>整包已發生利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.delay_interest",
+            "description": "<p>整包已發生延滯息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.max_instalment",
+            "description": "<p>最大剩餘期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.min_instalment",
+            "description": "<p>最小剩餘期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "combination_list.bargain_rate",
+            "description": "<p>增減價比率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "combination_list.interest_rate",
+            "description": "<p>平均年表利率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "combination_list.accounts_receivable",
+            "description": "<p>整包應收帳款</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 3,\n\t\t\t\t\"amount\": 5002,\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 2,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": 0,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"combination\": 0,\n\t\t\t\t\"expire_time\": 1547654399,\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"remark\": \"\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\t\"user\": {\n\t\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\t\"age\": 30\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 17,\n\t\t\t\t\"amount\": 4010,\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 6,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"instalment\": 18,\n\t\t\t\t\"combination\": 2,\n\t\t\t\t\"expire_time\": 1547913599,\n\t\t\t\t\"accounts_receivable\": 5398,\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"remark\": \"\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\t\"user\": {\n\t\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\t\"age\": 30\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t],\n\t\t\t\"combination_list\": [\n\t\t\t{\n\t\t\t\t\"id\": 2,\n\t\t\t\t\"combination_no\": \"PKG1547810358209546\",\n\t\t\t\t\"password\": false,\n\t\t\t\t\"count\": 3,\n\t\t\t\t\"amount\": 12028,\n\t\t\t\t\"principal\": 15000,\n\t\t\t\t\"interest\": 16,\n\t\t\t\t\"max_instalment\": 18,\n\t\t\t\t\"min_instalment\": 3,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"interest_rate\": 8.56,\n\t\t\t\t\"accounts_receivable\": 15626\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -24933,6 +25059,7 @@ define({ "api": [
     "version": "0.2.0",
     "name": "PostTransferApply",
     "group": "Transfer",
+    "description": "<p>可收購多筆，若為整包債轉，一次只能單筆，否則回覆債權轉讓標的不存在</p>",
     "header": {
       "fields": {
         "Header": [
@@ -24953,8 +25080,16 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "transfer_id",
-            "description": "<p>投資ID</p>"
+            "field": "transfer_ids",
+            "description": "<p>投資IDs IDs ex: 1,3,10,21</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "4,12",
+            "optional": true,
+            "field": "password",
+            "description": "<p>整包債轉密碼</p>"
           }
         ]
       }
