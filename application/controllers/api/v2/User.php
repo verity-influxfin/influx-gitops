@@ -1183,6 +1183,50 @@ class User extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data'=>$data));
     }
 	
+	/**
+     * @api {post} /v2/user/upload 會員 上傳圖片
+	 * @apiVersion 0.2.0
+	 * @apiName PostUserUpload
+     * @apiGroup User
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
+     * @apiParam {file="*.jpg","*.png","*.gif"} image 圖片檔
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"url": "https://dev-influxp2p/aaaa.jpg"
+     *      }
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 *
+     */
+	public function upload_post()
+    {
+		$user_id = $this->user_info->id;
+		$data 	 = [];
+		//上傳檔案欄位
+		if (isset($_FILES['image']) && !empty($_FILES['image'])) {
+			$this->load->library('S3_upload');
+			$image = $this->s3_upload->image($_FILES,'image',$user_id,'user_upload');
+			if($image){
+				$data['url'] = $image;
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		$this->response(['result' => 'SUCCESS','data' => $data]);
+    }
+	
 	private function get_promote_code(){
 		$code = make_promote_code();
 		$result = $this->user_model->get_by('my_promote_code',$code);

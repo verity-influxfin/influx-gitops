@@ -77,12 +77,11 @@
                                             <th>受讓人會員 ID</th>
                                             <th>扣款時間</th>
                                             <th>債權金額</th>
-                                            <th>案件總額</th>
 											<th>年化利率</th>
                                             <th>價金</th>
                                             <th>剩餘本金</th>
-                                            <th>本期利息</th>
-                                            <th>本期回款手續費</th>
+                                            <th>剩餘利息</th>
+                                            <th>剩餘延滯息</th>
                                             <th>剩餘期數</th>
                                             <th>有效時間</th>
 											<th>取消</th>
@@ -105,12 +104,11 @@
                                             <td><?=isset($value->transfer_investment->user_id)&&$value->transfer_investment->user_id?$value->transfer_investment->user_id:"" ?></td>
                                             <td><?=isset($value->transfer_investment->tx_datetime)&&$value->transfer_investment->tx_datetime?$value->transfer_investment->tx_datetime:"" ?></td>
                                             <td><?=isset($value->investment->loan_amount)&&$value->investment->loan_amount?$value->investment->loan_amount:"" ?></td>
-                                            <td><?=isset($value->target->loan_amount)&&$value->target->loan_amount?$value->target->loan_amount:"" ?></td>
                                             <td><?=isset($value->target->interest_rate)&&$value->target->interest_rate?$value->target->interest_rate.'%':"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                             <td><?=isset($value->principal)?$value->principal:"" ?></td>
                                             <td><?=isset($value->interest)?$value->interest:"" ?></td>
-                                            <td><?=isset($value->platform_fee)?$value->platform_fee:"" ?></td>
+                                            <td><?=isset($value->delay_interest)?$value->delay_interest:"" ?></td>
                                             <td><?=isset($value->instalment)?$value->instalment:"" ?></td>
                                             <td><?=isset($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"" ?></td>
                                             <td><button class="btn btn-danger" onclick="cancel(<?=isset($value->id)?$value->id:"" ?>)">取消</button></td>

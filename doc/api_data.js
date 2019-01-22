@@ -25120,6 +25120,12 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "804",
+            "description": "<p>雙方不可同使用者</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "809",
             "description": "<p>債權轉讓標的不存在</p>"
           },
@@ -25132,8 +25138,8 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "804",
-            "description": "<p>雙方不可同使用者</p>"
+            "field": "815",
+            "description": "<p>整包債權密碼錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -25199,6 +25205,11 @@ define({ "api": [
       },
       "examples": [
         {
+          "title": "804",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"804\"\n}",
+          "type": "Object"
+        },
+        {
           "title": "809",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"809\"\n}",
           "type": "Object"
@@ -25209,8 +25220,8 @@ define({ "api": [
           "type": "Object"
         },
         {
-          "title": "804",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"804\"\n}",
+          "title": "815",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"815\"\n}",
           "type": "Object"
         },
         {
@@ -29591,5 +29602,112 @@ define({ "api": [
         "url": "https://dev-api.influxfin.com/api/user/sociallogin"
       }
     ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/user/upload",
+    "title": "會員 上傳圖片",
+    "version": "0.2.0",
+    "name": "PostUserUpload",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "file",
+            "allowedValues": [
+              "\"*.jpg\"",
+              "\"*.png\"",
+              "\"*.gif\""
+            ],
+            "optional": false,
+            "field": "image",
+            "description": "<p>圖片檔</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"url\": \"https://dev-influxp2p/aaaa.jpg\"\n  }\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/User.php",
+    "groupTitle": "User",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/user/upload"
+      }
+    ],
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        }
+      ]
+    }
   }
 ] });

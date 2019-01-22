@@ -141,7 +141,116 @@ class Order extends REST_Controller {
 		$data['list'] = $list;
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
+	
+	/**
+     * @api {get} /order/amount Repayment Total Amount
+     * @apiGroup Order
+	 * @apiVersion 0.1.0
+	 * @apiName GetOrderAmount
+	 * @apiHeader {String} Authorization Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)
+	 * @apiHeaderExample {String} Authorization
+	 * Bearer fcea920f7412b5da7be0cf42b8c93759
+	 * @apiHeader {String} CooperationID CooperationID
+	 * @apiHeaderExample {String} CooperationID
+	 * CO12345678
+	 * @apiHeader {Number} Timestamp Unix Timestamp
+	 * @apiHeaderExample {Number} Timestamp
+	 * 1546932175
+	 *
+	 * @apiParam {Number} product_id Product ID
+	 * @apiParam {Number{5000-300000}} amount Amount
+     *
+     * @apiSuccess {String} result SUCCESS
+	 * @apiSuccess {Object} instalment Number Of Instalment
+	 * @apiSuccess {Number} principal Total Principal
+	 * @apiSuccess {Number} interest Total Interest
+	 * @apiSuccess {Number} total_payment Total Amount
+	 *
+     * @apiSuccessExample {Object} Success-Response:
+	 *     HTTP/1.1 200 OK
+     *    {
+     *      "result": "SUCCESS",
+	 *      "data": {
+	 *      	"list": [
+	 *      	{
+	 *      		"instalment": 3,
+	 *      		"principal": 20000,
+	 *      		"interest": 434,
+	 *      		"total_payment": 20434
+	 *      	},
+	 *      	{
+	 *      		"instalment": 6,
+	 *      		"principal": 20000,
+	 *      		"interest": 691,
+	 *      		"total_payment": 20691
+	 *      	},
+	 *      	{
+	 *      		"instalment": 12,
+	 *      		"principal": 20000,
+	 *      		"interest": 1210,
+	 *      		"total_payment": 21210
+	 *      	},
+	 *      	{
+	 *      		"instalment": 18,
+	 *      		"principal": 20000,
+	 *      		"interest": 1732,
+	 *      		"total_payment": 21732
+	 *      	},
+	 *      	{
+	 *      		"instalment": 24,
+	 *      		"principal": 20000,
+	 *      		"interest": 2270,
+	 *      		"total_payment": 22270
+	 *      	}
+	 *      	]
+	 *      }
+	 *     }
+     * 
+	 * @apiUse AuthorizationRequired
+	 * @apiUse IllegalIP
+	 * @apiUse TimeOut
+	 * @apiUse RequiredArguments
+	 * @apiUse CooperationNotFound
+	 *
+	 * @apiError (400) ArgumentError Insert Error.
+	 * @apiErrorExample ArgumentError
+	 *     HTTP/1.1 400 Not Found
+	 *     {
+	 *       "error": "ArgumentError"
+	 *     }
+     * 
+     */
+	public function amount_get()
+    {
+		$product_list 	= $this->config->item('product_list');
+		$input 			= $this->input->get(NULL, TRUE);
+		$fields 		= ['product_id','amount'];
+		foreach ($fields as $field) {
+			$input[$field] = intval($input[$field]);
+			if (empty($input[$field])) {
+				$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+			} 
+		}
 
+		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
+			$product_info = $product_list[$input['product_id']];
+			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
+				$list = [];
+				foreach($product_info['instalment'] as $key => $value){
+					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$value,10,'',1);
+					$list[] = [
+						'instalment'	=> $value,
+						'principal'		=> $amortization_schedule['total']['principal'],
+						'interest'		=> $amortization_schedule['total']['interest'],
+						'total_payment'	=> $amortization_schedule['total']['total_payment'],
+					];
+				}
+				$this->response(array('result' => 'SUCCESS','data' => ['list'=>$list]));
+			}
+		}
+		$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+    }
+	
 	/**
      * @api {get} /order/schedule Repayment Schedule
      * @apiGroup Order
@@ -189,49 +298,76 @@ class Order extends REST_Controller {
      *    {
      *      "result": "SUCCESS",
 	 *      "data": {
-  	 *      	"amortization_schedule": {
-  	 *          	"amount": 12000,
-  	 *          	"instalment": 3,
-  	 *          	"rate": 9,
-  	 *          	"date": "2018-04-17",
-  	 *         	 	"total_payment": 2053,
-  	 *         	 	"leap_year": false,
-  	 *          	"year_days": 365,
-  	 *          	"XIRR": 0.0939,
-  	 *          	"schedule": {
- 	 *              	"1": {
-   	 *                  	"instalment": 1,
-   	 *                  	"repayment_date": "2018-06-10",
-   	 *                  	"days": 54,
-   	 *                  	"remaining_principal": "12000",
-   	 *                  	"principal": 1893,
-   	 *                  	"interest": 160,
-   	 *                  	"total_payment": 2053
-   	 *              	},
-   	 *              	"2": {
-  	 *                   	"instalment": 2,
-   	 *                  	"repayment_date": "2018-07-10",
-   	 *                  	"days": 30,
-  	 *                   	"remaining_principal": 10107,
-  	 *                   	"principal": 1978,
-  	 *                   	"interest": 75,
- 	 *                    	"total_payment": 2053
-  	 *               	},
-   	 *              	"3": {
- 	 *                    	"instalment": 3,
- 	 *                    	"repayment_date": "2018-08-10",
- 	 *                    	"days": 31,
- 	 *                    	"remaining_principal": 8129,
-  	 *                   	"principal": 1991,
-  	 *                   	"interest": 62,
- 	 *                    	"total_payment": 2053
- 	 *                	}
- 	 *            	},
-  	 *           	"total": {
- 	 *              	"principal": 12000,
- 	 *                	"interest": 391,
- 	 *                	"total_payment": 12391
-	 *            	}
+	 *      	"amortization_schedule": {
+	 *      		"amount": 20000,
+	 *      		"instalment": 6,
+	 *      		"rate": 10,
+	 *      		"date": "2019-01-21",
+	 *      		"total_payment": 3432,
+	 *      		"leap_year": false,
+	 *      		"year_days": 365,
+	 *      		"XIRR": 10.47,
+	 *      		"schedule": {
+	 *      			"1": {
+	 *      				"instalment": 1,
+	 *      				"repayment_date": "2019-03-10",
+	 *      				"days": 48,
+	 *      				"remaining_principal": 20000,
+	 *      				"principal": 3169,
+	 *      				"interest": 263,
+	 *      				"total_payment": 3432
+	 *      			},
+	 *      			"2": {
+	 *      				"instalment": 2,
+	 *      				"repayment_date": "2019-04-10",
+	 *      				"days": 31,
+	 *      				"remaining_principal": 16831,
+	 *      				"principal": 3289,
+	 *      				"interest": 143,
+	 *      				"total_payment": 3432
+	 *      			},
+	 *      			"3": {
+	 *      				"instalment": 3,
+	 *      				"repayment_date": "2019-05-10",
+	 *      				"days": 30,
+	 *      				"remaining_principal": 13542,
+	 *      				"principal": 3321,
+	 *      				"interest": 111,
+	 *      				"total_payment": 3432
+	 *      			},
+	 *      			"4": {
+	 *      				"instalment": 4,
+	 *      				"repayment_date": "2019-06-10",
+	 *      				"days": 31,
+	 *      				"remaining_principal": 10221,
+	 *      				"principal": 3345,
+	 *      				"interest": 87,
+	 *      				"total_payment": 3432
+	 *      			},
+	 *      			"5": {
+	 *      				"instalment": 5,
+	 *      				"repayment_date": "2019-07-10",
+	 *      				"days": 30,
+	 *      				"remaining_principal": 6876,
+	 *      				"principal": 3375,
+	 *      				"interest": 57,
+	 *      				"total_payment": 3432
+	 *      			},
+	 *      			"6": {
+	 *      				"instalment": 6,
+	 *      				"repayment_date": "2019-08-10",
+	 *      				"days": 31,
+	 *      				"remaining_principal": 3501,
+	 *      				"principal": 3501,
+	 *      				"interest": 30,
+	 *      				"total_payment": 3531
+	 *      			}
+	 *      		},
+	 *      		"total": {
+	 *      			"principal": 20000,
+	 *      			"interest": 691,
+	 *      			"total_payment": 20691
+	 *      		}
 	 *      	}
 	 *    	}
      *    }

@@ -483,7 +483,7 @@ class Transaction_lib{
 	//債轉成功
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
-		$transaction 	= array();
+		$transaction 	= [];
 		if($transfer_id){
 			$this->CI->load->model('loan/transfer_model');
 			$this->CI->load->model('loan/transfer_investment_model');

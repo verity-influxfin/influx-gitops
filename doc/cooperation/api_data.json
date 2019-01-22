@@ -314,6 +314,209 @@
   },
   {
     "type": "get",
+    "url": "/order/amount",
+    "title": "Repayment Total Amount",
+    "group": "Order",
+    "version": "0.1.0",
+    "name": "GetOrderAmount",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer MD5(SHA1(CooperationID + Timestamp) + CooperationKey)</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "CooperationID",
+            "description": "<p>CooperationID</p>"
+          },
+          {
+            "group": "Header",
+            "type": "Number",
+            "optional": false,
+            "field": "Timestamp",
+            "description": "<p>Unix Timestamp</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Authorization",
+          "content": "Bearer fcea920f7412b5da7be0cf42b8c93759",
+          "type": "String"
+        },
+        {
+          "title": "CooperationID",
+          "content": "CO12345678",
+          "type": "String"
+        },
+        {
+          "title": "Timestamp",
+          "content": "1546932175",
+          "type": "Number"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "product_id",
+            "description": "<p>Product ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "size": "5000-300000",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>Amount</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>Number Of Instalment</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "principal",
+            "description": "<p>Total Principal</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest",
+            "description": "<p>Total Interest</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "total_payment",
+            "description": "<p>Total Amount</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"list\": [\n  \t{\n  \t\t\"instalment\": 3,\n  \t\t\"principal\": 20000,\n  \t\t\"interest\": 434,\n  \t\t\"total_payment\": 20434\n  \t},\n  \t{\n  \t\t\"instalment\": 6,\n  \t\t\"principal\": 20000,\n  \t\t\"interest\": 691,\n  \t\t\"total_payment\": 20691\n  \t},\n  \t{\n  \t\t\"instalment\": 12,\n  \t\t\"principal\": 20000,\n  \t\t\"interest\": 1210,\n  \t\t\"total_payment\": 21210\n  \t},\n  \t{\n  \t\t\"instalment\": 18,\n  \t\t\"principal\": 20000,\n  \t\t\"interest\": 1732,\n  \t\t\"total_payment\": 21732\n  \t},\n  \t{\n  \t\t\"instalment\": 24,\n  \t\t\"principal\": 20000,\n  \t\t\"interest\": 2270,\n  \t\t\"total_payment\": 22270\n  \t}\n  \t]\n  }\n }",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "400": [
+          {
+            "group": "400",
+            "optional": false,
+            "field": "ArgumentError",
+            "description": "<p>Insert Error.</p>"
+          },
+          {
+            "group": "400",
+            "optional": false,
+            "field": "RequiredArguments",
+            "description": "<p>Required Arguments.</p>"
+          }
+        ],
+        "401": [
+          {
+            "group": "401",
+            "optional": false,
+            "field": "AuthorizationRequired",
+            "description": "<p>Authorization Required.</p>"
+          },
+          {
+            "group": "401",
+            "optional": false,
+            "field": "IllegalIP",
+            "description": "<p>Illegal IP Address.</p>"
+          }
+        ],
+        "403": [
+          {
+            "group": "403",
+            "optional": false,
+            "field": "TimeOut",
+            "description": "<p>Time Out.</p>"
+          }
+        ],
+        "404": [
+          {
+            "group": "404",
+            "optional": false,
+            "field": "CooperationNotFound",
+            "description": "<p>Cooperation not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "ArgumentError",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"ArgumentError\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "AuthorizationRequired",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"AuthorizationRequired\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "IllegalIP",
+          "content": "HTTP/1.1 401 Not Found\n{\n  \"error\": \"IllegalIP\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TimeOut",
+          "content": "HTTP/1.1 403 Not Found\n{\n  \"error\": \"TimeOut\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "RequiredArguments",
+          "content": "HTTP/1.1 400 Not Found\n{\n  \"error\": \"RequiredArguments\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "CooperationNotFound",
+          "content": "HTTP/1.1 404 Not Found\n{\n  \"error\": \"CooperationNotFound\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "/var/www/html/p2plending/application/controllers/cooperation/Order.php",
+    "groupTitle": "Order"
+  },
+  {
+    "type": "get",
     "url": "/order/info",
     "title": "Order Information",
     "group": "Order",
@@ -1184,7 +1387,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"amortization_schedule\": {\n      \t\"amount\": 12000,\n      \t\"instalment\": 3,\n      \t\"rate\": 9,\n      \t\"date\": \"2018-04-17\",\n     \t \t\"total_payment\": 2053,\n     \t \t\"leap_year\": false,\n      \t\"year_days\": 365,\n      \t\"XIRR\": 0.0939,\n      \t\"schedule\": {\n          \t\"1\": {\n              \t\"instalment\": 1,\n              \t\"repayment_date\": \"2018-06-10\",\n              \t\"days\": 54,\n              \t\"remaining_principal\": \"12000\",\n              \t\"principal\": 1893,\n              \t\"interest\": 160,\n              \t\"total_payment\": 2053\n          \t},\n          \t\"2\": {\n               \t\"instalment\": 2,\n              \t\"repayment_date\": \"2018-07-10\",\n              \t\"days\": 30,\n               \t\"remaining_principal\": 10107,\n               \t\"principal\": 1978,\n               \t\"interest\": 75,\n                \t\"total_payment\": 2053\n           \t},\n          \t\"3\": {\n                \t\"instalment\": 3,\n                \t\"repayment_date\": \"2018-08-10\",\n                \t\"days\": 31,\n                \t\"remaining_principal\": 8129,\n               \t\"principal\": 1991,\n               \t\"interest\": 62,\n                \t\"total_payment\": 2053\n            \t}\n        \t},\n       \t\"total\": {\n          \t\"principal\": 12000,\n            \t\"interest\": 391,\n            \t\"total_payment\": 12391\n        \t}\n  \t}\n\t}\n}",
+          "content": " HTTP/1.1 200 OK\n{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"amortization_schedule\": {\n  \t\t\"amount\": 20000,\n  \t\t\"instalment\": 6,\n  \t\t\"rate\": 10,\n  \t\t\"date\": \"2019-01-21\",\n  \t\t\"total_payment\": 3432,\n  \t\t\"leap_year\": false,\n  \t\t\"year_days\": 365,\n  \t\t\"XIRR\": 10.47,\n  \t\t\"schedule\": {\n  \t\t\t\"1\": {\n  \t\t\t\t\"instalment\": 1,\n  \t\t\t\t\"repayment_date\": \"2019-03-10\",\n  \t\t\t\t\"days\": 48,\n  \t\t\t\t\"remaining_principal\": 20000,\n  \t\t\t\t\"principal\": 3169,\n  \t\t\t\t\"interest\": 263,\n  \t\t\t\t\"total_payment\": 3432\n  \t\t\t},\n  \t\t\t\"2\": {\n  \t\t\t\t\"instalment\": 2,\n  \t\t\t\t\"repayment_date\": \"2019-04-10\",\n  \t\t\t\t\"days\": 31,\n  \t\t\t\t\"remaining_principal\": 16831,\n  \t\t\t\t\"principal\": 3289,\n  \t\t\t\t\"interest\": 143,\n  \t\t\t\t\"total_payment\": 3432\n  \t\t\t},\n  \t\t\t\"3\": {\n  \t\t\t\t\"instalment\": 3,\n  \t\t\t\t\"repayment_date\": \"2019-05-10\",\n  \t\t\t\t\"days\": 30,\n  \t\t\t\t\"remaining_principal\": 13542,\n  \t\t\t\t\"principal\": 3321,\n  \t\t\t\t\"interest\": 111,\n  \t\t\t\t\"total_payment\": 3432\n  \t\t\t},\n  \t\t\t\"4\": {\n  \t\t\t\t\"instalment\": 4,\n  \t\t\t\t\"repayment_date\": \"2019-06-10\",\n  \t\t\t\t\"days\": 31,\n  \t\t\t\t\"remaining_principal\": 10221,\n  \t\t\t\t\"principal\": 3345,\n  \t\t\t\t\"interest\": 87,\n  \t\t\t\t\"total_payment\": 3432\n  \t\t\t},\n  \t\t\t\"5\": {\n  \t\t\t\t\"instalment\": 5,\n  \t\t\t\t\"repayment_date\": \"2019-07-10\",\n  \t\t\t\t\"days\": 30,\n  \t\t\t\t\"remaining_principal\": 6876,\n  \t\t\t\t\"principal\": 3375,\n  \t\t\t\t\"interest\": 57,\n  \t\t\t\t\"total_payment\": 3432\n  \t\t\t},\n  \t\t\t\"6\": {\n  \t\t\t\t\"instalment\": 6,\n  \t\t\t\t\"repayment_date\": \"2019-08-10\",\n  \t\t\t\t\"days\": 31,\n  \t\t\t\t\"remaining_principal\": 3501,\n  \t\t\t\t\"principal\": 3501,\n  \t\t\t\t\"interest\": 30,\n  \t\t\t\t\"total_payment\": 3531\n  \t\t\t}\n  \t\t},\n  \t\t\"total\": {\n  \t\t\t\"principal\": 20000,\n  \t\t\t\"interest\": 691,\n  \t\t\t\"total_payment\": 20691\n  \t\t}\n  \t}\n\t}\n}",
           "type": "Object"
         }
       ]

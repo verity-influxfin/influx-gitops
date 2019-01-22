@@ -425,8 +425,8 @@ class Transfer extends REST_Controller {
 		$transfer 			= $this->transfer_lib->get_transfer($transfer_id);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
-		$data				= array();
-		if(!empty($transfer)){
+		$data				= [];
+		if($transfer && in_array($transfer->status,[0,1])){
 			
 			$target 		= $this->target_model->get($transfer->target_id);
 			$product_list 	= $this->config->item('product_list');
@@ -531,6 +531,13 @@ class Transfer extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
+	 *
+     * @apiError 804 雙方不可同使用者
+     * @apiErrorExample {Object} 804
+     *     {
+     *       "result": "ERROR",
+     *       "error": "804"
+     *     }
      *
 	 * @apiError 809 債權轉讓標的不存在
      * @apiErrorExample {Object} 809
@@ -546,11 +553,11 @@ class Transfer extends REST_Controller {
      *       "error": "810"
      *     }
 	 *
-     * @apiError 804 雙方不可同使用者
-     * @apiErrorExample {Object} 804
+     * @apiError 815 整包債權密碼錯誤
+     * @apiErrorExample {Object} 815
      *     {
      *       "result": "ERROR",
-     *       "error": "804"
+     *       "error": "815"
      *     }
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
@@ -705,6 +712,12 @@ class Transfer extends REST_Controller {
 							$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 						}
 					}else{
+						$this->load->model('loan/transfer_combination_model');
+						$combinations = $this->transfer_combination_model->get($transfer->combination);
+						if(!empty($combinations->password) && $combinations->password != $password){
+							$this->response(array('result' => 'ERROR','error' => TRANSFER_PASSWORD_ERROR ));
+						}
+						
 						$param = [];
 						$transfer_list = $this->transfer_lib->get_transfer_list(['status'=>0,'combination'=>$transfer->combination]);
 						if($transfer_list){
