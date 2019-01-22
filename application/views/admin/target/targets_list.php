@@ -67,6 +67,7 @@
                                             <th>期數</th>
                                             <th>還款方式</th>
                                             <th>逾期狀況</th>
+                                            <th>逾期天數</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
                                             <th>備註</th>
@@ -91,6 +92,7 @@
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
+											<td><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
                                             <td>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 											<? 	if($value->status==2 && !$value->bank_account_verify){
