@@ -8,22 +8,21 @@ class Contract_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('loan/contract_model');
+		$this->CI->load->model('admin/contract_format_model');
     }
 
 	public function get_contract($contract_id){
 		if($contract_id){
 			$contract = $this->CI->contract_model->get($contract_id);
 			if($contract){
-				$file 	= base_url().'assets/contracts/'.$contract->type.'.json';
-				$rs 	= file_get_contents($file);
-				if($rs){
-					$info 		= json_decode($rs,TRUE);
+				$format = $this->CI->contract_format_model->get($contract->format_id);
+				if($format){
 					$content 	= json_decode($contract->content,TRUE);
-					$content 	= vsprintf($info["content"],$content);
+					$content 	= vsprintf($format->content,$content);
 					$data = array(
-						"title"		=> $info["title"],
-						"content" 	=> $content,
-						"created_at"=> $contract->created_at,
+						'title'		=> $format->title,
+						'content' 	=> $content,
+						'created_at'=> $contract->created_at,
 					);
 					return $data;
 				}
@@ -32,15 +31,16 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function sign_contract( $type="" , $data = array() ){
+	public function sign_contract( $type='' , $data = array() ){
 		if($type && $data){
-			$param = array(
-				"type"		=> $type,
-				"content" 	=> json_encode($data) 
-			);
-			$id = $this->CI->contract_model->insert($param);
-			if($id){
-				return $id;
+			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>$type]);
+			if($format){
+				$param = array(
+					'type'		=> $type,
+					'format_id'	=> $format->id,
+					'content' 	=> json_encode($data) 
+				);
+				return $this->CI->contract_model->insert($param);
 			}
 		}
 		return false;
@@ -48,9 +48,8 @@ class Contract_lib{
 
 	public function update_contract( $id=0 , $data = array() ){
 		if($id && $data){
-			dump($data);
 			$param = array(
-				"content" 	=> json_encode($data) 
+				'content' 	=> json_encode($data) 
 			);
 			return $this->CI->contract_model->update($id,$param);
 		}
@@ -59,11 +58,9 @@ class Contract_lib{
 	
 	public function pretransfer_contract($content = array() ){
 		if($content){
-			$file 	= base_url().'assets/contracts/transfer.json';
-			$rs 	= file_get_contents($file);
-			if($rs){
-				$rs 		= json_decode($rs,TRUE);
-				$contract 	= vsprintf($rs["content"],$content);
+			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>'transfer']);
+			if($format){
+				$contract 	= vsprintf($format->content,$content);
 				return $contract;
 			}
 		}
