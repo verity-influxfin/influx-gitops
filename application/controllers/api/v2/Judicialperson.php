@@ -123,10 +123,10 @@ class Judicialperson extends REST_Controller {
      * @apiParam {String{8}} tax_id 公司統一編號
      * @apiParam {Number=0,1} [cooperation=0] 0:法人帳號 1:法人經銷商帳號
 	 * @apiParam {String} [server_ip] 綁定伺服器IP，多組時，以逗號分隔(經銷商必填)
-	 * @apiParam {file} [facade_image] 店門正面照(經銷商必填)
-	 * @apiParam {file} [store_image] 店內正面照(經銷商必填)
-	 * @apiParam {file} [front_image] 銀行流水帳正面(經銷商必填)
-	 * @apiParam {file} [passbook_image] 銀行流水帳內頁(經銷商必填)
+	 * @apiParam {Number} [facade_image] 店門正面照(經銷商必填)( 圖片ID )
+	 * @apiParam {Number} [store_image] 店內正面照(經銷商必填)( 圖片ID )
+	 * @apiParam {Number} [front_image] 銀行流水帳正面(經銷商必填)( 圖片ID )
+	 * @apiParam {Number} [passbook_image] 銀行流水帳內頁(經銷商必填)( 圖片ID )
 	 * 
 	 * 
      * @apiSuccess {json} result SUCCESS
@@ -226,20 +226,25 @@ class Judicialperson extends REST_Controller {
 				}
 				//上傳檔案欄位
 				$content		= [];
-				$this->load->library('S3_upload');
 				$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
 				foreach ($file_fields as $field) {
-					if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-						$image 	= $this->s3_upload->image($_FILES,$field,$this->user_info->id,'cooperation');
-						if($image){
-							$content[$field] = $image;
+					$image_id = intval($input[$field]);
+					if (!$image_id) {
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					}else{
+						$rs = $this->log_image_model->get_by([
+							'id'		=> $image_id,
+							'user_id'	=> $user_id,
+						]);
+
+						if($rs){
+							$content[$field] = $rs->url;
 						}else{
 							$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 						}
-					}else{
-						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
 				}
+			
 				
 				$param['cooperation_content'] 	= json_encode($content);
 				$param['cooperation_server_ip'] = trim($input['server_ip']);
@@ -613,10 +618,10 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
 	 * @apiParam {String} server_ip 綁定伺服器IP，多組時，以逗號分隔
-	 * @apiParam {file} facade_image 店門正面照
-	 * @apiParam {file} store_image 店內正面照
-	 * @apiParam {file} front_image 銀行流水帳正面
-	 * @apiParam {file} passbook_image 銀行流水帳內頁
+	 * @apiParam {Number} facade_image 店門正面照 ( 圖片ID )
+	 * @apiParam {Number} store_image 店內正面照 ( 圖片ID )
+	 * @apiParam {Number} front_image 銀行流水帳正面 ( 圖片ID )
+	 * @apiParam {Number} passbook_image 銀行流水帳內頁 ( 圖片ID )
 	 * 
      * @apiSuccess {json} result SUCCESS
      * @apiSuccessExample {json} SUCCESS
@@ -660,15 +665,20 @@ class Judicialperson extends REST_Controller {
 		$content		= [];
 		$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
 		foreach ($file_fields as $field) {
-			if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-				$image 	= $this->s3_upload->image($_FILES,$field,$this->user_info->id,'cooperation');
-				if($image){
-					$content[$field] = $image;
+			$image_id = intval($input[$field]);
+			if (!$image_id) {
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}else{
+				$rs = $this->log_image_model->get_by([
+					'id'		=> $image_id,
+					'user_id'	=> $user_id,
+				]);
+
+				if($rs){
+					$content[$field] = $rs->url;
 				}else{
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
 

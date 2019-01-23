@@ -1819,17 +1819,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "front_image",
-            "description": "<p>金融卡正面照</p>"
+            "description": "<p>金融卡正面照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "back_image",
-            "description": "<p>金融卡背面照</p>"
+            "description": "<p>金融卡背面照 ( 圖片ID )</p>"
           }
         ]
       }
@@ -2246,10 +2246,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "diploma_image",
-            "description": "<p>畢業證書照</p>"
+            "description": "<p>畢業證書照 ( 圖片ID )</p>"
           }
         ]
       }
@@ -3095,17 +3095,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": true,
             "field": "creditcard_image",
-            "description": "<p>信用卡帳單照</p>"
+            "description": "<p>信用卡帳單照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": true,
             "field": "passbook_image",
-            "description": "<p>存摺內頁照</p>"
+            "description": "<p>存摺內頁照 ( 圖片ID )</p>"
           }
         ]
       }
@@ -3489,31 +3489,31 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "front_image",
-            "description": "<p>身分證正面照</p>"
+            "description": "<p>身分證正面照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "back_image",
-            "description": "<p>身分證背面照</p>"
+            "description": "<p>身分證背面照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "person_image",
-            "description": "<p>本人照</p>"
+            "description": "<p>本人照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "healthcard_image",
-            "description": "<p>健保卡照</p>"
+            "description": "<p>健保卡照 ( 圖片ID )</p>"
           }
         ]
       }
@@ -3913,10 +3913,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "postal_image",
-            "description": "<p>郵遞回單照</p>"
+            "description": "<p>郵遞回單照 ( 圖片ID )</p>"
           }
         ]
       }
@@ -4093,31 +4093,31 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "labor_image",
-            "description": "<p>勞健保卡</p>"
+            "description": "<p>勞健保卡 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "business_image",
-            "description": "<p>名片/工作證明</p>"
+            "description": "<p>名片/工作證明 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "passbook_image",
-            "description": "<p>存摺內頁照</p>"
+            "description": "<p>存摺內頁照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "auxiliary_image",
-            "description": "<p>收入輔助證明</p>"
+            "description": "<p>收入輔助證明 ( 圖片ID )</p>"
           }
         ]
       }
@@ -4597,17 +4597,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "front_image",
-            "description": "<p>學生證正面照</p>"
+            "description": "<p>學生證正面照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": false,
             "field": "back_image",
-            "description": "<p>學生證背面照</p>"
+            "description": "<p>學生證背面照 ( 圖片ID )</p>"
           },
           {
             "group": "Parameter",
@@ -4625,10 +4625,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "file",
+            "type": "Number",
             "optional": true,
             "field": "transcript_image",
-            "description": "<p>成績單</p>"
+            "description": "<p>成績單 ( 圖片ID )</p>"
           }
         ]
       }
@@ -11160,17 +11160,38 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "id",
             "description": "<p>Investments ID</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "loan_amount",
             "description": "<p>出借金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "status",
+            "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer_status",
+            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>申請日期</p>"
           },
           {
             "group": "Success 200",
@@ -11181,20 +11202,6 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "status",
-            "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "transfer_status",
-            "description": "<p>債權轉讓狀態 0:無 1:已申請 2:移轉成功</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Object",
             "optional": false,
             "field": "transfer",
@@ -11202,17 +11209,66 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "transfer.amount",
-            "description": "<p>債權轉讓本金</p>"
+            "description": "<p>債權轉讓價金</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "transfer.transfer_fee",
             "description": "<p>債權轉讓手續費</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.principal",
+            "description": "<p>剩餘本金</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.interest",
+            "description": "<p>已發生利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.delay_interest",
+            "description": "<p>已發生延滯利息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "transfer.bargain_rate",
+            "description": "<p>增減價比率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.instalment",
+            "description": "<p>剩餘期數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.combination",
+            "description": "<p>Combination ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "transfer.accounts_receivable",
+            "description": "<p>應收帳款</p>"
           },
           {
             "group": "Success 200",
@@ -11230,17 +11286,24 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>申請日期</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "Object",
             "optional": false,
             "field": "target",
             "description": "<p>標的資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.id",
+            "description": "<p>Target ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.target_no",
+            "description": "<p>標的號</p>"
           },
           {
             "group": "Success 200",
@@ -11251,42 +11314,42 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "target.delay",
-            "description": "<p>是否逾期 0:無 1:逾期中</p>"
+            "field": "target.user_id",
+            "description": "<p>User ID</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
+            "optional": false,
+            "field": "target.loan_amount",
+            "description": "<p>借款金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
             "optional": false,
             "field": "target.credit_level",
-            "description": "<p>信用指數</p>"
+            "description": "<p>信用評等</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
-            "field": "target.delay_days",
-            "description": "<p>逾期天數</p>"
+            "field": "target.interest_rate",
+            "description": "<p>年化利率</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "target.target_no",
-            "description": "<p>案號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "target.instalment",
             "description": "<p>期數</p>"
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "target.repayment",
             "description": "<p>還款方式</p>"
@@ -11295,15 +11358,99 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "target.status",
-            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+            "field": "target.reason",
+            "description": "<p>借款原因</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "target.remark",
+            "description": "<p>備註</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.delay",
+            "description": "<p>狀態 0:無 1:逾期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.delay_days",
+            "description": "<p>逾期天數</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.loan_date",
+            "description": "<p>放款日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.status",
+            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
             "field": "target.sub_status",
-            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
+            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.created_at",
+            "description": "<p>申請日期</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "target.user",
+            "description": "<p>借款人基本資訊</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.user.name",
+            "description": "<p>姓名</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.user.id_number",
+            "description": "<p>身分證字號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target.user.age",
+            "description": "<p>年齡</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.user.sex",
+            "description": "<p>性別 F/M</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "target.user.company_name",
+            "description": "<p>單位名稱</p>"
           },
           {
             "group": "Success 200",
@@ -11351,56 +11498,56 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule",
+            "field": "amortization_schedule.list",
             "description": "<p>回款計畫</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.instalment",
+            "field": "amortization_schedule.list.instalment",
             "description": "<p>第幾期</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.repayment_date",
+            "field": "amortization_schedule.list.repayment_date",
             "description": "<p>還款日</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.days",
+            "field": "amortization_schedule.list.days",
             "description": "<p>本期日數</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.principal",
+            "field": "amortization_schedule.list.principal",
             "description": "<p>還款本金</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.interest",
+            "field": "amortization_schedule.list.interest",
             "description": "<p>還款利息</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.total_payment",
+            "field": "amortization_schedule.list.total_payment",
             "description": "<p>本期還款金額</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "amortization_schedule.schedule.repayment",
+            "field": "amortization_schedule.list.repayment",
             "description": "<p>已還款金額</p>"
           }
         ]
@@ -11408,7 +11555,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"amount\":\"50000\",\n\t\t\t\"loan_amount\":\"\",\n\t\t\t\"status\":\"3\",\n\t\t\t\"transfer_status\":\"1\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"transfer\":{\n\t\t\t\t\"amount\":\"5000\",\n\t\t\t\t\"transfer_fee\":\"25\",\n\t\t\t\t\"contract\":\"我是合約，我是合約\",\n\t\t\t\t\"transfer_date\": null\n\t\t\t},\n\t\t\t\"target\": {\n\t\t\t\t\"id\": \"19\",\n\t\t\t\t\"target_no\": \"1804233189\",\n\t\t\t\t\"credit_level\": \"4\",\n\t\t\t\t\"delay\": \"0\",\n\t\t\t\t\"delay_days\": \"0\",\n\t\t\t\t\"instalment\": \"3期\",\n\t\t\t\t\"repayment\": \"等額本息\",\n\t\t\t\t\"status\": \"5\"\n\t\t\t},\n      \t\"amortization_schedule\": {\n          \t\"amount\": \"12000\",\n          \t\"instalment\": \"3\",\n          \t\"rate\": \"9\",\n          \t\"date\": \"2018-04-17\",\n          \t\"total_payment\": 2053,\n          \t\"list\": {\n             \t\"1\": {\n                 \t\"instalment\": 1,\n                 \t\"repayment_date\": \"2018-06-10\",\n                 \t\"repayment\": 0,\n                 \t\"principal\": 1893,\n                 \t\"interest\": 160,\n                 \t\"total_payment\": 2053\n             \t},\n             \t\"2\": {\n                 \t\"instalment\": 2,\n                  \t\"repayment_date\": \"2018-07-10\",\n                  \t\"repayment\": 0,\n                  \t\"principal\": 1978,\n                  \t\"interest\": 75,\n                  \t\"total_payment\": 2053\n              \t},\n             \t\"3\": {\n                   \t\"instalment\": 3,\n                   \t\"repayment_date\": \"2018-08-10\",\n                   \t\"repayment\": 0,\n                   \t\"principal\": 1991,\n                   \t\"interest\": 62,\n                   \t\"total_payment\": 2053\n              \t}\n           \t}\n       \t}\n\t\t }\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n   \t\"data\": {\n   \t\t\"id\": 10,\n   \t\t\"loan_amount\": 5000,\n   \t\t\"status\": 3,\n   \t\t\"transfer_status\": 0,\n   \t\t\"created_at\": 1547446446,\n   \t\t\"contract\": \"借貸契約\",\n   \t\t\"transfer\": {\n   \t\t\t\"amount\": 5120,\n   \t\t\t\"transfer_fee\": 25,\n   \t\t\t\"principal\": 5000,\n   \t\t\t\"interest\": 10,\n   \t\t\t\"delay_interest\": 0,\n   \t\t\t\"bargain_rate\": 2.2,\n   \t\t\t\"instalment\": 18,\n   \t\t\t\"accounts_receivable\": 5398,\n   \t\t\t\"transfer_at\": \"2019-01-21\",\n   \t\t\t\"contract\": \"應收帳款債權買賣\"\n   \t\t},\n   \t\t\"target\": {\n   \t\t\t\"id\": 15,\n   \t\t\t\"target_no\": \"STN2019011452727\",\n   \t\t\t\"product_id\": 1,\n   \t\t\t\"user_id\": 19,\n   \t\t\t\"user\": {\n   \t\t\t\t\"name\": \"你**\",\n   \t\t\t\t\"id_number\": \"A1085*****\",\n   \t\t\t\t\"sex\": \"M\",\n   \t\t\t\t\"age\": 30,\n   \t\t\t\t\"company_name\": \"國立政治大學\"\n   \t\t\t},\n   \t\t\t\"loan_amount\": 5000,\n   \t\t\t\"credit_level\": 3,\n   \t\t\t\"interest_rate\": 8,\n   \t\t\t\"reason\": \"\",\n   \t\t\t\"remark\": \"\",\n   \t\t\t\"instalment\": 12,\n   \t\t\t\"repayment\": 1,\n   \t\t\t\"delay\": 0,\n   \t\t\t\"delay_days\": 0,\n   \t\t\t\"loan_date\": \"2019-01-14\",\n   \t\t\t\"status\": 5,\n   \t\t\t\"sub_status\": 0,\n   \t\t\t\"created_at\": 1547445312\n   \t\t},\n   \t\t\"amortization_schedule\": {\n   \t\t\t\"amount\": 5000,\n   \t\t\t\"instalment\": 12,\n   \t\t\t\"rate\": 8,\n   \t\t\t\"total_payment\": 5249,\n   \t\t\t\"XIRR\": 8.28,\n   \t\t\t\"date\": \"2019-01-14\",\n   \t\t\t\"remaining_principal\": 5000,\n   \t\t\t\"list\": {\n   \t\t\t\t\"1\": {\n   \t\t\t\t\t\"instalment\": \"1\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 60,\n   \t\t\t\t\t\"principal\": 375,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 55,\n   \t\t\t\t\t\"remaining_principal\": \"5000\",\n   \t\t\t\t\t\"repayment_date\": \"2019-03-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t},\n   \t\t\t\t\"2\": {\n   \t\t\t\t\t\"instalment\": \"2\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 31,\n   \t\t\t\t\t\"principal\": 404,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 31,\n   \t\t\t\t\t\"remaining_principal\": 4625,\n   \t\t\t\t\t\"repayment_date\": \"2019-04-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t},\n   \t\t\t\t\"3\": {\n   \t\t\t\t\t\"instalment\": \"3\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 28,\n   \t\t\t\t\t\"principal\": 407,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 30,\n   \t\t\t\t\t\"remaining_principal\": 4221,\n   \t\t\t\t\t\"repayment_date\": \"2019-05-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t}\n   \t\t\t}\n   \t\t}\n   \t}\n   }",
           "type": "Object"
         }
       ]
@@ -12062,7 +12209,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "accounts_receivable.payable",
+            "field": "accounts_receivable.principal",
             "description": "<p>應收本金</p>"
           },
           {
@@ -23170,10 +23317,10 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v2/transfer/batch",
-    "title": "出借方 智能收購",
-    "name": "GetTransferBatch",
+    "url": "/v2/transfer/batch/",
+    "title": "出借方 智能收購前次設定",
     "version": "0.2.0",
+    "name": "GetTransferBatch",
     "group": "Transfer",
     "header": {
       "fields": {
@@ -23195,59 +23342,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "budget",
-            "description": "<p>預算金額</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "delay",
-            "defaultValue": "0",
-            "description": "<p>逾期標的 0:正常標的 1:逾期標的 default:0</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "user_id",
-            "description": "<p>指定使用者ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "interest_rate_s",
-            "description": "<p>正常標的-利率區間下限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "interest_rate_e",
-            "description": "<p>正常標的-利率區間上限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "instalment_s",
-            "description": "<p>正常標的-剩餘期數區間下限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "instalment_e",
-            "description": "<p>正常標的-剩餘期數區間上限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "credit_level",
-            "defaultValue": "all",
-            "description": "<p>逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8</p>"
+            "field": "batch_id",
+            "description": "<p>智能收購ID</p>"
           }
         ]
       }
@@ -23255,6 +23351,20 @@ define({ "api": [
     "success": {
       "fields": {
         "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "delay",
+            "description": "<p>逾期標的 0:正常標的 1:逾期標的</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>指定使用者ID</p>"
+          },
           {
             "group": "Success 200",
             "type": "Object",
@@ -23266,57 +23376,92 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "batch_id",
-            "description": "<p>智能收購ID</p>"
+            "field": "product_id",
+            "description": "<p>產品ID 全部：all 複選使用逗號隔開</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_s",
+            "description": "<p>利率區間下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_e",
+            "description": "<p>利率區間上限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "instalment_s",
+            "description": "<p>期數區間下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "instalment_e",
+            "description": "<p>期數區間上限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "bargain_rate_s",
+            "description": "<p>增減價比率下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Float",
+            "optional": false,
+            "field": "bargain_rate_e",
+            "description": "<p>增減價比率上限(%)</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "total_amount",
-            "description": "<p>總金額</p>"
+            "field": "credit_level",
+            "description": "<p>信用評等 全部：all 複選使用逗號隔開</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "total_count",
-            "description": "<p>總筆數</p>"
+            "field": "section",
+            "description": "<p>標的狀態 全部:all 全案:0 部分案:1</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "max_instalment",
-            "description": "<p>最大期數</p>"
+            "field": "national",
+            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "min_instalment",
-            "description": "<p>最小期數</p>"
+            "field": "system",
+            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "XIRR",
-            "description": "<p>平均內部報酬率(%)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "debt_transfer_contract",
-            "description": "<p>合約列表</p>"
+            "field": "sex",
+            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47,\n\t\t\t\"batch_id\": 2,\n\t\t\t\"debt_transfer_contract\": [\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"user_id\": \"\",\n\t\t\t\"delay\": 0,\n\t\t\t\"instalment_s\": 1,\n\t\t\t\"instalment_e\": 20,\n\t\t\t\"bargain_rate_s\": -18.9,\n\t\t\t\"bargain_rate_e\": 20,\n\t\t\t\"product_id\": \"1,2\",\n\t\t\t\"credit_level\": \"1,2,3,4,5,6,7,8,9,10,11,12,13\",\n\t\t\t\"section\": \"all\",\n\t\t\t\"interest_rate_s\": 1,\n\t\t\t\"interest_rate_e\": 20,\n\t\t\t\"sex\": \"M\",\n\t\t\t\"system\": \"2\",\n\t\t\t\"national\": \"1\"\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -23327,44 +23472,8 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "202",
-            "description": "<p>未通過所需的驗證(實名驗證)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "203",
-            "description": "<p>金融帳號驗證尚未通過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "208",
-            "description": "<p>未滿20歲</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "209",
-            "description": "<p>未設置交易密碼</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "212",
-            "description": "<p>未通過所需的驗證(Email)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "200",
-            "description": "<p>參數錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "201",
-            "description": "<p>新增時發生錯誤</p>"
+            "field": "811",
+            "description": "<p>智能收購不存在</p>"
           },
           {
             "group": "Error 4xx",
@@ -23388,38 +23497,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "202",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "203",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "208",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "209",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "212",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "200",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "811",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
           "type": "Object"
         },
         {
@@ -23443,7 +23522,7 @@ define({ "api": [
     "groupTitle": "Transfer",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch"
+        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch/"
       }
     ]
   },
@@ -25505,10 +25584,10 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v2/transfer/batch/:batch_id",
-    "title": "出借方 智能收購確認",
-    "version": "0.2.0",
+    "url": "/v2/transfer/batch",
+    "title": "出借方 智能收購",
     "name": "PostTransferBatch",
+    "version": "0.2.0",
     "group": "Transfer",
     "header": {
       "fields": {
@@ -25530,8 +25609,129 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "batch_id",
-            "description": "<p>智能收購ID</p>"
+            "field": "delay",
+            "defaultValue": "0",
+            "description": "<p>逾期標的 0:正常標的 1:逾期標的 default:0</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>指定使用者ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "product_id",
+            "defaultValue": "all",
+            "description": "<p>產品ID 全部：all 複選使用逗號隔開1,2,3,4</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "interest_rate_s",
+            "description": "<p>利率區間下限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "interest_rate_e",
+            "description": "<p>利率區間上限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "instalment_s",
+            "description": "<p>期數區間下限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "instalment_e",
+            "description": "<p>期數區間上限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Float",
+            "size": "-20..20",
+            "optional": true,
+            "field": "bargain_rate_s",
+            "description": "<p>增減價比率下限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Float",
+            "size": "-20..20",
+            "optional": true,
+            "field": "bargain_rate_e",
+            "description": "<p>增減價比率上限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "credit_level",
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8,9,10,11,12,13</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "section",
+            "defaultValue": "all",
+            "description": "<p>標的狀態 全部:all 全案:0 部分案:1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "national",
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
+            "field": "system",
+            "defaultValue": "all",
+            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "F",
+              "M"
+            ],
+            "optional": true,
+            "field": "sex",
+            "defaultValue": "all",
+            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       }
@@ -25579,14 +25779,21 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "XIRR",
-            "description": "<p>平均內部報酬率(%)</p>"
+            "description": "<p>平均年利率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "transfer_ids",
+            "description": "<p>篩選出的Transfer ID</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 50000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_amount\": 20000,\n\t\t\t\"total_count\": 4,\n\t\t\t\"max_instalment\": 12,\n\t\t\t\"min_instalment\": 12,\n\t\t\t\"XIRR\": 8,\n\t\t\t\"transfer_ids\": [\n\t\t\t\t\"33\"\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -25597,14 +25804,38 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "811",
-            "description": "<p>智能收購不存在</p>"
+            "field": "202",
+            "description": "<p>未通過所需的驗證(實名驗證)</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "812",
-            "description": "<p>對此智能收購無權限</p>"
+            "field": "203",
+            "description": "<p>金融帳號驗證尚未通過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "208",
+            "description": "<p>未滿20歲</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "209",
+            "description": "<p>未設置交易密碼</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -25621,12 +25852,6 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "200",
-            "description": "<p>參數錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
             "field": "205",
             "description": "<p>非出借端登入</p>"
           }
@@ -25634,13 +25859,33 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "811",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
+          "title": "202",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
           "type": "Object"
         },
         {
-          "title": "812",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"812\"\n}",
+          "title": "203",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "208",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "209",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "Object"
         },
         {
@@ -25654,11 +25899,6 @@ define({ "api": [
           "type": "Object"
         },
         {
-          "title": "200",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-          "type": "Object"
-        },
-        {
           "title": "205",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
           "type": "Object"
@@ -25669,7 +25909,7 @@ define({ "api": [
     "groupTitle": "Transfer",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch/:batch_id"
+        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch"
       }
     ]
   },
@@ -29657,13 +29897,20 @@ define({ "api": [
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "image_id",
+            "description": "<p>圖片ID</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\",\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"url\": \"https://dev-influxp2p/aaaa.jpg\"\n  }\n}",
+          "content": "{\n  \"result\": \"SUCCESS\",\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"image_id\": 191\n  }\n}",
           "type": "Object"
         }
       ]

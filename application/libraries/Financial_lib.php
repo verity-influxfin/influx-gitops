@@ -23,7 +23,7 @@ class Financial_lib{
 	private function amortization_schedule_1($amount,$instalment,$rate,$date){
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
-		$rate 		= intval($rate);
+		$rate 		= floatval($rate);
 		$total_payment 		= $this->PMT($rate,$instalment,$amount);
 		if($total_payment){
 			$xirr_dates		= array($date);
@@ -31,7 +31,7 @@ class Financial_lib{
 			//驗證閏年
 			$leap_year	= $this->leap_year($date,$instalment);
 			$year_days = $leap_year?366:365;//今年日數
-			$schedule	= array(
+			$schedule	= [
 				'amount'		=> $amount,
 				'instalment'	=> $instalment,
 				'rate'			=> $rate,
@@ -39,7 +39,7 @@ class Financial_lib{
 				'total_payment'	=> $total_payment,
 				'leap_year'		=> $leap_year,
 				'year_days'		=> $year_days
-			);
+			];
 			
 			$list 		= array();
 			$t_amount 	= $t_interest = $t_min = 0;

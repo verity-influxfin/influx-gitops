@@ -88,7 +88,7 @@
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?$value->interest_rate:'' ?></td>
+                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>

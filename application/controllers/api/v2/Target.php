@@ -150,7 +150,7 @@ class Target extends REST_Controller {
 					'user_id' 			=> intval($value->user_id),
 					'user' 				=> $user,
 					'loan_amount' 		=> intval($value->loan_amount),
-					'interest_rate' 	=> intval($value->interest_rate),
+					'interest_rate' 	=> floatval($value->interest_rate),
 					'instalment' 		=> intval($value->instalment),
 					'repayment' 		=> intval($value->repayment),
 					'expire_time' 		=> intval($value->expire_time),
@@ -379,7 +379,7 @@ class Target extends REST_Controller {
 				'user_id' 			=> intval($target->user_id),
 				'loan_amount' 		=> intval($target->loan_amount),
 				'credit_level' 		=> intval($target->credit_level),
-				'interest_rate' 	=> intval($target->interest_rate),
+				'interest_rate' 	=> floatval($target->interest_rate),
 				'reason' 			=> $target->reason,
 				'remark' 			=> $target->remark,
 				'instalment' 		=> intval($target->instalment),
@@ -646,7 +646,7 @@ class Target extends REST_Controller {
 					'user_id' 		=> intval($target_info->user_id),
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
-					'interest_rate' => intval($target_info->interest_rate),
+					'interest_rate' => floatval($target_info->interest_rate),
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
 					'expire_time'	=> intval($target_info->expire_time),
@@ -778,7 +778,12 @@ class Target extends REST_Controller {
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array('investor'=>$investor,'status'=>1,'user_id'=>$user_id,'verify'=>1));
+		$bank_account = $this->user_bankaccount_model->get_by([
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		]);
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
@@ -803,6 +808,7 @@ class Target extends REST_Controller {
 		}
 
 		if(isset($input['section']) && $input['section']!='all' ){
+			$input['section']  = $input['section']?1:0;
 			$filter['section'] = $input['section'];
 			if($input['section']){
 				$where['invested >'] = 0;
@@ -920,7 +926,7 @@ class Target extends REST_Controller {
 			'XIRR' 				=> 0,
 			'target_ids' 		=> [],
 		];
-			
+	
 		if($targets){
 			$numerator = $denominator = 0;
 			foreach($targets as $key => $value){

@@ -1193,12 +1193,13 @@ class User extends REST_Controller {
      * @apiParam {file="*.jpg","*.png","*.gif"} image 圖片檔
      *
      * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} image_id 圖片ID
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
      *      "result": "SUCCESS",
      *      "data": {
-     *      	"url": "https://dev-influxp2p/aaaa.jpg"
+     *      	"image_id": 191
      *      }
      *    }
 	 *
@@ -1214,9 +1215,9 @@ class User extends REST_Controller {
 		//上傳檔案欄位
 		if (isset($_FILES['image']) && !empty($_FILES['image'])) {
 			$this->load->library('S3_upload');
-			$image = $this->s3_upload->image($_FILES,'image',$user_id,'user_upload/'.$user_id);
+			$image = $this->s3_upload->image_id($_FILES,'image',$user_id,'user_upload/'.$user_id);
 			if($image){
-				$data['url'] = $image;
+				$data['image_id'] = $image;
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}

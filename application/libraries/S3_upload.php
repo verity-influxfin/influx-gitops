@@ -112,6 +112,87 @@ class S3_upload {
 		return false;
     }
 	
+	public function image_id ($files,$name='image',$user_id=0,$type='test')
+    {
+		if (isset($files[$name]) && $files[$name]) {
+			
+			if(isset($this->image_type[$files[$name]['type']])){
+				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
+				$exif = json_decode(json_encode($exif),true);
+				$fileType = $this->image_type[$files[$name]['type']];
+				if($fileType == '.jpg'){
+					ini_set('gd.jpeg_ignore_warning', true);
+					$src = imagecreatefromjpeg($files[$name]['tmp_name']);
+				}elseif($fileType == '.gif'){
+					$src = imagecreatefromgif($files[$name]['tmp_name']);
+				}elseif($fileType == '.png'){
+					$src = imagecreatefrompng($files[$name]['tmp_name']);
+				}
+
+				if (isset($exif['IFD0']['Orientation'])) {
+					switch ($exif['IFD0']['Orientation']) { 
+					case 3:
+						$src = imagerotate($src, 180, 0);
+						break;
+					case 6:
+						$src = imagerotate($src, -90, 0);
+						break;
+					case 8:
+						$src = imagerotate($src, 90, 0);
+						break;
+					}
+				}
+				
+				$output_w = $src_w = imagesx($src);
+				$output_h = $src_h = imagesy($src);
+				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
+				  $output_w = IMAGE_MAX_WIDTH;
+				  $output_h = intval($src_h / $src_w * IMAGE_MAX_WIDTH);
+				}else if($src_h > $src_w && $src_h > IMAGE_MAX_WIDTH){
+				  $output_h = IMAGE_MAX_WIDTH;
+				  $output_w = intval($src_w / $src_h * IMAGE_MAX_WIDTH);
+				}else if($src_h == $src_w && $src_h > IMAGE_MAX_WIDTH){
+				  $output_h = IMAGE_MAX_WIDTH;
+				  $output_w = IMAGE_MAX_WIDTH;
+				}
+				
+				$output = imagecreatetruecolor($output_w, $output_h);
+				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
+				
+				ob_start();
+				imagejpeg($output, NULL, 90);
+				$image_data = ob_get_contents();
+				ob_end_clean();
+				$result = $this->client->putObject(array(
+					'Bucket' 		=> S3_BUCKET,
+					'Key'    		=> $type.'/'.$name.$user_id.time().rand(1,9).'.jpg',
+					'Body'   		=> $image_data
+				));
+
+				if(isset($result['ObjectURL'])){
+					$data = array(
+						'type'		=> $type,
+						'user_id'	=> $user_id,
+						'file_name'	=> $files[$name]['name'],
+						'url'		=> $result['ObjectURL'],
+						'exif'		=> json_encode($exif),
+					);
+					
+					$image_id = $this->CI->log_image_model->insert($data);
+					return $image_id;
+				}else{
+					$this->error = 'upload error.';
+				}
+			}else{
+				$this->error = '只支援jpg gif png 圖檔';
+			}
+        }else{
+			$this->error = 'No file.';
+		}
+		
+		return false;
+    }
+	
 	public function image_by_data ($image_data='',$name='image.jpg',$user_id=0,$type='test')
     {
 		if (!empty($image_data)) {

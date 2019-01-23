@@ -301,7 +301,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {String} next_repayment.instalment 期數
 	 * @apiSuccess {String} next_repayment.amount 金額
 	 * @apiSuccess {Object} accounts_receivable 應收帳款
-	 * @apiSuccess {Number} accounts_receivable.payable 應收本金
+	 * @apiSuccess {Number} accounts_receivable.principal 應收本金
 	 * @apiSuccess {Number} accounts_receivable.interest 應收利息
 	 * @apiSuccess {Number} accounts_receivable.delay_interest 應收延滯息
      * @apiSuccessExample {Object} SUCCESS
@@ -411,7 +411,7 @@ class Recoveries extends REST_Controller {
 					'user_id' 		=> intval($target_info->user_id),
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
-					'interest_rate' => intval($target_info->interest_rate),
+					'interest_rate' => floatval($target_info->interest_rate),
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
 					'delay'			=> intval($target_info->delay),
@@ -578,7 +578,7 @@ class Recoveries extends REST_Controller {
 					'user_id' 		=> intval($target_info->user_id),
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
-					'interest_rate' => intval($target_info->interest_rate),
+					'interest_rate' => floatval($target_info->interest_rate),
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
 					'delay'			=> intval($target_info->delay),
@@ -646,101 +646,158 @@ class Recoveries extends REST_Controller {
 	 * @apiParam {Number} id Investments ID
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Investments ID
-	 * @apiSuccess {String} loan_amount 出借金額
+	 * @apiSuccess {Number} id Investments ID
+	 * @apiSuccess {Number} loan_amount 出借金額
+	 * @apiSuccess {Number} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
+	 * @apiSuccess {Number} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
+	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {String} contract 合約內容
-	 * @apiSuccess {String} status 狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案
-	 * @apiSuccess {String} transfer_status 債權轉讓狀態 0:無 1:已申請 2:移轉成功
 	 * @apiSuccess {Object} transfer 債轉資訊
-	 * @apiSuccess {String} transfer.amount 債權轉讓本金
-	 * @apiSuccess {String} transfer.transfer_fee 債權轉讓手續費
+	 * @apiSuccess {Number} transfer.amount 債權轉讓價金
+	 * @apiSuccess {Number} transfer.transfer_fee 債權轉讓手續費
+	 * @apiSuccess {Number} transfer.principal 剩餘本金
+	 * @apiSuccess {Number} transfer.interest 已發生利息
+	 * @apiSuccess {Number} transfer.delay_interest 已發生延滯利息
+	 * @apiSuccess {Float}  transfer.bargain_rate 增減價比率(%)
+	 * @apiSuccess {Number} transfer.instalment 剩餘期數
+	 * @apiSuccess {Number} transfer.combination Combination ID
+	 * @apiSuccess {Number} transfer.accounts_receivable 應收帳款
 	 * @apiSuccess {String} transfer.contract 債權轉讓合約
 	 * @apiSuccess {String} transfer.transfer_date 債權轉讓日期
-	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {Object} target 標的資訊
+	 * @apiSuccess {Number} target.id Target ID
+	 * @apiSuccess {String} target.target_no 標的號
 	 * @apiSuccess {Number} target.product_id 產品ID
-	 * @apiSuccess {String} target.delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {String} target.credit_level 信用指數
-	 * @apiSuccess {String} target.delay_days 逾期天數
-	 * @apiSuccess {String} target.target_no 案號
-	 * @apiSuccess {String} target.instalment 期數
-	 * @apiSuccess {String} target.repayment 還款方式
-	 * @apiSuccess {String} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {String} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Number} target.user_id User ID
+	 * @apiSuccess {Number} target.loan_amount 借款金額
+	 * @apiSuccess {Number} target.credit_level 信用評等
+	 * @apiSuccess {Number} target.interest_rate 年化利率
+	 * @apiSuccess {Number} target.instalment 期數
+	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {String} target.reason 借款原因
+	 * @apiSuccess {String} target.remark 備註
+	 * @apiSuccess {Number} target.delay 狀態 0:無 1:逾期
+	 * @apiSuccess {Number} target.delay_days 逾期天數
+	 * @apiSuccess {String} target.loan_date 放款日期
+	 * @apiSuccess {Number} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
+	 * @apiSuccess {Number} target.created_at 申請日期
+	 * @apiSuccess {Object} target.user 借款人基本資訊
+	 * @apiSuccess {String} target.user.name 姓名
+	 * @apiSuccess {String} target.user.id_number 身分證字號
+	 * @apiSuccess {Number} target.user.age 年齡
+	 * @apiSuccess {String} target.user.sex 性別 F/M
+	 * @apiSuccess {String} target.user.company_name 單位名稱
 	 * @apiSuccess {Object} amortization_schedule 回款計畫
 	 * @apiSuccess {String} amortization_schedule.amount 借款金額
 	 * @apiSuccess {String} amortization_schedule.instalment 借款期數
 	 * @apiSuccess {String} amortization_schedule.rate 年利率
 	 * @apiSuccess {String} amortization_schedule.date 起始時間
 	 * @apiSuccess {String} amortization_schedule.total_payment 每月還款金額
-	 * @apiSuccess {String} amortization_schedule.schedule 回款計畫
-	 * @apiSuccess {String} amortization_schedule.schedule.instalment 第幾期
-	 * @apiSuccess {String} amortization_schedule.schedule.repayment_date 還款日
-	 * @apiSuccess {String} amortization_schedule.schedule.days 本期日數
-	 * @apiSuccess {String} amortization_schedule.schedule.principal 還款本金
-	 * @apiSuccess {String} amortization_schedule.schedule.interest 還款利息
-	 * @apiSuccess {String} amortization_schedule.schedule.total_payment 本期還款金額
-	 * @apiSuccess {String} amortization_schedule.schedule.repayment 已還款金額
+	 * @apiSuccess {String} amortization_schedule.list 回款計畫
+	 * @apiSuccess {String} amortization_schedule.list.instalment 第幾期
+	 * @apiSuccess {String} amortization_schedule.list.repayment_date 還款日
+	 * @apiSuccess {String} amortization_schedule.list.days 本期日數
+	 * @apiSuccess {String} amortization_schedule.list.principal 還款本金
+	 * @apiSuccess {String} amortization_schedule.list.interest 還款利息
+	 * @apiSuccess {String} amortization_schedule.list.total_payment 本期還款金額
+	 * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"id":"1",
-     * 			"amount":"50000",
-     * 			"loan_amount":"",
-     * 			"status":"3",
-	 * 			"transfer_status":"1",
-     * 			"created_at":"1520421572",
-	 * 			"transfer":{
-     * 				"amount":"5000",
-     * 				"transfer_fee":"25",
-     * 				"contract":"我是合約，我是合約",
-     * 				"transfer_date": null
-     * 			},
-     * 			"target": {
-     * 				"id": "19",
-     * 				"target_no": "1804233189",
-     * 				"credit_level": "4",
-     * 				"delay": "0",
-     * 				"delay_days": "0",
-     * 				"instalment": "3期",
-     * 				"repayment": "等額本息",
-     * 				"status": "5"
-     * 			},
-  	 *       	"amortization_schedule": {
-  	 *           	"amount": "12000",
-  	 *           	"instalment": "3",
-  	 *           	"rate": "9",
-  	 *           	"date": "2018-04-17",
-  	 *           	"total_payment": 2053,
-  	 *           	"list": {
- 	 *              	"1": {
-   	 *                  	"instalment": 1,
-   	 *                  	"repayment_date": "2018-06-10",
-   	 *                  	"repayment": 0,
-   	 *                  	"principal": 1893,
-   	 *                  	"interest": 160,
-   	 *                  	"total_payment": 2053
-   	 *              	},
-   	 *              	"2": {
-  	 *                  	"instalment": 2,
-   	 *                   	"repayment_date": "2018-07-10",
-   	 *                   	"repayment": 0,
-  	 *                   	"principal": 1978,
-  	 *                   	"interest": 75,
- 	 *                   	"total_payment": 2053
-  	 *               	},
-   	 *              	"3": {
- 	 *                    	"instalment": 3,
- 	 *                    	"repayment_date": "2018-08-10",
- 	 *                    	"repayment": 0,
-  	 *                    	"principal": 1991,
-  	 *                    	"interest": 62,
- 	 *                    	"total_payment": 2053
- 	 *               	}
- 	 *            	}
-	 *        	}
-     *		 }
+     *    	"data": {
+     *    		"id": 10,
+     *    		"loan_amount": 5000,
+     *    		"status": 3,
+     *    		"transfer_status": 0,
+     *    		"created_at": 1547446446,
+	 *    		"contract": "借貸契約",
+     *    		"transfer": {
+     *    			"amount": 5120,
+     *    			"transfer_fee": 25,
+     *    			"principal": 5000,
+     *    			"interest": 10,
+     *    			"delay_interest": 0,
+     *    			"bargain_rate": 2.2,
+     *    			"instalment": 18,
+     *    			"accounts_receivable": 5398,
+     *    			"transfer_at": "2019-01-21",
+     *    			"contract": "應收帳款債權買賣"
+     *    		},
+     *    		"target": {
+     *    			"id": 15,
+     *    			"target_no": "STN2019011452727",
+     *    			"product_id": 1,
+     *    			"user_id": 19,
+     *    			"user": {
+     *    				"name": "你**",
+     *    				"id_number": "A1085*****",
+     *    				"sex": "M",
+     *    				"age": 30,
+     *    				"company_name": "國立政治大學"
+     *    			},
+     *    			"loan_amount": 5000,
+     *    			"credit_level": 3,
+     *    			"interest_rate": 8,
+     *    			"reason": "",
+     *    			"remark": "",
+     *    			"instalment": 12,
+     *    			"repayment": 1,
+     *    			"delay": 0,
+     *    			"delay_days": 0,
+     *    			"loan_date": "2019-01-14",
+     *    			"status": 5,
+     *    			"sub_status": 0,
+     *    			"created_at": 1547445312
+     *    		},
+     *    		"amortization_schedule": {
+     *    			"amount": 5000,
+     *    			"instalment": 12,
+     *    			"rate": 8,
+     *    			"total_payment": 5249,
+     *    			"XIRR": 8.28,
+     *    			"date": "2019-01-14",
+     *    			"remaining_principal": 5000,
+     *    			"list": {
+     *    				"1": {
+     *    					"instalment": "1",
+     *    					"total_payment": 435,
+     *    					"repayment": 0,
+     *    					"interest": 60,
+     *    					"principal": 375,
+     *    					"delay_interest": 0,
+     *    					"days": 55,
+     *    					"remaining_principal": "5000",
+     *    					"repayment_date": "2019-03-10",
+     *    					"ar_fees": 4
+     *    				},
+     *    				"2": {
+     *    					"instalment": "2",
+     *    					"total_payment": 435,
+     *    					"repayment": 0,
+     *    					"interest": 31,
+     *    					"principal": 404,
+     *    					"delay_interest": 0,
+     *    					"days": 31,
+     *    					"remaining_principal": 4625,
+     *    					"repayment_date": "2019-04-10",
+     *    					"ar_fees": 4
+     *    				},
+     *    				"3": {
+     *    					"instalment": "3",
+     *    					"total_payment": 435,
+     *    					"repayment": 0,
+     *    					"interest": 28,
+     *    					"principal": 407,
+     *    					"delay_interest": 0,
+     *    					"days": 30,
+     *    					"remaining_principal": 4221,
+     *    					"repayment_date": "2019-05-10",
+     *    					"ar_fees": 4
+     *    				}
+     *    			}
+     *    		}
+     *    	}
      *    }
 	 *
 	 * @apiUse TokenError
@@ -766,72 +823,109 @@ class Recoveries extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$investment 		= $this->investment_model->get($investment_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
-		if(!empty($investment) && in_array($investment->status,array(3,10))){
+		if(!empty($investment) && in_array($investment->status,[3,10])){
 			if($investment->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
 			}
-
-			$target_info = $this->target_model->get($investment->target_id);
-			$target = array(
-				'id'			=> $target_info->id,
-				'target_no'		=> $target_info->target_no,
-				'product_id'		=> $target_info->product_id,
-				'credit_level'	=> $target_info->credit_level,
-				'delay'			=> $target_info->delay,
-				'delay_days'	=> $target_info->delay_days,
-				'status'		=> $target_info->status,
-				'sub_status'	=> $target_info->sub_status,
-				'instalment' 	=> $instalment_list[$target_info->instalment],
-				'repayment' 	=> $repayment_type[$target_info->repayment],
-			);
 			
-			$repayment_detail = array();
+			$target_info 	= $this->target_model->get($investment->target_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target_info->product_id];
+			$user_info 		= $this->user_model->get($target_info->user_id); 
+			$user			= [];
+			if($user_info){
+				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
+				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
+				$age  		= get_age($user_info->birthday);
+				$this->load->model('user/user_meta_model');
+				if($product_info['identity']==1){
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>'school_name']);
+				}else{
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>'company_name']);
+				}
+				
+				$user = array(
+					'name' 			=> $name,
+					'id_number'		=> $id_number,
+					'sex' 			=> $user_info->sex,
+					'age'			=> $age,
+					'company_name'	=> $user_meta?$user_meta->meta_value:'',
+				);
+			}
+			
+			$target = [
+				'id'			=> intval($target_info->id),
+				'target_no'		=> $target_info->target_no,
+				'product_id'	=> intval($target_info->product_id),
+				'user_id'		=> intval($target_info->user_id),
+				'user'			=> $user,
+				'loan_amount'	=> intval($target_info->loan_amount),
+				'credit_level'	=> intval($target_info->credit_level),
+				'interest_rate'	=> floatval($target_info->interest_rate),
+				'reason'		=> $target_info->reason,
+				'remark'		=> $target_info->remark,
+				'instalment' 	=> intval($target_info->instalment),
+				'repayment' 	=> intval($target_info->repayment),
+				'delay'			=> intval($target_info->delay),
+				'delay_days'	=> intval($target_info->delay_days),
+				'loan_date'		=> $target_info->loan_date,
+				'status'		=> intval($target_info->status),
+				'sub_status'	=> intval($target_info->sub_status),
+				'created_at'	=> intval($target_info->created_at),			
+			];
+			
+			$repayment_detail = [];
 			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
 				'target_id'	=> $target_info->id,
 				'user_to'	=> $user_id,
-				'status'	=> array(1,2)
+				'status'	=> [1,2]
 			));
 			if($transaction){
 				foreach($transaction as $k => $v){
-					if(in_array($v->source,array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST))){
+					if(in_array($v->source,[SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST])){
 						$repayment_detail[$v->limit_date] = isset($repayment_detail[$v->limit_date])?$repayment_detail[$v->limit_date]+$v->amount:$v->amount;
 					}
 				}
 			}
 			
-			$transfer 		= array();
+			$transfer 		= [];
 			if($investment->transfer_status!=0){
 				$transfer_info = $this->transfer_lib->get_transfer_investments($investment->id);
 				if($transfer_info){
 					$contract_data 	= $this->contract_lib->get_contract($transfer_info->contract_id);
 					$contract 		= isset($contract_data['content'])?$contract_data['content']:'';
-					$transfer = array(
-						'transfer_fee'	=> $transfer_info->transfer_fee,
-						'amount'		=> $transfer_info->amount,
-						'contract'		=> $contract,
-						'transfer_at'	=> $transfer_info->transfer_date,
-					);
+					$transfer = [
+						'amount'			=> intval($transfer_info->amount),
+						'transfer_fee'		=> intval($transfer_info->transfer_fee),
+						'principal'			=> intval($transfer_info->principal),
+						'interest'			=> intval($transfer_info->interest),
+						'delay_interest'	=> intval($transfer_info->delay_interest),
+						'bargain_rate'		=> floatval($transfer_info->bargain_rate),
+						'instalment'		=> intval($transfer_info->instalment),
+						'combination'		=> intval($transfer_info->combination),
+						'accounts_receivable'	=> intval($transfer_info->accounts_receivable),
+						'transfer_at'		=> $transfer_info->transfer_date,
+						'contract'			=> $contract,
+					];
 				}
 			}
 			
 			$investment_contract = $this->contract_lib->get_contract($investment->contract_id);
-			$data = array(
-				'id' 					=> $investment->id,
-				'loan_amount' 			=> $investment->loan_amount?$investment->loan_amount:'',
+			$data = [
+				'id' 					=> intval($investment->id),
+				'loan_amount' 			=> intval($investment->loan_amount),
+				'status' 				=> intval($investment->status),
+				'transfer_status' 		=> intval($investment->transfer_status),
+				'created_at' 			=> intval($investment->created_at),
 				'contract' 				=> $investment_contract['content'],
-				'status' 				=> $investment->status,
-				'transfer_status' 		=> $investment->transfer_status,
-				'created_at' 			=> $investment->created_at,
 				'transfer' 				=> $transfer,
 				'target' 				=> $target,
 				'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info,$investment),
-			);
+			];
 			
-			$this->response(array('result' => 'SUCCESS','data' => $data ));
+			$this->response(['result' => 'SUCCESS','data' => $data ]);
 		}
-		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
+		$this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST ]);
     }
 	
 	/**

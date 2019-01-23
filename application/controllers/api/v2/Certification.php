@@ -10,7 +10,7 @@ class Certification extends REST_Controller {
     {
         parent::__construct();
 		$this->load->model('user/user_certification_model');
-		$this->load->library('S3_upload');
+		$this->load->model('log/log_image_model');
 		$this->load->library('Certification_lib');
         $method 				= $this->router->fetch_method();
 		$this->certification 	= $this->config->item('certifications');
@@ -238,10 +238,10 @@ class Certification extends REST_Controller {
      * @apiParam {String} id_card_place 發證地點
      * @apiParam {String} birthday 生日(民國) ex:1020101
      * @apiParam {String} address 地址
-     * @apiParam {file} front_image 身分證正面照
-     * @apiParam {file} back_image 身分證背面照
-     * @apiParam {file} person_image 本人照
-     * @apiParam {file} healthcard_image 健保卡照
+     * @apiParam {Number} front_image 身分證正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 身分證背面照 ( 圖片ID )
+     * @apiParam {Number} person_image 本人照 ( 圖片ID )
+     * @apiParam {Number} healthcard_image 健保卡照 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -330,15 +330,20 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image','person_image','healthcard_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 
@@ -371,11 +376,11 @@ class Certification extends REST_Controller {
 	 * @apiParam {String} grade 年級
 	 * @apiParam {String} student_id 學號
 	 * @apiParam {String} email 校內電子信箱
-     * @apiParam {file} front_image 學生證正面照
-     * @apiParam {file} back_image 學生證背面照
+     * @apiParam {Number} front_image 學生證正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 學生證背面照 ( 圖片ID )
 	 * @apiParam {String} sip_account SIP帳號
 	 * @apiParam {String} sip_password SIP密碼
-	 * @apiParam {file} [transcript_image] 成績單
+	 * @apiParam {Number} [transcript_image] 成績單 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -494,22 +499,32 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 
-			if (isset($_FILES['transcript_image']) && !empty($_FILES['transcript_image'])) {
-				$content['transcript_image'] = $this->s3_upload->image($_FILES,'transcript_image',$user_id,$certification['alias']);
-			}else{
-				$content['transcript_image'] = '';
+			$content['transcript_image'] = '';
+			if (isset($input['transcript_image']) && $input['transcript_image']) {
+				$rs = $this->log_image_model->get_by([
+					'id'		=> $image_id,
+					'user_id'	=> $user_id,
+				]);
+				if($rs){
+					$content['transcript_image'] = $rs->url;
+				}
 			}
 			
 			$param		= array(
@@ -541,8 +556,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {String{3}} bank_code 銀行代碼三碼
 	 * @apiParam {String{4}} branch_code 分支機構代號四碼
 	 * @apiParam {String{10..14}} bank_account 銀行帳號
-     * @apiParam {file} front_image 金融卡正面照
-     * @apiParam {file} back_image 金融卡背面照
+     * @apiParam {Number} front_image 金融卡正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 金融卡背面照 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -652,15 +667,20 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 
@@ -970,8 +990,8 @@ class Certification extends REST_Controller {
 	 * @apiParam {Number} transportation 交通支出
 	 * @apiParam {Number} entertainment 娛樂支出
 	 * @apiParam {Number} other_expense 其他支出
-     * @apiParam {file} [creditcard_image] 信用卡帳單照
-     * @apiParam {file} [passbook_image] 存摺內頁照
+     * @apiParam {Number} [creditcard_image] 信用卡帳單照 ( 圖片ID )
+     * @apiParam {Number} [passbook_image] 存摺內頁照 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -1035,15 +1055,20 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['creditcard_image','passbook_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
-					}else{
-						$content[$field] = '';
-					}
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
-					$content[$field] = '';
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
+					}else{
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					}
 				}
 			}
 			
@@ -1154,7 +1179,7 @@ class Certification extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {String} school 學校名稱
 	 * @apiParam {String=0,1,2} [system=0] 學制 0:大學 1:碩士 2:博士
-     * @apiParam {file} diploma_image 畢業證書照
+     * @apiParam {Number} diploma_image 畢業證書照 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -1226,17 +1251,26 @@ class Certification extends REST_Controller {
 			$content['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 
 			
-			//上傳檔案欄位
-			if (isset($_FILES['diploma_image']) && !empty($_FILES['diploma_image'])) {
-				$image 	= $this->s3_upload->image($_FILES,'diploma_image',$user_id,$certification['alias']);
-				if($image){
-					$content['diploma_image'] = $image;
-				}else{
+			//上傳檔案欄位		
+			$file_fields 	= ['diploma_image'];
+			foreach ($file_fields as $field) {
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
+					}else{
+						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					}
 				}
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
+			
 
 			$param		= array(
 				'user_id'			=> $user_id,
@@ -1262,7 +1296,7 @@ class Certification extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
 	 * @apiParam {String=0,1,2} [return_type=0] 回寄方式 0:不需寄回 1:Email
-     * @apiParam {file} postal_image 郵遞回單照
+     * @apiParam {Number} postal_image 郵遞回單照 ( 圖片ID )
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -1309,15 +1343,20 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['postal_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image = $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 			
@@ -1345,10 +1384,10 @@ class Certification extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiSuccess {String} company 公司名稱
 	 * @apiSuccess {String} tax_id 公司統一編號
-     * @apiParam {file} labor_image 勞健保卡
-     * @apiParam {file} business_image 名片/工作證明
-     * @apiParam {file} passbook_image 存摺內頁照
-     * @apiParam {file} auxiliary_image 收入輔助證明
+     * @apiParam {Number} labor_image 勞健保卡 ( 圖片ID )
+     * @apiParam {Number} business_image 名片/工作證明 ( 圖片ID )
+     * @apiParam {Number} passbook_image 存摺內頁照 ( 圖片ID )
+     * @apiParam {Number} auxiliary_image 收入輔助證明 ( 圖片ID )
 
      *
      * @apiSuccess {Object} result SUCCESS
@@ -1404,15 +1443,20 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['labor_image','business_image','passbook_image','auxiliary_image'];
 			foreach ($file_fields as $field) {
-				if (isset($_FILES[$field]) && !empty($_FILES[$field])) {
-					$image 	= $this->s3_upload->image($_FILES,$field,$user_id,$certification['alias']);
-					if($image){
-						$content[$field] = $image;
+				$image_id = intval($input[$field]);
+				if (!$image_id) {
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}else{
+					$rs = $this->log_image_model->get_by([
+						'id'		=> $image_id,
+						'user_id'	=> $user_id,
+					]);
+
+					if($rs){
+						$content[$field] = $rs->url;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}
-				}else{
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}
 			

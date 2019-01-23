@@ -911,13 +911,20 @@ class Transfer extends REST_Controller {
 	 * @apiVersion 0.2.0
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} [delay=0] 逾期標的 0:正常標的 1:逾期標的 default:0
+	 * @apiParam {Number} delay=0 逾期標的 0:正常標的 1:逾期標的 default:0
      * @apiParam {Number} [user_id] 指定使用者ID
-	 * @apiParam {Number} [interest_rate_s] 正常標的-利率區間下限(%)
-     * @apiParam {Number} [interest_rate_e] 正常標的-利率區間上限(%)
-     * @apiParam {Number} [instalment_s] 正常標的-剩餘期數區間下限(%)
-     * @apiParam {Number} [instalment_e] 正常標的-剩餘期數區間上限(%)
-     * @apiParam {String} [credit_level=all] 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8
+     * @apiParam {String} [product_id=all] 產品ID 全部：all 複選使用逗號隔開1,2,3,4
+     * @apiParam {Number} [interest_rate_s] 利率區間下限(%)
+     * @apiParam {Number} [interest_rate_e] 利率區間上限(%)
+     * @apiParam {Number} [instalment_s] 期數區間下限(%)
+     * @apiParam {Number} [instalment_e] 期數區間上限(%)
+	 * @apiParam {Float{-20..20}} [bargain_rate_s] 增減價比率下限(%)
+	 * @apiParam {Float{-20..20}} [bargain_rate_e] 增減價比率上限(%)
+     * @apiParam {String} [credit_level=all] 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8,9,10,11,12,13
+     * @apiParam {String=all,0,1} [section=all] 標的狀態 全部:all 全案:0 部分案:1
+     * @apiParam {String=all,0,1} [national=all] 信用評等 全部:all 私立:0 國立:1
+     * @apiParam {String=all,0,1,2} [system=all] 學制 全部:all 0:大學 1:碩士 2:博士
+     * @apiParam {String=all,F,M} [sex=all] 性別 全部:all 女性:F 男性:M
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} total_amount 總金額
@@ -937,10 +944,7 @@ class Transfer extends REST_Controller {
      * 			"min_instalment": 12,
      * 			"XIRR": 8,
      * 			"transfer_ids": [
-     * 				"17",
-     * 				"19",
-     * 				"21",
-     * 				"22"
+     * 				"33"
      * 			]
      * 		}
      *    }
@@ -989,7 +993,7 @@ class Transfer extends REST_Controller {
 	public function batch_post()
     {
 
-		$filter 	= $input = $this->input->post(NULL, TRUE);
+		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		
@@ -1038,7 +1042,20 @@ class Transfer extends REST_Controller {
 			$where['investment_id not'] = $investment_ids;
 		}
 
-		if(isset($input['user_id']) && intval($input['user_id'])>0){
+		$target = $this->target_model->get_many_by([
+			'user_id'			=> $user_id,
+			'status'			=> 5
+		]);
+		if($target){
+			$target_ids = [];
+			foreach($target as $key => $value){
+				$target_ids[] = $value->id;
+			}
+			$where['target_id not'] = $target_ids;
+		}
+		
+		if(isset($input['user_id']) && intval($input['user_id'])>0 && intval($input['user_id'])!=$user_id){
+			$filter['user_id'] = intval($input['user_id']);
 			$investment = $this->investment_model->get_many_by([
 				'user_id'			=> intval($input['user_id']),
 				'status'			=> 3,
@@ -1056,162 +1073,209 @@ class Transfer extends REST_Controller {
 			$filter['user_id'] = '';
 		}
 		
-		if($transfer){
-			$transfer_investment = $this->transfer_investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,10)));
-			if($transfer_investment){
-				$transfer_investment_target = array();
-				foreach($transfer_investment as $key => $value){
-					$transfer_investment_target[] = $value->transfer_id;
-				}
-				
-				foreach($transfer as $key => $value){
-					if(in_array($value->id,$transfer_investment_target)){
-						unset($transfer[$key]);
-					}
-				}
+		$transfer_investment = $this->transfer_investment_model->get_many_by([
+			'user_id' 	=> $user_id,
+			'status'	=> [0,1]
+		]);
+		if($transfer_investment){
+			$transfer_investment_target = [];
+			foreach($transfer_investment as $key => $value){
+				$transfer_investment_target[] = $value->transfer_id;
+			}
+			$where['id not'] = $transfer_investment_target;
+		}
+		
+		$filter['delay'] = isset($input['delay'])&&intval($input['delay'])?1:0;	
+		$filter['instalment_s'] = 0;
+		$filter['instalment_e'] = 24;
+		if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
+			if(isset($input['instalment_s']) && intval($input['instalment_e']) >= intval($input['instalment_s']) && $filter['delay']==0){
+				$filter['instalment_s'] = intval($input['instalment_s']);
+				$filter['instalment_e'] = intval($input['instalment_e']);
+				$where['instalment >='] = intval($input['instalment_s']);
+				$where['instalment <='] = intval($input['instalment_e']);
 			}
 		}
 		
-		
-		
-		
-		
+		$filter['bargain_rate_s'] = -20;
+		$filter['bargain_rate_e'] = 20;
+		if(isset($input['bargain_rate_e']) && isset($input['bargain_rate_s'])){
+			if(floatval($input['bargain_rate_e']) >= floatval($input['bargain_rate_s'])){
+				$filter['bargain_rate_s'] = floatval($input['bargain_rate_s']);
+				$filter['bargain_rate_e'] = floatval($input['bargain_rate_e']);
+				$where['bargain_rate >='] = floatval($input['bargain_rate_s']);
+				$where['bargain_rate <='] = floatval($input['bargain_rate_e']);
+			}
+		}
+
+		$transfer 		= $this->transfer_lib->get_transfer_list($where);
+		$transfer_ids 	= [];
+		$target_ids 	= $targets 		= [];
+		$investment_ids = $investments 	= [];
+		if($transfer){
+			foreach($transfer as $key => $value){
+				$transfer_ids[] 		 				= $value->id;
+				$target_ids[$value->target_id] 		 	= $value->target_id;
+				$investment_ids[$value->investment_id]  = $value->investment_id;
+			}
+			
+			$investments = $this->investment_model->get_many($investment_ids);
+			$targets 	= $this->target_model->get_many($target_ids);
+		}
+
 		if(isset($input['product_id']) && !empty($input['product_id']) && $input['product_id']!='all'){
 			$filter['product_id'] = $input['product_id'];
-			$where['product_id']  = explode(',',$input['product_id']);
+			if($targets){
+				$product_ids = explode(',',$input['product_id']);
+				foreach($targets as $key => $value){
+					if(!in_array($value->product_id,$product_ids)){
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
 		}else{
 			$filter['product_id'] = 'all';
 		}
 		
 		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
 			$filter['credit_level'] = $input['credit_level'];
-			$where['credit_level'] 	= explode(',',$input['credit_level']);
+			if($targets){
+				$credit_levels = explode(',',$input['credit_level']);
+				foreach($targets as $key => $value){
+					if(!in_array($value->credit_level,$credit_levels)){
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
 		}else{
 			$filter['credit_level'] = 'all';
 		}
 
 		if(isset($input['section']) && $input['section']!='all' ){
+			$input['section']  = $input['section']?1:0;
 			$filter['section'] = $input['section'];
-			if($input['section']){
-				$where['invested >'] = 0;
-			}else{
-				$where['invested'] = 0;
+			if($targets && $investments){
+				foreach($targets as $key => $value){
+					foreach($investments as $k => $v){
+						if($v->target_id == $value->id){
+							if($input['section'] && $v->loan_amount==$value->loan_amount){
+								unset($targets[$key]);
+								unset($target_ids[$value->id]);
+							}else if(!$input['section'] && $v->loan_amount!=$value->loan_amount){
+								unset($targets[$key]);
+								unset($target_ids[$value->id]);
+							}
+						}
+					}
+				}
 			}
+			
 		}else{
 			$filter['section'] = 'all';
 		}
 		
-		
-		
-
-		
-		$transfer 	= $this->transfer_lib->get_transfer_list();
-		if($transfer){
-			if($delay){
-				$where['delay_days >'] 	= GRACE_PERIOD;
-				if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
-					$where['credit_level'] = explode(',',$input['credit_level']);
-				}
-			}else{
-				
-				$where['delay_days <='] = GRACE_PERIOD;
-				if(isset($input['interest_rate_s']) && intval($input['interest_rate_s'])>=0){
-					$where['interest_rate >='] = intval($input['interest_rate_s']);
-				}
-				
-				if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
-					$where['interest_rate <='] = intval($input['interest_rate_e']);
-				}
-
-				if(isset($input['instalment_s']) && intval($input['instalment_s'])>=0){
-					if($transfer){
-						foreach($transfer as $key => $value){
-							if($value->instalment<intval($input['instalment_s'])){
-								unset($transfer[$key]);
-							}
-						}
-					}
-				}
-				
-				if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
-					if($transfer){
-						foreach($transfer as $key => $value){
-							if($value->instalment>intval($input['instalment_e'])){
-								unset($transfer[$key]);
-							}
-						}
-					}
-				}
-			}
-
-			
-			if($transfer){
-				$target_ids = array();
-				foreach($transfer as $key => $value){
-					$target_ids[] = $value->target_id;
-				}
-				
-				$where['id'] 	= $target_ids;
-				$targets = $this->target_model->get_many_by($where);
+		$filter['interest_rate_s'] = 0;
+		$filter['interest_rate_e'] = 20;
+		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
+			if(isset($input['interest_rate_s']) && intval($input['interest_rate_e']) >= intval($input['interest_rate_s']) && $filter['delay']==0){
+				$filter['interest_rate_s'] = intval($input['interest_rate_s']);
+				$filter['interest_rate_e'] = intval($input['interest_rate_e']);
 				if($targets){
-					$target_ids 	= array();
-					$target_list 	= array();
 					foreach($targets as $key => $value){
-						$target_ids[] = $value->id;
-						$target_list[$value->id] = $value;
-					}
-					
-					$where['budget'] = $budget;
-					$data = array(
-						'total_amount' 		=> 0,
-						'total_count' 		=> 0,
-						'max_instalment' 	=> 0,
-						'min_instalment' 	=> 0,
-						'XIRR' 				=> 0,
-						'batch_id' 			=> '',
-						'debt_transfer_contract' => array(),
-					);
-					foreach($transfer as $key => $value){
-						if(in_array($value->target_id,$target_ids)){
-							
-							$next = $data['total_amount'] + $value->amount;
-							if($next <= $budget){
-								$data['total_amount'] += $value->amount;
-								$data['total_count'] ++;
-								if($data['max_instalment'] < $value->instalment){
-									$data['max_instalment'] = $value->instalment;
-								}
-								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-									$data['min_instalment'] = $value->instalment;
-								}
-								$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-								$data['debt_transfer_contract'][] = $contract_data?$contract_data['content']:'';
-								$content[] = $value->id;
-								$target = $target_list[$value->target_id];
-								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
-								$data['XIRR'] += $amortization_schedule['XIRR'];
-							}
-						}
-					}
-					if($data['total_count']){
-						$param = array(
-							'user_id'	=> $user_id,
-							'type'		=> 1,
-							'filter'	=> json_encode($filter),
-							'content'	=> json_encode($content),
-						);
-						$this->load->model('loan/batch_model');
-						$batch_id = $this->batch_model->insert($param);
-						if($batch_id){
-							$data['XIRR'] = round($data['XIRR']/$data['total_count'] ,2);
-							$data['batch_id'] = $batch_id;
-							$this->response(array('result' => 'SUCCESS','data' => $data));
-						}else{
-							$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+						if($value->interest_rate < $filter['interest_rate_s'] || $value->interest_rate > $filter['interest_rate_e']){
+							unset($targets[$key]);
+							unset($target_ids[$value->id]);
 						}
 					}
 				}
 			}
+		}
+		
+		if($targets){
+			foreach($targets as $key => $value){
+				if($filter['delay']){
+					if($value->delay_days <= GRACE_PERIOD){
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}else{
+					if($value->delay_days > GRACE_PERIOD){
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
+		}
+
+		if(isset($input['sex']) && !empty($input['sex']) && $input['sex']!='all' ){
+			$filter['sex'] = $input['sex'];
+			if($targets){
+				foreach($targets as $key => $value){
+					$target_user_info = $this->user_model->get($value->user_id);
+					if($target_user_info->sex != $input['sex']){
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
+		}else{
+			$filter['sex'] = 'all';
+		}
+
+		if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
+			$filter['system'] = $input['system'];
+			if($targets){
+				foreach($targets as $key => $value){
+					$user_meta = $this->user_meta_model->get_by([
+						'user_id'	=> $value->user_id,
+						'meta_key'	=> 'school_system'
+					]);
+					if($user_meta){
+						if($user_meta->meta_value != $input['system']){
+							unset($targets[$key]);
+							unset($target_ids[$value->id]);
+						}
+					}else{
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
+		}else{
+			$filter['system'] = 'all';
+		}
+			
+		if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
+			$this->config->load('school_points',TRUE);
+			$school_list = $this->config->item('school_points');
+			$filter['national'] = $input['national'];
+			if($targets){
+				foreach($targets as $key => $value){
+					$user_meta = $this->user_meta_model->get_by([
+						'user_id'	=> $value->user_id,
+						'meta_key'	=> 'school_name'
+					]);
+					if($user_meta){
+						foreach($school_list['school_points'] as $k => $v){
+							if(trim($user_meta->meta_value)==$v['name']){
+								$school_info = $v;
+								break;
+							}
+						}
+						if($school_info['national']!=$input['national']){
+							unset($targets[$key]);
+							unset($target_ids[$value->id]);
+						}
+					}else{
+						unset($targets[$key]);
+						unset($target_ids[$value->id]);
+					}
+				}
+			}
+		}else{
+			$filter['national'] = 'all';
 		}
 		
 		$data = [
@@ -1223,23 +1287,68 @@ class Transfer extends REST_Controller {
 			'transfer_ids' 		=> [],
 		];
 		
+		if($targets){
+			$target_list = [];
+			foreach($targets as $key => $value){
+				$target_list[$value->id] = $value;
+			}
+			$transfer 	= $this->transfer_lib->get_transfer_list([
+				'status' 	=> 0,
+				'id' 		=> $transfer_ids,
+				'target_id'	=> $target_ids
+			]);
+			if($transfer){
+				$numerator = $denominator = 0;
+				foreach($transfer as $key => $value){
+					$data['total_amount'] += $value->amount;
+					$data['total_count'] ++;
+					
+					if($data['max_instalment'] < $value->instalment){
+						$data['max_instalment'] = intval($value->instalment);
+					}
+					if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+						$data['min_instalment'] = intval($value->instalment);
+					}
+					
+					$target = $target_list[$value->target_id];
+					$content[] 	= $value->id;
+					$numerator 		+= $value->amount * $target->instalment * $target->interest_rate;
+					$denominator 	+= $value->amount * $target->instalment;
+				}
+				$data['XIRR'] 			= round($numerator/$denominator ,2);
+				$data['transfer_ids'] 	= $content;
+			}
+		}
+		
+		$this->load->model('loan/batch_model');
+		$this->batch_model->insert([
+			'user_id'	=> $user_id,
+			'type'		=> 1,
+			'filter'	=> json_encode($filter),
+			'content'	=> json_encode($content),
+		]);
+		
 		$this->response(['result' => 'SUCCESS','data' =>$data]);
     }
 	
 	/**
-     * @api {get} /v2/transfer/batch/ 出借方 智能收購確認
+     * @api {get} /v2/transfer/batch/ 出借方 智能收購前次設定
 	 * @apiVersion 0.2.0
 	 * @apiName GetTransferBatch
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} batch_id 智能收購ID
      *
+	 * @apiSuccess {Number} delay 逾期標的 0:正常標的 1:逾期標的
+     * @apiSuccess {Number} user_id 指定使用者ID
 	 * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} product_id 產品ID 全部：all 複選使用逗號隔開
      * @apiSuccess {Number} interest_rate_s 利率區間下限(%)
      * @apiSuccess {Number} interest_rate_e 利率區間上限(%)
      * @apiSuccess {Number} instalment_s 期數區間下限(%)
      * @apiSuccess {Number} instalment_e 期數區間上限(%)
+	 * @apiSuccess {Float} bargain_rate_s 增減價比率下限(%)
+	 * @apiSuccess {Float} bargain_rate_e 增減價比率上限(%)
      * @apiSuccess {String} credit_level 信用評等 全部：all 複選使用逗號隔開
      * @apiSuccess {String} section 標的狀態 全部:all 全案:0 部分案:1
      * @apiSuccess {String} national 信用評等 全部:all 私立:0 國立:1
@@ -1249,16 +1358,20 @@ class Transfer extends REST_Controller {
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"product_id": "all",
-     * 			"credit_level": "all",
+     * 			"user_id": "",
+     * 			"delay": 0,
+     * 			"instalment_s": 1,
+     * 			"instalment_e": 20,
+     * 			"bargain_rate_s": -18.9,
+     * 			"bargain_rate_e": 20,
+     * 			"product_id": "1,2",
+     * 			"credit_level": "1,2,3,4,5,6,7,8,9,10,11,12,13",
      * 			"section": "all",
-     * 			"interest_rate_s": 7,
-     * 			"interest_rate_e": 10,
-     * 			"instalment_s": 12,
-     * 			"instalment_e": 12,
-     * 			"sex": "all",
-     * 			"system": "all",
-     * 			"national": "all"
+     * 			"interest_rate_s": 1,
+     * 			"interest_rate_e": 20,
+     * 			"sex": "M",
+     * 			"system": "2",
+     * 			"national": "1"
      * 		}
      *    }
 	 *

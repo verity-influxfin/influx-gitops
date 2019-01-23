@@ -335,18 +335,18 @@ class Target_lib{
 	}
 	
 	//借款端還款計畫
-	public function get_amortization_table($target=array()){
+	public function get_amortization_table($target=[]){
 
 		$schedule		= array(
-			'amount'				=> $target->loan_amount,
-			'instalment'			=> $target->instalment,
-			'rate'					=> $target->interest_rate,
+			'amount'				=> intval($target->loan_amount),
+			'instalment'			=> intval($target->instalment),
+			'rate'					=> intval($target->interest_rate),
 			'total_payment'			=> 0,
 			'date'					=> $target->loan_date,
 			'sub_loan_fees'			=> 0,
 			'platform_fees'			=> 0,
 			'list'					=> array(),
-			'remaining_principal' 	=> $target->loan_amount,
+			'remaining_principal' 	=> intval($target->loan_amount),
 		);
 		$transactions 	= $this->CI->transaction_model->get_many_by(array(
 			'user_from'	=> $target->user_id,
@@ -437,32 +437,33 @@ class Target_lib{
 	}
 	
 	//出借端回款計畫
-	public function get_investment_amortization_table($target=array(),$investment=array()){
+	public function get_investment_amortization_table($target=[],$investment=[]){
 		
-		$xirr_dates		= array($target->loan_date);
-		$xirr_value		= array($investment->loan_amount*(-1));
-		$schedule		= array(
-			'amount'				=> $investment->loan_amount,
-			'instalment'			=> $target->instalment,
-			'rate'					=> $target->interest_rate,
+		$xirr_dates		= [$target->loan_date];
+		$xirr_value		= [$investment->loan_amount*(-1)];
+		$list 			= [];
+		$schedule		= [
+			'amount'				=> intval($investment->loan_amount),
+			'instalment'			=> intval($target->instalment),
+			'rate'					=> intval($target->interest_rate),
 			'total_payment'			=> 0,
 			'XIRR'					=> 0,
 			'date'					=> $target->loan_date,
-			'remaining_principal' 	=> $investment->loan_amount,
-		);
-		
-		$transactions 	= $this->CI->transaction_model->get_many_by(array(
+			'remaining_principal' 	=> 0,
+		];
+		$repayment_principal = 0;
+		$transactions 	= $this->CI->transaction_model->get_many_by([
 			'investment_id'	=> $investment->id,
 			'target_id' 	=> $target->id,
-			'status' 		=> array(1,2)
-		));
-		$list = array();
+			'status' 		=> [1,2]
+		]);
+		
 		if($transactions){
 			foreach($transactions as $key => $value){
 				if($value->instalment_no && $value->source==SOURCE_AR_PRINCIPAL){
 					$limit_date = $value->limit_date?$value->limit_date:$limit_date;
-					$list[$value->instalment_no] = array(
-						'instalment'		=> $value->instalment_no,//期數
+					$list[$value->instalment_no] = [
+						'instalment'		=> intval($value->instalment_no),//期數
 						'total_payment'		=> 0,//本期應收款金額
 						'repayment'			=> 0,//本期已收款金額
 						'interest'			=> 0,//利息
@@ -472,7 +473,7 @@ class Target_lib{
 						'remaining_principal'=> 0,//期初本金
 						'repayment_date'	=> $limit_date,//還款日
 						'ar_fees'			=> 0,//應收回款手續費
-					); 
+					]; 
 				}
 			}
 			foreach($transactions as $key => $value){
@@ -491,7 +492,7 @@ class Target_lib{
 					case SOURCE_INTEREST: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
 						if($value->source==SOURCE_PRINCIPAL){
-							$schedule['remaining_principal'] -= $value->amount;
+							$repayment_principal += $value->amount;
 						}
 						break;
 					case SOURCE_AR_FEES: 
@@ -509,7 +510,17 @@ class Target_lib{
 			}
 			
 			$old_date 	= $target->loan_date;
-			$total 		= $investment->loan_amount;
+			$total 		= intval($investment->loan_amount);
+			$this->CI->load->model('loan/transfer_model');
+			$transfer = $this->CI->transfer_model->get_by([
+				'status'			=> 10,
+				'new_investment'	=> $investment->id
+			]);
+			if($transfer){
+				$total 	= intval($transfer->principal);
+			}
+			
+			$schedule['remaining_principal'] = $total - $repayment_principal;
 			ksort($list);
 			foreach($list as $key => $value){
 				$list[$key]['days'] 				= get_range_days($old_date,$value['repayment_date']);

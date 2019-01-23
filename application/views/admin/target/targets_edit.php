@@ -54,7 +54,7 @@
 												</td>
 												<td><p class="form-control-static">核可利率</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->interest_rate)?$data->interest_rate:"";?>%</p>
+													<p class="form-control-static"><?=isset($data->interest_rate)?floatval($data->interest_rate):"";?>%</p>
 												</td>
 											</tr>
 											<tr>

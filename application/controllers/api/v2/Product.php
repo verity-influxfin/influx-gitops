@@ -677,7 +677,7 @@ class Product extends REST_Controller {
 					'amount' 			=> intval($value->amount),
 					'loan_amount' 		=> intval($value->loan_amount),
 					'platform_fee' 		=> intval($value->platform_fee),
-					'interest_rate' 	=> intval($value->interest_rate),
+					'interest_rate' 	=> floatval($value->interest_rate),
 					'instalment' 		=> intval($value->instalment),
 					'repayment' 		=> intval($value->repayment),
 					'reason' 			=> $value->reason, 
@@ -882,7 +882,7 @@ class Product extends REST_Controller {
 				}
 			}
 			
-			$amortization_schedule = array();
+			$amortization_schedule = [];
 			if($target->status==1){
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
 			}
@@ -904,7 +904,7 @@ class Product extends REST_Controller {
 				'amount' 			=> intval($target->amount),
 				'loan_amount' 		=> intval($target->loan_amount),
 				'platform_fee' 		=> intval($target->platform_fee),
-				'interest_rate' 	=> intval($target->interest_rate),
+				'interest_rate' 	=> floatval($target->interest_rate),
 				'instalment' 		=> intval($target->instalment),
 				'repayment' 		=> intval($target->repayment),
 				'reason' 			=> $target->reason, 
