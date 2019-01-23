@@ -100,78 +100,99 @@ class Sales extends MY_Admin_Controller {
 	}
 
 	public function register_report(){
-		$page_data 		= array();	
-		$list			= array();
-		$max_date 		= '';
-		$min_date 		= '';
+		$get 			= $this->input->get(NULL, TRUE);
+		$sdate 			= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate 			= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$page_data 		= ['sdate'=>$sdate,'edate'=>$edate];	
 		$admins_qrcode 	= $this->admin_model->get_qrcode_list();
-		$admins_name 	= $this->admin_model->get_name_list();
-		$partner_type 	= $this->partner_type_model->get_name_list();
-		$partner_list 	= $this->partner_model->get_many_by(array('status'=>1));
-		$partner_list_byid = array();
+		$partner_list 	= $this->partner_model->get_many_by(['status'=>1]);
+		$partner_id_list = [];
+		$partner_qrcode = [];
+		$count 			= 0;
 		if($partner_list){
-			$partner_qrcode = array();
 			foreach($partner_list as $key => $value){
 				$partner_qrcode[$value->my_promote_code] = $value->id;
-				$partner_list_byid[$value->id] = $value;
+				$partner_id_list[$value->id] = $value;
 			}
 		}
 		
-		$user_list		= $this->user_model->get_many_by(array('status'=>1));
-		$school_list 	= $this->user_meta_model->get_many_by(array('meta_key'=>'student_status'));
+		$list = [
+			'platform'	=>['count'=>0,'name'=>0,'school'=>0,'fb'=>0],
+			'partner' 	=>[],
+			'sales' 	=>[],
+		];
+		$user_list		= $this->user_model->get_many_by([
+			'status' 		=> 1,
+			'created_at >='	=> strtotime($sdate.' 00:00:00'),
+			'created_at <='	=> strtotime($edate.' 23:59:59'),
+		]);
 		if(!empty($user_list)){
+			$total_list = [];
+			$user_ids 	= [];
+			foreach($user_list as $key => $value){
+				$user_ids[] = $value->id;
+				$total_list[$value->id] 		= $value;
+				$total_list[$value->id]->school = 0;
+			}
 			
+			$school_list 	= $this->user_meta_model->get_many_by([
+				'user_id' =>$user_ids,
+				'meta_key'=>'student_status',
+			]);
 			if(!empty($school_list)){
-				$school_status = array();
 				foreach($school_list as $key => $value){
-					
-					$school_status[$value->user_id] = 1;
+					$total_list[$value->user_id]->school = 1;
 				}
 			}
 			
-			foreach($user_list as $key => $value){
-				$user_list[$key]->school 	= isset($school_status[$value->id])&&$school_status[$value->id]?1:0;
-				$user_list[$key]->fb 		= $value->nickname?1:0;
-			}
-			
-			$list = array('platform'=>array('count'=>0,'school'=>0,'fb'=>0));
-			foreach($user_list as $key => $value){
+			foreach($total_list as $key => $value){
+				$count++;
 				if(isset($partner_qrcode[$value->promote_code]) && $partner_qrcode[$value->promote_code]){
-					$list['partner'][$partner_qrcode[$value->promote_code]]['count'] ++;
+					$id = $partner_qrcode[$value->promote_code];
+					if(!isset($list['partner'][$id])){
+						$list['partner'][$id] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+					
+					$list['partner'][$id]['count'] ++;
 					if($value->school)
-						$list['partner'][$partner_qrcode[$value->promote_code]]['school'] ++;
-					if($value->fb)
-						$list['partner'][$partner_qrcode[$value->promote_code]]['fb'] ++;
-				}
-
-				if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
-					@$list['sales'][$admins_qrcode[$value->promote_code]]['count'] ++;
+						$list['partner'][$id]['school'] ++;
+					if(!empty($value->nickname))
+						$list['partner'][$id]['fb'] ++;
+					if(!empty($value->name))
+						$list['partner'][$id]['name'] ++;
+					
+				}else if(isset($admins_qrcode[$value->promote_code]) && $admins_qrcode[$value->promote_code]){
+					$id = $admins_qrcode[$value->promote_code];
+					if(!isset($list['sales'][$id])){
+						$list['sales'][$id] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+					
+					$list['sales'][$id]['count'] ++;
 					if($value->school)
-						@$list['sales'][$admins_qrcode[$value->promote_code]]['school'] ++;
-					if($value->fb)
-						@$list['sales'][$admins_qrcode[$value->promote_code]]['fb'] ++;
-				}
-				
-				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
+						$list['sales'][$id]['school'] ++;
+					if(!empty($value->nickname))
+						$list['sales'][$id]['fb'] ++;
+					if(!empty($value->name))
+						$list['sales'][$id]['name'] ++;
+					
+				}else{
 					$list['platform']['count'] ++;
 					if($value->school)
 						$list['platform']['school'] ++;
-					if($value->fb)
+					if(!empty($value->nickname))
 						$list['platform']['fb'] ++;
+					if(!empty($value->name))
+						$list['platform']['name'] ++;
 				}
 				
-				if($max_date=='' || $max_date<$value->created_at)
-					$max_date = $value->created_at;
-				if($min_date=='' || $min_date>$value->created_at)
-					$min_date = $value->created_at;
 			}
 		}
+
 		$page_data['list'] 			= $list;
-		$page_data['partner_list'] 	= $partner_list_byid;
-		$page_data['admins_name'] 	= $admins_name;
-		$page_data['partner_type'] 	= $partner_type;
-		$page_data['max_date'] 		= $max_date?date('Y-m-d',$max_date):'';
-		$page_data['min_date'] 		= $min_date?date('Y-m-d',$min_date):'';
+		$page_data['partner_list'] 	= $partner_id_list;
+		$page_data['admins_name'] 	= $this->admin_model->get_name_list();
+		$page_data['partner_type'] 	= $this->partner_type_model->get_name_list();
+		$page_data['count'] 		= $count;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
