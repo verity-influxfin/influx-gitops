@@ -672,6 +672,12 @@ class Transfer extends REST_Controller {
 						if( $user_id == $investment->user_id ){
 							$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 						}
+						
+						$target = $this->target_model->get($value->target_id);
+						if( $user_id == $target->user_id ){
+							$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+						}
+						
 						$param[] = [
 							'transfer_id'	=> $value->id,
 							'user_id'		=> $user_id,
@@ -699,6 +705,11 @@ class Transfer extends REST_Controller {
 						$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 					}
 					
+					$target = $this->target_model->get($transfer->target_id);
+					if( $user_id == $target->user_id ){
+						$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+					}
+					
 					if($transfer->combination==0){
 						$param = [
 							'transfer_id'	=> $transfer->id,
@@ -722,6 +733,11 @@ class Transfer extends REST_Controller {
 						$transfer_list = $this->transfer_lib->get_transfer_list(['status'=>0,'combination'=>$transfer->combination]);
 						if($transfer_list){
 							foreach($transfer_list as $key => $value){
+								$target = $this->target_model->get($value->target_id);
+								if( $user_id == $target->user_id ){
+									$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+								}
+								
 								$param[] = [
 									'transfer_id'	=> $value->id,
 									'user_id'		=> $user_id,
@@ -890,12 +906,11 @@ class Transfer extends REST_Controller {
     }
  
  	/**
-     * @api {get} /v2/transfer/batch 出借方 智能收購
-	 * @apiName GetTransferBatch
+     * @api {post} /v2/transfer/batch 出借方 智能收購
+	 * @apiName PostTransferBatch
 	 * @apiVersion 0.2.0
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} budget 預算金額
 	 * @apiParam {Number} [delay=0] 逾期標的 0:正常標的 1:逾期標的 default:0
      * @apiParam {Number} [user_id] 指定使用者ID
 	 * @apiParam {Number} [interest_rate_s] 正常標的-利率區間下限(%)
@@ -905,31 +920,32 @@ class Transfer extends REST_Controller {
      * @apiParam {String} [credit_level=all] 逾期標的-信用評等 全部：all 複選使用逗號隔開6,7,8
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} batch_id 智能收購ID
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
-	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
-     * @apiSuccess {Object} debt_transfer_contract 合約列表
+	 * @apiSuccess {String} XIRR 平均年利率(%)
+	 * @apiSuccess {Object} transfer_ids 篩選出的Transfer ID
 	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"total_amount": 70000,
-     * 			"total_count": 1,
-     * 			"max_instalment": "12",
-     * 			"min_instalment": "12",
-     * 			"XIRR": 10.47,
-     * 			"batch_id": 2,
-     * 			"debt_transfer_contract": [
-     * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+     * 			"total_amount": 20000,
+     * 			"total_count": 4,
+     * 			"max_instalment": 12,
+     * 			"min_instalment": 12,
+     * 			"XIRR": 8,
+     * 			"transfer_ids": [
+     * 				"17",
+     * 				"19",
+     * 				"21",
+     * 				"22"
      * 			]
      * 		}
      *    }
 	 *
 	 * @apiUse InputError
-	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
@@ -970,29 +986,12 @@ class Transfer extends REST_Controller {
      *     }
 	 *
      */
-	public function batch_get()
+	public function batch_post()
     {
 
-		$filter 	= $input = $this->input->get(NULL, TRUE);
+		$filter 	= $input = $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$where		= array(
-			'user_id !='	=> $user_id,
-			'status'		=> 5,
-		);
-		
-		//必填欄位
-		if (empty($input['budget']) || intval($input['budget'])<=0) {
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}else{
-			$budget = intval($input['budget']);
-		}
-
-		if (isset($input['delay']) && in_array($input['delay'],array(0,1))) {
-			$delay 	= intval($input['delay']);
-		}else{
-			$delay 	= $input['delay'] = 0;
-		}
 		
 		//檢查認證 NOT_VERIFIED
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
@@ -1023,6 +1022,88 @@ class Transfer extends REST_Controller {
 		if(get_age($this->user_info->birthday) < 20){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
+		
+		$content 	= $filter = [];
+		$where 		= ['status' => 0];
+		$investment = $this->investment_model->get_many_by([
+			'user_id'			=> $user_id,
+			'status'			=> 3,
+			'transfer_status'	=> 1
+		]);
+		if($investment){
+			$investment_ids = [];
+			foreach($investment as $key => $value){
+				$investment_ids[] = $value->id;
+			}
+			$where['investment_id not'] = $investment_ids;
+		}
+
+		if(isset($input['user_id']) && intval($input['user_id'])>0){
+			$investment = $this->investment_model->get_many_by([
+				'user_id'			=> intval($input['user_id']),
+				'status'			=> 3,
+				'transfer_status'	=> 1
+			]);
+			
+			if($investment){
+				$investment_ids = [];
+				foreach($investment as $key => $value){
+					$investment_ids[] = $value->id;
+				}
+				$where['investment_id'] = $investment_ids;
+			}
+		}else{
+			$filter['user_id'] = '';
+		}
+		
+		if($transfer){
+			$transfer_investment = $this->transfer_investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,10)));
+			if($transfer_investment){
+				$transfer_investment_target = array();
+				foreach($transfer_investment as $key => $value){
+					$transfer_investment_target[] = $value->transfer_id;
+				}
+				
+				foreach($transfer as $key => $value){
+					if(in_array($value->id,$transfer_investment_target)){
+						unset($transfer[$key]);
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		if(isset($input['product_id']) && !empty($input['product_id']) && $input['product_id']!='all'){
+			$filter['product_id'] = $input['product_id'];
+			$where['product_id']  = explode(',',$input['product_id']);
+		}else{
+			$filter['product_id'] = 'all';
+		}
+		
+		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
+			$filter['credit_level'] = $input['credit_level'];
+			$where['credit_level'] 	= explode(',',$input['credit_level']);
+		}else{
+			$filter['credit_level'] = 'all';
+		}
+
+		if(isset($input['section']) && $input['section']!='all' ){
+			$filter['section'] = $input['section'];
+			if($input['section']){
+				$where['invested >'] = 0;
+			}else{
+				$where['invested'] = 0;
+			}
+		}else{
+			$filter['section'] = 'all';
+		}
+		
+		
+		
+
 		
 		$transfer 	= $this->transfer_lib->get_transfer_list();
 		if($transfer){
@@ -1062,58 +1143,7 @@ class Transfer extends REST_Controller {
 					}
 				}
 			}
-			if($transfer){
-				$investment = $this->investment_model->get_many_by(array(
-					'user_id'			=> $user_id,
-					'status'			=> 3,
-					'transfer_status'	=> 1
-				));
-				if($investment){
-					
-					$investment_ids = array();
-					foreach($investment as $key => $value){
-						$investment_ids[] = $value->id;
-					}
-					foreach($transfer as $key => $value){
-						if(in_array($value->investment_id,$investment_ids)){
-							unset($transfer[$key]);
-						}
-					}
-				}
-			}
-			
-			if($transfer && isset($input['user_id']) && intval($input['user_id'])>0){
-				$investment = $this->investment_model->get_many_by(array('user_id'=>$input['user_id'],'status'=>3,'transfer_status'=>1));
-				$investment_ids = array();
-				if($investment){
-					foreach($investment as $key => $value){
-						$investment_ids[] = $value->id;
-					}
-				}
-				
-				foreach($transfer as $key => $value){
-					if(!in_array($value->investment_id,$investment_ids)){
-						unset($transfer[$key]);
-					}
-				}
 
-			}
-			
-			if($transfer){
-				$transfer_investment = $this->transfer_investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,10)));
-				if($transfer_investment){
-					$transfer_investment_target = array();
-					foreach($transfer_investment as $key => $value){
-						$transfer_investment_target[] = $value->transfer_id;
-					}
-					
-					foreach($transfer as $key => $value){
-						if(in_array($value->id,$transfer_investment_target)){
-							unset($transfer[$key]);
-						}
-					}
-				}
-			}
 			
 			if($transfer){
 				$target_ids = array();
@@ -1183,46 +1213,57 @@ class Transfer extends REST_Controller {
 				}
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array(
+		
+		$data = [
 			'total_amount' 		=> 0,
 			'total_count' 		=> 0,
 			'max_instalment' 	=> 0,
 			'min_instalment' 	=> 0,
 			'XIRR' 				=> 0,
-			'batch_id' 			=> '',
-			'debt_transfer_contract' => array(),
-		)));
+			'transfer_ids' 		=> [],
+		];
+		
+		$this->response(['result' => 'SUCCESS','data' =>$data]);
     }
 	
 	/**
-     * @api {post} /v2/transfer/batch/:batch_id 出借方 智能收購確認
+     * @api {get} /v2/transfer/batch/ 出借方 智能收購確認
 	 * @apiVersion 0.2.0
-	 * @apiName PostTransferBatch
+	 * @apiName GetTransferBatch
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} batch_id 智能收購ID
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} total_amount 總金額
-	 * @apiSuccess {String} total_count 總筆數
-	 * @apiSuccess {String} max_instalment 最大期數
-	 * @apiSuccess {String} min_instalment 最小期數
-	 * @apiSuccess {String} XIRR 平均內部報酬率(%)
+     * @apiSuccess {String} product_id 產品ID 全部：all 複選使用逗號隔開
+     * @apiSuccess {Number} interest_rate_s 利率區間下限(%)
+     * @apiSuccess {Number} interest_rate_e 利率區間上限(%)
+     * @apiSuccess {Number} instalment_s 期數區間下限(%)
+     * @apiSuccess {Number} instalment_e 期數區間上限(%)
+     * @apiSuccess {String} credit_level 信用評等 全部：all 複選使用逗號隔開
+     * @apiSuccess {String} section 標的狀態 全部:all 全案:0 部分案:1
+     * @apiSuccess {String} national 信用評等 全部:all 私立:0 國立:1
+     * @apiSuccess {String} system 學制 全部:all 0:大學 1:碩士 2:博士
+     * @apiSuccess {String} sex 性別 全部:all 女性:F 男性:M
 	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"total_amount": 50000,
-     * 			"total_count": 1,
-     * 			"max_instalment": "12",
-     * 			"min_instalment": "12",
-     * 			"XIRR": 10.47
+     * 			"product_id": "all",
+     * 			"credit_level": "all",
+     * 			"section": "all",
+     * 			"interest_rate_s": 7,
+     * 			"interest_rate_e": 10,
+     * 			"instalment_s": 12,
+     * 			"instalment_e": 12,
+     * 			"sex": "all",
+     * 			"system": "all",
+     * 			"national": "all"
      * 		}
      *    }
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
-	 * @apiUse InputError
 	 * @apiUse NotInvestor
 	 *
 	 * @apiError 811 智能收購不存在
@@ -1231,79 +1272,18 @@ class Transfer extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "811"
      *     }
-	 *
-	 * @apiError 812 對此智能收購無權限
-     * @apiErrorExample {Object} 812
-     *     {
-     *       "result": "ERROR",
-     *       "error": "812"
-     *     }
      */
-	 
-	public function batch_post($batch_id)
-    {
-		$input 				= $this->input->post(NULL, TRUE);
+	public function batch_get()
+	{
+		$input 	= $this->input->get(NULL, TRUE);
 		$this->load->model('loan/batch_model');
-		if(!$batch_id){
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
-		$user_id 			= $this->user_info->id;
-		$batch 				= $this->batch_model->get($batch_id);
-		if($batch && $batch->status==0 && $batch->type==1){
-			if($batch->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => BATCH_NO_PERMISSION ));
-			}
-			
-			$transfer_ids 	= json_decode($batch->content,true);
-			$transfer 		= $this->transfer_lib->get_transfer_list(array('id'=>$transfer_ids,'status'=>0));
-			if($transfer){
-				$data = array(
-					'total_amount' 		=> 0,
-					'total_count' 		=> 0,
-					'max_instalment' 	=> 0,
-					'min_instalment' 	=> 0,
-					'XIRR' 				=> 0,
-				);
-				foreach($transfer as $key => $value){
-					if($value->status == 0 ){
-						$investments = $this->transfer_investment_model->get_by(array(
-							'transfer_id'	=> $value->id,
-							'user_id'		=> $user_id,
-							'status'		=> array(0,1,10)
-						));
-						if(!$investments){
-							$param = array(
-								'user_id' 		=> $user_id,
-								'transfer_id' 	=> $value->id,
-								'amount' 		=> $value->amount,
-							);
-							$investment_id = $this->transfer_investment_model->insert($param);
-							if($investment_id){
-								$data['total_amount'] += $value->amount;
-								$data['total_count'] ++;
-								if($data['max_instalment'] < $value->instalment){
-									$data['max_instalment'] = $value->instalment;
-								}
-								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-									$data['min_instalment'] = $value->instalment;
-								}
-								$target = $this->target_model->get($value->target_id);
-								$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
-								$data['XIRR'] += $amortization_schedule['XIRR'];
-							}
-						}
-					}
-				}
-				$data['XIRR'] = $data['total_count']>0?round($data['XIRR']/$data['total_count'] ,2):0;
-				$this->response(array('result' => 'SUCCESS','data' => $data));
-			}
-			$this->response(array('result' => 'SUCCESS','data' => array(
-				'total_amount' 		=> 0,
-				'total_count' 		=> 0,
-				'max_instalment' 	=> 0,
-				'min_instalment' 	=> 0,
-				'XIRR' 				=> 0,
-			)));
+		$user_id = $this->user_info->id;
+		$batch 	 = $this->batch_model->order_by('created_at','desc')->get_by([
+			'user_id'	=> $user_id,
+			'type'		=> 1,
+		]);
+		if($batch){
+			$this->response(['result' => 'SUCCESS','data' => json_decode($batch->filter,TRUE)]);
 		}
 		$this->response(array('result' => 'ERROR','error' => BATCH_NOT_EXIST ));
     }

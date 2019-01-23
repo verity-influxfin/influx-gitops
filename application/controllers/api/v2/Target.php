@@ -668,42 +668,44 @@ class Target extends REST_Controller {
     }
  
  	/**
-     * @api {get} /v2/target/batch 出借方 智能出借
+     * @api {post} /v2/target/batch 出借方 智能出借
 	 * @apiVersion 0.2.0
-	 * @apiName GetTargetBatch
+	 * @apiName PostTargetBatch
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} budget 預算金額
+     * @apiParam {String} [product_id=all] 產品ID 全部：all 複選使用逗號隔開1,2,3,4
      * @apiParam {Number} [interest_rate_s] 利率區間下限(%)
      * @apiParam {Number} [interest_rate_e] 利率區間上限(%)
      * @apiParam {Number} [instalment_s] 期數區間下限(%)
      * @apiParam {Number} [instalment_e] 期數區間上限(%)
-     * @apiParam {String} [credit_level=all] 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8
+     * @apiParam {String} [credit_level=all] 信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8,9,10,11,12,13
+     * @apiParam {String=all,0,1} [section=all] 標的狀態 全部:all 全案:0 部分案:1
      * @apiParam {String=all,0,1} [national=all] 信用評等 全部:all 私立:0 國立:1
      * @apiParam {String=all,0,1,2} [system=all] 學制 全部:all 0:大學 1:碩士 2:博士
-     * @apiParam {String=all,F,M} [gender=all] 性別 全部:all 女性:F 男性:M
-	 * 
+     * @apiParam {String=all,F,M} [sex=all] 性別 全部:all 女性:F 男性:M
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} batch_id 智能出借ID
 	 * @apiSuccess {String} total_amount 總金額
 	 * @apiSuccess {String} total_count 總筆數
 	 * @apiSuccess {String} max_instalment 最大期數
 	 * @apiSuccess {String} min_instalment 最小期數
 	 * @apiSuccess {String} XIRR 平均年利率(%)
-     * @apiSuccess {Object} contract 合約列表
+	 * @apiSuccess {Object} target_ids 篩選出的Target ID
 	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"total_amount": 70000,
-     * 			"total_count": 1,
-     * 			"max_instalment": "12",
-     * 			"min_instalment": "12",
-     * 			"XIRR": 10.47,
-     * 			"batch_id": 2,
-     * 			"contract": [
-     * 				"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！"
+     * 			"total_amount": 20000,
+     * 			"total_count": 4,
+     * 			"max_instalment": 12,
+     * 			"min_instalment": 12,
+     * 			"XIRR": 8,
+     * 			"target_ids": [
+     * 				"17",
+     * 				"19",
+     * 				"21",
+     * 				"22"
      * 			]
      * 		}
      *    }
@@ -750,24 +752,11 @@ class Target extends REST_Controller {
      *     }
 	 *
      */
-	public function batch_get()
+	public function batch_post()
     {
-
-		$input 		= $this->input->get(NULL, TRUE);
+		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-		$where		= array(
-			'user_id !=' 	=> $user_id,
-			'status'		=> 3,
-			'invested'		=> 0
-		);
-		
-		//必填欄位
-		if (empty($input['budget']) || intval($input['budget'])<=0) {
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}else{
-			$budget = intval($input['budget']);
-		}
 
 		//檢查認證 NOT_VERIFIED
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
@@ -793,189 +782,210 @@ class Target extends REST_Controller {
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
+		$content = $filter = [];
+		$where		= [
+			'user_id !=' 	=> $user_id,
+			'status'		=> 3
+		];
 		
-		if(isset($input['interest_rate_s']) && intval($input['interest_rate_s'])>=0){
-			$where['interest_rate >='] = intval($input['interest_rate_s']);
-		}
-		
-		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
-			$where['interest_rate <='] = intval($input['interest_rate_e']);
-		}
-
-		if(isset($input['instalment_s']) && intval($input['instalment_s'])>=0){
-			$where['instalment >='] = intval($input['instalment_s']);
-		}
-		
-		if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
-			$where['instalment <='] = intval($input['instalment_e']);
+		if(isset($input['product_id']) && !empty($input['product_id']) && $input['product_id']!='all'){
+			$filter['product_id'] = $input['product_id'];
+			$where['product_id']  = explode(',',$input['product_id']);
+		}else{
+			$filter['product_id'] = 'all';
 		}
 		
 		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
-			$where['credit_level'] = explode(',',$input['credit_level']);
+			$filter['credit_level'] = $input['credit_level'];
+			$where['credit_level'] 	= explode(',',$input['credit_level']);
+		}else{
+			$filter['credit_level'] = 'all';
+		}
+
+		if(isset($input['section']) && $input['section']!='all' ){
+			$filter['section'] = $input['section'];
+			if($input['section']){
+				$where['invested >'] = 0;
+			}else{
+				$where['invested'] = 0;
+			}
+		}else{
+			$filter['section'] = 'all';
 		}
 		
+		
+		$filter['interest_rate_s'] = 0;
+		$filter['interest_rate_e'] = 20;
+		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
+			if(isset($input['interest_rate_s']) && intval($input['interest_rate_e']) >= intval($input['interest_rate_s'])){
+				$filter['interest_rate_s'] = intval($input['interest_rate_s']);
+				$filter['interest_rate_e'] = intval($input['interest_rate_e']);
+				$where['interest_rate >='] = intval($input['interest_rate_s']);
+				$where['interest_rate <='] = intval($input['interest_rate_e']);
+			}
+		}
+		
+		$filter['instalment_s'] = 0;
+		$filter['instalment_e'] = 24;
+		if(isset($input['instalment_e']) && intval($input['instalment_e'])>0){
+			if(isset($input['instalment_s']) && intval($input['instalment_e']) >= intval($input['instalment_s'])){
+				$filter['instalment_s'] = intval($input['instalment_s']);
+				$filter['instalment_e'] = intval($input['instalment_e']);
+				$where['instalment >='] = intval($input['instalment_s']);
+				$where['instalment <='] = intval($input['instalment_e']);
+			}
+		}
+	
+		$investments = $this->investment_model->get_many_by(['user_id'=>$user_id,'status'=>[0,1,2]]);
+		if($investments){
+			$investment_target = [];
+			foreach($investments as $key => $value){
+				$investment_target[] = $value->target_id;
+			}
+			$where['id not'] = $investment_target;
+		}
+
 		$targets = $this->target_model->get_many_by($where);
-		if($targets){
-			$investments = $this->investment_model->get_many_by(array('user_id'=>$user_id,'status'=>array(0,1,2,3)));
-			if($investments){
-				$investment_target = array();
-				foreach($investments as $key => $value){
-					$investment_target[] = $value->target_id;
-				}
-				
+		
+		
+		if(isset($input['sex']) && !empty($input['sex']) && $input['sex']!='all' ){
+			$filter['sex'] = $input['sex'];
+			if($targets){
 				foreach($targets as $key => $value){
-					if(in_array($value->id,$investment_target)){
+					$target_user_info = $this->user_model->get($value->user_id);
+					if($target_user_info->sex != $input['sex']){
 						unset($targets[$key]);
 					}
 				}
 			}
-			
-			if(isset($input['gender']) && !empty($input['gender']) && $input['gender']!='all' ){
-				$where['gender'] = $input['gender'];
-				if($targets){
-					foreach($targets as $key => $value){
-						$target_user_info = $this->user_model->get($value->user_id);
-						if($target_user_info->sex != $input['gender']){
-							unset($targets[$key]);
-						}
-					}
-				}
-			}
-			
-			if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
-				$where['system'] = $input['system'];
-				if($targets){
-					foreach($targets as $key => $value){
-						$user_meta = $this->user_meta_model->get_by(array(
-							'user_id'	=> $value->user_id,
-							'meta_key'	=> 'school_system'
-						));
-						if($user_meta){
-							if($user_meta->meta_value != $input['system']){
-								unset($targets[$key]);
-							}
-						}else{
-							unset($targets[$key]);
-						}
-					}
-				}
-			}
-			
-			if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
-				$this->config->load('school_points',TRUE);
-				$school_list = $this->config->item('school_points');
-				$where['national'] = $input['national'];
-				if($targets){
-					foreach($targets as $key => $value){
-						$user_meta = $this->user_meta_model->get_by(array(
-							'user_id'	=> $value->user_id,
-							'meta_key'	=> 'school_name'
-						));
-						if($user_meta){
-							foreach($school_list['school_points'] as $k => $v){
-								if(trim($user_meta->meta_value)==$v['name']){
-									$school_info = $v;
-									break;
-								}
-							}
-							if($school_info['national']!=$input['national']){
-								unset($targets[$key]);
-							}
-						}else{
-							unset($targets[$key]);
-						}
-					}
-				}
-			}
-
-			if($targets){
-				$where['budget'] = $budget;
-				$data = array(
-					'total_amount' 		=> 0,
-					'total_count' 		=> 0,
-					'max_instalment' 	=> 0,
-					'min_instalment' 	=> 0,
-					'XIRR' 				=> 0,
-					'batch_id' 			=> '',
-					'contract' 			=> array(),
-				);
-				$numerator = $denominator = 0;
-				foreach($targets as $key => $value){
-					$next = $data['total_amount'] + $value->loan_amount;
-					if($next <= $budget){
-						$data['total_amount'] += $value->loan_amount;
-						$data['total_count'] ++;
-						if($data['max_instalment'] < $value->instalment){
-							$data['max_instalment'] = $value->instalment;
-						}
-						if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-							$data['min_instalment'] = $value->instalment;
-						}
-						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-						$data['contract'][] = $contract_data?$contract_data['content']:'';
-						$content[] = $value->id;
-						$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
-						$denominator 	+= $value->loan_amount * $value->instalment;
-					}
-				}
-
-				if($data['total_count']){
-					$param = array(
-						'user_id'	=> $user_id,
-						'type'		=> 0,
-						'filter'	=> json_encode($where),
-						'content'	=> json_encode($content),
-					);
-					$this->load->model('loan/batch_model');
-					$batch_id = $this->batch_model->insert($param);
-					if($batch_id){
-						$data['XIRR'] = round($numerator/$denominator ,2);
-						$data['batch_id'] = $batch_id;
-						$this->response(array('result' => 'SUCCESS','data' => $data));
-					}else{
-						$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-					}
-				}
-			}
+		}else{
+			$filter['sex'] = 'all';
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array(
+
+		if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
+			$filter['system'] = $input['system'];
+			if($targets){
+				foreach($targets as $key => $value){
+					$user_meta = $this->user_meta_model->get_by([
+						'user_id'	=> $value->user_id,
+						'meta_key'	=> 'school_system'
+					]);
+					if($user_meta){
+						if($user_meta->meta_value != $input['system']){
+							unset($targets[$key]);
+						}
+					}else{
+						unset($targets[$key]);
+					}
+				}
+			}
+		}else{
+			$filter['system'] = 'all';
+		}
+			
+		if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
+			$this->config->load('school_points',TRUE);
+			$school_list = $this->config->item('school_points');
+			$filter['national'] = $input['national'];
+			if($targets){
+				foreach($targets as $key => $value){
+					$user_meta = $this->user_meta_model->get_by([
+						'user_id'	=> $value->user_id,
+						'meta_key'	=> 'school_name'
+					]);
+					if($user_meta){
+						foreach($school_list['school_points'] as $k => $v){
+							if(trim($user_meta->meta_value)==$v['name']){
+								$school_info = $v;
+								break;
+							}
+						}
+						if($school_info['national']!=$input['national']){
+							unset($targets[$key]);
+						}
+					}else{
+						unset($targets[$key]);
+					}
+				}
+			}
+		}else{
+			$filter['national'] = 'all';
+		}
+
+		$data = [
 			'total_amount' 		=> 0,
 			'total_count' 		=> 0,
 			'max_instalment' 	=> 0,
 			'min_instalment' 	=> 0,
 			'XIRR' 				=> 0,
-			'batch_id' 			=> '',
-			'contract' 			=> array(),
-		)));
+			'target_ids' 		=> [],
+		];
+			
+		if($targets){
+			$numerator = $denominator = 0;
+			foreach($targets as $key => $value){
+				$data['total_amount'] += $value->loan_amount;
+				$data['total_count'] ++;
+				if($data['max_instalment'] < $value->instalment){
+					$data['max_instalment'] = intval($value->instalment);
+				}
+				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+					$data['min_instalment'] = intval($value->instalment);
+				}
+				$content[] = $value->id;
+				$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
+				$denominator 	+= $value->loan_amount * $value->instalment;
+			}
+			$data['XIRR'] 		= round($numerator/$denominator ,2);
+			$data['target_ids'] = $content;
+		}
+		
+		$this->load->model('loan/batch_model');
+		$this->batch_model->insert([
+			'user_id'	=> $user_id,
+			'type'		=> 0,
+			'filter'	=> json_encode($filter),
+			'content'	=> json_encode($content),
+		]);
+
+		$this->response(['result' => 'SUCCESS','data' =>$data]);
     }
 	
 	/**
-     * @api {post} /v2/target/batch/:batch_id 出借方 智能出借確認
+     * @api {get} /v2/target/batch 出借方 智能出借前次設定
 	 * @apiVersion 0.2.0
-	 * @apiName PostTargetBatch
+	 * @apiName GetTargetBatch
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} batch_id 智能出借ID
      *
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} total_amount 總金額
-	 * @apiSuccess {String} total_count 總筆數
-	 * @apiSuccess {String} max_instalment 最大期數
-	 * @apiSuccess {String} min_instalment 最小期數
-	 * @apiSuccess {String} XIRR 平均年利率(%)
+     * @apiSuccess {String} product_id 產品ID 全部：all 複選使用逗號隔開
+     * @apiSuccess {Number} interest_rate_s 利率區間下限(%)
+     * @apiSuccess {Number} interest_rate_e 利率區間上限(%)
+     * @apiSuccess {Number} instalment_s 期數區間下限(%)
+     * @apiSuccess {Number} instalment_e 期數區間上限(%)
+     * @apiSuccess {String} credit_level 信用評等 全部：all 複選使用逗號隔開
+     * @apiSuccess {String} section 標的狀態 全部:all 全案:0 部分案:1
+     * @apiSuccess {String} national 信用評等 全部:all 私立:0 國立:1
+     * @apiSuccess {String} system 學制 全部:all 0:大學 1:碩士 2:博士
+     * @apiSuccess {String} sex 性別 全部:all 女性:F 男性:M
 	 * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
-     * 			"total_amount": 50000,
-     * 			"total_count": 1,
-     * 			"max_instalment": "12",
-     * 			"min_instalment": "12",
-     * 			"XIRR": 10.47
+     * 			"product_id": "all",
+     * 			"credit_level": "all",
+     * 			"section": "all",
+     * 			"interest_rate_s": 7,
+     * 			"interest_rate_e": 10,
+     * 			"instalment_s": 12,
+     * 			"instalment_e": 12,
+     * 			"sex": "all",
+     * 			"system": "all",
+     * 			"national": "all"
      * 		}
      *    }
 	 *
-	 * @apiUse InputError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
@@ -987,75 +997,19 @@ class Target extends REST_Controller {
      *       "error": "811"
      *     }
 	 *
-	 * @apiError 812 對此智能出借無權限
-     * @apiErrorExample {Object} 812
-     *     {
-     *       "result": "ERROR",
-     *       "error": "812"
-     *     }
      */
 	 
-	public function batch_post($batch_id=0)
+	public function batch_get()
     {
-		$input 				= $this->input->post(NULL, TRUE);
+		$input 	= $this->input->get(NULL, TRUE);
 		$this->load->model('loan/batch_model');
-		
-		if(!$batch_id){
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
-		$user_id 			= $this->user_info->id;
-		$batch 				= $this->batch_model->get($batch_id);
-		if($batch && $batch->status==0 && $batch->type==0){
-			if($batch->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => BATCH_NO_PERMISSION ));
-			}
-			
-			$target_ids = json_decode($batch->content,true);
-			$targets 	= $this->target_model->get_many($target_ids);
-			if($targets){
-				$data = array(
-					'total_amount' 		=> 0,
-					'total_count' 		=> 0,
-					'max_instalment' 	=> 0,
-					'min_instalment' 	=> 0,
-					'XIRR' 				=> 0,
-				);
-				$numerator = $denominator = 0;
-				foreach($targets as $key => $value){
-					if($value->status == 3 ){
-						$investments = $this->investment_model->get_by(array('target_id'=>$value->id,'user_id'=>$user_id,'status'=>array(0,1,2,3,10)));
-						if(!$investments){
-							$param = array(
-								'user_id' 	=> $user_id,
-								'target_id' => $value->id,
-								'amount' 	=> $value->loan_amount,
-							);
-							$investment_id = $this->investment_model->insert($param);
-							if($investment_id){
-								$data['total_amount'] += $value->loan_amount;
-								$data['total_count'] ++;
-								if($data['max_instalment'] < $value->instalment){
-									$data['max_instalment'] = $value->instalment;
-								}
-								if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-									$data['min_instalment'] = $value->instalment;
-								}
-								$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
-								$denominator 	+= $value->loan_amount * $value->instalment;
-							}
-						}
-					}
-				}
-				$data['XIRR'] = $data['total_count']>0?round($numerator/$denominator ,2):0;
-				$this->response(array('result' => 'SUCCESS','data' => $data));
-			}
-			$this->response(array('result' => 'SUCCESS','data' => array(
-				'total_amount' 		=> 0,
-				'total_count' 		=> 0,
-				'max_instalment' 	=> 0,
-				'min_instalment' 	=> 0,
-				'XIRR' 				=> 0,
-			)));
+		$user_id 	= $this->user_info->id;
+		$batch 		= $this->batch_model->order_by('created_at','desc')->get_by([
+			'user_id'	=> $user_id,
+			'type'		=> 0,
+		]);
+		if($batch){
+			$this->response(['result' => 'SUCCESS','data' => json_decode($batch->filter,TRUE)]);
 		}
 		$this->response(array('result' => 'ERROR','error' => BATCH_NOT_EXIST ));
     }

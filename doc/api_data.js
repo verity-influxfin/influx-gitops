@@ -19822,7 +19822,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/v2/target/batch",
-    "title": "出借方 智能出借",
+    "title": "出借方 智能出借前次設定",
     "version": "0.2.0",
     "name": "GetTargetBatch",
     "group": "Target",
@@ -19835,95 +19835,6 @@ define({ "api": [
             "optional": false,
             "field": "request_token",
             "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "budget",
-            "description": "<p>預算金額</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "interest_rate_s",
-            "description": "<p>利率區間下限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "interest_rate_e",
-            "description": "<p>利率區間上限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "instalment_s",
-            "description": "<p>期數區間下限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "instalment_e",
-            "description": "<p>期數區間上限(%)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "credit_level",
-            "defaultValue": "all",
-            "description": "<p>信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "all",
-              "0",
-              "1"
-            ],
-            "optional": true,
-            "field": "national",
-            "defaultValue": "all",
-            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "all",
-              "0",
-              "1",
-              "2"
-            ],
-            "optional": true,
-            "field": "system",
-            "defaultValue": "all",
-            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "all",
-              "F",
-              "M"
-            ],
-            "optional": true,
-            "field": "gender",
-            "defaultValue": "all",
-            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       }
@@ -19942,57 +19853,78 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "batch_id",
-            "description": "<p>智能出借ID</p>"
+            "field": "product_id",
+            "description": "<p>產品ID 全部：all 複選使用逗號隔開</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_s",
+            "description": "<p>利率區間下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "interest_rate_e",
+            "description": "<p>利率區間上限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "instalment_s",
+            "description": "<p>期數區間下限(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "instalment_e",
+            "description": "<p>期數區間上限(%)</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "total_amount",
-            "description": "<p>總金額</p>"
+            "field": "credit_level",
+            "description": "<p>信用評等 全部：all 複選使用逗號隔開</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "total_count",
-            "description": "<p>總筆數</p>"
+            "field": "section",
+            "description": "<p>標的狀態 全部:all 全案:0 部分案:1</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "max_instalment",
-            "description": "<p>最大期數</p>"
+            "field": "national",
+            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "min_instalment",
-            "description": "<p>最小期數</p>"
+            "field": "system",
+            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
           },
           {
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "XIRR",
-            "description": "<p>平均年利率(%)</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "contract",
-            "description": "<p>合約列表</p>"
+            "field": "sex",
+            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47,\n\t\t\t\"batch_id\": 2,\n\t\t\t\"contract\": [\n\t\t\t\t\"我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！我就是合約啊！！\"\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"product_id\": \"all\",\n\t\t\t\"credit_level\": \"all\",\n\t\t\t\"section\": \"all\",\n\t\t\t\"interest_rate_s\": 7,\n\t\t\t\"interest_rate_e\": 10,\n\t\t\t\"instalment_s\": 12,\n\t\t\t\"instalment_e\": 12,\n\t\t\t\"sex\": \"all\",\n\t\t\t\"system\": \"all\",\n\t\t\t\"national\": \"all\"\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -20003,44 +19935,8 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "202",
-            "description": "<p>未通過所需的驗證(實名驗證)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "203",
-            "description": "<p>金融帳號驗證尚未通過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "208",
-            "description": "<p>未滿20歲</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "209",
-            "description": "<p>未設置交易密碼</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "212",
-            "description": "<p>未通過所需的驗證(Email)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "200",
-            "description": "<p>參數錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "201",
-            "description": "<p>新增時發生錯誤</p>"
+            "field": "811",
+            "description": "<p>智能出借不存在</p>"
           },
           {
             "group": "Error 4xx",
@@ -20064,38 +19960,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "202",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "203",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "208",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "209",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "212",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "200",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "201",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "title": "811",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
           "type": "Object"
         },
         {
@@ -22131,8 +21997,8 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v2/target/batch/:batch_id",
-    "title": "出借方 智能出借確認",
+    "url": "/v2/target/batch",
+    "title": "出借方 智能出借",
     "version": "0.2.0",
     "name": "PostTargetBatch",
     "group": "Target",
@@ -22154,10 +22020,100 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "product_id",
+            "defaultValue": "all",
+            "description": "<p>產品ID 全部：all 複選使用逗號隔開1,2,3,4</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Number",
-            "optional": false,
-            "field": "batch_id",
-            "description": "<p>智能出借ID</p>"
+            "optional": true,
+            "field": "interest_rate_s",
+            "description": "<p>利率區間下限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "interest_rate_e",
+            "description": "<p>利率區間上限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "instalment_s",
+            "description": "<p>期數區間下限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "instalment_e",
+            "description": "<p>期數區間上限(%)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "credit_level",
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部：all 複選使用逗號隔開1,2,3,4,5,6,7,8,9,10,11,12,13</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "section",
+            "defaultValue": "all",
+            "description": "<p>標的狀態 全部:all 全案:0 部分案:1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1"
+            ],
+            "optional": true,
+            "field": "national",
+            "defaultValue": "all",
+            "description": "<p>信用評等 全部:all 私立:0 國立:1</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "0",
+              "1",
+              "2"
+            ],
+            "optional": true,
+            "field": "system",
+            "defaultValue": "all",
+            "description": "<p>學制 全部:all 0:大學 1:碩士 2:博士</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "all",
+              "F",
+              "M"
+            ],
+            "optional": true,
+            "field": "sex",
+            "defaultValue": "all",
+            "description": "<p>性別 全部:all 女性:F 男性:M</p>"
           }
         ]
       }
@@ -22206,13 +22162,20 @@ define({ "api": [
             "optional": false,
             "field": "XIRR",
             "description": "<p>平均年利率(%)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "target_ids",
+            "description": "<p>篩選出的Target ID</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 50000,\n\t\t\t\"total_count\": 1,\n\t\t\t\"max_instalment\": \"12\",\n\t\t\t\"min_instalment\": \"12\",\n\t\t\t\"XIRR\": 10.47\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"total_amount\": 70000,\n\t\t\t\"total_amount\": 20000,\n\t\t\t\"total_count\": 4,\n\t\t\t\"max_instalment\": 12,\n\t\t\t\"min_instalment\": 12,\n\t\t\t\"XIRR\": 8,\n\t\t\t\"target_ids\": [\n\t\t\t\t\"17\",\n\t\t\t\t\"19\",\n\t\t\t\t\"21\",\n\t\t\t\t\"22\"\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
@@ -22223,20 +22186,44 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "811",
-            "description": "<p>智能出借不存在</p>"
+            "field": "202",
+            "description": "<p>未通過所需的驗證(實名驗證)</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "812",
-            "description": "<p>對此智能出借無權限</p>"
+            "field": "203",
+            "description": "<p>金融帳號驗證尚未通過</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "208",
+            "description": "<p>未滿20歲</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "209",
+            "description": "<p>未設置交易密碼</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "212",
+            "description": "<p>未通過所需的驗證(Email)</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "200",
             "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "201",
+            "description": "<p>新增時發生錯誤</p>"
           },
           {
             "group": "Error 4xx",
@@ -22260,18 +22247,38 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "811",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"811\"\n}",
+          "title": "202",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
           "type": "Object"
         },
         {
-          "title": "812",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"812\"\n}",
+          "title": "203",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "208",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "209",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "212",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
           "type": "Object"
         },
         {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "201",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
           "type": "Object"
         },
         {
@@ -22295,7 +22302,7 @@ define({ "api": [
     "groupTitle": "Target",
     "sampleRequest": [
       {
-        "url": "https://dev-api.influxfin.com/api/v2/target/batch/:batch_id"
+        "url": "https://dev-api.influxfin.com/api/v2/target/batch"
       }
     ]
   },

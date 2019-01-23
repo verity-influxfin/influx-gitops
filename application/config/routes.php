@@ -75,7 +75,6 @@ $route['api/transfer/info/(:num)'] 			= 'api/transfer/info/$1';
 
 
 $route['api/v2/target/info/(:num)'] 		= 'api/v2/target/info/$1';
-$route['api/v2/target/batch/(:num)'] 		= 'api/v2/target/batch/$1';
 $route['api/v2/product/info/(:num)'] 		= 'api/v2/product/info/$1';
 $route['api/v2/product/applyinfo/(:num)'] 	= 'api/v2/product/applyinfo/$1';
 $route['api/v2/product/cancel/(:num)'] 		= 'api/v2/product/cancel/$1';

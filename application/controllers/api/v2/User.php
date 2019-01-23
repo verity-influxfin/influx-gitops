@@ -29,13 +29,13 @@ class User extends REST_Controller {
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
-				$this->log_request_model->insert(array(
+				$this->log_request_model->insert([
 					'method' 	=> $this->request->method,
 					'url'	 	=> $this->uri->uri_string(),
 					'investor'	=> $tokenData->investor,
 					'user_id'	=> $tokenData->id,
 					'agent'		=> $tokenData->agent,
-				));
+				]);
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -1214,7 +1214,7 @@ class User extends REST_Controller {
 		//上傳檔案欄位
 		if (isset($_FILES['image']) && !empty($_FILES['image'])) {
 			$this->load->library('S3_upload');
-			$image = $this->s3_upload->image($_FILES,'image',$user_id,'user_upload');
+			$image = $this->s3_upload->image($_FILES,'image',$user_id,'user_upload/'.$user_id);
 			if($image){
 				$data['url'] = $image;
 			}else{

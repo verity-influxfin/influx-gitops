@@ -6,7 +6,7 @@ use Aws\S3\Exception\S3Exception;
 
 class S3_upload {
 
-	public $error = "";
+	public $error = '';
 	public $image_type = array(
 		'image/jpeg' =>	'.jpg' ,
 		'image/png'	 => '.png' ,
@@ -31,7 +31,7 @@ class S3_upload {
 		);
     }
 
-    public function image ($files,$name="image",$user_id="",$type="test")
+    public function image ($files,$name='image',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
 			
@@ -39,12 +39,12 @@ class S3_upload {
 				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
 				$exif = json_decode(json_encode($exif),true);
 				$fileType = $this->image_type[$files[$name]['type']];
-				if($fileType == ".jpg"){
+				if($fileType == '.jpg'){
 					ini_set('gd.jpeg_ignore_warning', true);
 					$src = imagecreatefromjpeg($files[$name]['tmp_name']);
-				}elseif($fileType == ".gif"){
+				}elseif($fileType == '.gif'){
 					$src = imagecreatefromgif($files[$name]['tmp_name']);
-				}elseif($fileType == ".png"){
+				}elseif($fileType == '.png'){
 					$src = imagecreatefrompng($files[$name]['tmp_name']);
 				}
 
@@ -90,11 +90,11 @@ class S3_upload {
 
 				if(isset($result['ObjectURL'])){
 					$data = array(
-						"type"		=> $type,
-						"user_id"	=> $user_id,
-						"file_name"	=> $files[$name]['name'],
-						"url"		=> $result['ObjectURL'],
-						"exif"		=> json_encode($exif),
+						'type'		=> $type,
+						'user_id'	=> $user_id,
+						'file_name'	=> $files[$name]['name'],
+						'url'		=> $result['ObjectURL'],
+						'exif'		=> json_encode($exif),
 					);
 					
 					$this->CI->log_image_model->insert($data);
@@ -106,13 +106,13 @@ class S3_upload {
 				$this->error = '只支援jpg gif png 圖檔';
 			}
         }else{
-			$this->error = "No file.";
+			$this->error = 'No file.';
 		}
 		
 		return false;
     }
 	
-	public function image_by_data ($image_data="",$name="image.jpg",$user_id="",$type="test")
+	public function image_by_data ($image_data='',$name='image.jpg',$user_id=0,$type='test')
     {
 		if (!empty($image_data)) {
 			$result = $this->client->putObject(array(
@@ -122,11 +122,11 @@ class S3_upload {
 			));
 			if(isset($result['ObjectURL'])){
 				$data = array(
-					"type"		=> $type,
-					"user_id"	=> $user_id,
-					"file_name"	=> $name,
-					"url"		=> $result['ObjectURL'],
-					"exif"		=> "rotate",
+					'type'		=> $type,
+					'user_id'	=> $user_id,
+					'file_name'	=> $name,
+					'url'		=> $result['ObjectURL'],
+					'exif'		=> 'rotate',
 				);
 				
 				$this->CI->log_image_model->insert($data);
@@ -147,7 +147,7 @@ class S3_upload {
 		
 	}
 	
-	public function pdf ($files="",$name="test.pdf",$user_id="",$type="test")
+	public function pdf ($files='',$name='test.pdf',$user_id='',$type='test')
     {
 		if (isset($files) && $files) {
 			$result = $this->client->putObject(array(
@@ -158,11 +158,11 @@ class S3_upload {
 
 			if(isset($result['ObjectURL'])){
 				$data = array(
-						"type"		=> 'estatement',
-						"user_id"	=> $user_id,
-						"file_name"	=> $name,
-						"url"		=> $result['ObjectURL'],
-						"exif"		=> "",
+						'type'		=> 'estatement',
+						'user_id'	=> $user_id,
+						'file_name'	=> $name,
+						'url'		=> $result['ObjectURL'],
+						'exif'		=> '',
 					);
 					
 				$this->CI->log_image_model->insert($data);
@@ -171,7 +171,7 @@ class S3_upload {
 				$this->error = 'upload error.';
 			}
         }else{
-			$this->error = "No file.";
+			$this->error = 'No file.';
 		}
 		
 		return false;
