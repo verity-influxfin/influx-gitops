@@ -172,7 +172,7 @@ $config['product_list']= [
 普匯陪你一起實現夢想'
 	],
 	5 => [
-		'id'				=> 4,
+		'id'				=> 5,
 		'type'				=> 1,
 		'identity'			=> 2,
 		'name'				=> 'Pay Day Loan',
