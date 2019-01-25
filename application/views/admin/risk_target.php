@@ -109,7 +109,7 @@
 											if($certification){
 												foreach($certification as $k => $v){
 													echo '<td>';
-													if(isset($value[$k]["user_status"]) && $value[$k]["user_status"]!=null){
+													if(isset($value[$k]["user_status"]) && $value[$k]["user_status"]!==null){
 														$user_status 		= $value[$k]["user_status"];
 														$certification_id 	= $value[$k]["certification_id"];
 														if($k==3){
@@ -211,7 +211,7 @@
 											<? if($certification){
 												foreach($certification as $k => $v){
 													echo '<td>';
-													if(isset($value->certification) && $value->certification[$k]["user_status"]!=null){
+													if(isset($value->certification) && $value->certification[$k]["user_status"]!==null){
 														$certification_id 	= $value->certification[$k]["certification_id"];
 														if($k==3){
 															switch($value->certification[$k]["user_status"]){

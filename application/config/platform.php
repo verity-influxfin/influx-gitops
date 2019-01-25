@@ -115,8 +115,7 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '
-普匯學生貸
+		'description'		=> '普匯學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -133,8 +132,7 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '
-普匯學生貸
+		'description'		=> '普匯學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -151,8 +149,7 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '
-普匯學生貸
+		'description'		=> '普匯學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -169,8 +166,24 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '
-普匯學生貸
+		'description'		=> '普匯學生貸
+計畫留學、創業或者實現更多理想嗎？
+需要資金卻無法向銀行聲請借款嗎？
+普匯陪你一起實現夢想'
+	],
+	5 => [
+		'id'				=> 4,
+		'type'				=> 1,
+		'identity'			=> 2,
+		'name'				=> 'Pay Day Loan',
+		'loan_range_s'		=> 10000,
+		'loan_range_e'		=> 200000,
+		'interest_rate_s'	=> 5,
+		'interest_rate_e'	=> 20,
+		'certifications'	=> [1,2,3,4,5,6,7],
+		'instalment'		=> [0],
+		'repayment'			=> [3],
+		'description'		=> '普匯學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -193,7 +206,8 @@ $config['product_identity']= array(
 //還款方式
 $config['repayment_type']= array(
 	1=> '等額本息',
-//	2=> '先息後本',
+	2=> '先息後本',
+	3=> '以日計息',
 );
 
 //學制

@@ -737,6 +737,7 @@ class Transfer extends REST_Controller {
 			"branch_code"	=> $user_bankaccount->branch_code,
 			"bank_account"	=> $user_bankaccount->bank_account,
 		);
+		$this->load->library('Transaction_lib');
 		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		$param				= array( "user_id"=> $user_id);
 		$transfer_investment = $this->transfer_investment_model->get_many_by($param);

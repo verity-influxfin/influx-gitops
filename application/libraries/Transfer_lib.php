@@ -103,7 +103,7 @@ class Transfer_lib{
 					]);
 					$instalment = $target->instalment - $instalment_paid;
 					$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
-					$data 		= array(
+					$data 		= [
 						'total'						=> $total,
 						'instalment'				=> intval($instalment),//剩餘期數
 						'principal'					=> intval($principal),
@@ -114,7 +114,7 @@ class Transfer_lib{
 						'fee'						=> intval($fee),
 						'debt_transfer_contract' 	=> $contract,
 						'settlement_date'			=> $settlement_date,//結帳日
-					);
+					];
 					return $data;
 				}
 			}

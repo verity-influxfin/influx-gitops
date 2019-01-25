@@ -15,7 +15,7 @@ class Notification extends REST_Controller {
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
-            if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
+            if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
 			
@@ -30,13 +30,13 @@ class Notification extends REST_Controller {
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
-				$this->log_request_model->insert(array(
+				$this->log_request_model->insert([
 					'method' 	=> $this->request->method,
 					'url'	 	=> $this->uri->uri_string(),
 					'investor'	=> $tokenData->investor,
 					'user_id'	=> $tokenData->id,
 					'agent'		=> $tokenData->agent,
-				));
+				]);
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;
@@ -52,14 +52,14 @@ class Notification extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetNotificationList
      * @apiGroup Notification
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
      * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Notification ID
-	 * @apiSuccess {String} investor 1:投資端 0:借款端 2:共通
+	 * @apiSuccess {Number} id Notification ID
 	 * @apiSuccess {String} title 標題
 	 * @apiSuccess {String} content 內容
-	 * @apiSuccess {String} status 1:未讀 2:已讀
-	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {Number} status 1:未讀 2:已讀
+	 * @apiSuccess {Number} created_at 創建日期
 	 
 
      * @apiSuccessExample {Object} SUCCESS
@@ -68,21 +68,19 @@ class Notification extends REST_Controller {
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id":"1",
-     * 				"investor":"1",
+     * 				"id": 1,
      * 				"title":"用戶資料認證未通過",
      * 				"content":"您好！ 您的資料認證未通過，請重新認證。",
-     * 				"status":"1",
-     * 				"created_at":"1519635711",
+     * 				"status": 1,
+     * 				"created_at":"1519635711"
      * 			},
      * 			{
-     * 				"id":"2",
-     * 				"investor":"2",
-     * 				"title":"用戶實名認證通過",
-     * 				"content":"尊敬的用戶： 您好！ 您的實名認證已通過。",
-     * 				"status":"0",
-     * 				"created_at":"1519635711",
-     * 			}
+    * 				"id": 241,
+    * 				"title": "【會員】 交易密碼設置成功",
+    * 				"content": "您好！\r\n\t\t\t\t\t您的交易密碼設置成功。",
+    * 				"status": 1,
+    * 				"created_at": 1548303563
+     * 			},
      * 			]
      * 		}
      * }
@@ -96,26 +94,25 @@ class Notification extends REST_Controller {
     {
 		$user_id			= $this->user_info->id;
 		$investor			= $this->user_info->investor;
-		$data				= array();
-		$notification_list 	= $this->user_notification_model->order_by('created_at','desc')->get_many_by(array(
+		$data				= [];
+		$notification_list 	= $this->user_notification_model->order_by('created_at','desc')->get_many_by([
 			'user_id'		=> $user_id,
-			'status <>'		=> '0',
-			'investor'		=> array($investor,2)
-		));
-		$list				= array();
+			'status <>'		=> 0,
+			'investor'		=> [$investor,2]
+		]);
+		$list				= [];
 		if(!empty($notification_list)){
 			foreach($notification_list as $key => $value){
-				$list[] = array(
-					'id' 		 => $value->id,
-					'investor'	 => $value->investor,
+				$list[] = [
+					'id' 		 => intval($value->id),
 					'title' 	 => $value->title,
 					'content' 	 => $value->content,
-					'status' 	 => $value->status,
-					'created_at' => $value->created_at,
-				);
+					'status' 	 => intval($value->status),
+					'created_at' => intval($value->created_at),
+				];
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
+		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
     }
 	
 	/**
@@ -123,26 +120,26 @@ class Notification extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetNotificationInfo
      * @apiGroup Notification
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
 	 * @apiParam {String} id 代號
      *
      * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} id Notification ID
-	 * @apiSuccess {String} investor 1:投資端 0:借款端 2:共通
+	 * @apiSuccess {Number} id Notification ID
 	 * @apiSuccess {String} title 標題
 	 * @apiSuccess {String} content 內容
-	 * @apiSuccess {String} status 1:未讀 2:已讀
-	 * @apiSuccess {String} created_at 創建日期
+	 * @apiSuccess {Number} status 1:未讀 2:已讀
+	 * @apiSuccess {Number} created_at 創建日期
 
      * @apiSuccessExample {Object} SUCCESS
      * {
      * 	"result":"SUCCESS",
      * 		"data":{
-     * 			"id":"1",
-     * 			"investor":"1",
+     * 			"id": 224,
      * 			"title":"用戶資料認證未通過",
      * 			"content":"您好！ 您的資料認證未通過，請重新認證。",
-     * 			"status":"1",
-     * 			"created_at":"1519635711"
+     * 			"status": 1,
+     * 			"created_at": 1548133390
      * 		}
      * }
 	 *
@@ -162,25 +159,24 @@ class Notification extends REST_Controller {
 		$investor			= $this->user_info->investor;
 
 		if(!empty($id)){
-			$notification = $this->user_notification_model->get_by(array(
+			$notification = $this->user_notification_model->get_by([
 				'user_id'	=> $user_id,
 				'id'		=> $id,
 				'status <>'	=> '0'
-			));
+			]);
 			if($notification && $notification->status){
-				$data = array(
-					'id' 			=> $notification->id,
-					'investor'		=> $notification->investor,
+				$data = [
+					'id' 			=> intval($notification->id),
 					'title' 		=> $notification->title,
 					'content' 		=> $notification->content,
-					'status' 		=> $notification->status,
-					'created_at' 	=> $notification->created_at,
-				);
-				$this->user_notification_model->update($id,array('status'=>2));
-				$this->response(array('result' => 'SUCCESS','data' => $data ));
+					'status' 		=> intval($notification->status),
+					'created_at' 	=> intval($notification->created_at),
+				];
+				$this->user_notification_model->update($id,['status'=>2]);
+				$this->response(['result' => 'SUCCESS','data' => $data]);
 			}
 		}
-		$this->response(array('result' => 'ERROR','error' => NOTIFICATION_NOT_EXIST ));
+		$this->response(['result' => 'ERROR','error' => NOTIFICATION_NOT_EXIST ]);
     }
 	
 	/**
@@ -188,6 +184,7 @@ class Notification extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetNotificationReadall
      * @apiGroup Notification
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -203,11 +200,11 @@ class Notification extends REST_Controller {
     {
 		$user_id		= $this->user_info->id;
 		$investor		= $this->user_info->investor;
-		$notification 	= $this->user_notification_model->update_by(array(
+		$notification 	= $this->user_notification_model->update_by([
 			'user_id'	=> $user_id,
-			'status'	=> '1',
-			'investor'	=> array($investor,2)
-		),array( 'status' => 2 ));
-		$this->response(array('result' => 'SUCCESS'));
+			'status'	=> 1,
+			'investor'	=> [$investor,2]
+		],['status' => 2]);
+		$this->response(['result' => 'SUCCESS']);
     }
 }

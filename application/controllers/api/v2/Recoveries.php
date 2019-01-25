@@ -71,7 +71,7 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} payable 待匯款
 	 * @apiSuccess {Object} accounts_receivable 應收帳款
-	 * @apiSuccess {Number} accounts_receivable.payable 應收本金
+	 * @apiSuccess {Number} accounts_receivable.principal 應收本金
 	 * @apiSuccess {Number} accounts_receivable.interest 應收利息
 	 * @apiSuccess {Number} accounts_receivable.delay_interest 應收延滯息
 	 * @apiSuccess {Object} income 收入
@@ -79,9 +79,9 @@ class Recoveries extends REST_Controller {
 	 * @apiSuccess {Number} income.delay_interest 已收延滯息
 	 * @apiSuccess {Number} income.other 已收補貼
 	 * @apiSuccess {Object} funds 資金資訊
-	 * @apiSuccess {String} funds.total 資金總額
+	 * @apiSuccess {Number} funds.total 資金總額
 	 * @apiSuccess {String} funds.last_recharge_date 最後一次匯入日
-	 * @apiSuccess {String} funds.frozen 待交易餘額
+	 * @apiSuccess {Number} funds.frozen 待交易餘額
 	 * @apiSuccess {Object} bank_account 綁定金融帳號
 	 * @apiSuccess {String} bank_account.bank_code 銀行代碼
 	 * @apiSuccess {String} bank_account.branch_code 分行代碼
@@ -427,8 +427,8 @@ class Recoveries extends REST_Controller {
 					'status' 				=> intval($value->status),
 					'transfer_status' 		=> intval($value->transfer_status),
 					'target' 				=> $target,
-					'next_repayment' 		=> $instalment_data[$value->id]['next_repayment'],
-					'accounts_receivable' 	=> $instalment_data[$value->id]['accounts_receivable'],
+					'next_repayment' 		=> isset($instalment_data[$value->id])?$instalment_data[$value->id]['next_repayment']:[],
+					'accounts_receivable' 	=> isset($instalment_data[$value->id])?$instalment_data[$value->id]['accounts_receivable']:[],
 				);
 			}
 		}
@@ -999,7 +999,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_Number) || $this->user_info->id_Number==''){
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
 		

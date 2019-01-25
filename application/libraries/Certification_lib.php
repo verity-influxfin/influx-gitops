@@ -42,13 +42,12 @@ class Certification_lib{
 	
 	public function get_last_certification_info($user_id,$certification_id,$investor=0){
 		if($user_id && $certification_id){
-			$param = array(
+			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by([
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'expire_time >='	=> time(),
-			);
-			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
+			]);
 			if(!empty($certification)){
 				$certification->id 					= intval($certification->id);
 				$certification->user_id 			= intval($certification->user_id);
@@ -693,10 +692,10 @@ class Certification_lib{
 	
 	public function get_last_status($user_id,$investor=0){
 		if($user_id){
-			$certification = array();
+			$certification = [];
 			if($investor){
 				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],array('idcard','debitcard','email','emergency'))){
+					if(in_array($value['alias'],['idcard','debitcard','email','emergency'])){
 						$certification[$key] = $value;
 					}
 				}
@@ -704,12 +703,12 @@ class Certification_lib{
 				$certification = $this->certification;
 			}
 
-			$certification_list = array();
+			$certification_list = [];
 			foreach($certification as $key => $value){
 				$user_certification = $this->get_last_certification_info($user_id,$key,$investor);
 				if($user_certification){
-					$value['user_status'] 		= $user_certification->status;
-					$value['certification_id'] 	= $user_certification->id;
+					$value['user_status'] 		= intval($user_certification->status);
+					$value['certification_id'] 	= intval($user_certification->id);
 				}else{
 					$value['user_status'] 		= null;
 					$value['certification_id'] 	= null;

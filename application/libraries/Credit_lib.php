@@ -4,8 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Credit_lib{
 	
-	private $user_id = '';
-	private $product_id = '';
+	private $credit = [];
 	
 	public function __construct()
     {
@@ -14,43 +13,45 @@ class Credit_lib{
 		$this->CI->load->model('user/user_meta_model');
 		$this->CI->config->load('school_points',TRUE);
 		$this->CI->config->load('credit',TRUE);
+		$this->credit = $this->CI->config->item('credit');
     }
 	
 	//信用評比
 	public function approve_credit($user_id,$product_id){
 		if($user_id && $product_id){
+			
+			//信用低落
+			$low = $this->CI->credit_model->order_by('level','desc')->get_by([
+				'user_id'		=> $user_id,
+				'status'		=> 1,
+				'points <'		=> 0,
+			]);
+			if($low){
+				return $this->CI->credit_model->insert([
+					'product_id' 	=> $product_id,
+					'user_id'		=> $user_id,
+					'points'		=> $low->points,
+					'level'			=> $low->level,
+					'amount'		=> $low->amount,
+				]);
+			}
+		
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id);
+				$rs = $this->$method($user_id);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id,$product_id){
-		$rs 	= $this->CI->credit_model->order_by('level','desc')->get_by(array(
-			'product_id' 	=> $product_id,
-			'user_id'		=> $user_id,
-			'status'		=> 1,
-			'points <'		=> 0,
-		));
-		if($rs){
-			$param		= array(
-				'product_id' 	=> $product_id,
-				'user_id'		=> $user_id,
-				'points'		=> $rs->points,
-				'level'			=> $rs->level,
-				'amount'		=> $rs->amount,
-			);
-			return $this->CI->credit_model->insert($param);
-		}
-		
-		$info 		= $this->CI->user_meta_model->get_many_by(array('user_id'=>$user_id));
+	private function approve_1($user_id){
+
+		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$data 		= [];
 		$total 		= 0;
-		$param		= array('product_id'=>$product_id,'user_id'=>$user_id);
+		$param		= ['product_id'=>1,'user_id'=> $user_id];
 		foreach($info as $key => $value){
 			$data[$value->meta_key] = $value->meta_value;
 		}
@@ -94,6 +95,15 @@ class Credit_lib{
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= $total;
 		$param['level'] 	= $this->get_credit_level($total,$product_id);
+		if(isset($this->credit['credit_amount_'.$product_id])){
+			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+				if($points>=$value['start'] && $points<=$value['end']){
+					return $value['amount'];
+					break;
+				}
+			}
+		}
+			
 		$param['amount'] 	= $this->get_credit_amount($total,$product_id);
 		$rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
@@ -122,8 +132,6 @@ class Credit_lib{
 
 			if(!empty($school_major)){
 				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
-			}else{
-				$point += 100;
 			}
 		}
 		return $point;
@@ -141,12 +149,12 @@ class Credit_lib{
 			$data 	= array();
 			$rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
 			if($rs){
-				$data = array(
+				$data = [
 					'level'		 => intval($rs->level),
 					'points'	 => intval($rs->points),
 					'amount'	 => intval($rs->amount),
 					'created_at' => intval($rs->created_at),
-				);
+				];
 				return $data;
 			}
 		}
@@ -155,9 +163,8 @@ class Credit_lib{
 	
 	public function get_credit_level($points=0,$product_id=0){
 		if(intval($points)>0 && $product_id){
-			$credit = $this->CI->config->item('credit');
-			if(isset($credit['credit_level_'.$product_id])){
-				foreach($credit['credit_level_'.$product_id] as $level => $value){
+			if(isset($this->credit['credit_level_'.$product_id])){
+				foreach($this->credit['credit_level_'.$product_id] as $level => $value){
 					if($points >= $value['start'] && $points <= $value['end']){
 						return $level;
 						break;
@@ -169,26 +176,11 @@ class Credit_lib{
 		return false;
 	}
 	
-	public function get_credit_amount($points=0,$product_id=0){
-		if(intval($points)>0 && $product_id){
-			$credit = $this->CI->config->item('credit');
-			if(isset($credit['credit_amount_'.$product_id])){
-				foreach($credit['credit_amount_'.$product_id] as $key => $value){
-					if($points>=$value['start'] && $points<=$value['end']){
-						return $value['amount'];
-						break;
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
 	public function get_rate($level,$instalment,$product_id){
 		$credit = $this->CI->config->item('credit');
-		if(isset($credit['credit_level_'.$product_id][$level])){
-			if(isset($credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
-				return $credit['credit_level_'.$product_id][$level]['rate'][$instalment];
+		if(isset($this->credit['credit_level_'.$product_id][$level])){
+			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
+				return $this->credit['credit_level_'.$product_id][$level]['rate'][$instalment];
 			}
 		}
 		return false;
@@ -215,12 +207,12 @@ class Credit_lib{
 				$level 		= 13;
 			}
 			
-			$product_id = array();
+			$product_id = [];
 			$rs 		= $this->CI->credit_model->order_by('created_at','desc')->get_many_by($param);
 			if($rs){
 				foreach($rs as $key => $value){
 					if($value->level != $level){
-						$this->CI->credit_model->update($value->id,array('status'=>0));
+						$this->CI->credit_model->update($value->id,['status'=>0]);
 						$product_id[$value->product_id] = $value->product_id;
 					}
 				}

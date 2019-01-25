@@ -75,6 +75,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} id Product ID
 	 * @apiSuccess {Number} type 類型 1:信用貸款 2:分期付款
+	 * @apiSuccess {Number} identity 身份 1:學生 2:社會新鮮人
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {Object} instalment 可選期數 0:其他
@@ -95,6 +96,7 @@ class Product extends REST_Controller {
      * 			{
      * 				"id":1,
      * 				"type":1,
+     * 				"identity":1,
      * 				"name":"學生區",
      * 				"description":"學生區",
      * 				"loan_range_s":12222,
@@ -187,6 +189,7 @@ class Product extends REST_Controller {
 				$list[] = array(
 					'id' 					=> $value['id'],
 					'type' 					=> $value['type'],
+					'identity' 				=> $value['identity'],
 					'name' 					=> $value['name'],
 					'description' 			=> $value['description'],
 					'loan_range_s'			=> $value['loan_range_s'],
@@ -217,6 +220,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Product ID
 	 * @apiSuccess {String} type 類型 1:信用貸款 2:分期付款
+	 * @apiSuccess {Number} identity 身份 1:學生 2:社會新鮮人
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} loan_range_s 最低借款額度(元)
@@ -229,39 +233,29 @@ class Product extends REST_Controller {
 	 * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
      * @apiSuccessExample {Object} SUCCESS
      * {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 				"id":"1",
-     * 				"type":"1",
-     * 				"name":"學生區",
-     * 				"description":"學生區",
-     * 				"rank":"0",
-     * 				"loan_range_s":"12222",
-     * 				"loan_range_e":"14333333",
-     * 				"interest_rate_s":"12",
-     * 				"interest_rate_e":"14",
-	 * 				"charge_platform":"0",
-     * 				"charge_platform_min":"0",
-	 * 				"instalment": [
-	  * 				{
-     * 				      "name": "3期",
-     * 				      "value": 3
-     * 				    },
-	  * 				{
-     * 				      "name": "12期",
-     * 				      "value": 12
-     * 				    },
-	  * 				{
-     * 				      "name": "24期",
-     * 				      "value": 24
-     * 				    },
-	 * 				],
-	 * 				"repayment": [
-	  * 				{
-     * 				      "name": "等額本息",
-     * 				      "value": 1
-     * 				    }
-	 * 				]
+     * 	"result": "SUCCESS",
+     * 		"data": {
+     * 			"id": 1,
+     * 			"type": 1,
+     * 			"identity": 1,
+     * 			"name": "學生貸",
+     * 			"description": "\r\n普匯學生貸\r\n計畫留學、創業或者實現更多理想嗎？\r\n需要資金卻無法向銀行聲請借款嗎？\r\n普匯陪你一起實現夢想",
+     * 			"loan_range_s": 5000,
+     * 			"loan_range_e": 120000,
+     * 			"interest_rate_s": 5,
+     * 			"interest_rate_e": 20,
+     * 			"charge_platform": 3,
+     * 			"charge_platform_min": 500,
+     * 			"instalment": [
+     * 				3,
+     * 				6,
+     * 				12,
+     * 				18,
+     * 				24
+     * 			],
+     * 			"repayment": [
+     * 				1
+     * 			]
      * 		}
      * }
 	 *
@@ -286,6 +280,8 @@ class Product extends REST_Controller {
 			if(isset($product_list[$id])){
 				$data = array(
 					'id' 					=> $product_list[$id]['id'],
+					'type' 					=> $product_list[$id]['type'],
+					'identity' 				=> $product_list[$id]['identity'],
 					'name' 					=> $product_list[$id]['name'],
 					'description' 			=> $product_list[$id]['description'],
 					'loan_range_s'			=> $product_list[$id]['loan_range_s'],

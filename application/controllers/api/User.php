@@ -1163,7 +1163,7 @@ class User extends REST_Controller {
 	public function credittest_post()
     {
         $input 	= $this->input->post(NULL, TRUE);
-		$data 	= array("amount"=>0); 
+		$data 	= ['amount'=>0]; 
 		//必填欄位
 		$fields 	= ['school','department','grade'];
 		foreach ($fields as $field) {
@@ -1172,12 +1172,18 @@ class User extends REST_Controller {
 			}
 		}
 		
-		$input['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+		$input['system'] = isset($input['system']) && in_array($input['system'],[0,1,2])?$input['system']:0;
 		$this->load->library('credit_lib'); 
-		$point  = $this->credit_lib->get_school_point($input['school'],$input['system'],"");
-		if($point>0){
-			$point = $point + 300;
-			$data["amount"] = $this->credit_lib->get_credit_amount($point);
+		$points  = $this->credit_lib->get_school_point($input['school'],$input['system'],'');
+		if($points>0){
+			$points = $points + 300;
+			$this->config->load('credit',TRUE);
+			$credit = $this->config->item('credit');
+			foreach($credit['credit_amount_1'] as $key => $value){
+				if($points >= $value['start'] && $points <= $value['end']){
+					$data['amount'] = $value['amount'];
+				}
+			}
 		}
 		
 		$this->response(array('result' => 'SUCCESS','data'=> $data));
