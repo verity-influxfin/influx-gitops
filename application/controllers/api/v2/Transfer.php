@@ -1337,7 +1337,6 @@ class Transfer extends REST_Controller {
 	 * @apiName GetTransferBatch
      * @apiGroup Transfer
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} batch_id 智能收購ID
      *
 	 * @apiSuccess {Number} delay 逾期標的 0:正常標的 1:逾期標的
      * @apiSuccess {Number} user_id 指定使用者ID

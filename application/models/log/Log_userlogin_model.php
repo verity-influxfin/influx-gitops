@@ -31,7 +31,7 @@ class Log_userlogin_model extends MY_Model
 			$agent = 'Unidentified User Agent';
 		}
 		$data['client'] = json_encode([
-			'agent'		=> $agent,
+			'agent'		=> $this->agent->agent_string(),
 			'platform'	=> $this->agent->platform(),
 		]);
 		

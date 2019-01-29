@@ -23643,19 +23643,6 @@ define({ "api": [
         ]
       }
     },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "batch_id",
-            "description": "<p>智能收購ID</p>"
-          }
-        ]
-      }
-    },
     "success": {
       "fields": {
         "Success 200": [
