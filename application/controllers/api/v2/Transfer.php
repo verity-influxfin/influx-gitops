@@ -183,8 +183,8 @@ class Transfer extends REST_Controller {
 		$combination_list = [];
 		$combination_ids = [];
 		$product_list 	= $this->config->item('product_list');
-		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'';
-		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
+		$sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
 		$transfer 		= $this->transfer_lib->get_transfer_list();
 		
 		if(!empty($transfer)){
@@ -455,13 +455,13 @@ class Transfer extends REST_Controller {
 					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'company_name']);
 				}
 
-				$user = array(
+				$user = [
 					'name' 			=> $name,
 					'id_number'		=> $id_number,
 					'sex' 			=> $user_info->sex,
 					'age'			=> $age,
 					'company_name'	=> $user_meta?$user_meta->meta_value:'',
-				);
+				];
 			}
 
 			$contract_data 	= $this->contract_lib->get_contract($transfer->contract_id);
@@ -614,7 +614,6 @@ class Transfer extends REST_Controller {
 		$count 			= count($transfer_ids);
 		if(!empty($transfer_ids)){
 			foreach($transfer_ids as $key => $id){
-				$id = intval($id);
 				if(intval($id)<=0 ){
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
@@ -1377,13 +1376,6 @@ class Transfer extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
-	 *
-	 * @apiError 811 智能收購不存在
-     * @apiErrorExample {Object} 811
-     *     {
-     *       "result": "ERROR",
-     *       "error": "811"
-     *     }
      */
 	public function batch_get()
 	{
@@ -1397,6 +1389,21 @@ class Transfer extends REST_Controller {
 		if($batch){
 			$this->response(['result' => 'SUCCESS','data' => json_decode($batch->filter,TRUE)]);
 		}
-		$this->response(array('result' => 'ERROR','error' => BATCH_NOT_EXIST ));
+		$this->response(['result' => 'SUCCESS','data' => [
+		    'user_id'			=> '',
+			'delay'				=> 0,
+			'instalment_s'		=> 0,
+			'instalment_e'		=> 24,
+			'bargain_rate_s'	=> -20,
+			'bargain_rate_e'	=> 20,
+			'product_id'		=> 'all',
+			'credit_level'		=> 'all',
+			'section'			=> 'all',
+			'interest_rate_s'	=> 0,
+			'interest_rate_e'	=> 20,
+			'sex'				=> 'all',
+			'system'			=> 'all',
+			'national'			=> 'all'
+		]]);
     }
 }

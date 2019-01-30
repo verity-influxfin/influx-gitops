@@ -84,6 +84,7 @@
 		"GetTargetList",
 		"GetTargetInfo",
 		"PostTargetApply",
+		"PostBatchTargetApply",
 		"GetTargetApplylist",
 		"GetTargetBatch",
 		"PostTargetBatch",

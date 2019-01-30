@@ -1,70 +1,75 @@
-###################
-What is CodeIgniter
-###################
+LAMP開發環境
+	php 7.2
+	phpmyadmin
+	mysql
+	php-mbstring
+ 
+版本控制
+	git
+	composer
+	
+Cache使用
+	phpredis
+	phpredisadmin
+	predis
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
+文檔使用
+	node
+	npm
+	apidoc
 
-*******************
-Release Information
-*******************
-
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
-
-**************************
-Changelog and New Features
-**************************
-
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
-
-*******************
-Server Requirements
-*******************
-
-PHP version 5.6 or newer is recommended.
-
-It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
-
-************
-Installation
-************
-
-Please see the `installation section <https://codeigniter.com/user_guide/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
-License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <https://codeigniter.com/docs>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
-
-***************
-Acknowledgement
-***************
-
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+OCR使用：
+	Soap
+	bcmath
+	
+php.ini
+	short_open_tag = On
+	extension = redis.so
+	
+Env:
+	SetEnv CI_ENV development
+	#銀行設定
+    SetEnv ENV_CATHAY_CUST_ID ""
+    SetEnv ENV_CATHAY_CUST_NICKNAME ""
+    SetEnv ENV_CATHAY_CUST_PASSWORD ""
+    SetEnv ENV_CATHAY_CUST_ACCNO ""
+    SetEnv ENV_CATHAY_VIRTUAL_CODE ""
+    SetEnv ENV_CATHAY_AES_KEY ""
+	#AWS
+    SetEnv ENV_AWS_ACCESS_TOKEN ""
+    SetEnv ENV_AWS_SECRET_TOKEN ""
+	SetEnv ENV_S3_BUCKET ""
+	#SMTP
+    SetEnv ENV_GMAIL_SMTP_ACCOUNT ""
+    SetEnv ENV_GMAIL_SMTP_PASSWORD ""
+	SetEnv ENV_GMAIL_SMTP_NAME "P2p"
+	SetEnv ENV_SES_SMTP_ACCOUNT ""
+	SetEnv ENV_SES_SMTP_PASSWORD ""
+	#Database
+    SetEnv ENV_DBHOST ""
+    SetEnv ENV_DBUSER ""
+    SetEnv ENV_DBPASS ""
+	#Facebook App
+    SetEnv ENV_FB_CLIENT_ID ""
+    SetEnv ENV_FB_CLIENT_SECRET ""
+	#instagram
+    SetEnv ENV_IG_CLIENT_ID ""
+    SetEnv ENV_IG_CLIENT_SECRET ""
+	#Google
+    SetEnv GOOGLE_APPLICATION_CREDENTIALS ""
+	#URL
+    SetEnv ENV_LENDING_URL ""
+    SetEnv ENV_BORROW_URL ""
+	SetEnv ENV_BASE_URL ""
+	#Key
+	SetEnv ENV_COOKIES_LOGIN_ADMIN ""
+	SetEnv ENV_SESSION_APP_ADMIN_INFO ""
+	SetEnv ENV_JWT_KEY ""
+	SetEnv ENV_JWT_ADMIN_KEY ""
+	SetEnv ENV_JWT_ADMIN_COOKIE_KEY ""
+	#ezPay
+	SetEnv ENV_EZPAY_ID ""
+	SetEnv ENV_EZPAY_KEY ""
+	SetEnv ENV_EZPAY_IV ""
+	#PDF password
+	SetEnv ENV_PDF_OWNER_PASSWORD ""

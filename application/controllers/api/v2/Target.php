@@ -223,97 +223,105 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} amortization_schedule.total.total_payment 加總
 
      * @apiSuccessExample {Object} SUCCESS
-     *    {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"id":30,
-     * 			"target_no":"STN2019011414457",
-     * 			"product_id":1,
-     * 			"user_id":1,
-     * 			"loan_amount":5000,
-     * 			"credit_level":6,
-     * 			"interest_rate":10,
-     * 			"reason":"",
-     * 			"remark":"",
-     * 			"instalment":3,
-     * 			"repayment":1,
-     * 			"expire_time":1547792055,
-     * 			"invested":0,
-     * 			"status":3,
-     * 			"sub_status":0,
-     * 			"created_at":1547455529,
-     * 			"contract":"我就是合約啊",
-     *	        "user": {
-     *           	"name": "陳**",
-     *           	"id_number": "A1154*****",
-     *           	"sex": "M",
-     *           	"age": 29,
-     *           	"company_name": "國立宜蘭大學"
-     *          },
-     *	        "certification": [
-     *           	{
-     *           	    "id": 1,
-     *           	    "alias": "idcard",
-     *           	    "name": "實名認證",
-     *           	    "status": 1,
-     *           	    "description": "驗證個人身份資訊",
-     *           	    "user_status": 1,
-     *           	},
-     *           	{
-     *           	    "id": 2,
-     *           	    "alias": "student",
-     *           	    "name": "學生身份認證",
-     *           	    "status": 1,
-     *           	    "description": "驗證學生身份",
-     *           	    "user_status": 1,
-     *           	}
-     *           ],
-     *	        "amortization_schedule": {
-     *           	"amount": 5000,
-     *           	"instalment": 3,
-     *           	"rate": 10,
-     *           	"date": "2019-01-16",
-     *           	"total_payment": 1695,
-     *           	"leap_year": false,
-     *           	"year_days": 365,
-     *           	"XIRR": 10.51,
-     *           	"schedule": {
-     *           		"1": {
-     *           			"instalment": 1,
-     *           			"repayment_date": "2019-03-10",
-     *           			"days": 53,
-     *           			"remaining_principal": 5000,
-     *           			"principal": 1622,
-     *           			"interest": 73,
-     *           			"total_payment": 1695
-     *           		},
-     *           		"2": {
-     *           			"instalment": 2,
-     *           			"repayment_date": "2019-04-10",
-     *           			"days": 31,
-     *           			"remaining_principal": 3378,
-     *           			"principal": 1666,
-     *           			"interest": 29,
-     *           			"total_payment": 1695
-     *           		},
-     *           		"3": {
-     *           			"instalment": 3,
-     *           			"repayment_date": "2019-05-10",
-     *           			"days": 30,
-     *           			"remaining_principal": 1712,
-     *           			"principal": 1712,
-     *           			"interest": 14,
-     *           			"total_payment": 1726
-     *           		}
-     *           	},
-     *           	"total": {
-     *           		"principal": 5000,
-     *           		"interest": 116,
-     *           		"total_payment": 5116
-     *           	}
-     *	        }
-     * 		}
-     *    }
+     *	{
+     *		"result": "SUCCESS",
+     *		"data": {
+     *			"id": 24,
+     *			"target_no": "STN2019011487405",
+     *			"product_id": 1,
+     *			"user_id": 19,
+     *			"loan_amount": 5000,
+     *			"credit_level": 3,
+     *			"interest_rate": 7,
+     *			"reason": "",
+     *			"remark": "",
+     *			"instalment": 3,
+     *			"repayment": 1,
+     *			"expire_time": 1548828283,
+     *			"invested": 0,
+     *			"status": 3,
+     *			"sub_status": 0,
+     *			"created_at": 1547445512,
+     *			"contract": "借貸契約",
+     *			"user": {
+     *				"name": "你**",
+     *				"id_number": "A1085*****",
+     *				"sex": "M",
+     *				"age": 30,
+     *				"company_name": "國立政治大學"
+     *			},
+     *			"certification": [
+     *				{
+     *					"id": 1,
+     *					"alias": "idcard",
+     *					"name": "實名認證",
+     *					"status": 1,
+     *					"description": "驗證個人身份資訊",
+     *					"user_status": 1
+     *				},
+     *				{
+     *					"id": 2,
+     *					"alias": "student",
+     *					"name": "學生身份認證",
+     *					"status": 1,
+     *					"description": "驗證學生身份",
+     *					"user_status": 1
+     *				},
+     *				{
+     *					"id": 7,
+     *					"alias": "financial",
+     *					"name": "財務訊息認證",
+     *					"status": 1,
+     *					"description": "提供財務訊息資訊",
+     *					"user_status": 1
+     *				}
+     *			],
+     *			"amortization_schedule": {
+     *				"amount": 5000,
+     *				"instalment": 3,
+     *				"rate": 7,
+     *				"date": "2019-01-30",
+     *				"total_payment": 1687,
+     *				"leap_year": false,
+     *				"year_days": 365,
+     *				"XIRR": 7.23,
+     *				"schedule": {
+     *					"1": {
+     *						"instalment": 1,
+     *						"repayment_date": "2019-03-10",
+     *						"days": 39,
+     *						"remaining_principal": 5000,
+     *						"principal": 1650,
+     *						"interest": 37,
+     *						"total_payment": 1687
+     *					},
+     *					"2": {
+     *						"instalment": 2,
+     *						"repayment_date": "2019-04-10",
+     *						"days": 31,
+     *						"remaining_principal": 3350,
+     *						"principal": 1667,
+     *						"interest": 20,
+     *						"total_payment": 1687
+     *					},
+     *					"3": {
+     *						"instalment": 3,
+     *						"repayment_date": "2019-05-10",
+     *						"days": 30,
+     *						"remaining_principal": 1683,
+     *						"principal": 1683,
+     *						"interest": 10,
+     *						"total_payment": 1693
+     *					}
+     *				},
+     *				"total": {
+     *					"principal": 5000,
+     *					"interest": 67,
+     *					"total_payment": 5067
+     *				}
+     *			}
+     *		}
+     *	}
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
@@ -401,7 +409,7 @@ class Target extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /v2/target/apply 出借方 申請出借
+     * @api {post} /v2/target/apply 出借方 單案申請出借
 	 * @apiVersion 0.2.0
 	 * @apiName PostTargetApply
      * @apiGroup Target
@@ -564,6 +572,358 @@ class Target extends REST_Controller {
     }
 	
 	/**
+     * @api {post} /v2/target/batchpreapply 出借方 批次查詢資訊
+	 * @apiVersion 0.2.0
+	 * @apiName PostBatchPreTargetApply
+     * @apiGroup Target
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} target_ids 產品IDs IDs ex: 1,3,10,21
+	 * 
+	 * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {String} total_amount 總金額
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {String} XIRR 平均年利率(%)
+	 * @apiSuccess {Object} target_ids Target IDs
+	 * @apiSuccess {Object} amortization_schedule 預計還款計畫
+	 * @apiSuccess {Object} amortization_schedule.total 還款總計
+	 * @apiSuccess {Number} amortization_schedule.total.principal 本金
+	 * @apiSuccess {Number} amortization_schedule.total.interest 利息
+	 * @apiSuccess {Number} amortization_schedule.total.total_payment 加總
+	 * @apiSuccess {Object} amortization_schedule.schedule 還款計畫
+	 * @apiSuccess {Number} amortization_schedule.schedule.key 還款日期
+	 * @apiSuccess {Number} amortization_schedule.schedule.principal 還款本金
+	 * @apiSuccess {Number} amortization_schedule.schedule.interest 還款利息
+	 * @apiSuccess {Number} amortization_schedule.schedule.total_payment 本期還款金額
+	 * @apiSuccess {Object} contracts 借貸合約列表
+	 * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 10000,
+     * 			"total_count": 2,
+     * 			"max_instalment": 6,
+     * 			"min_instalment": 3,
+     * 			"XIRR": 7.67,
+     * 			"target_ids": [
+     * 				23,
+     * 				24
+     * 			],
+     * 			"amortization_schedule": {
+     * 				"total": {
+     * 					"principal": 10000,
+     * 					"interest": 194,
+     * 					"total_payment": 10194
+     * 				},
+     * 				"schedule": {
+     * 					"2019-03-10": {
+     * 						"principal": 1650,
+     * 						"interest": 37,
+     * 						"total_payment": 1687
+     * 					},
+     * 					"2019-04-10": {
+     * 						"principal": 1667,
+     * 						"interest": 20,
+     * 						"total_payment": 1687
+     * 					},
+     * 					"2019-05-10": {
+     * 						"principal": 1683,
+     * 						"interest": 10,
+     * 						"total_payment": 1693
+     * 					},
+     * 					"2019-06-10": {
+     * 						"principal": 836,
+     * 						"interest": 17,
+     * 						"total_payment": 853
+     * 					},
+     * 					"2019-07-10": {
+     * 						"principal": 842,
+     * 						"interest": 11,
+     * 						"total_payment": 853
+     * 					},
+     * 					"2019-08-10": {
+     * 						"principal": 856,
+     * 						"interest": 6,
+     * 						"total_payment": 862
+     * 					}
+     * 				}
+     * 			},
+     * 			"contracts": [
+     * 				"借貸契約1",
+     * 				"借貸契約2"
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+     *
+	 * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       "result": "ERROR",
+     *       "error": "801"
+     *     }
+     */
+	public function batchpreapply_get()
+    {
+		$input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+
+		//必填欄位
+		if (empty($input['target_ids'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+
+		$target_ids 	= explode(',',$input['target_ids']);
+		$count 			= count($target_ids);
+		if(!empty($target_ids)){
+			foreach($target_ids as $key => $id){
+				if(intval($id)<=0 ){
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		$targets = $this->target_model->get_many_by([
+			'id'	=> $target_ids,
+			'status'=> 3,
+		]);
+		if($targets && count($targets)==$count){
+			$data = [
+				'total_amount' 		=> 0,
+				'total_count' 		=> 0,
+				'max_instalment' 	=> 0,
+				'min_instalment' 	=> 0,
+				'XIRR' 				=> 0,
+				'target_ids' 		=> [],
+			];
+			$contract 				= [];
+			$amortization_schedule 	= [
+				'total'=>[
+					'principal'		=> 0,
+					'interest'		=> 0,
+					'total_payment'	=> 0,
+				]
+			];
+			$numerator 	= $denominator = 0;
+			foreach($targets as $key => $value){
+				$data['total_amount'] += $value->loan_amount;
+				$data['total_count'] ++;
+				if($data['max_instalment'] < $value->instalment){
+					$data['max_instalment'] = intval($value->instalment);
+				}
+				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+					$data['min_instalment'] = intval($value->instalment);
+				}
+				
+				$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
+				$denominator 	+= $value->loan_amount * $value->instalment;
+				$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
+				$contract[] 	= $contract_data?$contract_data['content']:'';
+				$data['target_ids'][] = intval($value->id);
+				$schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,'',$value->repayment);
+				if($schedule){
+					foreach($schedule['schedule'] as $k => $v){
+						if(!isset($amortization_schedule[$v['repayment_date']])){
+							$amortization_schedule['schedule'][$v['repayment_date']] = [
+								'principal'		=> 0,
+								'interest'		=> 0,
+								'total_payment'	=> 0,
+							];
+						}
+						$amortization_schedule['schedule'][$v['repayment_date']]['principal'] 		+= $v['principal'];
+						$amortization_schedule['schedule'][$v['repayment_date']]['interest'] 		+= $v['interest'];
+						$amortization_schedule['schedule'][$v['repayment_date']]['total_payment'] 	+= $v['total_payment'];	
+						$amortization_schedule['total']['principal'] 					+= $v['principal'];
+						$amortization_schedule['total']['interest'] 					+= $v['interest'];
+						$amortization_schedule['total']['total_payment'] 				+= $v['total_payment'];
+					}
+				}
+			}
+			$data['XIRR'] 					= round($numerator/$denominator ,2);
+			$data['amortization_schedule'] 	= $amortization_schedule;
+			$data['contracts'] 				= $contract;
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
+		}
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
+    }
+	
+	/**
+     * @api {post} /v2/target/batchapply 出借方 批次申請出借
+	 * @apiVersion 0.2.0
+	 * @apiName PostBatchTargetApply
+     * @apiGroup Target
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} target_ids 產品IDs IDs ex: 1,3,10,21
+	 * 
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+     *
+	 * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       "result": "ERROR",
+     *       "error": "801"
+     *     }
+	 *
+     * @apiError 803 已申請出借
+     * @apiErrorExample {Object} 803
+     *     {
+     *       "result": "ERROR",
+     *       "error": "803"
+     *     }
+	 *
+     * @apiError 804 雙方不可同使用者
+     * @apiErrorExample {Object} 804
+     *     {
+     *       "result": "ERROR",
+     *       "error": "804"
+     *     }
+	 *
+     * @apiError 202 未通過所需的驗證(實名驗證)
+     * @apiErrorExample {Object} 202
+     *     {
+     *       "result": "ERROR",
+     *       "error": "202"
+     *     }
+	 *
+     * @apiError 203 金融帳號驗證尚未通過
+     * @apiErrorExample {Object} 203
+     *     {
+     *       "result": "ERROR",
+     *       "error": "203"
+     *     }
+	 *
+     * @apiError 208 未滿20歲
+     * @apiErrorExample {Object} 208
+     *     {
+     *       "result": "ERROR",
+     *       "error": "208"
+     *     }
+	 *
+     * @apiError 209 未設置交易密碼
+     * @apiErrorExample {Object} 209
+     *     {
+     *       "result": "ERROR",
+     *       "error": "209"
+     *     }
+	 *
+     * @apiError 212 未通過所需的驗證(Email)
+     * @apiErrorExample {Object} 212
+     *     {
+     *       "result": "ERROR",
+     *       "error": "212"
+     *     }
+	 *
+     */
+	public function batchapply_post()
+    {
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+
+		//必填欄位
+		if (empty($input['target_ids'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+
+		$target_ids 	= explode(',',$input['target_ids']);
+		$count 			= count($target_ids);
+		if(!empty($target_ids)){
+			foreach($target_ids as $key => $id){
+				if(intval($id)<=0 ){
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		//檢查認證 NOT_VERIFIED
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+		}
+			
+		//檢查認證 NOT_VERIFIED_EMAIL
+		if(empty($this->user_info->email) || $this->user_info->email==''){
+			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+		}
+		
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+		}
+
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$bank_account = $this->user_bankaccount_model->get_by([
+			'investor'	=> $investor,
+			'status'	=> 1,
+			'user_id'	=> $user_id,
+			'verify'	=> 1
+		]);
+		if(!$bank_account){
+			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+		}
+		
+		if($this->user_info->transaction_password==''){
+			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
+		}
+
+		
+		$exist = $this->investment_model->get_by([
+			'target_id'	=> $target_ids,
+			'user_id'	=> $user_id,
+			'status'	=> [0,1,2,3,10]
+		]);
+		if($exist){
+			$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
+		}
+
+		$targets = $this->target_model->get_many_by([
+			'id'	=> $target_ids,
+			'status'=> 3,
+		]);
+		if($targets && count($targets)==$count){
+			$param	= [];
+			foreach($targets as $key => $value){
+				if( $user_id == $value->user_id ){
+					$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
+				}
+				
+				$param[] = [
+					'target_id'	=> $value->id,
+					'amount'	=> intval($value->loan_amount),
+					'user_id'	=> $user_id,
+				];
+			}
+
+			$insert = $this->investment_model->insert_many($param);
+			if($insert){
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
+    }
+	
+	/**
      * @api {get} /v2/target/applylist 出借方 申請紀錄列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetTargetApplylist
@@ -696,16 +1056,15 @@ class Target extends REST_Controller {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"total_amount": 70000,
-     * 			"total_amount": 20000,
      * 			"total_count": 4,
      * 			"max_instalment": 12,
      * 			"min_instalment": 12,
      * 			"XIRR": 8,
      * 			"target_ids": [
-     * 				"17",
-     * 				"19",
-     * 				"21",
-     * 				"22"
+     * 				17,
+     * 				19,
+     * 				21,
+     * 				22
      * 			]
      * 		}
      *    }
@@ -938,7 +1297,7 @@ class Target extends REST_Controller {
 				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
 					$data['min_instalment'] = intval($value->instalment);
 				}
-				$content[] = $value->id;
+				$content[] 		= intval($value->id);
 				$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
 				$denominator 	+= $value->loan_amount * $value->instalment;
 			}
@@ -996,13 +1355,6 @@ class Target extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
-	 * @apiError 811 智能出借不存在
-     * @apiErrorExample {Object} 811
-     *     {
-     *       "result": "ERROR",
-     *       "error": "811"
-     *     }
-	 *
      */
 	 
 	public function batch_get()
@@ -1017,6 +1369,17 @@ class Target extends REST_Controller {
 		if($batch){
 			$this->response(['result' => 'SUCCESS','data' => json_decode($batch->filter,TRUE)]);
 		}
-		$this->response(array('result' => 'ERROR','error' => BATCH_NOT_EXIST ));
+		$this->response(['result' => 'SUCCESS','data' => [
+			'product_id'		=> 'all',
+			'credit_level'		=> 'all',
+			'section'			=> 'all',
+			'interest_rate_s'	=> 0,
+			'interest_rate_e'	=> 20,
+			'instalment_s'		=>  0,
+			'instalment_e'		=> 24,
+			'sex'				=> 'all',
+			'system'			=> 'all',
+			'national'			=> 'all'
+		]]);
     }
 }

@@ -17,38 +17,38 @@ class Ocr_lib
 	//台湾身份证背面1032
     public function identify($image,$type)
     {
-		if(in_array($type,array("1030","1031","1032"))){
+		if(in_array($type,array('1030','1031','1032'))){
 			$data 	= array();
 			$field	= array(
-				"1030" => array(
-					1 => "name",
-					2 => "id_number",
-					3 => "birthday",
-					4 => "code",
-					//5 => "face",
+				'1030' => array(
+					1 => 'name',
+					2 => 'id_number',
+					3 => 'birthday',
+					4 => 'code',
+					//5 => 'face',
 					
 				),
-				"1031" => array(
-					1 => "name",
-					2 => "sex",
-					3 => "birthday",
-					4 => "id_card_date",
-					5 => "id_number",
-					//6 => "face",
+				'1031' => array(
+					1 => 'name',
+					2 => 'sex',
+					3 => 'birthday',
+					4 => 'id_card_date',
+					5 => 'id_number',
+					//6 => 'face',
 				),
-				"1032" => array(
-					1 => "father",
-					2 => "mother",
-					3 => "spouse",
-					4 => "service",
-					5 => "city",
-					6 => "address",
-					7 => "code",
+				'1032' => array(
+					1 => 'father',
+					2 => 'mother',
+					3 => 'spouse',
+					4 => 'service',
+					5 => 'city',
+					6 => 'address',
+					7 => 'code',
 				),
 			);
 			
 			$file_content 	= base64_encode( file_get_contents($image) );
-			$file_content 	= $file_content."==##" . $type . "==##" . '' . "==##" . 'null';
+			$file_content 	= $file_content.'==##' . $type . '==##' . '' . '==##' . 'null';
 			$param 	= array(
 					'arg0' => 'test',
 					'arg1' => $file_content,
@@ -62,15 +62,15 @@ class Ocr_lib
 			} catch (Exception $e) {
 				return false;
 			}
-			$return = str_replace("==@@","",$rs->return);
+			$return = str_replace('==@@','',$rs->return);
 			$xml 	= simplexml_load_string($return,null,LIBXML_NOCDATA);
 			$xml 	= json_decode(json_encode($xml),TRUE);
-			if($xml['message']['value']=="识别完成"){
+			if($xml['message']['value']=='识别完成'){
 				$item = $xml['cardsinfo']['card']['item'];
 				if(!empty($item)){
 					foreach($item as $key => $value){
 						if(is_array($value)){
-							$value = "";
+							$value = '';
 						}
 						if(isset($field[$type][$key]) && $field[$type][$key])
 							$data[$field[$type][$key]] = $value; 

@@ -4,6 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 	
+	function index(){
+		/*try{
+			$this->load->driver('cache');
+			if($this->cache->redis->is_supported()){
+				echo $this->cache->redis->get('key11');
+			}
+		} catch (Exception $e) {
+			die('t');	
+		}*/
+		
+		$this->load->library('Ocr_lib');
+		$url = 'https://dev-influxp2p-personal.s3.ap-northeast-1.amazonaws.com/signing_target/person_image1915474455445.jpg';
+		$text = $this->ocr_lib->google_document($url);
+		dump($text);
+	}
 	function tool(){
 		$id 	= 'CO68566881';
 		$key 	= 'ae2d208d6c4cac0ef1c1080b338920c0';
