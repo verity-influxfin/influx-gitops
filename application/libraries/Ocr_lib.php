@@ -60,6 +60,7 @@ class Ocr_lib
 				$client = new SoapClient(OCR_API_URL);
 				$rs 	= $client->__soapCall('doAllCardRecon', array('parameters' => $param));
 			} catch (Exception $e) {
+				error_log('Failed to connect to OCR');
 				return false;
 			}
 			$return = str_replace('==@@','',$rs->return);

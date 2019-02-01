@@ -622,35 +622,7 @@ class Transfer extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
-		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-		}
-		
-		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-		}
-		
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-		}
-		
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array(
-			'investor'	=> $investor,
-			'status'	=> 1,
-			'user_id'	=> $user_id,
-			'verify'	=> 1
-		));
-		if(!$bank_account){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-		}
+		$this->check_adult();
 		
 		$transfer_investment = $this->transfer_investment_model->get_by([
 			'transfer_id'	=> $transfer_ids,
@@ -996,36 +968,8 @@ class Transfer extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		
-		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-		}
-		
-		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-		}
-		
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by(array(
-			'investor'	=> $investor,
-			'status'	=> 1,
-			'user_id'	=> $user_id,
-			'verify'	=> 1
-		));
-		if(!$bank_account){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-		}
-
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-		}
-		
+		$this->check_adult();
+	
 		$content 	= $filter = [];
 		$where 		= ['status' => 0];
 		$investment = $this->investment_model->get_many_by([
@@ -1406,4 +1350,37 @@ class Transfer extends REST_Controller {
 			'national'			=> 'all'
 		]]);
     }
+	
+	private function check_adult(){
+		
+		//檢查認證 NOT_VERIFIED
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
+		}
+		
+		//檢查認證 NOT_VERIFIED_EMAIL
+		if(empty($this->user_info->email) || $this->user_info->email==''){
+			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED_EMAIL]);
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$bank_account = $this->user_bankaccount_model->get_by([
+			'investor'	=> $this->user_info->investor,
+			'status'	=> 1,
+			'user_id'	=> $this->user_info->id,
+			'verify'	=> 1
+		]);
+		if(!$bank_account){
+			$this->response(['result' => 'ERROR','error' => NO_BANK_ACCOUNT]);
+		}
+		
+		if($this->user_info->transaction_password==''){
+			$this->response(['result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD]);
+		}
+
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
+		}
+	}
 }

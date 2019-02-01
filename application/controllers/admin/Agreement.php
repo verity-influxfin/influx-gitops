@@ -11,6 +11,7 @@ class Agreement extends MY_Admin_Controller
     {
         parent::__construct();
         $this->load->model('admin/agreement_model');
+		$this->load->library('Predis_lib');
     }
 
     public function index()
@@ -51,6 +52,7 @@ class Agreement extends MY_Admin_Controller
         if ($this->form_validation->run()) {
             $param['status'] = 1;
             $this->agreement_model->insert($param);
+			$this->predis_lib->get_agreement_list(true);
             $this->redirectToIndex();
         } else {
 			$viewData  = array(
@@ -70,6 +72,7 @@ class Agreement extends MY_Admin_Controller
 
         if ($this->form_validation->run()) {
             $this->agreement_model->update($id, $param);
+			$this->predis_lib->get_agreement_list(true);
             $this->redirectToIndex();
         } else {
             alert('alias不可重複', admin_url('agreement'));
@@ -80,7 +83,7 @@ class Agreement extends MY_Admin_Controller
     {
         $id = $this->input->get('id');
         $this->agreement_model->update($id, ["status" => 0]);
-
+		$this->predis_lib->get_agreement_list(true);
         $this->redirectToIndex();
     }
 

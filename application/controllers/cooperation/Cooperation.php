@@ -55,17 +55,6 @@ class Cooperation extends REST_Controller {
 			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
 
-		
-		
-		//$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
-		//$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
-		//$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
-		//$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
-		//$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
-		//$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
-		//$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
-		//$this->response(['error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
-		//$this->response(['error' =>'TimeOut'],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
     }
 
 	/**

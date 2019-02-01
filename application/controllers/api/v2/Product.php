@@ -16,9 +16,9 @@ class Product extends REST_Controller {
 		if (!in_array($method, $nonAuthMethods)) {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
-			$nonCheckMethods 	= ['list'];
+			$nonCheckMethods 	= ['list','info'];
 			if(in_array($method, $nonCheckMethods) && empty($token)){
-				$this->user_info = array();
+				$this->user_info = [];
 			}else{
 				if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 					$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -214,7 +214,6 @@ class Product extends REST_Controller {
 	 * @apiVersion 0.2.0
 	 * @apiName GetProductInfo
      * @apiGroup Product
-	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id 產品ID
      *
      * @apiSuccess {Object} result SUCCESS

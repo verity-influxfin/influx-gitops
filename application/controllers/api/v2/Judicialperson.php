@@ -11,6 +11,7 @@ class Judicialperson extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/judicial_person_model');
 		$this->load->model('user/judicial_agent_model');
+		$this->load->model('log/log_image_model');
 		
         $method = $this->router->fetch_method();
         $class 	= $this->router->fetch_class();
@@ -71,12 +72,12 @@ class Judicialperson extends REST_Controller {
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"company_type":"股份有限公司",
+     * 				"company_type":4,
      * 				"company":"普匯金融科技股份有限公司",
      * 				"tax_id":"68566881",
      * 				"remark":"盡快與您聯絡",
-     * 				"status":"1",
-     * 				"created_at":"1520421572"
+     * 				"status":1,
+     * 				"created_at":1520421572
      * 			}
      * 			]
      * 		}
@@ -99,13 +100,13 @@ class Judicialperson extends REST_Controller {
 		if(!empty($judicial_person)){
 			foreach($judicial_person as $key => $value){
 				$list[] = array(
-					'company_type' 		=> $value->company_type,
+					'company_type' 		=> intval($value->company_type),
 					'company' 			=> $value->company,
 					'tax_id' 			=> $value->tax_id,
 					'remark' 			=> $value->remark,
 					'cooperation' 		=> $value->cooperation,
-					'status' 			=> $value->status,
-					'created_at' 		=> $value->created_at
+					'status' 			=> intval($value->status),
+					'created_at' 		=> intval($value->created_at)
 				);
 			}
 		}
@@ -129,8 +130,8 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} [passbook_image] 銀行流水帳內頁(經銷商必填)( 圖片ID )
 	 * 
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -143,28 +144,28 @@ class Judicialperson extends REST_Controller {
 	 * @apiUse IsCompany
 	 *
      * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {json} 202
+     * @apiErrorExample {Object} 202
      *     {
      *       "result": "ERROR",
      *       "error": "202"
      *     }
 	 *
      * @apiError 208 未滿20歲
-     * @apiErrorExample {json} 208
+     * @apiErrorExample {Object} 208
      *     {
      *       "result": "ERROR",
      *       "error": "208"
      *     }
 	 *
      * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {json} 212
+     * @apiErrorExample {Object} 212
      *     {
      *       "result": "ERROR",
      *       "error": "212"
      *     }
 	 *
      * @apiError 214 此公司已申請過
-     * @apiErrorExample {json} 214
+     * @apiErrorExample {Object} 214
      *     {
      *       "result": "ERROR",
      *       "error": "214"
@@ -401,8 +402,8 @@ class Judicialperson extends REST_Controller {
 	 *
      * @apiParam {String{10}} id_number 代理人身分證字號
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -497,8 +498,8 @@ class Judicialperson extends REST_Controller {
 	 *
      * @apiParam {String} user_id 代理人UserID
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -557,21 +558,21 @@ class Judicialperson extends REST_Controller {
 	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
-     * @apiSuccess {json} result SUCCESS
-	 * @apiSuccess {String} user_id 代理人UserID
+     * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {Number} user_id 代理人UserID
 	 * @apiSuccess {String} name 姓名
 	 * @apiSuccess {String} id_number 身分證字號
-	 * @apiSuccess {String} created_at 新增日期
-     * @apiSuccessExample {json} SUCCESS
+	 * @apiSuccess {Number} created_at 新增日期
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"user_id":"1",
+     * 				"user_id":1,
      * 				"name": "曾志偉",
      * 				"id_number":"A1234*****",
-     * 				"created_at":"1520421572"
+     * 				"created_at":1520421572
      * 			}
      * 			]
      * 		}
@@ -623,8 +624,8 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} front_image 銀行流水帳正面 ( 圖片ID )
 	 * @apiParam {Number} passbook_image 銀行流水帳內頁 ( 圖片ID )
 	 * 
-     * @apiSuccess {json} result SUCCESS
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS"
      *    }
@@ -706,11 +707,11 @@ class Judicialperson extends REST_Controller {
 	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
-     * @apiSuccess {json} result SUCCESS
+     * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} server_ip 綁定伺服器IP
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:未開通 1:已開通 2:審核中
-     * @apiSuccessExample {json} SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
      * 		"data":{

@@ -522,35 +522,7 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => TARGET_SAME_USER ));
 			}
 
-			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
-			
-			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-			}
-		
-			if(get_age($this->user_info->birthday) < 20){
-				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-			}
-
-			//檢查金融卡綁定 NO_BANK_ACCOUNT
-			$this->load->model('user/user_bankaccount_model');
-			$bank_account = $this->user_bankaccount_model->get_by([
-				'investor'	=> $investor,
-				'status'	=> 1,
-				'user_id'	=> $user_id,
-				'verify'	=> 1
-			]);
-			if(!$bank_account){
-				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-			}
-			
-			if($this->user_info->transaction_password==''){
-				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-			}
+			$this->check_adult();
 
 			$exist = $this->investment_model->get_by([
 				'target_id'	=> $target->id,
@@ -572,9 +544,9 @@ class Target extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /v2/target/batchpreapply 出借方 批次查詢資訊
+     * @api {get} /v2/target/batchpreapply 出借方 批次查詢資訊
 	 * @apiVersion 0.2.0
-	 * @apiName PostBatchPreTargetApply
+	 * @apiName GetBatchPreTargetApply
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} target_ids 產品IDs IDs ex: 1,3,10,21
@@ -650,8 +622,16 @@ class Target extends REST_Controller {
      * 				}
      * 			},
      * 			"contracts": [
-     * 				"借貸契約1",
-     * 				"借貸契約2"
+     * 			{
+     * 				"title": "借貸契約",
+     * 				"content": "借貸契約",
+     * 				"created_at": "1547445331"
+     * 			},
+     * 			{
+     * 				"title": "借貸契約",
+     * 				"content": "借貸契約",
+     * 				"created_at": "1547445358"
+     * 			}
      * 			]
      * 		}
      *    }
@@ -726,12 +706,12 @@ class Target extends REST_Controller {
 				$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
 				$denominator 	+= $value->loan_amount * $value->instalment;
 				$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-				$contract[] 	= $contract_data?$contract_data['content']:'';
+				$contract[] 	= $contract_data;
 				$data['target_ids'][] = intval($value->id);
 				$schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,'',$value->repayment);
 				if($schedule){
 					foreach($schedule['schedule'] as $k => $v){
-						if(!isset($amortization_schedule[$v['repayment_date']])){
+						if(!isset($amortization_schedule['schedule'][$v['repayment_date']])){
 							$amortization_schedule['schedule'][$v['repayment_date']] = [
 								'principal'		=> 0,
 								'interest'		=> 0,
@@ -855,36 +835,7 @@ class Target extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		
-		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-		}
-			
-		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-		}
-		
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-		}
-
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by([
-			'investor'	=> $investor,
-			'status'	=> 1,
-			'user_id'	=> $user_id,
-			'verify'	=> 1
-		]);
-		if(!$bank_account){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-		}
-
+		$this->check_adult();
 		
 		$exist = $this->investment_model->get_by([
 			'target_id'	=> $target_ids,
@@ -1117,35 +1068,8 @@ class Target extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 
-		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-		}
+		$this->check_adult();
 		
-		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==''){
-			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
-		}
-
-		if(get_age($this->user_info->birthday) < 20){
-			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-		}
-		
-		//檢查金融卡綁定 NO_BANK_ACCOUNT
-		$this->load->model('user/user_bankaccount_model');
-		$bank_account = $this->user_bankaccount_model->get_by([
-			'investor'	=> $investor,
-			'status'	=> 1,
-			'user_id'	=> $user_id,
-			'verify'	=> 1
-		]);
-		if(!$bank_account){
-			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-		}
 		$content = $filter = [];
 		$where		= [
 			'user_id !=' 	=> $user_id,
@@ -1177,8 +1101,7 @@ class Target extends REST_Controller {
 		}else{
 			$filter['section'] = 'all';
 		}
-		
-		
+
 		$filter['interest_rate_s'] = 0;
 		$filter['interest_rate_e'] = 20;
 		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
@@ -1382,4 +1305,38 @@ class Target extends REST_Controller {
 			'national'			=> 'all'
 		]]);
     }
+	
+	private function check_adult(){
+		
+		//檢查認證 NOT_VERIFIED
+		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
+		}
+		
+		//檢查認證 NOT_VERIFIED_EMAIL
+		if(empty($this->user_info->email) || $this->user_info->email==''){
+			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED_EMAIL]);
+		}
+		
+		//檢查金融卡綁定 NO_BANK_ACCOUNT
+		$this->load->model('user/user_bankaccount_model');
+		$bank_account = $this->user_bankaccount_model->get_by([
+			'investor'	=> $this->user_info->investor,
+			'status'	=> 1,
+			'user_id'	=> $this->user_info->id,
+			'verify'	=> 1
+		]);
+		if(!$bank_account){
+			$this->response(['result' => 'ERROR','error' => NO_BANK_ACCOUNT]);
+		}
+		
+		if($this->user_info->transaction_password==''){
+			$this->response(['result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD]);
+		}
+
+		if(get_age($this->user_info->birthday) < 20){
+			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
+		}
+	}
+	
 }

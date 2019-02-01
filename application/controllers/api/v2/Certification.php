@@ -14,7 +14,7 @@ class Certification extends REST_Controller {
 		$this->load->library('Certification_lib');
         $method 				= $this->router->fetch_method();
 		$this->certification 	= $this->config->item('certifications');
-        $nonAuthMethods = ['verifyemail'];
+        $nonAuthMethods 		= ['verifyemail'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -1460,12 +1460,12 @@ class Certification extends REST_Controller {
 				}
 			}
 			
-			$param		= array(
+			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-			);
+			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('Sendemail');

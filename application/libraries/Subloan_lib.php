@@ -35,8 +35,8 @@ class Subloan_lib{
 					'total'						=> 0,
 				);
 				$instalment 			= 0;
-				$remaining_principal	= array();
-				$interest_payable		= array();
+				$remaining_principal	= [];
+				$interest_payable		= [];
 				foreach($transaction as $key => $value){
 					$remaining_principal[$value->user_to] 	= 0;
 					$interest_payable[$value->user_to] 		= 0;

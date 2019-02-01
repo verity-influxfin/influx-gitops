@@ -397,9 +397,12 @@ class Order extends REST_Controller {
 				$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 			}
 		}
-
+		
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
-			$product_info = $product_list[$input['product_id']];
+			
+			$product_info 	= $product_list[$input['product_id']];
+			$platform_fees 	= intval(round( $input['amount'] * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				if(in_array($input['instalment'],$product_info['instalment'])){
 					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$input['instalment'],10,'',1);
@@ -533,6 +536,9 @@ class Order extends REST_Controller {
 		if($exist){
 			$this->response(['error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
 		}
+		
+		$content['platform_fee'] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+		$content['total'] 			= $total + $content['platform_fee'];
 		$content['company_user_id'] = $this->cooperation_info->company_user_id;
 		$content['order_no'] 		= $this->get_order_no();
 		$rs = $this->order_model->insert($content);

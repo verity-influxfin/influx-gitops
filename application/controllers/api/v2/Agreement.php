@@ -5,11 +5,12 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Agreement extends REST_Controller {
 
 	public $user_info;
+	public $redis=true;
 	
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('admin/agreement_model');
+		$this->load->library('Predis_lib');
     }
 	
 	/**
@@ -42,17 +43,17 @@ class Agreement extends REST_Controller {
 	 
 	public function list_get()
     {
-		$agreement_list = $this->agreement_model->get_many_by(array('status'=>1));
-		$list			= array();
-		if(!empty($agreement_list)){
+		$agreement_list = $this->predis_lib->get_agreement_list();
+		$list 			= [];
+		if($agreement_list){
 			foreach($agreement_list as $key => $value){
-				$list[] = array(
-					'name' 		=> $value->name,
-					'alias' 	=> $value->alias,
-				);
+				$list[] = [
+					'name'	=> $value->name,
+					'alias'	=> $value->alias,
+				];
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
+		$this->response(['result' => 'SUCCESS','data' => ['list' => $list]]);
     }
 
 	
@@ -88,17 +89,19 @@ class Agreement extends REST_Controller {
 	public function info_get($alias)
     {
 		if(!empty($alias)){
-			$agreement = $this->agreement_model->get_by(array('alias'=>$alias));
-			if($agreement && $agreement->status){
-				$data = array(
-					'name' 			=> $agreement->name,
-					'content' 		=> $agreement->content,
-					'alias' 		=> $agreement->alias,
-				);
-				$this->response(array('result' => 'SUCCESS','data' => $data ));
+			$agreement_list = $this->predis_lib->get_agreement_list();
+			$list 			= [];
+			if($agreement_list && isset($agreement_list[$alias])){
+				$agreement = $agreement_list[$alias];
+				$data = [
+					'name' 		=> $agreement->name,
+					'content' 	=> $agreement->content,
+					'alias' 	=> $agreement->alias,
+				];
+				$this->response(['result' => 'SUCCESS','data' => $data]);
 			}
 		}
-		$this->response(array('result' => 'ERROR','error' => AGREEMENT_NOT_EXIST ));
+		$this->response(['result' => 'ERROR','error' => AGREEMENT_NOT_EXIST]);
     }
 	
 }
