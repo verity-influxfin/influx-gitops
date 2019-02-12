@@ -50,36 +50,32 @@ class User extends MY_Admin_Controller {
 		
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
-			if($id){
-				$certification_list = array();
-				if($this->certification){
-					foreach($this->certification as $key => $value){
-						$certification_list[$value['alias']] = $value['name'];
-					}
-				}
-				
-				$meta_data 			= array();
-				$meta 				= $this->user_meta_model->get_many_by(array('user_id'=>$id));
+			if($id){		
+				$meta_data 			= [];
+				$meta 				= $this->user_meta_model->get_many_by([
+					'user_id'	=> $id,
+					'meta_key'	=> ['fb_id']
+				]);
 				if($meta){
 					foreach($meta as $key => $value){
 						$meta_data[$value->meta_key] = $value->meta_value;
 					}
 				}
-				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
+				$bank_account = $this->user_bankaccount_model->get_many_by([
 					'user_id'	=> $id,
 					'status'	=> 1,
 					'verify'	=> 1,
-				));
-				$credit_list		= $this->credit_model->get_many_by(array('user_id'=>$id));
-				$info = $this->user_model->get($id);
+				]);
+
+				$info 			= $this->user_model->get($id);
 				if($info){
+					$this->load->library('certification_lib');
 					$page_data['data'] 					= $info;
 					$page_data['meta'] 					= $meta_data;
-					$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
-					$page_data['meta_images'] 			= $this->config->item('user_meta_images');
 					$page_data['school_system'] 		= $this->config->item('school_system');
-					$page_data['certification_list'] 	= $certification_list;
-					$page_data['credit_list'] 			= $credit_list;
+					$page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,0,$info->company_status);
+					$page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,1,$info->company_status);
+					$page_data['credit_list'] 			= $this->credit_model->get_many_by(['user_id' => $id, 'status' => 1]);
 					$page_data['product_list']			= $this->config->item('product_list');
 					$page_data['bank_account'] 			= $bank_account;
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
@@ -146,8 +142,6 @@ class User extends MY_Admin_Controller {
 			if($info){
 				$page_data['data'] 					= $info;
 				$page_data['meta'] 					= $meta_data;
-				$page_data['meta_fields'] 			= $this->config->item('user_meta_fields');
-				$page_data['meta_images'] 			= $this->config->item('user_meta_images');
 				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;

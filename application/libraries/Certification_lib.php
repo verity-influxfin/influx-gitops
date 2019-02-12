@@ -395,8 +395,13 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
@@ -463,8 +468,13 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
@@ -543,8 +553,13 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
@@ -578,8 +593,13 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
@@ -616,8 +636,13 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
@@ -628,17 +653,20 @@ class Certification_lib{
 		if($info){
 			$content 	= $info->content;
 			$data 		= array(
-				'investigation_status'	=> 1,
+				'investigation_status'		=> 1,
+				'investigation_times'		=> $content['times'],
+				'investigation_credit_rate'	=> $content['credit_rate'],
+				'investigation_months'		=> $content['months'],
 			);
 
-			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'investigation_status'));
+			$exist 		= $this->CI->user_meta_model->get_by(['user_id'=>$info->user_id , 'meta_key' => 'investigation_status']);
 			if($exist){
 				foreach($data as $key => $value){
 					$param = array(
 						'user_id'		=> $info->user_id,
 						'meta_key' 		=> $key,
 					);
-					$rs  = $this->CI->user_meta_model->update_by($param,array('meta_value'	=> $value));
+					$rs  = $this->CI->user_meta_model->update_by($param,['meta_value'	=> $value]);
 				}
 			}else{
 				foreach($data as $key => $value){
@@ -651,18 +679,79 @@ class Certification_lib{
 				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 			if($rs){
-				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
-				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public function get_status($user_id,$investor=0){
+	private function job_success($info){
+		if($info){
+			$content 	= $info->content;
+			$data 		= [
+				'job_status'			=> 1,
+				'job_tax_id'			=> $content['tax_id'],
+				'job_company'			=> $content['company'],
+				'job_industry'			=> $content['industry'],
+				'job_employee'			=> $content['employee'],
+				'job_position'			=> $content['position'],
+				'job_type'				=> $content['type'],
+				'job_seniority'			=> $content['seniority'],
+				'job_company_seniority'	=> $content['job_seniority'],
+				'job_salary'			=> $content['salary'],
+				'job_license'			=> $content['license_status'],
+			];
+
+			$exist 		= $this->CI->user_meta_model->get_by(['user_id'=>$info->user_id , 'meta_key' => 'job_status']);
+			if($exist){
+				foreach($data as $key => $value){
+					$param = [
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+					];
+					$rs  = $this->CI->user_meta_model->update_by($param,['meta_value'	=> $value]);
+				}
+			}else{
+				foreach($data as $key => $value){
+					$param[] = [
+						'user_id'		=> $info->user_id,
+						'meta_key' 		=> $key,
+						'meta_value'	=> $value
+					];
+				}
+				$rs  = $this->CI->user_meta_model->insert_many($param);
+			}
+			if($rs){
+				$this->CI->user_certification_model->update_by([
+					'user_id'			=> $info->user_id,
+					'certification_id'	=> $info->certification_id,
+					'status'			=> 0
+				],
+				['status'=>2]);
+				$this->CI->user_certification_model->update($info->id,['status'=>1]);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public function get_status($user_id,$investor=0,$company=0){
 		if($user_id){
 			$certification = array();
-			if($investor){
+			if($company){
+				foreach($this->certification as $key => $value){
+					if($value['alias']=='debitcard'){
+						$certification[$key] = $value;
+					}
+				}
+			}else if($investor){
 				foreach($this->certification as $key => $value){
 					if(in_array($value['alias'],array('idcard','debitcard','email','emergency'))){
 						$certification[$key] = $value;
@@ -672,7 +761,7 @@ class Certification_lib{
 				$certification = $this->certification;
 			}
 
-			$certification_list = array();
+			$certification_list = [];
 			foreach($certification as $key => $value){
 				$user_certification = $this->get_certification_info($user_id,$key,$investor);
 				if($user_certification){
@@ -690,10 +779,16 @@ class Certification_lib{
 		return false;
 	}
 	
-	public function get_last_status($user_id,$investor=0){
+	public function get_last_status($user_id,$investor=0,$company=0){
 		if($user_id){
 			$certification = [];
-			if($investor){
+			if($company){
+				foreach($this->certification as $key => $value){
+					if($value['alias']=='debitcard'){
+						$certification[$key] = $value;
+					}
+				}
+			}else if($investor){
 				foreach($this->certification as $key => $value){
 					if(in_array($value['alias'],['idcard','debitcard','email','emergency'])){
 						$certification[$key] = $value;

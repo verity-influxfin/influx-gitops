@@ -25,4 +25,9 @@ class Welcome extends CI_Controller {
 		];
 
 	}
+	
+	function index(){
+		$rs = $this->config->item('industry_name');
+		echo json_encode($rs)
+	}
 }

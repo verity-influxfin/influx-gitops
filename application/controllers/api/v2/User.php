@@ -754,11 +754,11 @@ class User extends REST_Controller {
 		}
 		
 		$data['transaction_password'] 	= empty($this->user_info->transaction_password)?false:true;
-		$data['investor'] 				= $this->user_info->investor;
-		$data['company'] 				= $this->user_info->company;
-		$data['incharge'] 				= $this->user_info->incharge;
-		$data['agent'] 					= $this->user_info->agent;
-		$data['expiry_time'] 			= $this->user_info->expiry_time;
+		$data['investor'] 				= intval($this->user_info->investor);
+		$data['company'] 				= intval($this->user_info->company);
+		$data['incharge'] 				= intval($this->user_info->incharge);
+		$data['agent'] 					= intval($this->user_info->agent);
+		$data['expiry_time'] 			= intval($this->user_info->expiry_time);
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	

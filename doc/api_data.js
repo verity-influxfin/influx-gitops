@@ -2747,6 +2747,13 @@ define({ "api": [
             "optional": false,
             "field": "relationship",
             "description": "<p>緊急聯絡人關係</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "household_image",
+            "description": "<p>戶口名簿 ( 圖片ID )</p>"
           }
         ]
       }
@@ -4054,23 +4061,154 @@ define({ "api": [
         ]
       }
     },
-    "success": {
+    "parameter": {
       "fields": {
-        "Success 200": [
+        "Parameter": [
           {
-            "group": "Success 200",
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tax_id",
+            "description": "<p>公司統一編號</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "company",
             "description": "<p>公司名稱</p>"
           },
           {
-            "group": "Success 200",
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "A-S"
+            ],
+            "optional": false,
+            "field": "industry",
+            "description": "<p>公司類型 <br>A：農、林、漁、牧業 <br>B：礦業及土石採取業 <br>C：製造業 <br>D：電力及燃氣供應業 <br>E：用水供應及污染整治業 <br>F：營建工程業 <br>G：批發及零售業 <br>H：運輸及倉儲業 <br>I：住宿及餐飲業 <br>J：出版、影音製作、傳播及資通訊服務業 <br>K：金融及保險業 <br>L：不動產業 <br>M：專業、科學及技術服務業 <br>N：支援服務業 <br>O：公共行政及國防；強制性社會安全 <br>P：教育業 <br>Q：醫療保健及社會工作服務業 <br>R：藝術、娛樂及休閒服務業 <br>S：其他服務業</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "optional": false,
+            "field": "employee",
+            "defaultValue": "0",
+            "description": "<p>企業規模\t <br>0：1~20（含） <br>1：20~50（含） <br>2：50~100（含） <br>3：100~500（含） <br>4：500~1000（含） <br>5：1000~5000（含） <br>6：5000以上</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "optional": false,
+            "field": "position",
+            "defaultValue": "0",
+            "description": "<p>職位 <br>0：一般員工 <br>1：初級管理 <br>2：中級管理 <br>3：高級管理</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1"
+            ],
+            "optional": false,
+            "field": "type",
+            "defaultValue": "0",
+            "description": "<p>職務性質 <br>0：外勤 <br>1：内勤</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "optional": false,
+            "field": "seniority",
+            "defaultValue": "0",
+            "description": "<p>畢業以來的工作期間 <br>0：三個月以内（含） <br>1：三個月至半年（含） <br>2：半年至一年（含） <br>3：一年至三年（含） <br>4：三年以上</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "optional": false,
+            "field": "job_seniority",
+            "defaultValue": "0",
+            "description": "<p>本公司工作期間 <br>0：三個月以内（含） <br>1：三個月至半年（含） <br>2：半年至一年（含） <br>3：一年至三年（含） <br>4：三年以上</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "salary",
+            "description": "<p>月薪</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "business_image",
+            "description": "<p>名片/工作證明 ( 圖片ID )</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "license_image",
+            "description": "<p>專業證照 ( 圖片ID )</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "tax_id",
-            "description": "<p>公司統一編號</p>"
+            "field": "labor_image",
+            "description": "<p>勞健保卡 ( 圖片IDs 以逗號隔開，最多三個)</p>"
           },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "passbook_image",
+            "description": "<p>存摺內頁照 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "auxiliary_image",
+            "description": "<p>收入輔助證明 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
           {
             "group": "Success 200",
             "type": "Object",
@@ -4087,40 +4225,6 @@ define({ "api": [
           "type": "Object"
         }
       ]
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "labor_image",
-            "description": "<p>勞健保卡 ( 圖片ID )</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "business_image",
-            "description": "<p>名片/工作證明 ( 圖片ID )</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "passbook_image",
-            "description": "<p>存摺內頁照 ( 圖片ID )</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "auxiliary_image",
-            "description": "<p>收入輔助證明 ( 圖片ID )</p>"
-          }
-        ]
-      }
     },
     "error": {
       "fields": {

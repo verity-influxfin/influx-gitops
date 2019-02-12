@@ -32,8 +32,12 @@ class Certification extends REST_Controller {
 			}
 			
 			//暫不開放法人
-			if(isset($tokenData->company) && $tokenData->company != 0 && $method != 'debitcard' ){
+			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			}
+			
+			if($tokenData->company==1 && $tokenData->incharge != 1 ){
+				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 			}
 			
 			if($this->request->method != 'get'){
@@ -94,14 +98,15 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
-	 * @apiUse IsCompany
+	 * @apiUse NotIncharge
      */
 	 
 	public function list_get()
     {
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor);
+		$company 			= $this->user_info->company;
+		$certification_list	= $this->certification_lib->get_status($user_id,$investor,$company);
 		$list				= array();
 		if(!empty($certification_list)){
 			$list = $certification_list;
@@ -140,7 +145,7 @@ class Certification extends REST_Controller {
 	 *
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
-	 * @apiUse IsCompany
+	 * @apiUse NotIncharge
      *
      * @apiError 501 此驗證尚未啟用
      * @apiErrorExample {Object} 501
@@ -208,7 +213,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['return_type'];
 						break;
 					case 10: 
-						$fields 	= [];
+						$fields 	= ['tax_id','company','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
 					default:
 						break;
@@ -519,7 +524,7 @@ class Certification extends REST_Controller {
 			$content['transcript_image'] = '';
 			if (isset($input['transcript_image']) && $input['transcript_image']) {
 				$rs = $this->log_image_model->get_by([
-					'id'		=> $image_id,
+					'id'		=> intval($input['transcript_image']),
 					'user_id'	=> $user_id,
 				]);
 				if($rs){
@@ -652,12 +657,12 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
 			
-			$where = array(
+			$where = [
 				'investor'		=> $investor,
 				'bank_code'		=> $content['bank_code'],
 				'bank_account'	=> $content['bank_account'],
 				'status'		=> 1,
-			);
+			];
 			
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
 			if($user_bankaccount){
@@ -684,17 +689,17 @@ class Certification extends REST_Controller {
 				}
 			}
 
-			$param		= array(
+			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'expire_time'		=> strtotime('+20 years'),
 				'content'			=> json_encode($content),
-			);
+			];
 			
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$bankaccount_info = array(
+				$bankaccount_info = [
 					'user_id'		=> $user_id,
 					'investor'		=> $investor,
 					'user_certification_id'	=> $insert,
@@ -703,18 +708,16 @@ class Certification extends REST_Controller {
 					'bank_account'	=> $content['bank_account'],
 					'front_image'	=> $content['front_image'],
 					'back_image'	=> $content['back_image'],
-				);
+				];
 				
 				if($investor){
 					$bankaccount_info['verify'] = 2;
-					$this->load->library('Sendemail');
-					$this->sendemail->admin_notification('新的一筆金融帳號驗證 出借端會員ID:'.$user_id,'有新的一筆金融帳號驗證 出借端會員ID:'.$user_id);
 				}else{
 					$this->certification_lib->set_success($insert);
-					$target = $this->target_model->get_by(array(
+					$target = $this->target_model->get_by([
 						'user_id'	=> $user_id,
 						'status'	=> 2,
-					));
+					]);
 					if($target){
 						$bankaccount_info['verify'] = 2;
 					}
@@ -739,6 +742,7 @@ class Certification extends REST_Controller {
 	 * @apiParam {String{2..15}} name 緊急聯絡人姓名
 	 * @apiParam {String} phone 緊急聯絡人電話
 	 * @apiParam {String} relationship 緊急聯絡人關係
+	 * @apiParam {Number} [household_image] 戶口名簿 ( 圖片ID )
 	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -775,7 +779,7 @@ class Certification extends REST_Controller {
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			$content	= array();
+			$content	= [];
 			
 			//是否驗證過
 			$this->was_verify($certification_id);
@@ -790,6 +794,17 @@ class Certification extends REST_Controller {
 				}
 			}
 			
+			$content['household_image'] = '';
+			if (isset($input['household_image']) && $input['household_image']) {
+				$rs = $this->log_image_model->get_by([
+					'id'		=> intval($input['household_image']),
+					'user_id'	=> $user_id,
+				]);
+				if($rs){
+					$content['household_image'] = $rs->url;
+				}
+			}
+			
 			$name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
 			if(in_array($content['name'],$name_limit)){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -801,24 +816,24 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
-			if(!preg_match("/^09[0-9]{2}[0-9]{6}$/", $content['phone'])){
+			if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $content['phone'])){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
-			$phone_exist = $this->user_model->get_by(array(
+			$phone_exist = $this->user_model->get_by([
 				'phone'		=> $content['phone'],
 				'status'	=> 1,
-			));
+			]);
 			if($phone_exist){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 			
-			$param		= array(
+			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-			);
+			];
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -899,12 +914,12 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
 		
-			$param		= array(
+			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-			);
+			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('Sendemail');
@@ -1134,7 +1149,7 @@ class Certification extends REST_Controller {
 			$type  		= 'instagram';
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			 
+
 			//是否驗證過
 			$this->was_verify($certification_id);
 			
@@ -1154,12 +1169,12 @@ class Certification extends REST_Controller {
 				'access_token'	=> $input['access_token'],
 			);
 			
-			$param		= array(
+			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-			);
+			];
 			
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1382,12 +1397,46 @@ class Certification extends REST_Controller {
 	 * @apiName PostCertificationJob
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiSuccess {String} company 公司名稱
-	 * @apiSuccess {String} tax_id 公司統一編號
-     * @apiParam {Number} labor_image 勞健保卡 ( 圖片ID )
-     * @apiParam {Number} business_image 名片/工作證明 ( 圖片ID )
-     * @apiParam {Number} passbook_image 存摺內頁照 ( 圖片ID )
-     * @apiParam {Number} auxiliary_image 收入輔助證明 ( 圖片ID )
+	 * @apiParam {String} tax_id 公司統一編號
+	 * @apiParam {String} company 公司名稱
+	 * @apiParam {String=A-S} industry 公司類型
+	 * <br>A：農、林、漁、牧業
+	 * <br>B：礦業及土石採取業
+	 * <br>C：製造業
+	 * <br>D：電力及燃氣供應業
+	 * <br>E：用水供應及污染整治業
+	 * <br>F：營建工程業
+	 * <br>G：批發及零售業
+	 * <br>H：運輸及倉儲業
+	 * <br>I：住宿及餐飲業
+	 * <br>J：出版、影音製作、傳播及資通訊服務業
+	 * <br>K：金融及保險業
+	 * <br>L：不動產業
+	 * <br>M：專業、科學及技術服務業
+	 * <br>N：支援服務業
+	 * <br>O：公共行政及國防；強制性社會安全
+	 * <br>P：教育業
+	 * <br>Q：醫療保健及社會工作服務業
+	 * <br>R：藝術、娛樂及休閒服務業
+	 * <br>S：其他服務業
+	 * @apiParam {Number=0,1,2,3,4,5,6} employee=0 企業規模	
+	 * <br>0：1~20（含）
+	 * <br>1：20~50（含）
+	 * <br>2：50~100（含）
+	 * <br>3：100~500（含）
+	 * <br>4：500~1000（含）
+	 * <br>5：1000~5000（含）
+	 * <br>6：5000以上
+	 * @apiParam {Number=0,1,2,3} position=0 職位 <br>0：一般員工 <br>1：初級管理 <br>2：中級管理 <br>3：高級管理
+	 * @apiParam {Number=0,1} type=0 職務性質 <br>0：外勤 <br>1：内勤
+	 * @apiParam {Number=0,1,2,3,4} seniority=0 畢業以來的工作期間 <br>0：三個月以内（含） <br>1：三個月至半年（含） <br>2：半年至一年（含） <br>3：一年至三年（含） <br>4：三年以上
+	 * @apiParam {Number=0,1,2,3,4} job_seniority=0 本公司工作期間 <br>0：三個月以内（含） <br>1：三個月至半年（含） <br>2：半年至一年（含） <br>3：一年至三年（含） <br>4：三年以上
+	 * @apiParam {Number} salary 月薪
+	 * @apiParam {Number} business_image 名片/工作證明 ( 圖片ID )
+	 * @apiParam {Number} [license_image] 專業證照 ( 圖片ID )
+     * @apiParam {String} labor_image 勞健保卡 ( 圖片IDs 以逗號隔開，最多三個)
+     * @apiParam {String} passbook_image 存摺內頁照 ( 圖片IDs 以逗號隔開，最多三個)
+     * @apiParam {String} auxiliary_image 收入輔助證明 ( 圖片IDs 以逗號隔開，最多三個)
 
      *
      * @apiSuccess {Object} result SUCCESS
@@ -1431,7 +1480,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 
 			//必填欄位
-			$fields 	= ['company','tax_id'];
+			$fields 	= ['tax_id','company','industry','salary','labor_image','business_image','passbook_image','auxiliary_image'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1439,24 +1488,61 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+			
+			$employee_range 		= $this->config->item('employee_range');
+			$position_name 			= $this->config->item('position_name');
+			$seniority_range 		= $this->config->item('seniority_range');
+			$industry_name 			= $this->config->item('industry_name');
+			$job_type_name 			= $this->config->item('job_type_name');
+			$content['employee'] 	= array_key_exists(intval($input['employee']),$employee_range)?intval($input['employee']):0;
+			$content['position'] 	= array_key_exists(intval($input['position']),$position_name)?intval($input['position']):0;
+			$content['type'] 		= array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
+			$content['seniority'] 	= array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
+			$content['job_seniority'] 	= array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+			if(!array_key_exists($input['industry'],$industry_name)){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
 
-			//上傳檔案欄位
-			$file_fields 	= ['labor_image','business_image','passbook_image','auxiliary_image'];
+			$rs = $this->log_image_model->get_by([
+				'id'		=> intval($input['business_image']),
+				'user_id'	=> $user_id,
+			]);
+			if($rs){
+				$content['business_image'] = $rs->url;
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+			
+			$content['license_image'] = '';
+			if(intval($input['license_image'])){
+				$rs = $this->log_image_model->get_by([
+					'id'		=> intval($input['license_image']),
+					'user_id'	=> $user_id,
+				]);
+				if($rs){
+					$content['license_image'] = $rs->url;
+				}
+			}
+			
+			//多個檔案欄位
+			$file_fields 	= ['labor_image','passbook_image','auxiliary_image'];
 			foreach ($file_fields as $field) {
-				$image_id = intval($input[$field]);
-				if (!$image_id) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$rs = $this->log_image_model->get_by([
-						'id'		=> $image_id,
-						'user_id'	=> $user_id,
-					]);
+				$image_ids = explode(',',$input[$field]);
+				if(count($image_ids)>3){
+					$image_ids = array_slice($image_ids,0,3);
+				}
+				$list = $this->log_image_model->get_many_by([
+					'id'		=> $image_ids,
+					'user_id'	=> $user_id,
+				]);
 
-					if($rs){
-						$content[$field] = $rs->url;
-					}else{
-						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				if($list && count($list)==count($image_ids)){
+					$content[$field] = [];
+					foreach($list as $k => $v){
+						$content[$field][] = $v->url;
 					}
+				}else{
+					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
 				}
 			}
 			
@@ -1468,11 +1554,9 @@ class Certification extends REST_Controller {
 			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->load->library('Sendemail');
-				$this->sendemail->send_verify_school($insert,$content['email']);
-				$this->response(array('result' => 'SUCCESS'));
+				$this->response(['result' => 'SUCCESS']);
 			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+				$this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));

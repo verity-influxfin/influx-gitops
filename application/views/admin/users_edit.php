@@ -9,7 +9,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><?=$type=="edit"?"會員資訊":"新增會員" ?></h1>
+                    <h1 class="page-header">會員資訊</h1>
 					
                 </div>
                 <!-- /.col-lg-12 -->
@@ -23,7 +23,8 @@
                         </div>
                         <div class="panel-body">
                             <div class="row">
-								<div class="col-lg-6 meta">						
+								<div class="col-lg-6">		
+									<h2>會員資訊</h2>
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover table-striped">
 											<tbody>
@@ -57,13 +58,9 @@
 
 												</tr>
 												<tr>
-													<td><p class="form-control-static">發證地點</p></td>
+													<td><p class="form-control-static">發證</p></td>
 													<td>
-														<p class="form-control-static"><?=isset($data->id_card_place)?$data->id_card_place:"";?></p>
-													</td>
-													<td><p class="form-control-static">發證日期</p></td>
-													<td>
-														<p class="form-control-static"><?=isset($data->id_card_date)?$data->id_card_date:"";?></p>
+														<p class="form-control-static"><?=isset($data->id_card_date)?$data->id_card_date:"";?> （<?=isset($data->id_card_place)?$data->id_card_place:"";?>）</p>
 													</td>
 													<td><p class="form-control-static">身分證字號</p></td>
 													<td>
@@ -83,72 +80,64 @@
 													<td>
 														<p class="form-control-static"><?=isset($data->phone)?$data->phone:"";?></p>
 													</td>
-													<td><p class="form-control-static">地址</p></td>
-													<td colspan="3">
-														<p class="form-control-static"><?=isset($data->address)?$data->address:"";?></p>
+													<td><p class="form-control-static">註冊日期</p></td>
+													<td>
+														<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
 													</td>
 												</tr>
 												<tr>
-													<td><p class="form-control-static">借款端帳號</p></td>
+													<td><p class="form-control-static">狀態</p></td>
 													<td>
-														<p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
+														<p class="form-control-static">借款端：<?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
+														<p class="form-control-static">投資端：<?=isset($data->investor_status)&&$data->investor_status?"正常":"未申請";?></p>
 													</td>
-													<td><p class="form-control-static">出借端帳號</p></td>
-													<td>
-														<p class="form-control-static"><?=isset($data->status)&&$data->status?"正常":"未申請";?></p>
-													</td>
-													<td><p class="form-control-static">註冊日期</p></td>
+													<td><p class="form-control-static">地址</p></td>
 													<td colspan="3">
-														<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
+														<p class="form-control-static"><?=isset($data->address)?$data->address:"";?></p>
 													</td>
 												</tr>
 											</tbody>
 										</table>
 									</div>
 								</div>
-								<div class="col-lg-6 meta">
+								<div class="col-lg-6">
+									<h2>金融卡資訊</h2>
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
-											<tr style="background-color:#f5f5f5;">
-												<td colspan="4">金融卡資訊</td>
-											</tr>
 											<? if(!empty($bank_account)){
 												foreach($bank_account as $key => $value){
 											?>
 												<tr style="background-color:#f5f5f5;">
-													<td>
+													<td rowspan="2">
 														<p class="form-control-static"><?=isset($value->investor)?$bank_account_investor[$value->investor]:"";?></p>
 													</td>
 													<td>
 														<p class="form-control-static">
-														銀行：<?=isset($value->bank_code)?$value->bank_code.'<br>分行：'.$value->branch_code:"";?><br>
-														<?=isset($value->bank_account)?$value->bank_account:"";?>
+														銀行：<?=isset($value->bank_code)?$value->bank_code.' 分行：'.$value->branch_code:"";?><br>
 														</p>
+														
 													</td>
 													<td>
-														<p class="form-control-static">正常</p>
-													</td>
-													<td>
-														<p class="form-control-static"><?=isset($value->verify)?$bank_account_verify[$value->verify]:"";?></p>
+														<p class="form-control-static">
+														帳號：<?=isset($value->bank_account)?$value->bank_account:"";?>
+														</p>
 													</td>
 												</tr>
 												<tr>
-													<td colspan="2"><?=isset($value->front_image)?"<a href='".$value->front_image."' data-fancybox='images'><img src='".$value->front_image."' style='width:30%;'></a>":"";?></td>
-													<td colspan="2"><?=isset($value->back_image)?"<a href='".$value->back_image."' data-fancybox='images'><img src='".$value->back_image."' style='width:30%;'></a>":"";?></td>
+													<td><?=isset($value->front_image)?"<a href='".$value->front_image."' data-fancybox='images'><img src='".$value->front_image."' style='width:30%;'></a>":"";?></td>
+													<td><?=isset($value->back_image)?"<a href='".$value->back_image."' data-fancybox='images'><img src='".$value->back_image."' style='width:30%;'></a>":"";?></td>
 												</tr>
 											<? }} ?>
 											</tbody>
 										</table>
 									</div>
                                 </div>
-								<div class="col-lg-3 meta">
+								<div class="col-lg-6">
+									<h2>信用評分</h2>
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
-											<tr style="background-color:#f5f5f5;">
-												<td colspan="4">信用指數</td>
-											</tr>
 											<? if(!empty($credit_list)){
 												foreach($credit_list as $key => $value){
 											?>
@@ -187,45 +176,114 @@
 										</table>
 									</div>
                                 </div>
-								<? if(!empty($meta_fields)){
-									foreach($meta_fields as $alias => $fields){
-								?>
-								<div class="col-lg-3 meta">
+								<div class="col-lg-3">
+									<h2>借款端認證</h2>
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
-												<tr style="background-color:#f5f5f5;">
-													<td colspan="2"><?=isset($certification_list[$alias])?$certification_list[$alias]:$alias?></td>
-												</tr>
-											<?		foreach($fields as $key => $field){
+											<? if(!empty($certification)){
+												foreach($certification as $key => $value){
 											?>
 												<tr>
-													<td style="width:40%;"><?=$field ?></td>
-													<td style="word-break: break-all;width:60%;"><?
-													if(isset($meta[$key])){
-														if(in_array($key,$meta_images) && !empty($meta[$key])){
-															echo "<a href='".$meta[$key]."' data-fancybox='images'><img src='".$meta[$key]."' style='width:30%;'></a>";
-														}else if( $key == $alias.'_status' && $meta[$key]==1){
-															echo "已認證"; 
-														}else if( $key == 'school_system'){
-															echo $school_system[$meta[$key]]; 
+													<td><p class="form-control-static"><?=$value['name']?></p></td>
+													<td>
+														<? 
+														if($value['id']==3){
+															switch($value['user_status']){
+																case '3':
+																case '0': 
+																	echo '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	break;
+																case '1':
+																	echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																	break;
+																case '2': 
+																	echo '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																default:
+																	echo '<p class="form-control-static">無</p>';	
+																	break;
+															}
 														}else{
-															if(!empty($meta[$key]))
-																echo $meta[$key];
-															else
-																echo "無";
+															$certification_id = $value['certification_id'];
+															switch($value['user_status']){
+																case '3': 
+																case '0': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	break;
+																case '1':
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																	break;
+																case '2': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																default:
+																	echo '<p class="form-control-static">無</p>';	
+																	break;
+															}
 														}
-													}else{
-														echo "無";
-													}
-													?></td>
+														?>
+													</td>
 												</tr>
-												<? } ?>
+											<? }} ?>
 											</tbody>
 										</table>
 									</div>
-								</div>
-								<? }} ?>
+                                </div>
+								<div class="col-lg-3">
+									<h2>投資端認證</h2>
+									<div class="table-responsive">
+										<table class="table table-bordered table-hover" style="text-align:center;">
+											<tbody>
+											<? if(!empty($certification_investor)){
+												foreach($certification_investor as $key => $value){
+											?>
+												<tr>
+													<td><p class="form-control-static"><?=$value['name']?></p></td>
+													<td>
+														<? 
+														if($value['id']==3){
+															switch($value['user_status']){
+																case '3':
+																case '0': 
+																	echo '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	break;
+																case '1':
+																	echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																	break;
+																case '2': 
+																	echo '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																default:
+																	echo '<p class="form-control-static">無</p>';	
+																	break;
+															}
+														}else{
+															$certification_id = $value['certification_id'];
+															switch($value['user_status']){
+																case '3': 
+																case '0': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																	break;
+																case '1':
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																	break;
+																case '2': 
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																	break;
+																default:
+																	echo '<p class="form-control-static">無</p>';	
+																	break;
+															}
+														}
+														?>
+													</td>
+												</tr>
+											<? }} ?>
+											</tbody>
+										</table>
+									</div>
+                                </div>
                             </div>
                             <!-- /.row (nested) -->
                         </div>

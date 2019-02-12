@@ -48,6 +48,36 @@
 									<h1>審核</h1>
                                     <form role="form" method="post">
                                         <fieldset>
+											<? if($data->status==1){?>
+											<div class="form-group">
+												<label>查詢次數</label>
+												<p><?=isset($content['times'])?$content['times']:0 ?></p>
+												<input type="hidden" name="times" value="<?=isset($content['times'])?$content['times']:0 ?>" >
+											</div>
+											<div class="form-group">
+												<label>信用卡使用率%</label>
+												<p><?=isset($content['credit_rate'])?$content['credit_rate']:0?></p>
+												<input type="hidden" name="credit_rate" value="<?=isset($content['credit_rate'])?$content['credit_rate']:0 ?>" >
+											</div>
+											<div class="form-group">
+												<label>信用記錄幾個月</label>
+												<p><?=isset($content['months'])?$content['months']:0?></p>
+												<input type="hidden" name="months" value="<?=isset($content['months'])?$content['months']:0 ?>" >
+											</div>
+											<? }else{ ?>
+											<div class="form-group">
+												<label>查詢次數</label>
+												<input type="number" class="form-control" name="times" value="<?=isset($content['times'])?$content['times']:0 ?>" >
+											</div>
+											<div class="form-group">
+												<label>信用卡使用率%</label>
+												<input type="number" class="form-control" name="credit_rate" value="<?=isset($content['credit_rate'])?$content['credit_rate']:0?>" >
+											</div>
+											<div class="form-group">
+												<label>信用記錄幾個月</label>
+												<input type="number" class="form-control" name="months" value="<?=isset($content['months'])?$content['months']:0?>" >
+											</div>
+											<? }?>
        										<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();" >
 													<? foreach($status_list as $key => $value){ ?>
