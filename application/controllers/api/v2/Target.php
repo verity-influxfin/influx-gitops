@@ -193,7 +193,6 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的
 	 * @apiSuccess {Number} created_at 申請日期
 	 * @apiSuccess {String} contract 合約內容
-	 * @apiSuccess {Object} certification 借款人認證完成資訊
 	 * @apiSuccess {Object} user 借款人基本資訊
 	 * @apiSuccess {String} user.name 姓名
 	 * @apiSuccess {String} user.id_number 身分證字號
@@ -250,32 +249,6 @@ class Target extends REST_Controller {
      *				"age": 30,
      *				"company_name": "國立政治大學"
      *			},
-     *			"certification": [
-     *				{
-     *					"id": 1,
-     *					"alias": "idcard",
-     *					"name": "實名認證",
-     *					"status": 1,
-     *					"description": "驗證個人身份資訊",
-     *					"user_status": 1
-     *				},
-     *				{
-     *					"id": 2,
-     *					"alias": "student",
-     *					"name": "學生身份認證",
-     *					"status": 1,
-     *					"description": "驗證學生身份",
-     *					"user_status": 1
-     *				},
-     *				{
-     *					"id": 7,
-     *					"alias": "financial",
-     *					"name": "財務訊息認證",
-     *					"status": 1,
-     *					"description": "提供財務訊息資訊",
-     *					"user_status": 1
-     *				}
-     *			],
      *			"amortization_schedule": {
      *				"amount": 5000,
      *				"instalment": 3,
@@ -338,23 +311,11 @@ class Target extends REST_Controller {
     {
 		$input 				= $this->input->get(NULL, TRUE);
 		$target 			= $this->target_model->get($target_id);
-		$data				= array();
+		$data				= [];
 		if(!empty($target) && in_array($target->status,[3,4])){
 			
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target->product_id];
-			$certification	= [];
-			$this->load->library('Certification_lib');
-			$certification_list	= $this->certification_lib->get_status($target->user_id);
-			if(!empty($certification_list)){
-				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info['certifications'])){
-						unset($value['certification_id']);
-						$certification[] = $value;
-					}
-				}
-			}
-
 			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
 		
 			$user_info 	= $this->user_model->get($target->user_id); 
@@ -399,7 +360,6 @@ class Target extends REST_Controller {
 				'created_at' 		=> intval($target->created_at),
 				'contract' 			=> $contract,
 				'user' 				=> $user,
-				'certification' 	=> $certification,
 				'amortization_schedule' => $amortization_schedule,
 			);
 

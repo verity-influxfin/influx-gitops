@@ -20,12 +20,12 @@ class Target extends MY_Admin_Controller {
  	}
 	
 	public function index(){
-		$page_data 	= array('type'=>'list');
-		$input 		= $this->input->get(NULL, TRUE);
-		$where		= array();
-		$list		= array();
-		$fields 	= ['status','target_no','user_id','delay','all'];
 		
+		$page_data 	= ['type'=>'list'];
+		$input 		= $this->input->get(NULL, TRUE);
+		$where		= [];
+		$list		= [];
+		$fields 	= ['status','target_no','user_id','delay','all'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				if($field=='target_no'){
@@ -75,11 +75,11 @@ class Target extends MY_Admin_Controller {
 		if($id){
 			$info = $this->target_model->get($id);
 			if($info){
-				$amortization_table 				= array();
-				$investments 						= array();
-				$investments 						= array();
-				$investments_amortization_table 	= array();
-				$investments_amortization_schedule 	= array();
+				$amortization_table 				= [];
+				$investments 						= [];
+				$investments 						= [];
+				$investments_amortization_table 	= [];
+				$investments_amortization_schedule 	= [];
 				if($info->status==5 || $info->status==10){
 					$amortization_table = $this->target_lib->get_amortization_table($info);
 					$investments = $this->investment_model->get_many_by(array('target_id'=>$info->id,'status'=>array(3,10)));
@@ -127,7 +127,7 @@ class Target extends MY_Admin_Controller {
 					'investor'	=> 0,
 					'status'	=> 1,
 				));
-				
+
 				$bank_account_verify 				= $bank_account?1:0;
 				$credit_list						= $this->credit_model->get_many_by(array('user_id'=>$user_id));
 				$user_info 							= $this->user_model->get($user_id);
@@ -149,6 +149,7 @@ class Target extends MY_Admin_Controller {
 				if(isset($get['risk'])&&$get['risk']!=null){
 					$this->load->library('certification_lib');
 					if(isset($get['slist'])&&$get['slist']!=null){$page_data['slist']=$get['slist'];}
+
 					$user_list 						= [];
 					$user_investor_list 			= [];
 					$certification_investor_list 	= [];
@@ -464,26 +465,26 @@ class Target extends MY_Admin_Controller {
 	public function repayment(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>5);
-		$list 						= $this->target_model->get_many_by($where);
-		$school_list 				= array();
-		$user_list 					= array();
-		$amortization_table 		= array();
+		$list 						= $this->target_model->get_many_by(['status'=>5]);
+		$school_list 				= [];
+		$user_list 					= [];
+		$amortization_table 		= [];
 		if($list){
 			foreach($list as $key => $value){
 				$user_list[] = $value->user_id;
 				$amortization_table = $this->target_lib->get_amortization_table($value);
-				$list[$key]->amortization_table = array(
-					'total_payment_m'	=> $amortization_table['list'][1]['total_payment'],
-					'total_payment'		=> $amortization_table['total_payment'],
-				);
+				$list[$key]->amortization_table = [
+					'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
+					'total_payment'			=> $amortization_table['total_payment'],
+					'remaining_principal'	=> $amortization_table['remaining_principal'],
+				];
 			}
-			
+
 			$this->load->model('user/user_meta_model');
-			$users_school 	= $this->user_meta_model->get_many_by(array(
-				'meta_key' 	=> array('school_name','school_department'),
+			$users_school 	= $this->user_meta_model->get_many_by([
+				'meta_key' 	=> ['school_name','school_department'],
 				'user_id' 	=> $user_list,
-			));
+			]);
 			if($users_school){
 				foreach($users_school as $key => $value){
 					$school_list[$value->user_id][$value->meta_key] = $value->meta_value;
@@ -515,9 +516,9 @@ class Target extends MY_Admin_Controller {
 		
 		$product_list				= $this->config->item('product_list');
 		$list 						= $this->target_model->get_many_by($where);
-		$school_list 				= array();
-		$user_list 					= array();
-		$amortization_table 		= array();
+		$school_list 				= [];
+		$user_list 					= [];
+		$amortization_table 		= [];
 		if($list){
 			foreach($list as $key => $value){
 				$user_list[] = $value->user_id;
@@ -681,8 +682,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_bidding(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>3);
-		$list 						= $this->target_model->get_many_by($where);
+		$list 						= $this->target_model->get_many_by(['status'=>3]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
@@ -700,10 +700,10 @@ class Target extends MY_Admin_Controller {
 			}
 			
 			$this->load->model('user/user_meta_model');
-			$users_school 	= $this->user_meta_model->get_many_by(array(
+			$users_school 	= $this->user_meta_model->get_many_by([
 				'meta_key' 	=> ['school_name','school_department'],
 				'user_id' 	=> $user_list,
-			));
+			]);
 			if($users_school){
 				foreach($users_school as $key => $value){
 					$school_list[$value->user_id][$value->meta_key] = $value->meta_value;

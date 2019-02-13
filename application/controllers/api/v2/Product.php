@@ -34,12 +34,12 @@ class Product extends REST_Controller {
 				}
 				
 				//只限借款人
-				if($tokenData->investor != 0){
+				if($tokenData->investor != 0 && !in_array($method,['list'])){
 					$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 				}
 
 				//暫不開放法人
-				if(isset($tokenData->company) && $tokenData->company != 0 ){
+				if(isset($tokenData->company) && $tokenData->company != 0  && !in_array($method,['list'])){
 					$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 				}
 			
@@ -150,15 +150,23 @@ class Product extends REST_Controller {
     {
 		$list			= [];
 		$product_list 	= $this->config->item('product_list');
-		if(isset($this->user_info->id) && $this->user_info->id){
+		if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
 			$certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
+		}else{
+			$certification_list = [];
+			$certification = $this->config->item('certifications');
+			foreach($certification as $key => $value){
+				$value['user_status'] 		= null;
+				$value['certification_id'] 	= null;
+				$certification_list[$key] = $value;
+			}
 		}
 		
 		if(!empty($product_list)){
 			foreach($product_list as $key => $value){
 				$target 				= [];
 				$certification 			= [];
-				if(isset($this->user_info->id) && $this->user_info->id){
+				if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
 					$targets = $this->target_model->get_by(array(
 						'status <='		=> 1,
 						'sub_status'	=> 0,
@@ -175,17 +183,17 @@ class Product extends REST_Controller {
 							'created_at'	=> intval($targets->created_at),
 							'instalment'	=> intval($targets->instalment),
 						];
-						
-						if(!empty($certification_list)){
-							foreach($certification_list as $k => $v){
-								if(in_array($k,$value['certifications'])){
-									$certification[] = $v;
-								}
-							}
-						}
 					}
 				}
 				
+				if(!empty($certification_list)){
+					foreach($certification_list as $k => $v){
+						if(in_array($k,$value['certifications'])){
+							$certification[] = $v;
+						}
+					}
+				}
+
 				$list[] = array(
 					'id' 					=> $value['id'],
 					'type' 					=> $value['type'],
@@ -299,7 +307,7 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /v2/product/apply 借款方 申請產品
+     * @api {post} /v2/product/apply 借款方 申請借款
 	 * @apiVersion 0.2.0
 	 * @apiName PostProductApply
      * @apiGroup Product
@@ -408,23 +416,23 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
 			}
 
-			$exist = $this->target_model->get_by(array(
+			$exist = $this->target_model->get_by([
 				'status <='		=> 1,
 				'user_id'		=> $user_id,
 				'product_id'	=> $product['id']
-			));
+			]);
 			if($exist){
-				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
+				$this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
 			}
 
 			$insert = $this->target_lib->add_target($param);
 			if($insert){
-				$this->response(array('result' => 'SUCCESS','data'=>['target_id'=> $insert ]));
+				$this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
 			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+				$this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
 			}
 		}
-		$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
+		$this->response(['result' => 'ERROR','error' => PRODUCT_NOT_EXIST]);
     }
 
 	/**
@@ -656,15 +664,13 @@ class Product extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
-		$param				= array( 'user_id'=> $user_id);
+		$param				= ['user_id'=> $user_id];
 		$targets 			= $this->target_model->get_many_by($param);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
-		$list				= array();
+		$list				= [];
 		if(!empty($targets)){
 			foreach($targets as $key => $value){
 				
-				$list[] = array(
+				$list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
 					'product_id' 		=> intval($value->product_id),
@@ -681,10 +687,10 @@ class Product extends REST_Controller {
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
-				);
+				];
 			}
 		}
-		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
+		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
     }
 	
 	/**
@@ -984,4 +990,99 @@ class Product extends REST_Controller {
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 
+		
+	/**
+     * @api {get} /v2/product/order 借款方 分期訂單列表
+	 * @apiVersion 0.2.0
+	 * @apiName GetProductApplylist
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiGroup Product
+	 * 
+	 * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {Number} id Targets ID
+	 * @apiSuccess {String} target_no 案號
+	 * @apiSuccess {Number} product_id Product ID
+	 * @apiSuccess {Number} user_id User ID
+	 * @apiSuccess {Number} amount 申請金額
+	 * @apiSuccess {Number} loan_amount 核准金額
+	 * @apiSuccess {Number} platform_fee 平台服務費
+	 * @apiSuccess {Number} interest_rate 年化利率
+	 * @apiSuccess {Number} instalment 期數 0:其他
+	 * @apiSuccess {Number} repayment 還款方式 1:等額本息
+	 * @apiSuccess {String} reason 借款原因
+	 * @apiSuccess {String} remark 備註
+	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Number} created_at 申請日期
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 			{
+     * 				"id": 5,
+     * 				"target_no": "STN2019010484186",
+     * 				"product_id": 1,
+     * 				"user_id": 1,
+     * 				"amount": 5000,
+     * 				"loan_amount": 0,
+     * 				"platform_fee": 500,
+     * 				"interest_rate": 0,
+     * 				"instalment": 3,
+     * 				"repayment": 1,
+     * 				"reason": "",
+     * 				"remark": "系統自動取消",
+     * 				"delay": 0,
+     * 				"status": 9,
+     * 				"sub_status": 0,
+     * 				"created_at": 1546591486
+     * 			}
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
+     *
+     */
+	public function order_get()
+    {
+		$input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+		
+		$this->load->model('transaction/order_model');
+		$orders 	= $this->order_model->get_many_by([
+			'phone'		=> $this->user_info->phone,
+			'status'	=> 0,
+		]);
+
+		$list				= [];
+		if(!empty($orders)){
+			foreach($orders as $key => $value){
+				$company = $this->user_model->get(intval($value->company_user_id));
+				$item_name	= explode(',',$value->item_name);
+				$item_count	= explode(',',$value->item_count);
+				foreach($item_count as $k => $v){
+					$item_count[$k] = intval($v);
+				}
+				$list[] = [
+					'order_no' 			=> $value->order_no,
+					'company' 			=> $company->name,
+					'merchant_order_no' => $value->merchant_order_no,
+					'product_id' 		=> intval($value->product_id),
+					'total' 			=> intval($value->total),
+					'instalment' 		=> intval($value->instalment),
+					'item_name' 		=> $item_name,
+					'item_count' 		=> $item_count,
+					'created_at' 		=> intval($value->created_at),
+				];
+			}
+		}
+		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
+    }
+	
 }

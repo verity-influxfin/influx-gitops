@@ -146,7 +146,7 @@ $config['product_list']= [
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
-		'certifications'	=> [1,2,3,4,5,6,7],
+		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
 		'description'		=> '普匯學生貸
@@ -163,7 +163,7 @@ $config['product_list']= [
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
-		'certifications'	=> [1,2,3,4,5,6,7],
+		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
 		'description'		=> '普匯學生貸
@@ -171,7 +171,7 @@ $config['product_list']= [
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
 	],
-	5 => [
+/*	5 => [
 		'id'				=> 5,
 		'type'				=> 1,
 		'identity'			=> 2,
@@ -180,14 +180,14 @@ $config['product_list']= [
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
-		'certifications'	=> [1,2,3,4,5,6,7],
+		'certifications'	=> [],
 		'instalment'		=> [0],
 		'repayment'			=> [3],
 		'description'		=> '普匯學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
-	],
+	],*/
 ];
 
 //產品型態

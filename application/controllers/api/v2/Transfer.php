@@ -384,25 +384,7 @@ class Transfer extends REST_Controller {
      * 					"sex": "M",
      * 					"age": 30,
      * 					"company_name": "國立政治大學"
-     * 				},
-     * 				"certification": [
-     * 					{
-     * 						"id": 1,
-     * 						"alias": "idcard",
-     * 						"name": "實名認證",
-     * 						"status": 1,
-     * 						"description": "驗證個人身份資訊",
-     * 						"user_status": 1
-     * 					},
-     * 					{
-     * 						"id": 2,
-     * 						"alias": "student",
-     * 						"name": "學生身份認證",
-     * 						"status": 1,
-     * 						"description": "驗證學生身份",
-     * 						"user_status": 1
-     * 					}
-     * 				]
+     * 				}
      * 			}
      * 		}
      *    }
@@ -431,20 +413,8 @@ class Transfer extends REST_Controller {
 			$target 		= $this->target_model->get($transfer->target_id);
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target->product_id];
-			$certification	= [];
-			$this->load->library('Certification_lib');
-			$certification_list	= $this->certification_lib->get_status($target->user_id);
-			if(!empty($certification_list)){
-				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info['certifications'])){
-						unset($value['certification_id']);
-						$certification[] = $value;
-					}
-				}
-			}
-
-			$user_info 	= $this->user_model->get($target->user_id); 
-			$user		= [];
+			$user_info 		= $this->user_model->get($target->user_id); 
+			$user			= [];
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
@@ -484,7 +454,6 @@ class Transfer extends REST_Controller {
 				'sub_status' 		=> intval($target->sub_status),
 				'created_at' 		=> intval($target->created_at),
 				'user' 				=> $user,
-				'certification' 	=> $certification,
 			];
 
 			$data 	= [

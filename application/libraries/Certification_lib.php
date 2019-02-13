@@ -32,7 +32,7 @@ class Certification_lib{
 				$certification->status 				= intval($certification->status);
 				$certification->certification_id 	= intval($certification->certification_id);
 				$certification->created_at 			= intval($certification->created_at);
-				$certification->updated_ip 			= intval($certification->updated_ip);
+				$certification->updated_at 			= intval($certification->updated_at);
 				$certification->content = json_decode($certification->content,true);
 				return $certification;
 			}
@@ -55,7 +55,7 @@ class Certification_lib{
 				$certification->status 				= intval($certification->status);
 				$certification->certification_id 	= intval($certification->certification_id);
 				$certification->created_at 			= intval($certification->created_at);
-				$certification->updated_ip 			= intval($certification->updated_ip);
+				$certification->updated_at 			= intval($certification->updated_at);
 				$certification->content = json_decode($certification->content,true);
 				return $certification;
 			}
@@ -652,12 +652,12 @@ class Certification_lib{
 	private function investigation_success($info){
 		if($info){
 			$content 	= $info->content;
-			$data 		= array(
+			$data 		= [
 				'investigation_status'		=> 1,
 				'investigation_times'		=> $content['times'],
 				'investigation_credit_rate'	=> $content['credit_rate'],
 				'investigation_months'		=> $content['months'],
-			);
+			];
 
 			$exist 		= $this->CI->user_meta_model->get_by(['user_id'=>$info->user_id , 'meta_key' => 'investigation_status']);
 			if($exist){
@@ -753,7 +753,7 @@ class Certification_lib{
 				}
 			}else if($investor){
 				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],array('idcard','debitcard','email','emergency'))){
+					if(in_array($value['alias'],['idcard','debitcard','email','emergency'])){
 						$certification[$key] = $value;
 					}
 				}

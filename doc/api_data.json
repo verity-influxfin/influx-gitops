@@ -1151,8 +1151,8 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
           }
         ]
       },
@@ -1178,8 +1178,8 @@
           "type": "Object"
         },
         {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
           "type": "Object"
         }
       ]
@@ -1292,8 +1292,8 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
+            "field": "213",
+            "description": "<p>非法人負責人</p>"
           }
         ]
       },
@@ -1309,8 +1309,8 @@
           "type": "Object"
         },
         {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "title": "213",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
           "type": "Object"
         }
       ]
@@ -9592,7 +9592,7 @@
   {
     "type": "post",
     "url": "/v2/product/apply",
-    "title": "借款方 申請產品",
+    "title": "借款方 申請借款",
     "version": "0.2.0",
     "name": "PostProductApply",
     "group": "Product",
@@ -21238,13 +21238,6 @@
             "group": "Success 200",
             "type": "Object",
             "optional": false,
-            "field": "certification",
-            "description": "<p>借款人認證完成資訊</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
             "field": "user",
             "description": "<p>借款人基本資訊</p>"
           },
@@ -21435,7 +21428,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n\t\"result\": \"SUCCESS\",\n\t\"data\": {\n\t\t\"id\": 24,\n\t\t\"target_no\": \"STN2019011487405\",\n\t\t\"product_id\": 1,\n\t\t\"user_id\": 19,\n\t\t\"loan_amount\": 5000,\n\t\t\"credit_level\": 3,\n\t\t\"interest_rate\": 7,\n\t\t\"reason\": \"\",\n\t\t\"remark\": \"\",\n\t\t\"instalment\": 3,\n\t\t\"repayment\": 1,\n\t\t\"expire_time\": 1548828283,\n\t\t\"invested\": 0,\n\t\t\"status\": 3,\n\t\t\"sub_status\": 0,\n\t\t\"created_at\": 1547445512,\n\t\t\"contract\": \"借貸契約\",\n\t\t\"user\": {\n\t\t\t\"name\": \"你**\",\n\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\"sex\": \"M\",\n\t\t\t\"age\": 30,\n\t\t\t\"company_name\": \"國立政治大學\"\n\t\t},\n\t\t\"certification\": [\n\t\t\t{\n\t\t\t\t\"id\": 1,\n\t\t\t\t\"alias\": \"idcard\",\n\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\"status\": 1,\n\t\t\t\t\"description\": \"驗證個人身份資訊\",\n\t\t\t\t\"user_status\": 1\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\": 2,\n\t\t\t\t\"alias\": \"student\",\n\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\"status\": 1,\n\t\t\t\t\"description\": \"驗證學生身份\",\n\t\t\t\t\"user_status\": 1\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\": 7,\n\t\t\t\t\"alias\": \"financial\",\n\t\t\t\t\"name\": \"財務訊息認證\",\n\t\t\t\t\"status\": 1,\n\t\t\t\t\"description\": \"提供財務訊息資訊\",\n\t\t\t\t\"user_status\": 1\n\t\t\t}\n\t\t],\n\t\t\"amortization_schedule\": {\n\t\t\t\"amount\": 5000,\n\t\t\t\"instalment\": 3,\n\t\t\t\"rate\": 7,\n\t\t\t\"date\": \"2019-01-30\",\n\t\t\t\"total_payment\": 1687,\n\t\t\t\"leap_year\": false,\n\t\t\t\"year_days\": 365,\n\t\t\t\"XIRR\": 7.23,\n\t\t\t\"schedule\": {\n\t\t\t\t\"1\": {\n\t\t\t\t\t\"instalment\": 1,\n\t\t\t\t\t\"repayment_date\": \"2019-03-10\",\n\t\t\t\t\t\"days\": 39,\n\t\t\t\t\t\"remaining_principal\": 5000,\n\t\t\t\t\t\"principal\": 1650,\n\t\t\t\t\t\"interest\": 37,\n\t\t\t\t\t\"total_payment\": 1687\n\t\t\t\t},\n\t\t\t\t\"2\": {\n\t\t\t\t\t\"instalment\": 2,\n\t\t\t\t\t\"repayment_date\": \"2019-04-10\",\n\t\t\t\t\t\"days\": 31,\n\t\t\t\t\t\"remaining_principal\": 3350,\n\t\t\t\t\t\"principal\": 1667,\n\t\t\t\t\t\"interest\": 20,\n\t\t\t\t\t\"total_payment\": 1687\n\t\t\t\t},\n\t\t\t\t\"3\": {\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment_date\": \"2019-05-10\",\n\t\t\t\t\t\"days\": 30,\n\t\t\t\t\t\"remaining_principal\": 1683,\n\t\t\t\t\t\"principal\": 1683,\n\t\t\t\t\t\"interest\": 10,\n\t\t\t\t\t\"total_payment\": 1693\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"total\": {\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 67,\n\t\t\t\t\"total_payment\": 5067\n\t\t\t}\n\t\t}\n\t}\n}",
+          "content": "{\n\t\"result\": \"SUCCESS\",\n\t\"data\": {\n\t\t\"id\": 24,\n\t\t\"target_no\": \"STN2019011487405\",\n\t\t\"product_id\": 1,\n\t\t\"user_id\": 19,\n\t\t\"loan_amount\": 5000,\n\t\t\"credit_level\": 3,\n\t\t\"interest_rate\": 7,\n\t\t\"reason\": \"\",\n\t\t\"remark\": \"\",\n\t\t\"instalment\": 3,\n\t\t\"repayment\": 1,\n\t\t\"expire_time\": 1548828283,\n\t\t\"invested\": 0,\n\t\t\"status\": 3,\n\t\t\"sub_status\": 0,\n\t\t\"created_at\": 1547445512,\n\t\t\"contract\": \"借貸契約\",\n\t\t\"user\": {\n\t\t\t\"name\": \"你**\",\n\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\"sex\": \"M\",\n\t\t\t\"age\": 30,\n\t\t\t\"company_name\": \"國立政治大學\"\n\t\t},\n\t\t\"amortization_schedule\": {\n\t\t\t\"amount\": 5000,\n\t\t\t\"instalment\": 3,\n\t\t\t\"rate\": 7,\n\t\t\t\"date\": \"2019-01-30\",\n\t\t\t\"total_payment\": 1687,\n\t\t\t\"leap_year\": false,\n\t\t\t\"year_days\": 365,\n\t\t\t\"XIRR\": 7.23,\n\t\t\t\"schedule\": {\n\t\t\t\t\"1\": {\n\t\t\t\t\t\"instalment\": 1,\n\t\t\t\t\t\"repayment_date\": \"2019-03-10\",\n\t\t\t\t\t\"days\": 39,\n\t\t\t\t\t\"remaining_principal\": 5000,\n\t\t\t\t\t\"principal\": 1650,\n\t\t\t\t\t\"interest\": 37,\n\t\t\t\t\t\"total_payment\": 1687\n\t\t\t\t},\n\t\t\t\t\"2\": {\n\t\t\t\t\t\"instalment\": 2,\n\t\t\t\t\t\"repayment_date\": \"2019-04-10\",\n\t\t\t\t\t\"days\": 31,\n\t\t\t\t\t\"remaining_principal\": 3350,\n\t\t\t\t\t\"principal\": 1667,\n\t\t\t\t\t\"interest\": 20,\n\t\t\t\t\t\"total_payment\": 1687\n\t\t\t\t},\n\t\t\t\t\"3\": {\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment_date\": \"2019-05-10\",\n\t\t\t\t\t\"days\": 30,\n\t\t\t\t\t\"remaining_principal\": 1683,\n\t\t\t\t\t\"principal\": 1683,\n\t\t\t\t\t\"interest\": 10,\n\t\t\t\t\t\"total_payment\": 1693\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"total\": {\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 67,\n\t\t\t\t\"total_payment\": 5067\n\t\t\t}\n\t\t}\n\t}\n}",
           "type": "Object"
         }
       ]
@@ -24896,7 +24889,7 @@
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\": 3,\n\t\t\t\"amount\": 5002,\n\t\t\t\"principal\": 5000,\n\t\t\t\"interest\": 2,\n\t\t\t\"delay_interest\": 0,\n\t\t\t\"bargain_rate\": 0,\n\t\t\t\"instalment\": 3,\n\t\t\t\"combination\": 0,\n\t\t\t\"expire_time\": 1547654399,\n\t\t\t\"accounts_receivable\": 5145,\n\t\t\t\"contract\": \"我是合約\",\n\t\t\t\"target\": {\n\t\t\t\t\"id\": 9,\n\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\"user_id\": 19,\n\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"repayment\": 1,\n\t\t\t\t\"delay\": 0,\n\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"remark\": \"\",\n\t\t\t\t\"status\": 5,\n\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\"user\": {\n\t\t\t\t\t\"name\": \"你**\",\n\t\t\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\"age\": 30,\n\t\t\t\t\t\"company_name\": \"國立政治大學\"\n\t\t\t\t},\n\t\t\t\t\"certification\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 1,\n\t\t\t\t\t\t\"alias\": \"idcard\",\n\t\t\t\t\t\t\"name\": \"實名認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證個人身份資訊\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"id\": 2,\n\t\t\t\t\t\t\"alias\": \"student\",\n\t\t\t\t\t\t\"name\": \"學生身份認證\",\n\t\t\t\t\t\t\"status\": 1,\n\t\t\t\t\t\t\"description\": \"驗證學生身份\",\n\t\t\t\t\t\t\"user_status\": 1\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t}\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\": 3,\n\t\t\t\"amount\": 5002,\n\t\t\t\"principal\": 5000,\n\t\t\t\"interest\": 2,\n\t\t\t\"delay_interest\": 0,\n\t\t\t\"bargain_rate\": 0,\n\t\t\t\"instalment\": 3,\n\t\t\t\"combination\": 0,\n\t\t\t\"expire_time\": 1547654399,\n\t\t\t\"accounts_receivable\": 5145,\n\t\t\t\"contract\": \"我是合約\",\n\t\t\t\"target\": {\n\t\t\t\t\"id\": 9,\n\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\"user_id\": 19,\n\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"repayment\": 1,\n\t\t\t\t\"delay\": 0,\n\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"remark\": \"\",\n\t\t\t\t\"status\": 5,\n\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\"user\": {\n\t\t\t\t\t\"name\": \"你**\",\n\t\t\t\t\t\"id_number\": \"A1085*****\",\n\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\"age\": 30,\n\t\t\t\t\t\"company_name\": \"國立政治大學\"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n   }",
           "type": "Object"
         }
       ]
