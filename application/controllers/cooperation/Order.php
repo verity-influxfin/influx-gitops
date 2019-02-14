@@ -233,11 +233,14 @@ class Order extends REST_Controller {
 		}
 
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
-			$product_info = $product_list[$input['product_id']];
+			$product_info 	= $product_list[$input['product_id']];
+			$platform_fees 	= intval(round( $input['amount'] * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+			$platform_fees 	= $platform_fees > PLATFORM_FEES_MIN ? $platform_fees : PLATFORM_FEES_MIN;
+			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				$list = [];
 				foreach($product_info['instalment'] as $key => $value){
-					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$value,10,'',1);
+					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$value,ORDER_INTEREST_RATE,'',1);
 					$list[] = [
 						'instalment'	=> $value,
 						'principal'		=> $amortization_schedule['total']['principal'],
@@ -399,13 +402,13 @@ class Order extends REST_Controller {
 		}
 		
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
-			
 			$product_info 	= $product_list[$input['product_id']];
 			$platform_fees 	= intval(round( $input['amount'] * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+			$platform_fees 	= $platform_fees > PLATFORM_FEES_MIN ? $platform_fees : PLATFORM_FEES_MIN;
 			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				if(in_array($input['instalment'],$product_info['instalment'])){
-					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$input['instalment'],10,'',1);
+					$amortization_schedule = $this->financial_lib->get_amortization_schedule($input['amount'],$input['instalment'],ORDER_INTEREST_RATE,'',1);
 					$this->response(array('result' => 'SUCCESS','data' => ['amortization_schedule'=>$amortization_schedule]));
 				}
 			}
@@ -781,7 +784,7 @@ class Order extends REST_Controller {
 		
 		if($order){
 			$this->order_model->update($order->id,['status'=>8]);
-			$this->response(array('result' => 'SUCCESS'));
+			$this->response(['result' => 'SUCCESS']);
 		}
 		$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
 

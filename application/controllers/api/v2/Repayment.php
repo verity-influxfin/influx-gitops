@@ -533,9 +533,6 @@ class Repayment extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
-		$transaction_source = $this->config->item('transaction_source');
 		$data				= [];
 		if(!empty($target) && in_array($target->status,[5,10])){
 			

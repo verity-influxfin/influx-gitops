@@ -58,7 +58,7 @@ class Transfer extends REST_Controller {
 	
 
 	/**
-     * @api {get} /v2/transfer/list 出借方 取得債權標的列表
+     * @api {get} /v2/transfer/list 出借方 債權標的列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetTransferList
      * @apiGroup Transfer
@@ -304,7 +304,7 @@ class Transfer extends REST_Controller {
     }
 
 	/**
-     * @api {get} /v2/transfer/info/:id 出借方 取得債權標的資訊
+     * @api {get} /v2/transfer/info/:id 出借方 債權標的資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetTransferInfo
      * @apiGroup Transfer
@@ -405,8 +405,6 @@ class Transfer extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$transfer 			= $this->transfer_lib->get_transfer($transfer_id);
-		$instalment_list 	= $this->config->item('instalment');
-		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= [];
 		if($transfer && in_array($transfer->status,[0,1])){
 			
@@ -455,9 +453,11 @@ class Transfer extends REST_Controller {
 				'created_at' 		=> intval($target->created_at),
 				'user' 				=> $user,
 			];
-
-			$data 	= [
+			
+			$investment = $this->investment_model->get($transfer->investment_id);
+			$data 		= [
 				'id'				=> intval($transfer->id),
+				'user_id'			=> intval($investment->user_id),
 				'amount'			=> intval($transfer->amount),
 				'principal'			=> intval($transfer->principal),
 				'interest'			=> intval($transfer->interest),
@@ -474,6 +474,108 @@ class Transfer extends REST_Controller {
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
 		$this->response(array('result' => 'ERROR','error' => TRANSFER_NOT_EXIST ));
+    }
+	
+	/**
+     * @api {get} /v2/transfer/combination/:id 出借方 債權組合資訊
+	 * @apiVersion 0.2.0
+	 * @apiName GetTransferCombination
+     * @apiGroup Transfer
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} id Combination ID
+     *
+	 * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} id Combination ID
+     * @apiSuccess {String} combination_no 整包轉讓號
+     * @apiSuccess {Boolean} password 是否需要密碼
+     * @apiSuccess {Number} count 筆數
+     * @apiSuccess {Number} amount 整包轉讓價金
+     * @apiSuccess {Number} principal 整包剩餘本金
+     * @apiSuccess {Number} interest 整包已發生利息
+     * @apiSuccess {Number} delay_interest 整包已發生延滯息
+     * @apiSuccess {Number} max_instalment 最大剩餘期數
+     * @apiSuccess {Number} min_instalment 最小剩餘期數
+     * @apiSuccess {Float} bargain_rate 增減價比率(%)
+     * @apiSuccess {Float} interest_rate 平均年表利率(%)
+     * @apiSuccess {Number} accounts_receivable 整包應收帳款
+	 * @apiSuccess {Object} contracts 債轉合約列表
+	 *
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"id": 9,
+     * 			"combination_no": "PKG1550041591930747",
+     * 			"password": false,
+     * 			"count": 3,
+     * 			"amount": 15102,
+     * 			"principal": 15000,
+     * 			"interest": 102,
+     * 			"max_instalment": 18,
+     * 			"min_instalment": 3,
+     * 			"delay_interest": 0,
+     * 			"bargain_rate": 0,
+     * 			"interest_rate": 8.56,
+     * 			"accounts_receivable": 15626,
+     * 			"contracts": [
+	 * 				"我是合約",
+	 * 				"我是合約2",
+	 * 				"我是合約3"
+	 *			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+	 * @apiError 816 此組合不存在
+     * @apiErrorExample {Object} 816
+     *     {
+     *       "result": "ERROR",
+     *       "error": "816"
+     *     }
+     */
+	 
+	public function combination_get($combination_id)
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$user_id 			= $this->user_info->id;
+		$data				= [];
+		if(!empty($combination_id)){
+			$this->load->model('loan/transfer_combination_model');
+			$combinations = $this->transfer_combination_model->get($combination_id);
+			if($combinations){
+				$transfers		= $this->transfer_lib->get_transfer_list([
+					'combination'	=> $combination_id,
+					'status' 		=> 0
+				]);
+				if($transfers){
+					$contracts = [];
+					foreach($transfers as $key => $value){
+						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
+						$contracts[]	= isset($contract_data['content'])?$contract_data['content']:'';
+					}
+					$data 	= [
+						'id'					=> intval($combinations->id),
+						'combination_no'		=> $combinations->combination_no,
+						'password'				=> empty($combinations->password)?false:true,
+						'count'					=> intval($combinations->count),
+						'amount'				=> intval($combinations->amount),
+						'principal'				=> intval($combinations->principal),
+						'interest'				=> intval($combinations->interest),
+						'max_instalment'		=> intval($combinations->max_instalment),
+						'min_instalment'		=> intval($combinations->min_instalment),
+						'delay_interest'		=> intval($combinations->delay_interest),
+						'bargain_rate'			=> floatval($combinations->bargain_rate),
+						'interest_rate'			=> floatval($combinations->interest_rate),
+						'accounts_receivable'	=> intval($combinations->accounts_receivable),
+						'contracts'				=> $contracts,
+					];
+					$this->response(array('result' => 'SUCCESS','data' => $data ));
+				}
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => COMBINATION_NOT_EXIST ));
     }
 	
 	/**

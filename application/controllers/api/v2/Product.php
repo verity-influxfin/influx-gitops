@@ -999,21 +999,14 @@ class Product extends REST_Controller {
      * @apiGroup Product
 	 * 
 	 * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {Number} id Targets ID
-	 * @apiSuccess {String} target_no 案號
+	 * @apiSuccess {String} order_no 訂單編號
+	 * @apiSuccess {String} company 經銷商名稱
+	 * @apiSuccess {String} merchant_order_no 經銷商訂單編號
 	 * @apiSuccess {Number} product_id Product ID
-	 * @apiSuccess {Number} user_id User ID
-	 * @apiSuccess {Number} amount 申請金額
-	 * @apiSuccess {Number} loan_amount 核准金額
-	 * @apiSuccess {Number} platform_fee 平台服務費
-	 * @apiSuccess {Number} interest_rate 年化利率
+	 * @apiSuccess {Number} amount 金額
 	 * @apiSuccess {Number} instalment 期數 0:其他
-	 * @apiSuccess {Number} repayment 還款方式 1:等額本息
-	 * @apiSuccess {String} reason 借款原因
-	 * @apiSuccess {String} remark 備註
-	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
-	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
-	 * @apiSuccess {Number} sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Object} item_name 商品名稱
+	 * @apiSuccess {Object} item_count 商品數量
 	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -1021,22 +1014,21 @@ class Product extends REST_Controller {
      * 		"data":{
      * 			"list":[
      * 			{
-     * 				"id": 5,
-     * 				"target_no": "STN2019010484186",
-     * 				"product_id": 1,
-     * 				"user_id": 1,
-     * 				"amount": 5000,
-     * 				"loan_amount": 0,
-     * 				"platform_fee": 500,
-     * 				"interest_rate": 0,
+     * 				"order_no": "29-2019013116565856678",
+     * 				"company": "普匯金融科技股份有限公司",
+     * 				"merchant_order_no": "toytoytoy123",
+     * 				"product_id": 2,
+     * 				"total": 20619,
      * 				"instalment": 3,
-     * 				"repayment": 1,
-     * 				"reason": "",
-     * 				"remark": "系統自動取消",
-     * 				"delay": 0,
-     * 				"status": 9,
-     * 				"sub_status": 0,
-     * 				"created_at": 1546591486
+     * 				"item_name": [
+     * 					"小雞",
+     * 					"'丫丫'"
+     * 				],
+     * 				"item_count": [
+     * 					1,
+     * 					2
+     * 				],
+     * 				"created_at": 1548925018
      * 			}
      * 			]
      * 		}
@@ -1060,9 +1052,11 @@ class Product extends REST_Controller {
 			'status'	=> 0,
 		]);
 
-		$list				= [];
+		$list	= [];
 		if(!empty($orders)){
 			foreach($orders as $key => $value){
+				$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,'',1);
+				dump($amortization_schedule);
 				$company = $this->user_model->get(intval($value->company_user_id));
 				$item_name	= explode(',',$value->item_name);
 				$item_count	= explode(',',$value->item_count);
@@ -1074,8 +1068,9 @@ class Product extends REST_Controller {
 					'company' 			=> $company->name,
 					'merchant_order_no' => $value->merchant_order_no,
 					'product_id' 		=> intval($value->product_id),
-					'total' 			=> intval($value->total),
+					'amount' 			=> intval($value->total),
 					'instalment' 		=> intval($value->instalment),
+					'pmt' 				=> intval($amortization_schedule['total_payment']),
 					'item_name' 		=> $item_name,
 					'item_count' 		=> $item_count,
 					'created_at' 		=> intval($value->created_at),

@@ -153,13 +153,6 @@ class Certification extends REST_Controller {
      *       "result": "ERROR",
      *       "error": "501"
      *     }
-	 *
-     * @apiError 503 尚未驗證過
-     * @apiErrorExample {Object} 503
-     *     {
-     *       "result": "ERROR",
-     *       "error": "503"
-     *     }
      */
 	public function index_get($alias='')
     {
@@ -173,7 +166,7 @@ class Certification extends REST_Controller {
 		if($certification && $certification['status']==1){
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			$data		= array();
+			$data		= [];
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
 			if($rs){
 				$data = array(
@@ -226,7 +219,7 @@ class Certification extends REST_Controller {
 				}
 				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
+			$this->response(array('result' => 'SUCCESS','data' => []));
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }

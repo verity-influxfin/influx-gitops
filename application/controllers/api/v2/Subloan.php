@@ -468,8 +468,8 @@ class Subloan extends REST_Controller {
 			$data = array(
 				'target_id'			=> $subloan->target_id,
 				'amount'			=> $subloan->amount,
-				'instalment'		=> $instalment_list[$subloan->instalment],
-				'repayment'			=> $repayment_type[$subloan->repayment],
+				'instalment'		=> $subloan->instalment,
+				'repayment'			=> $subloan->repayment,
 				'settlement_date'	=> $subloan->settlement_date,
 				'status'			=> $subloan->status,
 				'created_at'		=> $subloan->created_at,
