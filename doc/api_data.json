@@ -296,94 +296,10 @@
   },
   {
     "type": "get",
-    "url": "/v2/article/news",
-    "title": "文章 最新消息",
-    "version": "0.2.0",
-    "name": "GetAgreementInfo",
-    "group": "Article",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "type",
-            "description": "<p>類別</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "title",
-            "description": "<p>標題</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "content",
-            "description": "<p>內容</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "image_url",
-            "description": "<p>圖片連結</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "url",
-            "description": "<p>連結</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "rank",
-            "description": "<p>排序（由大至小）</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "updated_at",
-            "description": "<p>最後更新時間</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"news\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"https://dev-api.influxfin.com\",\n\t\t\t\t\"title\": \"News\",\n\t\t\t\t\"content\": \"<p>News News</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"https://dev-api.influxfin.com\",\n\t\t\t\t\"title\": \"News2\",\n\t\t\t\t\"content\": \"<p>News</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Article.php",
-    "groupTitle": "Article",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/article/news"
-      }
-    ]
-  },
-  {
-    "type": "get",
     "url": "/v2/article/event",
     "title": "文章 最新活動",
     "version": "0.2.0",
-    "name": "GetAgreementList",
+    "name": "GetArticleEvent",
     "group": "Article",
     "success": {
       "fields": {
@@ -459,6 +375,90 @@
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/v2/article/event"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/v2/article/news",
+    "title": "文章 最新消息",
+    "version": "0.2.0",
+    "name": "GetArticleNews",
+    "group": "Article",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>類別</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>標題</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>內容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image_url",
+            "description": "<p>圖片連結</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>連結</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "rank",
+            "description": "<p>排序（由大至小）</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "updated_at",
+            "description": "<p>最後更新時間</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"news\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"https://dev-api.influxfin.com\",\n\t\t\t\t\"title\": \"News\",\n\t\t\t\t\"content\": \"<p>News News</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"https://dev-api.influxfin.com\",\n\t\t\t\t\"title\": \"News2\",\n\t\t\t\t\"content\": \"<p>News</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Article.php",
+    "groupTitle": "Article",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/article/news"
       }
     ]
   },

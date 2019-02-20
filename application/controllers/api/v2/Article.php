@@ -16,7 +16,7 @@ class Article extends REST_Controller {
 	/**
      * @api {get} /v2/article/event 文章 最新活動
 	 * @apiVersion 0.2.0
-	 * @apiName GetAgreementList
+	 * @apiName GetArticleEvent
      * @apiGroup Article
      *
      * @apiSuccess {Object} result SUCCESS
@@ -78,7 +78,7 @@ class Article extends REST_Controller {
 	/**
      * @api {get} /v2/article/news 文章 最新消息
 	 * @apiVersion 0.2.0
-	 * @apiName GetAgreementInfo
+	 * @apiName GetArticleNews
      * @apiGroup Article
      *
      * @apiSuccess {Object} result SUCCESS
