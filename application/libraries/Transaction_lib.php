@@ -318,27 +318,30 @@ class Transaction_lib{
 	//放款成功
 	function lending_success($target_id,$admin_id=0){
 		$date 			= get_entering_date();
-		$transaction 	= array();
+		$transaction 	= [];
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 4 && $target->loan_status == 3){
-				$target_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$target->user_id,'investor'=>0,'status'=>1));
+				$target_account 	= $this->CI->virtual_account_model->get_by([
+					'user_id'	=> $target->user_id,
+					'investor'	=> 0,
+					'status'	=> 1
+				]);
 				if($target_account){
-					$where = array(
+
+					$this->CI->load->model('user/user_bankaccount_model');
+					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by([
 						'user_id'	=> $target->user_id,
 						'status'	=> 1,
 						'verify'	=> 1,
 						'investor'	=> 0
-					);
-
-					$this->CI->load->model('user/user_bankaccount_model');
-					$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+					]);
 					if($user_bankaccount){
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
 						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
 						//手續費
-						$transaction[]	= array(
+						$transaction[]	= [
 							'source'			=> SOURCE_FEES,
 							'entering_date'		=> $date,
 							'user_from'			=> $target->user_id,
@@ -349,10 +352,10 @@ class Transaction_lib{
 							'user_to'			=> 0,
 							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 							'status'			=> 2
-						);
+						];
 						
 
-						$investment_ids = array();
+						$investment_ids = [];
 						$frozen_ids 	= array();
 						$investments 	= $this->CI->investment_model->get_many_by(array(
 							'target_id'		=> $target->id,
@@ -526,18 +529,18 @@ class Transaction_lib{
 						$new_investment = $this->CI->investment_model->insert($investment_data);
 						if($new_investment){
 							
-							$this->CI->investment_model->update($investment->id,array('status'=>10,'transfer_status'=>2));
+							$this->CI->investment_model->update($investment->id,['status'=>10,'transfer_status'=>2]);
 							$this->CI->load->library('target_lib');
-							$this->CI->target_lib->insert_investment_change_log($investment->id,array('status'=>10,'transfer_status'=>2),0,$admin_id);
-							$this->CI->transfer_investment_model->update($transfer_investments->id,array('status'=>10));
-							$this->CI->frozen_amount_model->update($transfer_investments->frozen_id,array('status'=>0));
+							$this->CI->target_lib->insert_investment_change_log($investment->id,['status'=>10,'transfer_status'=>2],0,$admin_id);
+							$this->CI->transfer_investment_model->update($transfer_investments->id,['status'=>10]);
+							$this->CI->frozen_amount_model->update($transfer_investments->frozen_id,['status'=>0]);
 							
-							$transfer_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$investment->user_id,'investor'=>1));
-							$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$transfer_investments->user_id,'investor'=>1));
+							$transfer_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$investment->user_id,'investor'=>1]);
+							$virtual_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$transfer_investments->user_id,'investor'=>1]);
 							if($transfer_account && $virtual_account){
 							
 								//手續費
-								$transaction[]	= array(
+								$transaction[]	= [
 									'source'			=> SOURCE_TRANSFER_FEE,
 									'entering_date'		=> $date,
 									'user_from'			=> $investment->user_id,
@@ -549,10 +552,10 @@ class Transaction_lib{
 									'user_to'			=> 0,
 									'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 									'status'			=> 2
-								);
+								];
 								
 								//放款
-								$transaction[]		= array(
+								$transaction[]		= [
 									'source'			=> SOURCE_TRANSFER,
 									'entering_date'		=> $date,
 									'user_from'			=> $transfer_investments->user_id,
@@ -564,14 +567,14 @@ class Transaction_lib{
 									'user_to'			=> $investment->user_id,
 									'bank_account_to'	=> $transfer_account->virtual_account,
 									'status'			=> 2
-								);
+								];
 
 								
 								//攤還表
 								if($transaction_list){
 									foreach($transaction_list as $k => $v){
 										if($v->user_from==$investment->user_id){
-											$transaction[]	= array(
+											$transaction[]	= [
 												'source'			=> $v->source,
 												'entering_date'		=> $date,
 												'user_from'			=> $transfer_investments->user_id,
@@ -583,9 +586,9 @@ class Transaction_lib{
 												'user_to'			=> $v->user_to,
 												'bank_account_to'	=> $v->bank_account_to,
 												'limit_date'		=> $v->limit_date,
-											);
+											];
 										}else if($v->user_to==$investment->user_id){
-											$transaction[]	= array(
+											$transaction[]	= [
 												'source'			=> $v->source,
 												'entering_date'		=> $date,
 												'user_from'			=> $v->user_from,
@@ -597,7 +600,7 @@ class Transaction_lib{
 												'user_to'			=> $transfer_investments->user_id,
 												'bank_account_to'	=> $virtual_account->virtual_account,
 												'limit_date'		=> $v->limit_date,
-											);
+											];
 										}
 										$this->CI->transaction_model->update($v->id,array('status'=>0));
 									}

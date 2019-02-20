@@ -53,6 +53,64 @@ class Predis_lib {
 		}
 		return false;
 	}
+
+	public function get_event_list($reset = false){
+		$list = [];
+		if($this->isconnect && !$reset){
+			$list = $this->_redis->hgetall(REDIS_EVENT_LIST);
+		}
+		
+		if($reset || empty($list)){
+			$this->delect_key(REDIS_EVENT_LIST);
+			$this->CI->load->model('admin/article_model');
+			$article_list = $this->CI->article_model->order_by('rank','desc')->get_many_by(['type'=>1,'status'=>1]);
+			if(!empty($article_list)){
+				foreach($article_list as $key => $value){
+					$list[$key] = json_encode($value);
+				}
+				if($this->isconnect){
+					$this->_redis->hmset(REDIS_EVENT_LIST,$list);
+				}
+			}
+		}
+		
+		if($list){
+			foreach($list as $key => $value){
+				$list[$key] = json_decode($value);
+			}
+			return $list;
+		}
+		return false;
+	}
+	
+	public function get_news_list($reset = false){
+		$list = [];
+		if($this->isconnect && !$reset){
+			$list = $this->_redis->hgetall(REDIS_NEWS_LIST);
+		}
+		
+		if($reset || empty($list)){
+			$this->delect_key(REDIS_NEWS_LIST);
+			$this->CI->load->model('admin/article_model');
+			$article_list = $this->CI->article_model->order_by('rank','desc')->get_many_by(['type'=>2,'status'=>1]);
+			if(!empty($article_list)){
+				foreach($article_list as $key => $value){
+					$list[$key] = json_encode($value);
+				}
+				if($this->isconnect){
+					$this->_redis->hmset(REDIS_NEWS_LIST,$list);
+				}
+			}
+		}
+		
+		if($list){
+			foreach($list as $key => $value){
+				$list[$key] = json_decode($value);
+			}
+			return $list;
+		}
+		return false;
+	}
 	
 	public function delect_key($key=''){
 		if($this->isconnect && $key){

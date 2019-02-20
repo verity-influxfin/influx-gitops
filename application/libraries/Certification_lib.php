@@ -765,11 +765,13 @@ class Certification_lib{
 			foreach($certification as $key => $value){
 				$user_certification = $this->get_certification_info($user_id,$key,$investor);
 				if($user_certification){
-					$value['user_status'] 		= $user_certification->status;
-					$value['certification_id'] 	= $user_certification->id;
+					$value['user_status'] 		= intval($user_certification->status);
+					$value['certification_id'] 	= intval($user_certification->id);
+					$value['updated_at'] 		= intval($user_certification->updated_at);
 				}else{
 					$value['user_status'] 		= null;
 					$value['certification_id'] 	= null;
+					$value['updated_at'] 		= null;
 				}
 				
 				$certification_list[$key] = $value;
@@ -804,9 +806,11 @@ class Certification_lib{
 				if($user_certification){
 					$value['user_status'] 		= intval($user_certification->status);
 					$value['certification_id'] 	= intval($user_certification->id);
+					$value['updated_at'] 		= intval($user_certification->updated_at);
 				}else{
 					$value['user_status'] 		= null;
 					$value['certification_id'] 	= null;
+					$value['updated_at'] 		= null;
 				}
 				
 				$certification_list[$key] = $value;

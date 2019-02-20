@@ -257,6 +257,79 @@ class S3_upload {
 		
 		return false;
     }
+	
+	public function image_public ($files,$name='image')
+    {
+		if (isset($files[$name]) && $files[$name]) {
+			if(isset($this->image_type[$files[$name]['type']])){
+				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
+				$exif = json_decode(json_encode($exif),true);
+				$fileType = $this->image_type[$files[$name]['type']];
+				if($fileType == '.jpg'){
+					ini_set('gd.jpeg_ignore_warning', true);
+					$src = imagecreatefromjpeg($files[$name]['tmp_name']);
+				}elseif($fileType == '.gif'){
+					$src = imagecreatefromgif($files[$name]['tmp_name']);
+				}elseif($fileType == '.png'){
+					$src = imagecreatefrompng($files[$name]['tmp_name']);
+				}
+
+				if (isset($exif['IFD0']['Orientation'])) {
+					switch ($exif['IFD0']['Orientation']) { 
+					case 3:
+						$src = imagerotate($src, 180, 0);
+						break;
+					case 6:
+						$src = imagerotate($src, -90, 0);
+						break;
+					case 8:
+						$src = imagerotate($src, 90, 0);
+						break;
+					}
+				}
+				
+				$output_w = $src_w = imagesx($src);
+				$output_h = $src_h = imagesy($src);
+				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
+				  $output_w = IMAGE_MAX_WIDTH;
+				  $output_h = intval($src_h / $src_w * IMAGE_MAX_WIDTH);
+				}else if($src_h > $src_w && $src_h > IMAGE_MAX_WIDTH){
+				  $output_h = IMAGE_MAX_WIDTH;
+				  $output_w = intval($src_w / $src_h * IMAGE_MAX_WIDTH);
+				}else if($src_h == $src_w && $src_h > IMAGE_MAX_WIDTH){
+				  $output_h = IMAGE_MAX_WIDTH;
+				  $output_w = IMAGE_MAX_WIDTH;
+				}
+				
+				$output = imagecreatetruecolor($output_w, $output_h);
+				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
+				
+				ob_start();
+				imagejpeg($output, NULL, 90);
+				$image_data = ob_get_contents();
+				ob_end_clean();
+				$image_name = 'img/admin/post'.time().rand(1,9).rand(1,9).rand(1,9).'.jpg';
+				$result = $this->client->putObject(array(
+					'Bucket' => FRONT_S3_BUCKET,
+					'Key'    => $image_name,
+					'Body'   => $image_data,
+					'ACL'    => 'public-read'
+				));
+
+				if(isset($result['ObjectURL'])){
+					//return $result['ObjectURL'];
+					return FRONT_CDN_URL.$image_name;
+				}else{
+					$this->error = 'upload error.';
+				}
+			}else{
+				$this->error = '只支援jpg gif png 圖檔';
+			}
+        }else{
+			$this->error = 'No file.';
+		}
+		return false;
+    }
 }
 
 ?>

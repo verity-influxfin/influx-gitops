@@ -194,7 +194,7 @@ class User extends REST_Controller {
      * @apiParam {String} phone 手機號碼
      * @apiParam {String{6..50}} password 設定密碼
      * @apiParam {String} code 簡訊驗證碼
-	 * @apiParam {String} access_token Facebook AccessToken
+	 * @apiParam {String} [access_token] Facebook AccessToken
      * @apiParam {Number=0,1} [investor=0] 1:投資端 0:借款端
      * @apiParam {String{0..16}} [promote_code] 邀請碼
      *
@@ -257,8 +257,8 @@ class User extends REST_Controller {
 		$this->load->library('sms_lib'); 
 		
 		$input 		= $this->input->post(NULL, TRUE);
-		$data		= array();
-        $fields 	= ['phone','password','code','access_token'];
+		$data		= [];
+        $fields 	= ['phone','password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -274,21 +274,6 @@ class User extends REST_Controller {
 		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
-
-		$debug_token 	= $this->facebook_lib->debug_token($input['access_token']);
-		if(!$debug_token){
-			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
-		}
-		
-		$facebook_info 	= $this->facebook_lib->get_info($input['access_token']);
-		if(!$facebook_info){
-			$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
-		}
-		
-		$fb_exist 	= $this->facebook_lib->login($facebook_info);
-		if($fb_exist){
-			$this->response(array('result' => 'ERROR','error' => FBID_EXIST ));
-		}
 		
 		$user_exist = $this->user_model->get_by('phone',$input['phone']);
 		if ($user_exist) {
@@ -299,8 +284,6 @@ class User extends REST_Controller {
 		$data['promote_code']		= isset($input['promote_code'])?$input['promote_code']:'';
 		$data['status']				= $input['investor']?0:1;
 		$data['investor_status']	= $input['investor']?1:0;
-		$data['nickname']			= $facebook_info['name'];
-		$data['picture']			= $facebook_info['picture'];
 		$data['my_promote_code'] 	= $this->get_promote_code();
 		$data['auth_otp'] 			= get_rand_token();
 
@@ -321,7 +304,6 @@ class User extends REST_Controller {
 					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
-				$this->facebook_lib->bind_user($insert,$facebook_info);
 				$this->notification_lib->first_login($insert,$input['investor']);
 				$this->response(array(
 					'result' => 'SUCCESS',
@@ -438,14 +420,14 @@ class User extends REST_Controller {
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
 				}
-				$this->response(array(
+				$this->response([
 					'result' => 'SUCCESS',
-					'data' 	 => array( 
+					'data' 	 => [
 						'token' 		=> $request_token,
 						'expiry_time'	=> $token->expiry_time,
 						'first_time'	=> $first_time
-					) 
-				));
+					] 
+				]);
 			}else{
 				$this->insert_login_log($input['phone'],$investor,0,$user_info->id);
 				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));

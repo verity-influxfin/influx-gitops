@@ -1056,8 +1056,7 @@ class Product extends REST_Controller {
 		if(!empty($orders)){
 			foreach($orders as $key => $value){
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,'',1);
-				dump($amortization_schedule);
-				$company = $this->user_model->get(intval($value->company_user_id));
+				$company 	= $this->user_model->get(intval($value->company_user_id));
 				$item_name	= explode(',',$value->item_name);
 				$item_count	= explode(',',$value->item_count);
 				foreach($item_count as $k => $v){
@@ -1079,5 +1078,51 @@ class Product extends REST_Controller {
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
     }
+	
+	/**
+     * @api {post} /v2/product/order 借款方 申請分期
+	 * @apiVersion 0.2.0
+	 * @apiName PostProductOrder
+     * @apiGroup Product
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
+	 * @apiParam {String} order_no 訂單編號
+	 * @apiParam {file} person_image 本人照
+	 * 
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse IsInvestor
+	 * @apiUse IsCompany
+	 *
+     * @apiError 405 對此申請無權限
+     * @apiErrorExample {Object} 405
+     *     {
+     *       "result": "ERROR",
+     *       "error": "405"
+     *     }
+	 *
+     * @apiError 407 目前狀態無法完成此動作
+     * @apiErrorExample {Object} 407
+     *     {
+     *       "result": "ERROR",
+     *       "error": "407"
+     *     }
+	 *
+	 *
+     */
+	public function order_post()
+    {
+		$this->load->library('S3_upload');
+		$this->load->model('user/user_bankaccount_model');
+		$this->load->library('Certification_lib');
+   }
 	
 }

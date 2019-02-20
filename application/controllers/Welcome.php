@@ -27,7 +27,8 @@ class Welcome extends CI_Controller {
 	}
 	
 	function index(){
-		$rs = $this->config->item('industry_name');
-		echo json_encode($rs);
+		$this->load->library('S3_upload');
+		$image = $this->s3_upload->image_public($_FILES,'image');
+		dump($image);
 	}
 }

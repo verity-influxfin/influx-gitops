@@ -31,7 +31,7 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function sign_contract( $type='' , $data = array() ){
+	public function sign_contract( $type='' , $data = [] ){
 		if($type && $data){
 			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>$type]);
 			if($format){
@@ -46,7 +46,7 @@ class Contract_lib{
 		return false;
 	}
 
-	public function update_contract( $id=0 , $data = array() ){
+	public function update_contract( $id=0 , $data = [] ){
 		if($id && $data){
 			$param = array(
 				'content' 	=> json_encode($data) 
@@ -56,7 +56,7 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function pretransfer_contract($content = array() ){
+	public function pretransfer_contract($content = [] ){
 		if($content){
 			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>'transfer']);
 			if($format){

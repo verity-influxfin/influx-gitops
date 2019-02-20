@@ -70,7 +70,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} id Certification ID
 	 * @apiSuccess {String} name 名稱
 	 * @apiSuccess {String} description 簡介
-	 * @apiSuccess {String} alias 代號
+	 * @apiSuccess {String} alias 認證代號
 	 * @apiSuccess {Number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
 	 * 
      * @apiSuccessExample {Object} SUCCESS
@@ -122,6 +122,7 @@ class Certification extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
      * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {String} alias 認證代號
 	 * @apiSuccess {String} certification_id Certification ID
 	 * @apiSuccess {String} status 狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證
 	 * @apiSuccess {String} created_at 創建日期
@@ -130,6 +131,7 @@ class Certification extends REST_Controller {
      *    {
      *      "result": "SUCCESS",
      *      "data": {
+     *      	"alias": "debitcard",
      *      	"certification_id": "3", 
      *      	"status": "0",     
      *      	"created_at": "1518598432",     
@@ -170,6 +172,7 @@ class Certification extends REST_Controller {
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
 			if($rs){
 				$data = array(
+					'alias'				=> $alias,
 					'certification_id'	=> $rs->certification_id,
 					'status'			=> $rs->status,
 					'expire_time'		=> $rs->expire_time,
@@ -621,7 +624,7 @@ class Certification extends REST_Controller {
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			$content	= array();
+			$content	= [];
 
 			if($this->user_info->company==1 && $this->user_info->incharge != 1){
 				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));

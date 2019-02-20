@@ -73,7 +73,12 @@ $config['admin_menu'] = [
 		'estatement'		=> '個人對帳單',
 		'index'				=> '收支統計表',
 	],
-	'Agreement' 			=> ['name'=>'協議書','icon'=>'fa-star'],
+	'Article' 				=> [
+		'parent_name'		=> '活動及最新消息',
+		'index'				=> '最新活動',
+		'index?type=2'		=> '最新消息',
+	],
+	'Agreement' 			=> ['name'=>'協議書'],
 ];
 
 //內部通知Email
