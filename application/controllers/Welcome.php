@@ -27,8 +27,6 @@ class Welcome extends CI_Controller {
 	}
 	
 	function index(){
-		$this->load->library('S3_upload');
-		$image = $this->s3_upload->image_public($_FILES,'image');
-		dump($image);
+		dump(iconv('UTF-8', 'BIG-5//IGNORE', '業'));
 	}
 }

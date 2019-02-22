@@ -578,6 +578,117 @@ class Transfer extends REST_Controller {
 		$this->response(array('result' => 'ERROR','error' => COMBINATION_NOT_EXIST ));
     }
 	
+		/**
+     * @api {get} /v2/transfer/batchpreapply 出借方 批次債權收購前合約
+	 * @apiVersion 0.2.0
+	 * @apiName GetBatchPreTransferApply
+     * @apiGroup Transfer
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} transfer_ids Transfer IDs ex: 1,3,10,21
+	 * 
+	 * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {String} total_amount 總價金
+	 * @apiSuccess {String} total_count 總筆數
+	 * @apiSuccess {String} max_instalment 最大期數
+	 * @apiSuccess {String} min_instalment 最小期數
+	 * @apiSuccess {Object} transfer_ids Transfer IDs
+	 * @apiSuccess {Object} contracts 債權轉讓合約列表
+	 * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"total_amount": 23614,
+     * 			"total_count": 2,
+     * 			"max_instalment": 6,
+     * 			"min_instalment": 3,
+     * 			"transfer_ids": [
+     * 				67,
+     * 				68
+     * 			],
+     * 			"contracts": [
+     * 			{
+     * 				"title": "應收帳款債權讓與契約",
+     * 				"content": "應收帳款債權讓與契約",
+     * 				"created_at": "1550741178"
+     * 			},
+     * 			{
+     * 				"title": "應收帳款債權讓與契約",
+     * 				"content": "應收帳款債權讓與契約",
+     * 				"created_at": "1550741178"
+     * 			}
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+     *
+	 * @apiError 809 債權轉讓標的不存在
+     * @apiErrorExample {Object} 809
+     *     {
+     *       "result": "ERROR",
+     *       "error": "809"
+     *     }
+     */
+	public function batchpreapply_get()
+    {
+		$input 		= $this->input->get(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+
+		//必填欄位
+		if (empty($input['transfer_ids'])) {
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		$transfer_ids 	= explode(',',$input['transfer_ids']);
+		$count 			= count($transfer_ids);
+		if(!empty($transfer_ids)){
+			foreach($transfer_ids as $key => $id){
+				if(intval($id)<=0 ){
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+		
+		$data = [
+			'total_amount' 		=> 0,
+			'total_count' 		=> 0,
+			'max_instalment' 	=> 0,
+			'min_instalment' 	=> 0,
+			'transfer_ids' 		=> [],
+		];
+		$contract 				= [];
+		$transfers = $this->transfer_lib->get_transfer_list([
+			'id' 		=> $transfer_ids,
+			'status'	=> 0
+		]);
+		if($transfers && count($transfers)==$count){
+			foreach($transfers as $key => $value){
+				$data['total_amount'] += $value->amount;
+				$data['total_count'] ++;
+				if($data['max_instalment'] < $value->instalment){
+					$data['max_instalment'] = intval($value->instalment);
+				}
+				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+					$data['min_instalment'] = intval($value->instalment);
+				}
+				
+				$contract[] 			= $this->contract_lib->get_contract($value->contract_id);
+				$data['transfer_ids'][] = intval($value->id);
+			}
+
+			$data['contracts'] 				= $contract;
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
+		}
+		$this->response(array('result' => 'ERROR','error' => TRANSFER_NOT_EXIST ));
+    }
+	
+	
 	/**
      * @api {post} /v2/transfer/apply 出借方 申請債權收購
 	 * @apiVersion 0.2.0

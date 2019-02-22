@@ -1157,7 +1157,7 @@ class Product extends REST_Controller {
 			
 			//上傳檔案欄位
 			if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
-				$image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+				$image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'order');
 				if($image){
 					$param['person_image'] = $image;
 				}else{
@@ -1170,25 +1170,10 @@ class Product extends REST_Controller {
 			$target = $this->target_model->get($input['target_id']);
 			if(!empty($target)){
 
-				if($target->user_id != $user_id){
-					$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
-				}
-				
-				if($target->status != 1 || $target->sub_status != 0){
-					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
-				}
-				
-				$product_list 	= $this->config->item('product_list');
-				$product 		= $product_list[$target->product_id];
-				if($product){
-					if($product['type'] != 1){
-						$this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
-					}
-				
-					
-					$this->target_lib->signing_target($target->id,$param,$user_id);
-					$this->response(array('result' => 'SUCCESS'));
-				}
+
+				$this->target_lib->signing_target($target->id,$param,$user_id);
+				$this->response(array('result' => 'SUCCESS'));
+
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
 			}
 		}
