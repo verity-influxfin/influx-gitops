@@ -15,12 +15,12 @@ class Target_lib{
 	//新增target
 	public function add_target($param){
 		if(!empty($param)){
-			$param['target_no'] = $this->get_target_no();
+			$param['target_no'] = $this->get_target_no($param['product_id']);
 			$insert 			= $this->CI->target_model->insert($param);
 			if($insert){
 				return $insert;
 			}else{
-				$param['target_no'] = $this->get_target_no();
+				$param['target_no'] = $this->get_target_no($param['product_id']);
 				$insert 			= $this->CI->target_model->insert($param);
 				return $insert;
 			}
@@ -614,8 +614,10 @@ class Target_lib{
 		return false;
 	}
 	
-	private function get_target_no(){
-		$code = 'STN'.date('Ymd').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+	private function get_target_no($product_id=0){
+		$product_list 	= $this->config->item('product_list');
+		$alias 			= $product_list[$product_id]['alias'];
+		$code 			= $alias.date('Ymd').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
 		$result = $this->CI->target_model->get_by('target_no',$code);
 		if ($result) {
 			return $this->get_target_no();

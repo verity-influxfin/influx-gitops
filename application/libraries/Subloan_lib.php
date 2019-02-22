@@ -130,7 +130,7 @@ class Subloan_lib{
 				$this->CI->load->library('contract_lib');
 				$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$subloan['amount'],$interest_rate,'']);
 				if($contract_id){
-					$target_no 		= $this->get_target_no();
+					$target_no 		= $this->get_target_no($product_id);
 					$param = array(
 						'product_id'		=> $product_id,
 						'user_id'			=> $user_id,
@@ -310,8 +310,10 @@ class Subloan_lib{
 		return false;
 	}
 	
-	private function get_target_no(){
-		$code = 'STS'.date('Ymd').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
+	private function get_target_no($product_id=0){
+		$product_list 	= $this->config->item('product_list');
+		$alias 			= $product_list[$product_id]['alias'];
+		$code 			= $alias.'S'.date('Ymd').rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
 		$result = $this->CI->target_model->get_by('target_no',$code);
 		if ($result) {
 			return $this->get_target_no();

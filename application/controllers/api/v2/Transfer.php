@@ -587,7 +587,7 @@ class Transfer extends REST_Controller {
 	 * @apiDescription 可收購多筆，若為整包債轉，一次只能單筆，否則回覆債權轉讓標的不存在
 	 *
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} transfer_ids 投資IDs IDs ex: 1,3,10,21
+	 * @apiParam {Number} transfer_ids Transfer IDs ex: 1,3,10,21
 	 * @apiParam {String{4,12}} [password] 整包債轉密碼
 	 * 
 	 * 

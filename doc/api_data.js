@@ -6307,10 +6307,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": true,
             "field": "passbook_image",
-            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片ID )</p>"
+            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多三個)</p>"
           }
         ]
       }
@@ -6515,10 +6515,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "passbook_image",
-            "description": "<p>銀行流水帳內頁 ( 圖片ID )</p>"
+            "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多三個)</p>"
           }
         ]
       }
@@ -10406,14 +10406,14 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "405",
-            "description": "<p>對此申請無權限</p>"
+            "field": "411",
+            "description": "<p>訂單不存在</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "407",
-            "description": "<p>目前狀態無法完成此動作</p>"
+            "field": "412",
+            "description": "<p>已申請過或已失效</p>"
           },
           {
             "group": "Error 4xx",
@@ -10455,13 +10455,13 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "405",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+          "title": "411",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"411\"\n}",
           "type": "Object"
         },
         {
-          "title": "407",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
+          "title": "412",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"412\"\n}",
           "type": "Object"
         },
         {
@@ -26681,7 +26681,7 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "transfer_ids",
-            "description": "<p>投資IDs IDs ex: 1,3,10,21</p>"
+            "description": "<p>Transfer IDs ex: 1,3,10,21</p>"
           },
           {
             "group": "Parameter",

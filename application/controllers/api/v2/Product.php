@@ -1054,14 +1054,26 @@ class Product extends REST_Controller {
 
 		$list	= [];
 		if(!empty($orders)){
+			$this->load->library('contract_lib');
 			foreach($orders as $key => $value){
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,'',1);
-				$company 	= $this->user_model->get(intval($value->company_user_id));
+				$company = $this->user_model->get(intval($value->company_user_id));
+				$items 		= [];
 				$item_name	= explode(',',$value->item_name);
 				$item_count	= explode(',',$value->item_count);
 				foreach($item_count as $k => $v){
+					$items[] = $item_name[$k].' x '.$v;
 					$item_count[$k] = intval($v);
 				}
+				
+				$contract = $this->contract_lib->pretransfer_contract('order',[
+					$value->company_user_id,
+					$user_id,
+					implode(' , ',$items),
+					$value->total,
+					$amortization_schedule['total']['total_payment'].'、'.$value->instalment.'、'.$amortization_schedule['total_payment'].'、',
+				]);
+
 				$list[] = [
 					'order_no' 			=> $value->order_no,
 					'company' 			=> $company->name,
@@ -1072,6 +1084,7 @@ class Product extends REST_Controller {
 					'pmt' 				=> intval($amortization_schedule['total_payment']),
 					'item_name' 		=> $item_name,
 					'item_count' 		=> $item_count,
+					'contract' 			=> $contract,
 					'created_at' 		=> intval($value->created_at),
 				];
 			}
@@ -1102,18 +1115,18 @@ class Product extends REST_Controller {
 	 * @apiUse IsInvestor
 	 * @apiUse IsCompany
 	 *
-     * @apiError 405 對此申請無權限
-     * @apiErrorExample {Object} 405
+     * @apiError 411 訂單不存在
+     * @apiErrorExample {Object} 411
      *     {
      *       "result": "ERROR",
-     *       "error": "405"
+     *       "error": "411"
      *     }
 	 *
-     * @apiError 407 目前狀態無法完成此動作
-     * @apiErrorExample {Object} 407
+     * @apiError 412 已申請過或已失效
+     * @apiErrorExample {Object} 412
      *     {
      *       "result": "ERROR",
-     *       "error": "407"
+     *       "error": "412"
      *     }
 	 *
 	 *
@@ -1123,6 +1136,63 @@ class Product extends REST_Controller {
 		$this->load->library('S3_upload');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->library('Certification_lib');
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+
+		//必填欄位
+		if (empty($input['order_no'])) {
+			$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+		}
+		$this->load->model('transaction/order_model');
+		$order = $this->order_model->get_many_by([
+			'phone'		=> $this->user_info->phone,
+			'order_no'	=> $input['order_no'],
+		]);
+		
+		if($order){
+			if($order->status != 0 ){
+				$this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
+			}
+			
+			//上傳檔案欄位
+			if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+				$image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+				if($image){
+					$param['person_image'] = $image;
+				}else{
+					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				}
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+
+			$target = $this->target_model->get($input['target_id']);
+			if(!empty($target)){
+
+				if($target->user_id != $user_id){
+					$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+				}
+				
+				if($target->status != 1 || $target->sub_status != 0){
+					$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
+				}
+				
+				$product_list 	= $this->config->item('product_list');
+				$product 		= $product_list[$target->product_id];
+				if($product){
+					if($product['type'] != 1){
+						$this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
+					}
+				
+					
+					$this->target_lib->signing_target($target->id,$param,$user_id);
+					$this->response(array('result' => 'SUCCESS'));
+				}
+				$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
    }
 	
 }

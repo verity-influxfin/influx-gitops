@@ -127,7 +127,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} [facade_image] 店門正面照(經銷商必填)( 圖片ID )
 	 * @apiParam {Number} [store_image] 店內正面照(經銷商必填)( 圖片ID )
 	 * @apiParam {Number} [front_image] 銀行流水帳正面(經銷商必填)( 圖片ID )
-	 * @apiParam {Number} [passbook_image] 銀行流水帳內頁(經銷商必填)( 圖片ID )
+	 * @apiParam {String} [passbook_image] 銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多三個)
 	 * 
 	 * 
      * @apiSuccess {Object} result SUCCESS
@@ -227,7 +227,7 @@ class Judicialperson extends REST_Controller {
 				}
 				//上傳檔案欄位
 				$content		= [];
-				$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
+				$file_fields 	= ['facade_image','store_image','front_image'];
 				foreach ($file_fields as $field) {
 					$image_id = intval($input[$field]);
 					if (!$image_id) {
@@ -245,8 +245,29 @@ class Judicialperson extends REST_Controller {
 						}
 					}
 				}
-			
 				
+				//多個檔案欄位
+				$file_fields 	= ['passbook_image'];
+				foreach ($file_fields as $field) {
+					$image_ids = explode(',',$input[$field]);
+					if(count($image_ids)>3){
+						$image_ids = array_slice($image_ids,0,3);
+					}
+					$list = $this->log_image_model->get_many_by([
+						'id'		=> $image_ids,
+						'user_id'	=> $user_id,
+					]);
+
+					if($list && count($list)==count($image_ids)){
+						$content[$field] = [];
+						foreach($list as $k => $v){
+							$content[$field][] = $v->url;
+						}
+					}else{
+						$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+					}
+				}
+
 				$param['cooperation_content'] 	= json_encode($content);
 				$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
@@ -622,7 +643,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} facade_image 店門正面照 ( 圖片ID )
 	 * @apiParam {Number} store_image 店內正面照 ( 圖片ID )
 	 * @apiParam {Number} front_image 銀行流水帳正面 ( 圖片ID )
-	 * @apiParam {Number} passbook_image 銀行流水帳內頁 ( 圖片ID )
+	 * @apiParam {String} passbook_image 銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多三個)
 	 * 
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -664,7 +685,7 @@ class Judicialperson extends REST_Controller {
 
 		//上傳檔案欄位
 		$content		= [];
-		$file_fields 	= ['facade_image','store_image','front_image','passbook_image'];
+		$file_fields 	= ['facade_image','store_image','front_image'];
 		foreach ($file_fields as $field) {
 			$image_id = intval($input[$field]);
 			if (!$image_id) {
@@ -680,6 +701,27 @@ class Judicialperson extends REST_Controller {
 				}else{
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
+			}
+		}
+		
+		$file_fields 	= ['passbook_image'];
+		foreach ($file_fields as $field) {
+			$image_ids = explode(',',$input[$field]);
+			if(count($image_ids)>3){
+				$image_ids = array_slice($image_ids,0,3);
+			}
+			$list = $this->log_image_model->get_many_by([
+				'id'		=> $image_ids,
+				'user_id'	=> $user_id,
+			]);
+
+			if($list && count($list)==count($image_ids)){
+				$content[$field] = [];
+				foreach($list as $k => $v){
+					$content[$field][] = $v->url;
+				}
+			}else{
+				$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
 			}
 		}
 

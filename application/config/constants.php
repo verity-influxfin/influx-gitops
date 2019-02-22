@@ -133,6 +133,9 @@ defined('APPLY_STATUS_ERROR')  			OR define('APPLY_STATUS_ERROR'			, 407);
 defined('APPLY_EXIST')  				OR define('APPLY_EXIST'					, 408);
 defined('PRODUCT_REPAYMENT_ERROR')  	OR define('PRODUCT_REPAYMENT_ERROR'		, 409);
 defined('PRODUCT_TYPE_ERROR')  			OR define('PRODUCT_TYPE_ERROR'			, 410);
+defined('ORDER_NOT_EXIST')  			OR define('ORDER_NOT_EXIST'				, 411);
+defined('ORDER_STATUS_ERROR')  			OR define('ORDER_STATUS_ERROR'			, 412);
+
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
 defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 

@@ -19,6 +19,7 @@ class Contract_lib{
 				if($format){
 					$content 	= json_decode($contract->content,TRUE);
 					$content 	= vsprintf($format->content,$content);
+					$content 	.= "\n 中華民國 ".(date('Y',$contract->created_at)-1911).' '.date('年 m 月 d 日',$contract->created_at);
 					$data = array(
 						'title'		=> $format->title,
 						'content' 	=> $content,
@@ -56,11 +57,12 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function pretransfer_contract($content = [] ){
+	public function pretransfer_contract($type='' , $content = [] ){
 		if($content){
-			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>'transfer']);
+			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>$type]);
 			if($format){
 				$contract 	= vsprintf($format->content,$content);
+				$contract 	.= "\n 中華民國 ".(date('Y')-1911).' '.date('年 m 月 d 日');
 				return $contract;
 			}
 		}
