@@ -135,7 +135,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
-			if($target->sub_status != 0){
+			if(!in_array($target->sub_status,[0,8])){
 				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
 			}
 
@@ -250,7 +250,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			if($target->sub_status != 0){
+			if(!in_array($target->sub_status,[0,8])){
 				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
 			}
 			

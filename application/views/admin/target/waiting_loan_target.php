@@ -27,7 +27,9 @@
 					}
 					if(confirm("確認匯出下列案件："+target_no)){
 						window.open('./target_loan?ids=' + ids,'_blank');
-						setTimeout(location.reload(),500);
+						setTimeout(function(){
+						  location.reload()
+						}, 1000);
 					}
 				}
 				

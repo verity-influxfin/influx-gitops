@@ -21,7 +21,9 @@
 					}
 					if(confirm("確認匯出下列案件ID:"+ids)){
 						window.open('./withdraw_loan?ids=' + ids,'_blank');
-						setTimeout(location.reload(),500);
+						setTimeout(function(){
+						  location.reload()
+						}, 1000);
 					}
 				}
 				
