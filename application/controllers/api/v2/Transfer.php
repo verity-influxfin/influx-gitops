@@ -1107,41 +1107,6 @@ class Transfer extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotInvestor
 	 *
-     * @apiError 202 未通過所需的驗證(實名驗證)
-     * @apiErrorExample {Object} 202
-     *     {
-     *       "result": "ERROR",
-     *       "error": "202"
-     *     }
-	 *
-     * @apiError 203 金融帳號驗證尚未通過
-     * @apiErrorExample {Object} 203
-     *     {
-     *       "result": "ERROR",
-     *       "error": "203"
-     *     }
-	 *
-     * @apiError 208 未滿20歲
-     * @apiErrorExample {Object} 208
-     *     {
-     *       "result": "ERROR",
-     *       "error": "208"
-     *     }
-	 *
-     * @apiError 209 未設置交易密碼
-     * @apiErrorExample {Object} 209
-     *     {
-     *       "result": "ERROR",
-     *       "error": "209"
-     *     }
-	 *
-     * @apiError 212 未通過所需的驗證(Email)
-     * @apiErrorExample {Object} 212
-     *     {
-     *       "result": "ERROR",
-     *       "error": "212"
-     *     }
-	 *
      */
 	public function batch_post()
     {
@@ -1150,8 +1115,6 @@ class Transfer extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		
-		$this->check_adult();
-	
 		$content 	= $filter = [];
 		$where 		= ['status' => 0];
 		$investment = $this->investment_model->get_many_by([

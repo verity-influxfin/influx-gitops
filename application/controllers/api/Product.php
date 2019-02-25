@@ -1031,7 +1031,7 @@ class Product extends REST_Controller {
 			}
 
 			if(in_array($targets->status,array(0,1,2)) && $targets->sub_status == 0){
-				$rs = $this->target_lib->cancel_target($targets->id,$user_id);
+				$rs = $this->target_lib->cancel_target($targets,$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));

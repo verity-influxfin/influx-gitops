@@ -312,7 +312,7 @@ class Product extends REST_Controller {
 	 * @apiName PostProductApply
      * @apiGroup Product
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiDescription 此API只支援信用貸款類型產品。
+	 * @apiDescription 此API只支援信用貸款類型產品，產品簽約前一次只能一案。
 	 *
 	 * @apiParam {Number} product_id 產品ID
      * @apiParam {Number} amount 借款金額
@@ -358,7 +358,7 @@ class Product extends REST_Controller {
      *       "error": "403"
      *     }
 	 *
-     * @apiError 408 重複申請
+     * @apiError 408 同產品重複申請
      * @apiErrorExample {Object} 408
      *     {
      *       "result": "ERROR",
@@ -893,11 +893,11 @@ class Product extends REST_Controller {
 			$contract = '';
 			if($target->contract_id){
 				$this->load->library('Contract_lib');
-				$contract_data = $this->contract_lib->get_contract($target->contract_id);
-				$contract = $contract_data['content'];
+				$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
+				$contract 		= $contract_data['content'];
 			}
 			
-			$data = array(
+			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
 				'product_id' 		=> intval($target->product_id),
@@ -919,7 +919,7 @@ class Product extends REST_Controller {
 				'credit'			=> $credit,
 				'certification'		=> $certification,
 				'amortization_schedule'	=> $amortization_schedule,
-			);
+			];
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
@@ -981,7 +981,7 @@ class Product extends REST_Controller {
 			}
 
 			if(in_array($targets->status,array(0,1,2)) && $targets->sub_status == 0){
-				$rs = $this->target_lib->cancel_target($targets->id,$user_id);
+				$rs = $this->target_lib->cancel_target($targets,$user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
@@ -994,7 +994,7 @@ class Product extends REST_Controller {
 	/**
      * @api {get} /v2/product/order 借款方 分期訂單列表
 	 * @apiVersion 0.2.0
-	 * @apiName GetProductApplylist
+	 * @apiName GetProductOrder
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiGroup Product
 	 * 
@@ -1056,7 +1056,8 @@ class Product extends REST_Controller {
 		if(!empty($orders)){
 			$this->load->library('contract_lib');
 			foreach($orders as $key => $value){
-				$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,'',1);
+				$date = get_entering_date();
+				$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,$date,1);
 				$company = $this->user_model->get(intval($value->company_user_id));
 				$items 		= [];
 				$item_name	= explode(',',$value->item_name);
@@ -1093,20 +1094,25 @@ class Product extends REST_Controller {
     }
 	
 	/**
-     * @api {post} /v2/product/order 借款方 申請分期
+     * @api {post} /v2/product/order 借款方 申請分期訂單
 	 * @apiVersion 0.2.0
 	 * @apiName PostProductOrder
      * @apiGroup Product
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiDescription 此API只支援申請分期訂單，產品簽約前一次只能一案。
 	 *
 	 * @apiParam {String} order_no 訂單編號
 	 * @apiParam {file} person_image 本人照
 	 * 
      * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} target_id Targets ID
      * @apiSuccessExample {Object} SUCCESS
-     *    {
-     *      "result": "SUCCESS"
-     *    }
+     * {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"target_id": 1
+     * 		}
+     * }
 	 *
 	 * @apiUse InputError
 	 * @apiUse InsertError
@@ -1114,6 +1120,13 @@ class Product extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse IsInvestor
 	 * @apiUse IsCompany
+	 *
+     * @apiError 408 同產品重複申請
+     * @apiErrorExample {Object} 408
+     *     {
+     *       "result": "ERROR",
+     *       "error": "408"
+     *     }
 	 *
      * @apiError 411 訂單不存在
      * @apiErrorExample {Object} 411
@@ -1139,13 +1152,14 @@ class Product extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
-
+		$param 		= [];
+		$date 		= get_entering_date();
 		//必填欄位
 		if (empty($input['order_no'])) {
 			$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
 		}
 		$this->load->model('transaction/order_model');
-		$order = $this->order_model->get_many_by([
+		$order = $this->order_model->get_by([
 			'phone'		=> $this->user_info->phone,
 			'order_no'	=> $input['order_no'],
 		]);
@@ -1158,23 +1172,60 @@ class Product extends REST_Controller {
 			//上傳檔案欄位
 			if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
 				$image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'order');
-				if($image){
-					$param['person_image'] = $image;
-				}else{
+				if(!$image){
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
+			
+			$exist = $this->target_model->get_by([
+				'status <='		=> 1,
+				'user_id'		=> $user_id,
+				'product_id'	=> $order->product_id
+			]);
+			if($exist){
+				$this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
+			}
+			
+			$items 		= [];
+			$item_name	= explode(',',$order->item_name);
+			$item_count	= explode(',',$order->item_count);
+			foreach($item_count as $k => $v){
+				$items[] = $item_name[$k].' x '.$v;
+				$item_count[$k] = intval($v);
+			}
+			
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1);
+			
+			$this->load->library('contract_lib');
+			$contract = $this->contract_lib->sign_contract('order',[
+				$order->company_user_id,
+				$user_id,
+				implode(' , ',$items),
+				$order->total,
+				$amortization_schedule['total']['total_payment'].'、'.$order->instalment.'、'.$amortization_schedule['total_payment'].'、',
+			]);
+				
+			$param = [
+				'product_id'	=> $order->product_id,
+				'user_id'		=> $user_id,
+				'amount'		=> $order->total,
+				'damage_rate' 	=> LIQUIDATED_DAMAGES,
+				'instalment'	=> $order->instalment,
+				'order_id'		=> $order->id,
+				'reason'		=> '分期:'.implode(' , ',$items),
+				'contract_id'	=> $contract,
+				'person_image'	=> $image,
+				'loan_date'		=> $date,
+			];
 
-			$target = $this->target_model->get($input['target_id']);
-			if(!empty($target)){
-
-
-				$this->target_lib->signing_target($target->id,$param,$user_id);
-				$this->response(array('result' => 'SUCCESS'));
-
-				$this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
+			$insert = $this->target_lib->add_target($param);
+			if($insert){
+				$this->order_model->update($order->id,['status'=>2]);
+				$this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
+			}else{
+				$this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));

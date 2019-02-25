@@ -356,13 +356,13 @@ class Transaction_lib{
 						
 
 						$investment_ids = [];
-						$frozen_ids 	= array();
-						$investments 	= $this->CI->investment_model->get_many_by(array(
+						$frozen_ids 	= [];
+						$investments 	= $this->CI->investment_model->get_many_by([
 							'target_id'		=> $target->id,
 							'status'		=> 2,
 							'loan_amount >'	=> 0,
 							'frozen_status'	=> 1
-						));
+						]);
 						if($investments){
 							foreach($investments as $key => $value){
 								$investment_ids[]	= $value->id;
@@ -372,7 +372,7 @@ class Transaction_lib{
 								$this->CI->sms_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
 								
 								//放款
-								$transaction[]		= array(
+								$transaction[]		= [
 									'source'			=> SOURCE_LENDING,
 									'entering_date'		=> $date,
 									'user_from'			=> $value->user_id,
@@ -384,14 +384,14 @@ class Transaction_lib{
 									'user_to'			=> $target->user_id,
 									'bank_account_to'	=> $user_bankaccount->bank_account,
 									'status'			=> 2
-								);
+								];
 
 								
 								//攤還表
 								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
 								if($amortization_schedule){
 									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
-										$transaction[]	= array(
+										$transaction[]	= [
 											'source'			=> SOURCE_AR_PRINCIPAL,
 											'entering_date'		=> $date,
 											'user_from'			=> $target->user_id,
@@ -403,9 +403,9 @@ class Transaction_lib{
 											'user_to'			=> $value->user_id,
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
-										);
+										];
 										
-										$transaction[]	= array(
+										$transaction[]	= [
 											'source'			=> SOURCE_AR_INTEREST,
 											'entering_date'		=> $date,
 											'user_from'			=> $target->user_id,
@@ -417,11 +417,11 @@ class Transaction_lib{
 											'user_to'			=> $value->user_id,
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
-										);
+										];
 										
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
 										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
-										$transaction[]	= array(
+										$transaction[]	= [
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
 											'user_from'			=> $value->user_id,
@@ -433,27 +433,27 @@ class Transaction_lib{
 											'user_to'			=> 0,
 											'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 											'limit_date'		=> $payment['repayment_date'],
-										);
+										];
 									}
 								}
 							}
 							
 							$rs  = $this->CI->transaction_model->insert_many($transaction);
 							if($rs && is_array($rs)){
-								$target_update_param = array(
+								$target_update_param = [
 									'status'		=> 5,
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
-								);
+								];
 								$this->CI->target_model->update($target_id,$target_update_param);
 								$this->CI->load->library('target_lib');
 								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
 								
-								$this->CI->investment_model->update_many($investment_ids,array('status'=>3));
+								$this->CI->investment_model->update_many($investment_ids,['status'=>3]);
 								foreach($investment_ids as $k => $investment_id){
-									$this->CI->target_lib->insert_investment_change_log($investment_id,array('status'=>3),0,$admin_id);
+									$this->CI->target_lib->insert_investment_change_log($investment_id,['status'=>3],0,$admin_id);
 								}
-								$this->CI->frozen_amount_model->update_many($frozen_ids,array('status'=>0));
+								$this->CI->frozen_amount_model->update_many($frozen_ids,['status'=>0]);
 								foreach($rs as $key => $value){
 									$this->CI->passbook_lib->enter_account($value);
 								}

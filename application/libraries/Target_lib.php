@@ -44,22 +44,25 @@ class Target_lib{
 	
 	//全案退回
 	public function cancel_success_target($target,$admin_id=0){
-		if($target && $target->status==4){
-			$param = array(
+		if($target && in_array($target->status,[3,4]) && $target->script_status==0 ){
+			$param = [
 				'status'	=> 9,
 				'remark'	=> $target->remark.',整案退回',
-			);
+			];
 			$rs = $this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
 			$this->CI->load->model('loan/investment_model');
 			$this->CI->load->model('transaction/frozen_amount_model');
-			$investments = $this->CI->investment_model->get_many_by(array('target_id'=>$target->id,'status'=>array('0','1','2')));
+			$investments = $this->CI->investment_model->get_many_by([
+				'target_id'	=> $target->id,
+				'status'	=> [0,1,2]
+			]);
 			if($investments){
 				foreach($investments as $key => $value){
-					$this->insert_investment_change_log($value->id,array('status'=>9),0,$admin_id);
-					$this->CI->investment_model->update($value->id,array('status'=>9));
+					$this->insert_investment_change_log($value->id,['status'=>9],0,$admin_id);
+					$this->CI->investment_model->update($value->id,['status'=>9]);
 					if($value->frozen_status==1 && $value->frozen_id){
-						$this->CI->frozen_amount_model->update($value->frozen_id,array('status'=>0));
+						$this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
 					}
 				}
 			}
@@ -67,26 +70,34 @@ class Target_lib{
 				$this->CI->load->library('Subloan_lib');
 				$this->CI->subloan_lib->subloan_success_return($target,$admin_id);
 			}
+			if($target->order_id !=0){
+				$this->CI->load->model('transaction/order_model');
+				$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+			}
 			return $rs;
 		}
 		return false;
 	}
 	
 	//取消
-	public function cancel_target($target_id,$user_id=0){
-		if($target_id){
-			$param = array(
+	public function cancel_target($target=[],$user_id=0){
+		if($target){
+			$param = [
 				'status'		=> 8,
-			);
-			$rs = $this->CI->target_model->update($target_id,$param);
-			$this->insert_change_log($target_id,$param,$user_id);
+			];
+			$rs = $this->CI->target_model->update($target->id,$param);
+			$this->insert_change_log($target->id,$param,$user_id);
+			if($target->order_id !=0){
+				$this->CI->load->model('transaction/order_model');
+				$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+			}
 			return $rs;
 		}
 		return false;
 	}
 	
 	//核可額度利率
-	public function approve_target($target = array()){
+	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
 		if(!empty($target) && $target->status=='0'){
@@ -122,14 +133,14 @@ class Target_lib{
 						$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
 						$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
 						if($contract_id){
-							$param = array(
+							$param = [
 								'loan_amount'		=> $loan_amount,
 								'credit_level'		=> $credit['level'],
 								'platform_fee'		=> $platform_fee,
 								'interest_rate'		=> $interest_rate, 
 								'contract_id'		=> $contract_id,
 								'status'			=> '1',
-							);
+							];
 							$rs = $this->CI->target_model->update($target->id,$param);
 							$this->insert_change_log($target->id,$param);
 							if($rs){
@@ -137,11 +148,11 @@ class Target_lib{
 							}
 						}
 					}else{
-						$param = array(
+						$param = [
 							'loan_amount'		=> 0,
 							'status'			=> '9',
 							'remark'			=> '信用不足',
-						);
+						];
 						$rs = $this->CI->target_model->update($target->id,$param);
 						$this->insert_change_log($target->id,$param);
 						$this->CI->notification_lib->approve_target($user_id,'9');
@@ -154,7 +165,7 @@ class Target_lib{
 		return false;
 	}
 	
-	public function target_verify_success($target = array(),$admin_id=0){
+	public function target_verify_success($target = [],$admin_id=0){
 		if(!empty($target) && $target->status==2){
 			$param = [
 				'status' 		=> 3 , 
@@ -168,16 +179,20 @@ class Target_lib{
 		return false;
 	}
 	
-	public function target_verify_failed($target = array(),$admin_id=0,$remark='審批不通過'){
+	public function target_verify_failed($target = [],$admin_id=0,$remark='審批不通過'){
 		if(!empty($target)){
-			$param = array(
+			$param = [
 				'loan_amount'		=> 0,
-				'status'			=> '9',
+				'status'			=> 9,
 				'remark'			=> $remark,
-			);
+			];
 			$this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
 			$this->CI->notification_lib->target_verify_failed($target->user_id,0,$remark);
+			if($target->order_id !=0){
+				$this->CI->load->model('transaction/order_model');
+				$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+			}
 		}
 		return false;
 	}
@@ -192,7 +207,10 @@ class Target_lib{
 			$this->CI->load->library('Contract_lib');
 			$this->CI->load->library('Transaction_lib');
 
-			$investments = $this->CI->investment_model->order_by('tx_datetime','asc')->get_many_by(array('target_id'=>$target->id,'status'=>array('0','1')));
+			$investments = $this->CI->investment_model->order_by('tx_datetime','asc')->get_many_by([
+				'target_id'	=> $target->id,
+				'status'	=> [0,1]
+			);
 			if($investments){
 				
 				$amount = 0;
@@ -202,14 +220,14 @@ class Target_lib{
 					}
 				}
 				//更新invested
-				$this->CI->target_model->update($target->id,array('invested'=>$amount));
+				$this->CI->target_model->update($target->id,['invested'=>$amount]);
 				if($amount >= $target->loan_amount){
 					
 					//結標
-					$target_update_param = array(
+					$target_update_param = [
 						'status'		=> 4,
 						'loan_status'	=> 2
-					);
+					];
 					$rs = $this->CI->target_model->update($target->id,$target_update_param);
 					$this->insert_change_log($target->id,$target_update_param);
 					if($rs){
@@ -217,7 +235,7 @@ class Target_lib{
 						$total = 0;
 						$ended = true;
 						foreach($investments as $key => $value){
-							$param = array('status'=>9);
+							$param = ['status'=>9];
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
 								$total += $value->amount;
 								if($total < $target->loan_amount && $ended){
@@ -230,11 +248,11 @@ class Target_lib{
 										$target->interest_rate,
 										$schedule['total_payment']
 									]);
-									$param 			= array(
+									$param 			= [
 										'loan_amount'	=> $loan_amount,
 										'contract_id'	=> $contract_id ,
 										'status'		=> 2
-									);
+									];
 									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
@@ -246,11 +264,11 @@ class Target_lib{
 										$target->interest_rate,
 										$schedule['total_payment']
 									]);
-									$param 			= array(
+									$param 			= [
 										'loan_amount'	=> $loan_amount,
 										'contract_id'	=> $contract_id ,
 										'status'		=> 2
-									); 
+									]; 
 									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 									$ended 			= false;
 								}else{
@@ -270,45 +288,49 @@ class Target_lib{
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->auction_ended($target);
 						}else{
-							$target_update_param = array(
+							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
 								'expire_time'	=> strtotime('+2 days', $target->expire_time),
 								'invested'		=> 0,
-							);
+							];
 							$this->CI->target_model->update($target->id,$target_update_param);
 						}
 						foreach($investments as $key => $value){
-							$this->insert_investment_change_log($value->id,array('status'=>9));
-							$this->CI->investment_model->update($value->id,array('status'=>9));
+							$this->insert_investment_change_log($value->id,['status'=>9]);
+							$this->CI->investment_model->update($value->id,['status'=>9]);
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
-								$this->CI->frozen_amount_model->update($value->frozen_id,array('status'=>0));
+								$this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
 							}
 						}
 					}else{
 						//凍結款項
 						foreach($investments as $key => $value){
 							if($value->status ==0 && $value->frozen_status==0){
-								$virtual_account = $this->CI->virtual_account_model->get_by(array('status'=>1,'investor'=>1,'user_id'=>$value->user_id));
+								$virtual_account = $this->CI->virtual_account_model->get_by([
+									'status'	=> 1,
+									'investor'	=> 1,
+									'user_id'	=> $value->user_id
+								]);
 								if($virtual_account){
-									$this->CI->virtual_account_model->update($virtual_account->id,array('status'=>2));
+									$this->CI->virtual_account_model->update($virtual_account->id,['status'=>2]);
 									$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 									$total = $funds['total'] - $funds['frozen'];
 									if(intval($total)-intval($value->amount)>=0){
 										$last_recharge_date = strtotime($funds['last_recharge_date']);
 										$tx_datetime = $last_recharge_date < $value->created_at?$value->created_at:$last_recharge_date;
 										$tx_datetime = date('Y-m-d H:i:s',$tx_datetime);
-										$param = array(
+										$param = [
 											'virtual_account'	=> $virtual_account->virtual_account,
 											'amount'			=> intval($value->amount),
 											'tx_datetime'		=> $tx_datetime,
-										);
+										];
 										$rs = $this->CI->frozen_amount_model->insert($param);
 										if($rs){
-											$this->insert_investment_change_log($value->id,array('frozen_status'=>1,'frozen_id'=>$rs,'status'=>1,'tx_datetime'=>$tx_datetime));
-											$this->CI->investment_model->update($value->id,array('frozen_status'=>1,'frozen_id'=>$rs,'status'=>1,'tx_datetime'=>$tx_datetime));
+											$this->insert_investment_change_log($value->id,['frozen_status'=>1,'frozen_id'=>$rs,'status'=>1,'tx_datetime'=>$tx_datetime]);
+											$this->CI->investment_model->update($value->id,['frozen_status'=>1,'frozen_id'=>$rs,'status'=>1,'tx_datetime'=>$tx_datetime]);
 										}
 									}
-									$this->CI->virtual_account_model->update($virtual_account->id,array('status'=>1));
+									$this->CI->virtual_account_model->update($virtual_account->id,['status'=>1]);
 								}
 							}
 						}
@@ -533,7 +555,7 @@ class Target_lib{
 	public function script_check_bidding(){
 		$script  	= 3;
 		$count 		= 0;
-		$ids		= array();
+		$ids		= [];
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> 3,
 			'script_status'	=> 0
@@ -549,7 +571,7 @@ class Target_lib{
 					if($check){
 						$count++;
 					}
-					$this->CI->target_model->update($value->id,array('script_status'=>0));
+					$this->CI->target_model->update($value->id,['script_status'=>0]);
 				}
 			}
 		}
@@ -560,10 +582,10 @@ class Target_lib{
 	public function script_approve_target(){
 		
 		$this->CI->load->library('Certification_lib');
-		$targets 	= $this->CI->target_model->get_many_by(array(
+		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> 0,
 			'script_status'	=> 0
-		));
+		]);
 		$list 		= [];
 		$ids		= [];
 		$script  	= 4;
@@ -574,7 +596,7 @@ class Target_lib{
 				$ids[] = $value->id;
 			}
 			
-			$rs = $this->CI->target_model->update_many($ids,array('script_status'=>$script));
+			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
 			if($rs){
 				foreach($list as $product_id => $targets){
 					$product_list 			= $this->CI->config->item('product_list');
@@ -596,16 +618,20 @@ class Target_lib{
 							$create_date 	= date('Y-m-d',$value->created_at);
 							if($limit_date > $create_date){
 								$count++;
-								$param = array(
+								$param = [
 									'status' => 9,
 									'remark' => $value->remark.'系統自動取消'
-								);
+								];
 								$this->CI->target_model->update($value->id,$param);
 								$this->insert_change_log($target_id,$param);
 								$this->CI->notification_lib->approve_cancel($value->user_id);
+								if($value->order_id !=0){
+									$this->CI->load->model('transaction/order_model');
+									$order = $this->CI->order_model->update($value->order_id,['status'=>0]);
+								}
 							}
 						}
-						$this->CI->target_model->update($value->id,array('script_status'=>0));
+						$this->CI->target_model->update($value->id,['script_status'=>0]);
 					}
 				}
 				return $count;
@@ -615,7 +641,7 @@ class Target_lib{
 	}
 	
 	private function get_target_no($product_id=0){
-		$product_list 	= $this->config->item('product_list');
+		$product_list 	= $this->CI->config->item('product_list');
 		$alias 			= $product_list[$product_id]['alias'];
 		$code 			= $alias.date('Ymd').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(1, 9);
 		$result = $this->CI->target_model->get_by('target_no',$code);
@@ -629,11 +655,11 @@ class Target_lib{
 	public function insert_change_log($target_id,$update_param,$user_id=0,$admin_id=0){
 		if($target_id){
 			$this->CI->load->model('log/Log_targetschange_model');
-			$param		= array(
+			$param		= [
 				'target_id'		=> $target_id,
 				'change_user'	=> $user_id,
 				'change_admin'	=> $admin_id
-			);
+			];
 			$fields 	= ['delay','status','loan_status','sub_status'];
 			foreach ($fields as $field) {
 				if (isset($update_param[$field])) {
@@ -649,11 +675,11 @@ class Target_lib{
 	public function insert_investment_change_log($investment_id,$update_param,$user_id=0,$admin_id=0){
 		if($investment_id){
 			$this->CI->load->model('log/Log_investmentschange_model');
-			$param		= array(
+			$param		= [
 				'investment_id'	=> $investment_id,
 				'change_user'	=> $user_id,
 				'change_admin'	=> $admin_id
-			);
+			];
 			$fields 	= ['status','transfer_status'];
 			foreach ($fields as $field) {
 				if (isset($update_param[$field])) {

@@ -64,6 +64,10 @@
 		"PostProductSigning",
 		"GetProductApplylist",
 		"GetProductApplyinfo",
+		"GetProductCancel",
+		"GetProductOrder",
+		"PostProductOrder",
+		
 		
 		"Repayment",
 		"GetRepaymentDashboard",

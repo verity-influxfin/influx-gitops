@@ -59,6 +59,9 @@ define({
     "PostProductSigning",
     "GetProductApplylist",
     "GetProductApplyinfo",
+    "GetProductCancel",
+    "GetProductOrder",
+    "PostProductOrder",
     "Repayment",
     "GetRepaymentDashboard",
     "GetRepaymentList",
@@ -100,7 +103,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-02-22T09:29:56.101Z",
+    "time": "2019-02-25T11:35:15.445Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

@@ -27,6 +27,6 @@ class Welcome extends CI_Controller {
 	}
 	
 	function index(){
-		dump(iconv('UTF-8', 'BIG-5//IGNORE', '業'));
+		dump(MD5(date("Ymd").'ezbar888'));
 	}
 }

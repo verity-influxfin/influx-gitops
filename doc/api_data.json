@@ -8552,169 +8552,6 @@
   },
   {
     "type": "get",
-    "url": "/v2/product/order",
-    "title": "借款方 分期訂單列表",
-    "version": "0.2.0",
-    "name": "GetProductApplylist",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "request_token",
-            "description": "<p>登入後取得的 Request Token</p>"
-          }
-        ]
-      }
-    },
-    "group": "Product",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "result",
-            "description": "<p>SUCCESS</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "order_no",
-            "description": "<p>訂單編號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "company",
-            "description": "<p>經銷商名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "merchant_order_no",
-            "description": "<p>經銷商訂單編號</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "product_id",
-            "description": "<p>Product ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "amount",
-            "description": "<p>金額</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "instalment",
-            "description": "<p>期數 0:其他</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "item_name",
-            "description": "<p>商品名稱</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "item_count",
-            "description": "<p>商品數量</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "created_at",
-            "description": "<p>申請日期</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"order_no\": \"29-2019013116565856678\",\n\t\t\t\t\"company\": \"普匯金融科技股份有限公司\",\n\t\t\t\t\"merchant_order_no\": \"toytoytoy123\",\n\t\t\t\t\"product_id\": 2,\n\t\t\t\t\"total\": 20619,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"item_name\": [\n\t\t\t\t\t\"小雞\",\n\t\t\t\t\t\"'丫丫'\"\n\t\t\t\t],\n\t\t\t\t\"item_count\": [\n\t\t\t\t\t1,\n\t\t\t\t\t2\n\t\t\t\t],\n\t\t\t\t\"created_at\": 1548925018\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
-          "type": "Object"
-        }
-      ]
-    },
-    "filename": "application/controllers/api/v2/Product.php",
-    "groupTitle": "Product",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/product/order"
-      }
-    ],
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "100",
-            "description": "<p>Token錯誤</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "101",
-            "description": "<p>帳戶已黑名單</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "207",
-            "description": "<p>非借款端登入</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "216",
-            "description": "<p>不支援法人帳號使用</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "100",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "101",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "207",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "216",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-          "type": "Object"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
     "url": "/product/applylist",
     "title": "借款方 申請紀錄列表",
     "version": "0.1.0",
@@ -9917,6 +9754,169 @@
     ]
   },
   {
+    "type": "get",
+    "url": "/v2/product/order",
+    "title": "借款方 分期訂單列表",
+    "version": "0.2.0",
+    "name": "GetProductOrder",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "group": "Product",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "order_no",
+            "description": "<p>訂單編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "company",
+            "description": "<p>經銷商名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "merchant_order_no",
+            "description": "<p>經銷商訂單編號</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "product_id",
+            "description": "<p>Product ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>金額</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "instalment",
+            "description": "<p>期數 0:其他</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "item_name",
+            "description": "<p>商品名稱</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "item_count",
+            "description": "<p>商品數量</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>申請日期</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"order_no\": \"29-2019013116565856678\",\n\t\t\t\t\"company\": \"普匯金融科技股份有限公司\",\n\t\t\t\t\"merchant_order_no\": \"toytoytoy123\",\n\t\t\t\t\"product_id\": 2,\n\t\t\t\t\"total\": 20619,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"item_name\": [\n\t\t\t\t\t\"小雞\",\n\t\t\t\t\t\"'丫丫'\"\n\t\t\t\t],\n\t\t\t\t\"item_count\": [\n\t\t\t\t\t1,\n\t\t\t\t\t2\n\t\t\t\t],\n\t\t\t\t\"created_at\": 1548925018\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Product.php",
+    "groupTitle": "Product",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/product/order"
+      }
+    ],
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "207",
+            "description": "<p>非借款端登入</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "216",
+            "description": "<p>不支援法人帳號使用</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "207",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "216",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+          "type": "Object"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/v2/product/apply",
     "title": "借款方 申請借款",
@@ -9936,7 +9936,7 @@
         ]
       }
     },
-    "description": "<p>此API只支援信用貸款類型產品。</p>",
+    "description": "<p>此API只支援信用貸款類型產品，產品簽約前一次只能一案。</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -10032,7 +10032,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "408",
-            "description": "<p>重複申請</p>"
+            "description": "<p>同產品重複申請</p>"
           },
           {
             "group": "Error 4xx",
@@ -10343,7 +10343,7 @@
   {
     "type": "post",
     "url": "/v2/product/order",
-    "title": "借款方 申請分期",
+    "title": "借款方 申請分期訂單",
     "version": "0.2.0",
     "name": "PostProductOrder",
     "group": "Product",
@@ -10360,6 +10360,7 @@
         ]
       }
     },
+    "description": "<p>此API只支援申請分期訂單，產品簽約前一次只能一案。</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -10389,13 +10390,20 @@
             "optional": false,
             "field": "result",
             "description": "<p>SUCCESS</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "target_id",
+            "description": "<p>Targets ID</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target_id\": 1\n\t\t}\n}",
           "type": "Object"
         }
       ]
@@ -10403,6 +10411,12 @@
     "error": {
       "fields": {
         "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "408",
+            "description": "<p>同產品重複申請</p>"
+          },
           {
             "group": "Error 4xx",
             "optional": false,
@@ -10454,6 +10468,11 @@
         ]
       },
       "examples": [
+        {
+          "title": "408",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
+          "type": "Object"
+        },
         {
           "title": "411",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"411\"\n}",
@@ -23654,39 +23673,16 @@
         }
       ]
     },
+    "filename": "application/controllers/api/v2/Target.php",
+    "groupTitle": "Target",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/target/batch"
+      }
+    ],
     "error": {
       "fields": {
         "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "202",
-            "description": "<p>未通過所需的驗證(實名驗證)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "203",
-            "description": "<p>金融帳號驗證尚未通過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "208",
-            "description": "<p>未滿20歲</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "209",
-            "description": "<p>未設置交易密碼</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "212",
-            "description": "<p>未通過所需的驗證(Email)</p>"
-          },
           {
             "group": "Error 4xx",
             "optional": false,
@@ -23721,31 +23717,6 @@
       },
       "examples": [
         {
-          "title": "202",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "203",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "208",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "209",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "212",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "Object"
-        },
-        {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "Object"
@@ -23771,14 +23742,7 @@
           "type": "Object"
         }
       ]
-    },
-    "filename": "application/controllers/api/v2/Target.php",
-    "groupTitle": "Target",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/target/batch"
-      }
-    ]
+    }
   },
   {
     "type": "post",
@@ -27478,39 +27442,16 @@
         }
       ]
     },
+    "filename": "application/controllers/api/v2/Transfer.php",
+    "groupTitle": "Transfer",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch"
+      }
+    ],
     "error": {
       "fields": {
         "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "202",
-            "description": "<p>未通過所需的驗證(實名驗證)</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "203",
-            "description": "<p>金融帳號驗證尚未通過</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "208",
-            "description": "<p>未滿20歲</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "209",
-            "description": "<p>未設置交易密碼</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "212",
-            "description": "<p>未通過所需的驗證(Email)</p>"
-          },
           {
             "group": "Error 4xx",
             "optional": false,
@@ -27539,31 +27480,6 @@
       },
       "examples": [
         {
-          "title": "202",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "203",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"203\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "208",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "209",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"209\"\n}",
-          "type": "Object"
-        },
-        {
-          "title": "212",
-          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-          "type": "Object"
-        },
-        {
           "title": "200",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
           "type": "Object"
@@ -27584,14 +27500,7 @@
           "type": "Object"
         }
       ]
-    },
-    "filename": "application/controllers/api/v2/Transfer.php",
-    "groupTitle": "Transfer",
-    "sampleRequest": [
-      {
-        "url": "https://dev-api.influxfin.com/api/v2/transfer/batch"
-      }
-    ]
+    }
   },
   {
     "type": "post",
