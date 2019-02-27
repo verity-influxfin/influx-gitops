@@ -37,13 +37,13 @@ class Target extends REST_Controller {
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
-				$this->log_request_model->insert(array(
+				$this->log_request_model->insert([
 					'method' 	=> $this->request->method,
 					'url'	 	=> $this->uri->uri_string(),
 					'investor'	=> $tokenData->investor,
 					'user_id'	=> $tokenData->id,
 					'agent'		=> $tokenData->agent,
-				));
+				]);
 			}
 			
 			$this->user_info->investor 		= $tokenData->investor;

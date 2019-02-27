@@ -581,15 +581,14 @@ class Product extends REST_Controller {
 				}
 				
 				//檢查金融卡綁定 NO_BANK_ACCOUNT
-				$bank_account = $this->user_bankaccount_model->get_by(array(
+				$bank_account = $this->user_bankaccount_model->get_by([
 					'status'	=> 1,
 					'investor'	=> $investor,
+					'verify'	=> 0,
 					'user_id'	=> $user_id 
-				));
+				]);
 				if($bank_account){
-					if($bank_account->verify==0){
-						$this->user_bankaccount_model->update($bank_account->id,array('verify'=>2));
-					}
+					$this->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
 				}else{
 					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 				}

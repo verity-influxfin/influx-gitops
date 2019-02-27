@@ -100,10 +100,13 @@ class Target_lib{
 	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
-		if(!empty($target) && $target->status=='0'){
+		if(!empty($target) && $target->status==0){
+			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
+			$product_info 	= $product_list[$product_id];
 			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
+			
 			if(!$credit){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
 				if($rs){
@@ -115,12 +118,12 @@ class Target_lib{
 				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment,$product_id);
 				if($interest_rate){
 					$used_amount	= 0;
-					$target_list 	= $this->CI->target_model->get_many_by(array(
+					$target_list 	= $this->CI->target_model->get_many_by([
 						'id !='		=> $target->id,
 						'product_id'=> $product_id,
 						'user_id'	=> $user_id,
 						'status <='	=> 5
-					));
+					]);
 					if($target_list){
 						foreach($target_list as $key =>$value){
 							$used_amount = $used_amount + intval($value->loan_amount);
@@ -128,23 +131,52 @@ class Target_lib{
 					}
 					$credit['amount'] 	= $credit['amount'] - $used_amount;
 					$loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
-					if( $loan_amount >= 5000 ){
-						$platform_fee	= round($loan_amount/100*PLATFORM_FEES,0);
-						$platform_fee	= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
-						$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
-						if($contract_id){
+					$platform_fee		= round($loan_amount/100*PLATFORM_FEES,0);
+					$platform_fee		= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
+						
+					if( ($product_info['type']==1 && $loan_amount >= $product_info['loan_range_s']) ||
+						($product_info['type']==2 && $loan_amount == $target->amount)
+					) {
+						
+						if($product_info['type']==1){
+							$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
+							if($contract_id){
+								$param = [
+									'loan_amount'		=> $loan_amount,
+									'credit_level'		=> $credit['level'],
+									'platform_fee'		=> $platform_fee,
+									'interest_rate'		=> $interest_rate, 
+									'contract_id'		=> $contract_id,
+									'status'			=> 1,
+								];
+								$rs = $this->CI->target_model->update($target->id,$param);
+								$this->insert_change_log($target->id,$param);
+								if($rs){
+									$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+								}
+							}
+						}else if($product_info['type']==2){
 							$param = [
 								'loan_amount'		=> $loan_amount,
 								'credit_level'		=> $credit['level'],
 								'platform_fee'		=> $platform_fee,
 								'interest_rate'		=> $interest_rate, 
-								'contract_id'		=> $contract_id,
-								'status'			=> '1',
+								'status'			=> 2,
 							];
 							$rs = $this->CI->target_model->update($target->id,$param);
 							$this->insert_change_log($target->id,$param);
 							if($rs){
 								$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+								$this->CI->load->model('user/user_bankaccount_model');
+								$bank_account = $this->CI->user_bankaccount_model->get_by([
+									'status'	=> 1,
+									'investor'	=> 0,
+									'verify'	=> 0,
+									'user_id'	=> $user_id 
+								]);
+								if($bank_account){
+									$this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
+								}
 							}
 						}
 					}else{
@@ -156,6 +188,10 @@ class Target_lib{
 						$rs = $this->CI->target_model->update($target->id,$param);
 						$this->insert_change_log($target->id,$param);
 						$this->CI->notification_lib->approve_target($user_id,'9');
+						if($target->order_id !=0){
+							$this->CI->load->model('transaction/order_model');
+							$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+						}
 					}
 					
 					return $rs;
@@ -167,6 +203,8 @@ class Target_lib{
 	
 	public function target_verify_success($target = [],$admin_id=0){
 		if(!empty($target) && $target->status==2){
+			$product_list 	= $this->CI->config->item('product_list');
+			$product_info 	= $product_list[$target->product_id];
 			$param = [
 				'status' 		=> 3 , 
 				'expire_time'	=> strtotime('+2 days', time()),
@@ -210,7 +248,7 @@ class Target_lib{
 			$investments = $this->CI->investment_model->order_by('tx_datetime','asc')->get_many_by([
 				'target_id'	=> $target->id,
 				'status'	=> [0,1]
-			);
+			]);
 			if($investments){
 				
 				$amount = 0;
@@ -595,7 +633,7 @@ class Target_lib{
 				$list[$value->product_id][$value->id] = $value;
 				$ids[] = $value->id;
 			}
-			
+
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
 			if($rs){
 				foreach($list as $product_id => $targets){

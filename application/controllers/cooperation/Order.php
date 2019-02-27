@@ -541,12 +541,13 @@ class Order extends REST_Controller {
 		}
 		
 		$content['platform_fee'] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+		$content['platform_fee'] 	= $content['platform_fee'] > PLATFORM_FEES_MIN ? $content['platform_fee'] : PLATFORM_FEES_MIN;
 		$content['total'] 			= $total + $content['platform_fee'];
 		$content['company_user_id'] = $this->cooperation_info->company_user_id;
 		$content['order_no'] 		= $this->get_order_no();
 		$rs = $this->order_model->insert($content);
 		if($rs){
-			$this->response(array('result' => 'SUCCESS'));
+			$this->response(['result' => 'SUCCESS']);
 		}else{
 			$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
 		}		
@@ -630,7 +631,7 @@ class Order extends REST_Controller {
 				'status'			=> intval($order->status),
 				'created_at'		=> intval($order->created_at),
 			];
-			$this->response(array('result' => 'SUCCESS','data' => $data));
+			$this->response(['result' => 'SUCCESS','data' => $data]);
 		}
 		$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
     }

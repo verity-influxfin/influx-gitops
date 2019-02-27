@@ -38,20 +38,20 @@ class Credit_lib{
 		
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id);
+				$rs = $this->$method($user_id,$product_id);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id){
+	private function approve_1($user_id,$product_id){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$data 		= [];
 		$total 		= 0;
-		$param		= ['product_id'=>1,'user_id'=> $user_id];
+		$param		= ['product_id'=>$product_id,'user_id'=> $user_id,'amount'=>0];
 		foreach($info as $key => $value){
 			$data[$value->meta_key] = $value->meta_value;
 		}
@@ -93,12 +93,12 @@ class Credit_lib{
 		}
 		
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
-		$param['points'] 	= $total;
+		$param['points'] 	= intval($total);
 		$param['level'] 	= $this->get_credit_level($total,$product_id);
 		if(isset($this->credit['credit_amount_'.$product_id])){
 			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
-				if($points>=$value['start'] && $points<=$value['end']){
-					return $value['amount'];
+				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
+					$param['amount'] = $value['amount'];
 					break;
 				}
 			}
@@ -107,6 +107,99 @@ class Credit_lib{
 		$param['amount'] 	= $this->get_credit_amount($total,$product_id);
 		$rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
+	}
+	
+	private function approve_2($user_id,$product_id){
+		return $this->approve_1($user_id,$product_id);
+	}
+
+	private function approve_3($user_id,$product_id){
+
+		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
+		$user_info 	= $this->CI->user_model->get($user_id);
+		$data 		= [];
+		$total 		= 0;
+		$param		= ['product_id'=>$product_id,'user_id'=> $user_id,'amount'=>0];
+		foreach($info as $key => $value){
+			$data[$value->meta_key] = $value->meta_value;
+		}
+
+		//畢業學校
+		if(isset($data['diploma_name']) && !empty($data['diploma_name'])){
+			$total += intval($this->get_school_point($data['diploma_name'],$data['diploma_system'],''))*0.6;
+		}
+
+		if(isset($data['job_type'])){
+			$total += $data['job_type']?50:100;
+		}
+
+		if(isset($data['job_salary'])){
+			$total += $this->get_job_salary_point(intval($data['job_salary']));
+		}
+
+		if(isset($data['job_license']) && $data['job_license']){
+			$total += 100;
+		}
+
+		if(isset($data['job_employee'])){
+			$total += $this->get_job_employee_point(intval($data['job_employee']));
+		}
+
+		if(isset($data['job_position'])){
+			$total += $this->get_job_position_point(intval($data['job_position']));
+		}
+
+		if(isset($data['job_seniority'])){
+			$total += $this->get_job_seniority_point(intval($data['job_seniority']),intval($data['job_salary']));
+		}
+
+		if(isset($data['job_company_seniority'])){
+			$total += $this->get_job_seniority_point(intval($data['job_company_seniority']),intval($data['job_salary']));
+		}
+
+		if(isset($data['job_industry'])){
+			$total += $this->get_job_industry_point($data['job_industry']);
+		}
+		
+		//聯徵
+		if(isset($data['investigation_status']) && !empty($data['investigation_status'])){
+			if(isset($data['investigation_times'])){
+				$total += $this->get_investigation_times_point(intval($data['investigation_times']));
+			}
+
+			if(isset($data['investigation_credit_rate'])){
+				$total += $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+			}
+
+			if(isset($data['investigation_months'])){
+				$total += $this->get_investigation_months_point(intval($data['investigation_months']));
+			}
+		}
+
+		$total = $user_info->sex=='M'?round($total*0.9):$total;
+		$param['points'] 	= intval($total);
+		$param['level'] 	= $this->get_credit_level($total,$product_id);
+		if(isset($this->credit['credit_amount_'.$product_id])){
+			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
+					$param['amount'] = intval($data['job_salary'])*$value['rate'];
+					break;
+				}
+			}
+		}
+		$param['amount'] = $param['amount']>300000?300000:$param['amount'];
+		$param['amount'] = $param['amount']<20000?0:$param['amount'];
+		if(intval($data['job_salary'])<=35000){
+			$job_salary = intval($data['job_salary'])*2;
+			$param['amount'] = $param['amount']>$job_salary?$job_salary:$param['amount'];
+		}
+
+		$rs 		= $this->CI->credit_model->insert($param);
+		return $rs;
+	}
+	
+	private function approve_4($user_id,$product_id){
+		return $this->approve_3($user_id,$product_id);
 	}
 	
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
@@ -133,6 +226,138 @@ class Credit_lib{
 			if(!empty($school_major)){
 				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
 			}
+		}
+		return $point;
+	}
+	
+	public function get_job_salary_point($job_salary = 0){
+		$point 	= 0;
+		if($job_salary >= 23000 && $job_salary < 30000){
+			$point = 50;
+		}else if($job_salary >= 30000 && $job_salary < 35000){
+			$point = 100;
+		}else if($job_salary >= 35000 && $job_salary < 40000){
+			$point = 150;
+		}else if($job_salary >= 40000 && $job_salary < 45000){
+			$point = 200;
+		}else if($job_salary >= 45000 && $job_salary < 50000){
+			$point = 250;
+		}else if($job_salary >= 50000){
+			$point = 500;
+		}
+		return $point;
+	}
+
+	public function get_job_employee_point($employee = 0){
+		switch ($employee) {
+			case 1:
+				return 50;
+				break;
+			case 2:
+				return 100;
+				break;
+			case 3:
+				return 150;
+				break;
+			case 4:
+				return 200;
+				break;
+			case 5:
+				return 250;
+				break;
+			case 6:
+				return 300;
+				break;
+		}
+		return 0;
+	}
+
+	public function get_job_position_point($position = 0){
+		switch ($position) {
+			case 1:
+				return 150;
+				break;
+			case 2:
+				return 200;
+				break;
+			case 3:
+				return 300;
+				break;
+		}
+		return 100;
+	}
+
+	public function get_job_seniority_point($seniority = 0,$job_salary = 0){
+		switch ($seniority) {
+			case 1:
+				return 100;
+				break;
+			case 2:
+				return 150;
+				break;
+			case 3:
+				if($job_salary < 40000){
+					return 100;
+				}else{
+					return 200;
+				}
+				break;
+			case 3:
+				if($job_salary < 50000){
+					return 100;
+				}else{
+					return 300;
+				}
+				break;
+		}
+		return 0;
+	}
+
+	public function get_job_industry_point($industry = ''){
+		$point300 = ['K','O','Q','P'];
+		$point200 = ['M','D','J'];
+		
+		if(in_array($industry,$point300)){
+			return 300;
+		}else if(in_array($industry,$point200)){
+			return 200;
+		}else{
+			return 100;
+		}
+	}
+	
+	public function get_investigation_times_point($times = 0){
+		$point 	= 0;
+		if($times > 0 && $times <= 3){
+			$point = 300;
+		}else if($times > 3 && $times <= 6){
+			$point = 200;
+		}else if($times > 6 && $times <= 9){
+			$point = 100;
+		}
+		return $point;
+	}
+
+	public function get_investigation_rate_point($rate = 0){
+		$point 	= 0;
+		if($rate > 0 && $rate <= 30){
+			$point = 300;
+		}else if($rate > 30 && $rate <= 50){
+			$point = 200;
+		}else if($rate > 50 && $rate <= 70){
+			$point = 100;
+		}
+		return $point;
+	}
+
+	public function get_investigation_months_point($months = 0){
+		$point 	= 0;
+		if($months >= 12){
+			$point = 300;
+		}else if($months >= 6 && $rate < 12){
+			$point = 200;
+		}else if($months >= 3 && $rate < 6){
+			$point = 100;
 		}
 		return $point;
 	}
