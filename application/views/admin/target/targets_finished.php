@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 還款中</h1>
+                    <h1 class="page-header">借款 - 已結案</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -32,8 +32,8 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
-							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
+							<!--a id="target_export" href="<?=admin_url('target/target_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
+							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a-->
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -90,6 +90,7 @@
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?> <?=$value->delay?$value->delay_days.'天':"" ?></td>
                                             <td>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<?=$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':"" ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):"" ?></td>

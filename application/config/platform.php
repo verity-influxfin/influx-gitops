@@ -12,6 +12,7 @@ $config['admin_menu'] = array(
 		"waiting_bidding"	=> "已上架",
 		"waiting_loan"		=> "待放款",
 		"repayment"			=> "還款中",
+		"finished"			=> "已結案",
 		"prepayment"		=> "提前還款",
 	),
 	"Transfer" 						=> array(
