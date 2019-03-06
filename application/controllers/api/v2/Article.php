@@ -10,7 +10,7 @@ class Article extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->library('Predis_lib');
+		$this->load->model('admin/article_model');
     }
 	
 	/**
@@ -57,7 +57,7 @@ class Article extends REST_Controller {
 	 
 	public function event_get()
     {
-		$article_list 	= $this->predis_lib->get_event_list();
+		$article_list = $this->article_model->order_by('rank','desc')->get_many_by(['type'=>1,'status'=>1]);
 		$list 			= [];
 		if($article_list){
 			foreach($article_list as $key => $value){
@@ -118,7 +118,7 @@ class Article extends REST_Controller {
      */
 	public function news_get()
     {
-		$article_list 	= $this->predis_lib->get_news_list();
+		$article_list = $this->article_model->order_by('rank','desc')->get_many_by(['type'=>2,'status'=>1]);
 		$list 			= [];
 		if($article_list){
 			foreach($article_list as $key => $value){

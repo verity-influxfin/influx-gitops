@@ -9,6 +9,7 @@ class Predis_lib {
 	
 	function __construct()
     {
+		return false;//停用
         $this->CI = &get_instance();
 		$server  =  [
 			'scheme' 	=> 'tcp',

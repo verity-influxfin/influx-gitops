@@ -10,7 +10,6 @@ class Article extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('admin/article_model');
-		$this->load->library('Predis_lib');
  	}
 	
 	public function index(){
@@ -60,8 +59,6 @@ class Article extends MY_Admin_Controller {
 			
 			$rs = $this->article_model->insert($data);
 			if($rs){
-				$this->predis_lib->get_event_list(true);
-				$this->predis_lib->get_news_list(true);
 				alert('新增成功',admin_url('Article/index?type='.$data['type']));
 			}else{
 				alert('更新失敗，請洽工程師',admin_url('Article/index?type='.$data['type']));
@@ -109,8 +106,6 @@ class Article extends MY_Admin_Controller {
 				
 				$rs = $this->article_model->update($id,$data);
 				if($rs){
-					$this->predis_lib->get_event_list(true);
-					$this->predis_lib->get_news_list(true);
 					alert('新增成功',admin_url('Article/index?type='.$data['type']));
 				}else{
 					alert('更新失敗，請洽工程師',admin_url('Article/index?type='.$data['type']));
@@ -129,8 +124,6 @@ class Article extends MY_Admin_Controller {
 			$info = $this->article_model->get($id);
 			if($info){
 				$this->article_model->update($id,['status'=>1]);
-				$this->predis_lib->get_event_list(true);
-				$this->predis_lib->get_news_list(true);
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -147,8 +140,6 @@ class Article extends MY_Admin_Controller {
 			$info = $this->article_model->get($id);
 			if($info){
 				$this->article_model->update($id,['status'=>0]);
-				$this->predis_lib->get_event_list(true);
-				$this->predis_lib->get_news_list(true);
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -165,8 +156,6 @@ class Article extends MY_Admin_Controller {
 			$info = $this->article_model->get($id);
 			if($info){
 				$this->article_model->update($id,['status'=>2]);
-				$this->predis_lib->get_event_list(true);
-				$this->predis_lib->get_news_list(true);
 				echo '刪除成功';die();
 			}else{
 				echo '查無此ID';die();

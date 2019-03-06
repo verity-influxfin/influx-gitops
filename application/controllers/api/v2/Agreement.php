@@ -10,7 +10,7 @@ class Agreement extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->library('Predis_lib');
+		$this->load->model('admin/agreement_model');
     }
 	
 	/**
@@ -43,7 +43,7 @@ class Agreement extends REST_Controller {
 	 
 	public function list_get()
     {
-		$agreement_list = $this->predis_lib->get_agreement_list();
+		$agreement_list = $this->agreement_model->get_many_by(['status'=>1]);
 		$list 			= [];
 		if($agreement_list){
 			foreach($agreement_list as $key => $value){
@@ -89,10 +89,12 @@ class Agreement extends REST_Controller {
 	public function info_get($alias)
     {
 		if(!empty($alias)){
-			$agreement_list = $this->predis_lib->get_agreement_list();
+			$agreement = $this->agreement_model->get_by([
+				'alias'		=> $alias,
+				'status'	=> 1,
+			]);
 			$list 			= [];
-			if($agreement_list && isset($agreement_list[$alias])){
-				$agreement = $agreement_list[$alias];
+			if($agreement){
 				$data = [
 					'name' 		=> $agreement->name,
 					'content' 	=> $agreement->content,
