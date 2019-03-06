@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 還款中</h1>
+                    <h1 class="page-header">借款 - 已結案</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -13,18 +13,16 @@
 				
 				function check_checked(){
 					var ids					= "";
-					var target_export	= '<?=admin_url('target/target_export?status=5') ?>';
-					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
+					var target_export	= '<?=admin_url('target/target_export?status=10') ?>';
 					
 					$('.targets:checked').each(function() {
-						if(ids==''){
+						if(ids==""){
 							ids += this.value;
 						}else{
 							ids += ',' + this.value;
 						}		
 					});
 					$('#target_export').attr('href',target_export + '&ids=' + ids);
-					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
 				}
 			</script>
             <!-- /.row -->
@@ -32,8 +30,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export?status=5') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
-							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
+							<a id="target_export" href="<?=admin_url('target/target_export?status=10') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -69,10 +66,10 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
+                                        <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
 											 <td>
-												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:'' ?>" />
-												<?=isset($value->target_no)?$value->target_no:'' ?>
+												<input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:"" ?>" />
+												<?=isset($value->target_no)?$value->target_no:"" ?>
 											 </td>
                                             <td><?=isset($product_name[$value->product_id])?$product_name[$value->product_id]:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
@@ -89,12 +86,13 @@
                                             <td><?=isset($value->loan_date)?$value->loan_date:"" ?></td>
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?> <?=$value->delay?$value->delay_days.'天':"" ?></td>
                                             <td>
-											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
+											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
+											<?=$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':"" ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><?=isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):"" ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
-                                        </tr>                                
+                                        </tr>                                        
 									<?php 
 										}}
 									?>
