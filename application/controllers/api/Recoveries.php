@@ -11,7 +11,6 @@ class Recoveries extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_bankaccount_model');
-		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('transaction/transaction_model');
 		$this->load->library('Transaction_lib'); 
@@ -356,7 +355,8 @@ class Recoveries extends REST_Controller {
 					}
 				}
 				
-				$product_info = $this->product_model->get($target_info->product_id);
+				$product_list 	= $this->config->item('product_list');
+				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
 					"id"				=> $product_info->id,
 					"name"				=> $product_info->name,
@@ -541,7 +541,8 @@ class Recoveries extends REST_Controller {
 				}
 			}
 			
-			$product_info 	= $this->product_model->get($target_info->product_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target_info->product_id];
 			$product 		= array(
 				"id"	=> $product_info->id,
 				"name"	=> $product_info->name,

@@ -338,8 +338,8 @@ class Repayment extends REST_Controller {
 					}
 				}
 				
-				$this->load->model('loan/product_model');
-				$product_info 	= $this->product_model->get($value->product_id);
+				$product_list 	= $this->config->item('product_list');
+				$product_info	= $product_list[$value->product_id];
 				$product = array(
 					"id"				=> $product_info->id,
 					"name"				=> $product_info->name,
@@ -555,8 +555,8 @@ class Repayment extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			$this->load->model('loan/product_model');
-			$product_info 	= $this->product_model->get($target->product_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target->product_id];
 			$product 		= array(
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,

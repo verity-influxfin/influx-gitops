@@ -9,7 +9,6 @@ class Product extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/product_model');
 		$this->load->library('Certification_lib');
 		$this->load->library('Target_lib');
         $method = $this->router->fetch_method();
@@ -159,7 +158,7 @@ class Product extends REST_Controller {
 		$list			= array();
 		$where			= array( "id" => 1 , "status" => 1 );
 	
-		$product_list 	= $this->product_model->get_many_by($where);
+		$product_list 	= $this->config->item('product_list');
 		if(isset($this->user_info->id) && $this->user_info->id){
 			$certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
 		}
@@ -168,7 +167,6 @@ class Product extends REST_Controller {
 			foreach($product_list as $key => $value){
 				$target 				= array();
 				$certification 			= array();
-				$value->certifications 	= json_decode($value->certifications,true);
 				if(isset($this->user_info->id) && $this->user_info->id){
 					$targets = $this->target_model->get_by(array(
 						"status <="		=> 1,
@@ -195,12 +193,10 @@ class Product extends REST_Controller {
 					}
 				}
 
-				$instalment = json_decode($value->instalment,TRUE);
 				foreach($instalment as $k => $v){
 					$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
 				}
 				
-				$repayment = json_decode($value->repayment,TRUE);
 				foreach($repayment as $k => $v){
 					$repayment[$k] = array("name"=>$repayment_type[$v],"value"=>$v);
 				}
@@ -304,19 +300,17 @@ class Product extends REST_Controller {
     {
 		if($id){
 			$data			= array();
-			$product 		= $this->product_model->get(intval($id));
+			$product_list 	= $this->config->item('product_list');
+			$product 		= $product_list[$id];
 			$user_id 		= $this->user_info->id;
 			$instalment_list= $this->config->item('instalment');
 			$repayment_type = $this->config->item('repayment_type');
 			if($product && $product->status == 1 ){
-				$product->certifications 	= json_decode($product->certifications,TRUE);
-				
-				$instalment = json_decode($product->instalment,TRUE);
+
 				foreach($instalment as $k => $v){
 					$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
 				}
-				
-				$repayment = json_decode($product->repayment,TRUE);
+
 				foreach($repayment as $k => $v){
 					$repayment[$k] = array("name"=>$repayment_type[$v],"value"=>$v);
 				}
@@ -421,9 +415,9 @@ class Product extends REST_Controller {
 			$param["promote_code"] = $this->user_info->promote_code;
 		}
 		
-		$product 		= $this->product_model->get($input['product_id']);
+		$product_list 	= $this->config->item('product_list');
+		$product 		= $product_list[$input['product_id']];
 		if($product && $product->status == 1 ){
-			$product->instalment 		= json_decode($product->instalment,TRUE);
 			if(!in_array($input['instalment'],$product->instalment)){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
@@ -567,11 +561,12 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
-			$product = $this->product_model->get($targets->product_id);
+
+			$product_list 	= $this->config->item('product_list');
+			$product 		= $product_list[$targets->product_id];
 			if($product && $product->status == 1 ){
 
 				//檢查認證 NOT_VERIFIED
-				$product->certifications 	= json_decode($product->certifications,TRUE);
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
 					if(in_array($key,$product->certifications) && $value['user_status']!=1){
@@ -709,7 +704,9 @@ class Product extends REST_Controller {
 		$list				= array();
 		if(!empty($targets)){
 			foreach($targets as $key => $value){
-				$product_info = $this->product_model->get($value->product_id);
+
+				$product_list 	= $this->config->item('product_list');
+				$product_info 	= $product_list[$value->product_id];
 				$product = array(
 					"id"			=> $product_info->id,
 					"name"			=> $product_info->name,
@@ -919,13 +916,13 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			$product_info = $this->product_model->get($target->product_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info 	= $product_list[$target->product_id];
 			$product = array(
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,
 				"description"	=> $product_info->description,
 			);
-			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
 			$certification					= array();
 			$certification_list				= $this->certification_lib->get_status($user_id,$investor);
 			if(!empty($certification_list)){

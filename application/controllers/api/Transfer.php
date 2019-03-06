@@ -141,8 +141,7 @@ class Transfer extends REST_Controller {
 		if(!empty($transfer)){
 			
 			$product_list = array();
-			$this->load->model('loan/product_model');
-			$products = $this->product_model->get_all();
+			$products 	= $this->config->item('product_list');
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(
@@ -343,14 +342,13 @@ class Transfer extends REST_Controller {
 		$data				= array();
 		if(!empty($transfer)){
 			$target 		= $this->target_model->get($transfer->target_id);
-			$this->load->model('loan/product_model');
-			$product_info 	= $this->product_model->get($target->product_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target->product_id];
 			$product = array(
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,
 			);
-			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
-			$certification					= array();
+			$certification	= array();
 			$this->load->library('Certification_lib');
 			$certification_list				= $this->certification_lib->get_status($target->user_id);
 			if(!empty($certification_list)){
@@ -763,8 +761,9 @@ class Transfer extends REST_Controller {
 					"status"		=> $target_info->status,
 					"sub_status"	=> $target_info->sub_status,
 				);
-				$this->load->model('loan/product_model');
-				$product_info = $this->product_model->get($target_info->product_id);
+
+				$product_list 	= $this->config->item('product_list');
+				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
 					"id"			=> $product_info->id,
 					"name"			=> $product_info->name,

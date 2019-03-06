@@ -502,7 +502,6 @@ class Target extends MY_Admin_Controller {
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
-		$page_data['product_name']		= $this->product_model->get_name_list();
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
@@ -799,7 +798,7 @@ class Target extends MY_Admin_Controller {
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
-		$page_data['product_name']		= $this->product_model->get_name_list();
+		$page_data['product_list']		= $this->config->item('product_list');
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
@@ -852,7 +851,7 @@ class Target extends MY_Admin_Controller {
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
-		$page_data['product_name']		= $this->product_model->get_name_list();
+		$page_data['product_list']		= $this->config->item('product_list');
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;

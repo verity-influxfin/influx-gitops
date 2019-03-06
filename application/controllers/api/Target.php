@@ -9,7 +9,6 @@ class Target extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-		$this->load->model('loan/product_model');
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
@@ -126,7 +125,7 @@ class Target extends REST_Controller {
 
 		if(!empty($target_list)){
 			$product_list = array();
-			$products = $this->product_model->get_many_by(array("status"=>1));
+			$products = $this->config->item('product_list');
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(
@@ -331,12 +330,13 @@ class Target extends REST_Controller {
 		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= array();
 		if(!empty($target) && in_array($target->status,array(3,4,5,10))){
-			$product_info = $this->product_model->get($target->product_id);
+			$product_list 	= $this->config->item('product_list');
+			$product_info	= $product_list[$target->product_id];
 			$product = array(
 				"id"			=> $product_info->id,
 				"name"			=> $product_info->name,
 			);
-			$product_info->certifications 	= json_decode($product_info->certifications,TRUE);
+
 			$certification					= array();
 			$this->load->library('Certification_lib');
 			$certification_list				= $this->certification_lib->get_status($target->user_id);
@@ -737,7 +737,8 @@ class Target extends REST_Controller {
 					"sub_status"	=> $target_info->sub_status,
 				);
 				
-				$product_info = $this->product_model->get($target_info->product_id);
+				$product_list 	= $this->config->item('product_list');
+				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
 					"id"			=> $product_info->id,
 					"name"			=> $product_info->name,
