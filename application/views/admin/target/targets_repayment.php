@@ -13,7 +13,7 @@
 				
 				function check_checked(){
 					var ids					= "";
-					var target_export	= '<?=admin_url('target/target_export') ?>';
+					var target_export	= '<?=admin_url('target/target_export?status=5') ?>';
 					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
 					
 					$('.targets:checked').each(function() {
@@ -23,7 +23,7 @@
 							ids += ',' + this.value;
 						}		
 					});
-					$('#target_export').attr('href',target_export + '?ids=' + ids);
+					$('#target_export').attr('href',target_export + '&ids=' + ids);
 					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
 				}
 			</script>
@@ -32,7 +32,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
+							<a id="target_export" href="<?=admin_url('target/target_export?status=5') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
 							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
                         </div>
                         <!-- /.panel-heading -->

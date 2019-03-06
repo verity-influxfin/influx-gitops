@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 已結案</h1>
+                    <h1 class="page-header">借款 - 待簽約</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -13,7 +13,7 @@
 				
 				function check_checked(){
 					var ids					= "";
-					var target_export	= '<?=admin_url('target/target_export?status=10') ?>';
+					var target_export	= '<?=admin_url('target/target_export?status=1') ?>';
 					
 					$('.targets:checked').each(function() {
 						if(ids==""){
@@ -30,7 +30,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export?status=10') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
+							<a id="target_export" href="<?=admin_url('target/target_export?status=1') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">

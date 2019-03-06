@@ -8,6 +8,7 @@ $config['admin_menu'] = array(
 		"parent_name"		=> "借款管理",
 		"parent_icon"		=> "fa-gavel",
 		"index"				=> "全部列表",
+		"waiting_signing"	=> "待簽約",
 		"waiting_verify"	=> "待審批",
 		"waiting_bidding"	=> "已上架",
 		"waiting_loan"		=> "待放款",
