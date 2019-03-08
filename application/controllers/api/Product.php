@@ -163,6 +163,7 @@ class Product extends REST_Controller {
 			$certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
 		}
 		
+		$product_list = [1=>$product_list[1]];
 		if(!empty($product_list)){
 			foreach($product_list as $key => $value){
 				$target 				= array();
@@ -303,11 +304,12 @@ class Product extends REST_Controller {
 		if($id){
 			$data			= array();
 			$product_list 	= $this->config->item('product_list');
+			$product_list 	= [1=>$product_list[1]];
 			$product 		= $product_list[$id];
 			$user_id 		= $this->user_info->id;
 			$instalment_list= $this->config->item('instalment');
 			$repayment_type = $this->config->item('repayment_type');
-			if($product && $product['status'] == 1 ){
+			if($product){
 
 				$instalment = $product['instalment'];
 				foreach($instalment as $k => $v){
@@ -420,8 +422,9 @@ class Product extends REST_Controller {
 		}
 		
 		$product_list 	= $this->config->item('product_list');
+		$product_list 	= [1=>$product_list[1]];
 		$product 		= $product_list[$input['product_id']];
-		if($product && $product['status'] == 1 ){
+		if($product){
 			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
@@ -567,8 +570,9 @@ class Product extends REST_Controller {
 			
 
 			$product_list 	= $this->config->item('product_list');
+			$product_list 	= [1=>$product_list[1]];
 			$product 		= $product_list[$targets->product_id];
-			if($product && $product['status'] == 1 ){
+			if($product){
 
 				//檢查認證 NOT_VERIFIED
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
