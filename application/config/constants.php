@@ -169,6 +169,7 @@ defined('TRANSFER_AMOUNT_ERROR') 		OR define('TRANSFER_AMOUNT_ERROR'		, 813);
 defined('TRANSFER_COMBINE_STATUS') 		OR define('TRANSFER_COMBINE_STATUS'		, 814); 
 defined('TRANSFER_PASSWORD_ERROR') 		OR define('TRANSFER_PASSWORD_ERROR'		, 815); 
 defined('COMBINATION_NOT_EXIST') 		OR define('COMBINATION_NOT_EXIST'		, 816);
+defined('TARGET_IS_BUSY') 				OR define('TARGET_IS_BUSY'				, 817);
 //Repayment Error Code
 //defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
 //defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 

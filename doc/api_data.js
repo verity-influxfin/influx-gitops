@@ -22844,7 +22844,7 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "target_ids",
-            "description": "<p>產品IDs IDs ex: 1,3,10,21</p>"
+            "description": "<p>Target IDs ex: 1,3,10,21</p>"
           }
         ]
       }
@@ -23056,7 +23056,7 @@ define({ "api": [
             "type": "Number",
             "optional": false,
             "field": "target_id",
-            "description": "<p>產品ID</p>"
+            "description": "<p>Target ID</p>"
           },
           {
             "group": "Parameter",
@@ -23911,6 +23911,163 @@ define({ "api": [
     "sampleRequest": [
       {
         "url": "https://dev-api.influxfin.com/api/target/batch/:batch_id"
+      }
+    ]
+  },
+  {
+    "type": "post",
+    "url": "/v2/target/cancel",
+    "title": "出借方 取消申請出借",
+    "version": "0.2.0",
+    "name": "PostTargetCancel",
+    "group": "Target",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "request_token",
+            "description": "<p>登入後取得的 Request Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "target_id",
+            "description": "<p>Target ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "result",
+            "description": "<p>SUCCESS</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "SUCCESS",
+          "content": "{\n  \"result\": \"SUCCESS\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "801",
+            "description": "<p>標的不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "806",
+            "description": "<p>此申請不存在</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "807",
+            "description": "<p>此申請狀態不可操作</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "817",
+            "description": "<p>系統操作中請稍等</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "200",
+            "description": "<p>參數錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "100",
+            "description": "<p>Token錯誤</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "101",
+            "description": "<p>帳戶已黑名單</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "205",
+            "description": "<p>非出借端登入</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "801",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "806",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "807",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"807\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "817",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"817\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "200",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "100",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "101",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+          "type": "Object"
+        },
+        {
+          "title": "205",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
+          "type": "Object"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/v2/Target.php",
+    "groupTitle": "Target",
+    "sampleRequest": [
+      {
+        "url": "https://dev-api.influxfin.com/api/v2/target/cancel"
       }
     ]
   },

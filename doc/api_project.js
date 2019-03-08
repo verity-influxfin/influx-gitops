@@ -79,6 +79,7 @@ define({
     "GetTargetList",
     "GetTargetInfo",
     "PostTargetApply",
+    "PostTargetCancel",
     "PostBatchTargetApply",
     "GetTargetApplylist",
     "GetTargetBatch",
@@ -103,7 +104,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-02-25T11:35:15.445Z",
+    "time": "2019-03-08T03:49:13.181Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

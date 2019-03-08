@@ -374,7 +374,7 @@ class Target extends REST_Controller {
 	 * @apiName PostTargetApply
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} target_id 產品ID
+	 * @apiParam {Number} target_id Target ID
      * @apiParam {Number} amount 出借金額
 	 * 
 	 * 
@@ -501,6 +501,105 @@ class Target extends REST_Controller {
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
+    }
+	
+	
+	/**
+     * @api {post} /v2/target/cancel 出借方 取消申請出借
+	 * @apiVersion 0.2.0
+	 * @apiName PostTargetCancel
+     * @apiGroup Target
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} target_id Target ID
+	 * 
+	 * 
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse NotInvestor
+     *
+	 * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       "result": "ERROR",
+     *       "error": "801"
+     *     }
+	 *
+     * @apiError 806 此申請不存在
+     * @apiErrorExample {Object} 806
+     *     {
+     *       "result": "ERROR",
+     *       "error": "806"
+     *     }
+     *
+     * @apiError 807 此申請狀態不可操作
+     * @apiErrorExample {Object} 807
+     *     {
+     *       "result": "ERROR",
+     *       "error": "807"
+     *     }
+     *
+     * @apiError 817 系統操作中請稍等
+     * @apiErrorExample {Object} 817
+     *     {
+     *       "result": "ERROR",
+     *       "error": "817"
+     *     }
+	 *
+     */
+	public function cancel_post()
+    {
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$investor 	= $this->user_info->investor;
+
+		//必填欄位
+		if (empty($input['target_id'])) {
+			$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+		}
+		
+		$target_id = intval($input['target_id']);
+		
+
+		$target = $this->target_model->get($target_id);
+		if($target){
+			
+			if($target->status != 3){
+				$this->response(['result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR]);
+			}
+			
+			if($target->script_status != 0){
+				$this->response(['result' => 'ERROR','error' => TARGET_IS_BUSY]);
+			}
+			
+			$investment = $this->investment_model->get_by([
+				'target_id'	=> $target->id,
+				'user_id'	=> $user_id,
+				'status'	=> [0,1,2]
+			]);
+			if($investment){
+				if($investment->status > 1){
+					$this->response(['result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR]);
+				}
+				
+				$this->load->library('Target_lib'); 
+				$rs = $this->target_lib->cancel_investment($target,$investment,$user_id);
+				if($rs){
+					$this->response(['result' => 'SUCCESS']);
+				}else{
+					$this->response(['result' => 'ERROR','error' => TARGET_IS_BUSY]);
+				}
+			}else{
+				$this->response(['result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST]);
+			}
+		}
+		$this->response(['result' => 'ERROR','error' => TARGET_NOT_EXIST]);
     }
 	
 	/**
@@ -701,7 +800,7 @@ class Target extends REST_Controller {
 	 * @apiName PostBatchTargetApply
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} target_ids 產品IDs IDs ex: 1,3,10,21
+	 * @apiParam {Number} target_ids Target IDs ex: 1,3,10,21
 	 * 
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -910,7 +1009,7 @@ class Target extends REST_Controller {
 		if(!empty($investments)){
 			foreach($investments as $key => $value){
 				$target_info = $this->target_model->get($value->target_id);
-				$target = array(
+				$target = [
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
 					'product_id'	=> intval($target_info->product_id),
@@ -924,15 +1023,15 @@ class Target extends REST_Controller {
 					'invested'		=> intval($target_info->invested),
 					'status'		=> intval($target_info->status),
 					'sub_status'	=> intval($target_info->sub_status),
-				);
+				];
 			
-				$list[] = array(
+				$list[] = [
 					'amount' 			=> intval($value->amount),
 					'loan_amount' 		=> intval($value->loan_amount),
 					'status' 			=> intval($value->status),
 					'created_at' 		=> intval($value->created_at),
 					'target' 			=> $target,
-				);
+				];
 			}
 		}
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ]));

@@ -96,6 +96,41 @@ class Target_lib{
 		return false;
 	}
 	
+	//取消
+	public function cancel_investment($target=[],$investment=[],$user_id=0){
+		if($target && $target->status==3 && $target->script_status==0){
+			if($investment && in_array($investment->status,[0,1])){
+				$param = [
+					'status'	=> 8,
+				];
+				$rs = $this->CI->investment_model->update($investment->id,$param);
+				$this->insert_investment_change_log($investment->id,$param,$user_id,0);
+				//取消凍結
+				if($investment->status ==1 && $investment->frozen_status==1 && $investment->frozen_id){
+					$this->CI->load->model('transaction/frozen_amount_model');
+					$this->CI->frozen_amount_model->update($investment->frozen_id,['status'=>0]);
+					
+					//重新計算
+					$investments = $this->CI->investment_model->get_many_by([
+						'target_id'	=> $target->id,
+						'status'	=> 1
+					]);
+					if($investments){
+						$amount = 0;
+						foreach($investments as $key => $value){
+							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
+								$amount += $value->amount;
+							}
+						}
+						$this->CI->target_model->update($target->id,['invested'=>$amount]);
+					}
+				}
+				return $rs;
+			}
+		}
+		return false;
+	}
+	
 	//核可額度利率
 	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
