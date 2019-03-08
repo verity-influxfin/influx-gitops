@@ -358,8 +358,8 @@ class Recoveries extends REST_Controller {
 				$product_list 	= $this->config->item('product_list');
 				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
-					"id"				=> $product_info->id,
-					"name"				=> $product_info->name,
+					"id"				=> $product_info['id'],
+					"name"				=> $product_info['name'],
 				);
 				
 				$list[] = array(          
@@ -544,8 +544,8 @@ class Recoveries extends REST_Controller {
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target_info->product_id];
 			$product 		= array(
-				"id"	=> $product_info->id,
-				"name"	=> $product_info->name,
+				"id"	=> $product_info['id'],
+				"name"	=> $product_info['name'],
 			);
 			
 			$transfer 		= array();

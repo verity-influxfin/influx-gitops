@@ -115,15 +115,15 @@ class Target_lib{
 						'target_id'	=> $target->id,
 						'status'	=> 1
 					]);
+					$amount = 0;
 					if($investments){
-						$amount = 0;
 						foreach($investments as $key => $value){
 							if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
 								$amount += $value->amount;
 							}
 						}
-						$this->CI->target_model->update($target->id,['invested'=>$amount]);
 					}
+					$this->CI->target_model->update($target->id,['invested'=>$amount]);
 				}
 				return $rs;
 			}

@@ -341,8 +341,8 @@ class Repayment extends REST_Controller {
 				$product_list 	= $this->config->item('product_list');
 				$product_info	= $product_list[$value->product_id];
 				$product = array(
-					"id"				=> $product_info->id,
-					"name"				=> $product_info->name,
+					"id"				=> $product_info['id'],
+					"name"				=> $product_info['name'],
 				);
 
 				$list[] = array(
@@ -558,8 +558,8 @@ class Repayment extends REST_Controller {
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target->product_id];
 			$product 		= array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
+				"id"			=> $product_info['id'],
+				"name"			=> $product_info['name'],
 			);
 			
 			$this->load->model('user/virtual_account_model');

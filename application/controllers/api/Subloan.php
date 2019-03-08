@@ -163,6 +163,8 @@ class Subloan extends REST_Controller {
 			
 			$product_list 	= $this->config->item('product_list');
 			$product 		= $product_list[$target->product_id];
+			$instalment 	= $product['instalment'];
+
 			foreach($instalment as $k => $v){
 				$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
 			}
@@ -280,7 +282,7 @@ class Subloan extends REST_Controller {
 			
 			$product_list 	= $this->config->item('product_list');
 			$product 		= $product_list[$target->product_id];
-			if(!in_array($input['instalment'],$product->instalment)){
+			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
@@ -515,8 +517,8 @@ class Subloan extends REST_Controller {
 					$product_list 	= $this->config->item('product_list');
 					$product_info 	= $product_list[$new_target->product_id];
 					$product = array(
-						"id"			=> $product_info->id,
-						"name"			=> $product_info->name,
+						"id"			=> $product_info['id'],
+						"name"			=> $product_info['name'],
 					);
 				}
 			}

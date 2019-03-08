@@ -129,8 +129,8 @@ class Target extends REST_Controller {
 			if($products){
 				foreach($products as $key => $value){
 					$product_list[$value->id] = array(
-						"id"			=> $value->id,
-						"name"			=> $value->name,
+						"id"			=> $value['id'],
+						"name"			=> $value['name'],
 					);
 				}
 			}
@@ -333,8 +333,8 @@ class Target extends REST_Controller {
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target->product_id];
 			$product = array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
+				"id"			=> $product_info['id'],
+				"name"			=> $product_info['name'],
 			);
 
 			$certification					= array();
@@ -342,7 +342,7 @@ class Target extends REST_Controller {
 			$certification_list				= $this->certification_lib->get_status($target->user_id);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info->certifications)){
+					if(in_array($key,$product_info['certifications'])){
 						$certification[] = $value;
 					}
 				}
@@ -740,8 +740,8 @@ class Target extends REST_Controller {
 				$product_list 	= $this->config->item('product_list');
 				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					"id"			=> $product_info['id'],
+					"name"			=> $product_info['name'],
 				);
 				
 				$contract = "";

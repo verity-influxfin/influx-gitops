@@ -172,7 +172,7 @@ class Product extends REST_Controller {
 						"status <="		=> 1,
 						"sub_status"	=> 0,
 						"user_id"		=> $this->user_info->id,
-						"product_id"	=> $value->id
+						"product_id"	=> $value['id']
 					));
 					if($targets){
 						$target['id'] 			= $targets->id;
@@ -185,7 +185,7 @@ class Product extends REST_Controller {
 						
 						if(!empty($certification_list)){
 							foreach($certification_list as $k => $v){
-								if(in_array($k,$value->certifications)){
+								if(in_array($k,$value['certifications'])){
 									$certification[] = $v;
 								}
 							}
@@ -193,23 +193,25 @@ class Product extends REST_Controller {
 					}
 				}
 
+				$instalment = $value['instalment'];
 				foreach($instalment as $k => $v){
 					$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
 				}
 				
+				$repayment = $value['repayment'];
 				foreach($repayment as $k => $v){
 					$repayment[$k] = array("name"=>$repayment_type[$v],"value"=>$v);
 				}
 				
 				$list[] = array(
-					"id" 					=> $value->id,
-					"name" 					=> $value->name,
-					"description" 			=> $value->description,
-					"rank"					=> $value->rank,
-					"loan_range_s"			=> $value->loan_range_s,
-					"loan_range_e"			=> $value->loan_range_e,
-					"interest_rate_s"		=> $value->interest_rate_s,
-					"interest_rate_e"		=> $value->interest_rate_e,
+					"id" 					=> $value['id'],
+					"name" 					=> $value['name'],
+					"description" 			=> $value['description'],
+					"rank"					=> 0,
+					"loan_range_s"			=> $value['loan_range_s'],
+					"loan_range_e"			=> $value['loan_range_e'],
+					"interest_rate_s"		=> $value['interest_rate_s'],
+					"interest_rate_e"		=> $value['interest_rate_e'],
 					"charge_platform"		=> PLATFORM_FEES,
 					"charge_platform_min"	=> PLATFORM_FEES_MIN,
 					"instalment"			=> $instalment,
@@ -305,25 +307,27 @@ class Product extends REST_Controller {
 			$user_id 		= $this->user_info->id;
 			$instalment_list= $this->config->item('instalment');
 			$repayment_type = $this->config->item('repayment_type');
-			if($product && $product->status == 1 ){
+			if($product && $product['status'] == 1 ){
 
+				$instalment = $product['instalment'];
 				foreach($instalment as $k => $v){
 					$instalment[$k] = array("name"=>$instalment_list[$v],"value"=>$v);
 				}
 
+				$repayment = $product['repayment'];
 				foreach($repayment as $k => $v){
 					$repayment[$k] = array("name"=>$repayment_type[$v],"value"=>$v);
 				}
 				
 				$data['product'] = array(
-					"id" 					=> $product->id,
-					"name" 					=> $product->name,
-					"description" 			=> $product->description,
-					"rank"					=> $product->rank,
-					"loan_range_s"			=> $product->loan_range_s,
-					"loan_range_e"			=> $product->loan_range_e,
-					"interest_rate_s"		=> $product->interest_rate_s,
-					"interest_rate_e"		=> $product->interest_rate_e,
+					"id" 					=> $product['id'],
+					"name" 					=> $product['name'],
+					"description" 			=> $product['description'],
+					"rank"					=> 0,
+					"loan_range_s"			=> $product['loan_range_s'],
+					"loan_range_e"			=> $product['loan_range_e'],
+					"interest_rate_s"		=> $product['interest_rate_s'],
+					"interest_rate_e"		=> $product['interest_rate_e'],
 					"charge_platform"		=> PLATFORM_FEES,
 					"charge_platform_min"	=> PLATFORM_FEES_MIN,
 					"instalment"			=> $instalment,
@@ -417,16 +421,16 @@ class Product extends REST_Controller {
 		
 		$product_list 	= $this->config->item('product_list');
 		$product 		= $product_list[$input['product_id']];
-		if($product && $product->status == 1 ){
-			if(!in_array($input['instalment'],$product->instalment)){
+		if($product && $product['status'] == 1 ){
+			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
 			
-			if($input['amount'] < $product->loan_range_s || $input['amount'] > $product->loan_range_e){
+			if($input['amount'] < $product['loan_range_s'] || $input['amount'] > $product['loan_range_e']){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
 			}
 
-			$target = $this->target_model->get_by(array("status <="=>1,"user_id"=>$user_id,"product_id"=>$product->id));
+			$target = $this->target_model->get_by(array("status <="=>1,"user_id"=>$user_id,"product_id"=>$product['id']));
 			if($target){
 				$this->response(array('result' => 'ERROR','error' => APPLY_EXIST ));
 			}
@@ -564,12 +568,12 @@ class Product extends REST_Controller {
 
 			$product_list 	= $this->config->item('product_list');
 			$product 		= $product_list[$targets->product_id];
-			if($product && $product->status == 1 ){
+			if($product && $product['status'] == 1 ){
 
 				//檢查認證 NOT_VERIFIED
 				$certification_list	= $this->certification_lib->get_status($user_id,$investor);
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product->certifications) && $value['user_status']!=1){
+					if(in_array($key,$product['certifications']) && $value['user_status']!=1){
 						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}
@@ -708,8 +712,8 @@ class Product extends REST_Controller {
 				$product_list 	= $this->config->item('product_list');
 				$product_info 	= $product_list[$value->product_id];
 				$product = array(
-					"id"			=> $product_info->id,
-					"name"			=> $product_info->name,
+					"id"			=> $product_info['id'],
+					"name"			=> $product_info['name'],
 				);
 				
 				$list[] = array(
@@ -919,15 +923,15 @@ class Product extends REST_Controller {
 			$product_list 	= $this->config->item('product_list');
 			$product_info 	= $product_list[$target->product_id];
 			$product = array(
-				"id"			=> $product_info->id,
-				"name"			=> $product_info->name,
-				"description"	=> $product_info->description,
+				"id"			=> $product_info['id'],
+				"name"			=> $product_info['name'],
+				"description"	=> $product_info['description'],
 			);
 			$certification					= array();
 			$certification_list				= $this->certification_lib->get_status($user_id,$investor);
 			if(!empty($certification_list)){
 				foreach($certification_list as $key => $value){
-					if(in_array($key,$product_info->certifications)){
+					if(in_array($key,$product_info['certifications'])){
 						$certification[] = $value;
 					}
 				}
@@ -938,7 +942,7 @@ class Product extends REST_Controller {
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
 			}
 			
-			$credit_info 	= $this->credit_lib->get_credit($user_id,$product_info->id); 
+			$credit_info 	= $this->credit_lib->get_credit($user_id,$product_info['id']); 
 			$credit			= array();
 			if($credit_info){
 				$credit = $credit_info;
