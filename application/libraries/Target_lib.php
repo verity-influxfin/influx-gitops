@@ -407,6 +407,21 @@ class Target_lib{
 								}
 							}
 						}
+						
+						$investments = $this->CI->investment_model->get_many_by([
+							'target_id'	=> $target->id,
+							'status'	=> 1
+						]);
+						if($investments){
+							$amount = 0;
+							foreach($investments as $key => $value){
+								if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
+									$amount += $value->amount;
+								}
+							}
+							//更新invested
+							$this->CI->target_model->update($target->id,['invested'=>$amount]);
+						}
 					}
 					return true;
 				}
