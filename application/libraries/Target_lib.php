@@ -142,8 +142,18 @@ class Target_lib{
 						$this->CI->notification_lib->approve_target($user_id,"9");
 					}
 					
-					return $rs;
+				}else{
+					$param = array(
+						"loan_amount"		=> 0,
+						"status"			=> "9",
+						"remark"			=> "信用不足",
+					);
+					$rs = $this->CI->target_model->update($target->id,$param);
+					$this->insert_change_log($target->id,$param);
+					$this->CI->notification_lib->approve_target($user_id,"9");
 				}
+				
+				return $rs;
 			}
 		}
 		return false;
