@@ -938,13 +938,14 @@ class Estatement_lib{
 	}
 
 	function script_create_estatement_content(){
-		$day 			= REPAYMENT_DAY + 1;
-		$count			= 0;
-		$date  			 = date("Y-m-j");
-		$estatement_date = date("Y-m-").$day;
+		$day 				= REPAYMENT_DAY + 1;
+		$count				= 0;
+		$entering_date		= get_entering_date();
+		$date  				= date("Y-m-j",strtotime($entering_date));
+		$estatement_date 	= date("Y-m-").$day;
 		if($date === $estatement_date){
-			$sdate = date("Y-m-d",strtotime('-1 month'));
-			$edate = date("Y-m-d",strtotime('-1 day'));
+			$sdate = date("Y-m-d",strtotime($entering_date.' -1 month'));
+			$edate = date("Y-m-d",strtotime($entering_date.' -1 day'));
 			$exist = $this->CI->user_estatement_model->get_by([
 				"sdate"	=> $sdate,
 				"edate"	=> $edate,
