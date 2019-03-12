@@ -28,7 +28,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 
 	public function handle_payment()
@@ -46,7 +46,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function check_bidding()
@@ -64,7 +64,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function approve_target()
@@ -82,7 +82,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function check_transfer_bidding()
@@ -100,7 +100,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function charge_targets()
@@ -118,7 +118,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function prepayment_targets()
@@ -136,7 +136,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function check_certifications()
@@ -154,7 +154,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function daily_tax()
@@ -172,7 +172,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 
 	public function create_estatement_pdf()
@@ -190,7 +190,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function alert_account_remaining()
@@ -208,7 +208,7 @@ class Cron extends CI_Controller {
 			'end_time'		=> $end_time
 		];
 		$this->log_script_model->insert($data);
-		die('KO');
+		die('1');
 	}
 	
 	public function create_estatement_html()
@@ -226,7 +226,7 @@ class Cron extends CI_Controller {
 			"end_time"		=> $end_time
 		);
 		$this->log_script_model->insert($data);
-		die("KO");
+		die('1');
 	}
 
 	public function send_estatement_pdf()
@@ -244,7 +244,25 @@ class Cron extends CI_Controller {
 			"end_time"		=> $end_time
 		);
 		$this->log_script_model->insert($data);
-		die("KO");
+		die('1');
+	}
+	
+	public function check_transfer_success()
+	{	//每五分鐘
+		$this->load->library('Transfer_lib'); 
+		$script  	= 14;
+		$start_time = time();
+		$count 		= $this->transfer_lib->script_transfer_success();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= [
+			'script_name'	=> 'transfer_success',
+			'num'			=> $num,
+			'start_time'	=> $start_time,
+			'end_time'		=> $end_time
+		];
+		$this->log_script_model->insert($data);
+		die('1');
 	}
 }
 

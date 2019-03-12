@@ -422,7 +422,7 @@ class Transfer_lib{
 	public function script_check_bidding(){
 		$script  	= 5;
 		$count 		= 0;
-		$ids		= array();
+		$ids		= [];
 		$transfers 	= $this->CI->transfer_model->get_many_by([
 			'status'		=> 0,
 			'script_status'	=> 0
@@ -445,4 +445,31 @@ class Transfer_lib{
 		return $count;
 	}
 	
+	public function script_transfer_success(){
+		$script  	= 14;
+		$count 		= 0;
+		$ids		= [];
+		$transfers 	= $this->CI->transfer_model->limit(30)->get_many_by([
+			'status'		=> 1,
+			'script_status'	=> 0
+		]);
+		
+		if($transfers && !empty($transfers)){
+			foreach($transfers as $key => $value){
+				$ids[] = $value->id;
+			}
+			$update_rs 	= $this->CI->transfer_model->update_many($ids,['script_status'=>$script]);
+			if($update_rs){
+				$this->CI->load->library('Transaction_lib');
+				foreach($transfers as $key => $value){
+					$success = $this->CI->transaction_lib->transfer_success($value->id,0);
+					if($success){
+						$count++;
+					}
+					$this->CI->transfer_model->update($value->id,['script_status'=>0]);
+				}
+			}
+		}
+		return $count;
+	}
 }

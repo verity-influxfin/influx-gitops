@@ -30,7 +30,7 @@ class S3_upload {
 			)
 		);
     }
-
+	//return URL
     public function image ($files,$name='image',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
@@ -112,6 +112,7 @@ class S3_upload {
 		return false;
     }
 	
+	//return id
 	public function image_id ($files,$name='image',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
@@ -193,6 +194,7 @@ class S3_upload {
 		return false;
     }
 	
+	//return URL by base64 data
 	public function image_by_data ($image_data='',$name='image.jpg',$user_id=0,$type='test')
     {
 		if (!empty($image_data)) {
@@ -217,6 +219,7 @@ class S3_upload {
 		return false;
     }
 	
+	//show all the bucket images
 	public function image_list ()
     {
 		$result = $this->client->listObjects(array('Bucket' => S3_BUCKET));
@@ -258,6 +261,7 @@ class S3_upload {
 		return false;
     }
 	
+	//upload to public bucket
 	public function image_public ($files,$name='image')
     {
 		if (isset($files[$name]) && $files[$name]) {
