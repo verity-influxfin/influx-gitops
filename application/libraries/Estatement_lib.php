@@ -921,6 +921,56 @@ class Estatement_lib{
 		}
 		return $count;
 	}
+	
+	function script_send_estatement_pdf(){
+		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
+			"url !="	=> "",
+			"status"	=> 0,
+		));
+		$count = 0;
+		if($list){
+			foreach($list as $key=>$value){
+				$count++;
+				$this->send_estatement($value->id);
+			}
+		}
+		return $count;
+	}
+
+	function script_create_estatement_content(){
+		$day 				= REPAYMENT_DAY + 1;
+		$count				= 0;
+		$entering_date		= get_entering_date();
+		$date  				= date("Y-m-j",strtotime($entering_date));
+		$estatement_date 	= date("Y-m-").$day;
+		if($date === $estatement_date){
+			$sdate = date("Y-m-d",strtotime($entering_date.' -1 month'));
+			$edate = date("Y-m-d",strtotime($entering_date.' -1 day'));
+			$exist = $this->CI->user_estatement_model->get_by([
+				"sdate"	=> $sdate,
+				"edate"	=> $edate,
+			]);
+			if(!$exist){
+				$investor_list 	= $this->get_investor_user_list($sdate,$edate);
+				if($investor_list){
+					foreach($investor_list as $key => $user_id){
+						$rs = $this->get_estatement_investor($user_id,$sdate,$edate);
+						$count++;
+						$rs = $this->get_estatement_investor_detail($user_id,$sdate,$edate);
+						$count++;
+					}
+				}
+				$borrower_list 	= $this->get_borrower_user_list($sdate,$edate);
+				if($borrower_list){
+					foreach($borrower_list as $key => $user_id){
+						$rs = $this->get_estatement_borrower($user_id,$sdate,$edate);
+						$count++;
+					}
+				}
+			}
+		}
+		return $count;
+	}
 }
 
 

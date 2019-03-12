@@ -14,7 +14,7 @@ class Cron extends CI_Controller {
     }
 	
 	public function cathay()
-	{
+	{	//每五分鐘
 		$this->load->library('Payment_lib'); 
 		$script  	= 1;
 		$start_time = time();
@@ -32,7 +32,7 @@ class Cron extends CI_Controller {
 	}
 
 	public function handle_payment()
-	{
+	{	//每五分鐘
 		$this->load->library('Payment_lib'); 
 		$script  	= 2;
 		$start_time = time();
@@ -50,7 +50,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function check_bidding()
-	{
+	{	//每五分鐘
 		$this->load->library('Target_lib'); 
 		$script  	= 3;
 		$start_time = time();
@@ -68,7 +68,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function approve_target()
-	{
+	{	//每五分鐘
 		$this->load->library('Target_lib'); 
 		$script  	= 4;
 		$start_time = time();
@@ -86,7 +86,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function check_transfer_bidding()
-	{
+	{	//每五分鐘
 		$this->load->library('Transfer_lib'); 
 		$script  	= 5;
 		$start_time = time();
@@ -104,7 +104,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function charge_targets()
-	{
+	{	//每五分鐘
 		$this->load->library('Charge_lib'); 
 		$script  	= 6;
 		$start_time = time();
@@ -122,7 +122,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function prepayment_targets()
-	{
+	{	//每五分鐘
 		$this->load->library('Charge_lib'); 
 		$script  	= 7;
 		$start_time = time();
@@ -140,7 +140,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function check_certifications()
-	{
+	{	//每五分鐘
 		$this->load->library('Certification_lib'); 
 		$script  	= 8;
 		$start_time = time();
@@ -158,7 +158,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function daily_tax()
-	{
+	{	//每天下午一點
 		$this->load->library('Payment_lib'); 
 		$script  	= 9;
 		$start_time = time();
@@ -176,7 +176,7 @@ class Cron extends CI_Controller {
 	}
 
 	public function create_estatement_pdf()
-	{
+	{	//每五分鐘
 		$this->load->library('Estatement_lib'); 
 		$script  	= 10;
 		$start_time = time();
@@ -194,7 +194,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function alert_account_remaining()
-	{
+	{	//需要時才手動跑
 		$this->load->library('Passbook_lib'); 
 		$script  	= 11;
 		$start_time = time();
@@ -209,6 +209,42 @@ class Cron extends CI_Controller {
 		];
 		$this->log_script_model->insert($data);
 		die('KO');
+	}
+	
+	public function create_estatement_html()
+	{	//每五分鐘
+		$this->load->library('Estatement_lib'); 
+		$script  	= 12;
+		$start_time = time();
+		$count 		= $this->estatement_lib->script_create_estatement_content();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "create_estatement_html",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
+	}
+
+	public function send_estatement_pdf()
+	{	//每五分鐘
+		$this->load->library('Estatement_lib'); 
+		$script  	= 13;
+		$start_time = time();
+		$count 		= $this->estatement_lib->script_send_estatement_pdf();
+		$num		= $count?intval($count):0;
+		$end_time 	= time();
+		$data		= array(
+			"script_name"	=> "send_estatement_pdf",
+			"num"			=> $num,
+			"start_time"	=> $start_time,
+			"end_time"		=> $end_time
+		);
+		$this->log_script_model->insert($data);
+		die("KO");
 	}
 }
 
