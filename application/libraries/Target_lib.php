@@ -230,14 +230,18 @@ class Target_lib{
 					}
 					
 				}else{
-					$param = array(
-						"loan_amount"		=> 0,
-						"status"			=> "9",
-						"remark"			=> "信用不足",
-					);
+					$param = [
+						'loan_amount'		=> 0,
+						'status'			=> '9',
+						'remark'			=> '信用不足',
+					];
 					$rs = $this->CI->target_model->update($target->id,$param);
 					$this->insert_change_log($target->id,$param);
-					$this->CI->notification_lib->approve_target($user_id,"9");
+					$this->CI->notification_lib->approve_target($user_id,'9');
+					if($target->order_id !=0){
+						$this->CI->load->model('transaction/order_model');
+						$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+					}
 				}
 				
 				return $rs;
