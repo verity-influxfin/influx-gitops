@@ -467,6 +467,137 @@ class Transaction_lib{
 		}
 		return false;
 	}
+	
+	//分期成功
+	function order_success($target_id,$admin_id=0){
+		$date 			= get_entering_date();
+		$transaction 	= [];
+		if($target_id){			
+			$target = $this->CI->target_model->get($target_id);
+			if( $target && $target->status == 2 && $target->order_id != 0){
+				$this->CI->load->model('transaction/order_model');
+				$order = $this->CI->order_model->get($target->order_id);
+				if($order && $order->status==2){
+					
+					$target_account 	= $this->CI->virtual_account_model->get_by([
+						'user_id'	=> $target->user_id,
+						'investor'	=> 0,
+						'status'	=> 1
+					]);
+					$company_account 	= $this->CI->virtual_account_model->get_by([
+						'user_id'	=> $order->company_user_id,
+						'investor'	=> 1,
+						'status'	=> 1
+					]);
+
+					if($target_account && $company_account){
+
+						//手續費
+						$transaction[]	= [
+							'source'			=> SOURCE_FEES,
+							'entering_date'		=> $date,
+							'user_from'			=> $company_account->user_id,
+							'bank_account_from'	=> $company_account->virtual_account,
+							'amount'			=> intval($target->platform_fee),
+							'target_id'			=> $target->id,
+							'instalment_no'		=> 0,
+							'user_to'			=> 0,
+							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
+							'status'			=> 2
+						];
+						
+						$investment_id 	= $this->CI->investment_model->insert([
+							'target_id'		=> $target->id,
+							'user_id'		=> $company_account->user_id,
+							'amount'		=> $target->loan_amount,
+							'loan_amount'	=> $target->loan_amount,
+							'frozen_status'	=> 1,
+							'tx_datetime'	=> date("Y-m-d H:i:s"),
+							'contract_id'	=> $target->contract_id,
+							'status'		=> 3,
+						]);
+						
+						if($investment_id){
+							
+							//攤還表
+							$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
+							if($amortization_schedule){
+								foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
+									$transaction[]	= [
+										'source'			=> SOURCE_AR_PRINCIPAL,
+										'entering_date'		=> $date,
+										'user_from'			=> $target->user_id,
+										'bank_account_from'	=> $target_account->virtual_account,
+										'amount'			=> intval($payment['principal']),
+										'target_id'			=> $target->id,
+										'investment_id'		=> $investment_id,
+										'instalment_no'		=> $instalment_no,
+										'user_to'			=> $company_account->user_id,
+										'bank_account_to'	=> $company_account->virtual_account,
+										'limit_date'		=> $payment['repayment_date'],
+									];
+									
+									$transaction[]	= [
+										'source'			=> SOURCE_AR_INTEREST,
+										'entering_date'		=> $date,
+										'user_from'			=> $target->user_id,
+										'bank_account_from'	=> $target_account->virtual_account,
+										'amount'			=> intval($payment['interest']),
+										'target_id'			=> $target->id,
+										'investment_id'		=> $investment_id,
+										'instalment_no'		=> $instalment_no,
+										'user_to'			=> $company_account->user_id,
+										'bank_account_to'	=> $company_account->virtual_account,
+										'limit_date'		=> $payment['repayment_date'],
+									];
+									
+									$total 	= intval($payment['interest'])+intval($payment['principal']);
+									$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+									$transaction[]	= [
+										'source'			=> SOURCE_AR_FEES,
+										'entering_date'		=> $date,
+										'user_from'			=> $company_account->user_id,
+										'bank_account_from'	=> $company_account->virtual_account,
+										'amount'			=> $ar_fee,
+										'target_id'			=> $target->id,
+										'investment_id'		=> $investment_id,
+										'instalment_no'		=> $instalment_no,
+										'user_to'			=> 0,
+										'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
+										'limit_date'		=> $payment['repayment_date'],
+									];
+								}
+							}
+
+							$rs  = $this->CI->transaction_model->insert_many($transaction);
+							if($rs && is_array($rs)){
+								$target_update_param = [
+									'status'		=> 5,
+									'loan_status'	=> 1,
+								];
+								foreach($rs as $key => $value){
+									$this->CI->passbook_lib->enter_account($value);
+								}
+								
+								$this->CI->target_model->update($target_id,$target_update_param);
+								$this->CI->load->library('target_lib');
+								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
+								$this->CI->order_model->update($order->id,['status'=>1]);
+								$investment 	= $this->CI->investment_model->get($investment_id);
+								if($investment){
+									$this->CI->load->library('Transfer_lib');
+									$this->CI->transfer_lib->apply_transfer($investment,0,0);
+								}
+						
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	//放款失敗重新操作
 	function lending_failed($target_id,$admin_id=0){

@@ -103,8 +103,6 @@ class Credit_lib{
 				}
 			}
 		}
-			
-		$param['amount'] 	= $this->get_credit_amount($total,$product_id);
 		$rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}

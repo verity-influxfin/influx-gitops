@@ -16,7 +16,7 @@ class Ocr_lib
 	//台湾身份证正面1031
 	//台湾身份证背面1032
     public function identify($image,$type)
-    {
+    {	return false;//棄用
 		if(in_array($type,array('1030','1031','1032'))){
 			$data 	= array();
 			$field	= array(
