@@ -128,7 +128,7 @@ class Target extends REST_Controller {
 			$products = $this->config->item('product_list');
 			if($products){
 				foreach($products as $key => $value){
-					$product_list[$value->id] = array(
+					$product_list[$value["id"]] = array(
 						"id"			=> $value['id'],
 						"name"			=> $value['name'],
 					);
