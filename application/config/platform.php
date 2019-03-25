@@ -343,3 +343,8 @@ $config['industry_name']= [
 	'R'	=>	'藝術、娛樂及休閒服務業',
 	'S'	=>	'其他服務業',
 ];
+
+
+$config['action_Keyword']= [
+	0   => '轉換產品',
+];

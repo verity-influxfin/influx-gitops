@@ -252,7 +252,9 @@ class Target extends MY_Admin_Controller {
 		$input 						= $this->input->get(NULL, TRUE);
 		$where						= array('status'=>2);
 		$fields 					= ['target_no','user_id','delay'];
-		
+		$subloan_keyword			= $this->config->item('action_Keyword')[0];
+		$subloan_count 				= 0;
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				$where[$field] = $input[$field];
@@ -269,6 +271,16 @@ class Target extends MY_Admin_Controller {
 						'status'	=> 1,
 						'verify'	=> 1,
 					));
+
+					
+					$value -> subloan_count = count($this->target_model->get_many_by(
+						array(
+							'user_id'     => $value->user_id,
+							'status !='     => "9",
+							'remark like' => '%'.$subloan_keyword.'%'
+						)
+					));
+
 					if($bank_account){
 						$waiting_list[] = $value;
 					}
