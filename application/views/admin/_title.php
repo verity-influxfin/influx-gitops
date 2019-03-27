@@ -48,7 +48,7 @@
 					
 								<?}else{?>
                         
-							<li class="<?=$active==$key?"active":""; ?>">
+							<li data-id="<?=$key?>" class="<?=$active==$key?"active":""; ?>">
 								<a href="#"><?=$value["parent_name"] ?><span class="fa arrow"></span></a>
 								<ul class="nav nav-second-level">
 									<? 

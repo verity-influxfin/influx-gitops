@@ -28,6 +28,7 @@ $config['admin_menu'] = [
 		'loaned_wait_push?slist=1' 	=> '貸後已催收列表',
 	],
 	'Passbook' 	=> [
+        '../Certification/user_bankaccount_list?verify=2'	=> '金融帳號認證',
 		'parent_name'				=> '虛擬帳號管理',
 		'index'						=> '虛擬帳號列表',
 		'withdraw_list'				=> '提領紀錄',
@@ -43,7 +44,6 @@ $config['admin_menu'] = [
 		'parent_name'				=> '認證管理',
 		'index'						=> '認證方式列表',
 		'user_certification_list'			=> '會員認證審核',
-		'user_bankaccount_list?verify=2'	=> '金融帳號認證',
 		'difficult_word_list'				=> '銀行困難字管理',
 	],
 	'Partner' 				=> [
