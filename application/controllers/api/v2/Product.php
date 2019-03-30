@@ -589,8 +589,7 @@ class Product extends REST_Controller {
 				]);
 				if($bank_account){
 					$this->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
-				}else{
-					$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+                    $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 				}
 				
 				$this->target_lib->signing_target($target->id,$param,$user_id);
