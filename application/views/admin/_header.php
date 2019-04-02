@@ -38,7 +38,7 @@
         var explode = function(){
             location.pathname=="/admin/Certification/user_bankaccount_list"?$('li[data-id=Passbook] a').click():"";
         };
-        setTimeout(explode, 2000);
+        setTimeout(explode, 500);
 
 		</script>
 </head>
