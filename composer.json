@@ -14,7 +14,7 @@
 		"php": ">=5.3.7",
 		"aws/aws-sdk-php": "3.*",
 		"tecnickcom/tcpdf": "6.*",
-		"google/cloud-vision": "^0.19",
+		"google/cloud-vision": "^0.20",
 		"predis/predis": "*"
 	},
 	"suggest": {

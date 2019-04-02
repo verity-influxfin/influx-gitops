@@ -115,5 +115,51 @@ class Ocr_lib
 		}
 		return $content; 
 	}
-	
+
+    function detect_text($path)
+    {
+        $result = "";
+        $imageAnnotator = new ImageAnnotatorClient();
+
+        # annotate the image
+        $image = file_get_contents($path);
+        $response = $imageAnnotator->textDetection($image);
+        $texts = $response->getTextAnnotations();
+
+        //printf('%d texts found:' . PHP_EOL, count($texts));
+        foreach ($texts as $text) {
+            //$result.=$text->getDescription() . PHP_EOL;
+            $result.=$text->getDescription();
+        //    # get bounds
+        //    $vertices = $text->getBoundingPoly()->getVertices();
+        //    $bounds = [];
+        //    foreach ($vertices as $vertex) {
+        //        $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+        //    }
+        //     print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
+        }
+        return $result;
+        $imageAnnotator->close();
+    }
+
+    function detect_label($path)
+    {
+        $imageAnnotator = new ImageAnnotatorClient();
+
+        # annotate the image
+        $image = file_get_contents($path);
+        $response = $imageAnnotator->labelDetection($image);
+        $labels = $response->getLabelAnnotations();
+
+        if ($labels) {
+            print("Labels:" . PHP_EOL);
+            foreach ($labels as $label) {
+                print($label->getDescription() . PHP_EOL);
+            }
+        } else {
+            print('No label found' . PHP_EOL);
+        }
+
+        $imageAnnotator->close();
+    }
 }

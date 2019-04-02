@@ -115,92 +115,118 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
-	public function idcard_verify($info = []){
-		if($info && $info->status ==0 && $info->certification_id==1){
-			$this->CI->load->library('Faceplusplus_lib');
-			$this->CI->load->library('Ocr_lib');
-			$content				 = json_decode($info->content,true);
-			$person_token 			 = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-			$front_token 			 = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
-			$ocr 					 = [];
-			$ocr['front_image'] 	 = $this->CI->ocr_lib->identify($content['front_image']		,1031);
-			$ocr['back_image'] 		 = $this->CI->ocr_lib->identify($content['back_image']		,1032);
-			$ocr['healthcard_image'] = $this->CI->ocr_lib->identify($content['healthcard_image'],1030);
-			$error 		= '';
-			$check_list = ['name','id_number','id_card_date','birthday','address'];
-			$check_name = ['姓名','身分證字號','發證日','生日','地址'];
-			foreach($check_list as $k => $v){
-				if(in_array($v,['birthday','id_card_date'])){
-					$content[$v] = r_to_ad($content[$v]);
-					if(isset($ocr['front_image'][$v])){
-						$ocr['front_image'][$v] 	= r_to_ad($ocr['front_image'][$v]);
-					}
-					if(isset($ocr['healthcard_image'][$v])){
-						$ocr['healthcard_image'][$v] = r_to_ad($ocr['healthcard_image'][$v]);
-					}
-				}
-				if(isset($ocr['front_image'][$v]) && trim($content[$v]) != trim($ocr['front_image'][$v]) ){
-					$error .= '身分證'.$check_name[$k].'錯誤<br>';
-				}
-				if(isset($ocr['back_image'][$v]) && trim($content[$v]) != trim($ocr['back_image'][$v]) ){
-					$error .= '身分證'.$check_name[$k].'錯誤<br>';
-				}
-				if(isset($ocr['healthcard_image'][$v]) && trim($content[$v]) != trim($ocr['healthcard_image'][$v]) ){
-					$error .= '健保卡'.$check_name[$k].'錯誤<br>';
-				}
-			}
 
-			$person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
-			$front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
-			$answer			= array();
-			$remark			= array(
-				'error'			=> $error,
-				'OCR'			=> $ocr,
-				'face'			=> array(),
-				'face_count'	=> array(
-					'person_count'	=> $person_count,
-					'front_count'	=> $front_count
-				),
-			);
+    public function idcard_verify($info = []){
+       if($info && $info->status ==0 && $info->certification_id==1){
+           $content = json_decode($info->content,true);
 
-			if($person_count > 0 && $front_count > 0 ){
-				foreach($person_token as $token){
-					$answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
-				}
-				sort($answer);
-				$remark['face'] = $answer;
-				if(count($answer)==2){
-					if($answer[0]<60 || $answer[1]<90){
-						$remark['error'] .= '人臉比對分數不足';
-					}
-				}else{
-					$remark['error'] .= '人臉數量錯誤';
-				}
-			}else{
-				$remark['error'] .= '人臉數量錯誤';
-			}
+           $this->CI->load->library('Faceplusplus_lib');
+           $this->CI->load->library('Ocr_lib');
 
-			if($remark['error']==''){
-				$this->CI->user_certification_model->update($info->id,array(
-					'remark'	=> json_encode($remark),
-					'content'	=> json_encode($content),
-				));
-				$this->set_success($info->id);
-			}else{
-				$this->CI->user_certification_model->update($info->id,array(
-					'status'	=> 3,
-					'remark'	=> json_encode($remark),
-					'content'	=> json_encode($content),
-				));
-			}
+           $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+           $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
 
-			return true;
+           $error 	= '';
+           $ocr = array();
+           $ocr['front_image'] 		= preg_replace('/\s/','',$this->CI->ocr_lib->detect_text($content['front_image']));
+           $ocr['back_image'] 		= $this->CI->ocr_lib->detect_text($content['back_image']);
+           $ocr['healthcard_image'] = $this->CI->ocr_lib->detect_text($content['healthcard_image']);
+
+           $ocr['front_image'] = preg_replace_callback(
+               '/\d{2,3}年|\d{1,2}月/',
+               function ($matches) {
+                   if(strpos($matches[0],'月')){
+                       $match = (preg_match('/\d/',$matches[0])==1?'0':'').preg_replace('/\D/','',$matches[0]).'-';
+                   }
+                   else{//
+                       $match = ((int)preg_replace('/\D/','//',$matches[0])+1911).'-';
+                   }
+                   return $match;},
+               $ocr['front_image']
+           );
+
+           $ocr['healthcard_image'] = preg_replace_callback(
+               '/\d{2,3}-\d{1,2}-\d{1,2}/',
+               function ($matches) {
+                   $matchArr=preg_split('/-/',$matches[0]);
+                   return ($matchArr[0]+1911).'-'.$matchArr[1].'-'.$matchArr[2];},
+               str_replace('/','-',$ocr['healthcard_image'])
+           );
+           $ocr['healthcard_image'] = preg_replace('/\s/','',$ocr['healthcard_image']);
+
+           $check_name = ['姓名','身分證字號','發證日','發證區域','生日'];
+           $check_item = ['name','id_number','id_card_date','id_card_place','birthday'];
+           foreach($check_item as $k => $v){
+               //身分證正面資訊
+               if(in_array($v,['name','id_number','id_card_date','id_card_place'])){
+                   !strpos($ocr['front_image'],$content[$v])?$error .= '身分證'.$check_name[$k].'錯誤<br>':$ocr[$v]=$content[$v];
+               }
+               //健保卡
+               if(in_array($v,['name','id_number','birthday'])){
+                   !strpos($ocr['healthcard_image'],$content[$v])?$error .= '健保卡'.$check_name[$k].'錯誤<br>':$ocr[$v]=$content[$v];
+               }
+           }
+
+           //健保卡
+           !strpos($ocr['healthcard_image'],'全民健康保險')?$error .= '健保卡"全民健康保險"辨識錯誤<br>':$ocr[$v]=$content[$v];
+
+           $ocr['back_image'] = preg_replace('/父/','-',$ocr['back_image']);
+           //身分證背面-父
+           $ocr['father'] = preg_split('/-/',preg_replace('/母/','-',$ocr['back_image']))[0];
+           //身分證背面-母
+           $ocr['mother'] = preg_split('/-/',preg_replace('/母|配偶|役別/','-',$ocr['back_image']))[1];
+           //身分證背面-配偶
+           //$ocr['spouse'] = preg_split('/-/',preg_replace('/\\n/','-',$ocr['back_image']))[1];
+           //$ocr['spouse'] = ($ocr['spouse']!=''?$ocr['spouse']:'無或未成功識別');
+
+           $person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
+           $front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
+           $answer			= array();
+           $remark			= array(
+               'error'			=> $error,
+               'OCR'			=> $ocr,
+               'face'			=> array(),
+               'face_count'	=> array(
+               	'person_count'	=> $person_count,
+               	'front_count'	=> $front_count
+               ),
+           );
+
+           if($person_count > 0 && $front_count > 0 ){
+               foreach($person_token as $token){
+                   $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
+               }
+               sort($answer);
+               $remark['face'] = $answer;
+               if(count($answer)==2){
+                   if($answer[0]<60 || $answer[1]<90){
+                       $remark['error'] .= '人臉比對分數不足';
+                   }
+               }else{
+                   $remark['error'] .= '人臉數量錯誤';
+               }
+           }else{
+               $remark['error'] .= '人臉數量錯誤';
+           }
+
+           if($remark['error']==''){
+               $this->CI->user_certification_model->update($info->id,array(
+                   'remark'	=> json_encode($remark),
+                   'content'	=> json_encode($content),
+               ));
+               $this->set_success($info->id);
+           }else{
+               $this->CI->user_certification_model->update($info->id,array(
+                   'status'	=> 3,
+                   'remark'	=> json_encode($remark),
+                   'content'	=> json_encode($content),
+               ));
+           }
+           return true;
 		}
 		return false;
-	}
-	
-	public function emergency_verify($info = array()){
+    }
+    public function emergency_verify($info = array()){
 		if($info && $info->status ==0 && $info->certification_id==5){
 			$content	= json_decode($info->content,true);
 			$name 		= $content['name'];

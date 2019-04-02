@@ -63,7 +63,7 @@
 													echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
 												}
 												if(isset($remark["error"]) && $remark["error"]){
-													echo '<p style="color:red;" class="form-control-static">錯誤：'.$remark["error"].'</p>';
+													echo '<p style="color:red;" class="form-control-static">錯誤：<br />'.$remark["error"].'</p>';
 												}
 												if($remark["face"] && is_array($remark["face"])){
 													echo '<p class="form-control-static">照片比對結果：';
@@ -110,10 +110,10 @@
 												</tr>
 												<tr><td>
 													<label>人臉數量：</label><?=isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;?><br>
-													<label>姓名：</label><?=isset($remark["OCR"]["front_image"]["name"])?$remark["OCR"]["front_image"]["name"]:"";?><br>
-													<label>生日：</label><?=isset($remark["OCR"]["front_image"]["birthday"])?$remark["OCR"]["front_image"]["birthday"]:"";?><br>
-													<label>換發日期：</label><?=isset($remark["OCR"]["front_image"]["id_card_date"])?$remark["OCR"]["front_image"]["id_card_date"]:"";?><br>
-													<label>身分證字號：</label><?=isset($remark["OCR"]["front_image"]["id_number"])?$remark["OCR"]["front_image"]["id_number"]:"";?>
+													<label>姓名：</label><?=isset($remark["OCR"]["name"])?$remark["OCR"]["name"]:"";?><br>
+													<label>生日：</label><?=isset($remark["OCR"]["birthday"])?$remark["OCR"]["birthday"]:"";?><br>
+													<label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])?$remark["OCR"]["id_card_date"]:"";?><br>
+													<label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])?$remark["OCR"]["id_number"]:"";?>
 												</td></tr>
 											</table>
 										</div>
@@ -128,10 +128,8 @@
 													</td>
 												</tr>
 												<tr><td>
-													<label>父：</label><?=isset($remark["OCR"]["back_image"]["father"])?$remark["OCR"]["back_image"]["father"]:"";?><br>
-													<label>母：</label><?=isset($remark["OCR"]["back_image"]["mother"])?$remark["OCR"]["back_image"]["mother"]:"";?><br>
-													<label>配偶：</label><?=isset($remark["OCR"]["back_image"]["spouse"])?$remark["OCR"]["back_image"]["spouse"]:"";?><br>
-													<label>地址：</label><?=isset($remark["OCR"]["back_image"]["address"])?$remark["OCR"]["back_image"]["address"]:"";?>
+													<label>父：</label><?=isset($remark["OCR"]["father"])?$remark["OCR"]["father"]:"";?><br>
+													<label>母：</label><?=isset($remark["OCR"]["mother"])?$remark["OCR"]["mother"]:"";?><br>
 												</td></tr>
 											</table>
 										</div>
@@ -159,9 +157,9 @@
 													</td>
 												</tr>
 												<tr><td>
-													<label>姓名：</label><?=isset($remark["OCR"]["healthcard_image"]["name"])?$remark["OCR"]["healthcard_image"]["name"]:"";?><br>
-													<label>生日：</label><?=isset($remark["OCR"]["healthcard_image"]["birthday"])?$remark["OCR"]["healthcard_image"]["birthday"]:"";?><br>
-													<label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_image"]["id_number"])?$remark["OCR"]["healthcard_image"]["id_number"]:"";?>
+													<label>姓名：</label><?=isset($remark["OCR"]["name"])?$remark["OCR"]["name"]:"";?><br>
+													<label>生日：</label><?=isset($remark["OCR"]["birthday"])?$remark["OCR"]["birthday"]:"";?><br>
+													<label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])?$remark["OCR"]["id_number"]:"";?>
 												</td></tr>
 											</table>
 										</div>
