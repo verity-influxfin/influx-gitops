@@ -254,8 +254,8 @@ defined('LINE_CHANNEL_ID')     	 	OR define('LINE_CHANNEL_ID'			, '1508139296');
 defined('LINE_CHANNEL_SECRET')  	OR define('LINE_CHANNEL_SECRET'		, '7f57ae86e8ff067d9e11248b2a75973e');
 
 //曠視
-defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'WW6FytNauCGA4U4UZuVbT4bqYq2tNtJo');
-defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PPlwd8Ue3EdErHHdBTNFSZ2-Yh');
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, '	FOlzTTV1goCuQsaiNrRcjUONWZrSLEsf');
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'UCEPzxznd-0fRz4CQBmre0ZVTm3_Cff4');
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');

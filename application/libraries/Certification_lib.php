@@ -160,17 +160,20 @@ class Certification_lib{
                //身分證正面資訊
                if(in_array($v,['name','id_number','id_card_date','id_card_place'])){
                    !strpos($ocr['front_image'],$content[$v])?$error .= '身分證'.$check_name[$k].'錯誤<br>':$ocr[$v]=$content[$v];
+                   //$error .= '身分證'.$check_name[$k].'錯誤<br>'
                }
                //健保卡
                if(in_array($v,['name','id_number','birthday'])){
-                   !strpos($ocr['healthcard_image'],$content[$v])?$error .= '健保卡'.$check_name[$k].'錯誤<br>':$ocr[$v]=$content[$v];
+                   !strpos($ocr['healthcard_image'],$content[$v])?'':$ocr[$v]=$content[$v];
+                   //$error .= '健保卡'.$check_name[$k].'錯誤<br>'
                }
            }
 
            //健保卡
-           !strpos($ocr['healthcard_image'],'全民健康保險')?$error .= '健保卡"全民健康保險"辨識錯誤<br>':$ocr[$v]=$content[$v];
+           !strpos($ocr['healthcard_image'],'全民健康保險')?'':$ocr[$v]=$content[$v];
+           //$error .= '健保卡"全民健康保險"辨識錯誤<br>'
 
-           $ocr['back_image'] = preg_replace('/父/','-',$ocr['back_image']);
+           $ocr['back_image'] = preg_replace('/父/','*',$ocr['back_image']);
            //身分證背面-父
            $ocr['father'] = preg_split('/-/',preg_replace('/母/','-',$ocr['back_image']))[0];
            //身分證背面-母
