@@ -1331,16 +1331,19 @@ class Target extends REST_Controller {
     }
 	
 	private function check_adult(){
-		
+        $Judicialperson = $this->user_info->investor == 1 && $this->user_info->company == 1?true:false;
+
 		//檢查認證 NOT_VERIFIED
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
 		}
-		
-		//檢查認證 NOT_VERIFIED_EMAIL
-		if(empty($this->user_info->email) || $this->user_info->email==''){
-			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED_EMAIL]);
-		}
+
+		if(!$Judicialperson){
+            //檢查認證 NOT_VERIFIED_EMAIL
+            if(empty($this->user_info->email) || $this->user_info->email==''){
+                $this->response(['result' => 'ERROR','error' => NOT_VERIFIED_EMAIL]);
+            }
+        }
 		
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
@@ -1353,12 +1356,10 @@ class Target extends REST_Controller {
 		if(!$bank_account){
 			$this->response(['result' => 'ERROR','error' => NO_BANK_ACCOUNT]);
 		}
-		
-		if($this->user_info->transaction_password==''){
-			$this->response(['result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD]);
-		}
 
-		if(get_age($this->user_info->birthday) < 20){
+		
+
+		if(get_age($this->user_info->birthday) < 20 && !$Judicialperson){
 			$this->response(['result' => 'ERROR','error' => UNDER_AGE ]);
 		}
 	}
