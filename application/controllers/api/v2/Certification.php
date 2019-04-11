@@ -35,10 +35,11 @@ class Certification extends REST_Controller {
 			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
-			
-			if($tokenData->company==1 && $tokenData->incharge != 1 ){
-				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-			}
+
+			//代理人
+			//if($tokenData->company==1 && $tokenData->incharge != 1 ){
+				//$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
+			//}
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
@@ -106,11 +107,17 @@ class Certification extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
+        $incharge           = $this->user_info->incharge;
 		$certification_list	= $this->certification_lib->get_status($user_id,$investor,$company);
 		$list				= array();
 		if(!empty($certification_list)){
 			$list = $certification_list;
 		}
+
+		//讓代理人傳空值
+        if($company==1&&$incharge==0) {
+            $list = array();
+        }
 		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 	
