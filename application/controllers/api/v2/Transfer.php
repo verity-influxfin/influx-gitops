@@ -69,6 +69,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} id Transfer ID
 	 * @apiSuccess {Number} amount 價金
+         * @apiSuccess {Boolean} same_user 是出借方本人
 	 * @apiSuccess {Number} principal 剩餘本金
 	 * @apiSuccess {Number} interest 已發生利息
 	 * @apiSuccess {Number} delay_interest 已發生延滯利息
@@ -98,6 +99,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} target.user.sex 性別 F/M
 	 * @apiSuccess {Object} combination_list 整包債權列表
      * @apiSuccess {Number} combination_list.id Combination ID
+     * @apiSuccess {Boolean} same_user 是出借方本人
      * @apiSuccess {String} combination_list.combination_no 整包轉讓號
      * @apiSuccess {Boolean} combination_list.password 是否需要密碼
      * @apiSuccess {Number} combination_list.count 筆數
@@ -118,6 +120,7 @@ class Transfer extends REST_Controller {
      * 			"list":[
      * 			{
      * 				"id": 17,
+     *                                 "same_user":true,
      * 				"amount": 4010,
      * 				"principal": 5000,
      * 				"interest": 6,
@@ -154,6 +157,7 @@ class Transfer extends REST_Controller {
      * 			"combination_list": [
      * 			{
      * 				"id": 2,
+     *                                 "same_user":true,
      * 				"combination_no": "PKG1547810358209546",
      * 				"password": false,
      * 				"count": 3,
@@ -175,132 +179,149 @@ class Transfer extends REST_Controller {
 	 * @apiUse BlockUser
 	 *
      */
-	 	
-	public function list_get()
+
+    public function list_get()
     {
-		$input 			= $this->input->get();
-		$list			= [];
-		$combination_list = [];
-		$combination_ids = [];
-		$product_list 	= $this->config->item('product_list');
-		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
-		$sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
-		$transfer 		= $this->transfer_lib->get_transfer_list();
-		
-		if(!empty($transfer)){
-			
-			foreach($transfer as $key => $value){
-				$target 	= $this->target_model->get($value->target_id);
-				$user_info 	= $this->user_model->get($target->user_id); 
-				$user		= [];
-				if($user_info){
-					$user = array(
-						'sex' 	=> $user_info->sex,
-						'age'	=> get_age($user_info->birthday),
-					);
-				}
-				
-				$target_info = [
-					'id' 				=> intval($target->id),
-					'target_no' 		=> $target->target_no,
-					'product_id' 		=> intval($target->product_id),
-					'credit_level' 		=> intval($target->credit_level),
-					'user_id' 			=> intval($target->user_id),
-					'loan_amount' 		=> intval($target->loan_amount),
-					'interest_rate' 	=> floatval($target->interest_rate),
-					'instalment' 		=> intval($target->instalment),
-					'repayment' 		=> intval($target->repayment),
-					'delay' 			=> intval($target->delay),
-					'delay_days' 		=> intval($target->delay_days),
-					'reason' 			=> $target->reason,
-					'remark' 			=> $target->remark,
-					'status' 			=> intval($target->status),
-					'sub_status' 		=> intval($target->sub_status),
-					'created_at' 		=> intval($target->created_at),
-					'user' 				=> $user,
-				];
-				
-				$list[] 	= [
-					'id'				=> intval($value->id),
-					'amount'			=> intval($value->amount),
-					'principal'			=> intval($value->principal),
-					'interest'			=> intval($value->interest),
-					'delay_interest'	=> intval($value->delay_interest),
-					'bargain_rate'		=> floatval($value->bargain_rate),
-					'instalment'		=> intval($value->instalment),
-					'combination'		=> intval($value->combination),
-					'expire_time'		=> intval($value->expire_time),
-					'accounts_receivable'	=> intval($value->accounts_receivable),
-					'target'			=> $target_info,
-				];
-				if($value->combination > 0){
-					$combination_ids[$value->combination] = $value->combination;
-				}
-			}
-			
-			if(!empty($combination_ids)){
-				$this->load->model('loan/transfer_combination_model');
-				$combinations = $this->transfer_combination_model->get_many($combination_ids);
-				if($combinations){
-					foreach($combinations as $key => $value){
-						$combination_list[] 	= [
-							'id'				=> intval($value->id),
-							'combination_no'	=> $value->combination_no,
-							'password'			=> empty($value->password)?false:true,
-							'count'				=> intval($value->count),
-							'amount'			=> intval($value->amount),
-							'principal'			=> intval($value->principal),
-							'interest'			=> intval($value->interest),
-							'max_instalment'	=> intval($value->max_instalment),
-							'min_instalment'	=> intval($value->min_instalment),
-							'delay_interest'	=> intval($value->delay_interest),
-							'bargain_rate'		=> floatval($value->bargain_rate),
-							'interest_rate'		=> floatval($value->interest_rate),
-							'accounts_receivable'	=> intval($value->accounts_receivable),
-						];
-					}
-				}
-			}
-			
-			
-			if(!empty($orderby) && !empty($sort) && !empty($list)){
-				$num = count($list);
-				for($i = 0 ; $i < $num ; $i++){
-					for ($j=$i+1;$j<$num;$j++) {
-						switch($orderby){
-							case 'credit_level': 
-								$a = $list[$i]['target']['credit_level'];
-								$b = $list[$j]['target']['credit_level'];
-								break;
-							case 'instalment': 
-								$a = $list[$i]['instalment'];
-								$b = $list[$j]['instalment'];
-								break;
-							case 'interest_rate': 
-								$a = $list[$i]['target']['interest_rate'];
-								$b = $list[$j]['target']['interest_rate'];
-								break;
-							default:
-								break;
-						}
-						if ($sort=='desc') {
-							if( $a > $b ){
-								$tmp      = $list[$i];
-								$list[$i] = $list[$j];
-								$list[$j] = $tmp;
-							}
-						}else{
-							if( $a < $b ){
-								$tmp      = $list[$i];
-								$list[$i] = $list[$j];
-								$list[$j] = $tmp;
-							}
-						}
-					}
-				}
-			}
-		}
-		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ,'combination_list' => $combination_list] ));
+        $input 			= $this->input->get();
+        $list			= [];
+        $combination_list = [];
+        $combination_ids = [];
+        $product_list 	= $this->config->item('product_list');
+        $orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
+        $sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
+        $transfer 		= $this->transfer_lib->get_transfer_list();
+        $my_investment  = array();
+        $my_combination = array();
+        $user_id 			= $this->user_info->id;
+        $investments		= $this->investment_model->get_many_by([
+            'user_id'	=> $user_id,
+            'status'	=> 3
+        ]);
+        foreach($investments as $key => $value){
+            array_push($my_investment,$value->id);
+        }
+
+        if(!empty($transfer)){
+
+            foreach($transfer as $key => $value){
+                $target 	= $this->target_model->get($value->target_id);
+                $user_info 	= $this->user_model->get($target->user_id);
+                $user		= [];
+                if($user_info){
+                    $user = array(
+                        'sex' 	=> $user_info->sex,
+                        'age'	=> get_age($user_info->birthday),
+                    );
+                }
+
+                $target_info = [
+                    'id' 				=> intval($target->id),
+                    'target_no' 		=> $target->target_no,
+                    'product_id' 		=> intval($target->product_id),
+                    'credit_level' 		=> intval($target->credit_level),
+                    'user_id' 			=> intval($target->user_id),
+                    'loan_amount' 		=> intval($target->loan_amount),
+                    'interest_rate' 	=> floatval($target->interest_rate),
+                    'instalment' 		=> intval($target->instalment),
+                    'repayment' 		=> intval($target->repayment),
+                    'delay' 			=> intval($target->delay),
+                    'delay_days' 		=> intval($target->delay_days),
+                    'reason' 			=> $target->reason,
+                    'remark' 			=> $target->remark,
+                    'status' 			=> intval($target->status),
+                    'sub_status' 		=> intval($target->sub_status),
+                    'created_at' 		=> intval($target->created_at),
+                    'user' 				=> $user,
+                ];
+
+                $list[] 	= [
+                    'id'				=> intval($value->id),
+                    'same_user'		    => in_array($value->investment_id,$my_investment),
+                    'amount'			=> intval($value->amount),
+                    'principal'			=> intval($value->principal),
+                    'interest'			=> intval($value->interest),
+                    'delay_interest'	=> intval($value->delay_interest),
+                    'bargain_rate'		=> floatval($value->bargain_rate),
+                    'instalment'		=> intval($value->instalment),
+                    'combination'		=> intval($value->combination),
+                    'expire_time'		=> intval($value->expire_time),
+                    'accounts_receivable'	=> intval($value->accounts_receivable),
+                    'target'			=> $target_info,
+                ];
+
+                if(in_array($value->investment_id,$my_investment)){
+                    array_push($my_combination,$value->combination);
+                }
+
+                if($value->combination > 0){
+                    $combination_ids[$value->combination] = $value->combination;
+                }
+            }
+
+            if(!empty($combination_ids)){
+                $this->load->model('loan/transfer_combination_model');
+                $combinations = $this->transfer_combination_model->get_many($combination_ids);
+                if($combinations){
+                    foreach($combinations as $key => $value){
+                        $combination_list[] 	= [
+                            'id'				=> intval($value->id),
+                            'same_user'         => in_array($value->id,$my_combination),
+                            'combination_no'	=> $value->combination_no,
+                            'password'			=> empty($value->password)?false:true,
+                            'count'				=> intval($value->count),
+                            'amount'			=> intval($value->amount),
+                            'principal'			=> intval($value->principal),
+                            'interest'			=> intval($value->interest),
+                            'max_instalment'	=> intval($value->max_instalment),
+                            'min_instalment'	=> intval($value->min_instalment),
+                            'delay_interest'	=> intval($value->delay_interest),
+                            'bargain_rate'		=> floatval($value->bargain_rate),
+                            'interest_rate'		=> floatval($value->interest_rate),
+                            'accounts_receivable'	=> intval($value->accounts_receivable),
+                        ];
+                    }
+                }
+            }
+
+
+            if(!empty($orderby) && !empty($sort) && !empty($list)){
+                $num = count($list);
+                for($i = 0 ; $i < $num ; $i++){
+                    for ($j=$i+1;$j<$num;$j++) {
+                        switch($orderby){
+                            case 'credit_level':
+                                $a = $list[$i]['target']['credit_level'];
+                                $b = $list[$j]['target']['credit_level'];
+                                break;
+                            case 'instalment':
+                                $a = $list[$i]['instalment'];
+                                $b = $list[$j]['instalment'];
+                                break;
+                            case 'interest_rate':
+                                $a = $list[$i]['target']['interest_rate'];
+                                $b = $list[$j]['target']['interest_rate'];
+                                break;
+                            default:
+                                break;
+                        }
+                        if ($sort=='desc') {
+                            if( $a > $b ){
+                                $tmp      = $list[$i];
+                                $list[$i] = $list[$j];
+                                $list[$j] = $tmp;
+                            }
+                        }else{
+                            if( $a < $b ){
+                                $tmp      = $list[$i];
+                                $list[$i] = $list[$j];
+                                $list[$j] = $tmp;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ,'combination_list' => $combination_list] ));
     }
 
 	/**

@@ -26357,6 +26357,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "same_user",
+            "description": "<p>是出借方本人</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "amount",
@@ -26567,6 +26574,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "combination_list.same_user",
+            "description": "<p>是出借方本人</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "combination_list.combination_no",
@@ -26654,7 +26668,7 @@ define({ "api": [
       "examples": [
         {
           "title": "SUCCESS",
-          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 17,\n\t\t\t\t\"amount\": 4010,\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 6,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"instalment\": 18,\n\t\t\t\t\"combination\": 2,\n\t\t\t\t\"expire_time\": 1547913599,\n\t\t\t\t\"accounts_receivable\": 5398,\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"remark\": \"\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\t\"user\": {\n\t\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\t\"age\": 30\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t],\n\t\t\t\"combination_list\": [\n\t\t\t{\n\t\t\t\t\"id\": 2,\n\t\t\t\t\"combination_no\": \"PKG1547810358209546\",\n\t\t\t\t\"password\": false,\n\t\t\t\t\"count\": 3,\n\t\t\t\t\"amount\": 12028,\n\t\t\t\t\"principal\": 15000,\n\t\t\t\t\"interest\": 16,\n\t\t\t\t\"max_instalment\": 18,\n\t\t\t\t\"min_instalment\": 3,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"interest_rate\": 8.56,\n\t\t\t\t\"accounts_receivable\": 15626\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+          "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 17,\n\t\t\t\t\"amount\": 4010,\n\t\t\t\t\"same_user\": true,\n\t\t\t\t\"principal\": 5000,\n\t\t\t\t\"interest\": 6,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"instalment\": 18,\n\t\t\t\t\"combination\": 2,\n\t\t\t\t\"expire_time\": 1547913599,\n\t\t\t\t\"accounts_receivable\": 5398,\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"remark\": \"\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\t\"created_at\": 1547444954,\n\t\t\t\t\t\"user\": {\n\t\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\t\"age\": 30\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t],\n\t\t\t\"combination_list\": [\n\t\t\t{\n\t\t\t\t\"id\": 2,\n\t\t\t\t\"same_user\": true,\n\t\t\t\t\"combination_no\": \"PKG1547810358209546\",\n\t\t\t\t\"password\": false,\n\t\t\t\t\"count\": 3,\n\t\t\t\t\"amount\": 12028,\n\t\t\t\t\"principal\": 15000,\n\t\t\t\t\"interest\": 16,\n\t\t\t\t\"max_instalment\": 18,\n\t\t\t\t\"min_instalment\": 3,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"bargain_rate\": -19.9,\n\t\t\t\t\"interest_rate\": 8.56,\n\t\t\t\t\"accounts_receivable\": 15626\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
           "type": "Object"
         }
       ]
