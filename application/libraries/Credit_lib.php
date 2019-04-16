@@ -459,4 +459,20 @@ class Credit_lib{
 		}
 		return false;
 	}
+
+    //取得最高歸戶額度
+    public function get_user_max_credit_amount($user_id){
+        if($user_id){
+            $param = array(
+                'user_id'			=> $user_id,
+                'status'			=> 1,
+                'expire_time >='	=> time(),
+            );
+            $rs 	= $this->CI->credit_model->order_by('amount','desc')->get_by($param);
+            if($rs){
+                return $rs->amount;
+            }
+        }
+        return false;
+    }
 }

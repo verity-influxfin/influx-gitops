@@ -141,7 +141,6 @@ class Target_lib{
 			$product_id 	= $target->product_id;
 			$product_info 	= $product_list[$product_id];
 			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
-			
 			if(!$credit){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
 				if($rs){
@@ -151,84 +150,131 @@ class Target_lib{
 			
 			if($credit){
 				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment,$product_id);
-				if($interest_rate){
-					$used_amount	= 0;
+				if($interest_rate){//'product_id'=> $product_id,
+					$used_amount	   = 0;
+                    $other_used_amount = 0;
+                    $user_current_credit_amount = 0;
+                    $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($user_id);
+                    //取得所有產品申請或進行中的案件
 					$target_list 	= $this->CI->target_model->get_many_by([
 						'id !='		=> $target->id,
-						'product_id'=> $product_id,
 						'user_id'	=> $user_id,
 						'status <='	=> 5
 					]);
-					if($target_list){
-						foreach($target_list as $key =>$value){
-							$used_amount = $used_amount + intval($value->loan_amount);
-						}
-					}
-					$credit['amount'] 	= $credit['amount'] - $used_amount;
-					$loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
-					$platform_fee		= round($loan_amount/100*PLATFORM_FEES,0);
-					$platform_fee		= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
-						
-					if( ($product_info['type']==1 && $loan_amount >= $product_info['loan_range_s']) ||
-						($product_info['type']==2 && $loan_amount == $target->amount)
-					) {
-						
-						if($product_info['type']==1){
-							$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
-							if($contract_id){
-								$param = [
-									'loan_amount'		=> $loan_amount,
-									'credit_level'		=> $credit['level'],
-									'platform_fee'		=> $platform_fee,
-									'interest_rate'		=> $interest_rate, 
-									'contract_id'		=> $contract_id,
-									'status'			=> 1,
-								];
-								$rs = $this->CI->target_model->update($target->id,$param);
-								$this->insert_change_log($target->id,$param);
-								if($rs){
-									$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
-								}
-							}
-						}else if($product_info['type']==2){
-							$param = [
-								'loan_amount'		=> $loan_amount,
-								'credit_level'		=> $credit['level'],
-								'platform_fee'		=> $platform_fee,
-								'interest_rate'		=> $interest_rate, 
-								'status'			=> 2,
-							];
-							$rs = $this->CI->target_model->update($target->id,$param);
-							$this->insert_change_log($target->id,$param);
-							if($rs){
-								$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
-								$this->CI->load->model('user/user_bankaccount_model');
-								$bank_account = $this->CI->user_bankaccount_model->get_by([
-									'status'	=> 1,
-									'investor'	=> 0,
-									'verify'	=> 0,
-									'user_id'	=> $user_id 
-								]);
-								if($bank_account){
-									$this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
-								}
-							}
-						}
-					}else{
-						$param = [
-							'loan_amount'		=> 0,
-							'status'			=> '9',
-							'remark'			=> '信用不足',
-						];
-						$rs = $this->CI->target_model->update($target->id,$param);
-						$this->insert_change_log($target->id,$param);
-						$this->CI->notification_lib->approve_target($user_id,'9');
-						if($target->order_id !=0){
-							$this->CI->load->model('transaction/order_model');
-							$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
-						}
-					}
-					
+                    if($target_list){
+                        foreach($target_list as $key =>$value){
+                            if($product_id == $value->product_id){
+                                $used_amount = $used_amount + intval($value->loan_amount);
+                            }
+                            else{
+                                $other_used_amount = $other_used_amount + intval($value->loan_amount);
+                            }
+                            //取得案件已還款金額
+                            $pay_back_transactions 	= $this->CI->transaction_model->get_many_by(array(
+                                "source"			=> SOURCE_PRINCIPAL,
+                                "user_from" 		=> $user_id,
+                                "target_id"	        => $value->id,
+                                "status" 			=> 2
+                            ));
+                            //扣除已還款金額
+                            foreach($pay_back_transactions as $key2 =>$value2){
+                                if($product_id == $value->product_id) {
+                                    $used_amount = $used_amount - intval($value2->amount);
+                                }
+                                else{
+                                    $other_used_amount = $other_used_amount - intval($value2->amount);
+                                }
+                            }
+                        }
+                        //無條件進位使用額度(千元) ex: 1001 ->1100
+                        $used_amount = $used_amount%1000!=0?ceil($used_amount*0.001)*1000:$used_amount;
+                        $other_used_amount = $other_used_amount%1000!=0?ceil($other_used_amount*0.001)*1000:$other_used_amount;
+                        //個人最高歸戶剩餘額度
+                        $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
+                    }
+                    if($user_current_credit_amount > 1000){
+                        //該產品額度
+                        $used_amount     	= $credit['amount'] - $used_amount;
+                        //檢核產品額度，不得高於個人最高歸戶剩餘額度
+                        $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
+                        $loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
+                        $platform_fee		= round($loan_amount/100*PLATFORM_FEES,0);
+                        $platform_fee		= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
+
+                        if( ($product_info['type']==1 && $loan_amount >= $product_info['loan_range_s']) ||
+                            ($product_info['type']==2 && $loan_amount == $target->amount)
+                        ) {
+
+                            if($product_info['type']==1){
+                                $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
+                                if($contract_id){
+                                    $param = [
+                                        'loan_amount'		=> $loan_amount,
+                                        'credit_level'		=> $credit['level'],
+                                        'platform_fee'		=> $platform_fee,
+                                        'interest_rate'		=> $interest_rate,
+                                        'contract_id'		=> $contract_id,
+                                        'status'			=> 1,
+                                    ];
+                                    $rs = $this->CI->target_model->update($target->id,$param);
+                                    $this->insert_change_log($target->id,$param);
+                                    if($rs){
+                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                                    }
+                                }
+                            }else if($product_info['type']==2){
+                                $param = [
+                                    'loan_amount'		=> $loan_amount,
+                                    'credit_level'		=> $credit['level'],
+                                    'platform_fee'		=> $platform_fee,
+                                    'interest_rate'		=> $interest_rate,
+                                    'status'			=> 2,
+                                ];
+                                $rs = $this->CI->target_model->update($target->id,$param);
+                                $this->insert_change_log($target->id,$param);
+                                if($rs){
+                                    $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                                    $this->CI->load->model('user/user_bankaccount_model');
+                                    $bank_account = $this->CI->user_bankaccount_model->get_by([
+                                        'status'	=> 1,
+                                        'investor'	=> 0,
+                                        'verify'	=> 0,
+                                        'user_id'	=> $user_id
+                                    ]);
+                                    if($bank_account){
+                                        $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
+                                    }
+                                }
+                            }
+                        }else{
+                            $param = [
+                                'loan_amount'		=> 0,
+                                'status'			=> '9',
+                                'remark'			=> '信用不足',
+                            ];
+                            $rs = $this->CI->target_model->update($target->id,$param);
+                            $this->insert_change_log($target->id,$param);
+                            $this->CI->notification_lib->approve_target($user_id,'9');
+                            if($target->order_id !=0){
+                                $this->CI->load->model('transaction/order_model');
+                                $order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+                            }
+                        }
+                    }
+					else{
+                        $param = [
+                            'loan_amount'		=> 0,
+                            'status'			=> '9',
+                            'remark'			=> '信用不足(多產品總額度超過歸戶)',
+                        ];
+                        $rs = $this->CI->target_model->update($target->id,$param);
+                        $this->insert_change_log($target->id,$param);
+                        $this->CI->notification_lib->approve_target($user_id,'9');
+                        if($target->order_id !=0){
+                            $this->CI->load->model('transaction/order_model');
+                            $order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+                        }
+                    }
 				}else{
 					$param = [
 						'loan_amount'		=> 0,
