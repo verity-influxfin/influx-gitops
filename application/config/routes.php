@@ -94,3 +94,5 @@ $route['api/v2/transfer/info/(:num)'] 		= 'api/v2/transfer/info/$1';
 $route['api/v2/combination/info/(:num)'] 		= 'api/v2/combination/info/$1';
 $route['api/v2/judicialperson/agent/(:num)']= 'api/v2/judicialperson/agent/$1';
 $route['api/v2/certifications/(:any)'] 		= 'api/v2/certifications/$1';
+
+$route['api/v2/version/(:any)'] 		    = 'api/v2/version/$1';

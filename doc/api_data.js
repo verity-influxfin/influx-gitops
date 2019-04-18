@@ -1,5 +1,94 @@
 define({ "api": [
-  {
+    {
+      "type": "get",
+      "url": "/v2/version/ver",
+      "title": "版本",
+      "version": "0.2.0",
+      "name": "GetVersion",
+      "group": "Version",
+      "parameter": {
+        "fields": {
+          "Parameter": [
+            {
+              "group": "Parameter",
+              "type": "String",
+              "size": "50",
+              "optional": false,
+              "field": "app",
+              "description": "<p>程式名稱:[app_invest][app_borrow]</p>"
+            },
+            {
+              "group": "Parameter",
+              "type": "String",
+              "size": "50",
+              "optional": false,
+              "field": "platform",
+              "description": "<p>平台[Android][iOS][PC]</p>"
+            }
+          ]
+        }
+      },
+      "success": {
+        "fields": {
+          "Success 200": [
+            {
+              "group": "Success 200",
+              "type": "Object",
+              "optional": false,
+              "field": "result",
+              "description": "<p>SUCCESS</p>"
+            },
+            {
+              "group": "Success 200",
+              "type": "String",
+              "optional": false,
+              "field": "version",
+              "description": "<p>版本</p>"
+            },
+            {
+              "group": "Success 200",
+              "type": "String",
+              "optional": false,
+              "field": "description",
+              "description": "<p>描述</p>"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "title": "SUCCESS",
+            "content": "{\n\t\"result\":\"SUCCESS\",\n\t\"data\":{\n\t\t\"list\":[\n\t\t\t\"version\":\"1.00\",\n\t\t\t\"description\":\"build\"\n\t\t]\n\t}\n}",
+            "type": "Object"
+          }
+        ]
+      },
+      "error": {
+        "fields": {
+          "Error 4xx": [
+            {
+              "group": "Error 4xx",
+              "optional": false,
+              "field": "200",
+              "description": "<p>INPUT_NOT_CORRECT</p>"
+            }
+          ]
+        },
+        "examples": [
+          {
+            "title": "200",
+            "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+            "type": "Object"
+          }
+        ]
+      },
+      "filename": "application/controllers/api/v2/version.php",
+      "groupTitle": "Version",
+      "sampleRequest": [
+        {
+          "url": "https://dev-api.influxfin.com/api/v2/version/ver"
+        }
+      ]
+    },{
     "type": "get",
     "url": "/v2/agreement/info/:alias",
     "title": "協議 協議書",
