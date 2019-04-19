@@ -189,9 +189,9 @@ class Target_lib{
                         //無條件進位使用額度(千元) ex: 1001 ->1100
                         $used_amount = $used_amount%1000!=0?ceil($used_amount*0.001)*1000:$used_amount;
                         $other_used_amount = $other_used_amount%1000!=0?ceil($other_used_amount*0.001)*1000:$other_used_amount;
-                        //個人最高歸戶剩餘額度
-                        $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
                     }
+                    //個人最高歸戶剩餘額度
+                    $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
                     if($user_current_credit_amount > 1000){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
