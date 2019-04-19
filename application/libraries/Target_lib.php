@@ -192,7 +192,7 @@ class Target_lib{
                     }
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-                    if($user_current_credit_amount > 1000){
+                    if($user_current_credit_amount >= 1000){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
