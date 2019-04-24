@@ -33,6 +33,7 @@ class Log_userlogin_model extends MY_Model
 		$data['client'] = json_encode([
 			'agent'		=> $this->agent->agent_string(),
 			'platform'	=> $this->agent->platform(),
+            'device_id'	=> $this->agent->device_id
 		]);
 		
 		return $data;

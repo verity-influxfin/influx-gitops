@@ -1,4 +1,5 @@
-define({ "api": [
+define({
+    "api": [
         {
             "type": "get",
             "url": "/v2/version/ver",
@@ -86,7 +87,8 @@ define({ "api": [
                     "url": "https://dev-api.influxfin.com/api/v2/version/ver"
                 }
             ]
-        },{
+        },
+        {
             "type": "get",
             "url": "/v2/agreement/info/:alias",
             "title": "協議 協議書",
@@ -6767,6 +6769,13 @@ define({ "api": [
                             "field": "investor",
                             "defaultValue": "1",
                             "description": "<p>1:投資端</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
                         }
                     ]
                 }
@@ -11187,10 +11196,38 @@ define({ "api": [
                         },
                         {
                             "group": "Success 200",
-                            "type": "Number",
+                            "type": "Object",
                             "optional": false,
                             "field": "funds.frozen",
                             "description": "<p>待交易餘額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "funds.frozen.invest",
+                            "description": "<p>投標</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "funds.frozen.transfer",
+                            "description": "<p>債轉投標</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "funds.frozen.withdraw",
+                            "description": "<p>提領</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "funds.frozen.other",
+                            "description": "<p>其它</p>"
                         },
                         {
                             "group": "Success 200",
@@ -11267,7 +11304,7 @@ define({ "api": [
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"payable\": \"50000\",\n\t\t\t\"accounts_receivable\": {\n\t\t\t\t\"principal\": 40000,\n\t\t\t\t\"interest\": 1280,\n\t\t\t\t\"delay_interest\": 0\n\t\t\t},\n\t\t\t\"income\": {\n\t\t\t\t\"interest\": 0,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"other\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t\"total\": 960000,\n\t\t\t\t\"last_recharge_date\": \"2019-01-14 14:12:10\",\n\t\t\t\t\"frozen\": 0\n\t\t\t},\n\t\t\t\"bank_account\": {\n\t\t\t\t\"bank_code\": \"004\",\n\t\t\t\t\"branch_code\": \"0037\",\n\t\t\t\t\"bank_account\": \"123123123132\"\n\t\t\t},\n\t\t\t\"virtual_account\": {\n\t\t\t\t\"bank_code\": \"013\",\n\t\t\t\t\"branch_code\": \"0154\",\n\t\t\t\t\"bank_name\": \"國泰世華商業銀行\",\n\t\t\t\t\"branch_name\": \"信義分行\",\n\t\t\t\t\"virtual_account\": \"56639164278638\"\n\t\t\t}\n\t\t}\n   }",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"payable\": \"50000\",\n\t\t\t\"accounts_receivable\": {\n\t\t\t\t\"principal\": 40000,\n\t\t\t\t\"interest\": 1280,\n\t\t\t\t\"delay_interest\": 0\n\t\t\t},\n\t\t\t\"income\": {\n\t\t\t\t\"interest\": 0,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"other\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t\"total\": 960000,\n\t\t\t\t\"last_recharge_date\": \"2019-01-14 14:12:10\",\n\t\t\t\t\"frozen\": {\n                \t\t\t\"invest\": 0,\n                \t\t\t\"transfer\": 3401,\n                \t\t\t\"withdraw\": 0,\n                \t\t\t\"other\": 0\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"bank_account\": {\n\t\t\t\t\"bank_code\": \"004\",\n\t\t\t\t\"branch_code\": \"0037\",\n\t\t\t\t\"bank_account\": \"123123123132\"\n\t\t\t},\n\t\t\t\"virtual_account\": {\n\t\t\t\t\"bank_code\": \"013\",\n\t\t\t\t\"branch_code\": \"0154\",\n\t\t\t\t\"bank_name\": \"國泰世華商業銀行\",\n\t\t\t\t\"branch_name\": \"信義分行\",\n\t\t\t\t\"virtual_account\": \"56639164278638\"\n\t\t\t}\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
@@ -24555,6 +24592,13 @@ define({ "api": [
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "target.delay_days",
+                            "description": "<p>逾期天數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.expire_time",
                             "description": "<p>流標時間</p>"
                         },
@@ -24578,6 +24622,27 @@ define({ "api": [
                             "optional": false,
                             "field": "target.sub_status",
                             "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "target.user",
+                            "description": "<p>借款人基本資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target.user.age",
+                            "description": "<p>年齡</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "target.user.sex",
+                            "description": "<p>性別 F/M</p>"
                         }
                     ]
                 },
@@ -30445,6 +30510,13 @@ define({ "api": [
                             "field": "investor",
                             "defaultValue": "0",
                             "description": "<p>1:投資端 0:借款端</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
                         }
                     ]
                 }
@@ -31811,4 +31883,5 @@ define({ "api": [
                 ]
             }
         }
-    ] });
+    ]
+});

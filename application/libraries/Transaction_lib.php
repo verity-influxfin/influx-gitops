@@ -20,7 +20,7 @@ class Transaction_lib{
 	public function get_virtual_funds($virtual_account=''){
 		if($virtual_account){
 			$total  = 0;
-			$frozen = 0;
+			$frozen = ['1' => 0,'2' => 0,'3' => 0,'4' => 0];
 			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
@@ -36,11 +36,17 @@ class Transaction_lib{
 			
 			if($frozen_amount){
 				foreach($frozen_amount as $key => $value){
-					$frozen = $frozen + intval($value->amount);
+                    $frozen[$value->type] = $frozen[$value->type] + intval($value->amount);
 				}
+
 			}
-			
-			return array('total'=>$total,'last_recharge_date'=>$last_recharge_date,'frozen'=>$frozen);
+            $frozens = [
+                'invest'   => $frozen[1],
+                'transfer' => $frozen[2],
+                'withdraw' => $frozen[3],
+                'other'    => $frozen[4]
+            ];
+			return array('total'=>$total,'last_recharge_date'=>$last_recharge_date,'frozen'=>$frozens);
 		}
 		return false;
 	}

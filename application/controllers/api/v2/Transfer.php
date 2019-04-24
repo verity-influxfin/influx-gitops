@@ -1038,9 +1038,18 @@ class Transfer extends REST_Controller {
 					'expire_time'		=> intval($transfer_info->expire_time),
 					'accounts_receivable' => intval($transfer_info->accounts_receivable),
 				];
-			
+
+
 				$target_info = $this->target_model->get($transfer_info->target_id);
-				$target = array(
+                $user_info 	= $this->user_model->get($target_info->user_id);
+                $user		= [];
+                if($user_info){
+                    $user = array(
+                        'sex' 	=> $user_info->sex,
+                        'age'	=> get_age($user_info->birthday),
+                    );
+                }
+                $target = array(
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
 					'product_id'	=> intval($target_info->product_id),
@@ -1052,10 +1061,12 @@ class Transfer extends REST_Controller {
 					'remark' 		=> $target_info->remark,
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
+                    'delay_days' 	=> intval($target_info->delay_days),
 					'expire_time'	=> intval($target_info->expire_time),
 					'invested'		=> intval($target_info->invested),
 					'status'		=> intval($target_info->status),
 					'sub_status'	=> intval($target_info->sub_status),
+                    'user' 			=> $user,
 				);
 				
 				$contract = '';
