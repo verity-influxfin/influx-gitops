@@ -372,6 +372,7 @@ class User extends REST_Controller {
 
 		$input = $this->input->post(NULL, TRUE);
         $fields 	= ['phone','password'];
+        $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -415,7 +416,7 @@ class User extends REST_Controller {
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$input['device_id']);
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
@@ -429,11 +430,11 @@ class User extends REST_Controller {
 					] 
 				]);
 			}else{
-				$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$input['device_id']);
+				$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
 				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 			}
 		}else{
-			$this->insert_login_log($input['phone'],$investor,0,0,$input['device_id']);
+			$this->insert_login_log($input['phone'],$investor,0,0,$device_id);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
@@ -482,7 +483,7 @@ class User extends REST_Controller {
 	public function sociallogin_post(){
         $input 		= $this->input->post(NULL, TRUE);
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
-		
+		$device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
 		$fields = ['access_token'];
 		foreach ($fields as $field) {
             if (empty($input[$field])) {
@@ -523,7 +524,7 @@ class User extends REST_Controller {
 				];
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->insert_login_log($account,$investor,1,$user_id,$input['device_id']);
+				$this->insert_login_log($account,$investor,1,$user_id,$device_id);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
@@ -537,11 +538,11 @@ class User extends REST_Controller {
 					)
 				));
 			}else{
-				$this->insert_login_log($account,$investor,0,$user_id,$input['device_id']);
+				$this->insert_login_log($account,$investor,0,$user_id,$device_id);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
 		}else{
-			$this->insert_login_log($account,$investor,0,0,$input['device_id']);
+			$this->insert_login_log($account,$investor,0,0,$device_id);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
