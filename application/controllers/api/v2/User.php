@@ -415,7 +415,7 @@ class User extends REST_Controller {
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->insert_login_log($input['phone'],$investor,1,$user_info->id);
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$input['device_id']);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
@@ -429,11 +429,11 @@ class User extends REST_Controller {
 					] 
 				]);
 			}else{
-				$this->insert_login_log($input['phone'],$investor,0,$user_info->id);
+				$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$input['device_id']);
 				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 			}
 		}else{
-			$this->insert_login_log($input['phone'],$investor,0,0);
+			$this->insert_login_log($input['phone'],$investor,0,0,$input['device_id']);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
@@ -523,7 +523,7 @@ class User extends REST_Controller {
 				];
 				$request_token = AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->insert_login_log($account,$investor,1,$user_id);
+				$this->insert_login_log($account,$investor,1,$user_id,$input['device_id']);
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
@@ -537,11 +537,11 @@ class User extends REST_Controller {
 					)
 				));
 			}else{
-				$this->insert_login_log($account,$investor,0,$user_id);
+				$this->insert_login_log($account,$investor,0,$user_id,$input['device_id']);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
 		}else{
-			$this->insert_login_log($account,$investor,0,0);
+			$this->insert_login_log($account,$investor,0,0,$input['device_id']);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}

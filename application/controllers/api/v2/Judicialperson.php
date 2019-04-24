@@ -391,7 +391,7 @@ class Judicialperson extends REST_Controller {
 						$this->user_model->update($company_info->id,array(
 							'auth_otp'	=> $token->auth_otp
 						));
-						$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id);
+						$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id,$input['device_id']);
 						if($first_time){
 							$this->load->library('notification_lib'); 
 							$this->notification_lib->first_login($user_info->id,$investor);
@@ -403,13 +403,13 @@ class Judicialperson extends REST_Controller {
 						)));
 					}
 				}
-				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id);
+				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$input['device_id']);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
-			$this->insert_login_log($input['phone'],$investor,0,$user_info->id);
+			$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$input['device_id']);
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 		}
-		$this->insert_login_log($input['phone'],$investor,0,0);
+		$this->insert_login_log($input['phone'],$investor,0,0,$input['device_id']);
 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 	}
 	
@@ -797,7 +797,7 @@ class Judicialperson extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
-	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0){
+	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
 		$this->load->model('log/log_userlogin_model');
 		return $this->log_userlogin_model->insert(array(
 			'account'	=> $account,
