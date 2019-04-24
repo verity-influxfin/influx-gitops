@@ -1225,9 +1225,39 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 		}
 	}
+
+    public function biologin_post()
+    {
+
+        $input = $this->input->post(NULL, TRUE);
+        $phone = isset($input['phone'])?trim($input['phone']):'';
+        if (empty($phone)) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        $this->load->library('sms_lib');
+        $code = $this->sms_lib->get_code($phone);
+        if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
+            $this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
+        }
+
+        $result = $this->user_model->get_by('phone', $phone);
+        if ($result) {
+            $this->sms_lib->send_verify_code($result->id,$phone);
+            $this->response(array('result' => 'SUCCESS'));
+        } else {
+            $this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+        }
+    }
 	
-	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0){
+	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
 		$this->load->model('log/log_userlogin_model');
+        $this->load->library('user_agent');
+        $this->agent->device_id=$device_id;
 		return $this->log_userlogin_model->insert(array(
 			'account'	=> $account,
 			'investor'	=> $investor,
