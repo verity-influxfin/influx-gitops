@@ -11196,37 +11196,44 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "Object",
+                            "type": "Number",
                             "optional": false,
                             "field": "funds.frozen",
                             "description": "<p>待交易餘額</p>"
                         },
                         {
                             "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "funds.frozenes",
+                            "description": "<p>各別待交易餘額</p>"
+                        },
+                        {
+                            "group": "Success 200",
                             "type": "Number",
                             "optional": false,
-                            "field": "funds.frozen.invest",
+                            "field": "funds.frozenes.invest",
                             "description": "<p>投標</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
-                            "field": "funds.frozen.transfer",
+                            "field": "funds.frozenes.transfer",
                             "description": "<p>債轉投標</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
-                            "field": "funds.frozen.withdraw",
+                            "field": "funds.frozenes.withdraw",
                             "description": "<p>提領</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
-                            "field": "funds.frozen.other",
+                            "field": "funds.frozenz.other",
                             "description": "<p>其它</p>"
                         },
                         {
@@ -11304,7 +11311,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"payable\": \"50000\",\n\t\t\t\"accounts_receivable\": {\n\t\t\t\t\"principal\": 40000,\n\t\t\t\t\"interest\": 1280,\n\t\t\t\t\"delay_interest\": 0\n\t\t\t},\n\t\t\t\"income\": {\n\t\t\t\t\"interest\": 0,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"other\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t\"total\": 960000,\n\t\t\t\t\"last_recharge_date\": \"2019-01-14 14:12:10\",\n\t\t\t\t\"frozen\": {\n                \t\t\t\"invest\": 0,\n                \t\t\t\"transfer\": 3401,\n                \t\t\t\"withdraw\": 0,\n                \t\t\t\"other\": 0\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"bank_account\": {\n\t\t\t\t\"bank_code\": \"004\",\n\t\t\t\t\"branch_code\": \"0037\",\n\t\t\t\t\"bank_account\": \"123123123132\"\n\t\t\t},\n\t\t\t\"virtual_account\": {\n\t\t\t\t\"bank_code\": \"013\",\n\t\t\t\t\"branch_code\": \"0154\",\n\t\t\t\t\"bank_name\": \"國泰世華商業銀行\",\n\t\t\t\t\"branch_name\": \"信義分行\",\n\t\t\t\t\"virtual_account\": \"56639164278638\"\n\t\t\t}\n\t\t}\n   }",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"payable\": \"50000\",\n\t\t\t\"accounts_receivable\": {\n\t\t\t\t\"principal\": 40000,\n\t\t\t\t\"interest\": 1280,\n\t\t\t\t\"delay_interest\": 0\n\t\t\t},\n\t\t\t\"income\": {\n\t\t\t\t\"interest\": 0,\n\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\"other\": 0\n\t\t\t},\n\t\t\t\"funds\": {\n\t\t\t\t\"total\": 960000,\n\t\t\t\t\"last_recharge_date\": \"2019-01-14 14:12:10\",\n\t\t\t\t\"frozen\": \"3401\",\n\t\t\t\t\"frozenes\": {\n                \t\t\t\"invest\": 0,\n                \t\t\t\"transfer\": 3401,\n                \t\t\t\"withdraw\": 0,\n                \t\t\t\"other\": 0\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"bank_account\": {\n\t\t\t\t\"bank_code\": \"004\",\n\t\t\t\t\"branch_code\": \"0037\",\n\t\t\t\t\"bank_account\": \"123123123132\"\n\t\t\t},\n\t\t\t\"virtual_account\": {\n\t\t\t\t\"bank_code\": \"013\",\n\t\t\t\t\"branch_code\": \"0154\",\n\t\t\t\t\"bank_name\": \"國泰世華商業銀行\",\n\t\t\t\t\"branch_name\": \"信義分行\",\n\t\t\t\t\"virtual_account\": \"56639164278638\"\n\t\t\t}\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
@@ -28068,6 +28075,260 @@ define({
                     {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/bioregister",
+            "title": "會員 生物辨識註冊",
+            "version": "0.2.0",
+            "name": "GetUserBioRegister",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "bio_type",
+                            "description": "<p>登入方式 0:指紋 1:手勢 2:臉部</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "bio_key",
+                            "description": "<p>登入KEY</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"bio_key\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "https://dev-api.influxfin.com/api/v2/user/bioregister"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤(參數條件不足)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/bioregister",
+            "title": "會員 生物辨識登入",
+            "version": "0.2.0",
+            "name": "GetUserBioRegister",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "bio_type",
+                            "description": "<p>登入方式 0:指紋 1:手勢 2:臉部</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "bio_key",
+                            "description": "<p>登入KEY</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"bio_key\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "https://dev-api.influxfin.com/api/v2/user/bioregister"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤(參數條件不足)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
                         "type": "Object"
                     }
                 ]
