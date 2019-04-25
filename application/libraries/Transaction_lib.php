@@ -41,14 +41,13 @@ class Transaction_lib{
                     $frozen = $frozen + intval($value->amount);
                     $frozen_arr[$value->type] = $frozen_arr[$value->type] + intval($value->amount);
 				}
-
+                $frozenes = [
+                    'invest'   => $frozen_arr[1],
+                    'transfer' => $frozen_arr[2],
+                    'withdraw' => $frozen_arr[3],
+                    'other'    => $frozen_arr[4]
+                ];
 			}
-            $frozenes = [
-                'invest'   => $frozen_arr[1],
-                'transfer' => $frozen_arr[2],
-                'withdraw' => $frozen_arr[3],
-                'other'    => $frozen_arr[4]
-            ];
 			return array('total'=>$total,'last_recharge_date'=>$last_recharge_date,'frozen'=>$frozen,'frozenes'=>$frozenes);
 		}
 		return false;
