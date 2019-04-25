@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -1227,31 +1227,142 @@ class User extends REST_Controller {
 		}
 	}
 
+    public function bioregister_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $data		= [];
+        $fields 	= ['bio_type','device_id'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field]) && !$input[$field]) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $data[$field] = $input[$field];
+            }
+        }
+        $this->load->model('user/user_bio_model');
+
+        $user_id    = $this->user_info->id;
+        $investor   = $this->user_info->investor;
+        $bio_type       = $data['bio_type'];
+        $device_id  = $data['device_id'];
+
+        $token = (object)[
+            'user_id'   => $user_id,
+            'bio_type'  => $bio_type,
+            'investor'  => $investor,
+            'device_id' => $device_id,
+            'auth_otp'  => get_rand_token(),
+        ];
+        $bio_key 		= AUTHORIZATION::generateUserToken($token);
+
+        $registed = $this->user_bio_model->get_by(array(
+            "user_id"	=> $user_id,
+            'bio_type'	=> $bio_type,
+            "investor"	=> $investor,
+            'device_id' => $device_id,
+        ));
+
+        if($registed){
+            $insert = $this->user_bio_model->update($registed->id,array(
+                "bio_key"	=> $bio_key,
+            ));
+        }
+        else{
+            $insert = $this->user_bio_model->insert(array(
+                "user_id"	=> $user_id,
+                'bio_type'	=> $bio_type,
+                "investor"	=> $investor,
+                "device_id"	=> $device_id,
+                "bio_key"	=> $bio_key,
+            ));
+        }
+        if(!$insert) {
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
+        }
+
+        $this->response(array(
+            'result' => 'SUCCESS',
+            'data' 	 => array(
+                'bio_key'   => $bio_key,
+            )
+        ));
+    }
+
     public function biologin_post()
     {
+        $bio_key 		= isset($this->input->request_headers()['bio_key'])?$this->input->request_headers()['bio_key']:'';
+        $bio_keyData 	= AUTHORIZATION::getUserInfoByToken($bio_key);
 
-        $input = $this->input->post(NULL, TRUE);
-        $phone = isset($input['phone'])?trim($input['phone']):'';
-        if (empty($phone)) {
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        if (empty($bio_keyData->user_id)||empty($bio_keyData->investor)||empty($bio_keyData->device_id)) {
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
+        if($bio_keyData) {
+            $user_id = $bio_keyData->user_id;
+            $bio_type = $bio_keyData->bio_type;
+            $investor = $bio_keyData->investor;
+            $device_id = $bio_keyData->device_id;
 
-        if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            $this->load->model('user/user_bio_model');
+            $active = $this->user_bio_model->get_by(array(
+                'user_id'	=> $user_id,
+                'bio_type'	=> $bio_type,
+                'investor'	=> $investor,
+                'device_id' => $device_id,
+                'bio_key'   => $bio_key
+            ));
+            if($bio_key !== $active->bio_key) {
+                $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
+            }
+
+            $user_info = $this->user_model->get($user_id);
+            if ($user_info) {
+                if ($user_info->block_status != 0) {
+                    $this->response(array('result' => 'ERROR', 'error' => BLOCK_USER));
+                }
+
+                $token = (object)[
+                    'id' => $user_info->id,
+                    'phone' => $user_info->phone,
+                    'auth_otp' => get_rand_token(),
+                    'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
+                    'investor' => $investor,
+                    'company' => 0,
+                    'incharge' => 0,
+                    'agent' => 0,
+                ];
+                $request_token = AUTHORIZATION::generateUserToken($token);
+                $this->user_model->update($user_info->id, array('auth_otp' => $token->auth_otp));
+                $this->insert_login_log($user_info->phone, $investor, 1, $user_info->id, $device_id);
+
+                //new biokey
+                $ntoken = (object)[
+                    'user_id' => $user_id,
+                    'bio_type' => $bio_type,
+                    'investor' => $investor,
+                    'device_id' => $device_id,
+                    'auth_otp' => get_rand_token(),
+                ];
+                $bio_key = AUTHORIZATION::generateUserToken($ntoken);
+
+                $insert = $this->user_bio_model->update($active->id, array(
+                    "bio_key" => $bio_key,
+                ));
+
+                if (!$insert) {
+                    $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                }
+                $this->response([
+                    'result' => 'SUCCESS',
+                    'data' => [
+                        'bio_key' => $bio_key,
+                        'token' => $request_token,
+                        'expiry_time' => $token->expiry_time,
+                    ]
+                ]);
+            }
         }
-
-        $this->load->library('sms_lib');
-        $code = $this->sms_lib->get_code($phone);
-        if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
-            $this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
-        }
-
-        $result = $this->user_model->get_by('phone', $phone);
-        if ($result) {
-            $this->sms_lib->send_verify_code($result->id,$phone);
-            $this->response(array('result' => 'SUCCESS'));
-        } else {
-            $this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+        else{
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
     }
 	

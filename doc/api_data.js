@@ -28209,10 +28209,10 @@ define({
         },
         {
             "type": "post",
-            "url": "/v2/user/bioregister",
+            "url": "/v2/user/biologin",
             "title": "會員 生物辨識登入",
             "version": "0.2.0",
-            "name": "GetUserBioRegister",
+            "name": "GetUserBioLogin",
             "group": "User",
             "header": {
                 "fields": {
@@ -28221,28 +28221,8 @@ define({
                             "group": "Header",
                             "type": "String",
                             "optional": false,
-                            "field": "request_token",
-                            "description": "<p>登入後取得的 Request Token</p>"
-                        }
-                    ]
-                }
-            },
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "bio_type",
-                            "description": "<p>登入方式 0:指紋 1:手勢 2:臉部</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "device_id",
-                            "description": "<p>裝置ID</p>"
+                            "field": "bio_key",
+                            "description": "<p>生物辨識註冊取得的KEY</p>"
                         }
                     ]
                 }
@@ -28262,14 +28242,28 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "bio_key",
-                            "description": "<p>登入KEY</p>"
+                            "description": "<p>New KEY</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "token",
+                            "description": "<p>request_token</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "expiry_time",
+                            "description": "<p>token時效</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"bio_key\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\"\n  }\n}",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"bio_key\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n  \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjkiLCJwaG9uZSI6IjA5MDAwMDAwMDAiLCJhdXRoX290cCI6IjE0NTkzNyIsImV4cGlyeV90aW1lIjoxNTU2MjE4MDQ4LCJpbnZlc3RvciI6MSwiY29tcGFueSI6MCwiaW5jaGFyZ2UiOjAsImFnZW50IjowfQ.ay48W5jL_eRNdFCCrZAKXHfPdPF2ra5Oo36kGOxF0rw\",\n  \t\"expiry_time\": \"1556217688\"\n  }\n}",
                         "type": "Object"
                     }
                 ]
@@ -28278,7 +28272,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://dev-api.influxfin.com/api/v2/user/bioregister"
+                    "url": "https://dev-api.influxfin.com/api/v2/user/biologin"
                 }
             ],
             "error": {
@@ -28287,14 +28281,13 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
+                        },{
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "102",
+                            "description": "<p>KEY無效</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -28312,17 +28305,12 @@ define({
                 },
                 "examples": [
                     {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "200",
+                        "title": "202",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
                         "type": "Object"
                     },
