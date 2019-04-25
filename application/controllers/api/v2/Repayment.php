@@ -204,7 +204,13 @@ class Repayment extends REST_Controller {
 			$funds			 = array(
 				'total'					=> 0,
 				'last_recharge_date'	=> '',
-				'frozen'				=> 0
+				'frozen'				=> 0,
+                'frozenes'              => [
+                    'invest'   => 0,
+                    'transfer' => 0,
+                    'withdraw' => 0,
+                    'other'    => 0
+                ]
 			);
 			$virtual_account	= array(
 				'bank_code'			=> '',
