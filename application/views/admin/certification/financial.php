@@ -104,8 +104,8 @@
 										</div>
 										<div class="form-group">
 											<label for="disabledSelect">存摺內頁照</label><br>
-											<a href="<?=isset($content['creditcard_image'])?$content['creditcard_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['creditcard_image'])?$content['creditcard_image']:""?>" style='width:30%;max-width:400px'>
+											<a href="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" data-fancybox="images">
+												<img src="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
 									</fieldset>

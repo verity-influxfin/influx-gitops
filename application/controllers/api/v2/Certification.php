@@ -1073,9 +1073,9 @@ class Certification extends REST_Controller {
 			//上傳檔案欄位
 			$file_fields 	= ['creditcard_image','passbook_image'];
 			foreach ($file_fields as $field) {
-				$image_id = intval($input[$field]);
+				$image_id = !empty($input[$field])!=null?intval($input[$field]):null;
 				if (!$image_id) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$rs = $this->log_image_model->get_by([
 						'id'		=> $image_id,
@@ -1098,7 +1098,7 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
+				//$this->certification_lib->set_success($insert);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));

@@ -19701,6 +19701,19 @@ define({
             "version": "0.2.0",
             "name": "PostSubloanApply",
             "group": "Subloan",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
             "parameter": {
                 "fields": {
                     "Parameter": [

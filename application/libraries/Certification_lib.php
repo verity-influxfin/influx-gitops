@@ -558,9 +558,15 @@ class Certification_lib{
 				'financial_status'		=> 1,
 				'financial_income'		=> $content['parttime']+$content['allowance']+$content['scholarship']+$content['other_income'],
 				'financial_expense'		=> $content['restaurant']+$content['transportation']+$content['entertainment']+$content['other_expense'],
-				'financial_creditcard'	=> $content['creditcard_image'],
-				'financial_passbook'	=> $content['passbook_image'],
 			);
+
+            if(isset($content['creditcard_image'])){
+                array_push($data,array('financial_creditcard',$content['creditcard_image']));
+            }
+
+            if(isset($content['passbook_image'])){
+                array_push($data,array('financial_passbook',$content['passbook_image']));
+            }
 
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'financial_status'));
 			if($exist){
