@@ -85,7 +85,7 @@ class Judicialperson_lib{
 				$this->CI->judicial_person_model->update($person_id,['cooperation'=>1]);
 				$param	= array(
 					'company_user_id'	=> $judicial_person->company_user_id,
-					'server_ip'			=> $judicial_person->cooperation_server_ip,
+					//'server_ip'			=> $judicial_person->cooperation_server_ip,
 					'status'			=> 1,
 					'cooperation_id'	=> 'CO'.$judicial_person->tax_id,
 					'cooperation_key'	=> SHA1(COOPER_KEY.$judicial_person->tax_id.time())

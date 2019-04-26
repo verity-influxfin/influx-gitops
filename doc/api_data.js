@@ -5904,13 +5904,6 @@ define({
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
-                            "field": "server_ip",
-                            "description": "<p>綁定伺服器IP</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
                             "field": "remark",
                             "description": "<p>備註</p>"
                         },
@@ -5926,7 +5919,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"server_ip\": \"192.168.0.1\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\"\n\t\t}\n   }",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\"\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
@@ -6356,6 +6349,21 @@ define({
                         },
                         {
                             "group": "Parameter",
+                            "type": "String",
+                            "size": "2..15",
+                            "optional": false,
+                            "field": "cooperation_contact",
+                            "description": "<p>聯絡人</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_phone",
+                            "description": "<p>連絡電話</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "Number",
                             "allowedValues": [
                                 "0",
@@ -6365,13 +6373,6 @@ define({
                             "field": "cooperation",
                             "defaultValue": "0",
                             "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "server_ip",
-                            "description": "<p>綁定伺服器IP，多組時，以逗號分隔(經銷商必填)</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6400,6 +6401,13 @@ define({
                             "optional": true,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多三個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "bankbook_image",
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多三個)</p>"
                         }
                     ]
                 }
@@ -6576,13 +6584,6 @@ define({
                     "Parameter": [
                         {
                             "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "server_ip",
-                            "description": "<p>綁定伺服器IP，多組時，以逗號分隔</p>"
-                        },
-                        {
-                            "group": "Parameter",
                             "type": "Number",
                             "optional": false,
                             "field": "facade_image",
@@ -6608,6 +6609,13 @@ define({
                             "optional": false,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "bankbook_image",
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多三個)</p>"
                         }
                     ]
                 }

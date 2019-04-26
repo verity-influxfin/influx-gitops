@@ -35,10 +35,10 @@
 									<label>統一編號</label>
 									<p class="form-control-static"><?=isset($user_info->id_number)?$user_info->id_number:"" ?></p>
 								</div>
-								<div class="form-group">
+								<!--<div class="form-group">
 									<label>IP列表</label><br>
 									<textarea style="width:100%" class="form-control-static"><?=isset($data->cooperation_server_ip)?$data->cooperation_server_ip:"" ?></textarea>
-								</div>	
+								</div>-->
 								<div class="form-group">
 									<label>備註</label>
 									<p class="form-control-static"><?=isset($data->remark)?$data->remark:"" ?></p>

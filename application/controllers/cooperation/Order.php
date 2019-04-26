@@ -29,11 +29,11 @@ class Order extends REST_Controller {
 				'status'			=> 1,
 			]);
 			if($cooperation){
-				$this->cooperation_info = $cooperation;
-				$ips = explode(',',$cooperation->server_ip);
-				if(!in_array(get_ip(),$ips)){
-					$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
-				}
+				//$this->cooperation_info = $cooperation;
+				//$ips = explode(',',$cooperation->server_ip);
+				//if(!in_array(get_ip(),$ips)){
+				//	$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
+				//}
 			}else{
 				$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 			}

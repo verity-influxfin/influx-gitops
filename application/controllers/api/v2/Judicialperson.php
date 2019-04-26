@@ -123,7 +123,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number=1,2,3,4} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
      * @apiParam {String{8}} tax_id 公司統一編號
      * @apiParam {Number=0,1} [cooperation=0] 0:法人帳號 1:法人經銷商帳號
-	 * @apiParam {String} [server_ip] 綁定伺服器IP，多組時，以逗號分隔(經銷商必填)
+	 * ->cancel@apiParam {String} [server_ip] 綁定伺服器IP，多組時，以逗號分隔(經銷商必填)
 	 * @apiParam {Number} [facade_image] 店門正面照(經銷商必填)( 圖片ID )
 	 * @apiParam {Number} [store_image] 店內正面照(經銷商必填)( 圖片ID )
 	 * @apiParam {Number} [front_image] 銀行流水帳正面(經銷商必填)( 圖片ID )
@@ -179,9 +179,9 @@ class Judicialperson extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= array('user_id'=> $user_id);
-		
+
 		//必填欄位
-		$fields 	= ['company_type','tax_id'];
+		$fields 	= ['company_type','tax_id','cooperation_contact','cooperation_phone'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -206,7 +206,7 @@ class Judicialperson extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
 
-			$this->load->library('Gcis_lib'); 
+			$this->load->library('Gcis_lib');
 			$company_data = $this->gcis_lib->check_responsible($param['tax_id'],$this->user_info->name);
 			if(!$company_data){
 				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
@@ -222,9 +222,9 @@ class Judicialperson extends REST_Controller {
 			}
 			
 			if($param['cooperation']==2){
-				if (empty($input['server_ip'])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}
+				//if (empty($input['server_ip'])) {
+					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+				//}
 				//上傳檔案欄位
 				$content		= [];
 				$file_fields 	= ['facade_image','store_image','front_image'];
@@ -247,7 +247,7 @@ class Judicialperson extends REST_Controller {
 				}
 				
 				//多個檔案欄位
-				$file_fields 	= ['passbook_image'];
+				$file_fields 	= ['passbook_image','bankbook_image'];
 				foreach ($file_fields as $field) {
 					$image_ids = explode(',',$input[$field]);
 					if(count($image_ids)>3){
@@ -269,7 +269,7 @@ class Judicialperson extends REST_Controller {
 				}
 
 				$param['cooperation_content'] 	= json_encode($content);
-				$param['cooperation_server_ip'] = trim($input['server_ip']);
+				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
 
 			
@@ -639,7 +639,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
-	 * @apiParam {String} server_ip 綁定伺服器IP，多組時，以逗號分隔
+	 * ->cancel@apiParam {String} server_ip 綁定伺服器IP，多組時，以逗號分隔
 	 * @apiParam {Number} facade_image 店門正面照 ( 圖片ID )
 	 * @apiParam {Number} store_image 店內正面照 ( 圖片ID )
 	 * @apiParam {Number} front_image 銀行流水帳正面 ( 圖片ID )
@@ -679,9 +679,9 @@ class Judicialperson extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
 		}
 
-		if (empty($input['server_ip'])) {
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
+		//if (empty($input['server_ip'])) {
+			//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		//}
 
 		//上傳檔案欄位
 		$content		= [];
@@ -704,7 +704,7 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 		
-		$file_fields 	= ['passbook_image'];
+		$file_fields 	= ['passbook_image','bankbook_image'];
 		foreach ($file_fields as $field) {
 			$image_ids = explode(',',$input[$field]);
 			if(count($image_ids)>3){
@@ -729,7 +729,7 @@ class Judicialperson extends REST_Controller {
 			$param	= array(
 				'cooperation'			=> 2,
 				'cooperation_content'	=> json_encode($content),
-				'cooperation_server_ip'	=> trim($input['server_ip']),
+				//'cooperation_server_ip'	=> trim($input['server_ip']),
 			);
 			$rs = $this->judicial_person_model->update($judicial_person->id,$param);
 		}
@@ -750,7 +750,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * 
      * @apiSuccess {Object} result SUCCESS
-	 * @apiSuccess {String} server_ip 綁定伺服器IP
+	 * ->cancel@apiSuccess {String} server_ip 綁定伺服器IP
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {String} status 狀態 0:未開通 1:已開通 2:審核中
      * @apiSuccessExample {Object} SUCCESS
@@ -786,7 +786,7 @@ class Judicialperson extends REST_Controller {
 		
 		if($judicial_person){
 			$data = array(
-				'server_ip'	=> $judicial_person->cooperation_server_ip,
+				//'server_ip'	=> $judicial_person->cooperation_server_ip,
 				'status'	=> $judicial_person->cooperation,
 				'remark'	=> $judicial_person->remark,
 			);
