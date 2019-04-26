@@ -21,7 +21,7 @@ class Transaction_lib{
 		if($virtual_account){
 			$total  = 0;
             $frozen = 0;
-            $frozenes = ['1' => 0,'2' => 0,'3' => 0,'4' => 0];
+            $frozenes = ['invest' => 0,'transfer' => 0,'withdraw' => 0,'other' => 0];
             $frozen_arr = $frozenes;
 			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
