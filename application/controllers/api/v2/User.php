@@ -1367,18 +1367,14 @@ class User extends REST_Controller {
     }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
-		$this->load->model('log/log_userlogin_model');
+        $this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');
-        $check_log = $this->log_userlogin_model->order_by('created_at','desc')->limit(7)->get_many_by(
-            array('user_id' => $user_id)
-        );
-
         $this->agent->device_id=$device_id;
-		return $this->log_userlogin_model->insert(array(
-			'account'	=> $account,
-			'investor'	=> $investor,
-			'user_id'	=> $user_id,
-			'status'	=> $status
-		));
+        return $this->log_userlogin_model->insert(array(
+            'account'	=> $account,
+            'investor'	=> $investor,
+            'user_id'	=> $user_id,
+            'status'	=> $status
+        ));
 	}
 }
