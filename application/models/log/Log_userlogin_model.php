@@ -30,10 +30,11 @@ class Log_userlogin_model extends MY_Model
 		}else{
 			$agent = 'Unidentified User Agent';
 		}
+		$device_id = isset($this->agent->device_id)?$this->agent->device_id:null;
 		$data['client'] = json_encode([
 			'agent'		=> $this->agent->agent_string(),
 			'platform'	=> $this->agent->platform(),
-            'device_id'	=> $this->agent->device_id
+            'device_id'	=> $device_id
 		]);
 		
 		return $data;
