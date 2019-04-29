@@ -532,7 +532,7 @@ class Product extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= ['status'=>2];
-		
+
 		//必填欄位
 		if (empty($input['target_id'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -575,7 +575,7 @@ class Product extends REST_Controller {
 						$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 					}
 				}
-				
+
 				if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
 					$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 				}
@@ -584,13 +584,14 @@ class Product extends REST_Controller {
 				$bank_account = $this->user_bankaccount_model->get_by([
 					'status'	=> 1,
 					'investor'	=> $investor,
-					'verify'	=> 0,
+					'verify'	=> 1,
 					'user_id'	=> $user_id 
 				]);
 				if($bank_account){
 					$this->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
+                }else{
                     $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-				}
+                }
 				
 				$this->target_lib->signing_target($target->id,$param,$user_id);
 				$this->response(array('result' => 'SUCCESS'));
