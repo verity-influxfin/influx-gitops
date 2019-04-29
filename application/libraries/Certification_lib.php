@@ -138,7 +138,7 @@ class Certification_lib{
                    if(strpos($matches[0],'月')){
                        $match = (preg_match('/\d/',$matches[0])==1?'0':'').preg_replace('/\D/','',$matches[0]).'-';
                    }
-                   else{//
+                   else{
                        $match = ((int)preg_replace('/\D/','//',$matches[0])+1911).'-';
                    }
                    return $match;},
@@ -342,12 +342,19 @@ class Certification_lib{
 			}
 
 			if($rs){
+                $birthday 	= trim($content["birthday"]);
+                if(strlen($birthday)==7 || strlen($birthday)==6){
+                    $birthday = $birthday + 19110000;
+                    $birthday = date("Y-m-d",strtotime($birthday));
+                }
 				if($exist){
 					$user_info = array(
 						'name'				=> $content['name'],
-						'id_card_date'		=> $content['id_card_date'],
-						'id_card_place'		=> $content['id_card_place'],
-						'address'			=> $content['address'],
+                        "id_number"			=> $content["id_number"],
+                        "id_card_date"		=> $content["id_card_date"],
+                        "id_card_place"		=> $content["id_card_place"],
+                        "address"			=> $content["address"],
+                        "birthday"			=> $birthday,
 					);
 				}else{
 					$sex		= substr($content['id_number'],1,1)==1?'M':'F';
@@ -358,7 +365,7 @@ class Certification_lib{
 						'id_card_date'		=> $content['id_card_date'],
 						'id_card_place'		=> $content['id_card_place'],
 						'address'			=> $content['address'],
-						'birthday'			=> $content['birthday'],
+                        "birthday"			=> $birthday,
 					);
 					
 					$virtual_data[] = array(
@@ -559,15 +566,12 @@ class Certification_lib{
 				'financial_income'		=> $content['parttime']+$content['allowance']+$content['scholarship']+$content['other_income'],
 				'financial_expense'		=> $content['restaurant']+$content['transportation']+$content['entertainment']+$content['other_expense'],
 			);
-
             if(isset($content['creditcard_image'])){
                 array_push($data,array('financial_creditcard',$content['creditcard_image']));
             }
-
             if(isset($content['passbook_image'])){
                 array_push($data,array('financial_passbook',$content['passbook_image']));
             }
-
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'financial_status'));
 			if($exist){
 				foreach($data as $key => $value){
