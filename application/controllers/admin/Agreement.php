@@ -101,6 +101,8 @@ class Agreement extends MY_Admin_Controller
         $param['alias']   = $this->input->post('alias');
         $param['name']    = $this->input->post('name');
         $param['content'] = $this->input->post('content');
+        $param['version'] = $this->input->post('version');
+        $param['remark'] = $this->input->post('remark');
 
         return $param;
     }

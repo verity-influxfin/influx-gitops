@@ -14,6 +14,8 @@
                 <th>ID</th>
                 <th>代號</th>
                 <th>名稱</th>
+                <th>版本</th>
+                <th>備註</th>
                 <th>最後更新時間</th>
                 <th>修改</th>
                 <!--th>刪除</th-->
@@ -25,6 +27,8 @@
                     <td><?= $agreement->id ?></td>
                     <td><?= $agreement->alias ?></td>
                     <td><?= $agreement->name ?></td>
+                    <td><?= $agreement->version ?></td>
+                    <td><?= $agreement->remark ?></td>
                     <td>
                         <?= date("Y-m-d H:i:s", $agreement->updated_at) ?>
                     </td>

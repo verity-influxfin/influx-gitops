@@ -33,11 +33,19 @@
 										<input id="alias" name="alias" class="form-control" placeholder="Enter Alias" value="<?=isset($data->alias)?$data->alias:"" ?>" >
 									</div>
 									<div class="form-group">
-										<label>產品縮寫</label> 
+										<label>內容</label>
 										<textarea id="content" name="content" class="form-control" rows="3">
 										<?=isset($data->content)?$data->content:"";?>
 										</textarea>
 									</div>
+                                    <div class="form-group">
+                                        <label>版本</label>
+                                        <input id="version" name="version" class="form-control" placeholder="Enter version" value="<?=isset($data->version)?$data->version:"" ?>" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>備註</label>
+                                        <input id="remark" name="remark" class="form-control" placeholder="Enter remark" value="<?=isset($data->remark)?$data->remark:"" ?>" >
+                                    </div>
 									<button type="submit" class="btn btn-default">送出</button>
 								</form>
 							</div>
