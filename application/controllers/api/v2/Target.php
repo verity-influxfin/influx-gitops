@@ -1005,20 +1005,38 @@ class Target extends REST_Controller {
 			'user_id' 	=> $user_id,
 			'status'	=> [0,1,2]
 		]);
-		$list			= [];
+        $list			= [];
+
+        $product_list 	= $this->config->item('product_list');
+        $user_info 	= $this->user_model->get($user_id);
+
 		if(!empty($investments)){
 			foreach($investments as $key => $value){
 				$target_info = $this->target_model->get($value->target_id);
-				$target = [
+                $age  = get_age($user_info->birthday);
+                $user		= [];
+                if($product_list[$target_info->product_id]['identity']==1){
+                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'school_name']);
+                }else{
+                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'company_name']);
+                }
+                $user = array(
+                    'sex' 			=> $user_info->sex,
+                    'age'			=> $age,
+                    'company_name'	=> $user_meta?$user_meta->meta_value:'',
+                );
+                $target = [
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
 					'product_id'	=> intval($target_info->product_id),
 					'user_id' 		=> intval($target_info->user_id),
+                    'user' 			=> $user,
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
 					'interest_rate' => floatval($target_info->interest_rate),
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
+                    'reason' 		=> $target_info->reason,
 					'expire_time'	=> intval($target_info->expire_time),
 					'invested'		=> intval($target_info->invested),
 					'status'		=> intval($target_info->status),
