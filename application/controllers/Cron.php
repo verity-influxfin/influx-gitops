@@ -264,5 +264,23 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
+
+    public function unlock_block_user()
+    {	//每五分鐘
+        $this->load->library('User_lib');
+        $script  	= 15;
+        $start_time = time();
+        $count 		= $this->user_lib->script_unlock_block_user();
+        $num		= $count?intval($count):0;
+        $end_time 	= time();
+        $data		= [
+            'script_name'	=> 'unlock_block_user',
+            'num'			=> $num,
+            'start_time'	=> $start_time,
+            'end_time'		=> $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 }
 

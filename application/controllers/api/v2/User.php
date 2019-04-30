@@ -387,9 +387,31 @@ class User extends REST_Controller {
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
 			if(sha1($input['password'])==$user_info->password){
-				
 				if($user_info->block_status != 0){
-					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+				    if($user_info->block_status == 3){
+                        $this->load->model('log/log_userlogin_model');
+                        $check_logs = $this->log_userlogin_model->get_many_by(array(
+                            'account'	  => $input['phone'],
+                            'investor'	  => $investor,
+                            'user_id'	  => $user_info->id,
+                            'status <'	  => 2,
+                            'created_at <'=> strtotime('-1 minutes')
+                        ));
+				        if($check_logs){
+                            $this->user_model->update_by(array(
+                                'id'	  => $user_info->id,
+                                'block_status'	  => 3,
+                            ),array(
+                                'block_status' => 0
+                            ));
+                        }
+				        else{
+                            $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+                        }
+                    }
+					else{
+					    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+					}
 				}
 			
 
@@ -1367,14 +1389,20 @@ class User extends REST_Controller {
     }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
-        $this->load->model('log/log_userlogin_model');
+		$this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');
+
         $this->agent->device_id=$device_id;
-        return $this->log_userlogin_model->insert(array(
-            'account'	=> $account,
-            'investor'	=> $investor,
-            'user_id'	=> $user_id,
-            'status'	=> $status
-        ));
+		$log_insert = $this->log_userlogin_model->insert(array(
+			'account'	=> $account,
+			'investor'	=> $investor,
+			'user_id'	=> $user_id,
+			'status'	=> $status
+		));
+
+        $this->load->library('user_lib');
+        $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+
+        return $log_insert;
 	}
 }
