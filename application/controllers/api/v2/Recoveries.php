@@ -611,10 +611,9 @@ class Recoveries extends REST_Controller {
 						$last_date[$value->id] = $transfer_info->transfer_date;
 					}
 				}
-				
 				$instalment_invest = [
 					'start_date'	=> '',
-					'end_date'		=> $last_date[$value->id],
+					'end_date'		=> isset($last_date[$value->id])?$last_date[$value->id]:'****-**-**',
 					'amount'		=> 0,
 				];
 				$transaction = $this->transaction_model->get_by([
