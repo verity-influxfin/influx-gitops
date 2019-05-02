@@ -547,7 +547,7 @@ class Product extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}else{
-			//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
 		$target 	= $this->target_model->get($input['target_id']);
@@ -584,8 +584,8 @@ class Product extends REST_Controller {
 				$bank_account = $this->user_bankaccount_model->get_by([
 					'status'	=> 1,
 					'investor'	=> $investor,
-					'verify >'	=> 1,
-					'user_id'	=> $user_id 
+					'verify >'	=> 0,
+					'user_id'	=> $user_id
 				]);
 				if($bank_account){
 					$this->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
