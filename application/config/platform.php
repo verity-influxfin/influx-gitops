@@ -157,7 +157,7 @@ $config['product_list']= [
 		'alias'				=> 'FGN',
 		'name'				=> '新鮮人貸',
 		'loan_range_s'		=> 10000,
-		'loan_range_e'		=> 300000,
+		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
@@ -222,7 +222,7 @@ $config['product_identity']= [
 //還款方式
 $config['repayment_type']= [
 	1=> '等額本息',
-	2=> '先息後本',
+	2=> '繳息不還本',
 	3=> '以日計息',
 ];
 
