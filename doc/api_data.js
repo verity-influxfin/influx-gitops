@@ -30914,6 +30914,18 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "121",
+                            "description": "<p>帳戶(登入失敗3次)自動鎖定30分鐘，可風控提早解除</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "120",
+                            "description": "<p>帳戶(登入失敗10次)自動永久鎖定，需風控解除</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
                         }
@@ -30938,6 +30950,16 @@ define({
                     {
                         "title": "200",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "103",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "102",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
                         "type": "Object"
                     },
                     {
