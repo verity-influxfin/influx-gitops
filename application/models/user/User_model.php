@@ -13,8 +13,8 @@ class User_model extends MY_Model
 	public $block_status_list   = array(
 		0 =>	'正常',
 		1 =>	'人工停權',
-		2 =>	'系統鎖定',
-        3 =>    '系統暫時鎖定',
+		2 =>	'系統暫時鎖定',
+        3 =>    '系統鎖定',
 	);
 	
 	public $token_fields  = array(

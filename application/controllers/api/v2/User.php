@@ -386,34 +386,23 @@ class User extends REST_Controller {
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
 		if($user_info){
+            //判斷鎖定狀態並解除
+            $this->load->library('user_lib');
+            $unblock_status = $this->user_lib->unblock_user($user_info->id);
+            if($unblock_status){
+                $user_info->block_status = 0;
+            }
+            if($user_info->block_status == 3) {
+                $this->response(array('result' => 'ERROR','error' => SYSTEM_BLOCK_USER ));
+            } elseif ($user_info->block_status == 2) {
+                $this->response(array('result' => 'ERROR','error' => TEMP_BLOCK_USER ));
+            }
+
 			if(sha1($input['password'])==$user_info->password){
+
 				if($user_info->block_status != 0){
-				    if($user_info->block_status == 3){
-                        $this->load->model('log/log_userlogin_model');
-                        $check_logs = $this->log_userlogin_model->get_many_by(array(
-                            'account'	  => $input['phone'],
-                            'investor'	  => $investor,
-                            'user_id'	  => $user_info->id,
-                            'status <'	  => 2,
-                            'created_at <'=> strtotime('-1 minutes')
-                        ));
-				        if($check_logs){
-                            $this->user_model->update_by(array(
-                                'id'	  => $user_info->id,
-                                'block_status'	  => 3,
-                            ),array(
-                                'block_status' => 0
-                            ));
-                        }
-				        else{
-                            $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-                        }
-                    }
-					else{
-					    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-					}
+				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
-			
 
 				$first_time = 0;
 				if($investor==1 && $user_info->investor_status==0){
