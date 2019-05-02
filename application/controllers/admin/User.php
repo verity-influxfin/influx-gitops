@@ -159,5 +159,29 @@ class User extends MY_Admin_Controller {
 			alert('ERROR , id is not exist',admin_url('user/index'));
 		}
 	}
+
+    public function block_user(){
+        $get 		= $this->input->get(NULL, TRUE);
+        if(empty($get)) {
+            $page_data = [];
+            $block_user = $this->user_model->get_many_by(array("block_status" => [1, 2, 3]));
+            if ($block_user && !empty($block_user)) {
+                $page_data['list'] = $block_user;
+                $page_data['block_status_list'] = $this->user_model->block_status_list;
+            }
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/users_block_list', $page_data);
+            $this->load->view('admin/_footer');
+        }
+        else{
+            $success = $this->user_model->update($get['id'], ["block_status" => 0]);
+            if($success===true){
+                alert('更新成功',admin_url('user/block_user'));
+            }else{
+                alert('更新失敗，請洽工程師',admin_url('user/block_user'));
+            }
+        }
+    }
 }
 ?>

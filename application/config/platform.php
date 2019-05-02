@@ -56,7 +56,11 @@ $config['admin_menu'] = [
 		'index'				=> '投訴與建議',
 		'send_email'		=> '通知工具',
 	],
-	'User' 					=> ['name'=>'會員管理'],
+	'User' 					=> [
+	    'parent_name'       => '會員管理',
+	    'index'             => '會員列表',
+        'block_user'        => '鎖定帳號管理',
+    ],
 	'Admin' 				=> [
 		'parent_name'		=> '後台人員管理',
 		'role_list'			=> '權限管理',
