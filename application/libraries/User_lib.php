@@ -19,7 +19,7 @@ class User_lib {
         $check_logs = $this->CI->log_userlogin_model->order_by('created_at', 'desc')->limit(10)->get_many_by(array(
                 'user_id'	  => $user_id,
                 'status <'	  => 2,
-                'created_at >'=> strtotime('-1 minutes')
+                'created_at >'=> strtotime('-30 minutes')
         ));
         foreach ($check_logs as $field) {
             $check_log .= $field->status;
@@ -47,7 +47,7 @@ class User_lib {
         $check_logs = $this->CI->log_userlogin_model->order_by('created_at', 'desc')->limit(10)->get_many_by(array(
             'user_id' => $user_id,
             'status <' => 2,
-            'created_at >' => strtotime('-1 minutes')
+            'created_at >' => strtotime('-30 minutes')
         ));
         if (!$check_logs) {
             $this->CI->user_model->update_by(array(
