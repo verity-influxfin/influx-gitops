@@ -253,7 +253,6 @@ class Target extends MY_Admin_Controller {
 		$where						= array('status'=>2);
 		$fields 					= ['target_no','user_id','delay'];
 		$subloan_keyword			= $this->config->item('action_Keyword')[0];
-		$subloan_count 				= 0;
 
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {

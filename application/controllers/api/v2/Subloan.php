@@ -150,6 +150,8 @@ class Subloan extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($target_id);
 		$data				= array();
+        $subloan_keyword			= $this->config->item('action_Keyword')[0];
+
 		if(!empty($target) && $target->status == 5 ){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
@@ -162,10 +164,20 @@ class Subloan extends REST_Controller {
 			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
-			
+
+            //計算該user轉換產品次數
+            $subloan_count = count($this->target_model->get_many_by(
+                array(
+                    'user_id'     => $user_id,
+                    'status !='     => "9",
+                    'remark like' => '%'.$subloan_keyword.'%'
+                )
+            ));
+
 			$product_list 	= $this->config->item('product_list');
 			$product 		= $product_list[$target->product_id];
-		
+            $subloan_count >= BALLOON_MORTGAGE_RULE?array_push($product['repayment'],2):null;
+
 			$info 			= $this->subloan_lib->get_info($target);
 			$data			= array(
 				'amount' 		=> $info['total'],

@@ -209,6 +209,7 @@ defined('PASSWORD_LENGTH') 			OR define('PASSWORD_LENGTH'					, 6); //登入密�
 defined('PASSWORD_LENGTH_MAX') 		OR define('PASSWORD_LENGTH_MAX'		, 50); //登入密碼長度
 defined('TARGET_APPROVE_LIMIT')   	OR define('TARGET_APPROVE_LIMIT'	, 15); //申請期限
 defined('TARGET_PROMOTE_LIMIT')   	OR define('TARGET_PROMOTE_LIMIT'	, 2); //邀請碼保留月數
+defined('BALLOON_MORTGAGE_RULE')   	OR define('BALLOON_MORTGAGE_RULE'   , 3); //轉換產品達到次數開啟繳息不還本
 defined('PREPAYMENT_RANGE_DAYS')   	OR define('PREPAYMENT_RANGE_DAYS'	, 2); //提前還款結息天數
 defined('SUBLOAN_RANGE_DAYS')   	OR define('SUBLOAN_RANGE_DAYS'		, 3); //轉換產品結息天數
 defined('TRANSFER_RANGE_DAYS')   	OR define('TRANSFER_RANGE_DAYS'		, 1); //債權轉讓結息天數
