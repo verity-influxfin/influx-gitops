@@ -341,6 +341,7 @@ class Judicialperson extends REST_Controller {
 	public function login_post(){
 
 		$input = $this->input->post(NULL, TRUE);
+        $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
         $fields 	= ['tax_id','phone','password'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
@@ -353,14 +354,26 @@ class Judicialperson extends REST_Controller {
 		}
 		
 		$investor	= 1;
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
 		if($user_info){
-			if(sha1($input['password'])==$user_info->password){
+            //判斷鎖定狀態並解除
+            $this->load->library('user_lib');
+            $unblock_status = $this->user_lib->unblock_user($user_info->id);
+            if($unblock_status){
+                $user_info->block_status = 0;
+            }
+            if($user_info->block_status == 3) {
+                $this->response(array('result' => 'ERROR','error' => SYSTEM_BLOCK_USER ));
+            } elseif ($user_info->block_status == 2) {
+                $this->response(array('result' => 'ERROR','error' => TEMP_BLOCK_USER ));
+            }
+
+		    if(sha1($input['password'])==$user_info->password){
 				
 				if($user_info->block_status != 0){
 					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
-				
+
 				$company_info 	= $this->user_model->get_by('phone', $input['tax_id']);
 				if($company_info){
 					$judicial_agent = $this->judicial_agent_model->get_by(array(
@@ -785,11 +798,19 @@ class Judicialperson extends REST_Controller {
 		));
 		
 		if($judicial_person){
-			$data = array(
-				//'server_ip'	=> $judicial_person->cooperation_server_ip,
-				'status'	=> $judicial_person->cooperation,
-				'remark'	=> $judicial_person->remark,
-			);
+            $data = array(
+                //'server_ip'	=> $judicial_person->cooperation_server_ip,
+                'status'	=> $judicial_person->cooperation,
+                'remark'	=> $judicial_person->remark,
+            );
+		    if($judicial_person->cooperation == 1){
+                $this->load->model('user/cooperation_model');
+                $cooperation= $this->cooperation_model->get_by(array(
+                    'company_user_id' 	=> $this->user_info->id,
+                ));
+                $data['cooperation_id'] = $cooperation -> cooperation_id;
+                $data['cooperation_key'] = $cooperation -> cooperation_key;
+		    }
 		}else{
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
 		}
@@ -798,13 +819,21 @@ class Judicialperson extends REST_Controller {
     }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
-		$this->load->model('log/log_userlogin_model');
-		return $this->log_userlogin_model->insert(array(
-			'account'	=> $account,
-			'investor'	=> $investor,
-			'user_id'	=> $user_id,
-			'status'	=> $status
-		));
+        $this->load->model('log/log_userlogin_model');
+        $this->load->library('user_agent');
+
+        $this->agent->device_id=$device_id;
+        $log_insert = $this->log_userlogin_model->insert(array(
+            'account'	=> $account,
+            'investor'	=> $investor,
+            'user_id'	=> $user_id,
+            'status'	=> $status
+        ));
+
+        $this->load->library('user_lib');
+        $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+
+        return $log_insert;
 	}
 	
 	private function not_support_company(){

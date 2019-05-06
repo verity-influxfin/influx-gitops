@@ -5913,13 +5913,27 @@ define({
                             "optional": false,
                             "field": "status",
                             "description": "<p>狀態 0:未開通 1:已開通 2:審核中</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_id",
+                            "description": "<p>cooperation_id(申請經銷商用,status=1才出現)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_key",
+                            "description": "<p>cooperation_key(申請經銷商用,status=1才出現)</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\"\n\t\t}\n   }",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"remark\":\"\",\n\t\t\t\"status\": \"1\",\n\t\t\t\"cooperation_id\": \"CO22721208\",\n\t\t\t\"cooperation_key\": \"49abaccbb0a16560bbaf7b5973c91582\",\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
