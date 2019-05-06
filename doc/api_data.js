@@ -6414,14 +6414,14 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多四個)</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個)</p>"
                         }
                     ]
                 }
@@ -6622,14 +6622,14 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個)</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個)</p>"
                         }
                     ]
                 }

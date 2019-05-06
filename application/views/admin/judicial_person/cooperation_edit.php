@@ -59,33 +59,6 @@
 								</form>
 							</div>
 							<div class="col-lg-6">
-								<h1>圖片</h1>
-								<div class="form-group">
-									<label for="disabledSelect">店門正面照</label>
-									<a href="<?=isset($content['facade_image'])?$content['facade_image']:""?>" data-fancybox="images">
-										<img src="<?=isset($content['facade_image'])?$content['facade_image']:""?>" style='width:100%;max-width:300px'>
-									</a>
-								</div>
-								<div class="form-group">
-									<label for="disabledSelect">店內正面照</label>
-									<a href="<?=isset($content['store_image'])?$content['store_image']:""?>" data-fancybox="images">
-										<img src="<?=isset($content['store_image'])?$content['store_image']:""?>" style='width:100%;max-width:300px'>
-									</a>
-								</div>
-								<div class="form-group">
-									<label for="disabledSelect">銀行流水帳正面</label>
-									<a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
-										<img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
-									</a>
-								</div>
-								<div class="form-group">
-									<label for="disabledSelect">銀行流水帳內頁</label>
-									<a href="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" data-fancybox="images">
-										<img src="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" style='width:100%;max-width:300px'>
-									</a>
-								</div>
-							</div>
-							<div class="col-lg-6">
 								<h1>商業司資料</h1>
 								<div class="form-group">
 									<?if($company_data){?>
@@ -140,6 +113,45 @@
 										</table>
 									<?}?>
 								</div>
+                                <div class="col-lg-6">
+                                    <h1>圖片</h1>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">店門正面照</label>
+                                        <a href="<?=isset($content['facade_image'])?$content['facade_image']:""?>" data-fancybox="images">
+                                            <img src="<?=isset($content['facade_image'])?$content['facade_image']:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">店內正面照</label>
+                                        <? foreach($content['store_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                            </a>
+                                        <? } ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳正面</label>
+                                        <a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
+                                            <img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳內頁</label>
+                                        <? foreach($content['passbook_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                            </a>
+                                        <? } ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">存摺封面</label>
+                                        <? foreach($content['bankbook_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                            </a>
+                                        <? } ?>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 						<!-- /.row (nested) -->
