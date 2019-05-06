@@ -1523,4 +1523,57 @@ class Recoveries extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
     }
+
+    public function amortization_get()
+    {
+        $user_id 	= $this->user_info->id;
+        $normal_list = [];
+        $delay_list  = [];
+        $investments 			= $this->investment_model->get_many_by(
+            array(
+                'user_id'	=> $user_id,
+                'status'    => 3
+            )
+        );
+        if($investments){
+            foreach($investments as $key => $value){
+                $target = $this->target_model->get($value->target_id);
+                if($target->status == 5){
+                    $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
+                    if($amortization_table && !empty($amortization_table['list'])) {
+                        if ($target->delay == 0) {
+                            foreach ($amortization_table['list'] as $k => $v) {
+                                if (!isset($normal_list[$v['repayment_date']])) {
+                                    $normal_list[$v['repayment_date']] = array(
+                                        'principal' => 0,
+                                        'interest'  => 0,
+                                    );
+                                }
+                                $normal_list[$v['repayment_date']]['principal'] += $v['principal'];
+                                $normal_list[$v['repayment_date']]['interest'] += $v['interest'];
+                            }
+                        } elseif ($target->delay == 1) {
+                            foreach ($amortization_table['list'] as $k => $v) {
+                                if (!isset($delay_list[$v['repayment_date']])) {
+                                    $delay_list[$v['repayment_date']] = array(
+                                        'principal'      => 0,
+                                        'interest'       => 0,
+                                        'delay_interest' => 0,
+                                    );
+                                }
+                                $delay_list[$v['repayment_date']]['principal'] += $v['principal'];
+                                $delay_list[$v['repayment_date']]['interest'] += $v['interest'];
+                                $delay_list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
+                            }
+                        }
+                    }
+                }
+            }
+            $data = array(
+                'normal'	=> $normal_list,
+                'delay'	    => $delay_list,
+            );
+            $this->response(array('result' => 'SUCCESS','data' => $data ));
+        }
+    }
 }
