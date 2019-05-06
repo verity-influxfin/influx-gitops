@@ -6386,7 +6386,7 @@ define({
                             "type": "Number",
                             "optional": true,
                             "field": "store_image",
-                            "description": "<p>店內正面照(經銷商必填)( 圖片ID )</p>"
+                            "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個)</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6594,7 +6594,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "store_image",
-                            "description": "<p>店內正面照 ( 圖片ID )</p>"
+                            "description": "<p>店內正面照 ( 圖片ID )( 圖片IDs 以逗號隔開，最多四個)</p>"
                         },
                         {
                             "group": "Parameter",

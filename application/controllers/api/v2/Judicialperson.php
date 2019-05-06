@@ -227,7 +227,7 @@ class Judicialperson extends REST_Controller {
 				//}
 				//上傳檔案欄位
 				$content		= [];
-				$file_fields 	= ['facade_image','store_image','front_image'];
+				$file_fields 	= ['facade_image','front_image'];
 				foreach ($file_fields as $field) {
 					$image_id = intval($input[$field]);
 					if (!$image_id) {
@@ -247,11 +247,11 @@ class Judicialperson extends REST_Controller {
 				}
 				
 				//多個檔案欄位
-				$file_fields 	= ['passbook_image','bankbook_image'];
+				$file_fields 	= ['store_image','passbook_image','bankbook_image'];
 				foreach ($file_fields as $field) {
 					$image_ids = explode(',',$input[$field]);
-					if(count($image_ids)>3){
-						$image_ids = array_slice($image_ids,0,3);
+					if(count($image_ids)>4){
+						$image_ids = array_slice($image_ids,0,4);
 					}
 					$list = $this->log_image_model->get_many_by([
 						'id'		=> $image_ids,
@@ -685,7 +685,7 @@ class Judicialperson extends REST_Controller {
 
 		//上傳檔案欄位
 		$content		= [];
-		$file_fields 	= ['facade_image','store_image','front_image'];
+		$file_fields 	= ['facade_image','front_image'];
 		foreach ($file_fields as $field) {
 			$image_id = intval($input[$field]);
 			if (!$image_id) {
@@ -704,11 +704,11 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 		
-		$file_fields 	= ['passbook_image','bankbook_image'];
+		$file_fields 	= ['store_image','passbook_image','bankbook_image'];
 		foreach ($file_fields as $field) {
 			$image_ids = explode(',',$input[$field]);
-			if(count($image_ids)>3){
-				$image_ids = array_slice($image_ids,0,3);
+			if(count($image_ids)>4){
+				$image_ids = array_slice($image_ids,0,4);
 			}
 			$list = $this->log_image_model->get_many_by([
 				'id'		=> $image_ids,
