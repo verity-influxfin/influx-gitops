@@ -1569,11 +1569,11 @@ class Recoveries extends REST_Controller {
                     }
                 }
             }
-            $data = array(
-                'normal'	=> $normal_list,
-                'delay'	    => $delay_list,
-            );
-            $this->response(array('result' => 'SUCCESS','data' => $data ));
         }
+        $data = array(
+            'normal'	=> $normal_list,
+            'delay'	    => $delay_list,
+        );
+        $this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 }

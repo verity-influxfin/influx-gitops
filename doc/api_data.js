@@ -13615,6 +13615,159 @@ define({
             ]
         },
         {
+            "type": "get",
+            "url": "/v2/recoveries/amortization",
+            "title": "出借方 預期本息還款明細",
+            "version": "0.2.0",
+            "name": "GetRecoveriesamortization",
+            "group": "Recoveries",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "normal",
+                            "description": "<p>正常案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "normal.principal",
+                            "description": "<p>本金</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "normal.interest",
+                            "description": "<p>利息</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "delay",
+                            "description": "<p>逾期案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "delay.principal",
+                            "description": "<p>本金</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "delay.interest",
+                            "description": "<p>利息</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "delay.delay_interest",
+                            "description": "<p>延滯息</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"normal\": {\n" +
+                            "            \"2019-07-10\": {\n" +
+                            "                \"principal\": 842,\n" +
+                            "                \"interest\": 11\n" +
+                            "            },\n" +
+                            "            \"2019-08-10\": {\n" +
+                            "                \"principal\": 874,\n" +
+                            "                \"interest\": 6\n" +
+                            "            }\n" +
+                            "        },\n" +
+                            "        \"delay\": []\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "205",
+                            "description": "<p>非出借端登入</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "205",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Recoveries.php",
+            "groupTitle": "Recoveries",
+            "sampleRequest": [
+                {
+                    "url": "https://dev-api.influxfin.com/api/v2/recoveries/amortization"
+                }
+            ]
+        },
+        {
             "type": "post",
             "url": "/v2/recoveries/pretransfer",
             "title": "出借方 我要轉讓",
