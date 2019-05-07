@@ -1552,7 +1552,7 @@ class Recoveries extends REST_Controller {
                                 }
                                 $normal_list[$v['repayment_date']]['principal']     += $v['principal'];
                                 $normal_list[$v['repayment_date']]['interest']      += $v['interest'];
-                                $normal_list[$v['repayment_date']]['total_payment'] += $v['total_payment'];
+                                $normal_list[$v['repayment_date']]['total_payment'] += $v['repayment'];
                             }
                         } elseif ($target->delay == 1) {
                             foreach ($amortization_table['list'] as $k => $v) {
@@ -1567,7 +1567,7 @@ class Recoveries extends REST_Controller {
                                 $delay_list[$v['repayment_date']]['principal']      += $v['principal'];
                                 $delay_list[$v['repayment_date']]['interest']       += $v['interest'];
                                 $delay_list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
-                                $delay_list[$v['repayment_date']]['total_payment']  += $v['total_payment'];
+                                $delay_list[$v['repayment_date']]['total_payment']  += $v['repayment'];
                             }
                         }
                     }
