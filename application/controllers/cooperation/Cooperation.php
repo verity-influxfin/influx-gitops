@@ -29,7 +29,7 @@ class Cooperation extends REST_Controller {
 				'status'			=> 1,
 			]);
 			if($cooperation){
-				//$this->cooperation_info = $cooperation;
+				$this->cooperation_info = $cooperation;
 				//$ips = explode(',',$cooperation->server_ip);
 				//if(!in_array(get_ip(),$ips)){
 				//	$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
