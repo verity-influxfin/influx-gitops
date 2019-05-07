@@ -1545,12 +1545,14 @@ class Recoveries extends REST_Controller {
                             foreach ($amortization_table['list'] as $k => $v) {
                                 if (!isset($normal_list[$v['repayment_date']])) {
                                     $normal_list[$v['repayment_date']] = array(
-                                        'principal' => 0,
-                                        'interest'  => 0,
+                                        'principal'      => 0,
+                                        'interest'       => 0,
+                                        'total_payment'  => 0,
                                     );
                                 }
-                                $normal_list[$v['repayment_date']]['principal'] += $v['principal'];
-                                $normal_list[$v['repayment_date']]['interest'] += $v['interest'];
+                                $normal_list[$v['repayment_date']]['principal']     += $v['principal'];
+                                $normal_list[$v['repayment_date']]['interest']      += $v['interest'];
+                                $normal_list[$v['repayment_date']]['total_payment'] += $v['total_payment'];
                             }
                         } elseif ($target->delay == 1) {
                             foreach ($amortization_table['list'] as $k => $v) {
@@ -1559,11 +1561,13 @@ class Recoveries extends REST_Controller {
                                         'principal'      => 0,
                                         'interest'       => 0,
                                         'delay_interest' => 0,
+                                        'total_payment'  => 0,
                                     );
                                 }
-                                $delay_list[$v['repayment_date']]['principal'] += $v['principal'];
-                                $delay_list[$v['repayment_date']]['interest'] += $v['interest'];
+                                $delay_list[$v['repayment_date']]['principal']      += $v['principal'];
+                                $delay_list[$v['repayment_date']]['interest']       += $v['interest'];
                                 $delay_list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
+                                $delay_list[$v['repayment_date']]['total_payment']  += $v['total_payment'];
                             }
                         }
                     }
