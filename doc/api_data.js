@@ -13703,15 +13703,29 @@ define({
                             "    \"data\": {\n" +
                             "        \"normal\": {\n" +
                             "            \"2019-07-10\": {\n" +
-                            "                \"principal\": 842,\n" +
-                            "                \"interest\": 11\n" +
+                            "                \"principal\": 8917,\n" +
+                            "                \"interest\": 213,\n" +
+                            "                \"total_payment\": 9130\n" +
                             "            },\n" +
                             "            \"2019-08-10\": {\n" +
-                            "                \"principal\": 874,\n" +
-                            "                \"interest\": 6\n" +
-                            "            }\n" +
+                            "                \"principal\": 5603,\n" +
+                            "                \"interest\": 164,\n" +
+                            "                \"total_payment\": 5767\n" +
+                            "            },\n" +
+                            "            \"2019-09-10\": {\n" +
+                            "                \"principal\": 3042,\n" +
+                            "                \"interest\": 130,\n" +
+                            "                \"total_payment\": 3172\n" +
+                            "            },\n" +
                             "        },\n" +
-                            "        \"delay\": []\n" +
+                            "        \"delay\": {\n" +
+                            "            \"2019-03-10\": {\n" +
+                            "                \"principal\": 5000,\n" +
+                            "                \"interest\": 60,\n" +
+                            "                \"delay_interest\": 225,\n" +
+                            "                \"total_payment\": 5285\n" +
+                            "            }\n" +
+                            "        }\n" +
                             "    }\n" +
                             "}",
                         "type": "Object"
