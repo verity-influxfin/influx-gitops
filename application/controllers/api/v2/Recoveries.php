@@ -1312,8 +1312,8 @@ class Recoveries extends REST_Controller {
 			if($interest_rate_n && $interest_rate_d){
 				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 			}
-			
-			if($data['amount']>$data['accounts_receivable']){
+
+            if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
 				$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
 			}
 			
@@ -1495,7 +1495,7 @@ class Recoveries extends REST_Controller {
 					}
 				}
 
-				if($data['amount'] > $data['accounts_receivable']){
+				if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
 					$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
 				}
 				if($interest_rate_n && $interest_rate_d){
@@ -1508,7 +1508,7 @@ class Recoveries extends REST_Controller {
 				if($bargain_rate > 0){
 					foreach( $investments as $key => $value ){
 						$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
-						if($info['total'] > $info['accounts_receivable']){
+						if(($info['total'] + $info['fee']) > $info['accounts_receivable']){
 							$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
 						}
 					}
