@@ -1517,7 +1517,7 @@ class Certification extends REST_Controller {
 			}
 			
 			$content['license_image'] = '';
-			if(intval($input['license_image'])){
+			if(intval($content['license_image'])){
 				$rs = $this->log_image_model->get_by([
 					'id'		=> intval($input['license_image']),
 					'user_id'	=> $user_id,
