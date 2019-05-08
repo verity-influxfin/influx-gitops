@@ -140,15 +140,17 @@ class Cooperation extends REST_Controller {
      */
 	public function info_get()
     {
-		$user_info 	= $this->user_model->get($this->cooperation_info->company_user_id);
-		$data 		= [
-			'company'	        => $user_info->name,
-            'tax_id'	        => $user_info->id_number,
-            'company_contact'	=> $user_info->cooperation_contact,
-            'company_phone'	    => $user_info->cooperation_phone,
-            'company_address'	=> $user_info->cooperation_address,
-		];
-		$this->response(array('result' => 'SUCCESS','data' => $data));
+        $this->load->model('user/judicial_person_model');
+        $user_info      = $this->user_model->get($this->cooperation_info->company_user_id);
+        $judicial_person = $this->judicial_person_model->get_by(array('user_id'=>$this->cooperation_info->company_user_id):);
+        $data           = [
+            'company'               => $user_info->name,
+            'tax_id'            => $user_info->id_number,
+            'company_contact'   => $judicial_person->cooperation_contact,
+            'company_phone'         => $judicial_person->cooperation_phone,
+            'company_address'   => $judicial_person->cooperation_address,
+        ];
+        $this->response(array('result' => 'SUCCESS','data' => $data));
     }
 	
 	
