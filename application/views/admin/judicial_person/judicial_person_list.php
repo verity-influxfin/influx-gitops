@@ -84,6 +84,9 @@
                                             <th>公司名稱</th>
                                             <th>申請人 ID</th>
                                             <th>申請人</th>
+                                            <th>聯絡人</th>
+                                            <th>電話</th>
+                                            <th>地址</th>
                                             <th>備註</th>
                                             <th>狀態</th>
 											<th>申請日期</th>
@@ -103,7 +106,10 @@
                                             <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
-											<td><?=isset($value->remark)?$value->remark:"" ?></td>
+                                            <td><?=isset($value->cooperation_contact)?$value->cooperation_contact:"" ?></td>
+                                            <td><?=isset($value->cooperation_phone)?$value->cooperation_phone:"" ?></td>
+                                            <td><?=isset($value->cooperation_address)?$value->cooperation_address:"" ?></td>
+                                            <td><?=isset($value->remark)?$value->remark:"" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
 											<? if($value->status==0){ ?>
 												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>

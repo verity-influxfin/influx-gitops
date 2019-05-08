@@ -6064,6 +6064,27 @@ define({
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
+                            "field": "cooperation_contact",
+                            "description": "<p>聯絡人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_phone",
+                            "description": "<p>電話</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_address",
+                            "description": "<p>地址</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
                             "field": "remark",
                             "description": "<p>備註</p>"
                         },
@@ -6093,7 +6114,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"company_type\":4,\n\t\t\t\t\"company\":\"普匯金融科技股份有限公司\",\n\t\t\t\t\"tax_id\":\"68566881\",\n\t\t\t\t\"remark\":\"盡快與您聯絡\",\n\t\t\t\t\"status\":1,\n\t\t\t\t\"created_at\":1520421572\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"company_type\":4,\n\t\t\t\t\"company\":\"普匯金融科技股份有限公司\",\n\t\t\t\t\"tax_id\":\"68566881\",\n\t\t\t\t\"cooperation_contact\":\"XXX\",\n\t\t\t\t\"cooperation_phone\":\"0222522222\",\n\t\t\t\t\"cooperation_address\":\"台北市松江路\",\n\t\t\t\t\"remark\":\"盡快與您聯絡\",\n\t\t\t\t\"status\":1,\n\t\t\t\t\"created_at\":1520421572\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
                         "type": "Object"
                     }
                 ]
@@ -6374,7 +6395,14 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "cooperation_phone",
-                            "description": "<p>連絡電話</p>"
+                            "description": "<p>電話</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_address",
+                            "description": "<p>地址</p>"
                         },
                         {
                             "group": "Parameter",

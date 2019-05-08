@@ -100,13 +100,16 @@ class Judicialperson extends REST_Controller {
 		if(!empty($judicial_person)){
 			foreach($judicial_person as $key => $value){
 				$list[] = array(
-					'company_type' 		=> intval($value->company_type),
-					'company' 			=> $value->company,
-					'tax_id' 			=> $value->tax_id,
-					'remark' 			=> $value->remark,
-					'cooperation' 		=> $value->cooperation,
-					'status' 			=> intval($value->status),
-					'created_at' 		=> intval($value->created_at)
+					'company_type' 		    => intval($value->company_type),
+					'company' 			    => $value->company,
+                    'tax_id' 			    => $value->tax_id,
+                    'cooperation_contact' 	=> $value->cooperation_contact,
+                    'cooperation_phone' 	=> $value->cooperation_phone,
+                    'cooperation_address' 	=> $value->cooperation_address,
+					'remark' 			    => $value->remark,
+					'cooperation' 		    => $value->cooperation,
+					'status' 			    => intval($value->status),
+					'created_at' 		    => intval($value->created_at)
 				);
 			}
 		}
@@ -181,7 +184,7 @@ class Judicialperson extends REST_Controller {
 		$param		= array('user_id'=> $user_id);
 
 		//必填欄位
-		$fields 	= ['company_type','tax_id','cooperation_contact','cooperation_phone'];
+		$fields 	= ['company_type','tax_id','cooperation_contact','cooperation_phone','cooperation_address'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));

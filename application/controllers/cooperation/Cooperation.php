@@ -142,8 +142,11 @@ class Cooperation extends REST_Controller {
     {
 		$user_info 	= $this->user_model->get($this->cooperation_info->company_user_id);
 		$data 		= [
-			'company'	=> $user_info->name,
-			'tax_id'	=> $user_info->id_number,
+			'company'	        => $user_info->name,
+            'tax_id'	        => $user_info->id_number,
+            'company_contact'	=> $user_info->cooperation_contact,
+            'company_phone'	    => $user_info->cooperation_phone,
+            'company_address'	=> $user_info->cooperation_address,
 		];
 		$this->response(array('result' => 'SUCCESS','data' => $data));
     }
