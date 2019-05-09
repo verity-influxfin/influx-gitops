@@ -584,11 +584,13 @@ class Product extends REST_Controller {
 				$bank_account = $this->user_bankaccount_model->get_by([
 					'status'	=> 1,
 					'investor'	=> $investor,
-					'verify >'	=> 0,
+					//'verify'	=> 0,
 					'user_id'	=> $user_id
 				]);
 				if($bank_account){
-					$this->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
+                    if($bank_account->verify==0) {
+                        $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                    }
                 }else{
                     $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
                 }
