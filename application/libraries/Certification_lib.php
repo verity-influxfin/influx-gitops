@@ -567,10 +567,10 @@ class Certification_lib{
 				'financial_expense'		=> $content['restaurant']+$content['transportation']+$content['entertainment']+$content['other_expense'],
 			);
             if(isset($content['creditcard_image'])){
-                array_push($data,array('financial_creditcard',$content['creditcard_image']));
+                $data['financial_creditcard'] = $content['creditcard_image'];
             }
             if(isset($content['passbook_image'])){
-                array_push($data,array('financial_passbook',$content['passbook_image']));
+                $data['financial_passbook'] = $content['passbook_image'];
             }
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'financial_status'));
 			if($exist){
@@ -580,6 +580,7 @@ class Certification_lib{
 						'meta_key' 		=> $key,
 					);
 					$rs  = $this->CI->user_meta_model->update_by($param,array('meta_value'	=> $value));
+
 				}
 			}else{
 				foreach($data as $key => $value){
