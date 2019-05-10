@@ -1548,11 +1548,19 @@ class Recoveries extends REST_Controller {
                                         'principal'      => 0,
                                         'interest'       => 0,
                                         'total_payment'  => 0,
+                                        'recorded'       => 0,
+                                        'unrecorded'     => 0,
                                     );
                                 }
                                 $normal_list[$v['repayment_date']]['principal']     += $v['principal'];
                                 $normal_list[$v['repayment_date']]['interest']      += $v['interest'];
                                 $normal_list[$v['repayment_date']]['total_payment'] += $v['repayment'];
+                                if($v['repayment']!==0){
+                                    $normal_list[$v['repayment_date']]['recorded']++;
+                                }
+                                else{
+                                    $normal_list[$v['repayment_date']]['unrecorded']++;
+                                }
                             }
                         } elseif ($target->delay == 1) {
                             foreach ($amortization_table['list'] as $k => $v) {
