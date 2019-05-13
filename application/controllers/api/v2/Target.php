@@ -882,7 +882,12 @@ class Target extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 
-		//必填欄位
+        //暫不開放法人
+        if(isset($this->user_info->company) != 0){
+            $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+        }
+
+        //必填欄位
 		if (empty($input['target_ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
@@ -1117,11 +1122,6 @@ class Target extends REST_Controller {
 
 		//$this->check_adult();
 
-        //暫不開放法人
-        if(isset($this->user_info->company) != 0){
-            $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
-        }
-		
 		$content = $filter = [];
 		$where		= [
 			'user_id !=' 	=> $user_id,
