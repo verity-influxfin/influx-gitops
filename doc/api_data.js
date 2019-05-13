@@ -11131,6 +11131,376 @@ define({
             ]
         },
         {
+            "type": "post",
+            "url": "/v2/product/orderapply",
+            "title": "借款方 申請分期訂單",
+            "version": "0.2.0",
+            "name": "PostProductOrder",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "description": "<p>此API只支援申請分期訂單，產品簽約前一次只能一案。</p>",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "order_no",
+                            "description": "<p>訂單編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "optional": false,
+                            "field": "person_image",
+                            "description": "<p>本人照</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"target_id\": 1\n\t\t}\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "408",
+                            "description": "<p>同產品重複申請</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "411",
+                            "description": "<p>訂單不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "412",
+                            "description": "<p>已申請過或已失效</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "408",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "411",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"411\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "412",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"412\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "https://dev-api.influxfin.com/api/v2/product/orderapply"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/v2/product/dealerlist",
+            "title": "借款方 分期經銷商列表",
+            "version": "0.2.0",
+            "name": "GetProductDealerlist",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "type",
+                            "description": "<p>類別 0:手機商</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "dealer",
+                            "description": "<p>經銷商</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_id",
+                            "description": "<p>經銷商ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company",
+                            "description": "<p>店名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "tax_id",
+                            "description": "<p>統編</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_phone",
+                            "description": "<p>連絡電話</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_address",
+                            "description": "<p>店家地址</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "            {\n" +
+                            "                \"company_id\": \"18\",\n" +
+                            "                \"company\": \"寓意科技股份有限公司\",\n" +
+                            "                \"tax_id\": \"53778177\",\n" +
+                            "                \"company_phone\": null,\n" +
+                            "                \"company_address\": null\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"company_id\": \"17\",\n" +
+                            "                \"company\": \"普匯金融科技股份有限公司\",\n" +
+                            "                \"tax_id\": \"68566880\",\n" +
+                            "                \"company_phone\": \"ddd\",\n" +
+                            "                \"company_address\": \"eee\"\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"company_id\": \"9\",\n" +
+                            "                \"company\": \"普匯金融科技股份有限公司\",\n" +
+                            "                \"tax_id\": \"68566882\",\n" +
+                            "                \"company_phone\": null,\n" +
+                            "                \"company_address\": null\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"company_id\": \"161\",\n" +
+                            "                \"company\": \"鬍鬚張股份有限公司\",\n" +
+                            "                \"tax_id\": \"22721208\",\n" +
+                            "                \"company_phone\": \"9030234023\",\n" +
+                            "                \"company_address\": \"cccc\"\n" +
+                            "            }\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "https://dev-api.influxfin.com/api/v2/product/dealerlist"
+                }
+            ]
+        },
+        {
             "type": "get",
             "url": "/v2/recoveries/dashboard",
             "title": "出借方 我的帳戶",

@@ -55,6 +55,7 @@ define({
     "Product",
     "GetProductList",
     "GetProductInfo",
+    "GetProductDealerlist",
     "PostProductApply",
     "PostProductSigning",
     "GetProductApplylist",
