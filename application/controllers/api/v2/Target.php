@@ -460,6 +460,11 @@ class Target extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= ['user_id' => $user_id];
+
+        //暫不開放法人
+        if(isset($this->user_info->company) != 0){
+            $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+        }
 		
 		//必填欄位
 		$fields 	= ['target_id','amount'];
@@ -1111,6 +1116,11 @@ class Target extends REST_Controller {
 		$investor 	= $this->user_info->investor;
 
 		//$this->check_adult();
+
+        //暫不開放法人
+        if(isset($this->user_info->company) != 0){
+            $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+        }
 		
 		$content = $filter = [];
 		$where		= [

@@ -23957,6 +23957,12 @@ define({
                             "optional": false,
                             "field": "205",
                             "description": "<p>非出借端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
                         }
                     ]
                 },
@@ -24029,6 +24035,11 @@ define({
                     {
                         "title": "205",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
                     }
                 ]
@@ -24495,6 +24506,12 @@ define({
                             "optional": false,
                             "field": "205",
                             "description": "<p>非出借端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
                         }
                     ]
                 },
@@ -24522,6 +24539,11 @@ define({
                     {
                         "title": "205",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"205\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
                     }
                 ]
