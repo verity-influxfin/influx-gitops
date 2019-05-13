@@ -771,7 +771,29 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_bidding_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
+    function cancel_bidding(){
+        $get 	= $this->input->get(NULL, TRUE);
+        $id 	= isset($get['id'])?intval($get['id']):0;
+        $remark = isset($get['remark'])?$get['remark']:'';
+        if($id){
+            $info = $this->target_model->get($id);
+            if($info && in_array($info->status,array(3))){
+                if($info->sub_status==8){
+                    $this->load->library('subloan_lib');
+                    $this->subloan_lib->subloan_cancel_bidding($info,$this->login_info->id,$remark);
+                }else{
+                    $this->target_lib->target_cancel_bidding($info,$this->login_info->id,$remark);
+                }
+                echo '更新成功';die();
+            }else{
+                echo '查無此ID';die();
+            }
+        }else{
+            echo '查無此ID';die();
+        }
+    }
+
 	public function finished(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);

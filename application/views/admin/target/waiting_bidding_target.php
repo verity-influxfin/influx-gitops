@@ -5,6 +5,27 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            <script type="text/javascript">
+                function cancel(id){
+                    if(confirm("確認強制下架？案件將退回前一狀態")){
+                        if(id){
+                            var p 		= prompt("請輸入退案原因，將自動通知使用者，不通知請按取消","");
+                            var remark 	= "";
+                            if(p){
+                                remark = encodeURIComponent(p);
+                            }
+                            $.ajax({
+                                url: './cancel_bidding?id='+id+'&remark='+remark,
+                                type: 'GET',
+                                success: function(response) {
+                                    alert(response);
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                }
+            </script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -33,6 +54,7 @@
                                             <th>流標期限</th>
                                             <th>上架日期</th>
                                             <th>邀請碼</th>
+                                            <th>稽核</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -64,6 +86,7 @@
                                             <td><?=isset($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):'' ?></td>
                                             <td><?=isset($value->bidding_date)?date("Y-m-d H:i:s",$value->bidding_date):'' ?></td>
 											<td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
+                                            <td><button class="btn btn-danger" onclick="cancel(<?=isset($value->id)?$value->id:"" ?>)">下架</button></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
 									<?php 

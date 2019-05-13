@@ -224,8 +224,29 @@ class Subloan_lib{
 		}
 		return false;
 	}
-	
-	//流標
+
+    public function subloan_cancel_bidding($target = array(),$admin_id=0,$remark="請連繫客服協助處理"){
+        if(!empty($target) && $target->status==3){
+            $subloan	= $this->CI->subloan_model->get_by(array(
+                "status"		=> 2,
+                "new_target_id"	=> $target->id
+            ));
+
+            if($subloan){
+                $param = array(
+                    "status" 		=> 2 ,
+                    "launch_times"	=> 0
+                );
+                $this->CI->target_model->update($target->id, $param);
+                $this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
+                $this->CI->subloan_model->update($subloan->id,array("status"=>1));
+                $this->CI->notification_lib->target_cancel_bidding($target->user_id,0,$remark);
+            }
+        }
+        return false;
+    }
+
+    //流標
 	public function auction_ended($target){
 		if($target->status == 3 && $target->expire_time < time()){
 			$subloan	= $this->CI->subloan_model->get_by(array(

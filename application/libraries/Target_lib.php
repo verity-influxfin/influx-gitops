@@ -502,7 +502,22 @@ class Target_lib{
 		}
 		return false;
 	}
-	
+
+
+    public function target_cancel_bidding($target = array(),$admin_id=0,$remark="請連繫客服協助處理"){
+        if(!empty($target)){
+            $param = array(
+                "status" 		=> 2 ,
+                "launch_times"	=> 0 ,
+                "remark"		=> $remark,
+            );
+            $this->CI->target_model->update($target->id,$param);
+            $this->insert_change_log($target->id,$param,0,$admin_id);
+            $this->CI->notification_lib->target_cancel_bidding($target->user_id,0,$remark);
+        }
+        return false;
+    }
+
 	//借款端還款計畫
 	public function get_amortization_table($target=[]){
 

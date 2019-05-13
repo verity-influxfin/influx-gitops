@@ -150,6 +150,26 @@ class Notification_lib{
 		return $rs;
 	}
 
+    public function target_cancel_bidding($user_id,$investor=0,$remark=""){
+        $title = "【下架通知】";
+        $content = "親愛的用戶：
+您好！
+非常抱歉，您的申請已下架，普匯將會對您的申請信息進行嚴格保密，非常感謝您的申請及對我們的信任。
+退件原因：".$remark."
+或請連繫客服協助處理";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,$content);
+        return $rs;
+    }
+
 	
 	public function target_verify_success($target){
 		$target_no = $target->target_no;
