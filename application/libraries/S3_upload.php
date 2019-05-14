@@ -84,7 +84,7 @@ class S3_upload {
 				ob_end_clean();
 				$result = $this->client->putObject(array(
 					'Bucket' 		=> S3_BUCKET,
-					'Key'    		=> $type.'/'.$name.$user_id.time().rand(1,9).'.jpg',
+					'Key'    		=> $type.'/'.$name.$user_id.time().mt_rand(1,199).'.jpg',
 					'Body'   		=> $image_data
 				));
 
