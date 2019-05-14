@@ -201,6 +201,16 @@ class Transfer_lib{
 		}
 		return false;
 	}
+
+    public function cancel_transfer_apply($transfers_id,$user_id)
+    {
+        $this->CI->transfer_investment_model->update_by(array(
+            'transfer_id'   => $transfers_id,
+            'user_id'       => $user_id,
+            'frozen_status'	=> 0
+        ),array('status'=>8));
+        return true;
+    }
 	
 	public function get_transfer_list($where = ['status' => 0]){
 		$list 	= [];

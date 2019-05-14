@@ -1529,6 +1529,19 @@ class Transfer extends REST_Controller {
 			'national'			=> 'all'
 		]]);
     }
+
+    public function cancel_get()
+    {
+        $input 	      = $this->input->get(NULL, TRUE);;
+        $user_id      = $this->user_info->id;
+        $transfers_id = $input['transfers_id'];
+        $cancel_success = $this->transfer_lib->cancel_transfer_apply($transfers_id,$user_id);
+        if($cancel_success){
+            $this->response(array('result' => 'SUCCESS'));
+        }else{
+            $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
+        }
+    }
 	
 	private function check_adult(){
 		

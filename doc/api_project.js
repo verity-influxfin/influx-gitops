@@ -99,7 +99,8 @@ define({
     "PostTransferApply",
     "GetTransferBatch",
     "PostTransferBatch",
-    "GetTransferApplylist"
+    "GetTransferApplylist",
+    "GetTransferCancel"
   ],
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
