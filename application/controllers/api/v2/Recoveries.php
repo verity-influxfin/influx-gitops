@@ -1541,7 +1541,7 @@ class Recoveries extends REST_Controller {
                 if($target->status == 5){
                     $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
                     if($amortization_table && !empty($amortization_table['list'])) {
-                        if ($target->delay == 0) {
+                        if ($target->delay == 0 || ($target->delay_days - GRACE_PERIOD <= 0)) {
                             foreach ($amortization_table['list'] as $k => $v) {
                                 if (!isset($normal_list[$v['repayment_date']])) {
                                     $normal_list[$v['repayment_date']] = array(
