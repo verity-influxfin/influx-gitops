@@ -1286,8 +1286,10 @@ class Recoveries extends REST_Controller {
 				$target = $this->target_model->get($value->target_id);
 				$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
 				$interest_rate_d += $value->loan_amount*$target->instalment;
+                $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
+
 				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
-				if($info){
+                if($info){
 					$data['count']++;
 					$data['amount'] 			+= $info['total'];
 					$data['principal'] 			+= $info['principal'];
@@ -1297,7 +1299,14 @@ class Recoveries extends REST_Controller {
 					$data['accounts_receivable'] += $info['accounts_receivable'];
 					$data['contract'][] 	= $info['debt_transfer_contract'];
 
-					if($data['max_instalment'] < $info['instalment']){
+                    foreach ($amortization_table['list'] as $k => $v) {
+                        if (!isset($data['total_payment'][$v['repayment_date']])) {
+                            $data['total_payment'][$v['repayment_date']] = 0;
+                        }
+                        $data['total_payment'][$v['repayment_date']] += $v['total_payment'];
+                    }
+
+                    if($data['max_instalment'] < $info['instalment']){
 						$data['max_instalment'] = $info['instalment'];
 					}
 					if($data['min_instalment'] > $info['instalment'] || $data['min_instalment']==0){
@@ -1308,7 +1317,7 @@ class Recoveries extends REST_Controller {
 					}
 				}
 			}
-			
+
 			if($interest_rate_n && $interest_rate_d){
 				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 			}
