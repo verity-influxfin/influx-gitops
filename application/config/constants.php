@@ -312,9 +312,28 @@ defined('SES_SMTP_PASSWORD')   		OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SE
 
 defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_PDF_OWNER_PASSWORD'));
 
-defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_JWT_KEY'));
-defined('COOPER_TIMEOUT')   		OR define('COOPER_TIMEOUT'			, 3600);
+//COOP
+defined('SAVE_FAIL')  	            	OR define('SAVE_FAIL'		            , 500);//與主系統連線失敗
 
+defined('ArgumentError')  	            OR define('ArgumentError'		        , 351);//參數錯誤
+defined('RequiredArguments')  	        OR define('RequiredArguments'		    , 352);//參數不足
+defined('AuthorizationRequired')  	    OR define('AuthorizationRequired'		, 353);//法人認證失敗
+defined('IllegalIP')  	            	OR define('IllegalIP'		            , 354);//禁止訪問的IP位置
+defined('TimeOut')  	            	    OR define('TimeOut'		        		, 355);//逾時
+defined('OrderNotFound')  	            OR define('OrderNotFound'		        , 356);//找不到此訂單
+defined('CooperationNotFound')			OR define('CooperationNotFound'		    , 357);//法人代碼不存在
+defined('InsertError')  	                OR define('InsertError'		            , 358);//輸入錯誤
+defined('OrderExists')  	                OR define('OrderExists'		            , 359);//重複的單號
+defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360);//API ERROR
+defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
+defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
+
+defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
+defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));
+defined('COOPER_TIMEOUT')   	    OR define('COOPER_TIMEOUT'			, 3600);
+defined('COOPER_API_URL')        OR define('COOPER_API_URL'			, getenv('ENV_COOP_API_URL'));
+
+//Google GCP
 defined('GOOGLE_APPLICATION_CREDENTIALS')  OR define('GOOGLE_APPLICATION_CREDENTIALS', getenv('GOOGLE_APPLICATION_CREDENTIALS'));
 
 //Redis

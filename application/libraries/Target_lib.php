@@ -80,7 +80,7 @@ class Target_lib{
 	}
 	
 	//取消
-	public function cancel_target($target=[],$user_id=0){
+	public function cancel_target($target=[],$user_id=0,$phone=0){
 		if($target){
 			$param = [
 				'status'		=> 8,
@@ -88,13 +88,38 @@ class Target_lib{
 			$rs = $this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,$user_id);
 			if($target->order_id !=0){
-				$this->CI->load->model('transaction/order_model');
-				$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+                $this->cancel_order($target,$phone);
 			}
-			return $rs;
 		}
 		return false;
 	}
+
+    //取消訂單
+    public function cancel_order($target=[],$phone=0){
+        $this->CI->load->model('transaction/order_model');
+        $order = $this->CI->order_model->get($target->order_id);
+        $this->CI->order_model->update($target->order_id,['status'=>8]);
+        $postData=array(
+            'phone'             => $phone,
+            'merchant_order_no' => $order->merchant_order_no
+        );
+        ksort($postData);
+        $middles        = implode('',array_values($postData));
+        $Timestamp      = time();
+        $Authorization  ='Bearer '.md5(sha1(COOPER_ID.$middles.$Timestamp).COOPER_KEY);
+        $header = [
+            'Authorization:'.$Authorization,
+            'CooperID:'.COOPER_ID,
+            'Timestamp:'.$Timestamp,
+        ];
+        $result = json_decode(curl_get(COOPER_API_URL.'/order/scancel',$postData,$header));
+        if(isset($result->error)){
+            return false;
+        }
+        else if(isset($result->result)){
+            return true;
+        }
+    }
 	
 	//取消
 	public function cancel_investment($target=[],$investment=[],$user_id=0){

@@ -90,54 +90,54 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} certification 認證完成資訊
      * @apiSuccessExample {Object} SUCCESS
      * {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"list":[
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'list':[
      * 			{
-     * 				"id":1,
-     * 				"type":1,
-     * 				"identity":1,
-     * 				"name":"學生區",
-     * 				"description":"學生區",
-     * 				"loan_range_s":12222,
-     * 				"loan_range_e":14333333,
-     * 				"interest_rate_s":12,
-     * 				"interest_rate_e":14,
-     * 				"charge_platform":0,
-     * 				"charge_platform_min":0,
-     * 				"instalment": [
+     * 				'id':1,
+     * 				'type':1,
+     * 				'identity':1,
+     * 				'name':'學生區',
+     * 				'description':'學生區',
+     * 				'loan_range_s':12222,
+     * 				'loan_range_e':14333333,
+     * 				'interest_rate_s':12,
+     * 				'interest_rate_e':14,
+     * 				'charge_platform':0,
+     * 				'charge_platform_min':0,
+     * 				'instalment': [
      *					3,
      * 				    6,
      * 				    12,
      * 				    18,
      * 				    24
      * 				  ]
-     * 				"repayment": [
+     * 				'repayment': [
      *					1
      * 				  ],
-     * 				"target":{
-     * 					"id":1,
-     * 					"target_no": "1803269743",
-     * 					"amount":5000,
-     * 					"loan_amount":0,
-     * 					"status":0,
-     * 					"instalment":3,
-     * 					"created_at":"1520421572"
+     * 				'target':{
+     * 					'id':1,
+     * 					'target_no': '1803269743',
+     * 					'amount':5000,
+     * 					'loan_amount':0,
+     * 					'status':0,
+     * 					'instalment':3,
+     * 					'created_at':'1520421572'
      * 				},
-     * 				"certification":[
+     * 				'certification':[
      * 					{
-     * 						"id":1,
-     * 						"name": "實名認證",
-     * 						"description":"實名認證",
-     * 						"alias":"id_card",
-     * 						"user_status":1
+     * 						'id':1,
+     * 						'name': '實名認證',
+     * 						'description':'實名認證',
+     * 						'alias':'id_card',
+     * 						'user_status':1
      * 					},
      * 					{
-     * 						"id":2,
-     * 						"name": "學生身份認證",
-     * 						"description":"學生身份認證",
-     * 						"alias":"student",
-     * 						"user_status":1
+     * 						'id':2,
+     * 						'name': '學生身份認證',
+     * 						'description':'學生身份認證',
+     * 						'alias':'student',
+     * 						'user_status':1
      * 					}
      * 				]
      * 			}
@@ -240,27 +240,27 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
      * @apiSuccessExample {Object} SUCCESS
      * {
-     * 	"result": "SUCCESS",
-     * 		"data": {
-     * 			"id": 1,
-     * 			"type": 1,
-     * 			"identity": 1,
-     * 			"name": "學生貸",
-     * 			"description": "\r\n普匯學生貸\r\n計畫留學、創業或者實現更多理想嗎？\r\n需要資金卻無法向銀行聲請借款嗎？\r\n普匯陪你一起實現夢想",
-     * 			"loan_range_s": 5000,
-     * 			"loan_range_e": 120000,
-     * 			"interest_rate_s": 5,
-     * 			"interest_rate_e": 20,
-     * 			"charge_platform": 3,
-     * 			"charge_platform_min": 500,
-     * 			"instalment": [
+     * 	'result': 'SUCCESS',
+     * 		'data': {
+     * 			'id': 1,
+     * 			'type': 1,
+     * 			'identity': 1,
+     * 			'name': '學生貸',
+     * 			'description': '\r\n普匯學生貸\r\n計畫留學、創業或者實現更多理想嗎？\r\n需要資金卻無法向銀行聲請借款嗎？\r\n普匯陪你一起實現夢想',
+     * 			'loan_range_s': 5000,
+     * 			'loan_range_e': 120000,
+     * 			'interest_rate_s': 5,
+     * 			'interest_rate_e': 20,
+     * 			'charge_platform': 3,
+     * 			'charge_platform_min': 500,
+     * 			'instalment': [
      * 				3,
      * 				6,
      * 				12,
      * 				18,
      * 				24
      * 			],
-     * 			"repayment": [
+     * 			'repayment': [
      * 				1
      * 			]
      * 		}
@@ -274,8 +274,8 @@ class Product extends REST_Controller {
      * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
      *     {
-     *       "result": "ERROR",
-     *       "error": "401"
+     *       'result': 'ERROR',
+     *       'error': '401'
      *     }
      */
 
@@ -324,9 +324,9 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} target_id Targets ID
      * @apiSuccessExample {Object} SUCCESS
      * {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"target_id": 1
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'target_id': 1
      * 		}
      * }
      *
@@ -340,36 +340,36 @@ class Product extends REST_Controller {
      * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
      *     {
-     *       "result": "ERROR",
-     *       "error": "401"
+     *       'result': 'ERROR',
+     *       'error': '401'
      *     }
      *
      * @apiError 402 超過此產品可申請額度
      * @apiErrorExample {Object} 402
      *     {
-     *       "result": "ERROR",
-     *       "error": "402"
+     *       'result': 'ERROR',
+     *       'error': '402'
      *     }
      *
      * @apiError 403 不支援此期數
      * @apiErrorExample {Object} 403
      *     {
-     *       "result": "ERROR",
-     *       "error": "403"
+     *       'result': 'ERROR',
+     *       'error': '403'
      *     }
      *
      * @apiError 408 同產品重複申請
      * @apiErrorExample {Object} 408
      *     {
-     *       "result": "ERROR",
-     *       "error": "408"
+     *       'result': 'ERROR',
+     *       'error': '408'
      *     }
      *
      * @apiError 410 產品類型錯誤
      * @apiErrorExample {Object} 410
      *     {
-     *       "result": "ERROR",
-     *       "error": "410"
+     *       'result': 'ERROR',
+     *       'error': '410'
      *     }
      *
      */
@@ -449,7 +449,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
-     *      "result": "SUCCESS"
+     *      'result': 'SUCCESS'
      *    }
      *
      * @apiUse InputError
@@ -462,64 +462,64 @@ class Product extends REST_Controller {
      * @apiError 401 產品不存在
      * @apiErrorExample {Object} 401
      *     {
-     *       "result": "ERROR",
-     *       "error": "401"
+     *       'result': 'ERROR',
+     *       'error': '401'
      *     }
      *
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
      *     {
-     *       "result": "ERROR",
-     *       "error": "404"
+     *       'result': 'ERROR',
+     *       'error': '404'
      *     }
      *
      * @apiError 405 對此申請無權限
      * @apiErrorExample {Object} 405
      *     {
-     *       "result": "ERROR",
-     *       "error": "405"
+     *       'result': 'ERROR',
+     *       'error': '405'
      *     }
      *
      * @apiError 407 目前狀態無法完成此動作
      * @apiErrorExample {Object} 407
      *     {
-     *       "result": "ERROR",
-     *       "error": "407"
+     *       'result': 'ERROR',
+     *       'error': '407'
      *     }
      *
      * @apiError 410 產品類型錯誤
      * @apiErrorExample {Object} 410
      *     {
-     *       "result": "ERROR",
-     *       "error": "410"
+     *       'result': 'ERROR',
+     *       'error': '410'
      *     }
      *
      * @apiError 202 未通過所需的驗證
      * @apiErrorExample {Object} 202
      *     {
-     *       "result": "ERROR",
-     *       "error": "202"
+     *       'result': 'ERROR',
+     *       'error': '202'
      *     }
      *
      * @apiError 203 未綁定金融帳號
      * @apiErrorExample {Object} 203
      *     {
-     *       "result": "ERROR",
-     *       "error": "203"
+     *       'result': 'ERROR',
+     *       'error': '203'
      *     }
      *
      * @apiError 206 人臉辨識不通過
      * @apiErrorExample {Object} 206
      *     {
-     *       "result": "ERROR",
-     *       "error": "206"
+     *       'result': 'ERROR',
+     *       'error': '206'
      *     }
      *
      * @apiError 208 未滿20歲或大於35歲
      * @apiErrorExample {Object} 208
      *     {
-     *       "result": "ERROR",
-     *       "error": "208"
+     *       'result': 'ERROR',
+     *       'error': '208'
      *     }
      *
      */
@@ -629,26 +629,26 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"list":[
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'list':[
      * 			{
-     * 				"id": 5,
-     * 				"target_no": "STN2019010484186",
-     * 				"product_id": 1,
-     * 				"user_id": 1,
-     * 				"amount": 5000,
-     * 				"loan_amount": 0,
-     * 				"platform_fee": 500,
-     * 				"interest_rate": 0,
-     * 				"instalment": 3,
-     * 				"repayment": 1,
-     * 				"reason": "",
-     * 				"remark": "系統自動取消",
-     * 				"delay": 0,
-     * 				"status": 9,
-     * 				"sub_status": 0,
-     * 				"created_at": 1546591486
+     * 				'id': 5,
+     * 				'target_no': 'STN2019010484186',
+     * 				'product_id': 1,
+     * 				'user_id': 1,
+     * 				'amount': 5000,
+     * 				'loan_amount': 0,
+     * 				'platform_fee': 500,
+     * 				'interest_rate': 0,
+     * 				'instalment': 3,
+     * 				'repayment': 1,
+     * 				'reason': '',
+     * 				'remark': '系統自動取消',
+     * 				'delay': 0,
+     * 				'status': 9,
+     * 				'sub_status': 0,
+     * 				'created_at': 1546591486
      * 			}
      * 			]
      * 		}
@@ -752,89 +752,89 @@ class Product extends REST_Controller {
      * @apiSuccess {String} amortization_schedule.total.total_payment 加總
      * @apiSuccessExample {Object} SUCCESS
      *    {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"id":"1",
-     * 			"target_no": "1803269743",
-     * 			"product_id":"1",
-     * 			"user_id":"1",
-     * 			"amount":"5000",
-     * 			"loan_amount":"12000",
-     * 			"platform_fee":"1500",
-     * 			"interest_rate":"9",
-     * 			"instalment":"3",
-     * 			"repayment":"1",
-     * 			"reason":"",
-     * 			"remark":"",
-     * 			"delay":"0",
-     * 			"status":"0",
-     * 			"sub_status":"0",
-     * 			"created_at":"1520421572",
-     * 			"contract":"我是合約",
-     * 			"credit":{
-     * 				"level":"1",
-     * 				"points":"1985",
-     * 				"amount":"45000",
-     * 				"created_at":"1520421572"
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'id':'1',
+     * 			'target_no': '1803269743',
+     * 			'product_id':'1',
+     * 			'user_id':'1',
+     * 			'amount':'5000',
+     * 			'loan_amount':'12000',
+     * 			'platform_fee':'1500',
+     * 			'interest_rate':'9',
+     * 			'instalment':'3',
+     * 			'repayment':'1',
+     * 			'reason':'',
+     * 			'remark':'',
+     * 			'delay':'0',
+     * 			'status':'0',
+     * 			'sub_status':'0',
+     * 			'created_at':'1520421572',
+     * 			'contract':'我是合約',
+     * 			'credit':{
+     * 				'level':'1',
+     * 				'points':'1985',
+     * 				'amount':'45000',
+     * 				'created_at':'1520421572'
      * 			},
-     *	         "certification": [
+     *	         'certification': [
      *           	{
-     *           	     "id": "1",
-     *           	     "name": "身分證認證",
-     *           	     "description": "身分證認證",
-     *           	     "alias": "id_card",
-     *            	    "user_status": "1"
+     *           	     'id': '1',
+     *           	     'name': '身分證認證',
+     *           	     'description': '身分證認證',
+     *           	     'alias': 'id_card',
+     *            	    'user_status': '1'
      *           	},
      *           	{
-     *           	    "id": "2",
-     *            	    "name": "學生證認證",
-     *           	    "description": "學生證認證",
-     *            	   "alias": "student",
-     *            	   "user_status": "1"
+     *           	    'id': '2',
+     *            	    'name': '學生證認證',
+     *           	    'description': '學生證認證',
+     *            	   'alias': 'student',
+     *            	   'user_status': '1'
      *           	}
      *           ],
-     *       "amortization_schedule": {
-     *           "amount": "12000",
-     *           "instalment": "6",
-     *           "rate": "9",
-     *           "date": "2018-04-17",
-     *           "total_payment": 2053,
-     *           "leap_year": false,
-     *           "year_days": 365,
-     *           "XIRR": 0.0939,
-     *           "schedule": {
-     *                "1": {
-     *                  "instalment": 1,
-     *                  "repayment_date": "2018-06-10",
-     *                  "days": 54,
-     *                  "remaining_principal": "12000",
-     *                  "principal": 1893,
-     *                  "interest": 160,
-     *                  "total_payment": 2053
+     *       'amortization_schedule': {
+     *           'amount': '12000',
+     *           'instalment': '6',
+     *           'rate': '9',
+     *           'date': '2018-04-17',
+     *           'total_payment': 2053,
+     *           'leap_year': false,
+     *           'year_days': 365,
+     *           'XIRR': 0.0939,
+     *           'schedule': {
+     *                '1': {
+     *                  'instalment': 1,
+     *                  'repayment_date': '2018-06-10',
+     *                  'days': 54,
+     *                  'remaining_principal': '12000',
+     *                  'principal': 1893,
+     *                  'interest': 160,
+     *                  'total_payment': 2053
      *              },
-     *              "2": {
-     *                   "instalment": 2,
-     *                  "repayment_date": "2018-07-10",
-     *                  "days": 30,
-     *                   "remaining_principal": 10107,
-     *                   "principal": 1978,
-     *                   "interest": 75,
-     *                    "total_payment": 2053
+     *              '2': {
+     *                   'instalment': 2,
+     *                  'repayment_date': '2018-07-10',
+     *                  'days': 30,
+     *                   'remaining_principal': 10107,
+     *                   'principal': 1978,
+     *                   'interest': 75,
+     *                    'total_payment': 2053
      *               },
-     *              "3": {
-     *                    "instalment": 3,
-     *                    "repayment_date": "2018-08-10",
-     *                    "days": 31,
-     *                    "remaining_principal": 8129,
-     *                   "principal": 1991,
-     *                   "interest": 62,
-     *                    "total_payment": 2053
+     *              '3': {
+     *                    'instalment': 3,
+     *                    'repayment_date': '2018-08-10',
+     *                    'days': 31,
+     *                    'remaining_principal': 8129,
+     *                   'principal': 1991,
+     *                   'interest': 62,
+     *                    'total_payment': 2053
      *                }
      *            },
-     *           "total": {
-     *                "principal": 12000,
-     *                "interest": 391,
-     *                "total_payment": 12391
+     *           'total': {
+     *                'principal': 12000,
+     *                'interest': 391,
+     *                'total_payment': 12391
      *            }
      *        }
      * 		}
@@ -848,15 +848,15 @@ class Product extends REST_Controller {
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
      *     {
-     *       "result": "ERROR",
-     *       "error": "404"
+     *       'result': 'ERROR',
+     *       'error': '404'
      *     }
      *
      * @apiError 405 對此申請無權限
      * @apiErrorExample {Object} 405
      *     {
-     *       "result": "ERROR",
-     *       "error": "405"
+     *       'result': 'ERROR',
+     *       'error': '405'
      *     }
      */
     public function applyinfo_get($target_id)
@@ -938,7 +938,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
-     *      "result": "SUCCESS"
+     *      'result': 'SUCCESS'
      *    }
      *
      * @apiUse InputError
@@ -951,22 +951,22 @@ class Product extends REST_Controller {
      * @apiError 404 此申請不存在
      * @apiErrorExample {Object} 404
      *     {
-     *       "result": "ERROR",
-     *       "error": "404"
+     *       'result': 'ERROR',
+     *       'error': '404'
      *     }
      *
      * @apiError 405 對此申請無權限
      * @apiErrorExample {Object} 405
      *     {
-     *       "result": "ERROR",
-     *       "error": "405"
+     *       'result': 'ERROR',
+     *       'error': '405'
      *     }
      *
      * @apiError 407 目前狀態無法完成此動作
      * @apiErrorExample {Object} 407
      *     {
-     *       "result": "ERROR",
-     *       "error": "407"
+     *       'result': 'ERROR',
+     *       'error': '407'
      *     }
      *
      */
@@ -981,8 +981,8 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            if(in_array($targets->status,array(0,1,2)) && $targets->sub_status == 0){
-                $rs = $this->target_lib->cancel_target($targets,$user_id);
+            if(in_array($targets->status,array(0,1,2,20,21)) && $targets->sub_status == 0){
+                $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
                 $this->response(array('result' => 'SUCCESS'));
             }else{
                 $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
@@ -1011,25 +1011,25 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"list":[
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'list':[
      * 			{
-     * 				"order_no": "29-2019013116565856678",
-     * 				"company": "普匯金融科技股份有限公司",
-     * 				"merchant_order_no": "toytoytoy123",
-     * 				"product_id": 2,
-     * 				"total": 20619,
-     * 				"instalment": 3,
-     * 				"item_name": [
-     * 					"小雞",
-     * 					"'丫丫'"
+     * 				'order_no': '29-2019013116565856678',
+     * 				'company': '普匯金融科技股份有限公司',
+     * 				'merchant_order_no': 'toytoytoy123',
+     * 				'product_id': 2,
+     * 				'total': 20619,
+     * 				'instalment': 3,
+     * 				'item_name': [
+     * 					'小雞',
+     * 					''丫丫''
      * 				],
-     * 				"item_count": [
+     * 				'item_count': [
      * 					1,
      * 					2
      * 				],
-     * 				"created_at": 1548925018
+     * 				'created_at': 1548925018
      * 			}
      * 			]
      * 		}
@@ -1109,9 +1109,9 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} target_id Targets ID
      * @apiSuccessExample {Object} SUCCESS
      * {
-     * 		"result":"SUCCESS",
-     * 		"data":{
-     * 			"target_id": 1
+     * 		'result':'SUCCESS',
+     * 		'data':{
+     * 			'target_id': 1
      * 		}
      * }
      *
@@ -1125,22 +1125,22 @@ class Product extends REST_Controller {
      * @apiError 408 同產品重複申請
      * @apiErrorExample {Object} 408
      *     {
-     *       "result": "ERROR",
-     *       "error": "408"
+     *       'result': 'ERROR',
+     *       'error': '408'
      *     }
      *
      * @apiError 411 訂單不存在
      * @apiErrorExample {Object} 411
      *     {
-     *       "result": "ERROR",
-     *       "error": "411"
+     *       'result': 'ERROR',
+     *       'error': '411'
      *     }
      *
      * @apiError 412 已申請過或已失效
      * @apiErrorExample {Object} 412
      *     {
-     *       "result": "ERROR",
-     *       "error": "412"
+     *       'result': 'ERROR',
+     *       'error': '412'
      *     }
      *
      *
@@ -1232,113 +1232,177 @@ class Product extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
     }
 
-    public function orderApply_post()
+    public function orderapply_post()
     {
-
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
         $param 		= [];
         $date 		= get_entering_date();
-        $fields 	= ['product_id','phone','amount','instalment','item_id','item_name','item_count','item_price'];
+        $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];
         foreach ($fields as $field) {
-            if (empty($input[$field])) {
+            if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
                 $content[$field] = $input[$field];
             }
         }
-        $product_id		   = $content["product_id"];
-        $phone			   = $content["phone"];
-        $amount			   = $content["amount"];
-        $instalment		   = $content["instalment"];
-        $merchant_order_no = "CPA".date("ymdhs", time()).substr(msectime(),-3);//PPPyymmddhhss123
-        $item_id		   = $content["item_id"];
-        $item_name		   = $content["item_name"];
-        $item_count		   = $content["item_count"];
-        $item_price		   = $content["item_price"];
-        $postData=array('product_id'=>$product_id,
-            'phone'=>$phone,
-            'amount'=>$amount,
-            'instalment'=>$instalment,
-            'merchant_order_no'=>$merchant_order_no,
-            'item_name'=>$item_name,
-            'item_count'=>$item_count,
-            'item_price'=>$item_price
+
+
+        $product_id		= $content['product_id'];//產品ID
+        $instalment     = $content['instalment'];//分期數
+        $store_id       = $content['store_id'];  //店家ID
+        $item_id		= $content['item_id'];   //商品ID
+        $item_count		= $content['item_count'];//商品數量
+        $delivery       = $content['delivery'];  //0:線下 1:線上
+
+        //檢驗消費貸重複申請
+        $exist = $this->target_model->get_by([
+            'status'		=> [20,21],
+            'user_id'		=> $user_id,
+            'product_id'	=> $product_id
+        ]);
+        if($exist){
+            $this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
+        }
+
+        $this->load->model('user/cooperation_model');
+        $cooperation = $this->cooperation_model->get_by(array(
+            'company_user_id' 	=> $store_id,
+        ));
+        if(!$cooperation){
+            $this->response(['result' => 'ERROR','error' => CooperationNotFound]);
+        }
+        $cooperation_id = $cooperation -> cooperation_id;
+
+        $postData=array(
+            'cooperation_id' => $cooperation_id,
+            'item_id'        => $item_id,
+            'item_count'     => $item_count,
+            'delivery'       => $delivery,
+            'name'           => substr($this->user_info->name,0,1).(substr($this->user_info->id_number,1,1)==1?'先生':'小姐'),
+            'phone'          => $this->user_info->phone,
         );
-        $result=json_decode(curl_get($this->api_model->url."order/create",
-            $postData,
-            $this->api_model->authorization(x.$instalment.$item_count.$item_name.$item_price.$merchant_order_no.$phone.$product_id)));
+
+        //對經銷商系統建立訂單
+        ksort($postData);
+        $middles        = implode('',array_values($postData));
+        $Timestamp      = time();
+        $Authorization  ='Bearer '.md5(sha1(COOPER_ID.$middles.$Timestamp).COOPER_KEY);
+        $header = [
+            'Authorization:'.$Authorization,
+            'CooperID:'.COOPER_ID,
+            'Timestamp:'.$Timestamp,
+        ];
+        $result = json_decode(curl_get(COOPER_API_URL.'/order/screate',$postData,$header));
         if(isset($result->error)){
-            $this->response(array('result' => 'ERROR','error' => $this->api_model->errorList[$result->error]));
+            $this->response(array('result' => 'ERROR','error' => ApplyFail));
         }
         else if(isset($result->result)){
-            $this->response([
-                'result' => 'SUCCESS'
-            ]);
-            $this->load->model('dealer/order_model');
-            $this->order_model->insert(array(
-                    "company_id"=>$this->user_info->company_id,
-                    "item_id"=>$item_id,
-                    "merchant_order_no"=>$merchant_order_no)
-            );
+            $item_name = $result->data->product_name.($result->data->product_spec!='-'?$result->data->product_spec:'');
+            $this->load->model('transaction/order_model');
+            //建立主系統訂單
+            $order_insert = $this->order_model->insert(array(
+                'company_user_id'   => $store_id,
+                'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
+                'merchant_order_no' => $result->data->merchant_order_no,
+                'phone'             => $this->user_info->phone,
+                'product_id'	    => $product_id,
+                'instalment'	    => $instalment,
+                'item_name'         => $item_name,
+                'item_count'        => $item_count,
+                'delivery'          => $delivery,
+            ));
+            if(!$order_insert){
+                $param = [
+                    'product_id'	=> $product_id,
+                    'user_id'		=> $user_id,
+                    'amount'		=> $result->data->product_price,
+                    'damage_rate' 	=> LIQUIDATED_DAMAGES,
+                    'instalment'	=> $instalment,
+                    'order_id'		=> $order_insert,
+                    'reason'		=> '分期:'.$item_name,
+                    'status'        => '20',
+                    //'contract_id'	=> $contract,
+                    //'person_image'	=> $image,
+                    //'loan_date'		=> $date,
+                ];
+                //建立產品單號
+                $insert = $this->target_lib->add_target($param);
+                if($insert){
+                    $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
+                }
+            }
         }
-        else{
-            $this->response(array('result' => 'ERROR','error' => SAVE_FAIL ));
-        }
+        $this->target_lib->cancel_order($result->data->merchant_order_no,$this->user_info->phone);
+        $this->response(array('result' => 'ERROR','error' => ApplyFail ));
+    }
 
+    public function orderapplyinfo_get($target_id)
+    {
+        $this->load->library('credit_lib');
+        $input 				= $this->input->get(NULL, TRUE);
+        $user_id 			= $this->user_info->id;
+        $investor 			= $this->user_info->investor;
+        $target 			= $this->target_model->get($target_id);
+        if(!empty($target)){
 
-        //必填欄位
-        if (empty($input['order_no'])) {
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-        }
-        $this->load->model('transaction/order_model');
-        $order = $this->order_model->get_by([
-            'phone'		=> $this->user_info->phone,
-            'order_no'	=> $input['order_no'],
-        ]);
-
-        if($order){
-            if($order->status != 0 ){
-                $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
+            if($target->user_id != $user_id){
+                $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            $exist = $this->target_model->get_by([
-                'status <='		=> 1,
-                'user_id'		=> $user_id,
-                'product_id'	=> $order->product_id
-            ]);
-            if($exist){
-                $this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
+            $product_list 		= $this->config->item('product_list');
+            $product 			= $product_list[$target->product_id];
+            $certification		= [];
+            $certification_list	= $this->certification_lib->get_status($user_id,$investor);
+            if(!empty($certification_list)){
+                foreach($certification_list as $key => $value){
+                    if(in_array($key,$product['certifications'])){
+                        $certification[] = $value;
+                    }
+                }
             }
 
-            $items 		= [];
-            $item_name	= explode(',',$order->item_name);
-            $item_count	= explode(',',$order->item_count);
-            foreach($item_count as $k => $v){
-                $items[] = $item_name[$k].' x '.$v;
-                $item_count[$k] = intval($v);
+            $amortization_schedule = [];
+            if($target->status==1){
+                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
             }
 
-            $param = [
-                'product_id'	=> $order->product_id,
-                'user_id'		=> $user_id,
-                'amount'		=> $order->total,
-                'damage_rate' 	=> LIQUIDATED_DAMAGES,
-                'instalment'	=> $order->instalment,
-                'order_id'		=> $order->id,
-                'reason'		=> '分期:'.implode(' , ',$items),
-                'loan_date'		=> $date,
-                'remark'        => $order->delivery
+            $credit 	= $this->credit_lib->get_credit($user_id,$target->product_id);
+
+            $contract = '';
+            if($target->contract_id){
+                $this->load->library('Contract_lib');
+                $contract_data 	= $this->contract_lib->get_contract($target->contract_id);
+                $contract 		= $contract_data['content'];
+            }
+
+            $data = [
+                'id' 				=> intval($target->id),
+                'target_no' 		=> $target->target_no,
+                'product_id' 		=> intval($target->product_id),
+                'user_id' 			=> intval($target->user_id),
+                'amount' 			=> intval($target->amount),
+                'loan_amount' 		=> intval($target->loan_amount),
+                'platform_fee' 		=> intval($target->platform_fee),
+                'interest_rate' 	=> floatval($target->interest_rate),
+                'instalment' 		=> intval($target->instalment),
+                'repayment' 		=> intval($target->repayment),
+                'reason' 			=> $target->reason,
+                'remark' 			=> $target->remark,
+                'delay' 			=> intval($target->delay),
+                'delay_days' 		=> intval($target->delay_days),
+                'status' 			=> intval($target->status),
+                'sub_status' 		=> intval($target->sub_status),
+                'created_at' 		=> intval($target->created_at),
+                'contract'			=> $contract,
+                'credit'			=> $credit,
+                'certification'		=> $certification,
+                'amortization_schedule'	=> $amortization_schedule,
             ];
 
-            $insert = $this->target_lib->add_target($param);
-            if($insert){
-                $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
-            }else{
-                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
-            }
+            $this->response(array('result' => 'SUCCESS','data' => $data ));
         }
-        $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
+        $this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 
     public function dealerlist_get()
