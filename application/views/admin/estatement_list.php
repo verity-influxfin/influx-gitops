@@ -11,7 +11,8 @@
 					var sdate 				= $('#sdate').val();
 					var edate 				= $('#edate').val();
 					var investor 			= $('#investor :selected').val();
-					top.location = './estatement?investor='+investor+'&sdate='+sdate+'&edate='+edate+'&user_id='+user_id;
+                    var name 				= $('#name').val();
+					top.location = './estatement?investor='+investor+'&sdate='+sdate+'&edate='+edate+'&user_id='+user_id+'&name='+name;
 				}
 			</script>
             <!-- /.row -->
@@ -39,6 +40,10 @@
 									<td style="text-align: center;">-</td>
 									<td><input type="text" value="<?=isset($edate)&&$edate?$edate:'' ?>" id="edate" data-toggle="datepicker" /></td>
 								</tr>
+                                <tr>
+                                    <td style="text-align: center;">會員姓名：</td>
+                                    <td><input type="text" value="<?=isset($name)&&$name?$name:'' ?>" id="name" /></td>
+                                </tr>
 								<tr>
 									<td></td>
 									<td></td>

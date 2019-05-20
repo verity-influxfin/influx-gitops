@@ -588,7 +588,8 @@ class Account extends MY_Admin_Controller {
 		$sdate 		= isset($input['sdate'])&&$input['sdate']?$input['sdate']:'';
 		$edate 		= isset($input['edate'])&&$input['edate']?$input['edate']:'';
 		$fields 	= ['investor','user_id'];
-		
+        $name       = '';
+
 		if($sdate && $edate && $edate > $sdate ){
 			$where	= array(
 				"sdate >="	=> $sdate,
@@ -601,7 +602,15 @@ class Account extends MY_Admin_Controller {
 				$where[$field] = $input[$field];
 			}
 		}
-		
+
+		if(!empty($input['name'])){
+		    $name = $input['name'];
+            $get_user_id = $this->user_model->get_by(['name'=>$input['name']]);
+            if($get_user_id){
+                $where['user_id'] = $get_user_id->id;
+            }
+        }
+
 		if(!empty($where)){
 			$list = $this->user_estatement_model->order_by("user_id","asc")->get_many_by($where);
 			if($list){
@@ -611,7 +620,7 @@ class Account extends MY_Admin_Controller {
 				}
 			}
 		}
-		
+        $page_data['name'] 		    = $name;
 		$page_data['sdate'] 		= $sdate;
 		$page_data['edate'] 		= $edate;
 		$page_data['list'] 			= $list?$list:array();
