@@ -4,9 +4,9 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <a href="<?=admin_url('contract/editContract') ?>">
+           <!-- <a href="<?=admin_url('contract/editContract') ?>">
                 <button class="btn btn-primary">新增</button>
-            </a>
+            </a>-->
         </div>
         <table class="table table-bordered table-striped">
             <thead>
@@ -14,8 +14,10 @@
                 <th>NO.</th>
                 <th>代號</th>
                 <th>名稱</th>
+                <th>版本</th>
+                <th>備註</th>
                 <th>最後更新時間</th>
-                <th>Edit</th>
+                <th>修改</th>
             </tr>
             </thead>
             <tbody>
@@ -24,14 +26,16 @@
 			foreach ($contracts as $contract): ?>
                 <tr>
                     <td><?= $contract->id ?></td>
-                    <td><?= $contract->alias ?></td>
-                    <td><?= $contract->name ?></td>
+                    <td><?= $contract->type ?></td>
+                    <td><?= $contract->title ?></td>
+                    <td><?= $contract->version ?></td>
+                    <td><?= $contract->remark ?></td>
                     <td>
                         <?= date("Y-m-d H:i:s", $contract->updated_at) ?>
                     </td>
                     <td>
                         <a href="<?=admin_url('contract/editContract?id='.$contract->id) ?>">
-                            <button class="btn btn-default">Edit</button>
+                            <button class="btn btn-default">修改</button>
                         </a>
                     </td>
                 </tr>

@@ -85,6 +85,7 @@ $config['admin_menu'] = [
 		'index?type=2'		=> '最新消息',
 	],
 	'Agreement' 			=> ['name'=>'協議書'],
+    'Contract' 			    => ['name'=>'合約書'],
 ];
 
 //內部通知Email
