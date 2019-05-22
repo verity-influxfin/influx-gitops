@@ -1263,7 +1263,7 @@ class Recoveries extends REST_Controller {
 				'max_instalment' 		=> 0,
 				'min_instalment' 		=> 0,
 				'settlement_date' 		=> '',
-				//'bargain_rate' 		=> $bargain_rate,
+				'bargain_rate'   		=> $bargain_rate,
 				'interest_rate' 		=> 0,
 				'accounts_receivable' 	=> 0,
 				'contract' 		 		=> [],
