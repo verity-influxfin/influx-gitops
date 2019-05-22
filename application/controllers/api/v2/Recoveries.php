@@ -1322,9 +1322,9 @@ class Recoveries extends REST_Controller {
 				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 			}
 
-            if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
-				$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
-			}
+            //if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
+			//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+			//}
 			
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
