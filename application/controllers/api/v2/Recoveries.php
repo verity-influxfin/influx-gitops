@@ -1420,7 +1420,7 @@ class Recoveries extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
-        if(!isset($input['amount'])){
+        if(!isset($input['amount'])||empty($input['amount'])){
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
         $amount = $input['amount'];
@@ -1534,9 +1534,9 @@ class Recoveries extends REST_Controller {
 				$this->load->model('loan/transfer_combination_model');
 				$combination_id = $this->transfer_combination_model->insert($data);
 			}else{
-				if($bargain_rate > 0){
+				//if($bargain_rate > 0){
 					foreach( $investments as $key => $value ){
-						$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+						$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
                         $minAmount      = intval(round($info['accounts_receivable'] * (100 - 20) /100,0));
                         $maxAmount      = $info['accounts_receivable'];
                         if($amount < $minAmount || $amount > $maxAmount){
@@ -1546,7 +1546,7 @@ class Recoveries extends REST_Controller {
 						//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
 						//}
 					}
-				}
+				//}
 			}
 			foreach( $investments as $key => $value ){
 				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount);

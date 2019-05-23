@@ -14143,7 +14143,7 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "amount",
                             "description": "<p>金額</p>"
                         }
