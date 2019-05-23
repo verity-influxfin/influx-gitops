@@ -1228,6 +1228,8 @@ class Recoveries extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$ids		= array();
+        $amount     = isset($input['amount'])?$input['amount']:0;
+
 		//必填欄位
 		if (empty($input['ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1249,11 +1251,6 @@ class Recoveries extends REST_Controller {
 		if($bargain_rate < -20 || $bargain_rate > 20){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-
-        $amount  = $input['amount'];
-        if(!isset($amount)){
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-        }
 
 		$investments = $this->investment_model->get_many($ids);
 
@@ -1296,13 +1293,13 @@ class Recoveries extends REST_Controller {
 				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
                 if($info){
 					$data['count']++;
-					$data['amount'] 			+= $info['total'];
-					$data['principal'] 			+= $info['principal'];
-					$data['interest'] 			+= $info['interest'];
-					$data['delay_interest'] 	+= $info['delay_interest'];
-					$data['fee'] 				+= $info['fee'];
+					$data['amount'] 			 += $info['total'];
+					$data['principal'] 			 += $info['principal'];
+					$data['interest'] 			 += $info['interest'];
+					$data['delay_interest'] 	 += $info['delay_interest'];
+					$data['fee'] 				 += $info['fee'];
 					$data['accounts_receivable'] += $info['accounts_receivable'];
-					$data['contract'][] 	= $info['debt_transfer_contract'];
+					$data['contract'][] 	     = $info['debt_transfer_contract'];
 
                     foreach ($amortization_table['list'] as $k => $v) {
                         if (!isset($data['total_payment'][$v['repayment_date']])) {
@@ -1329,7 +1326,7 @@ class Recoveries extends REST_Controller {
 
             $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
             $maxAmount = $data['accounts_receivable'];
-            if($amount < $minAmount || $amount > $maxAmount){
+            if($amount!=0&&($amount < $minAmount || $amount > $maxAmount)){
                 $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
             }
 
@@ -1423,11 +1420,11 @@ class Recoveries extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
-		$amount         = $input['amount'];
-        if(!isset($amount)){
+        if(!isset($input['amount'])){
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
-		
+        $amount = $input['amount'];
+
 		$combination 	= isset($input['combination'])&&intval($input['combination'])?1:0;
 		$combination_id = 0;
 		$password 		= isset($input['password'])?$input['password']:'';

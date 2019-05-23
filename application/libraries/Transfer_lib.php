@@ -89,7 +89,7 @@ class Transfer_lib{
 					$accounts_receivable = $accounts_receivable + $principal + $delay_interest;
 					//190525 顯示不加利息
 					//$total = $principal + $interest + $delay_interest;
-                    $total = $amount;
+                    $total = intval($amount);
 					$total = intval(round($total * (100 + $bargain_rate) /100,0));
 					$contract = $this->CI->contract_lib->pretransfer_contract('transfer',[
 						$investment->user_id,
