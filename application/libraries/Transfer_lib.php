@@ -127,7 +127,7 @@ class Transfer_lib{
 	public function apply_transfer($investment,$bargain_rate=0,$combination=0,$amount=0){
 		if($investment && $investment->status==3 && $investment->transfer_status==0){
 			$target 	= $this->CI->target_model->get($investment->target_id);
-			$info  		= $this->get_pretransfer_info($investment,$bargain_rate,$amount=0);
+			$info  		= $this->get_pretransfer_info($investment,$bargain_rate,$amount);
 			if($info){
 				$principal 	= $info['principal'];
 				$total 		= $info['total'];

@@ -1327,6 +1327,12 @@ class Recoveries extends REST_Controller {
 				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 			}
 
+            $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
+            $maxAmount = $data['accounts_receivable'];
+            if($amount < $minAmount || $amount > $maxAmount){
+                $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+            }
+
             //if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
 			//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
 			//}
@@ -1545,7 +1551,6 @@ class Recoveries extends REST_Controller {
 					}
 				}
 			}
-			
 			foreach( $investments as $key => $value ){
 				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount);
 			}
