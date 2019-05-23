@@ -23,7 +23,7 @@ class Transfer_lib{
 	債轉期間於寬限期內且跨到逾期日：結息日調整至逾期前一日，利息為上期利息金額
 	逾期債轉：已發生利息 + 依照逾期日計算延滯息
 	*/
-	public function get_pretransfer_info($investment,$bargain_rate=0){
+	public function get_pretransfer_info($investment,$bargain_rate=0,$amount=0){
 		if($investment && $investment->status==3){
 			$this->CI->load->model('transaction/transaction_model');
 			$this->CI->load->library('Financial_lib');
@@ -87,7 +87,9 @@ class Transfer_lib{
 					}
 
 					$accounts_receivable = $accounts_receivable + $principal + $delay_interest;
-					$total = $principal + $interest + $delay_interest;
+					//190525 顯示不加利息
+					//$total = $principal + $interest + $delay_interest;
+                    $total = $amount;
 					$total = intval(round($total * (100 + $bargain_rate) /100,0));
 					$contract = $this->CI->contract_lib->pretransfer_contract('transfer',[
 						$investment->user_id,
@@ -122,10 +124,10 @@ class Transfer_lib{
 		return false;
 	}
 	
-	public function apply_transfer($investment,$bargain_rate=0,$combination=0){
+	public function apply_transfer($investment,$bargain_rate=0,$combination=0,$amount=0){
 		if($investment && $investment->status==3 && $investment->transfer_status==0){
 			$target 	= $this->CI->target_model->get($investment->target_id);
-			$info  		= $this->get_pretransfer_info($investment,$bargain_rate);
+			$info  		= $this->get_pretransfer_info($investment,$bargain_rate,$amount=0);
 			if($info){
 				$principal 	= $info['principal'];
 				$total 		= $info['total'];

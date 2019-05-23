@@ -1249,7 +1249,12 @@ class Recoveries extends REST_Controller {
 		if($bargain_rate < -20 || $bargain_rate > 20){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
+
+        $amount  = $input['amount'];
+        if(!isset($amount)){
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
 		$investments = $this->investment_model->get_many($ids);
 
 		if(count($investments)==count($ids)){
@@ -1288,7 +1293,7 @@ class Recoveries extends REST_Controller {
 				$interest_rate_d += $value->loan_amount*$target->instalment;
                 $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
 
-				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
                 if($info){
 					$data['count']++;
 					$data['amount'] 			+= $info['total'];
@@ -1542,7 +1547,7 @@ class Recoveries extends REST_Controller {
 			}
 			
 			foreach( $investments as $key => $value ){
-				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id);
+				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount);
 			}
 			
 			$this->response(array('result' => 'SUCCESS'));
