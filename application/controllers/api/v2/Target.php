@@ -883,7 +883,7 @@ class Target extends REST_Controller {
 		$investor 	= $this->user_info->investor;
 
         //暫不開放法人
-        if(isset($this->user_info->company) != 0){
+        if(isset($this->user_info->company)&&$this->user_info->company != 0){
             $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
         }
 
