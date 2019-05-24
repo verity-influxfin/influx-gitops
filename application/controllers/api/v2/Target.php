@@ -462,7 +462,7 @@ class Target extends REST_Controller {
 		$param		= ['user_id' => $user_id];
 
         //暫不開放法人
-        if(isset($this->user_info->company) != 0){
+        if(isset($this->user_info->company)&&$this->user_info->company != 0){
             $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
         }
 		
