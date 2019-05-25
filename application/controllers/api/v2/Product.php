@@ -168,7 +168,7 @@ class Product extends REST_Controller {
                 $certification 			= [];
                 if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
                     $targets = $this->target_model->get_by(array(
-                        'status <='		=> 1,
+                        'status'		=> [0,1,20,21],
                         'sub_status'	=> 0,
                         'user_id'		=> $this->user_info->id,
                         'product_id'	=> $value['id']
@@ -1303,8 +1303,12 @@ class Product extends REST_Controller {
         $item_count		= $content['item_count'];//商品數量
         $delivery       = $content['delivery'];  //0:線下 1:線上
 
-        if(isset($input['address'])){
-            $address = $input['address'];
+        if($content['delivery'] == 1){
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $address = $input['address'];
+            }
         }
 
         //檢驗消費貸重複申請
