@@ -888,9 +888,9 @@ class Product extends REST_Controller {
             if($target->status==1){
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
             }
-
-            $credit 	= $this->credit_lib->get_credit($user_id,$target->product_id);
-
+            //if($target->status==1) {
+              //  $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
+            //}
             $contract = '';
             if($target->contract_id){
                 $this->load->library('Contract_lib');
@@ -898,27 +898,73 @@ class Product extends REST_Controller {
                 $contract 		= $contract_data['content'];
             }
 
+            $order_info = [];
+            if($target->order_id != 0){
+                $this->load->model('transaction/order_model');
+                $orders 	= $this->order_model->get_by([
+                    'id'		=> $target->order_id,
+                    'phone'		=> $this->user_info->phone,
+                    //'status'	=> 0,
+                ]);
+
+                if(!empty($orders)){
+                    $this->load->library('contract_lib');
+                    $date = get_entering_date();
+                    $company = $this->user_model->get(intval($orders->company_user_id));
+                    $items 		= [];
+                    $item_name	= explode(',',$orders->item_name);
+                    $item_count	= explode(',',$orders->item_count);
+                    foreach($item_count as $k => $v){
+                        $items[] = $item_name[$k].' x '.$v;
+                        $item_count[$k] = intval($v);
+                    }
+
+                    if($target->status==21){
+                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1);
+                        $contract = $this->contract_lib->pretransfer_contract('order',[
+                            $orders->company_user_id,
+                            $user_id,
+                            implode(' , ',$items),
+                            $orders->total,
+                            $amortization_schedule['total']['total_payment'].'、'.$orders->instalment.'、'.$amortization_schedule['total_payment'].'、',
+                        ]);
+                    }
+
+                    $order_info['order_no'] 		 = $orders->order_no;
+                    $order_info['company'] 			 = $company->name;
+                    $order_info['merchant_order_no'] = $orders->merchant_order_no;
+                    $order_info['item_name'] 		 = $item_name;
+                    $order_info['item_count'] 		 = $item_count;
+                    $order_info['contract'] 		 = $contract;
+                    $order_info['delivery'] 		 = intval($orders->delivery);
+                    $order_info['status'] 		     = intval($orders->status);
+                    $order_info['created_at'] 		 = intval($orders->created_at);
+                }
+            }
+
             $data = [
-                'id' 				=> intval($target->id),
-                'target_no' 		=> $target->target_no,
-                'product_id' 		=> intval($target->product_id),
-                'user_id' 			=> intval($target->user_id),
-                'amount' 			=> intval($target->amount),
-                'loan_amount' 		=> intval($target->loan_amount),
-                'platform_fee' 		=> intval($target->platform_fee),
-                'interest_rate' 	=> floatval($target->interest_rate),
-                'instalment' 		=> intval($target->instalment),
-                'repayment' 		=> intval($target->repayment),
-                'reason' 			=> $target->reason,
-                'remark' 			=> $target->remark,
-                'delay' 			=> intval($target->delay),
-                'delay_days' 		=> intval($target->delay_days),
-                'status' 			=> intval($target->status),
-                'sub_status' 		=> intval($target->sub_status),
-                'created_at' 		=> intval($target->created_at),
-                'contract'			=> $contract,
-                'credit'			=> $credit,
-                'certification'		=> $certification,
+                'id' 				    => intval($target->id),
+                'target_no' 		    => $target->target_no,
+                'product_id' 		    => intval($target->product_id),
+                'user_id' 			    => intval($target->user_id),
+                'order_id'              => intval($target->order_id),
+                'order_info'            => $order_info,
+                'amount' 			    => intval($target->amount),
+                'loan_amount' 		    => intval($target->loan_amount),
+                'platform_fee' 		    => intval($target->platform_fee),
+                'interest_rate' 	    => floatval($target->interest_rate),
+                'instalment' 		    => intval($target->instalment),
+                'repayment' 		    => intval($target->repayment),
+                'reason' 			    => $target->reason,
+                'remark' 			    => $target->remark,
+                'delay' 			    => intval($target->delay),
+                'delay_days' 		    => intval($target->delay_days),
+                'status' 			    => intval($target->status),
+                'sub_status' 		    => intval($target->sub_status),
+                'created_at' 		    => intval($target->created_at),
+                'contract'			    => $contract,
+                'credit'			    => $credit,
+                'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
             ];
 
@@ -1232,10 +1278,12 @@ class Product extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
     }
 
-    public function orderapply_post()
+    public function orderApply_post()
     {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
+        $phone = $this->user_info->phone;
+        $user_name  = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':'小姐');
         $param 		= [];
         $date 		= get_entering_date();
         $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];
@@ -1246,7 +1294,6 @@ class Product extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-
 
         $product_id		= $content['product_id'];//產品ID
         $instalment     = $content['instalment'];//分期數
@@ -1279,40 +1326,33 @@ class Product extends REST_Controller {
             'item_id'        => $item_id,
             'item_count'     => $item_count,
             'delivery'       => $delivery,
-            'name'           => substr($this->user_info->name,0,1).(substr($this->user_info->id_number,1,1)==1?'先生':'小姐'),
-            'phone'          => $this->user_info->phone,
+            'name'           => $user_name,
+            'phone'          => $phone,
         );
 
         //對經銷商系統建立訂單
-        ksort($postData);
-        $middles        = implode('',array_values($postData));
-        $Timestamp      = time();
-        $Authorization  ='Bearer '.md5(sha1(COOPER_ID.$middles.$Timestamp).COOPER_KEY);
-        $header = [
-            'Authorization:'.$Authorization,
-            'CooperID:'.COOPER_ID,
-            'Timestamp:'.$Timestamp,
-        ];
-        $result = json_decode(curl_get(COOPER_API_URL.'/order/screate',$postData,$header));
-        if(isset($result->error)){
-            $this->response(array('result' => 'ERROR','error' => ApplyFail));
-        }
-        else if(isset($result->result)){
+        $this->load->library('coop_lib');
+        $coop_url = 'order/screate';
+        $result = $this->coop_lib->coop_request($coop_url,$postData,$user_id,$phone);
+        if(isset($result->result)=='SUCCESS'){
             $item_name = $result->data->product_name.($result->data->product_spec!='-'?$result->data->product_spec:'');
-            $this->load->model('transaction/order_model');
+            $merchant_order_no = $result->data->merchant_order_no;
             //建立主系統訂單
+            $order_insert = false;
+            $this->load->model('transaction/order_model');
             $order_insert = $this->order_model->insert(array(
                 'company_user_id'   => $store_id,
                 'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
-                'merchant_order_no' => $result->data->merchant_order_no,
-                'phone'             => $this->user_info->phone,
+                'merchant_order_no' => $merchant_order_no,
+                'phone'             => $phone,
                 'product_id'	    => $product_id,
                 'instalment'	    => $instalment,
                 'item_name'         => $item_name,
                 'item_count'        => $item_count,
                 'delivery'          => $delivery,
+                'status'            => 20
             ));
-            if(!$order_insert){
+            if($order_insert){
                 $param = [
                     'product_id'	=> $product_id,
                     'user_id'		=> $user_id,
@@ -1321,91 +1361,98 @@ class Product extends REST_Controller {
                     'instalment'	=> $instalment,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
-                    'status'        => '20',
-                    //'contract_id'	=> $contract,
-                    //'person_image'	=> $image,
-                    //'loan_date'		=> $date,
+                    'status'        => 20,
                 ];
                 //建立產品單號
                 $insert = $this->target_lib->add_target($param);
                 if($insert){
                     $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
                 }
+                else{
+                    $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
+                }
             }
+            $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
         }
-        $this->target_lib->cancel_order($result->data->merchant_order_no,$this->user_info->phone);
         $this->response(array('result' => 'ERROR','error' => ApplyFail ));
     }
 
-    public function orderapplyinfo_get($target_id)
+    public function orderSigning_post()
     {
-        $this->load->library('credit_lib');
-        $input 				= $this->input->get(NULL, TRUE);
-        $user_id 			= $this->user_info->id;
-        $investor 			= $this->user_info->investor;
-        $target 			= $this->target_model->get($target_id);
+        $input 		= $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $date 		= get_entering_date();
+
+        //必填欄位
+        if (empty($input['id'])) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        $target 	= $this->target_model->get($input['id']);
         if(!empty($target)){
 
             if($target->user_id != $user_id){
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            $product_list 		= $this->config->item('product_list');
-            $product 			= $product_list[$target->product_id];
-            $certification		= [];
-            $certification_list	= $this->certification_lib->get_status($user_id,$investor);
-            if(!empty($certification_list)){
-                foreach($certification_list as $key => $value){
-                    if(in_array($key,$product['certifications'])){
-                        $certification[] = $value;
+            if($target->status != 21 || $target->sub_status != 0){
+                $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
+            }
+
+            $product_list 	= $this->config->item('product_list');
+            $product 		= isset($product_list[$target->product_id])?$product_list[$target->product_id]:false;
+            if($product){
+                if($product['type'] != 2){
+                    $this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
+                }
+
+                $this->load->model('transaction/order_model');
+                $order 	= $this->order_model->get($target->order_id);
+                if($order){
+                    if($order->status != 21 ){
+                        $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
+                    }
+                    $items 		= [];
+                    $item_name	= explode(',',$order->item_name);
+                    $item_count	= explode(',',$order->item_count);
+                    foreach($item_count as $k => $v){
+                        $items[] = $item_name[$k].' x '.$v;
+                        $item_count[$k] = intval($v);
+                    }
+
+                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1);
+
+                    $this->load->library('contract_lib');
+                    $contract = $this->contract_lib->sign_contract('order',[
+                        $order->company_user_id,
+                        $user_id,
+                        implode(' , ',$items),
+                        $order->total,
+                        $amortization_schedule['total']['total_payment'].'、'.$order->instalment.'、'.$amortization_schedule['total_payment'].'、',
+                    ]);
+
+                    $param = [
+                        'amount'		=> $order->total,
+                        'damage_rate' 	=> LIQUIDATED_DAMAGES,
+                        'contract_id'	=> $contract,
+                        'status'        => 22,
+                    ];
+                    $rs = $this->target_lib->ordersigning_target($target->id,$user_id,$param);
+                    if($rs){
+                        $this->order_model->update($target->order_id,
+                            ['status' => 22]
+                        );
+                        $this->response(array('result' => 'SUCCESS'));
                     }
                 }
+                $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
             }
-
-            $amortization_schedule = [];
-            if($target->status==1){
-                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
-            }
-
-            $credit 	= $this->credit_lib->get_credit($user_id,$target->product_id);
-
-            $contract = '';
-            if($target->contract_id){
-                $this->load->library('Contract_lib');
-                $contract_data 	= $this->contract_lib->get_contract($target->contract_id);
-                $contract 		= $contract_data['content'];
-            }
-
-            $data = [
-                'id' 				=> intval($target->id),
-                'target_no' 		=> $target->target_no,
-                'product_id' 		=> intval($target->product_id),
-                'user_id' 			=> intval($target->user_id),
-                'amount' 			=> intval($target->amount),
-                'loan_amount' 		=> intval($target->loan_amount),
-                'platform_fee' 		=> intval($target->platform_fee),
-                'interest_rate' 	=> floatval($target->interest_rate),
-                'instalment' 		=> intval($target->instalment),
-                'repayment' 		=> intval($target->repayment),
-                'reason' 			=> $target->reason,
-                'remark' 			=> $target->remark,
-                'delay' 			=> intval($target->delay),
-                'delay_days' 		=> intval($target->delay_days),
-                'status' 			=> intval($target->status),
-                'sub_status' 		=> intval($target->sub_status),
-                'created_at' 		=> intval($target->created_at),
-                'contract'			=> $contract,
-                'credit'			=> $credit,
-                'certification'		=> $certification,
-                'amortization_schedule'	=> $amortization_schedule,
-            ];
-
-            $this->response(array('result' => 'SUCCESS','data' => $data ));
+            $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
         }
         $this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
 
-    public function dealerlist_get()
+    public function dealerList_get()
     {
         $list	     = [];
         $cooperation = [];

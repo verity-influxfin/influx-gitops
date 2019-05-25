@@ -27,20 +27,30 @@ class Target_lib{
 		}
 		return false;
 	}
-	
-	//簽約
-	public function signing_target( $target_id, $data, $user_id=0 ){
-		if($target_id){
-			$param = array(
-				'person_image'	=> $data['person_image'],
-				'status'		=> 2,
-			);
-			$rs = $this->CI->target_model->update($target_id,$param);
-			$this->insert_change_log($target_id,$param,$user_id);
-			return $rs;
-		}
-		return false;
-	}
+
+    //簽約
+    public function signing_target( $target_id, $data, $user_id=0 ){
+        if($target_id){
+            $param = array(
+                'person_image'	=> $data['person_image'],
+                'status'		=> 2,
+            );
+            $rs = $this->CI->target_model->update($target_id,$param);
+            $this->insert_change_log($target_id,$param,$user_id);
+            return $rs;
+        }
+        return false;
+    }
+
+    //分期貸簽約
+    public function ordersigning_target( $target_id, $user_id=0, $param ){
+        if($target_id){
+            $rs = $this->CI->target_model->update($target_id,$param);
+            $this->insert_change_log($target_id,$param,$user_id);
+            return $rs;
+        }
+        return false;
+    }
 	
 	//全案退回
 	public function cancel_success_target($target,$admin_id=0){
@@ -88,37 +98,32 @@ class Target_lib{
 			$rs = $this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,$user_id);
 			if($target->order_id !=0){
-                $this->cancel_order($target,$phone);
+                $this->CI->load->model('transaction/order_model');
+                $order = $this->CI->order_model->get($target->order_id);
+                $this->cancel_order($target->order_id,$order->merchant_order_no,$target->user_id,$phone);
 			}
 		}
 		return false;
 	}
 
     //取消訂單
-    public function cancel_order($target=[],$phone=0){
+    public function cancel_order($order_id,$merchant_order_no,$user_id,$phone=0){
         $this->CI->load->model('transaction/order_model');
-        $order = $this->CI->order_model->get($target->order_id);
-        $this->CI->order_model->update($target->order_id,['status'=>8]);
+        if($order_id != false){
+            $this->CI->order_model->update($order_id,['status'=>8]);
+        }
         $postData=array(
             'phone'             => $phone,
-            'merchant_order_no' => $order->merchant_order_no
+            'merchant_order_no' => $merchant_order_no
         );
-        ksort($postData);
-        $middles        = implode('',array_values($postData));
-        $Timestamp      = time();
-        $Authorization  ='Bearer '.md5(sha1(COOPER_ID.$middles.$Timestamp).COOPER_KEY);
-        $header = [
-            'Authorization:'.$Authorization,
-            'CooperID:'.COOPER_ID,
-            'Timestamp:'.$Timestamp,
-        ];
-        $result = json_decode(curl_get(COOPER_API_URL.'/order/scancel',$postData,$header));
-        if(isset($result->error)){
-            return false;
-        }
-        else if(isset($result->result)){
+
+        $this->CI->load->library('coop_lib');
+        $coop_url = 'order/scancel';
+        $result = $this->CI->coop_lib->coop_request($coop_url,$postData,$user_id,$phone);
+        if(isset($result->result)=='SUCCESS'){
             return true;
         }
+        return false;
     }
 	
 	//取消
