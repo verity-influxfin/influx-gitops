@@ -1303,7 +1303,7 @@ class Product extends REST_Controller {
         $item_count		= $content['item_count'];//商品數量
         $delivery       = $content['delivery'];  //0:線下 1:線上
 
-        if($content['delivery'] == 1){
+        if(isset($input['address'])){
             $address = $input['address'];
         }
 

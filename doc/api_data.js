@@ -11034,7 +11034,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "field": "address",
-                            "description": "<p>0:線下 1:線上</p>"
+                            "description": "<p>地址</p>"
                         }
                     ]
                 }
@@ -11058,124 +11058,131 @@ define({
                         }
                     ]
                 },
-                "examples": [{
-                    "result": "SUCCESS",
-                    "data": {
-                        "id": 315,
-                        "target_no": "STI2019052213182",
-                        "product_id": 2,
-                        "user_id": 9,
-                        "order_id": 64,
-                        "order_info": {
-                            "order_no": "17-2019052214031991972",
-                            "company": "普匯金融科技股份有限公司",
-                            "merchant_order_no": "CPA1905220218518",
-                            "item_name": [
-                                "Samsung Galaxy A8 Star"
-                            ],
-                            "item_count": [
-                                1
-                            ],
-                            "contract": "",
-                            "delivery": 1,
-                            "status": 0,
-                            "created_at": 1558504999
-                        },
-                        "amount": 0,
-                        "loan_amount": 0,
-                        "platform_fee": 0,
-                        "interest_rate": 0,
-                        "instalment": 3,
-                        "repayment": 1,
-                        "reason": "分期:Samsung Galaxy A8 Star",
-                        "remark": "",
-                        "delay": 0,
-                        "delay_days": 0,
-                        "status": 20,
-                        "sub_status": 0,
-                        "created_at": 1558504999,
-                        "contract": "",
-                        "credit": {
-                            "level": 11,
-                            "points": -1,
-                            "amount": 0,
-                            "created_at": 1554307202
-                        },
-                        "certification": [
-                            {
-                                "id": 1,
-                                "alias": "idcard",
-                                "name": "實名認證",
-                                "status": 1,
-                                "description": "驗證個人身份資訊",
-                                "user_status": 1,
-                                "certification_id": 581,
-                                "updated_at": 1556762167
-                            },
-                            {
-                                "id": 2,
-                                "alias": "student",
-                                "name": "學生身份認證",
-                                "status": 1,
-                                "description": "驗證學生身份",
-                                "user_status": 1,
-                                "certification_id": 533,
-                                "updated_at": 1556284120
-                            },
-                            {
-                                "id": 3,
-                                "alias": "debitcard",
-                                "name": "金融帳號認證",
-                                "status": 1,
-                                "description": "驗證個人金融帳號",
-                                "user_status": 1,
-                                "certification_id": 71,
-                                "updated_at": 1548256915
-                            },
-                            {
-                                "id": 4,
-                                "alias": "social",
-                                "name": "社交認證",
-                                "status": 1,
-                                "description": "個人社交帳號認證",
-                                "user_status": 1,
-                                "certification_id": 93,
-                                "updated_at": 1551260545
-                            },
-                            {
-                                "id": 5,
-                                "alias": "emergency",
-                                "name": "緊急聯絡人",
-                                "status": 1,
-                                "description": "設定緊急連絡人資訊",
-                                "user_status": 1,
-                                "certification_id": 532,
-                                "updated_at": 1556275356
-                            },
-                            {
-                                "id": 6,
-                                "alias": "email",
-                                "name": "常用電子信箱",
-                                "status": 1,
-                                "description": "驗證常用E-Mail位址",
-                                "user_status": 1,
-                                "certification_id": 567,
-                                "updated_at": 1556284130
-                            },
-                            {
-                                "id": 7,
-                                "alias": "financial",
-                                "name": "財務訊息認證",
-                                "status": 1,
-                                "description": "提供財務訊息資訊",
-                                "user_status": 1,
-                                "certification_id": 529,
-                                "updated_at": 1556284136
-                            }
-                        ],
-                        "amortization_schedule": []
+                "examples":  [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "                    \"result\": \"SUCCESS\",\n" +
+                            "                    \"data\": {\n" +
+                            "                        \"id\": 315,\n" +
+                            "                        \"target_no\": \"STI2019052213182\",\n" +
+                            "                        \"product_id\": 2,\n" +
+                            "                        \"user_id\": 9,\n" +
+                            "                        \"order_id\": 64,\n" +
+                            "                        \"order_info\": {\n" +
+                            "                            \"order_no\": \"17-2019052214031991972\",\n" +
+                            "                            \"company\": \"普匯金融科技股份有限公司\",\n" +
+                            "                            \"merchant_order_no\": \"CPA1905220218518\",\n" +
+                            "                            \"item_name\": [\n" +
+                            "                                \"Samsung Galaxy A8 Star\"\n" +
+                            "                            ],\n" +
+                            "                            \"item_count\": [\n" +
+                            "                                1\n" +
+                            "                            ],\n" +
+                            "                            \"contract\": \"\",\n" +
+                            "                            \"delivery\": 1,\n" +
+                            "                            \"address\": \"台北市天龍國境\",\n" +
+                            "                            \"status\": 0,\n" +
+                            "                            \"created_at\": 1558504999\n" +
+                            "                        },\n" +
+                            "                        \"amount\": 0,\n" +
+                            "                        \"loan_amount\": 0,\n" +
+                            "                        \"platform_fee\": 0,\n" +
+                            "                        \"interest_rate\": 0,\n" +
+                            "                        \"instalment\": 3,\n" +
+                            "                        \"repayment\": 1,\n" +
+                            "                        \"reason\": \"分期:Samsung Galaxy A8 Star\",\n" +
+                            "                        \"remark\": \"\",\n" +
+                            "                        \"delay\": 0,\n" +
+                            "                        \"delay_days\": 0,\n" +
+                            "                        \"status\": 20,\n" +
+                            "                        \"sub_status\": 0,\n" +
+                            "                        \"created_at\": 1558504999,\n" +
+                            "                        \"contract\": \"\",\n" +
+                            "                        \"credit\": {\n" +
+                            "                            \"level\": 11,\n" +
+                            "                            \"points\": -1,\n" +
+                            "                            \"amount\": 0,\n" +
+                            "                            \"created_at\": 1554307202\n" +
+                            "                        },\n" +
+                            "                        \"certification\": [\n" +
+                            "                            {\n" +
+                            "                                \"id\": 1,\n" +
+                            "                                \"alias\": \"idcard\",\n" +
+                            "                                \"name\": \"實名認證\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 581,\n" +
+                            "                                \"updated_at\": 1556762167\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 2,\n" +
+                            "                                \"alias\": \"student\",\n" +
+                            "                                \"name\": \"學生身份認證\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"驗證學生身份\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 533,\n" +
+                            "                                \"updated_at\": 1556284120\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 3,\n" +
+                            "                                \"alias\": \"debitcard\",\n" +
+                            "                                \"name\": \"金融帳號認證\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 71,\n" +
+                            "                                \"updated_at\": 1548256915\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 4,\n" +
+                            "                                \"alias\": \"social\",\n" +
+                            "                                \"name\": \"社交認證\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 93,\n" +
+                            "                                \"updated_at\": 1551260545\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 5,\n" +
+                            "                                \"alias\": \"emergency\",\n" +
+                            "                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 532,\n" +
+                            "                                \"updated_at\": 1556275356\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 6,\n" +
+                            "                                \"alias\": \"email\",\n" +
+                            "                                \"name\": \"常用電子信箱\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 567,\n" +
+                            "                                \"updated_at\": 1556284130\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"id\": 7,\n" +
+                            "                                \"alias\": \"financial\",\n" +
+                            "                                \"name\": \"財務訊息認證\",\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                \"user_status\": 1,\n" +
+                            "                                \"certification_id\": 529,\n" +
+                            "                                \"updated_at\": 1556284136\n" +
+                            "                            }\n" +
+                            "                        ],\n" +
+                            "                        \"amortization_schedule\": []\n" +
+                            "                    }\n" +
+                            "                }",
+                        "type": "Object"
                     }
-                }]
+                ]
             },
             "filename": "application/controllers/api/v2/Product.php",
             "groupTitle": "Product",
