@@ -11002,7 +11002,7 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "Object",
+                            "type": "Number",
                             "field": "instalment",
                             "description": "<p>可選期數 0:其他</p>"
                         },
@@ -11028,6 +11028,12 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "field": "delivery",
+                            "description": "<p>0:線下 1:線上</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "address",
                             "description": "<p>0:線下 1:線上</p>"
                         }
                     ]

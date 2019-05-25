@@ -1286,6 +1286,7 @@ class Product extends REST_Controller {
         $user_name  = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':'小姐');
         $param 		= [];
         $date 		= get_entering_date();
+        $address    = '';
         $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
@@ -1301,6 +1302,10 @@ class Product extends REST_Controller {
         $item_id		= $content['item_id'];   //商品ID
         $item_count		= $content['item_count'];//商品數量
         $delivery       = $content['delivery'];  //0:線下 1:線上
+
+        if($content['delivery'] == 1){
+            $address = $input['address'];
+        }
 
         //檢驗消費貸重複申請
         $exist = $this->target_model->get_by([
@@ -1328,6 +1333,7 @@ class Product extends REST_Controller {
             'delivery'       => $delivery,
             'name'           => $user_name,
             'phone'          => $phone,
+            'address'        => $address,
         );
 
         //對經銷商系統建立訂單
