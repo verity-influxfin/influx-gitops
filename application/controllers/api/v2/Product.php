@@ -885,12 +885,12 @@ class Product extends REST_Controller {
             }
 
             $amortization_schedule = [];
-            if($target->status==1){
+            if(in_array($target->status,[1,21])){
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
             }
-            //if($target->status==1) {
-              //  $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
-            //}
+
+            $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
+
             $contract = '';
             if($target->contract_id){
                 $this->load->library('Contract_lib');
