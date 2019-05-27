@@ -29122,7 +29122,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": false,
-                            "field": "transfers_id",
+                            "field": "id",
                             "description": "<p>Transfers ID</p>"
                         }
                     ]
