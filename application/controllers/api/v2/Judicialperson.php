@@ -184,7 +184,7 @@ class Judicialperson extends REST_Controller {
 		$param		= array('user_id'=> $user_id);
 
 		//必填欄位
-		$fields 	= ['company_type','tax_id','cooperation_contact','cooperation_phone','cooperation_address'];
+		$fields 	= ['company_type','tax_id'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -193,9 +193,6 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 		$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
-        $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
-        $param['cooperation_phone'] = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
-        $param['cooperation_address'] = isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'';
 
         if($param['tax_id'] && strlen($param['tax_id'])==8){
 
@@ -229,6 +226,10 @@ class Judicialperson extends REST_Controller {
 			}
 			
 			if($param['cooperation']==2){
+                $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
+                $param['cooperation_phone'] = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
+                $param['cooperation_address'] = isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'';
+
 				//if (empty($input['server_ip'])) {
 					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				//}
