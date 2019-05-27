@@ -6628,14 +6628,14 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "size": "2..15",
-                            "optional": false,
+                            "optional": true,
                             "field": "cooperation_contact",
                             "description": "<p>聯絡人</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "cooperation_phone",
                             "description": "<p>電話</p>"
                         },

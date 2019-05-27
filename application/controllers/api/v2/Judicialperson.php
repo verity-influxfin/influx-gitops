@@ -692,9 +692,10 @@ class Judicialperson extends REST_Controller {
 		$this->not_incharge();
 		$input 	= $this->input->post(NULL, TRUE);
 		$this->load->library('S3_upload');
+        $company_user_id = $this->user_info->id;
 
 		$judicial_person = $this->judicial_person_model->get_by(array(
-			'company_user_id' 	=> $this->user_info->id,
+			'company_user_id' 	=> $company_user_id,
 		));
 		if($judicial_person && $judicial_person->cooperation != 0){
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
@@ -704,7 +705,11 @@ class Judicialperson extends REST_Controller {
 			//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		//}
 
-		//上傳檔案欄位
+        if (empty($input['cooperation_address'])) {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        }
+
+            //上傳檔案欄位
 		$content		= [];
 		$file_fields 	= ['facade_image','front_image'];
 		foreach ($file_fields as $field) {
@@ -714,7 +719,7 @@ class Judicialperson extends REST_Controller {
 			}else{
 				$rs = $this->log_image_model->get_by([
 					'id'		=> $image_id,
-					'user_id'	=> $user_id,
+					'user_id'	=> $company_user_id,
 				]);
 
 				if($rs){
@@ -747,8 +752,11 @@ class Judicialperson extends REST_Controller {
 		}
 
 		if($judicial_person){
+            $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
+            $param['cooperation_phone']   = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
 			$param	= array(
 				'cooperation'			=> 2,
+				'cooperation_address'   => $input['cooperation_address'],
 				'cooperation_content'	=> json_encode($content),
 				//'cooperation_server_ip'	=> trim($input['server_ip']),
 			);
@@ -800,21 +808,25 @@ class Judicialperson extends REST_Controller {
 	public function cooperation_get()
     {
 		$this->not_incharge();
+        $company_user_id = $this->user_info->id;
 
 		$judicial_person = $this->judicial_person_model->get_by(array(
-			'company_user_id' 	=> $this->user_info->id,
+			'company_user_id' 	=> $company_user_id,
 		));
 		
 		if($judicial_person){
             $data = array(
                 //'server_ip'	=> $judicial_person->cooperation_server_ip,
-                'status'	=> $judicial_person->cooperation,
-                'remark'	=> $judicial_person->remark,
+                'cooperation_contact'	=> $judicial_person->cooperation_contact,
+                'cooperation_phone'	    => $judicial_person->cooperation_phone,
+                'cooperation_address'	=> $judicial_person->cooperation_address,
+                'status'	            => $judicial_person->cooperation,
+                'remark'	            => $judicial_person->remark,
             );
 		    if($judicial_person->cooperation == 1){
                 $this->load->model('user/cooperation_model');
                 $cooperation= $this->cooperation_model->get_by(array(
-                    'company_user_id' 	=> $this->user_info->id,
+                    'company_user_id' 	=> $company_user_id,
                 ));
                 $data['cooperation_id'] = $cooperation -> cooperation_id;
                 $data['cooperation_key'] = $cooperation -> cooperation_key;
