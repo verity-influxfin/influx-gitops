@@ -51,7 +51,6 @@ class Transfer_lib{
 								$next_pay_date = $value->limit_date;
 							}
 							$principal += $value->amount;
-							//print('$principal:'.$value->amount);
 						}
 					}
 				}
@@ -73,7 +72,6 @@ class Transfer_lib{
 								$settlement_date = date('Y-m-d',strtotime($next_pay_date.' +'.GRACE_PERIOD.' days'));
 							}elseif($range_days > GRACE_PERIOD){
 								$delay_interest = $this->CI->financial_lib->get_delay_interest($principal,$range_days);
-                                //print('$delay_interest:'.$value->amount);
 							}
 						}
 					}
@@ -81,16 +79,13 @@ class Transfer_lib{
 					foreach($transaction as $key => $value){
 						if($value->status==1 && $value->source==SOURCE_AR_INTEREST && $value->limit_date <= $settlement_date){
 							$interest += $value->amount;
-                            //print('$interest:'.$value->amount);
 						}
 						if($value->status==1 && $value->source==SOURCE_AR_INTEREST){
 							$accounts_receivable += $value->amount;
-                            //print('$accounts_receivable:'.$value->amount);
 						}
 					}
-//print('$accounts_receivable'.$accounts_receivable .'$principal'. $principal .'$delay_interest'. $delay_interest.'$interest'. $interest);
 
-					$accounts_receivable = $accounts_receivable + $principal + $delay_interest;
+					$accounts_receivable = $accounts_receivable + $principal + $delay_interest + $interest;
 					//190525 顯示不加利息
 					//$total = $principal + $interest + $delay_interest;
                     $total = intval($amount);
@@ -109,7 +104,7 @@ class Transfer_lib{
 					]);
 					$instalment = $target->instalment - $instalment_paid;
 					$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
-					//print('$fee'.$fee);
+
 					$data 		= [
 						'total'						=> $total,
 						'instalment'				=> intval($instalment),//剩餘期數
