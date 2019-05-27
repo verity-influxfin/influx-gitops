@@ -6386,21 +6386,21 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "size": "2..15",
-                            "optional": false,
+                            "optional": true,
                             "field": "cooperation_contact",
                             "description": "<p>聯絡人</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "cooperation_phone",
                             "description": "<p>電話</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "cooperation_address",
                             "description": "<p>地址</p>"
                         },
@@ -6624,6 +6624,28 @@ define({
             "parameter": {
                 "fields": {
                     "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "size": "2..15",
+                            "optional": false,
+                            "field": "cooperation_contact",
+                            "description": "<p>聯絡人</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_phone",
+                            "description": "<p>電話</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_address",
+                            "description": "<p>地址</p>"
+                        },
                         {
                             "group": "Parameter",
                             "type": "Number",
@@ -29120,10 +29142,10 @@ define({
                     "Parameter": [
                         {
                             "group": "Parameter",
-                            "type": "Number",
+                            "type": "String",
                             "optional": false,
                             "field": "id",
-                            "description": "<p>Transfers ID</p>"
+                            "description": "<p>Transfers IDs (複選使用逗號隔開1,3,10,21)</p>"
                         }
                     ]
                 }

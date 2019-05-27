@@ -193,7 +193,11 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 		$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
-		if($param['tax_id'] && strlen($param['tax_id'])==8){
+        $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
+        $param['cooperation_phone'] = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
+        $param['cooperation_address'] = isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'';
+
+        if($param['tax_id'] && strlen($param['tax_id'])==8){
 
 			//檢查認證 NOT_VERIFIED
 			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
