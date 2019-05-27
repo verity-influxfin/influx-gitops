@@ -204,14 +204,22 @@ class Transfer_lib{
 		return false;
 	}
 
-    public function cancel_transfer_apply($transfers_id,$user_id)
+    public function cancel_transfer_apply($transfers,$user_id)
     {
-        $this->CI->transfer_investment_model->update_by(array(
-            'transfer_id'   => $transfers_id,
+        $pram = [
+            'transfer_id'   => $transfers,
             'user_id'       => $user_id,
-            'frozen_status'	=> 0
-        ),array('status'=>8));
-        return true;
+            'frozen_status'	=> 0,
+            'status'     => [0,1]
+        ];
+        $transfer_investment = $this->CI->transfer_investment_model->get_many_by($pram);
+        if($transfer_investment){
+           foreach($transfer_investment as $key => $value){
+               $this->CI->transfer_investment_model->update($value->id,array('status'=>8));
+           }
+           return true;
+        }
+        return false;
     }
 	
 	public function get_transfer_list($where = ['status' => 0]){
