@@ -676,11 +676,11 @@ class Repayment extends REST_Controller {
      *       "error": "407"
      *     }
      */
-	public function prepayment_get($target_id)
+	public function prepayment_get()
     {
 		$input 				= $this->input->get(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
-		$target 			= $this->target_model->get($target_id);
+		$target 			= $this->target_model->get($input['target_id']);
 		$instalment_list 	= $this->config->item('instalment');
 		$repayment_type 	= $this->config->item('repayment_type');
 		$data				= [];
@@ -747,11 +747,11 @@ class Repayment extends REST_Controller {
      *       "error": "903"
      *     }
      */
-	public function prepayment_post($target_id)
+	public function prepayment_post()
     {
-		$input 				= $this->input->get(NULL, TRUE);
+		$input 				= $this->input->post (NULL, TRUE);
 		$user_id 			= $this->user_info->id;
-		$target 			= $this->target_model->get($target_id);
+		$target 			= $this->target_model->get($input['target_id']);
 		if(!empty($target)){
 			
 			if($target->status != 5 || $target->delay_days > 0 ){
