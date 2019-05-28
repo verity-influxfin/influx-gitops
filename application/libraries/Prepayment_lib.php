@@ -41,8 +41,11 @@ class Prepayment_lib{
 					
 					if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
 						$instalment_paid 		= $value->instalment_no;
-						$last_settlement_date 	= $value->limit_date;
 					}
+
+                    if($value->status==2 && $value->source==SOURCE_AR_PRINCIPAL){
+                        $last_settlement_date 	= $value->limit_date;
+                    }
 					
 					if($value->status==1){
 						switch($value->source){
