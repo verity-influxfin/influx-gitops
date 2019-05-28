@@ -749,7 +749,7 @@ class Repayment extends REST_Controller {
      */
 	public function prepayment_post()
     {
-		$input 				= $this->input->post (NULL, TRUE);
+		$input 				= $this->input->post(NULL, TRUE);
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($input['target_id']);
 		if(!empty($target)){

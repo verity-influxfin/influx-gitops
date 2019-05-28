@@ -17741,7 +17741,7 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/repayment/prepayment/:id",
+            "url": "/v2/repayment/prepayment/",
             "title": "借款方 提前還款資訊",
             "version": "0.2.0",
             "name": "GetRepaymentPrepayment",
@@ -17766,7 +17766,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": false,
-                            "field": "id",
+                            "field": "target_id",
                             "description": "<p>Targets ID</p>"
                         }
                     ]
@@ -17914,7 +17914,7 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "216",
+                        "title": "216",                                                                                                                                                                                                                             
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
                     }
@@ -17924,7 +17924,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/:id"
+                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/"
                 }
             ]
         },
@@ -18255,7 +18255,7 @@ define({
         },
         {
             "type": "post",
-            "url": "/v2/repayment/prepayment/:id",
+            "url": "/v2/repayment/prepayment/",
             "title": "借款方 申請提前還款",
             "version": "0.2.0",
             "name": "PostRepaymentPrepayment",
@@ -18280,7 +18280,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": false,
-                            "field": "id",
+                            "field": "target_id",
                             "description": "<p>Targets ID</p>"
                         }
                     ]
@@ -18396,7 +18396,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/:id"
+                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/"
                 }
             ]
         },
