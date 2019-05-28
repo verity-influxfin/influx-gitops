@@ -12,7 +12,7 @@ class Version extends REST_Controller {
 
     public function ver_get()
     {
-        $list = [];
+        $data = [];
         $get = $this->input->get(NULL, TRUE);
         if(!isset($get['app'])||!isset($get['platform'])){
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -22,11 +22,11 @@ class Version extends REST_Controller {
             'platform' => $get['platform']
         ]);
         if (!empty($version)) {
-            $list[] = array(
+            $data[] = array(
                 'version'     => $version -> version,
                 'description' => $version -> description
             );
         }
-        $this->response(array('result' => 'SUCCESS','data' => ['list' => $list] ));
+        $this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 }
