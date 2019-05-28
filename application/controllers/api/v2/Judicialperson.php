@@ -278,14 +278,14 @@ class Judicialperson extends REST_Controller {
 
 				$param['cooperation_content'] 	  = json_encode($content);
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
+                $param['company_user_id']         = $this->user_info->transaction_password;
 			}
 
 
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
-				'status'          => 2,
-                'company_user_id' => $this->user_info->transaction_password
+				'status'          => 2
 			));
 
 			if($exist){
