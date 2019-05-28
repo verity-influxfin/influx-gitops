@@ -427,7 +427,9 @@ class User extends REST_Controller {
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
+
 				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id);
+
 				if($first_time){
 					$this->load->library('notification_lib'); 
 					$this->notification_lib->first_login($user_info->id,$investor);
@@ -437,12 +439,12 @@ class User extends REST_Controller {
 					'data' 	 => [
 						'token' 		=> $request_token,
 						'expiry_time'	=> $token->expiry_time,
-						'first_time'	=> $first_time
+						'first_time'	=> $first_time,
 					] 
 				]);
 			}else{
-				$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
-				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
+                $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
+				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR,'remind_count' => $remind_count, ));
 			}
 		}else{
 			$this->insert_login_log($input['phone'],$investor,0,0,$device_id);
@@ -1390,8 +1392,8 @@ class User extends REST_Controller {
 		));
 
         $this->load->library('user_lib');
-        $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+        $remind_count = $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
 
-        return $log_insert;
+        return $remind_count;
 	}
 }

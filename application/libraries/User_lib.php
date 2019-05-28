@@ -24,6 +24,8 @@ class User_lib {
         foreach ($check_logs as $field) {
             $check_log .= $field->status;
         }
+
+
         if (substr($check_log, 0, 3) == $temp_lock) {
             if ($check_log != $system_lock) {
                 $block_status = 2;
@@ -32,13 +34,19 @@ class User_lib {
             }
             $this->CI->user_model->update($user_id, array("block_status" => $block_status));
             $this->CI->agent->device_id=$device_id;
-            $log_insert = $this->CI->log_userlogin_model->insert(array(
+            $this->CI->log_userlogin_model->insert(array(
                 'account'	=> $account,
                 'investor'	=> $investor,
                 'user_id'	=> $user_id,
                 'status'	=> $block_status
             ));
+            $remind_count = 0;
         }
+        else{
+            $remind_count = substr($check_log, 0, 2) == '00'?1:(substr($check_log, 0, 1) == '0'?2:3);
+        }
+
+        return $remind_count;
     }
 
     public function unblock_user($user_id)
