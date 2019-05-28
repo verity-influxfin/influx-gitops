@@ -22,12 +22,13 @@ class Judicialperson_lib{
 				]);
 				if(!$exist){
 					$user_param = [
-						'name'				=> $judicial_person->company,
-						'nickname'			=> $judicial_person->company,
-						'password'			=> md5($judicial_person->user_id),
-						'phone'				=> $judicial_person->tax_id,
-						'id_number'			=> $judicial_person->tax_id,
-						'company_status'	=> 1
+						'name'				   => $judicial_person->company,
+						'nickname'			   => $judicial_person->company,
+						'password'			   => md5($judicial_person->user_id),
+						'phone'				   => $judicial_person->tax_id,
+						'id_number'			   => $judicial_person->tax_id,
+						'company_status'	   => 1,
+                        'transaction_password' => $judicial_person->company_user_id
 					];
 					$user_id = $this->CI->user_model->insert($user_param);
 					if($user_id){

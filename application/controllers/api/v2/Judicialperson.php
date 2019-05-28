@@ -200,12 +200,12 @@ class Judicialperson extends REST_Controller {
 			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
-			
+
 			//檢查認證 NOT_VERIFIED_EMAIL
 			if(empty($this->user_info->email) || $this->user_info->email==''){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
-		
+
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
@@ -215,7 +215,7 @@ class Judicialperson extends REST_Controller {
 			if(!$company_data){
 				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 			}
-			
+
 			$param['company'] = $company_data['Company_Name'];
 			$exist = $this->judicial_person_model->get_by(array(
 				'tax_id' 	=> $param['tax_id'],
@@ -224,7 +224,7 @@ class Judicialperson extends REST_Controller {
 			if($exist){
 				$this->response(array('result' => 'ERROR','error' => COMPANY_EXIST ));
 			}
-			
+
 			if($param['cooperation']==2){
                 $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
                 $param['cooperation_phone'] = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
@@ -253,7 +253,7 @@ class Judicialperson extends REST_Controller {
 						}
 					}
 				}
-				
+
 				//多個檔案欄位
 				$file_fields 	= ['store_image','passbook_image','bankbook_image'];
 				foreach ($file_fields as $field) {
@@ -276,32 +276,33 @@ class Judicialperson extends REST_Controller {
 					}
 				}
 
-				$param['cooperation_content'] 	= json_encode($content);
+				$param['cooperation_content'] 	  = json_encode($content);
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
 
-			
-			$exist = $this->judicial_person_model->get_by(array(
-				'user_id'=> $user_id,
-				'tax_id' => $param['tax_id'],
-				'status' => 2
+
+			$exist = $this -> judicial_person_model->get_by(array(
+				'user_id'         => $user_id,
+				'tax_id'          => $param['tax_id'],
+				'status'          => 2,
+                'company_user_id' => $this->user_info->transaction_password
 			));
-			
+
 			if($exist){
 				$param['status'] = 0;
-				$rs = $this->judicial_person_model->update($exist->id,$param);
+				$rs = $this->judicial_person_model -> update($exist->id,$param);
 			}else{
-				$rs = $this->judicial_person_model->insert($param);
+				$rs = $this->judicial_person_model -> insert($param);
 			}
-			
+
 			if($rs){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
-			
+
 		}
-		
+
 		$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
     }
 	
@@ -817,18 +818,18 @@ class Judicialperson extends REST_Controller {
 		if($judicial_person){
             $data = array(
                 //'server_ip'	=> $judicial_person->cooperation_server_ip,
-                'cooperation_contact'	=> $judicial_person->cooperation_contact,
-                'cooperation_phone'	    => $judicial_person->cooperation_phone,
-                'cooperation_address'	=> $judicial_person->cooperation_address,
-                'status'	            => $judicial_person->cooperation,
-                'remark'	            => $judicial_person->remark,
+                'cooperation_contact'	 => $judicial_person->cooperation_contact,
+                'cooperation_phone'	     => $judicial_person->cooperation_phone,
+                'cooperation_address'	 => $judicial_person->cooperation_address,
+                'status'	             => $judicial_person->cooperation,
+                'remark'	             => $judicial_person->remark,
             );
 		    if($judicial_person->cooperation == 1){
                 $this->load->model('user/cooperation_model');
                 $cooperation= $this->cooperation_model->get_by(array(
-                    'company_user_id' 	=> $company_user_id,
+                    'company_user_id' 	 => $company_user_id,
                 ));
-                $data['cooperation_id'] = $cooperation -> cooperation_id;
+                $data['cooperation_id']  = $cooperation -> cooperation_id;
                 $data['cooperation_key'] = $cooperation -> cooperation_key;
 		    }
 		}else{
