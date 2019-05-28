@@ -178,11 +178,24 @@ class Subloan extends REST_Controller {
 			$product 		= $product_list[$target->product_id];
             $subloan_count >= BALLOON_MORTGAGE_RULE?array_push($product['repayment'],2):null;
 
+            //認證狀態
+            $certification 	= [];
+            $this->load->library('Certification_lib');
+            $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
+            if(!empty($certification_list)){
+                foreach($certification_list as $k => $v){
+                    if(in_array($k,$product_list[1]['certifications'])){
+                        $certification[] = $v;
+                    }
+                }
+            }
+
 			$info 			= $this->subloan_lib->get_info($target);
 			$data			= array(
-				'amount' 		=> $info['total'],
-				'instalment'	=> $product['instalment'],
-				'repayment'		=> $product['repayment'],
+				'amount' 		 => $info['total'],
+				'instalment'	 => $product['instalment'],
+				'repayment'		 => $product['repayment'],
+                'certification' => $certification,
 			);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
