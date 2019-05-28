@@ -22,7 +22,7 @@ class Version extends REST_Controller {
             'platform' => $get['platform']
         ]);
         if (!empty($version)) {
-            $data[] = array(
+            $data = array(
                 'version'     => $version -> version,
                 'description' => $version -> description
             );
