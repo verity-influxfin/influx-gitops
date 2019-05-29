@@ -105,7 +105,7 @@ class Passbook_lib{
 				}
 			}
 		}
-		return $list;
+		return array_reverse($list);
 	}
 
 	//餘額大餘1000通知
