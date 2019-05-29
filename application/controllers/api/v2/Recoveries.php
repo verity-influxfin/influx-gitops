@@ -1293,7 +1293,7 @@ class Recoveries extends REST_Controller {
 				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
                 if($info){
 					$data['count']++;
-					$data['amount'] 			 += $info['total'];
+					//$data['amount'] 			 += $info['total'];
 					$data['principal'] 			 += $info['principal'];
 					$data['interest'] 			 += $info['interest'];
 					$data['delay_interest'] 	 += $info['delay_interest'];
@@ -1319,7 +1319,7 @@ class Recoveries extends REST_Controller {
 					}
 				}
 			}
-
+            $data['amount'] = $amount;
 			if($interest_rate_n && $interest_rate_d){
 				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 			}
