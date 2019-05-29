@@ -39,13 +39,9 @@ class Prepayment_lib{
 						$interest_payable[$value->investment_id] 		= 0;
 					}
 
-                    if($value->status==2 && $value->source==SOURCE_AR_PRINCIPAL){
-                        $last_settlement_date 	= $value->limit_date;
-                    }
-
-                    if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
+					if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
 						$instalment_paid 		= $value->instalment_no;
-                        $last_settlement_date 	= $value->limit_date;
+						$last_settlement_date 	= $value->limit_date;
 					}
 
 					if($value->status==1){
