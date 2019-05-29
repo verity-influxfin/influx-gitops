@@ -1486,7 +1486,7 @@ class Recoveries extends REST_Controller {
 				}
 			
 				foreach( $investments as $key => $value ){
-					$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+					$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
 					if($delay==1 && $info['delay_interest']==0){
 						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
 					}
@@ -1517,7 +1517,7 @@ class Recoveries extends REST_Controller {
 						$data['min_instalment'] = $info['instalment'];
 					}
 				}
-
+                $data['amount'] = $amount;
                 $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
                 $maxAmount = $data['accounts_receivable'];
                 if($amount < $minAmount || $amount > $maxAmount){
