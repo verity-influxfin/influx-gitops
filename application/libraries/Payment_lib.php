@@ -247,7 +247,7 @@ class Payment_lib{
 						"amount"		=> 1,//靠左補0
 						"bankcode_to"	=> $value->bank_code.$value->branch_code,
 						"bankacc_to"	=> $value->bank_account,
-						"tax_to"		=> $user_info->id_number,
+						"tax_to"		=> strtoupper($user_info->id_number),
 						"name_to"		=> nf_to_wf($user_info->name),
 						"alert_to"		=> "0",
 						"email_to"		=> "",
