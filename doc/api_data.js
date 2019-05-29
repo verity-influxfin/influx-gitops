@@ -15,7 +15,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "app",
-                            "description": "<p>程式名稱-> 0:[APP_INVEST] 1:[APP_BORROW]</p>"
+                            "description": "<p>程式名稱-> 0:[APP_INVEST] 1:[APP_BORROW] 2:[APP_COOP]</p>"
                         },
                         {
                             "group": "Parameter",
