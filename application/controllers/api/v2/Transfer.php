@@ -575,10 +575,24 @@ class Transfer extends REST_Controller {
 				]);
 				if($transfers){
 					$contracts = [];
-					foreach($transfers as $key => $value){
+                    $repayment=[];
+                    foreach($transfers as $key => $value){
+                        //現金流
+                        $target             = $this->target_model->get($value->target_id);
+                        $investment         = $this->investment_model->get($value->investment_id);
+                        $amortization_table = $this->target_lib->get_investment_amortization_table($target,$investment);
+                        if($amortization_table){
+                            foreach($amortization_table['list'] as $k => $v){
+                                if(!isset($list[$v['repayment_date']])){
+                                    $repayment[$v['repayment_date']] = $v['principal'] + $v['interest'] + $v['ar_fees'];;
+                                }
+                            }
+                        }
+
 						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
 						$contracts[]	= isset($contract_data['content'])?$contract_data['content']:'';
 					}
+
 					$data 	= [
 						'id'					=> intval($combinations->id),
 						'combination_no'		=> $combinations->combination_no,
@@ -594,6 +608,7 @@ class Transfer extends REST_Controller {
 						'interest_rate'			=> floatval($combinations->interest_rate),
 						'accounts_receivable'	=> intval($combinations->accounts_receivable),
 						'contracts'				=> $contracts,
+                        'repayment'             => $repayment,
 					];
 					$this->response(array('result' => 'SUCCESS','data' => $data ));
 				}
