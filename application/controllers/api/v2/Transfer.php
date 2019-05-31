@@ -581,7 +581,6 @@ class Transfer extends REST_Controller {
                         $target             = $this->target_model->get($value->target_id);
                         $investment         = $this->investment_model->get($value->investment_id);
                         $amortization_table = $this->target_lib->get_investment_amortization_table($target,$investment);
-                        //print_r($amortization_table);
                         foreach($amortization_table['list'] as $k => $v){
                             if($v['repayment'] == 0){
                                 if(!isset($repayment[$v['repayment_date']])){
@@ -590,7 +589,6 @@ class Transfer extends REST_Controller {
                                 $repayment[$v['repayment_date']] += $v['total_payment'] + $v['ar_fees'];
                             }
                         }
-
 						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
 						$contracts[]	= isset($contract_data['content'])?$contract_data['content']:'';
 					}
