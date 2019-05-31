@@ -434,7 +434,9 @@ class Transfer extends REST_Controller {
 			$product_info	= $product_list[$target->product_id];
 			$user_info 		= $this->user_model->get($target->user_id); 
 			$user			= [];
-            $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
+            $investment = $this->investment_model->get($transfer->investment_id);
+            $amortization_schedule = $this->target_lib->get_investment_amortization_table($target,$investment);
+
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
@@ -476,8 +478,7 @@ class Transfer extends REST_Controller {
 				'user' 				=> $user,
                 'amortization_schedule' => $amortization_schedule,
 			];
-			
-			$investment = $this->investment_model->get($transfer->investment_id);
+
 			$data 		= [
 				'id'				=> intval($transfer->id),
 				'user_id'			=> intval($investment->user_id),
