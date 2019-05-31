@@ -152,11 +152,12 @@ class Transfer_lib{
 					if($rs){
 						$this->CI->load->library('target_lib');
 						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
+						$infoAmount = $combination == 0?$info['total']:$info['principal'];
 						$param = [
 							'target_id'				=> $investment->target_id,
 							'investment_id'			=> $investment->id,
 							'transfer_fee'			=> $info['fee'],
-							'amount'				=> $info['total'],
+							'amount'				=> $infoAmount,
 							'principal'				=> $info['principal'],
 							'interest'				=> $info['interest'],
 							'delay_interest'		=> $info['delay_interest'],
