@@ -166,11 +166,15 @@ class Charge_lib
 									'platform_fee'				=> 0,
 								];
 							}
-							
-							if($value->source==SOURCE_PRINCIPAL){
-								$instalment_paid 		= $value->instalment_no;
-								$last_settlement_date	= $value->limit_date;
-							}
+
+                            if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
+                                $instalment_paid 		= $value->instalment_no;
+                                //$last_settlement_date 	= $value->limit_date;
+                            }
+
+                            if($value->status==2 && $value->source==SOURCE_AR_PRINCIPAL){
+                                $last_settlement_date 	= $value->limit_date;
+                            }
 						}
 						
 						$instalment = $instalment_paid + 1;
