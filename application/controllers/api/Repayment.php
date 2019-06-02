@@ -852,10 +852,10 @@ class Repayment extends REST_Controller {
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
-			
-			if($target->sub_status != 0){
-				$this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
-			}
+
+            if(!in_array($target->sub_status,[0,8])){
+                $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
+            }
 			
 			$prepayment 	= $this->prepayment_lib->get_prepayment_info($target);
 			if($prepayment){
