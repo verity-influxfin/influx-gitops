@@ -90,7 +90,7 @@ define({
             "groupTitle": "Version",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/version/ver"
+                    "url": "/api/v2/version/ver"
                 }
             ]
         },
@@ -178,7 +178,7 @@ define({
             "groupTitle": "Agreement",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/agreement/info/:alias"
+                    "url": "/api/v2/agreement/info/:alias"
                 }
             ]
         },
@@ -273,7 +273,7 @@ define({
             "groupTitle": "Agreement",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/agreement/info/:alias"
+                    "url": "/api/agreement/info/:alias"
                 }
             ]
         },
@@ -322,7 +322,7 @@ define({
             "groupTitle": "Agreement",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/agreement/list"
+                    "url": "/api/v2/agreement/list"
                 }
             ]
         },
@@ -385,7 +385,7 @@ define({
             "groupTitle": "Agreement",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/agreement/list"
+                    "url": "/api/agreement/list"
                 }
             ]
         },
@@ -460,7 +460,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"event\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"https://stage-api.influxfin.com\",\n\t\t\t\t\"title\": \"event\",\n\t\t\t\t\"content\": \"<p>event event</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"https://stage-api.influxfin.com\",\n\t\t\t\t\"title\": \"event2\",\n\t\t\t\t\"content\": \"<p>Event</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"event\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"\",\n\t\t\t\t\"title\": \"event\",\n\t\t\t\t\"content\": \"<p>event event</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"\",\n\t\t\t\t\"title\": \"event2\",\n\t\t\t\t\"content\": \"<p>Event</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
                         "type": "Object"
                     }
                 ]
@@ -469,7 +469,7 @@ define({
             "groupTitle": "Article",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/article/event"
+                    "url": "/api/v2/article/event"
                 }
             ]
         },
@@ -544,7 +544,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"news\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"https://stage-api.influxfin.com\",\n\t\t\t\t\"title\": \"News\",\n\t\t\t\t\"content\": \"<p>News News</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"https://stage-api.influxfin.com\",\n\t\t\t\t\"title\": \"News2\",\n\t\t\t\t\"content\": \"<p>News</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
+                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"type\": \"news\",\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"url\": \"\",\n\t\t\t\t\"title\": \"News\",\n\t\t\t\t\"content\": \"<p>News News</p>\",\n\t\t\t\t\"image_url\": \"https://d3imllwf4as09k.cloudfront.net/img/admin/post1550664784915.jpg\",\n\t\t\t\t\"rank\": 59,\n\t\t\t\t\"updated_at\": 1550667400\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"url\": \"\",\n\t\t\t\t\"title\": \"News2\",\n\t\t\t\t\"content\": \"<p>News</p>\",\n\t\t\t\t\"image_url\": \"\",\n\t\t\t\t\"rank\": 55,\n\t\t\t\t\"updated_at\": 1550667092\n\t\t\t}\n\t\t\t]\n\t\t}\n}",
                         "type": "Object"
                     }
                 ]
@@ -553,7 +553,7 @@ define({
             "groupTitle": "Article",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/article/news"
+                    "url": "/api/v2/article/news"
                 }
             ]
         },
@@ -716,7 +716,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/debitcard"
+                    "url": "/api/certification/debitcard"
                 }
             ]
         },
@@ -823,7 +823,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/email"
+                    "url": "/api/certification/email"
                 }
             ]
         },
@@ -944,7 +944,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/emergency"
+                    "url": "/api/certification/emergency"
                 }
             ]
         },
@@ -1135,7 +1135,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/financial"
+                    "url": "/api/certification/financial"
                 }
             ]
         },
@@ -1312,7 +1312,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/idcard"
+                    "url": "/api/certification/idcard"
                 }
             ]
         },
@@ -1447,7 +1447,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/:alias"
+                    "url": "/api/v2/certification/:alias"
                 }
             ]
         },
@@ -1530,7 +1530,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/list"
+                    "url": "/api/v2/certification/list"
                 }
             ],
             "error": {
@@ -1654,7 +1654,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/list"
+                    "url": "/api/certification/list"
                 }
             ],
             "error": {
@@ -1826,7 +1826,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/social"
+                    "url": "/api/certification/social"
                 }
             ]
         },
@@ -2024,7 +2024,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/student"
+                    "url": "/api/certification/student"
                 }
             ]
         },
@@ -2246,7 +2246,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/debitcard"
+                    "url": "/api/v2/certification/debitcard"
                 }
             ]
         },
@@ -2456,7 +2456,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/debitcard"
+                    "url": "/api/certification/debitcard"
                 }
             ]
         },
@@ -2655,7 +2655,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/diploma"
+                    "url": "/api/v2/certification/diploma"
                 }
             ]
         },
@@ -2812,7 +2812,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/email"
+                    "url": "/api/v2/certification/email"
                 }
             ]
         },
@@ -2958,7 +2958,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/email"
+                    "url": "/api/certification/email"
                 }
             ]
         },
@@ -3126,7 +3126,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/emergency"
+                    "url": "/api/v2/certification/emergency"
                 }
             ]
         },
@@ -3276,7 +3276,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/emergency"
+                    "url": "/api/certification/emergency"
                 }
             ]
         },
@@ -3485,7 +3485,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/financial"
+                    "url": "/api/v2/certification/financial"
                 }
             ]
         },
@@ -3683,7 +3683,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/financial"
+                    "url": "/api/certification/financial"
                 }
             ]
         },
@@ -3915,7 +3915,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/idcard"
                 }
             ]
         },
@@ -4137,7 +4137,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/idcard"
+                    "url": "/api/certification/idcard"
                 }
             ]
         },
@@ -4296,7 +4296,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/investigation"
+                    "url": "/api/v2/certification/investigation"
                 }
             ]
         },
@@ -4574,7 +4574,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/job"
+                    "url": "/api/v2/certification/job"
                 }
             ]
         },
@@ -4730,7 +4730,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/social"
+                    "url": "/api/v2/certification/social"
                 }
             ]
         },
@@ -4876,7 +4876,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/social"
+                    "url": "/api/certification/social"
                 }
             ]
         },
@@ -5138,7 +5138,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/student"
+                    "url": "/api/v2/certification/student"
                 }
             ]
         },
@@ -5389,7 +5389,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/student"
+                    "url": "/api/certification/student"
                 }
             ]
         },
@@ -5492,7 +5492,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/certification/verifyemail"
+                    "url": "/api/v2/certification/verifyemail"
                 }
             ]
         },
@@ -5595,7 +5595,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/certification/verifyemail"
+                    "url": "/api/certification/verifyemail"
                 }
             ]
         },
@@ -5742,7 +5742,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/agent/:user_id"
+                    "url": "/api/v2/judicialperson/agent/:user_id"
                 }
             ]
         },
@@ -5819,7 +5819,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/agent"
+                    "url": "/api/v2/judicialperson/agent"
                 }
             ],
             "error": {
@@ -6011,7 +6011,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/cooperation"
+                    "url": "/api/v2/judicialperson/cooperation"
                 }
             ]
         },
@@ -6129,7 +6129,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/list"
+                    "url": "/api/v2/judicialperson/list"
                 }
             ],
             "error": {
@@ -6340,7 +6340,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/agent"
+                    "url": "/api/v2/judicialperson/agent"
                 }
             ]
         },
@@ -6602,7 +6602,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/apply"
+                    "url": "/api/v2/judicialperson/apply"
                 }
             ]
         },
@@ -6799,7 +6799,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/cooperation"
+                    "url": "/api/v2/judicialperson/cooperation"
                 }
             ]
         },
@@ -6955,7 +6955,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/judicialperson/login"
+                    "url": "/api/v2/judicialperson/login"
                 }
             ]
         },
@@ -7092,7 +7092,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/notification/info/:id"
+                    "url": "/api/v2/notification/info/:id"
                 }
             ]
         },
@@ -7236,7 +7236,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/notification/info/:id"
+                    "url": "/api/notification/info/:id"
                 }
             ]
         },
@@ -7319,7 +7319,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/notification/list"
+                    "url": "/api/v2/notification/list"
                 }
             ],
             "error": {
@@ -7439,7 +7439,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/notification/list"
+                    "url": "/api/notification/list"
                 }
             ],
             "error": {
@@ -7517,7 +7517,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/notification/readall"
+                    "url": "/api/v2/notification/readall"
                 }
             ],
             "error": {
@@ -7595,7 +7595,7 @@ define({
             "groupTitle": "Notification",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/notification/readall"
+                    "url": "/api/notification/readall"
                 }
             ],
             "error": {
@@ -8076,7 +8076,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/applyinfo/:id"
+                    "url": "/api/v2/product/applyinfo/:id"
                 }
             ]
         },
@@ -8508,7 +8508,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/applyinfo/:id"
+                    "url": "/api/product/applyinfo/:id"
                 }
             ]
         },
@@ -8668,7 +8668,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/applylist"
+                    "url": "/api/v2/product/applylist"
                 }
             ],
             "error": {
@@ -8880,7 +8880,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/applylist"
+                    "url": "/api/product/applylist"
                 }
             ],
             "error": {
@@ -9078,7 +9078,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/cancel/:id"
+                    "url": "/api/v2/product/cancel/:id"
                 }
             ]
         },
@@ -9224,7 +9224,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/cancel/:id"
+                    "url": "/api/product/cancel/:id"
                 }
             ]
         },
@@ -9426,7 +9426,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/info/:id"
+                    "url": "/api/v2/product/info/:id"
                 }
             ]
         },
@@ -9623,7 +9623,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/info/:id"
+                    "url": "/api/product/info/:id"
                 }
             ]
         },
@@ -9777,7 +9777,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/list"
+                    "url": "/api/v2/product/list"
                 }
             ]
         },
@@ -9923,7 +9923,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/list"
+                    "url": "/api/product/list"
                 }
             ]
         },
@@ -10151,7 +10151,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/apply"
+                    "url": "/api/v2/product/apply"
                 }
             ]
         },
@@ -10347,7 +10347,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/apply"
+                    "url": "/api/product/apply"
                 }
             ]
         },
@@ -10589,7 +10589,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/signing"
+                    "url": "/api/v2/product/signing"
                 }
             ]
         },
@@ -10808,7 +10808,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/product/signing"
+                    "url": "/api/product/signing"
                 }
             ]
         },
@@ -10996,7 +10996,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/dealerlist"
+                    "url": "/api/v2/product/dealerlist"
                 }
             ]
         },{
@@ -11216,7 +11216,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/orderapply"
+                    "url": "/api/v2/product/orderapply"
                 }
             ],
             "error": {
@@ -11361,7 +11361,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/product/ordersigning"
+                    "url": "/api/v2/product/ordersigning"
                 }
             ],
             "error": {
@@ -11712,7 +11712,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/dashboard"
+                    "url": "/api/v2/recoveries/dashboard"
                 }
             ],
             "error": {
@@ -11941,7 +11941,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/dashboard"
+                    "url": "/api/recoveries/dashboard"
                 }
             ],
             "error": {
@@ -12233,7 +12233,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/finish"
+                    "url": "/api/v2/recoveries/finish"
                 }
             ],
             "error": {
@@ -12790,7 +12790,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/info/:id"
+                    "url": "/api/v2/recoveries/info/:id"
                 }
             ]
         },
@@ -13166,7 +13166,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/info/:id"
+                    "url": "/api/recoveries/info/:id"
                 }
             ]
         },
@@ -13403,7 +13403,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/list"
+                    "url": "/api/v2/recoveries/list"
                 }
             ],
             "error": {
@@ -13618,7 +13618,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/list"
+                    "url": "/api/recoveries/list"
                 }
             ],
             "error": {
@@ -13816,7 +13816,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/passbook"
+                    "url": "/api/v2/recoveries/passbook"
                 }
             ]
         },
@@ -13980,7 +13980,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/passbook"
+                    "url": "/api/recoveries/passbook"
                 }
             ]
         },
@@ -14147,7 +14147,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/amortization"
+                    "url": "/api/v2/recoveries/amortization"
                 }
             ]
         },
@@ -14471,7 +14471,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/pretransfer"
+                    "url": "/api/v2/recoveries/pretransfer"
                 }
             ]
         },
@@ -14663,7 +14663,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/pretransfer"
+                    "url": "/api/recoveries/pretransfer"
                 }
             ]
         },
@@ -14866,7 +14866,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/transfer"
+                    "url": "/api/v2/recoveries/transfer"
                 }
             ]
         },
@@ -15023,7 +15023,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/transfer"
+                    "url": "/api/recoveries/transfer"
                 }
             ]
         },
@@ -15205,7 +15205,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/recoveries/withdraw"
+                    "url": "/api/v2/recoveries/withdraw"
                 }
             ]
         },
@@ -15387,7 +15387,7 @@ define({
             "groupTitle": "Recoveries",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/recoveries/withdraw"
+                    "url": "/api/recoveries/withdraw"
                 }
             ]
         },
@@ -15536,7 +15536,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/contract/:id"
+                    "url": "/api/v2/repayment/contract/:id"
                 }
             ]
         },
@@ -15674,7 +15674,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/contract/:id"
+                    "url": "/api/repayment/contract/:id"
                 }
             ]
         },
@@ -15876,7 +15876,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/dashboard"
+                    "url": "/api/v2/repayment/dashboard"
                 }
             ],
             "error": {
@@ -16130,7 +16130,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/dashboard"
+                    "url": "/api/repayment/dashboard"
                 }
             ],
             "error": {
@@ -16614,7 +16614,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/info/:id"
+                    "url": "/api/v2/repayment/info/:id"
                 }
             ]
         },
@@ -17081,7 +17081,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/info/:id"
+                    "url": "/api/repayment/info/:id"
                 }
             ]
         },
@@ -17255,7 +17255,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/list"
+                    "url": "/api/v2/repayment/list"
                 }
             ],
             "error": {
@@ -17537,7 +17537,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/list"
+                    "url": "/api/repayment/list"
                 }
             ],
             "error": {
@@ -17735,7 +17735,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/passbook"
+                    "url": "/api/v2/repayment/passbook"
                 }
             ]
         },
@@ -17924,7 +17924,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/"
+                    "url": "/api/v2/repayment/prepayment/"
                 }
             ]
         },
@@ -18249,7 +18249,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/prepayment/:id"
+                    "url": "/api/repayment/prepayment/:id"
                 }
             ]
         },
@@ -18396,7 +18396,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/prepayment/"
+                    "url": "/api/v2/repayment/prepayment/"
                 }
             ]
         },
@@ -18543,7 +18543,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/repayment/prepayment/:id"
+                    "url": "/api/repayment/prepayment/:id"
                 }
             ]
         },
@@ -18725,7 +18725,7 @@ define({
             "groupTitle": "Repayment",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/repayment/withdraw"
+                    "url": "/api/v2/repayment/withdraw"
                 }
             ]
         },
@@ -19200,7 +19200,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/subloan/applyinfo/:id"
+                    "url": "/api/v2/subloan/applyinfo/:id"
                 }
             ]
         },
@@ -19664,7 +19664,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/subloan/applyinfo/:id"
+                    "url": "/api/subloan/applyinfo/:id"
                 }
             ]
         },
@@ -19832,7 +19832,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/subloan/cancel/:id"
+                    "url": "/api/v2/subloan/cancel/:id"
                 }
             ]
         },
@@ -19989,7 +19989,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/subloan/cancel/:id"
+                    "url": "/api/subloan/cancel/:id"
                 }
             ]
         },
@@ -20167,7 +20167,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/subloan/preapply/:id"
+                    "url": "/api/v2/subloan/preapply/:id"
                 }
             ]
         },
@@ -20334,7 +20334,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/subloan/preapply/:id"
+                    "url": "/api/subloan/preapply/:id"
                 }
             ]
         },
@@ -20538,7 +20538,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/subloan/apply/"
+                    "url": "/api/v2/subloan/apply/"
                 }
             ]
         },
@@ -20731,7 +20731,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/subloan/apply/"
+                    "url": "/api/subloan/apply/"
                 }
             ]
         },
@@ -20928,7 +20928,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/subloan/signing"
+                    "url": "/api/v2/subloan/signing"
                 }
             ]
         },
@@ -21114,7 +21114,7 @@ define({
             "groupTitle": "Subloan",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/subloan/signing"
+                    "url": "/api/subloan/signing"
                 }
             ]
         },
@@ -21357,7 +21357,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/batchpreapply"
+                    "url": "/api/v2/target/batchpreapply"
                 }
             ]
         },
@@ -21532,7 +21532,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/applylist"
+                    "url": "/api/v2/target/applylist"
                 }
             ],
             "error": {
@@ -21923,7 +21923,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/applylist"
+                    "url": "/api/target/applylist"
                 }
             ]
         },
@@ -22041,7 +22041,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/batch"
+                    "url": "/api/v2/target/batch"
                 }
             ],
             "error": {
@@ -22386,7 +22386,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/batch"
+                    "url": "/api/target/batch"
                 }
             ]
         },
@@ -22808,7 +22808,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/info/:id"
+                    "url": "/api/v2/target/info/:id"
                 }
             ]
         },
@@ -23237,7 +23237,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/info/:id"
+                    "url": "/api/target/info/:id"
                 }
             ]
         },
@@ -23436,7 +23436,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/list"
+                    "url": "/api/v2/target/list"
                 }
             ]
         },
@@ -23621,7 +23621,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/list"
+                    "url": "/api/target/list"
                 }
             ]
         },
@@ -23833,7 +23833,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/batchapply"
+                    "url": "/api/v2/target/batchapply"
                 }
             ]
         },
@@ -24074,7 +24074,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/apply"
+                    "url": "/api/v2/target/apply"
                 }
             ]
         },
@@ -24304,7 +24304,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/apply"
+                    "url": "/api/target/apply"
                 }
             ]
         },
@@ -24497,7 +24497,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/batch"
+                    "url": "/api/v2/target/batch"
                 }
             ],
             "error": {
@@ -24741,7 +24741,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/target/batch/:batch_id"
+                    "url": "/api/target/batch/:batch_id"
                 }
             ]
         },
@@ -24898,7 +24898,7 @@ define({
             "groupTitle": "Target",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/target/cancel"
+                    "url": "/api/v2/target/cancel"
                 }
             ]
         },
@@ -25064,7 +25064,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/batchpreapply"
+                    "url": "/api/v2/transfer/batchpreapply"
                 }
             ]
         },
@@ -25365,7 +25365,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/applylist"
+                    "url": "/api/v2/transfer/applylist"
                 }
             ],
             "error": {
@@ -25784,7 +25784,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/applylist"
+                    "url": "/api/transfer/applylist"
                 }
             ]
         },
@@ -25930,7 +25930,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/batch/"
+                    "url": "/api/v2/transfer/batch/"
                 }
             ],
             "error": {
@@ -26250,7 +26250,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/batch"
+                    "url": "/api/transfer/batch"
                 }
             ]
         },
@@ -26510,7 +26510,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/combination/:id"
+                    "url": "/api/v2/transfer/combination/:id"
                 }
             ]
         },
@@ -27268,7 +27268,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/info/:id"
+                    "url": "/api/v2/transfer/info/:id"
                 }
             ]
         },
@@ -27612,7 +27612,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/info/:id"
+                    "url": "/api/transfer/info/:id"
                 }
             ]
         },
@@ -28006,7 +28006,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/list"
+                    "url": "/api/v2/transfer/list"
                 }
             ],
             "error": {
@@ -28248,7 +28248,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/list"
+                    "url": "/api/transfer/list"
                 }
             ],
             "error": {
@@ -28510,7 +28510,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/apply"
+                    "url": "/api/v2/transfer/apply"
                 }
             ]
         },
@@ -28722,7 +28722,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/apply"
+                    "url": "/api/transfer/apply"
                 }
             ]
         },
@@ -28946,7 +28946,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/batch"
+                    "url": "/api/v2/transfer/batch"
                 }
             ],
             "error": {
@@ -29168,7 +29168,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/transfer/batch/:batch_id"
+                    "url": "/api/transfer/batch/:batch_id"
                 }
             ]
         },
@@ -29270,7 +29270,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/transfer/cancel/:id"
+                    "url": "/api/v2/transfer/cancel/:id"
                 }
             ]
         },
@@ -29318,7 +29318,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/chagetoken"
+                    "url": "/api/v2/user/chagetoken"
                 }
             ],
             "error": {
@@ -29423,7 +29423,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/bioregister"
+                    "url": "/api/v2/user/bioregister"
                 }
             ],
             "error": {
@@ -29544,7 +29544,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/biologin"
+                    "url": "/api/v2/user/biologin"
                 }
             ],
             "error": {
@@ -29638,7 +29638,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/chagetoken"
+                    "url": "/api/user/chagetoken"
                 }
             ],
             "error": {
@@ -29768,7 +29768,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/editpwphone"
+                    "url": "/api/v2/user/editpwphone"
                 }
             ]
         },
@@ -29857,7 +29857,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/editpwphone"
+                    "url": "/api/user/editpwphone"
                 }
             ]
         },
@@ -30003,7 +30003,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/info"
+                    "url": "/api/v2/user/info"
                 }
             ],
             "error": {
@@ -30158,7 +30158,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/info"
+                    "url": "/api/user/info"
                 }
             ],
             "error": {
@@ -30257,7 +30257,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/promote"
+                    "url": "/api/v2/user/promote"
                 }
             ],
             "error": {
@@ -30374,7 +30374,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/promote"
+                    "url": "/api/user/promote"
                 }
             ],
             "error": {
@@ -30550,7 +30550,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/bind"
+                    "url": "/api/v2/user/bind"
                 }
             ]
         },
@@ -30718,7 +30718,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/bind"
+                    "url": "/api/user/bind"
                 }
             ]
         },
@@ -30800,7 +30800,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/contact"
+                    "url": "/api/v2/user/contact"
                 }
             ],
             "error": {
@@ -30934,7 +30934,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/contact"
+                    "url": "/api/user/contact"
                 }
             ],
             "error": {
@@ -31068,7 +31068,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/credittest"
+                    "url": "/api/user/credittest"
                 }
             ],
             "error": {
@@ -31259,7 +31259,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/editpw"
+                    "url": "/api/v2/user/editpw"
                 }
             ]
         },
@@ -31431,7 +31431,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/editpw"
+                    "url": "/api/user/editpw"
                 }
             ]
         },
@@ -31585,7 +31585,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/edittpw"
+                    "url": "/api/v2/user/edittpw"
                 }
             ]
         },
@@ -31739,7 +31739,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/edittpw"
+                    "url": "/api/user/edittpw"
                 }
             ]
         },
@@ -31865,7 +31865,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/forgotpw"
+                    "url": "/api/v2/user/forgotpw"
                 }
             ]
         },
@@ -31991,7 +31991,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/forgotpw"
+                    "url": "/api/user/forgotpw"
                 }
             ]
         },
@@ -32182,7 +32182,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/login"
+                    "url": "/api/v2/user/login"
                 }
             ]
         },
@@ -32323,7 +32323,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/login"
+                    "url": "/api/user/login"
                 }
             ]
         },
@@ -32519,7 +32519,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/register"
+                    "url": "/api/v2/user/register"
                 }
             ]
         },
@@ -32685,7 +32685,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/register"
+                    "url": "/api/user/register"
                 }
             ]
         },
@@ -32774,7 +32774,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/registerphone"
+                    "url": "/api/v2/user/registerphone"
                 }
             ]
         },
@@ -32863,7 +32863,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/registerphone"
+                    "url": "/api/user/registerphone"
                 }
             ]
         },
@@ -32952,7 +32952,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/smsloginphone"
+                    "url": "/api/v2/user/smsloginphone"
                 }
             ]
         },
@@ -33041,7 +33041,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/smsloginphone"
+                    "url": "/api/user/smsloginphone"
                 }
             ]
         },
@@ -33174,7 +33174,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/sociallogin"
+                    "url": "/api/v2/user/sociallogin"
                 }
             ]
         },
@@ -33318,7 +33318,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/user/sociallogin"
+                    "url": "/api/user/sociallogin"
                 }
             ]
         },
@@ -33391,7 +33391,7 @@ define({
             "groupTitle": "User",
             "sampleRequest": [
                 {
-                    "url": "https://stage-api.influxfin.com/api/v2/user/upload"
+                    "url": "/api/v2/user/upload"
                 }
             ],
             "error": {
