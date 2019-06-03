@@ -1295,7 +1295,6 @@ class Product extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-
         $product_id		= $content['product_id'];//產品ID
         $instalment     = $content['instalment'];//分期數
         $store_id       = $content['store_id'];  //店家ID
@@ -1303,12 +1302,21 @@ class Product extends REST_Controller {
         $item_count		= $content['item_count'];//商品數量
         $delivery       = $content['delivery'];  //0:線下 1:線上
 
-        if($content['delivery'] == 1){
-            if (!isset($input[$field])) {
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }else{
-                $address = $input['address'];
+        //檢驗產品規格
+        $product_list 	= $this->config->item('product_list');
+        $product 		= $product_list[$product_id];
+        if($product){
+            if($product['type'] != 2){
+                $this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
             }
+
+            if(!in_array($input['instalment'],$product['instalment'])){
+                $this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
+            }
+        }
+
+        if($content['delivery'] == 1){
+            $address = $input['address'];
         }
 
         //檢驗消費貸重複申請
@@ -1321,15 +1329,17 @@ class Product extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
         }
 
+        //檢核經銷商是否存在
         $this->load->model('user/cooperation_model');
         $cooperation = $this->cooperation_model->get_by(array(
-            'company_user_id' 	=> $store_id,
+            'id' 	=> $store_id,
         ));
         if(!$cooperation){
             $this->response(['result' => 'ERROR','error' => CooperationNotFound]);
         }
         $cooperation_id = $cooperation -> cooperation_id;
 
+        //對經銷商系統建立訂單
         $postData=array(
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
@@ -1339,8 +1349,6 @@ class Product extends REST_Controller {
             'phone'          => $phone,
             'address'        => $address,
         );
-
-        //對經銷商系統建立訂單
         $this->load->library('coop_lib');
         $coop_url = 'order/screate';
         $result = $this->coop_lib->coop_request($coop_url,$postData,$user_id,$phone);
@@ -1477,11 +1485,11 @@ class Product extends REST_Controller {
         if($cooperation){
             foreach($cooperation as $key => $value){
                 $this->load->model('user/judicial_person_model');
-                $judicial_person = $this->judicial_person_model->get_by(array('user_id'=>$value->company_user_id));
+                $judicial_person = $this->judicial_person_model->get_by(array('company_user_id'=>$value->company_user_id));
 
                 if($judicial_person){
                     $list[$key]  = [
-                        'company_id'        => $value->company_user_id,
+                        'company_id'        => $value->id,
                         'company'           => $judicial_person->company,
                         'tax_id'            => $judicial_person->tax_id,
                         //'company_contact' => $judicial_person->cooperation_contact,
