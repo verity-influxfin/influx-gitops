@@ -68,20 +68,4 @@ class User_lib {
         }
     }
 
-    public function script_unlock_block_user(){
-        $count 		= 0;
-        $block_user = $this->CI->user_model->get_many_by(array( "block_status" => 2 ));
-        if($block_user && !empty($block_user)) {
-            foreach ($block_user as $key => $value) {
-                $last_logs = $this->CI->log_userlogin_model->limit(1)->get_many_by(
-                    array('user_id' => $value->id)
-                );
-                $success = $this->CI->user_model->update($value->id, ["block_status" => 0]);
-                if ($success) {
-                    $count++;
-                }
-            }
-        }
-        return $count;
-	}
 }

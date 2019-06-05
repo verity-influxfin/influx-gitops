@@ -1384,7 +1384,7 @@ class User extends REST_Controller {
         $this->load->library('user_agent');
 
         $this->agent->device_id=$device_id;
-		$log_insert = $this->log_userlogin_model->insert(array(
+		$this->log_userlogin_model->insert(array(
 			'account'	=> $account,
 			'investor'	=> $investor,
 			'user_id'	=> $user_id,

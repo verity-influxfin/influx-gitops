@@ -428,8 +428,8 @@ class Judicialperson extends REST_Controller {
 				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$device_id);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
-			$this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
-			$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
+            $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
+            $this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR,'remind_count' => $remind_count, ));
 		}
 		$this->insert_login_log($input['phone'],$investor,0,0,$device_id);
 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
@@ -844,7 +844,7 @@ class Judicialperson extends REST_Controller {
         $this->load->library('user_agent');
 
         $this->agent->device_id=$device_id;
-        $log_insert = $this->log_userlogin_model->insert(array(
+        $this->log_userlogin_model->insert(array(
             'account'	=> $account,
             'investor'	=> $investor,
             'user_id'	=> $user_id,
@@ -852,9 +852,9 @@ class Judicialperson extends REST_Controller {
         ));
 
         $this->load->library('user_lib');
-        $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+        $remind_count = $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
 
-        return $log_insert;
+        return $remind_count;
 	}
 	
 	private function not_support_company(){
