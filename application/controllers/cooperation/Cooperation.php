@@ -142,7 +142,7 @@ class Cooperation extends REST_Controller {
     {
         $this->load->model('user/judicial_person_model');
         $user_info      = $this->user_model->get($this->cooperation_info->company_user_id);
-        $judicial_person = $this->judicial_person_model->get_by(array('user_id'=>$this->cooperation_info->company_user_id));
+        $judicial_person = $this->judicial_person_model->get_by(array('company_user_id'=>$this->cooperation_info->company_user_id));
         $data           = [
             'company'               => $user_info->name,
             'tax_id'            => $user_info->id_number,

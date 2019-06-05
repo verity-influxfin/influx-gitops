@@ -1352,7 +1352,7 @@ class Product extends REST_Controller {
         $this->load->library('coop_lib');
         $coop_url = 'order/screate';
         $result = $this->coop_lib->coop_request($coop_url,$postData,$user_id,$phone);
-        if(isset($result->result)=='SUCCESS'){
+        if(isset($result->result) && $result->result == 'SUCCESS'){
             $item_name = $result->data->product_name.($result->data->product_spec!='-'?$result->data->product_spec:'');
             $merchant_order_no = $result->data->merchant_order_no;
             //建立主系統訂單
