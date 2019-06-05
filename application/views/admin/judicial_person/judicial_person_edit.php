@@ -1,9 +1,13 @@
 
 	<script>
-	
-		function form_onsubmit(){
-			return true;
-		}
+        function check_fail(){
+            var status = $('#status :selected').val();
+            if(status==2){
+                $('#fail_div').show();
+            }else{
+                $('#fail_div').hide();
+            }
+        }
 
 	</script>
 	
@@ -50,14 +54,14 @@
 								<h1>審核</h1>
 								<form role="form" method="post">
 									<fieldset>
-										<div class="form-group">
-											<select id="status" name="status" class="form-control" onchange="check_fail();" >
-												<? foreach($status_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=$data->status==$key?"selected":""?>><?=$value?></option>
-												<? } ?>
-											</select>
-											<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-										</div>
+                                        <div class="form-group">
+                                            <select id="status" name="status" class="form-control" onchange="check_fail();" >
+                                                <? foreach($status_list as $key => $value){ ?>
+                                                    <option value="<?=$key?>" <?=$data->status==$key?"selected":""?>><?=$value?></option>
+                                                <? } ?>
+                                            </select>
+                                            <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+                                        </div>
 										<button type="submit" class="btn btn-primary">送出</button>
 									</fieldset>
 								</form>

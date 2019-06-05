@@ -49,30 +49,54 @@ class Judicialperson extends MY_Admin_Controller {
 
 	public function edit(){
 		$page_data 	= array('type'=>'edit');
-		$get 		= $this->input->get(NULL, TRUE);
-		$id 		= isset($get['id'])?intval($get['id']):0;
-		if($id){
-			$info = $this->judicial_person_model->get($id);
-			if($info){
-				$this->load->library('Gcis_lib'); 
-				$user_info 					= $this->user_model->get($info->user_id);
-				$info->user_name			= $user_info->name;
-				$page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
-				$page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
-				$page_data['data'] 			= $info;
-				$page_data['status_list'] 	= $this->judicial_person_model->status_list;
-				$page_data['name_list'] 	= $this->admin_model->get_name_list();
-				$page_data['company_type'] 	= $this->config->item('company_type');
-				$this->load->view('admin/_header');
-				$this->load->view('admin/_title',$this->menu);
-				$this->load->view('admin/judicial_person/judicial_person_edit',$page_data);
-				$this->load->view('admin/_footer');
-			}else{
-				alert('查無此ID',admin_url('judicialperson/index'));
-			}
-		}else{
-			alert('查無此ID',admin_url('judicialperson/index'));
-		}
+        $post 		= $this->input->post(NULL, TRUE);
+        $get 		= $this->input->get(NULL, TRUE);
+        if(empty($post)) {
+            $id = isset($get['id']) ? intval($get['id']) : 0;
+            if ($id) {
+                $info = $this->judicial_person_model->get($id);
+                if ($info) {
+                    $this->load->library('Gcis_lib');
+                    $user_info = $this->user_model->get($info->user_id);
+                    $info->user_name = $user_info->name;
+                    $page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);
+                    $page_data['shareholders'] = $this->gcis_lib->get_shareholders($info->tax_id);
+                    $page_data['data'] = $info;
+                    $page_data['status_list'] = $this->judicial_person_model->status_list;
+                    $page_data['name_list'] = $this->admin_model->get_name_list();
+                    $page_data['company_type'] = $this->config->item('company_type');
+                    $this->load->view('admin/_header');
+                    $this->load->view('admin/_title', $this->menu);
+                    $this->load->view('admin/judicial_person/judicial_person_edit', $page_data);
+                    $this->load->view('admin/_footer');
+                } else {
+                    alert('查無此ID', admin_url('index?status=0'));
+                }
+            } else {
+                alert('查無此ID', admin_url('index?status=0'));
+            }
+        }else {
+            if (!empty($post['id'])) {
+                $info = $this->judicial_person_model->get($post['id']);
+                if ($info) {
+                    if ($post['status'] == '1') {
+                        $rs = $this->judicialperson_lib->apply_success($post['id']);
+                    } else if ($post['status'] == '2') {
+                        $rs = $this->judicialperson_lib->apply_failed($post['id']);
+                    }
+
+                    if ($rs === true) {
+                        alert('更新成功', 'index?status=0');
+                    } else {
+                        alert('更新失敗，請洽工程師', 'index?status=0');
+                    }
+                } else {
+                    alert('查無此ID', admin_url('index?status=0'));
+                }
+            } else {
+                alert('查無此ID', admin_url('index?status=0'));
+            }
+        }
 	}
 
 	function apply_success(){
@@ -98,7 +122,7 @@ class Judicialperson extends MY_Admin_Controller {
 		if($id){
 			$info = $this->judicial_person_model->get($id);
 			if($info && $info->status==0){
-				$this->judicialperson_lib->apply_failed($id,$this->login_info->id,$remark);
+				$this->judicialperson_lib->apply_failed($id,$this->login_info->id);
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -143,30 +167,54 @@ class Judicialperson extends MY_Admin_Controller {
 
 	public function cooperation_edit(){
 		$page_data 	= array('type'=>'edit');
-		$get 		= $this->input->get(NULL, TRUE);
-		$id 		= isset($get['id'])?intval($get['id']):0;
-		if($id){
-			$info = $this->judicial_person_model->get($id);
-			if($info){
-				$user_info 					= $this->user_model->get($info->user_id);
-				$this->load->library('Gcis_lib'); 
-				$page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
-				$page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
-				$page_data['user_info'] 	= $user_info;
-				$page_data['data'] 			= $info;
-				$page_data['content'] 		= json_decode($info->cooperation_content,true);
-				$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
-				$page_data['company_type'] 		= $this->config->item('company_type');
-				$this->load->view('admin/_header');
-				$this->load->view('admin/_title',$this->menu);
-				$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
-				$this->load->view('admin/_footer');
-			}else{
-				alert('查無此ID',admin_url('judicialperson/cooperation'));
-			}
-		}else{
-			alert('查無此ID',admin_url('judicialperson/cooperation'));
-		}
+        $post 		= $this->input->post(NULL, TRUE);
+        $get 		= $this->input->get(NULL, TRUE);
+        if(empty($post)) {
+            $id 		= isset($get['id'])?intval($get['id']):0;
+            if($id){
+                $info = $this->judicial_person_model->get($id);
+                if($info){
+                    $user_info 					= $this->user_model->get($info->user_id);
+                    $this->load->library('Gcis_lib');
+                    $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
+                    $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
+                    $page_data['user_info'] 	= $user_info;
+                    $page_data['data'] 			= $info;
+                    $page_data['content'] 		= json_decode($info->cooperation_content,true);
+                    $page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
+                    $page_data['company_type'] 		= $this->config->item('company_type');
+                    $this->load->view('admin/_header');
+                    $this->load->view('admin/_title',$this->menu);
+                    $this->load->view('admin/judicial_person/cooperation_edit',$page_data);
+                    $this->load->view('admin/_footer');
+                }else{
+                    alert('查無此ID',admin_url('cooperation?cooperation=2'));
+                }
+            }else{
+                alert('查無此ID',admin_url('cooperation?cooperation=2'));
+            }
+        }else {
+            if (!empty($post['id'])) {
+                $info = $this->judicial_person_model->get($post['id']);
+                if ($info) {
+                    if ($post['cooperation'] == '1') {
+                        $rs = $this->judicialperson_lib->cooperation_success($post['id']);
+                    } else if ($post['cooperation'] == '0') {
+                        $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
+                    }
+
+                    if ($rs === true) {
+                        alert('更新成功', 'cooperation?cooperation=2');
+                    } else {
+                        alert('更新失敗，請洽工程師', 'cooperation?cooperation=2');
+                    }
+                } else {
+                    alert('查無此ID', admin_url('cooperation?cooperation=2'));
+                }
+            } else {
+                alert('查無此ID', admin_url('cooperation?cooperation=2'));
+            }
+        }
 	}
 
 	function cooperation_success(){
