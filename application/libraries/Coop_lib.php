@@ -12,7 +12,7 @@ class Coop_lib {
         $this->CI->load->model('log/log_coop_model');
     }
 
-	public function coop_request($coop_url,$postData,$user_id,$phone){
+	public function coop_request($coop_url,$postData,$user_id){
 		if(!empty($user_id)){
             ksort($postData);
             $middles        = implode('',array_values($postData));
@@ -24,17 +24,16 @@ class Coop_lib {
                 'Timestamp:'.$Timestamp,
             ];
             $result = json_decode(curl_get(COOPER_API_URL.$coop_url,$postData,$header));
-            $this->log_coop($result,$coop_url,$user_id,$phone);
+            $this->log_coop($result,$coop_url,$user_id);
             return $result;
 		}
 		return false;
 	}
 
-    private function log_coop($result,$coop_url,$user_id,$phone){
+    private function log_coop($result,$coop_url,$user_id){
         $this->CI->log_coop_model->insert(array(
             "type" 		=> $coop_url,
             "user_id"	=> $user_id,
-            "phone"		=> $phone,
             "response"	=> isset($result->result)=='SUCCESS'?$result->result:(isset($result->error)?$result->error:SAVE_FAIL),
         ));
     }

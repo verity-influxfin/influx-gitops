@@ -119,7 +119,7 @@ class Target_lib{
 
         $this->CI->load->library('coop_lib');
         $coop_url = 'order/scancel';
-        $result = $this->CI->coop_lib->coop_request($coop_url,$postData,$user_id,$phone);
+        $result = $this->CI->coop_lib->coop_request($coop_url,$postData,$user_id);
         if(isset($result->result)=='SUCCESS'){
             return true;
         }
