@@ -15,7 +15,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "app",
-                            "description": "<p>程式名稱-> 0:[APP_INVEST] 1:[APP_BORROW] 2:[APP_COOP]</p>"
+                            "description": "<p>程式名稱-> 0:[APP_INVEST] 1:[APP_BORROW] 2:[APP_SELLER]</p>"
                         },
                         {
                             "group": "Parameter",
@@ -10902,39 +10902,25 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"list\": [\n" +
-                            "            {\n" +
-                            "                \"company_id\": \"18\",\n" +
-                            "                \"company\": \"寓意科技股份有限公司\",\n" +
-                            "                \"tax_id\": \"53778177\",\n" +
-                            "                \"company_phone\": null,\n" +
-                            "                \"company_address\": null\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"company_id\": \"17\",\n" +
-                            "                \"company\": \"普匯金融科技股份有限公司\",\n" +
-                            "                \"tax_id\": \"68566880\",\n" +
-                            "                \"company_phone\": \"ddd\",\n" +
-                            "                \"company_address\": \"eee\"\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"company_id\": \"9\",\n" +
-                            "                \"company\": \"普匯金融科技股份有限公司\",\n" +
-                            "                \"tax_id\": \"68566882\",\n" +
-                            "                \"company_phone\": null,\n" +
-                            "                \"company_address\": null\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"company_id\": \"161\",\n" +
-                            "                \"company\": \"鬍鬚張股份有限公司\",\n" +
-                            "                \"tax_id\": \"22721208\",\n" +
-                            "                \"company_phone\": \"9030234023\",\n" +
-                            "                \"company_address\": \"cccc\"\n" +
-                            "            }\n" +
-                            "        ]\n" +
-                            "    }\n" +
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"list\": [\n" +
+                            "      {\n" +
+                            "        \"company_id\": \"1\",\n" +
+                            "        \"company\": \"全聯實業股份有限公司\",\n" +
+                            "        \"tax_id\": \"16740494\",\n" +
+                            "        \"company_phone\": \"0225079990\",\n" +
+                            "        \"company_address\": \"台北市南京東路四段111號\"\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"company_id\": \"2\",\n" +
+                            "        \"company\": \"柏竑貿易有限公司\",\n" +
+                            "        \"tax_id\": \"45883816\",\n" +
+                            "        \"company_phone\": \"2342342342\",\n" +
+                            "        \"company_address\": \"全家就是你家\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  }\n" +
                             "}",
                         "type": "Object"
                     }
@@ -11056,7 +11042,7 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "field": "delivery",
-                            "description": "<p>0:線下 1:線上</p>"
+                            "description": "<p>交易方式 0:線下 1:線上</p>"
                         },
                         {
                             "group": "Parameter",

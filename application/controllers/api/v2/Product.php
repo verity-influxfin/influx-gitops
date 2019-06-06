@@ -1344,6 +1344,7 @@ class Product extends REST_Controller {
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
             'item_count'     => $item_count,
+            'instalment'     => $instalment,
             'delivery'       => $delivery,
             'name'           => $user_name,
             'phone'          => $phone,
