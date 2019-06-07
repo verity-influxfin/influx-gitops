@@ -92,36 +92,40 @@ class Target_lib{
 	//取消
 	public function cancel_target($target=[],$user_id=0,$phone=0){
 		if($target){
-			$param = [
-				'status'		=> 8,
-			];
-			$rs = $this->CI->target_model->update($target->id,$param);
-			$this->insert_change_log($target->id,$param,$user_id);
-			if($target->order_id !=0){
+		    //判斷是否為消費貸
+            if($target->order_id !=0){
                 $this->CI->load->model('transaction/order_model');
                 $order = $this->CI->order_model->get($target->order_id);
-                $this->cancel_order($target->order_id,$order->merchant_order_no,$target->user_id,$phone);
-			}
+                $rs = $this->cancel_order($target->order_id,$order->merchant_order_no,$user_id,$phone);
+                if(!$rs){
+                    return false;
+                }
+            }
+            $param = [
+				'status'		=> 8,
+			];
+			$this->CI->target_model->update($target->id,$param);
+			$this->insert_change_log($target->id,$param,$user_id);
+			return true;
 		}
-		return false;
+		else{
+		    return false;
+        }
 	}
 
     //取消訂單
     public function cancel_order($order_id,$merchant_order_no,$user_id,$phone=0){
-        $this->CI->load->model('transaction/order_model');
-        if($order_id != false){
-            $this->CI->order_model->update($order_id,['status'=>8]);
-        }
-        $postData=array(
-            'phone'             => $phone,
-            'merchant_order_no' => $merchant_order_no
-        );
-
         $this->CI->load->library('coop_lib');
-        $coop_url = 'order/scancel';
-        $result = $this->CI->coop_lib->coop_request($coop_url,$postData,$user_id);
-        if(isset($result->result)=='SUCCESS'){
-            return true;
+        $result = $this->CI->coop_lib->coop_request('order/scancel',[
+            'merchant_order_no' => $merchant_order_no,
+            'phone'             => $phone,
+        ],$user_id);
+        if(isset($result->result) && $result->result == 'SUCCESS'){
+            if($order_id != false){
+                $this->CI->load->model('transaction/order_model');
+                $this->CI->order_model->update($order_id,['status'=>8]);
+                return true;
+            }
         }
         return false;
     }

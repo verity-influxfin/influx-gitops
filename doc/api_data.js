@@ -6917,6 +6917,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "304 - remind_count",
+                            "description": "<p>剩餘錯誤次數</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "200",
                             "description": "<p>參數錯誤</p>"
                         },
@@ -6936,7 +6942,11 @@ define({
                     },
                     {
                         "title": "304",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+                        "content": "{\n" +
+                            "    \"result\": \"ERROR\",\n" +
+                            "    \"error\": 304,\n" +
+                            "    \"remind_count\": 2\n" +
+                            "}",
                         "type": "Object"
                     },
                     {
@@ -10863,7 +10873,7 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "String",
+                            "type": "Number",
                             "optional": false,
                             "field": "company_id",
                             "description": "<p>經銷商ID</p>"
@@ -10877,7 +10887,7 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "String",
+                            "type": "Number",
                             "optional": false,
                             "field": "tax_id",
                             "description": "<p>統編</p>"

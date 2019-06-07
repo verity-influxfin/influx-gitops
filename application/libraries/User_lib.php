@@ -11,7 +11,7 @@ class User_lib {
     }
 
     //登入失敗鎖定帳號
-    public function auto_block_user($account,$investor,$status,$user_id,$device_id)
+    public function auto_block_user($account,$investor,$user_id,$device_id)
     {
         $temp_lock = '000';
         $system_lock = '0000000000';

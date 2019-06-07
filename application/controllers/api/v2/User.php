@@ -1380,10 +1380,9 @@ class User extends REST_Controller {
     }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
-		$this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');
-
         $this->agent->device_id=$device_id;
+        $this->load->model('log/log_userlogin_model');
 		$this->log_userlogin_model->insert(array(
 			'account'	=> $account,
 			'investor'	=> $investor,
@@ -1392,7 +1391,7 @@ class User extends REST_Controller {
 		));
 
         $this->load->library('user_lib');
-        $remind_count = $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+        $remind_count = $this->user_lib->auto_block_user($account,$investor,$user_id,$device_id);
 
         return $remind_count;
 	}
