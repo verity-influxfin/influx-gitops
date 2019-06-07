@@ -313,7 +313,7 @@ defined('SES_SMTP_PASSWORD')   		OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SE
 defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_PDF_OWNER_PASSWORD'));
 
 //COOP
-defined('SAVE_FAIL')  	            	OR define('SAVE_FAIL'		            , 500);//與主系統連線失敗
+defined('LINK_FAIL')  	            	OR define('LINK_FAIL'		            , 500);//與主系統連線失敗
 
 defined('ArgumentError')  	            OR define('ArgumentError'		        , 351);//參數錯誤
 defined('RequiredArguments')  	        OR define('RequiredArguments'		    , 352);//參數不足

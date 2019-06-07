@@ -852,7 +852,7 @@ class Judicialperson extends REST_Controller {
         ));
 
         $this->load->library('user_lib');
-        $remind_count = $this->user_lib->auto_block_user($account,$investor,$status,$user_id,$device_id);
+        $remind_count = $this->user_lib->auto_block_user($account,$investor,$user_id,$device_id);
 
         return $remind_count;
 	}
