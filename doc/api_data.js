@@ -29384,7 +29384,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "stageice_id",
+                            "field": "device_id",
                             "description": "<p>裝置ID</p>"
                         }
                     ]
@@ -32034,7 +32034,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "stageice_id",
+                            "field": "device_id",
                             "description": "<p>裝置ID</p>"
                         }
                     ]
