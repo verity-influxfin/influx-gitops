@@ -822,6 +822,7 @@ class Order extends REST_Controller {
                     [
                         'merchant_order_no' => $merchant_order_no,
                         'phone'             => $phone,
+                        'status'            => 20,
                     ],
                     [
                         'amount'            => $quotes,
@@ -831,7 +832,34 @@ class Order extends REST_Controller {
                     ]
                 );
                 if($rs){
-                    $this->response(array('result' => 'SUCCESS'));
+                    $rs2 = $this->target_model->update_by(
+                        [
+                            'order_id'      => $order->id,
+                            'status'        => 20,
+                        ],
+                        [
+                            'amount'        => $quotes,
+                            'platform_fee'  => $platform_fee,
+                            'status'        => 21,
+                        ]
+                    );
+                    if($rs2){
+                        $this->response(array('result' => 'SUCCESS'));
+                    }else{
+                        $this->order_model->update_by(
+                            [
+                                'merchant_order_no' => $merchant_order_no,
+                                'phone'             => $phone,
+                                'status'            => 21,
+                            ],
+                            [
+                                'amount'            => 0,
+                                'platform_fee'      => 0,
+                                'total'             => 0,
+                                'status'            => 20,
+                            ]
+                        );
+                    }
                 }
                 $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
             }
