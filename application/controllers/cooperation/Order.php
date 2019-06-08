@@ -790,6 +790,11 @@ class Order extends REST_Controller {
 		$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
 
     }
+
+    public function quote_post()
+    {
+        echo 1223;
+    }
 	
 	private function get_order_no(){
 		return $this->cooperation_info->company_user_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);

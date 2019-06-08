@@ -429,7 +429,13 @@ class Judicialperson extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
             $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
-            $this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR,'remind_count' => $remind_count, ));
+            $this->response([
+                'result' => 'ERROR',
+                'error'  => PASSWORD_ERROR,
+                'data'   => [
+                    'remind_count' => $remind_count,
+                ]
+            ]);
 		}
 		$this->insert_login_log($input['phone'],$investor,0,0,$device_id);
 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));

@@ -444,7 +444,13 @@ class User extends REST_Controller {
 				]);
 			}else{
                 $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
-				$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR,'remind_count' => $remind_count, ));
+				$this->response([
+				    'result' => 'ERROR',
+                    'error'  => PASSWORD_ERROR,
+                    'data'   => [
+                        'remind_count' => $remind_count,
+                    ]
+                ]);
 			}
 		}else{
 			$this->insert_login_log($input['phone'],$investor,0,0,$device_id);

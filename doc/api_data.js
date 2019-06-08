@@ -6943,9 +6943,11 @@ define({
                     {
                         "title": "304",
                         "content": "{\n" +
-                            "    \"result\": \"ERROR\",\n" +
-                            "    \"error\": 304,\n" +
-                            "    \"remind_count\": 2\n" +
+                            "  \"result\": \"ERROR\",\n" +
+                            "  \"error\": 304,\n" +
+                            "  \"data\": {\n" +
+                            "    \"remind_count\": 0\n" +
+                            "  }\n" +
                             "}",
                         "type": "Object"
                     },
@@ -32141,9 +32143,11 @@ define({
                     {
                         "title": "304",
                         "content": "{\n" +
-                            "    \"result\": \"ERROR\",\n" +
-                            "    \"error\": 304,\n" +
-                            "    \"remind_count\": 2\n" +
+                            "  \"result\": \"ERROR\",\n" +
+                            "  \"error\": 304,\n" +
+                            "  \"data\": {\n" +
+                            "    \"remind_count\": 0\n" +
+                            "  }\n" +
                             "}",
                         "type": "Object"
                     },

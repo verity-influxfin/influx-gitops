@@ -25,14 +25,15 @@ class User_lib {
             $check_log .= $field->status;
         }
 
-
-        if (substr($check_log, 0, 3) == $temp_lock) {
+        if (mb_substr($check_log, 0, 3) == $temp_lock) {
             if ($check_log != $system_lock) {
                 $block_status = 2;
             } else {
                 $block_status = 3;
             }
-            $this->CI->user_model->update($user_id, array("block_status" => $block_status));
+            $this->CI->user_model->update($user_id, array(
+                'block_status' => $block_status)
+            );
             $this->CI->agent->device_id=$device_id;
             $this->CI->log_userlogin_model->insert(array(
                 'account'	=> $account,
@@ -43,7 +44,7 @@ class User_lib {
             $remind_count = 0;
         }
         else{
-            $remind_count = substr($check_log, 0, 2) == '00'?1:(substr($check_log, 0, 1) == '0'?2:3);
+            $remind_count = mb_substr($check_log, 0, 2) == '00'?1:(mb_substr($check_log, 0, 1) == '0'?2:3);
         }
 
         return $remind_count;
