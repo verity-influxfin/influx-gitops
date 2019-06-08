@@ -1216,7 +1216,7 @@ class Product extends REST_Controller {
 
         if($order){
             if($order->status != 0 ){
-                $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
+                $this->response(['result' => 'ERROR','error' => M_ORDER_STATUS_ERROR]);
             }
 
             //上傳檔案欄位
@@ -1278,7 +1278,7 @@ class Product extends REST_Controller {
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
         }
-        $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
+        $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
     }
 
     public function orderApply_post()
@@ -1434,7 +1434,7 @@ class Product extends REST_Controller {
                 $order 	= $this->order_model->get($target->order_id);
                 if($order){
                     if($order->status != 21 ){
-                        $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
+                        $this->response(['result' => 'ERROR','error' => M_ORDER_STATUS_ERROR]);
                     }
                     $items 		= [];
                     $item_name	= explode(',',$order->item_name);
@@ -1469,7 +1469,7 @@ class Product extends REST_Controller {
                         $this->response(array('result' => 'SUCCESS'));
                     }
                 }
-                $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
+                $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
             }
             $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
         }

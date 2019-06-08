@@ -9,6 +9,8 @@ class Order extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('transaction/order_model');
+
 		$authorization 	= isset($this->input->request_headers()['Authorization'])?$this->input->request_headers()['Authorization']:'';
 		$time 			= isset($this->input->request_headers()['Timestamp'])?$this->input->request_headers()['Timestamp']:'';
 		$cooperation_id = isset($this->input->request_headers()['CooperationID'])?$this->input->request_headers()['CooperationID']:'';
@@ -531,7 +533,7 @@ class Order extends REST_Controller {
 			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
-		$this->load->model('transaction/order_model');
+
 		$exist = $this->order_model->get_by([
 			'company_user_id'	=> $this->cooperation_info->company_user_id,
 			'merchant_order_no'	=> $content['merchant_order_no'],
@@ -615,7 +617,7 @@ class Order extends REST_Controller {
 			$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 		}
 		
-		$this->load->model('transaction/order_model');
+
 		$order = $this->order_model->get_by([
 			'company_user_id'	=> $this->cooperation_info->company_user_id,
 			'merchant_order_no'	=> $input['merchant_order_no'],
@@ -706,7 +708,7 @@ class Order extends REST_Controller {
 			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
-		$this->load->model('transaction/order_model');
+
 		$orders = $this->order_model->get_many_by([
 			'created_at >='	=> strtotime($sdate.' 00:00:00'),
 			'created_at <='	=> strtotime($edate.' 23:59:59'),
@@ -775,8 +777,7 @@ class Order extends REST_Controller {
 		if (empty($input['merchant_order_no'])) {
 			$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 		}
-		
-		$this->load->model('transaction/order_model');
+
 		$order = $this->order_model->get_by([
 			'company_user_id'	=> $this->cooperation_info->company_user_id,
 			'merchant_order_no'	=> $input['merchant_order_no'],
@@ -791,12 +792,68 @@ class Order extends REST_Controller {
 
     }
 
-    public function quote_post()
+    public function quotes_post()
     {
-        echo 1223;
+        $product_list = $this->config->item('product_list');
+        $input 	      = $this->input->post(NULL, TRUE);
+        $fields       = ['merchant_order_no','phone','quotes'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $merchant_order_no = $content['merchant_order_no'];
+        $phone             = $content['phone'];
+        $quotes            = $content['quotes'];
+        $order             = $this->get_order($merchant_order_no,$phone);
+        if($order){
+            if($order->status == 20){
+                $product_info = $product_list[$order->product_id];
+                if($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']){
+                    $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
+                }
+                $platform_fee   = intval(round( $quotes * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+                $platform_fee   = $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
+                $total 		    = $quotes + $platform_fee;
+                $data['amount'] = $quotes;
+                $rs = $this->order_model->update_by(
+                    [
+                        'merchant_order_no' => $merchant_order_no,
+                        'phone'             => $phone,
+                    ],
+                    [
+                        'amount'            => $quotes,
+                        'platform_fee'      => $platform_fee,
+                        'total'             => $total,
+                        'status'            => 21,
+                    ]
+                );
+                if($rs){
+                    $this->response(array('result' => 'SUCCESS'));
+                }
+                $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
+            }
+            $this->response(array('result' => 'ERROR','error' => M_ORDER_STATUS_ERROR ));
+        }
+        $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
     }
 	
 	private function get_order_no(){
 		return $this->cooperation_info->company_user_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
+
+    private function get_order($merchant_order_no,$phone)
+    {
+        $order = $this->order_model->get_by([
+            'merchant_order_no'	=> $merchant_order_no,
+            'phone'	            => $phone,
+        ]);
+
+        $order_info = [
+
+        ];
+        return $order;
+    }
 }

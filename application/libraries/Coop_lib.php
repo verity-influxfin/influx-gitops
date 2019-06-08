@@ -23,7 +23,7 @@ class Coop_lib {
         ];
         $result = json_decode(curl_get(COOPER_API_URL.$coop_url,$postData,$header));
         $this->log_coop($result,$coop_url,$user_id);
-        if(isset($result->result) && $result->result == 'SUCCESS') {
+        if(isset($result->result)) {
             return $result;
         }
         return false;
