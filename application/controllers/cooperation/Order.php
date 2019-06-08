@@ -840,6 +840,7 @@ class Order extends REST_Controller {
                         [
                             'amount'        => $quotes,
                             'platform_fee'  => $platform_fee,
+                            'loan_amount'   => $total,
                             'status'        => 21,
                         ]
                     );
