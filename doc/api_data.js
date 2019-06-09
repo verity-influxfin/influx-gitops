@@ -8671,7 +8671,85 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 5,\n\t\t\t\t\"target_no\": \"STN2019010484186\",\n\t\t\t\t\"product_id\": 1,\n\t\t\t\t\"user_id\": 1,\n\t\t\t\t\"amount\": 5000,\n\t\t\t\t\"loan_amount\": 0,\n\t\t\t\t\"platform_fee\": 500,\n\t\t\t\t\"interest_rate\": 0,\n\t\t\t\t\"instalment\": 3,\n\t\t\t\t\"repayment\": 1,\n\t\t\t\t\"reason\": \"\",\n\t\t\t\t\"remark\": \"系統自動取消\",\n\t\t\t\t\"delay\": 0,\n\t\t\t\t\"status\": 9,\n\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\"created_at\": 1546591486\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "            {\n" +
+                            "                \"id\": 6770,\n" +
+                            "                \"target_no\": \"STN2019032807528\",\n" +
+                            "                \"product_id\": 1,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 30000,\n" +
+                            "                \"loan_amount\": 27000,\n" +
+                            "                \"platform_fee\": 810,\n" +
+                            "                \"interest_rate\": 12,\n" +
+                            "                \"instalment\": 6,\n" +
+                            "                \"repayment\": 1,\n" +
+                            "                \"reason\": \"\",\n" +
+                            "                \"remark\": \"\",\n" +
+                            "                \"delay\": 0,\n" +
+                            "                \"status\": 10,\n" +
+                            "                \"sub_status\": 4,\n" +
+                            "                \"created_at\": 1553705897\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 7025,\n" +
+                            "                \"target_no\": \"STN2019040492514\",\n" +
+                            "                \"product_id\": 1,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 5000,\n" +
+                            "                \"loan_amount\": 0,\n" +
+                            "                \"platform_fee\": 0,\n" +
+                            "                \"interest_rate\": 0,\n" +
+                            "                \"instalment\": 18,\n" +
+                            "                \"repayment\": 1,\n" +
+                            "                \"reason\": \"\",\n" +
+                            "                \"remark\": \"\",\n" +
+                            "                \"delay\": 0,\n" +
+                            "                \"status\": 8,\n" +
+                            "                \"sub_status\": 0,\n" +
+                            "                \"created_at\": 1554349266\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 8786,\n" +
+                            "                \"target_no\": \"STI2019060857987\",\n" +
+                            "                \"product_id\": 2,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 0,\n" +
+                            "                \"loan_amount\": 0,\n" +
+                            "                \"platform_fee\": 0,\n" +
+                            "                \"interest_rate\": 0,\n" +
+                            "                \"instalment\": 6,\n" +
+                            "                \"repayment\": 1,\n" +
+                            "                \"reason\": \"分期:Apple iPhone 7 (128GB)\",\n" +
+                            "                \"remark\": \"\",\n" +
+                            "                \"delay\": 0,\n" +
+                            "                \"status\": 8,\n" +
+                            "                \"sub_status\": 0,\n" +
+                            "                \"created_at\": 1559954919\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 8788,\n" +
+                            "                \"target_no\": \"STI2019060889753\",\n" +
+                            "                \"product_id\": 2,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 16500,\n" +
+                            "                \"loan_amount\": 16500,\n" +
+                            "                \"platform_fee\": 500,\n" +
+                            "                \"interest_rate\": 18,\n" +
+                            "                \"instalment\": 3,\n" +
+                            "                \"repayment\": 1,\n" +
+                            "                \"reason\": \"分期:LG V30 \",\n" +
+                            "                \"remark\": \"\",\n" +
+                            "                \"delay\": 0,\n" +
+                            "                \"status\": 21,\n" +
+                            "                \"sub_status\": 0,\n" +
+                            "                \"created_at\": 1559982650\n" +
+                            "            }\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -11088,124 +11166,11 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "                    \"result\": \"SUCCESS\",\n" +
-                            "                    \"data\": {\n" +
-                            "                        \"id\": 315,\n" +
-                            "                        \"target_no\": \"STI2019052213182\",\n" +
-                            "                        \"product_id\": 2,\n" +
-                            "                        \"user_id\": 9,\n" +
-                            "                        \"order_id\": 64,\n" +
-                            "                        \"order_info\": {\n" +
-                            "                            \"order_no\": \"17-2019052214031991972\",\n" +
-                            "                            \"company\": \"普匯金融科技股份有限公司\",\n" +
-                            "                            \"merchant_order_no\": \"CPA1905220218518\",\n" +
-                            "                            \"item_name\": [\n" +
-                            "                                \"Samsung Galaxy A8 Star\"\n" +
-                            "                            ],\n" +
-                            "                            \"item_count\": [\n" +
-                            "                                1\n" +
-                            "                            ],\n" +
-                            "                            \"contract\": \"\",\n" +
-                            "                            \"delivery\": 1,\n" +
-                            "                            \"address\": \"台北市天龍國境\",\n" +
-                            "                            \"status\": 0,\n" +
-                            "                            \"created_at\": 1558504999\n" +
-                            "                        },\n" +
-                            "                        \"amount\": 0,\n" +
-                            "                        \"loan_amount\": 0,\n" +
-                            "                        \"platform_fee\": 0,\n" +
-                            "                        \"interest_rate\": 0,\n" +
-                            "                        \"instalment\": 3,\n" +
-                            "                        \"repayment\": 1,\n" +
-                            "                        \"reason\": \"分期:Samsung Galaxy A8 Star\",\n" +
-                            "                        \"remark\": \"\",\n" +
-                            "                        \"delay\": 0,\n" +
-                            "                        \"delay_days\": 0,\n" +
-                            "                        \"status\": 20,\n" +
-                            "                        \"sub_status\": 0,\n" +
-                            "                        \"created_at\": 1558504999,\n" +
-                            "                        \"contract\": \"\",\n" +
-                            "                        \"credit\": {\n" +
-                            "                            \"level\": 11,\n" +
-                            "                            \"points\": -1,\n" +
-                            "                            \"amount\": 0,\n" +
-                            "                            \"created_at\": 1554307202\n" +
-                            "                        },\n" +
-                            "                        \"certification\": [\n" +
-                            "                            {\n" +
-                            "                                \"id\": 1,\n" +
-                            "                                \"alias\": \"idcard\",\n" +
-                            "                                \"name\": \"實名認證\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"驗證個人身份資訊\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 581,\n" +
-                            "                                \"updated_at\": 1556762167\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 2,\n" +
-                            "                                \"alias\": \"student\",\n" +
-                            "                                \"name\": \"學生身份認證\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"驗證學生身份\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 533,\n" +
-                            "                                \"updated_at\": 1556284120\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 3,\n" +
-                            "                                \"alias\": \"debitcard\",\n" +
-                            "                                \"name\": \"金融帳號認證\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"驗證個人金融帳號\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 71,\n" +
-                            "                                \"updated_at\": 1548256915\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 4,\n" +
-                            "                                \"alias\": \"social\",\n" +
-                            "                                \"name\": \"社交認證\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"個人社交帳號認證\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 93,\n" +
-                            "                                \"updated_at\": 1551260545\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 5,\n" +
-                            "                                \"alias\": \"emergency\",\n" +
-                            "                                \"name\": \"緊急聯絡人\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"設定緊急連絡人資訊\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 532,\n" +
-                            "                                \"updated_at\": 1556275356\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 6,\n" +
-                            "                                \"alias\": \"email\",\n" +
-                            "                                \"name\": \"常用電子信箱\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"驗證常用E-Mail位址\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 567,\n" +
-                            "                                \"updated_at\": 1556284130\n" +
-                            "                            },\n" +
-                            "                            {\n" +
-                            "                                \"id\": 7,\n" +
-                            "                                \"alias\": \"financial\",\n" +
-                            "                                \"name\": \"財務訊息認證\",\n" +
-                            "                                \"status\": 1,\n" +
-                            "                                \"description\": \"提供財務訊息資訊\",\n" +
-                            "                                \"user_status\": 1,\n" +
-                            "                                \"certification_id\": 529,\n" +
-                            "                                \"updated_at\": 1556284136\n" +
-                            "                            }\n" +
-                            "                        ],\n" +
-                            "                        \"amortization_schedule\": []\n" +
-                            "                    }\n" +
-                            "                }",
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"target_id\": 8788\n" +
+                            "  }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -11373,10 +11338,7 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "    \"result\": \"SUCCESS\",\n" +
-                            "    \"data\": {\n" +
-                            "        \"target_id\": 282\n" +
-                            "    }\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
                             "}",
                         "type": "Object"
                     }
