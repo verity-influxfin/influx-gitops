@@ -937,7 +937,6 @@ class Product extends REST_Controller {
                     $order_info['merchant_order_no'] = $orders->merchant_order_no;
                     $order_info['item_name'] 		 = $item_name;
                     $order_info['item_count'] 		 = $item_count;
-                    $order_info['contract'] 		 = $contract;
                     $order_info['delivery'] 		 = intval($orders->delivery);
                     $order_info['status'] 		     = intval($orders->status);
                     $order_info['created_at'] 		 = intval($orders->created_at);
