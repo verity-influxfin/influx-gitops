@@ -887,7 +887,7 @@ class Product extends REST_Controller {
             }
 
             $amortization_schedule = [];
-            if(in_array($target->status,[1,21])){
+            if(in_array($target->status,[1])){
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
             }
 
@@ -921,7 +921,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    if($target->status==21){
+                    if($target->status==22){
                         $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
@@ -1216,7 +1216,7 @@ class Product extends REST_Controller {
 
         if($order){
             if($order->status != 0 ){
-                $this->response(['result' => 'ERROR','error' => M_ORDER_STATUS_ERROR]);
+                $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
             }
 
             //上傳檔案欄位
@@ -1278,7 +1278,7 @@ class Product extends REST_Controller {
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
         }
-        $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
+        $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
     }
 
     public function orderApply_post()
@@ -1332,7 +1332,7 @@ class Product extends REST_Controller {
         $this->load->library('coop_lib');
         $cooperation = $this->coop_lib->get_cooperation_info($store_id);
         if(!$cooperation){
-            $this->response(['result' => 'ERROR','error' => CooperationNotFound]);
+            $this->response(['result' => 'ERROR','error' => COMPANY_NOT_EXIST]);
         }
         $cooperation_id  = $cooperation -> cooperation_id;
         $company_user_id = $cooperation -> company_user_id;
@@ -1352,12 +1352,13 @@ class Product extends REST_Controller {
             'item_id'        => $item_id,
             'item_count'     => $item_count,
             'instalment'     => $instalment,
+            'interest_rate'  => ORDER_INTEREST_RATE,
             'delivery'       => $delivery,
             'name'           => $user_name,
             'phone'          => $phone,
             'address'        => $address,
         ],$user_id);
-        if($result){
+        if($result->result == 'SUCCESS'){
             $item_name = $result->data->product_name.($result->data->product_spec!='-'?
                     $result->data->product_spec:'');
             $merchant_order_no = $result->data->merchant_order_no;
@@ -1381,7 +1382,6 @@ class Product extends REST_Controller {
                     'product_id'	=> $product_id,
                     'user_id'		=> $user_id,
                     'amount'		=> $result->data->product_price,
-                    'damage_rate' 	=> LIQUIDATED_DAMAGES,
                     'instalment'	=> $instalment,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
@@ -1398,7 +1398,7 @@ class Product extends REST_Controller {
             }
             $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
         }
-        $this->response(array('result' => 'ERROR','error' => ApplyFail ));
+        $this->response(['result' => 'ERROR','error' => $result->error ]);
     }
 
     public function orderSigning_post()
@@ -1434,7 +1434,7 @@ class Product extends REST_Controller {
                 $order 	= $this->order_model->get($target->order_id);
                 if($order){
                     if($order->status != 21 ){
-                        $this->response(['result' => 'ERROR','error' => M_ORDER_STATUS_ERROR]);
+                        $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
                     }
                     $items 		= [];
                     $item_name	= explode(',',$order->item_name);
@@ -1455,21 +1455,34 @@ class Product extends REST_Controller {
                         $amortization_schedule['total']['total_payment'].'、'.$order->instalment.'、'.$amortization_schedule['total_payment'].'、',
                     ]);
 
-                    $param = [
-                        'amount'		=> $order->total,
-                        'damage_rate' 	=> LIQUIDATED_DAMAGES,
-                        'contract_id'	=> $contract,
-                        'status'        => 22,
-                    ];
-                    $rs = $this->target_lib->ordersigning_target($target->id,$user_id,$param);
-                    if($rs){
-                        $this->order_model->update($target->order_id,
-                            ['status' => 22]
-                        );
-                        $this->response(array('result' => 'SUCCESS'));
+                    $this->load->library('coop_lib');
+                    $result = $this->coop_lib->coop_request('order/supdate',[
+                        'merchant_order_no' => $order->merchant_order_no,
+                        'phone'             => $order->phone,
+                        'type'              => 'shipment',
+                    ],$user_id);
+                    if($result->result == 'SUCCESS'){
+                        $rs = $this->target_lib->ordersigning_target($target->id,$user_id,[
+                            'damage_rate' 	=> LIQUIDATED_DAMAGES,
+                            'contract_id'	=> $contract,
+                            'status'        => 22,
+                        ]);
+                        if($rs){
+                            $this->order_model->update($target->order_id,
+                                ['status' => 22]
+                            );
+                            $this->response(array('result' => 'SUCCESS'));
+                        }
                     }
+                    //fallback
+                    $this->target_lib->ordersigning_target($target->id,$user_id,[
+                        'damage_rate' 	=> 0,
+                        'contract_id'	=> false,
+                        'status'        => 21,
+                    ]);
+                    $this->response(['result' => 'ERROR','error' => $result->error ]);
                 }
-                $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
+                $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
             }
             $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
         }

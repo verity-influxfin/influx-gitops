@@ -21,7 +21,8 @@ class Coop_lib {
             'CooperID:'.COOPER_ID,
             'Timestamp:'.$Timestamp,
         ];
-        $result = json_decode(curl_get(COOPER_API_URL.$coop_url,$postData,$header));
+        $curl   = curl_get(COOPER_API_URL.$coop_url,$postData,$header);
+        $result = json_decode($curl);
         $this->log_coop($result,$coop_url,$user_id);
         if(isset($result->result)) {
             return $result;

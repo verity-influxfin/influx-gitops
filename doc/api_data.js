@@ -11247,6 +11247,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "215",
+                            "description": "<p>經銷商不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "216",
                             "description": "<p>不支援法人帳號使用</p>"
                         },
@@ -11254,7 +11260,13 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "357",
-                            "description": "<p>法人代碼不存在</p>"
+                            "description": "<p>子系統-法人代碼不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "362",
+                            "description": "<p>子系統-訂單建立失敗</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -11276,8 +11288,18 @@ define({
                         "type": "Object"
                     },
                     {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "207",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "215",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"215\"\n}",
                         "type": "Object"
                     },
                     {
@@ -11291,6 +11313,11 @@ define({
                         "type": "Object"
                     },
                     {
+                        "title": "362",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"362\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "408",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
                         "type": "Object"
@@ -11299,7 +11326,7 @@ define({
             }
         },{
             "type": "post",
-            "url": "/v2/product/ordersigning/:id",
+            "url": "/v2/product/ordersigning",
             "title": "借款方 申請分期簽約",
             "name": "PostProductOrderSigning",
             "version": "0.2.0",
