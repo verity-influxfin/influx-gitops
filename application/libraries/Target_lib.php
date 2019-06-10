@@ -169,7 +169,7 @@ class Target_lib{
 	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
-		if(!empty($target) && $target->status==0){
+		if(!empty($target) && ($target->status==0 || $target->status==22)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -187,13 +187,12 @@ class Target_lib{
 				if($interest_rate){//'product_id'=> $product_id,
 					$used_amount	   = 0;
                     $other_used_amount = 0;
-                    $user_current_credit_amount = 0;
                     $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($user_id);
                     //取得所有產品申請或進行中的案件
 					$target_list 	= $this->CI->target_model->get_many_by([
 						'id !='		=> $target->id,
 						'user_id'	=> $user_id,
-						'status <='	=> 5
+						'status'	=> [0,1,2,3,4,5,20,21,22,23,24,25]
 					]);
                     if($target_list){
                         foreach($target_list as $key =>$value){
@@ -262,7 +261,7 @@ class Target_lib{
                                     'credit_level'		=> $credit['level'],
                                     'platform_fee'		=> $platform_fee,
                                     'interest_rate'		=> $interest_rate,
-                                    'status'			=> 2,
+                                    'status'			=> 23,
                                 ];
                                 $rs = $this->CI->target_model->update($target->id,$param);
                                 $this->insert_change_log($target->id,$param);
@@ -281,54 +280,36 @@ class Target_lib{
                                 }
                             }
                         }else{
-                            $param = [
-                                'loan_amount'		=> 0,
-                                'status'			=> '9',
-                                'remark'			=> '信用不足',
-                            ];
-                            $rs = $this->CI->target_model->update($target->id,$param);
-                            $this->insert_change_log($target->id,$param);
-                            $this->CI->notification_lib->approve_target($user_id,'9');
-                            if($target->order_id !=0){
-                                $this->CI->load->model('transaction/order_model');
-                                $order = $this->CI->order_model->update($target->order_id,['status'=>0]);
-                            }
+                            $this->approve_target_fail($user_id,$target);
                         }
                     }
 					else{
-                        $param = [
-                            'loan_amount'		=> 0,
-                            'status'			=> '9',
-                            'remark'			=> '信用不足(多產品總額度超過歸戶)',
-                        ];
-                        $rs = $this->CI->target_model->update($target->id,$param);
-                        $this->insert_change_log($target->id,$param);
-                        $this->CI->notification_lib->approve_target($user_id,'9');
-                        if($target->order_id !=0){
-                            $this->CI->load->model('transaction/order_model');
-                            $order = $this->CI->order_model->update($target->order_id,['status'=>0]);
-                        }
+                        $this->approve_target_fail($user_id,$target,true);
                     }
 				}else{
-					$param = [
-						'loan_amount'		=> 0,
-						'status'			=> '9',
-						'remark'			=> '信用不足',
-					];
-					$rs = $this->CI->target_model->update($target->id,$param);
-					$this->insert_change_log($target->id,$param);
-					$this->CI->notification_lib->approve_target($user_id,'9');
-					if($target->order_id !=0){
-						$this->CI->load->model('transaction/order_model');
-						$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
-					}
+					$this->approve_target_fail($user_id,$target);
 				}
-				
 				return $rs;
 			}
 		}
 		return false;
 	}
+
+    private function approve_target_fail($user_id,$target,$maxAmountAlarm=false){
+	    $remak = '信用不足'.($maxAmountAlarm?'(多產品總額度超過歸戶)':'');
+        $param = [
+            'loan_amount'		=> 0,
+            'status'			=> '9',
+            'remark'			=> $remak,
+        ];
+        $this->CI->target_model->update($target->id,$param);
+        $this->insert_change_log($target->id,$param);
+        $this->CI->notification_lib->approve_target($user_id,'9');
+        if($target->order_id !=0){
+            $this->CI->load->model('transaction/order_model');
+            $order = $this->CI->order_model->update($target->order_id,['status'=>9]);
+        }
+    }
 	
 	public function target_verify_success($target = [],$admin_id=0){
 		if(!empty($target) && $target->status==2){
@@ -780,7 +761,7 @@ class Target_lib{
 		
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
-			'status'		=> 0,
+			'status'		=> [0,22],
 			'script_status'	=> 0
 		]);
 		$list 		= [];

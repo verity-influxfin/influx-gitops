@@ -39,7 +39,7 @@ class Target extends MY_Admin_Controller {
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
 				foreach($list as $key => $value){
-					if($value->status==2){
+					if($value->status==2 || $value->status==23){
 						$bank_account 		= $this->user_bankaccount_model->get_by(array(
 							'user_id'	=> $value->user_id,
 							'investor'	=> 0,
@@ -206,7 +206,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==2){
+			if($info && in_array($info->status,array(2,23))){
 				if($info->sub_status==8){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
@@ -231,7 +231,7 @@ class Target extends MY_Admin_Controller {
 		$remark = isset($get['remark'])?$get['remark']:'';
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(0,1,2))){
+			if($info && in_array($info->status,array(0,1,2,23))){
 				if($info->sub_status==8){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
@@ -250,7 +250,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_verify(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>2);
+		$where						= array('status'=>[2,23]);
 		$fields 					= ['target_no','user_id','delay'];
 		$subloan_keyword			= $this->config->item('action_Keyword')[0];
 
@@ -263,7 +263,7 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==2){
+				if(in_array($value->status,array(2,23))){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_id'	=> $value->user_id,
 						'investor'	=> 0,
@@ -275,7 +275,7 @@ class Target extends MY_Admin_Controller {
 					$value -> subloan_count = count($this->target_model->get_many_by(
 						array(
 							'user_id'     => $value->user_id,
-							'status !='     => "9",
+							'status !='   => "9",
 							'remark like' => '%'.$subloan_keyword.'%'
 						)
 					));
@@ -304,7 +304,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>4);
+		$where						= array('status'=>[4]);
 		$fields 					= ['target_no','user_id','delay'];
 		
 		foreach ($fields as $field) {
@@ -316,7 +316,7 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==4){
+				if(in_array($value->status,array(4))){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_id'	=> $value->user_id,
 						'investor'	=> 0,
@@ -850,7 +850,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_signing(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>1]);
+		$list 						= $this->target_model->get_many_by(['status'=>[1,21]]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];

@@ -110,12 +110,20 @@
 													<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
 												</td>
 											</tr>
+                                            <tr>
+                                                <td><p class="form-control-static">借款原因</p></td>
+                                                <td colspan="3">
+                                                    <p class="form-control-static"><?=isset($data->reason)?$data->reason:"";?></p>
+                                                </td>
+                                            </tr>
+                                            <? if($data->status < 20 || $data->status == 25){ ?>
 											<tr>
 												<td><p class="form-control-static">簽約照片</p></td>
 												<td colspan="3">
 													<?=isset($data->person_image)?"<a href='".$data->person_image."' data-fancybox='images'><img src='".$data->person_image."' style='width:30%;'></a>":"";?>
 												</td>
 											</tr>
+                                            <? } ?>
 										</tbody>
 									</table>
 								</div>

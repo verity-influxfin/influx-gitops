@@ -15,6 +15,13 @@ class Target_model extends MY_Model
 		8 =>	"已取消",
 		9 =>	"申請失敗",
 		10 =>	"已結案",
+        20 =>	"待報價",
+        21 =>	"待簽約 (分期)",
+        22 =>	"待核可 (分期)",
+        23 =>	"待驗證 (分期)",
+        24 =>	"待債轉 (分期)",
+        25 =>	"待出貨",
+        26 =>	"待放款 (分期)",
 	);
 	public $sub_list   = array(
 		0 =>	"無",
@@ -22,6 +29,7 @@ class Target_model extends MY_Model
 		2 =>	"轉貸成功",
 		3 =>	"申請提還",
 		4 =>	"提還成功",
+        8 =>	"產轉案件",
 	);
 
 	public $loan_list   = array(

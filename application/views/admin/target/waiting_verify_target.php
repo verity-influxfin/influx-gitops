@@ -89,9 +89,9 @@
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td>
-												<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 												<button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?> class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批上架</button>
 												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
+                                                <?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->remark)?$value->remark:'' ?></td>

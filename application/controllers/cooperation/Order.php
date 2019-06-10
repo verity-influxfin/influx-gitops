@@ -822,13 +822,14 @@ class Order extends REST_Controller {
                     [
                         'merchant_order_no' => $merchant_order_no,
                         'phone'             => $phone,
-                        'status'            => 20,
+                        'status'            => 0,
                     ],
                     [
                         'amount'            => $quotes,
                         'platform_fee'      => $platform_fee,
                         'total'             => $total,
-                        'status'            => 21,
+                        'item_price'        => $quotes,
+                        'status'            => 1,
                     ]
                 );
                 if($rs){
@@ -851,13 +852,13 @@ class Order extends REST_Controller {
                             [
                                 'merchant_order_no' => $merchant_order_no,
                                 'phone'             => $phone,
-                                'status'            => 21,
+                                'status'            => 1,
                             ],
                             [
                                 'amount'            => 0,
                                 'platform_fee'      => 0,
                                 'total'             => 0,
-                                'status'            => 20,
+                                'status'            => 0,
                             ]
                         );
                     }

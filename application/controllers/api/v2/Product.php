@@ -921,7 +921,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    if($target->status==22){
+                    if($target->status > 20){
                         $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
@@ -1374,7 +1374,7 @@ class Product extends REST_Controller {
                 'item_name'         => $item_name,
                 'item_count'        => $item_count,
                 'delivery'          => $delivery,
-                'status'            => 20
+                'status'            => 0
             ));
             if($order_insert){
                 $param = [
@@ -1432,7 +1432,7 @@ class Product extends REST_Controller {
                 $this->load->model('transaction/order_model');
                 $order 	= $this->order_model->get($target->order_id);
                 if($order){
-                    if($order->status != 21 ){
+                    if($order->status != 1 ){
                         $this->response(['result' => 'ERROR','error' => ORDER_STATUS_ERROR]);
                     }
                     $items 		= [];
@@ -1454,32 +1454,14 @@ class Product extends REST_Controller {
                         $amortization_schedule['total']['total_payment'].'、'.$order->instalment.'、'.$amortization_schedule['total_payment'].'、',
                     ]);
 
-                    $this->load->library('coop_lib');
-                    $result = $this->coop_lib->coop_request('order/supdate',[
-                        'merchant_order_no' => $order->merchant_order_no,
-                        'phone'             => $order->phone,
-                        'type'              => 'shipment',
-                    ],$user_id);
-                    if($result->result == 'SUCCESS'){
-                        $rs = $this->target_lib->ordersigning_target($target->id,$user_id,[
-                            'damage_rate' 	=> LIQUIDATED_DAMAGES,
-                            'contract_id'	=> $contract,
-                            'status'        => 22,
-                        ]);
-                        if($rs){
-                            $this->order_model->update($target->order_id,
-                                ['status' => 22]
-                            );
-                            $this->response(array('result' => 'SUCCESS'));
-                        }
-                    }
-                    //fallback
-                    $this->target_lib->ordersigning_target($target->id,$user_id,[
-                        'damage_rate' 	=> 0,
-                        'contract_id'	=> false,
-                        'status'        => 21,
+                    $rs = $this->target_lib->ordersigning_target($target->id,$user_id,[
+                        'damage_rate' 	=> LIQUIDATED_DAMAGES,
+                        'contract_id'	=> $contract,
+                        'status'        => 22,
                     ]);
-                    $this->response(['result' => 'ERROR','error' => $result->error ]);
+                    if($rs){
+                        $this->response(array('result' => 'SUCCESS'));
+                    }
                 }
                 $this->response(array('result' => 'ERROR','error' => ORDER_NOT_EXIST ));
             }
