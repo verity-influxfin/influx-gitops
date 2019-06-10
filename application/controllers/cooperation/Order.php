@@ -809,7 +809,7 @@ class Order extends REST_Controller {
         $quotes            = $content['quotes'];
         $order             = $this->get_order($merchant_order_no,$phone);
         if($order){
-            if($order->status == 20){
+            if($order->status == 0){
                 $product_info = $product_list[$order->product_id];
                 if($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']){
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
