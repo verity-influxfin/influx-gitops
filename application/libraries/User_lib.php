@@ -25,7 +25,7 @@ class User_lib {
             $check_log .= $field->status;
         }
 
-        if (mb_substr($check_log, 0, 3) == $temp_lock) {
+        if (mb_substr($check_log, 0, 3) === $temp_lock) {
             if ($check_log != $system_lock) {
                 $block_status = 2;
             } else {
@@ -44,7 +44,7 @@ class User_lib {
             $remind_count = 0;
         }
         else{
-            $remind_count = mb_substr($check_log, 0, 2) == '00'?1:(mb_substr($check_log, 0, 1) == '0'?2:3);
+            $remind_count = mb_substr($check_log, 0, 2) === '00'?1:(mb_substr($check_log, 0, 1) === '0'?2:3);
         }
 
         return $remind_count;
