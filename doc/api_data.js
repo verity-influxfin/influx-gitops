@@ -7788,14 +7788,14 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待核可(分期) 23:待驗證(分期) 24:待債轉(分期) 25:待出貨 26:待放款(分期)</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",
@@ -8650,14 +8650,14 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待核可(分期) 23:待驗證(分期) 24:待債轉(分期) 25:待出貨 26:待放款(分期)</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",
