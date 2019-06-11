@@ -814,9 +814,11 @@ class Order extends REST_Controller {
                 if($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']){
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
                 }
+                $amount         = $quotes;
                 $platform_fee   = intval(round( $quotes * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
                 $platform_fee   = $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
-                $total 		    = $quotes + $platform_fee;
+                $transfer_fee   = intval(round($quotes *DEBT_TRANSFER_FEES/100,0));
+                $total 		    = $quotes + $platform_fee + $transfer_fee;
                 $data['amount'] = $quotes;
                 $rs = $this->order_model->update_by(
                     [
@@ -825,8 +827,9 @@ class Order extends REST_Controller {
                         'status'            => 0,
                     ],
                     [
-                        'amount'            => $quotes,
+                        'amount'            => $amount,
                         'platform_fee'      => $platform_fee,
+                        'transfer_fee'      => $transfer_fee,
                         'total'             => $total,
                         'item_price'        => $quotes,
                         'status'            => 1,
@@ -841,7 +844,6 @@ class Order extends REST_Controller {
                         [
                             'amount'        => $quotes,
                             'platform_fee'  => $platform_fee,
-                            //'loan_amount'   => $total,
                             'status'        => 21,
                         ]
                     );

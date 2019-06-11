@@ -1284,11 +1284,6 @@ class Product extends REST_Controller {
     {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
-        $phone = $this->user_info->phone;
-        $user_name  = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':'小姐');
-        $param 		= [];
-        $date 		= get_entering_date();
-        $address    = '';
         $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
@@ -1337,6 +1332,7 @@ class Product extends REST_Controller {
         $company_user_id = $cooperation -> company_user_id;
 
         //交易方式
+        $address    = '';
         if($content['delivery'] == 1){
             if (!isset($input['address'])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1346,6 +1342,12 @@ class Product extends REST_Controller {
         }
 
         //對經銷商系統建立訂單
+        $phone        = $this->user_info->phone;
+        $user_name    = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':'小姐');
+        $order_parm   = [
+
+        ];
+
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
@@ -1361,31 +1363,50 @@ class Product extends REST_Controller {
             $item_name = $result->data->product_name.($result->data->product_spec!='-'?
                     $result->data->product_spec:'');
             $merchant_order_no = $result->data->merchant_order_no;
+            $product_price     = $result->data->product_price;
+            $amount            = $product_price;
+            $platform_fee      = 0;
+            $transfer_fee      = 0;
+            $total             = 0;
             //建立主系統訂單
             $order_insert = false;
-            $this->load->model('transaction/order_model');
-            $order_insert = $this->order_model->insert(array(
+            if($product_price > 0){
+                $platform_fee = intval(round( $product_price * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+                $platform_fee = $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
+                $transfer_fee = intval(round($product_price *DEBT_TRANSFER_FEES/100,0));
+                $total        = $amount + $platform_fee + $transfer_fee;
+            }
+            $order_parm = [
                 'company_user_id'   => $company_user_id,
                 'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
                 'merchant_order_no' => $merchant_order_no,
                 'phone'             => $phone,
                 'product_id'	    => $product_id,
                 'instalment'	    => $instalment,
+                'item_price'        => $product_price,
                 'item_name'         => $item_name,
                 'item_count'        => $item_count,
+                'amount'            => $amount,
+                'platform_fee'	    => $platform_fee,
+                'transfer_fee'      => $transfer_fee,
+                'total'             => $total,
                 'delivery'          => $delivery,
                 'status'            => 0
-            ));
+            ];
+            $this->load->model('transaction/order_model');
+            $order_insert = $this->order_model->insert($order_parm);
             if($order_insert){
                 $param = [
                     'product_id'	=> $product_id,
                     'user_id'		=> $user_id,
-                    'amount'		=> $result->data->product_price,
+                    'amount'		=> $product_price,
                     'instalment'	=> $instalment,
+                    'platform_fee'  => $platform_fee,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
                     'status'        => 20,
                 ];
+
                 //建立產品單號
                 $insert = $this->target_lib->add_target($param);
                 if($insert){
