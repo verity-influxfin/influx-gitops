@@ -92,7 +92,7 @@ $config['admin_menu'] = [
 if(ENVIRONMENT=='development'){
 	$config['admin_email'] = ['news@influxfin.com'];
 }else{
-	$config['admin_email'] = ['yaomu@influxfin.com','rogerkuo@influxfin.com','mori2.tw@gmail.com','tim@influxfin.com'];
+	$config['admin_email'] = ['yaomu@influxfin.com','rogerkuo@influxfin.com','lc@influxfin.com','mori2.tw@gmail.com'];
 } 
 
 //期數
