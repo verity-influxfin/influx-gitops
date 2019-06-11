@@ -80,7 +80,12 @@
                                             <td><?=isset($value->sdate)?$value->sdate.' - '.$value->edate:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
-                                            <td><a type="button" href="<?=isset($value->url)?$value->url:"" ?>" class="btn btn-info"><i class="fa fa-download"></i></a></td>
+                                            <td>
+                                                <a type="button" href="<?=isset($value->url)?$value->url:"" ?>" class="btn btn-danger"><i class="fa fa-download"></i></a>
+                                                <? if($value->investor==1&&$value->type=="estatementdetail"){ ?>
+                                                    <a type="button" href="./estatement_excel?sdate=<?=isset($value->sdate)?$value->sdate:'' ?>&edate=<?=isset($value->edate)?$value->edate:'' ?>&user_id=<?=isset($value->user_id)?$value->user_id:"" ?>" class="btn btn-success"><i class="fa fa-download"></i></a>
+                                                <? } ?>
+                                            </td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 										</tr>                                        
 									<?php 

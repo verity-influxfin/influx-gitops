@@ -482,7 +482,7 @@ class Estatement_lib{
 		return false;
 	}
 	
-	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate=""){
+	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate="",$export=false){
 		$user_info = $this->CI->user_model->get($user_id);
 		if($user_info){
 			$virtual_account = $this->CI->virtual_account_model->get_by(array(
@@ -704,7 +704,13 @@ class Estatement_lib{
 					"list"			=> $list,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor_detail', $data,TRUE);
-				
+
+                if($export){
+                    header('Content-type:application/vnd.ms-excel');
+                    header('Content-Disposition: attachment; filename=estatementdetail_'.date('Ymd').'.xls');
+                    echo $html;
+                    return true;
+                }
 				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatementdetail",

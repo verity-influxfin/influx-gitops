@@ -631,4 +631,9 @@ class Account extends MY_Admin_Controller {
 		$this->load->view('admin/estatement_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
+    public function estatement_excel(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->get_estatement_investor_detail($get['user_id'],$get['sdate'],$get['edate'],true);
+    }
 }
