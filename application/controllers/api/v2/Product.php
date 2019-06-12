@@ -913,6 +913,7 @@ class Product extends REST_Controller {
                     $this->load->library('contract_lib');
                     $date        = get_entering_date();
                     $company     = $this->get_dealer_info($orders->company_user_id,substr($orders->merchant_order_no,0,1));
+                    $product     = '';
                     $items 		 = [];
                     $item_name	 = explode(',',$orders->item_name);
                     $item_count	 = explode(',',$orders->item_count);
@@ -932,9 +933,20 @@ class Product extends REST_Controller {
                         ]);
                     }
 
+                    $this->load->library('coop_lib');
+                    $result = $this->coop_lib->coop_request('order/sread',[
+                        'merchant_order_no' => $orders->merchant_order_no,
+                        'phone'             => $orders->phone,
+                        'type'              => 'product',
+                    ],0);
+                    if($result->result == 'SUCCESS') {
+                        $item_info[] = $result->data->list;
+                    }
+
                     $order_info['order_no'] 		 = $orders->order_no;
                     $order_info['company'] 			 = $company;
                     $order_info['merchant_order_no'] = $orders->merchant_order_no;
+                    $order_info['item_info']   	     = $item_info;
                     $order_info['item_name'] 		 = $item_name;
                     $order_info['item_count'] 		 = $item_count;
                     $order_info['delivery'] 		 = intval($orders->delivery);

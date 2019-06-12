@@ -7715,6 +7715,139 @@ define({
                         },
                         {
                             "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "oreder",
+                            "description": "<p>訂單資訊     </p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.oreder_id",
+                            "description": "<p>Order ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.company_id",
+                            "description": "<p>經銷商ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.company",
+                            "description": "<p>經銷商公司名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.tax_id",
+                            "description": "<p>統編</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.company_phone",
+                            "description": "<p>連絡電話</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.company_address",
+                            "description": "<p>店家地址</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.merchant_order_no",
+                            "description": "<p>訂單號碼</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "oreder.item_info",
+                            "description": "<p>訂單商品資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "oreder.item_info.item",
+                            "description": "<p>商品資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.item_info.item.brand",
+                            "description": "<p>品牌</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.item_info.item.name",
+                            "description": "<p>商品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.item_info.item.spec",
+                            "description": "<p>商品規格</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "oreder.item_info.item.image",
+                            "description": "<p>商品圖片</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.item_name",
+                            "description": "<p>商品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.item_count",
+                            "description": "<p>商品數量</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.delivery",
+                            "description": "交易方式 0:線下 1:線上"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.status",
+                            "description": "<p>訂單狀態</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "oreder.created_at",
+                            "description": "<p>建立時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "amount",
@@ -8005,7 +8138,181 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\":\"1\",\n\t\t\t\"target_no\": \"1803269743\",\n\t\t\t\"product_id\":\"1\",\n\t\t\t\"user_id\":\"1\",\n\t\t\t\"amount\":\"5000\",\n\t\t\t\"loan_amount\":\"12000\",\n\t\t\t\"platform_fee\":\"1500\",\n\t\t\t\"interest_rate\":\"9\",\n\t\t\t\"instalment\":\"3\",\n\t\t\t\"repayment\":\"1\",\n\t\t\t\"reason\":\"\",\n\t\t\t\"remark\":\"\",\n\t\t\t\"delay\":\"0\",\n\t\t\t\"status\":\"0\",\n\t\t\t\"sub_status\":\"0\",\n\t\t\t\"created_at\":\"1520421572\",\n\t\t\t\"contract\":\"我是合約\",\n\t\t\t\"credit\":{\n\t\t\t\t\"level\":\"1\",\n\t\t\t\t\"points\":\"1985\",\n\t\t\t\t\"amount\":\"45000\",\n\t\t\t\t\"created_at\":\"1520421572\"\n\t\t\t},\n\t         \"certification\": [\n          \t{\n          \t     \"id\": \"1\",\n          \t     \"name\": \"身分證認證\",\n          \t     \"description\": \"身分證認證\",\n          \t     \"alias\": \"id_card\",\n           \t    \"user_status\": \"1\"\n          \t},\n          \t{\n          \t    \"id\": \"2\",\n           \t    \"name\": \"學生證認證\",\n          \t    \"description\": \"學生證認證\",\n           \t   \"alias\": \"student\",\n           \t   \"user_status\": \"1\"\n          \t}\n          ],\n      \"amortization_schedule\": {\n          \"amount\": \"12000\",\n          \"instalment\": \"6\",\n          \"rate\": \"9\",\n          \"date\": \"2018-04-17\",\n          \"total_payment\": 2053,\n          \"leap_year\": false,\n          \"year_days\": 365,\n          \"XIRR\": 0.0939,\n          \"schedule\": {\n               \"1\": {\n                 \"instalment\": 1,\n                 \"repayment_date\": \"2018-06-10\",\n                 \"days\": 54,\n                 \"remaining_principal\": \"12000\",\n                 \"principal\": 1893,\n                 \"interest\": 160,\n                 \"total_payment\": 2053\n             },\n             \"2\": {\n                  \"instalment\": 2,\n                 \"repayment_date\": \"2018-07-10\",\n                 \"days\": 30,\n                  \"remaining_principal\": 10107,\n                  \"principal\": 1978,\n                  \"interest\": 75,\n                   \"total_payment\": 2053\n              },\n             \"3\": {\n                   \"instalment\": 3,\n                   \"repayment_date\": \"2018-08-10\",\n                   \"days\": 31,\n                   \"remaining_principal\": 8129,\n                  \"principal\": 1991,\n                  \"interest\": 62,\n                   \"total_payment\": 2053\n               }\n           },\n          \"total\": {\n               \"principal\": 12000,\n               \"interest\": 391,\n               \"total_payment\": 12391\n           }\n       }\n\t\t}\n   }",
+                        "content": "{\n" +
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"id\": 8788,\n" +
+                            "    \"target_no\": \"STI2019060889753\",\n" +
+                            "    \"product_id\": 2,\n" +
+                            "    \"user_id\": 12820,\n" +
+                            "    \"order_id\": 10,\n" +
+                            "    \"order_info\": {\n" +
+                            "      \"order_no\": \"1-2019060816305027903\",\n" +
+                            "      \"company\": {\n" +
+                            "        \"company_id\": 0,\n" +
+                            "        \"company\": \"全聯實業股份有限公司\",\n" +
+                            "        \"tax_id\": 16740494,\n" +
+                            "        \"company_phone\": \"0225079990\",\n" +
+                            "        \"company_address\": \"台北市南京東路四段111號\"\n" +
+                            "      },\n" +
+                            "      \"merchant_order_no\": \"CPA1906080449583\",\n" +
+                            "      \"item_info\": [\n" +
+                            "        {\n" +
+                            "          \"brand\": \"LG\",\n" +
+                            "          \"name\": \"LG V30 \",\n" +
+                            "          \"spec\": \"-\",\n" +
+                            "          \"price\": \"15800\",\n" +
+                            "          \"image\": \"http:\\/\\/img.eprice.com.tw\\/img\\/mobile\\/5736\\/big.png\"\n" +
+                            "        }\n" +
+                            "      ],\n" +
+                            "      \"item_name\": [\n" +
+                            "        \"LG V30 \"\n" +
+                            "      ],\n" +
+                            "      \"item_count\": [\n" +
+                            "        1\n" +
+                            "      ],\n" +
+                            "      \"delivery\": 1,\n" +
+                            "      \"status\": 1,\n" +
+                            "      \"created_at\": 1559982650\n" +
+                            "    },\n" +
+                            "    \"amount\": 16000,\n" +
+                            "    \"loan_amount\": 16000,\n" +
+                            "    \"platform_fee\": 500,\n" +
+                            "    \"interest_rate\": 18,\n" +
+                            "    \"instalment\": 3,\n" +
+                            "    \"repayment\": 1,\n" +
+                            "    \"reason\": \"分期:LG V30 \",\n" +
+                            "    \"remark\": \"\",\n" +
+                            "    \"delay\": 0,\n" +
+                            "    \"delay_days\": 0,\n" +
+                            "    \"status\": 23,\n" +
+                            "    \"sub_status\": 0,\n" +
+                            "    \"created_at\": 1559982650,\n" +
+                            "    \"contract\": \"分期付款買賣契約書\\n立契約書人\\n出賣人：20445（簡稱甲方）\\n買受人：12820（簡稱乙方）\\n\\n乙方向甲方以分期付款方式購買乙方指定手機（下稱標的手機），並簽訂本「分期付款買賣契約書」（下稱本契約），業經乙方經合理天數詳細審閱本契約所有條款，且已充份理解契約內容後，同意與甲方共同遵守約定條款如下:\\n第一條\\t標的手機買賣暨分期付款約定\\n（一）\\t標的手機規格及數量：LG V30  x 1\\n（二）\\t買賣總價：16580\\n（三）\\t分期金額、期數及每期應繳金額：17323、3、5694、\\n第二條\\t標的手機之交付\\n（一）\\t乙方對前開標的手機同意承買，於本契約成立後，甲方仍保有標的手機之實質所有權，乙方僅取得標的手機之占有，並不因標的手機之交付而取得所有權。於全部分期價款及本契約約定未完全履行清償前，乙方應依善良管理人注意義務為先行保管、占有使用，不得擅自將標的手機遷移、讓與、移轉、質押、典當或其他處分，違反本條款將依刑法詐欺罪或侵占罪，追究相關刑事責任。\\n（二）\\t為確認乙方就標的手機未為前項之遷移、讓與、移轉、質押、典當或其他處分行為，甲方於乙方逾期清償或違約時，有權要求乙方證明標的手機尚在乙方占有中，乙方不得拒絕。\\n（三）\\t乙方於收受標的手機時應即驗收，發現瑕疪時應即通知甲方，如乙方怠為此通知者，視為承認所受領之物。標的手機之危險自乙方占有時起，\u7531乙方自行承擔。\\n第三條\\t應收帳款暨權利轉讓\\n（一）\\t乙方同意甲方不另書面通知即得將請求分期價款之權利及依本契約約定所有之其他一切權利及利益轉讓第三人，轉讓方式包括但不限於透過第三人普匯金融科技股份有限公司（下稱普匯公司）所營個人借貸媒合服務平台（下稱借貸平台）轉讓與任意第三人受讓，乙方絕無異議。\\n（二）\\t乙方理解並同意分期付款價款應依約定繳付予帳款受讓人或收買人之指定繳款帳戶。乙方對上開分期價款與撥款日期悉數承認，絕不以乙方與甲方間之法律關係存在與否，或其他任何紛爭等事由對抗帳款受讓人或帳款收買人。\\n（三）\\t乙方與甲方同意帳款受讓人得將請求乙方支付分期價款之權利，讓與帳款收買人，乙方仍受本契約之約束，茲確認已接受讓與之通知，且同意不得以其對甲方之任何債權向帳款受讓人及其指定人或帳款收買人主張抵銷。關於因契約之所生之消費性商品瑕疵擔保、保固、保證、售後服務或其他契約上之責任，仍應由甲方負責；帳款受讓人及其指定人或帳款收買人就商品標的物無任何明示或默示之承諾或保證，乙方應向甲方請求履行此等責任與義務。\\n（四）\\t於甲方透過第三人普匯公司所營借貸平台轉讓本契約債權時，乙方同意第三人普匯公司得揭露經隱蔽部分內容之乙方姓名及身分證字號等個人資料與受讓債權之第三方，並得登載於借貸平台上供本契約債權之受讓人查詢。當乙方逾清償期日仍未清償債務者，乙方同意普匯公司得揭露未經隱蔽之乙方姓名及身分證字號與本契約債權\u4e4b受讓人。\\n（五）\\t乙方瞭解帳款受讓人及其指定人、帳款收買人或普匯公司，均非商品、服務之進口人、出售人或經銷人，與甲方無任何代理、合夥、經銷關係，相關商品、服務之瑕疵擔保、保固、保證、售後服務或其他契約上之責任，概由甲方負責。\\n第四條\\t違約責任\\n（一）\\t乙方應按本契約前開約定所列日期及金額，分期支付所列之分期付款價款，乙方未按期支付期付款之任一期逾期繳款時，應自逾期之日按年利率百分之二十計付遲延利息，並喪失期限利益，全部分期債務視為到期，乙方應一次清償該筆未償分期餘額、利息、違約金或相關費用等總債權。\\n（二）\\t乙方發生任何逾期清償或違反本契約情事時，除應加計給付前項所規定之遲延利息外，並同意支付依分期餘額百分之十計算之懲罰性違約金。\\n（三）\\t乙方如有延遲付款、退票、銀行拒往、信用貶落、不履行或怠於履行本契約之任一義務及規定；因其他債務關係而受假扣押、假處分、終局執行或其他公權力處分；進行重整、合併、清算、解散等程序或受破產宣告；死亡、失蹤或發生繼承而其繼承人聲明限定或拋棄繼承；於本契約由乙方交由甲方之任何文件(含所填載之顧客申購契約書)中有不實之陳述或說明之情事之一者，除甲方、帳款受讓人及其指定人或帳款收買人得依法律或契約約定行使權利外，所有未到期分期價款視為提前全部到期，應即清償，甲方或其權利受讓人亦得逕行向乙方取回標的手機。\\n（四）\\t乙方在本契約有效期間內發生任何逾期清償或違約情事時，同意甲方、帳款受讓人及其指定人或帳款收買人或其他催收公司代為處理相關催收事宜，乙方與甲方同意如逾期未清償本契約項下任何債務時，帳款受讓人或收買人得將本契約項下之相關權益，包括但\u4e0d限於乙方未付之分期餘額、利息及違約金等債權及相關擔保權益，相關書面資料包括但不限於本契約與分期有關之任何文件轉讓予帳款受讓人或其指定人。\\n第五條\\t送達\\n乙方因名稱、組織、代表人及通知地址(營業所)等之變更或其他不關影響權益之變更，應立即以書面將變更事項通知甲方、帳款受讓人及其指定人或帳款收買人，如未通知，甲方、帳款受讓人及其指定人或帳款收買人得將有關文書向本契約所載或其知悉之最後地址投郵寄送後，經通常之郵遞期間即視為已合法送達，另乙方如未為通知致生糾葛或因而造成甲方、帳款受讓人及其指定人或帳款收買人損害時，概由乙方負責。\\n第六條\\t個人資料蒐集、處理及利用之同意\\n乙方同意甲方、帳款受讓人及其指定人或帳款收買人對乙方之徵信、授信及其他達成授信及催收等所取得之資料，提供予甲方、帳款受讓人及其指定人或帳款收買人得蒐集電腦處理及利用本人個人資料。乙方另同意甲方、帳款受讓人及其指定人或帳款收買人得將其基本資料、帳務資料、信用資料、投資資料、保險資料等個人資料，提供揭露予所屬關係企業，供各該公司蒐集、電腦處理及為共同行銷利用，或提供予受甲方、帳款受讓人及其指定人或帳款收買人委任代為處理事務之人。\\n第七條\\t其他約款\\n（一）\\t因本契約發生之爭訟時，雙方同意以台灣台北地方法院(包括其簡易庭)為第一審管轄法院，並適用中華民國法律。\\n（二）\\t乙方同意應受普匯公司所營網路平台之所有條款內容拘束，內容包含但不限於使用者條款、債權讓與條款、隱私權政策等條款，且普匯公司保有解釋及變更之權利。\\n（三）\\t本契約一式二份，由雙方各執乙份為憑。\\n\\n 中華民國 108 年 06 月 12 日\",\n" +
+                            "    \"credit\": {\n" +
+                            "      \"level\": 7,\n" +
+                            "      \"points\": 630,\n" +
+                            "      \"amount\": 27000,\n" +
+                            "      \"created_at\": 1560088999\n" +
+                            "    },\n" +
+                            "    \"certification\": [\n" +
+                            "      {\n" +
+                            "        \"id\": 1,\n" +
+                            "        \"alias\": \"idcard\",\n" +
+                            "        \"name\": \"實\u540d認證\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"驗證個人身份資訊\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11430,\n" +
+                            "        \"updated_at\": 1553795034\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 2,\n" +
+                            "        \"alias\": \"student\",\n" +
+                            "        \"name\": \"學生身份認證\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"驗證學生身份\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11453,\n" +
+                            "        \"updated_at\": 1553815012\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 3,\n" +
+                            "        \"alias\": \"debitcard\",\n" +
+                            "        \"name\": \"金融帳號認證\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"驗證個人金融帳號\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11407,\n" +
+                            "        \"updated_at\": 1553750450\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 4,\n" +
+                            "        \"alias\": \"social\",\n" +
+                            "        \"name\": \"社交認證\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"個人社交帳號認證\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11451,\n" +
+                            "        \"updated_at\": 1553819560\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 5,\n" +
+                            "        \"alias\": \"emergency\",\n" +
+                            "        \"name\": \"緊急聯絡人\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11454,\n" +
+                            "        \"updated_at\": 1553819660\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 6,\n" +
+                            "        \"alias\": \"email\",\n" +
+                            "        \"name\": \"常用電子信箱\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11392,\n" +
+                            "        \"updated_at\": 1553706982\n" +
+                            "      },\n" +
+                            "      {\n" +
+                            "        \"id\": 7,\n" +
+                            "        \"alias\": \"financial\",\n" +
+                            "        \"name\": \"財務訊息認證\",\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"description\": \"提供財務訊息資訊\",\n" +
+                            "        \"user_status\": 1,\n" +
+                            "        \"certification_id\": 11394,\n" +
+                            "        \"updated_at\": 1553707117\n" +
+                            "      }\n" +
+                            "    ],\n" +
+                            "    \"amortization_schedule\": {\n" +
+                            "      \"amount\": 16580,\n" +
+                            "      \"instalment\": 3,\n" +
+                            "      \"rate\": 18,\n" +
+                            "      \"date\": \"2019-06-12\",\n" +
+                            "      \"total_payment\": 5694,\n" +
+                            "      \"leap_year\": false,\n" +
+                            "      \"year_days\": 365,\n" +
+                            "      \"XIRR\": 19.470000000000002,\n" +
+                            "      \"schedule\": {\n" +
+                            "        \"1\": {\n" +
+                            "          \"instalment\": 1,\n" +
+                            "          \"repayment_date\": \"2019-08-10\",\n" +
+                            "          \"days\": 59,\n" +
+                            "          \"remaining_principal\": 16580,\n" +
+                            "          \"principal\": 5212,\n" +
+                            "          \"interest\": 482,\n" +
+                            "          \"total_payment\": 5694\n" +
+                            "        },\n" +
+                            "        \"2\": {\n" +
+                            "          \"instalment\": 2,\n" +
+                            "          \"repayment_date\": \"2019-09-10\",\n" +
+                            "          \"days\": 31,\n" +
+                            "          \"remaining_principal\": 11368,\n" +
+                            "          \"principal\": 5520,\n" +
+                            "          \"interest\": 174,\n" +
+                            "          \"total_payment\": 5694\n" +
+                            "        },\n" +
+                            "        \"3\": {\n" +
+                            "          \"instalment\": 3,\n" +
+                            "          \"repayment_date\": \"2019-10-10\",\n" +
+                            "          \"days\": 30,\n" +
+                            "          \"remaining_principal\": 5848,\n" +
+                            "          \"principal\": 5848,\n" +
+                            "          \"interest\": 87,\n" +
+                            "          \"total_payment\": 5935\n" +
+                            "        }\n" +
+                            "      },\n" +
+                            "      \"total\": {\n" +
+                            "        \"principal\": 16580,\n" +
+                            "        \"interest\": 743,\n" +
+                            "        \"total_payment\": 17323\n" +
+                            "      }\n" +
+                            "    }\n" +
+                            "  }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -10946,13 +11253,6 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "dealer",
-                            "description": "<p>經銷商</p>"
-                        },
-                        {
-                            "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "company_id",
@@ -10963,7 +11263,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "company",
-                            "description": "<p>店名</p>"
+                            "description": "<p>經銷商公司名</p>"
                         },
                         {
                             "group": "Success 200",
