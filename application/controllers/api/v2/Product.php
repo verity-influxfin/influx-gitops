@@ -911,11 +911,11 @@ class Product extends REST_Controller {
 
                 if(!empty($orders)){
                     $this->load->library('contract_lib');
-                    $date = get_entering_date();
-                    $company = $this->user_model->get(intval($orders->company_user_id));
-                    $items 		= [];
-                    $item_name	= explode(',',$orders->item_name);
-                    $item_count	= explode(',',$orders->item_count);
+                    $date        = get_entering_date();
+                    $company     = $this->get_dealer_info($orders->company_user_id,substr($orders->merchant_order_no,0,1));
+                    $items 		 = [];
+                    $item_name	 = explode(',',$orders->item_name);
+                    $item_count	 = explode(',',$orders->item_count);
                     foreach($item_count as $k => $v){
                         $items[] = $item_name[$k].' x '.$v;
                         $item_count[$k] = intval($v);
@@ -933,7 +933,7 @@ class Product extends REST_Controller {
                     }
 
                     $order_info['order_no'] 		 = $orders->order_no;
-                    $order_info['company'] 			 = $company->name;
+                    $order_info['company'] 			 = $company;
                     $order_info['merchant_order_no'] = $orders->merchant_order_no;
                     $order_info['item_name'] 		 = $item_name;
                     $order_info['item_count'] 		 = $item_count;
@@ -1505,22 +1505,27 @@ class Product extends REST_Controller {
         }
         if($cooperation){
             foreach($cooperation as $key => $value){
-                $this->load->model('user/judicial_person_model');
-                $judicial_person = $this->judicial_person_model->get_by(array('company_user_id'=>$value->company_user_id));
-
-                if($judicial_person){
-                    $list[$key]  = [
-                        'company_id'        => intval($value->id),
-                        'company'           => $judicial_person->company,
-                        'tax_id'            => intval($judicial_person->tax_id),
-                        //'company_contact' => $judicial_person->cooperation_contact,
-                        'company_phone'     => $judicial_person->cooperation_phone,
-                        'company_address'   => $judicial_person->cooperation_address,
-                    ];
-                }
+                $list[$key] = $this->get_dealer_info($value->company_user_id,$value->id);
             }
         }
 
         $this->response(array('result' => 'SUCCESS','data' => ['list' => $list] ));
+    }
+
+    private function get_dealer_info($company_user_id,$id){
+        $this->load->model('user/judicial_person_model');
+        $judicial_person = $this->judicial_person_model->get_by(array('company_user_id'=>$company_user_id));
+        $info = '';
+        if($judicial_person){
+            $info  = [
+                'company_id'        => intval($id),
+                'company'           => $judicial_person->company,
+                'tax_id'            => intval($judicial_person->tax_id),
+                //'company_contact' => $judicial_person->cooperation_contact,
+                'company_phone'     => $judicial_person->cooperation_phone,
+                'company_address'   => $judicial_person->cooperation_address,
+            ];
+        }
+        return $info;
     }
 }
