@@ -8323,18 +8323,6 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "404",
-                            "description": "<p>此申請不存在</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "405",
-                            "description": "<p>對此申請無權限</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
                             "field": "100",
                             "description": "<p>Token錯誤</p>"
                         },
@@ -8347,6 +8335,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤(經銷商)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "207",
                             "description": "<p>非借款端登入</p>"
                         },
@@ -8355,20 +8349,40 @@ define({
                             "optional": false,
                             "field": "216",
                             "description": "<p>不支援法人帳號使用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "356",
+                            "description": "<p>訂單不存在(經銷商)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "405",
+                            "description": "<p>對此申請無權限</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "412",
+                            "description": "<p>目前狀態無法完成此動作(經銷商)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "413",
+                            "description": "<p>對此訂單無權限(經銷商)</p>"
                         }
                     ]
                 },
                 "examples": [
-                    {
-                        "title": "404",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "405",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
-                        "type": "Object"
-                    },
                     {
                         "title": "100",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
@@ -8380,6 +8394,11 @@ define({
                         "type": "Object"
                     },
                     {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "207",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
                         "type": "Object"
@@ -8388,7 +8407,33 @@ define({
                         "title": "216",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
+                    },
+                    {
+                        "title": "356",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"356\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "405",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "412",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"412\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "413",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"413\"\n}",
+                        "type": "Object"
                     }
+
                 ]
             },
             "filename": "application/controllers/api/v2/Product.php",

@@ -913,7 +913,7 @@ class Product extends REST_Controller {
                     $this->load->library('contract_lib');
                     $date        = get_entering_date();
                     $company     = $this->get_dealer_info($orders->company_user_id,substr($orders->merchant_order_no,0,1));
-                    $product     = '';
+                    $item_info   = [];
                     $items 		 = [];
                     $item_name	 = explode(',',$orders->item_name);
                     $item_count	 = explode(',',$orders->item_count);
@@ -939,7 +939,7 @@ class Product extends REST_Controller {
                         'phone'             => $orders->phone,
                         'type'              => 'product',
                     ],0);
-                    if($result->result == 'SUCCESS') {
+                    if(!$result->result == 'SUCCESS') {
                         $item_info[] = $result->data->list;
                     }
 
