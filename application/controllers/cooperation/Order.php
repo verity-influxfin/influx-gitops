@@ -16,12 +16,12 @@ class Order extends REST_Controller {
 		$cooperation_id = isset($this->input->request_headers()['CooperationID'])?$this->input->request_headers()['CooperationID']:'';
 		
 		if(strlen($authorization) != 39 || substr($authorization,0,7) != 'Bearer '){
-			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
+			$this->response(['result' => 'ERROR','error' => AuthorizationRequired ],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
 		
 		$time_ragne = time() - intval($time);
 		if($time_ragne > COOPER_TIMEOUT){
-			$this->response(['error' =>'TimeOut'],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
+			$this->response(['result' => 'ERROR','error' => TimeOut ],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
 		}
 		
 		if($cooperation_id){
@@ -34,13 +34,13 @@ class Order extends REST_Controller {
 				//$this->cooperation_info = $cooperation;
 				//$ips = explode(',',$cooperation->server_ip);
 				//if(!in_array(get_ip(),$ips)){
-				//	$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
+				//	$this->response(['result' => 'ERROR','error' => IllegalIP ],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
 				//}
 			}else{
-				$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
+				$this->response(['result' => 'ERROR','error' => CooperationNotFound ],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 			}
 		}else{
-			$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
+			$this->response(['result' => 'ERROR','error' => CooperationNotFound ],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 		}
 
 
@@ -54,7 +54,7 @@ class Order extends REST_Controller {
 		
 		$signature = 'Bearer '.MD5(SHA1($cooperation_id.$middles.$time).$cooperation->cooperation_key);
 		if($signature != $authorization){
-			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
+			$this->response(['result' => 'ERROR','error' => AuthorizationRequired ],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
     }
 	
@@ -230,7 +230,7 @@ class Order extends REST_Controller {
 		foreach ($fields as $field) {
 			$input[$field] = intval($input[$field]);
 			if (empty($input[$field])) {
-				$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+				$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 			} 
 		}
 
@@ -253,7 +253,7 @@ class Order extends REST_Controller {
 				$this->response(array('result' => 'SUCCESS','data' => ['list'=>$list]));
 			}
 		}
-		$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+		$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
     }
 	
 	/**
@@ -399,7 +399,7 @@ class Order extends REST_Controller {
 		foreach ($fields as $field) {
 			$input[$field] = intval($input[$field]);
 			if (empty($input[$field])) {
-				$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+				$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 			}
 		}
 		
@@ -415,7 +415,7 @@ class Order extends REST_Controller {
 				}
 			}
 		}
-		$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+		$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
     }
 	
 	/**
@@ -485,35 +485,35 @@ class Order extends REST_Controller {
 		$content		= [];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
-				$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+				$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 			}else{
 				$content[$field] = $input[$field];
 			}
 		}
 
 		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $content['phone'])){
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 		if(strlen($content['merchant_order_no'])< 8 || strlen($content['merchant_order_no'])>32){
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 		//產品
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
 			$product_info = $product_list[$input['product_id']];
 		}else{
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 		//期數
 		if(!in_array($input['instalment'],$product_info['instalment'])){
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 		//金額
 		if($input['amount'] < $product_info['loan_range_s'] && $input['amount'] > $product_info['loan_range_e']){
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 		//商品
@@ -527,10 +527,10 @@ class Order extends REST_Controller {
 			}
 			
 			if($total != $content['amount']){
-				$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+				$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 			}
 		}else{
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 
@@ -539,7 +539,7 @@ class Order extends REST_Controller {
 			'merchant_order_no'	=> $content['merchant_order_no'],
 		]);
 		if($exist){
-			$this->response(['error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
+			$this->response(['result' => 'ERROR','error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
 		}
 		
 		$content['platform_fee'] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
@@ -551,7 +551,7 @@ class Order extends REST_Controller {
 		if($rs){
 			$this->response(['result' => 'SUCCESS']);
 		}else{
-			$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
+			$this->response(['result' => 'ERROR','error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
 		}		
     }
 
@@ -614,7 +614,7 @@ class Order extends REST_Controller {
     {
 		$input 			= $this->input->get(NULL, TRUE);
 		if (empty($input['merchant_order_no'])) {
-			$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+			$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 		}
 		
 
@@ -635,7 +635,7 @@ class Order extends REST_Controller {
 			];
 			$this->response(['result' => 'SUCCESS','data' => $data]);
 		}
-		$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
+		$this->response(['result' => 'ERROR','error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
     }
 
 	 /**
@@ -705,7 +705,7 @@ class Order extends REST_Controller {
 		$sdate	= isset($input['start_date'])?date('Y-m-d',strtotime($input['start_date'])):date('Y-m-d');
 		$edate	= isset($input['end_date'])?date('Y-m-d',strtotime($input['end_date'])):date('Y-m-d');
 		if($edate < $sdate || get_range_days($sdate,$edate)>90){
-			$this->response(['error' =>'ArgumentError'],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
+			$this->response(['result' => 'ERROR','error' => ArgumentError ],REST_Controller::HTTP_BAD_REQUEST);//400 參數有誤
 		}
 		
 
@@ -775,7 +775,7 @@ class Order extends REST_Controller {
 		$product_list 	= $this->config->item('product_list');
 		$input 			= $this->input->post(NULL, TRUE);
 		if (empty($input['merchant_order_no'])) {
-			$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+			$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 		}
 
 		$order = $this->order_model->get_by([
@@ -788,7 +788,7 @@ class Order extends REST_Controller {
 			$this->order_model->update($order->id,['status'=>8]);
 			$this->response(['result' => 'SUCCESS']);
 		}
-		$this->response(['error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
+		$this->response(['result' => 'ERROR','error' =>'OrderNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此單號
 
     }
 
@@ -859,7 +859,9 @@ class Order extends REST_Controller {
                             [
                                 'amount'            => 0,
                                 'platform_fee'      => 0,
+                                'transfer_fee'      => 0,
                                 'total'             => 0,
+                                'item_price'        => 0,
                                 'status'            => 0,
                             ]
                         );

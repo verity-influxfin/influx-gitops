@@ -298,7 +298,7 @@ defined('EVER8D_UID')      			OR define('EVER8D_UID'				, '0908903885');
 defined('EVER8D_PWD')     			OR define('EVER8D_PWD'				, 'ATx#25B6');
 
 //S3
-defined('AWS_ACCESS_TOKEN')     	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV_AWS_ACCESS_TOKEN'));
+defined('AWS_ACCESS_TOKEN')         	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV_AWS_ACCESS_TOKEN'));
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, getenv('ENV_AWS_SECRET_TOKEN'));
 defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('FRONT_S3_BUCKET')     		OR define('FRONT_S3_BUCKET'			, 'influxp2p-front-assets');

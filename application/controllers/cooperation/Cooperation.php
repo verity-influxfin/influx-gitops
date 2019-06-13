@@ -14,12 +14,12 @@ class Cooperation extends REST_Controller {
 		$cooperation_id = isset($this->input->request_headers()['CooperationID'])?$this->input->request_headers()['CooperationID']:'';
 		
 		if(strlen($authorization) != 39 || substr($authorization,0,7) != 'Bearer '){
-			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
+			$this->response(['result' => 'ERROR','error' => AuthorizationRequired ],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
 		
 		$time_ragne = time() - intval($time);
 		if($time_ragne > COOPER_TIMEOUT){
-			$this->response(['error' =>'TimeOut'],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
+			$this->response(['result' => 'ERROR','error' => TimeOut ],REST_Controller::HTTP_FORBIDDEN);//403 TimeOut
 		}
 		
 		if($cooperation_id){
@@ -32,13 +32,13 @@ class Cooperation extends REST_Controller {
 				$this->cooperation_info = $cooperation;
 				//$ips = explode(',',$cooperation->server_ip);
 				//if(!in_array(get_ip(),$ips)){
-				//	$this->response(['error' =>'IllegalIP'],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
+				//	$this->response(['result' => 'ERROR','error' => IllegalIP ],REST_Controller::HTTP_UNAUTHORIZED);//401 違法IP
 				//}
 			}else{
-				$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
+				$this->response(['result' => 'ERROR','error' => CooperationNotFound ],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 			}
 		}else{
-			$this->response(['error' =>'CooperationNotFound'],REST_Controller::HTTP_NOT_FOUND);//404 無此id
+			$this->response(['result' => 'ERROR','error' => CooperationNotFound ],REST_Controller::HTTP_NOT_FOUND);//404 無此id
 		}
 
 
@@ -52,7 +52,7 @@ class Cooperation extends REST_Controller {
 		
 		$signature = 'Bearer '.MD5(SHA1($cooperation_id.$middles.$time).$cooperation->cooperation_key);
 		if($signature != $authorization){
-			$this->response(['error' =>'AuthorizationRequired'],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
+			$this->response(['result' => 'ERROR','error' => AuthorizationRequired ],REST_Controller::HTTP_UNAUTHORIZED);//401 Authorization錯誤
 		}
 
     }
@@ -197,7 +197,7 @@ class Cooperation extends REST_Controller {
         $input 	= $this->input->post(NULL, TRUE);
 
 		if (empty($input['content'])) {
-			$this->response(['error' =>'RequiredArguments'],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
+			$this->response(['result' => 'ERROR','error' => RequiredArguments ],REST_Controller::HTTP_BAD_REQUEST);//400 缺少參數
 		}
 
 		$param	= [
@@ -210,7 +210,7 @@ class Cooperation extends REST_Controller {
 		if($insert){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
-			$this->response(['error' =>'InsertError'],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
+			$this->response(['result' => 'ERROR','error' => InsertError ],REST_Controller::HTTP_CONFLICT);//409 新增錯誤
 		}
     }
 	
