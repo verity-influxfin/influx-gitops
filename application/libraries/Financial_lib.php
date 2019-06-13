@@ -7,12 +7,12 @@ define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
 	
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1){
+	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1){
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($amount,$instalment,$rate,$date);
+				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type);
 				return $rs;
 			}
 		}
@@ -20,7 +20,7 @@ class Financial_lib{
 	}
 
 	//取得攤還表 - 等額本息
-	private function amortization_schedule_1($amount,$instalment,$rate,$date){
+	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type){
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
 		$rate 		= floatval($rate);
@@ -52,14 +52,14 @@ class Financial_lib{
 					$date 		= date('Y-m-',strtotime($date.' + 1 month')).REPAYMENT_DAY;
 				}
 				//本期日數
-				$days  		= get_range_days($odate,$date);
+				$days  		= $product_type == 1?get_range_days($odate,$date):30;
 				//本期利息 = 年利率/年日數*本期日數=本期利率
 				$interest 	= round( $amount * $rate / 100 * $days / $year_days ,0);
 				//本期本金
 				$principal	= $total_payment - $interest;
 				
 				//最後一期本金
-				if($i==$instalment){
+				if($i==$instalment && $product_type == 1){
 					$principal = $schedule['amount'] - $t_amount;
 				}
 				

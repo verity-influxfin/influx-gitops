@@ -326,8 +326,30 @@ class Target_lib{
 		}
 		return false;
 	}
-	
-	public function target_verify_failed($target = [],$admin_id=0,$remark='審批不通過'){
+
+    public function order_verify_success($target = [],$admin_id=0){
+        //
+        $this->CI->load->model('transaction/order_model');
+        $order  = $this->CI->order_model->get($target->order_id);
+        $this->CI->load->library('coop_lib');
+        $result = $this->CI->coop_lib->coop_request('order/supdate',[
+            'merchant_order_no' => $order->merchant_order_no,
+            'phone'             => $order->phone,
+            'type'              => 'shipment',
+        ],0);
+        if($result->result == 'SUCCESS') {
+            $target_update_param = [
+                'status' => 24
+            ];
+            $this->CI->target_model->update($target->id, $target_update_param);
+            $this->CI->load->library('target_lib');
+            $this->CI->target_lib->insert_change_log($target->id, $target_update_param, 0, $admin_id);
+            $this->CI->order_model->update($order->id, ['status' => 2]);
+        }
+        return false;
+    }
+
+    public function target_verify_failed($target = [],$admin_id=0,$remark='審批不通過'){
 		if(!empty($target)){
 			$param = [
 				'loan_amount'		=> 0,

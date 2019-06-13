@@ -489,7 +489,7 @@ class Transaction_lib{
 				$this->CI->load->model('transaction/order_model');
 				$order = $this->CI->order_model->get($target->order_id);
 				if($order && $order->status==1){
-					
+
 					$target_account 	= $this->CI->virtual_account_model->get_by([
 						'user_id'	=> $target->user_id,
 						'investor'	=> 0,
@@ -516,7 +516,7 @@ class Transaction_lib{
 							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 							'status'			=> 2
 						];
-						
+
 						$investment_id 	= $this->CI->investment_model->insert([
 							'target_id'		=> $target->id,
 							'user_id'		=> $company_account->user_id,
@@ -542,7 +542,7 @@ class Transaction_lib{
                             'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
                             'status'			=> 2
                         ];
-						
+
 						if($investment_id){
 							//攤還表
 							$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$target->loan_date,$target->repayment);
@@ -561,7 +561,7 @@ class Transaction_lib{
 										'bank_account_to'	=> $company_account->virtual_account,
 										'limit_date'		=> $payment['repayment_date'],
 									];
-									
+
 									$transaction[]	= [
 										'source'			=> SOURCE_AR_INTEREST,
 										'entering_date'		=> $date,
@@ -575,7 +575,7 @@ class Transaction_lib{
 										'bank_account_to'	=> $company_account->virtual_account,
 										'limit_date'		=> $payment['repayment_date'],
 									];
-									
+
 									$total 	= intval($payment['interest'])+intval($payment['principal']);
 									$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
 									$transaction[]	= [
@@ -601,27 +601,27 @@ class Transaction_lib{
                                 'type'              => 'shipment',
                             ],0);
                             if($result->result == 'SUCCESS') {
-                                //$rs = $this->CI->transaction_model->insert_many($transaction);
-                                //if ($rs && is_array($rs)) {
+                                $rs = $this->CI->transaction_model->insert_many($transaction);
+                                if ($rs && is_array($rs)) {
                                     $target_update_param = [
                                         'status' => 5,
                                         'loan_status' => 1,
                                     ];
-                                //    foreach ($rs as $key => $value) {
-                                //        $this->CI->passbook_lib->enter_account($value);
+                                    foreach ($rs as $key => $value) {
+                                        $this->CI->passbook_lib->enter_account($value);
 
-                                //    }
+                                    }
                                     $this->CI->target_model->update($target_id, $target_update_param);
-                                //    $this->CI->load->library('target_lib');
-                                //    $this->CI->target_lib->insert_change_log($target_id, $target_update_param, 0, $admin_id);
+                                    $this->CI->load->library('target_lib');
+                                    $this->CI->target_lib->insert_change_log($target_id, $target_update_param, 0, $admin_id);
                                     $this->CI->order_model->update($order->id, ['status' => 2]);
-                                //    $investment = $this->CI->investment_model->get($investment_id);
-                                //    if ($investment) {
-                                //        $this->CI->load->library('Transfer_lib');
-                                //        $this->CI->transfer_lib->apply_transfer($investment, 0, 0);
+                                    $investment = $this->CI->investment_model->get($investment_id);
+                                    if ($investment) {
+                                        $this->CI->load->library('Transfer_lib');
+                                        $this->CI->transfer_lib->apply_transfer($investment, 0, 0);
                                     return true;
-                                //    }
-                                //}
+                                    }
+                                }
                             }
 						}
 					}

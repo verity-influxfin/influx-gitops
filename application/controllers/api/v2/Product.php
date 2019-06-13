@@ -923,7 +923,7 @@ class Product extends REST_Controller {
                     }
 
                     if($target->status > 20){
-                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1);
+                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
                             $user_id,
@@ -939,7 +939,7 @@ class Product extends REST_Controller {
                         'phone'             => $orders->phone,
                         'type'              => 'product',
                     ],0);
-                    if(!$result->result == 'SUCCESS') {
+                    if($result->result == 'SUCCESS') {
                         $item_info[] = $result->data->list;
                     }
 
@@ -1476,7 +1476,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1);
+                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
 
                     $this->load->library('contract_lib');
                     $contract = $this->contract_lib->sign_contract('order',[
