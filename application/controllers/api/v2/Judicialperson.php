@@ -177,7 +177,7 @@ class Judicialperson extends REST_Controller {
      */
 	public function apply_post()
     {
-		$this->not_support_company();
+		//$this->not_support_company();
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
