@@ -745,7 +745,7 @@ class Judicialperson extends REST_Controller {
 			}
 			$list = $this->log_image_model->get_many_by([
 				'id'		=> $image_ids,
-				'user_id'	=> $user_id,
+				'user_id'	=> $company_user_id,
 			]);
 
 			if($list && count($list)==count($image_ids)){
