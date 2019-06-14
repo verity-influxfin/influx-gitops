@@ -507,13 +507,15 @@ class Charge_lib
 				
 				$delay_days	= get_range_days($last_date,$date);
 				if( $delay_days > 0 && $amount > 0){
-
-					if(in_array($delay_days,[1,3,7])){
-						$this->CI->load->library('Notification_lib');
-						$this->CI->load->library('sms_lib');
+                    $this->CI->load->library('Notification_lib');
+                    $this->CI->load->library('sms_lib');
+					if(in_array($delay_days,[1,2,3])){
 						$this->CI->notification_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
 						$this->CI->sms_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
-					}
+					}else if(in_array($delay_days,[4,5,6,7])){
+                        $this->CI->notification_lib->notice_delay_target_lv2($target->user_id,$amount,$target->target_no);
+                        $this->CI->sms_lib->notice_delay_target_lv2($target->user_id,$amount,$target->target_no);
+                    }
 
 					$update_data = [
 						'delay'		  => 1,

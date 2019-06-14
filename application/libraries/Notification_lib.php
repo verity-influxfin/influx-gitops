@@ -462,7 +462,8 @@ class Notification_lib{
 	public function notice_delay_target($user_id,$amount=0,$target_no=""){
 
 		$title 		= "【逾期通知】";
-		$content 	= "您好！您在手機ATM申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
+		$content 	= "親愛的用戶：
+    您的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，儘快安排還款，如已還款，請忽略本訊息。";
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> 0,
@@ -474,8 +475,25 @@ class Notification_lib{
 		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
-	
-	public function account_remaining($user_id,$investor=0){
+
+    public function notice_delay_target_lv2($user_id,$amount=0,$target_no=""){
+
+        $title 		= "【逾期通知】";
+        $content 	= "親愛的用戶：
+善意提醒，您的借款 $target_no ，本期應還款 $amount 元已逾期，請立即繳款，逾寬限期需立即全額還款。";
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,$content);
+        return $rs;
+    }
+
+    public function account_remaining($user_id,$investor=0){
 
 		$title 		= "【普匯金融科技提醒】";
 		$content 	= "親愛的會員：普匯平台提醒您，您在本平台的虛擬帳戶餘額超過1000元，如不投資或還款，請儘快匯出。普匯金融科技平台謝謝您的支持。";

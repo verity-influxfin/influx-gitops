@@ -48,7 +48,7 @@
 									<td></td>
 									<td></td>
 									<td></td>
-									<td style="text-align:right;"><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
+									<td style="text-align:right;"><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >指定區間Excel</a><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
 								</tr>
 							</table>
 						</div>

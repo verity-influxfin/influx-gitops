@@ -94,8 +94,21 @@ class Sms_lib {
 		}				
 		return false;
 	}
-	
-	public function verify_code($phone="",$code=""){
+
+    public function notice_delay_target_lv2($user_id,$amount=0,$target_no=""){
+        if(!empty($user_id)){
+            $user_info 	= $this->CI->user_model->get($user_id);
+            if($user_info){
+                $phone 		= $user_info->phone;
+                $content 	= "親愛的用戶：
+善意提醒，您的借款 $target_no ，本期應還款 $amount 元已逾期，請立即繳款，逾寬限期需立即全額還款。";
+                return $this->send('target_notice',$user_id,$phone,$content);
+            }
+        }
+        return false;
+    }
+
+    public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){
 			$param = array(
 				"phone"			=> $phone,
