@@ -873,7 +873,77 @@ class Order extends REST_Controller {
         }
         $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
     }
-	
+
+    public function shipped_post()
+    {
+        $input 	      = $this->input->post(NULL, TRUE);
+        $fields       = ['merchant_order_no','phone','quotes'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $merchant_order_no = $content['merchant_order_no'];
+        $phone             = $content['phone'];
+        $order             = $this->get_order($merchant_order_no,$phone);
+        if($order){
+            if($order->status == 2){
+                $rs = $this->order_model->update_by(
+                    [
+                        'merchant_order_no' => $merchant_order_no,
+                        'phone'             => $phone,
+                        'status'            => 2,
+                    ],
+                    [
+                        'amount'            => $amount,
+                        'platform_fee'      => $platform_fee,
+                        'transfer_fee'      => $transfer_fee,
+                        'total'             => $total,
+                        'item_price'        => $quotes,
+                        'status'            => 1,
+                    ]
+                );
+                if($rs){
+                    $rs2 = $this->target_model->update_by(
+                        [
+                            'order_id'      => $order->id,
+                            'status'        => 20,
+                        ],
+                        [
+                            'amount'        => $quotes,
+                            'platform_fee'  => $platform_fee,
+                            'status'        => 21,
+                        ]
+                    );
+                    if($rs2){
+                        $this->response(array('result' => 'SUCCESS'));
+                    }else{
+                        $this->order_model->update_by(
+                            [
+                                'merchant_order_no' => $merchant_order_no,
+                                'phone'             => $phone,
+                                'status'            => 1,
+                            ],
+                            [
+                                'amount'            => 0,
+                                'platform_fee'      => 0,
+                                'transfer_fee'      => 0,
+                                'total'             => 0,
+                                'item_price'        => 0,
+                                'status'            => 0,
+                            ]
+                        );
+                    }
+                }
+                $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
+            }
+            $this->response(array('result' => 'ERROR','error' => M_ORDER_STATUS_ERROR ));
+        }
+        $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
+    }
+
 	private function get_order_no(){
 		return $this->cooperation_info->company_user_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}

@@ -95,8 +95,7 @@ class Target_lib{
 		    //判斷是否為消費貸
             if($target->order_id !=0){
                 $this->CI->load->model('transaction/order_model');
-                $order = $this->CI->order_model->get($target->order_id);
-                $rs = $this->cancel_order($target->order_id,$order->merchant_order_no,$user_id,$phone);
+                $rs = $this->cancel_order($target->order_id,$user_id,$phone);
                 if(!$rs){
                     return false;
                 }
@@ -114,15 +113,16 @@ class Target_lib{
 	}
 
     //取消訂單
-    public function cancel_order($order_id,$merchant_order_no,$user_id,$phone=0){
+    public function cancel_order($order_id,$user_id,$phone=0){
+        $this->CI->load->model('transaction/order_model');
+        $order  = $this->CI->order_model->get($order_id);
         $this->CI->load->library('coop_lib');
         $result = $this->CI->coop_lib->coop_request('order/scancel',[
-            'merchant_order_no' => $merchant_order_no,
+            'merchant_order_no' => $order->merchant_order_no,
             'phone'             => $phone,
         ],$user_id);
         if(isset($result->result) && $result->result == 'SUCCESS'){
             if($order_id != false){
-                $this->CI->load->model('transaction/order_model');
                 $this->CI->order_model->update($order_id,['status'=>8]);
                 return true;
             }
@@ -164,8 +164,18 @@ class Target_lib{
 		}
 		return false;
 	}
-	
-	//核可額度利率
+
+    private function coop_status_change_no($order_id,$type){
+        $order = $this->CI->order_model->get($order_id);
+        $rs = $this->CI->coop_lib->coop_request('order/supdate',[
+            'merchant_order_no' => $order->merchant_order_no,
+            'phone'             => $order->phone,
+            'type'              => $type,
+        ],0);
+        return $rs;
+    }
+
+    //核可額度利率
 	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
@@ -289,7 +299,7 @@ class Target_lib{
 				}else{
 					$this->approve_target_fail($user_id,$target);
 				}
-				return $rs;
+				//return $rs;
 			}
 		}
 		return false;
@@ -307,7 +317,9 @@ class Target_lib{
         $this->CI->notification_lib->approve_target($user_id,'9');
         if($target->order_id !=0){
             $this->CI->load->model('transaction/order_model');
-            $order = $this->CI->order_model->update($target->order_id,['status'=>9]);
+            $this->CI->order_model->update($target->order_id,['status'=>9]);
+            $this->CI->load->library('coop_lib');
+            $this->coop_status_change_no($target->order_id,'approve_fail');
         }
     }
 	
@@ -330,13 +342,8 @@ class Target_lib{
     public function order_verify_success($target = [],$admin_id=0){
         //
         $this->CI->load->model('transaction/order_model');
-        $order  = $this->CI->order_model->get($target->order_id);
         $this->CI->load->library('coop_lib');
-        $result = $this->CI->coop_lib->coop_request('order/supdate',[
-            'merchant_order_no' => $order->merchant_order_no,
-            'phone'             => $order->phone,
-            'type'              => 'shipment',
-        ],0);
+        $result = $this->coop_status_change_no($target->order_id,'shipment');
         if($result->result == 'SUCCESS') {
             $target_update_param = [
                 'status' => 24
@@ -344,7 +351,7 @@ class Target_lib{
             $this->CI->target_model->update($target->id, $target_update_param);
             $this->CI->load->library('target_lib');
             $this->CI->target_lib->insert_change_log($target->id, $target_update_param, 0, $admin_id);
-            $this->CI->order_model->update($order->id, ['status' => 2]);
+            $this->CI->order_model->update($target->order_id, ['status' => 2]);
         }
         return false;
     }
@@ -827,7 +834,7 @@ class Target_lib{
 								$this->CI->notification_lib->approve_cancel($value->user_id);
 								if($value->order_id !=0){
 									$this->CI->load->model('transaction/order_model');
-									$order = $this->CI->order_model->update($value->order_id,['status'=>0]);
+									$this->CI->order_model->update($value->order_id,['status'=>0]);
 								}
 							}
 						}
@@ -839,7 +846,7 @@ class Target_lib{
 		}
 		return false;
 	}
-	
+
 	private function get_target_no($product_id=0){
 		$product_list 	= $this->CI->config->item('product_list');
 		$alias 			= $product_list[$product_id]['alias'];
@@ -891,4 +898,6 @@ class Target_lib{
 		}
 		return false;
 	}
+
+
 }
