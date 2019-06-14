@@ -607,7 +607,7 @@ class Recoveries extends REST_Controller {
 				if($value->transfer_status==2){
 					$transfer_info = $this->transfer_lib->get_transfer_investments($value->id);
 					if($transfer_info && $transfer_info->status==10){
-						$instalment_income[$value->id]['transfer'] = $transfer_info->amount;
+						$instalment_income[$value->id]['transfer'] = intval($transfer_info->amount);
 						$last_date[$value->id] = $transfer_info->transfer_date;
 					}
 				}
@@ -625,7 +625,7 @@ class Recoveries extends REST_Controller {
 				]);
 				if($transaction){
 					$instalment_invest['start_date']= $transaction->entering_date;
-					$instalment_invest['amount'] 	= $transaction->amount;
+					$instalment_invest['amount'] 	= intval($transaction->amount);
 				}
 				
 				$list[] = array(

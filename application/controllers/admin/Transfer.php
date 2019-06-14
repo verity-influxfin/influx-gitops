@@ -170,13 +170,19 @@ class Transfer extends MY_Admin_Controller {
 			$repayment_type				= $this->config->item('repayment_type');
 			$delay_list 				= $this->target_model->delay_list;
 			$status_list 				= $this->target_model->status_list;
+            $transfer_list 	= $this->transfer_model->get_many_by(array('investment_id'=>$ids));
+            if($transfer_list){
+                foreach($transfer_list as $key => $value){
+                    $transfers[$value->investment_id] = $value;
+                }
+            }
 
 			header('Content-type:application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename=assets_'.date('Ymd').'.xls');
-			$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
-					<th>核准金額</th><th>債權金額</th><th>剩餘本金</th><th>年化利率</th><th>期數</th>
-					<th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
-					<th>逾期狀況</th><th>狀態</th></tr></thead><tbody>';
+			$html = '<table><thead><tr><th>案號</th><th>投資人 ID</th><th>借款人 ID</th><th>債權金額</th><th>案件總額</th><th>剩餘本金</th>
+					<th>信用等級</th><th>學校名稱</th><th>學校科系</th><th>年化利率</th><th>期數</th>
+					<th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>債權狀態</th>
+					<th>債轉時間</th><th>案件狀態</th></tr></thead><tbody>';
 
 			if(isset($list) && !empty($list)){
 				
@@ -184,22 +190,22 @@ class Transfer extends MY_Admin_Controller {
 					$target = $targets[$value->target_id];
 					$html .= '<tr>';
 					$html .= '<td>'.$target->target_no.'</td>';
-					$html .= '<td>'.$product_list[$target->product_id]['name'].'</td>';
+					$html .= '<td>'.$value->user_id.'</td>';
 					$html .= '<td>'.$target->user_id.'</td>';
-					$html .= '<td>'.$target->credit_level.'</td>';
-					$html .= '<td>'.$school_list[$target->user_id]['school_name'].'</td>';
-					$html .= '<td>'.$school_list[$target->user_id]['school_department'].'</td>';
-					$html .= '<td>'.$target->loan_amount.'</td>';
 					$html .= '<td>'.$value->loan_amount.'</td>';
-					$html .= '<td>'.$value->amortization_table['remaining_principal'].'</td>';
+					$html .= '<td>'.$target->loan_amount.'</td>';
+					$html .= '<td>'.$value->amortization_table["remaining_principal"].'</td>';
+					$html .= '<td>'.$target->credit_level.'</td>';
+					$html .= '<td>'.$school_list[$target->user_id]["school_name"].'</td>';
+					$html .= '<td>'.$school_list[$target->user_id]["school_department"].'</td>';
 					$html .= '<td>'.$target->interest_rate.'</td>';
 					$html .= '<td>'.$target->instalment.'</td>';
 					$html .= '<td>'.$repayment_type[$target->repayment].'</td>';
-					$html .= '<td>'.$value->amortization_table['total_payment_m'].'</td>';
-					$html .= '<td>'.$value->amortization_table['total_payment'].'</td>';
 					$html .= '<td>'.$target->loan_date.'</td>';
 					$html .= '<td>'.$delay_list[$target->delay].'</td>';
-					$html .= '<td>'.$status_list[$target->status].'</td>';
+					$html .= '<td>'.($value->transfer_status==2?$this->investment_model->transfer_status_list[$value->transfer_status]:$this->investment_model->status_list[$value->status]).'</td>';
+					$html .= '<td>'.($value->transfer_status==2&&isset($transfers[$value->id]->transfer_date)?$transfers[$value->id]->transfer_date:"").'</td>';
+					$html .= '<td>'.(isset($status_list[$target->status])?$status_list[$target->status]:"").'</td>';
 					$html .= '</tr>';
 				}
 			}

@@ -14,6 +14,15 @@
                     var name 				= $('#name').val();
 					top.location = './estatement?investor='+investor+'&sdate='+sdate+'&edate='+edate+'&user_id='+user_id+'&name='+name;
 				}
+				function excel_export() {
+				    var userId=$('.panel-heading input#user_id').val(),sdate=$('.panel-heading input#sdate').val(),edate=$('.panel-heading input#edate').val();
+				    if(userId!=''&&sdate!=''&&edate!=''){
+                        window.location.href = "./estatement_excel?sdate="+sdate+"&edate="+edate+"&user_id="+userId;
+                    }
+				    else{
+				        alert('請輸入會員ID、日期區間(不需會員姓名)');
+                    }
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -48,7 +57,7 @@
 									<td></td>
 									<td></td>
 									<td></td>
-									<td style="text-align:right;"><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >指定區間Excel</a><a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
+									<td style="text-align:right;"><a href="javascript:void(0)" onclick="excel_export();" class="btn btn-default float-right btn-md" >指定區間 Excel</a> <a href="javascript:void(0)" onclick="showChang();" class="btn btn-default float-right btn-md" >查詢</a></td>
 								</tr>
 							</table>
 						</div>
