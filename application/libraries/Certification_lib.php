@@ -126,11 +126,26 @@ class Certification_lib{
            $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
            $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
 
-           $error 	= '';
-           $ocr = array();
-           $ocr['front_image'] 		= preg_replace('/\s/','',$this->CI->ocr_lib->detect_text($content['front_image']));
-           $ocr['back_image'] 		= $this->CI->ocr_lib->detect_text($content['back_image']);
-           $ocr['healthcard_image'] = $this->CI->ocr_lib->detect_text($content['healthcard_image']);
+            if(!$person_token){
+                $rotate = $this->face_rotate($content['person_image'],$info->user_id);
+                if($rotate){
+                    $content['person_image'] 	= $rotate['url'];
+                    $person_token				= $rotate['count'];
+                }
+            }
+            if(!$front_token){
+                $rotate = $this->face_rotate($content['front_image'],$info->user_id);
+                if($rotate){
+                    $content['front_image'] 	= $rotate['url'];
+                    $front_token				= $rotate['count'];
+                }
+            }
+
+            $error 	= '';
+            $ocr = array();
+            $ocr['front_image'] 	 = preg_replace('/\s/','',$this->CI->ocr_lib->detect_text($content['front_image']));
+            $ocr['back_image'] 		 = preg_replace('/\\n/','',$this->CI->ocr_lib->detect_text($content['back_image']));
+            $ocr['healthcard_image'] = $this->CI->ocr_lib->detect_text($content['healthcard_image']);
 
            $ocr['front_image'] = preg_replace_callback(
                '/\d{2,3}年|\d{1,2}月/',
@@ -255,7 +270,7 @@ class Certification_lib{
 		return false;
 	}
 	
-	/*public function face_rotate($url='',$user_id=0){
+	public function face_rotate($url='',$user_id=0){
 		$this->CI->load->library('faceplusplus_lib');
 		$this->CI->load->library('s3_upload');
 		$image 	= file_get_contents($url);
@@ -296,13 +311,13 @@ class Certification_lib{
 				$base64 = base64_encode($image_data);
 				$count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,1);
 				if($count){
-					$url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,'id_card');
+					$url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,'id_card','rotate');
 					return array('count' => $count,'url' => $url);
 				}
 			}
 		}
 		return false;
-	}*/
+	}
 	
 	private function idcard_success($info){
 		if($info){
