@@ -877,7 +877,7 @@ class Order extends REST_Controller {
     public function shipped_post()
     {
         $input 	      = $this->input->post(NULL, TRUE);
-        $fields       = ['merchant_order_no','phone'];
+        $fields       = ['merchant_order_no','phone','shipped_image'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -890,67 +890,43 @@ class Order extends REST_Controller {
         $order             = $this->get_order($merchant_order_no,$phone);
         if($order){
             if($order->status == 2){
-                //上傳檔案欄位
-                if (isset($_FILES['shipped_image']) && !empty($_FILES['shipped_image'])) {
-                    $image 	= $this->s3_upload->image($_FILES,$field,$user_id,'shipped_image');
-                    if($image){
-                        $param[$field] = $image;
+                $rs = $this->order_model->update_by(
+                    [
+                        'merchant_order_no' => $merchant_order_no,
+                        'phone'             => $phone,
+                    ],
+                    [
+                        'status'            => 3,
+                    ]
+                );
+                if($rs){
+                    $rs2 = $this->target_model->update_by(
+                        [
+                            'order_id'      => $order->id,
+                            'status'        => 24,
+                        ],
+                        [
+                            'person_image'  => $content['shipped_image'],
+                            'status'        => 25,
+                        ]
+                    );
+                    if($rs2){
+                        $this->response(array('result' => 'SUCCESS'));
                     }else{
-                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                        $this->order_model->update_by(
+                            [
+                                'merchant_order_no' => $merchant_order_no,
+                                'phone'             => $phone,
+                                'status'            => 3,
+                            ],
+                            [
+                                'person_image'      => '',
+                                'status'            => 2,
+                            ]
+                        );
                     }
-                }else{
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }
-
-                $this->response(array('result' => $image));
-                //$rs = $this->order_model->update_by(
-                //    [
-                //        'merchant_order_no' => $merchant_order_no,
-                //        'phone'             => $phone,
-                //        'status'            => 3,
-                //    ],
-                //    [
-                //        'amount'            => $amount,
-                //        'platform_fee'      => $platform_fee,
-                //        'transfer_fee'      => $transfer_fee,
-                //        'total'             => $total,
-                //        'item_price'        => $quotes,
-                //        'status'            => 1,
-                //    ]
-                //);
-                //if($rs){
-                //    $rs2 = $this->target_model->update_by(
-                //        [
-                //            'order_id'      => $order->id,
-                //            'status'        => 20,
-                //        ],
-                //        [
-                //            'amount'        => $quotes,
-                //            'platform_fee'  => $platform_fee,
-                //            'status'        => 21,
-                //        ]
-                //    );
-                //    if($rs2){
-                //        $this->response(array('result' => 'SUCCESS'));
-                //    }else{
-                //        $this->order_model->update_by(
-                //            [
-                //                'merchant_order_no' => $merchant_order_no,
-                //                'phone'             => $phone,
-                //                'status'            => 1,
-                //            ],
-                //            [
-                //                'amount'            => 0,
-                //                'platform_fee'      => 0,
-                //                'transfer_fee'      => 0,
-                //                'total'             => 0,
-                //                'item_price'        => 0,
-                //                'status'            => 0,
-                //            ]
-                //        );
-                //    }
-                //}
-                //$this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
+                $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
             }
             $this->response(array('result' => 'ERROR','error' => M_ORDER_STATUS_ERROR ));
         }
