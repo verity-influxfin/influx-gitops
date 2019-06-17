@@ -211,8 +211,6 @@ class Target extends MY_Admin_Controller {
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
 				}if($info->order_id!=0){
-					//$this->load->library('Transaction_lib');
-					//$this->transaction_lib->order_success($info->id,$this->login_info->id);
                     $this->target_lib->order_verify_success($info,$this->login_info->id);
 				}else{
 					$this->target_lib->target_verify_success($info,$this->login_info->id);

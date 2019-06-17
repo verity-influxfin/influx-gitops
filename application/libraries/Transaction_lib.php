@@ -480,11 +480,11 @@ class Transaction_lib{
 	}
 	
 	//分期成功
-	function order_success($target_id,$admin_id=0){
+	function order_success($order_id,$admin_id=0){
 		$date 			= get_entering_date();
 		$transaction 	= [];
 		if($target_id){			
-			$target = $this->CI->target_model->get($target_id);
+			$target = $this->CI->target_model->get($order_id);
 			if( $target && $target->status == 23 && $target->order_id != 0){
 				$this->CI->load->model('transaction/order_model');
 				$order = $this->CI->order_model->get($target->order_id);
@@ -614,7 +614,7 @@ class Transaction_lib{
                                     $this->CI->target_model->update($target_id, $target_update_param);
                                     $this->CI->load->library('target_lib');
                                     $this->CI->target_lib->insert_change_log($target_id, $target_update_param, 0, $admin_id);
-                                    $this->CI->order_model->update($order->id, ['status' => 2]);
+                                    $this->CI->order_model->update($order->id, ['status' => 3]);
                                     $investment = $this->CI->investment_model->get($investment_id);
                                     if ($investment) {
                                         $this->CI->load->library('Transfer_lib');

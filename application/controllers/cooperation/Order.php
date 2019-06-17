@@ -900,6 +900,14 @@ class Order extends REST_Controller {
                     ]
                 );
                 if($rs){
+                    $sub_status = 0;
+                    $status     = 25;
+
+                    //線上交易
+                    if($order->delivery === 1){
+                        $status     = 24;
+                        $sub_status = 1;
+                    }
                     $rs2 = $this->target_model->update_by(
                         [
                             'order_id'      => $order->id,
@@ -907,7 +915,8 @@ class Order extends REST_Controller {
                         ],
                         [
                             'person_image'  => $content['shipped_image'],
-                            'status'        => 25,
+                            'status'        => $status,
+                            'sub_status'    => $sub_status,
                         ]
                     );
                     if($rs2){
