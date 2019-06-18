@@ -121,7 +121,7 @@ class Certification extends MY_Admin_Controller {
 				if(!empty($from)){
 					$back_url = admin_url($from);
 				}
-			
+
 				$info = $this->user_certification_model->get($post['id']);
 				if($info){
 					$certification = $this->certification[$info->certification_id];
@@ -139,7 +139,7 @@ class Certification extends MY_Admin_Controller {
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
-							
+
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
@@ -148,7 +148,7 @@ class Certification extends MY_Admin_Controller {
 							'status'				=> $post['status'],
 							'change_admin'			=> $this->login_info->id,
 						));
-						
+
 						if($post['status']=='1'){
 							$rs = $this->certification_lib->set_success($post['id']);
 						}else if($post['status']=='2'){
@@ -172,7 +172,7 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
-	
+
 	public function user_bankaccount_list(){
 		$page_data 			= array('type'=>'list','list'=>array());
 		$input 				= $this->input->get(NULL, TRUE);
@@ -185,7 +185,7 @@ class Certification extends MY_Admin_Controller {
 				$where[$field] = $input[$field];
 			}
 		}
-		
+
 		$list = $this->user_bankaccount_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
@@ -194,9 +194,9 @@ class Certification extends MY_Admin_Controller {
 				$list[$key]->user_name_list = $user->name?mb_str_split($user->name):'';
 			}
 		}
-		
+
 		$this->load->model('admin/difficult_word_model');
-		
+
 		$page_data['list'] 			= $list?$list:array();
 		$page_data['verify_list'] 	= $this->user_bankaccount_model->verify_list;
 		$page_data['investor_list'] = $this->user_bankaccount_model->investor_list;
@@ -207,31 +207,63 @@ class Certification extends MY_Admin_Controller {
 		$this->load->view('admin/user_bankaccount_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function user_bankaccount_edit(){
 		$page_data 	= array();
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		$id = isset($get['id'])?intval($get['id']):0;
-		if($id){
-			$info = $this->user_bankaccount_model->get($id);
-			if($info){
-				$page_data['data'] 					= $info;
-				$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
-				$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
-				
-				$this->load->view('admin/_header');
-				$this->load->view('admin/_title',$this->menu);
-				$this->load->view('admin/user_bankaccount_edit',$page_data);
-				$this->load->view('admin/_footer');
+
+		if(empty($post)){
+			$id = isset($get['id'])?intval($get['id']):0;
+			if($id){
+				$info = $this->user_bankaccount_model->get($id);
+				if($info){
+					$page_data['data'] 					= $info;
+					$page_data['verify_list'] 			= $this->user_bankaccount_model->verify_list;
+					$page_data['investor_list'] 		= $this->user_bankaccount_model->investor_list;
+                    $page_data['status_list'] 			= $this->user_certification_model->status_list;
+
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/user_bankaccount_edit',$page_data);
+					$this->load->view('admin/_footer');
+				}else{
+					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
+				}
 			}else{
-				alert('ERROR , id is not exist',admin_url('certification/user_bankaccount_list'));
+				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}else{
-			alert('ERROR , id is not exist',admin_url('certification/user_bankaccount_list'));
+			if(!empty($post['id'])){
+				$info = $this->user_bankaccount_model->get($post['id']);
+				if($info){
+					if($post['status']=='2'){
+                        ;
+                        $this->load->model('log/log_usercertification_model');
+                        $this->log_usercertification_model->insert(array(
+                            'user_certification_id'	=> $info->user_certification_id,
+                            'status'				=> 2,
+                            'change_admin'			=> $this->login_info->id,
+                        ));
+                        $this->user_certification_model->update($info->user_certification_id,array('status'=>2));
+                        $this->user_bankaccount_model->update($post['id'],array('verify'=>4,'status'=>0));
+                        $rs = true;
+                    }
+
+                    if($rs===true){
+                        alert('更新成功',admin_url('certification/user_bankaccount_list'));
+                    }else{
+                        alert('更新失敗，請洽工程師',admin_url('certification/user_bankaccount_list'));
+                    }
+				}else{
+					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
+				}
+			}else{
+				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
+			}
 		}
 	}
-	
+
 	function user_bankaccount_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -255,7 +287,7 @@ class Certification extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function user_bankaccount_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -280,7 +312,7 @@ class Certification extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function user_bankaccount_resend(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -296,7 +328,7 @@ class Certification extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function user_bankaccount_verify(){
 		$this->load->library('payment_lib');
 		$rs = $this->payment_lib->verify_bankaccount_txt($this->login_info->id);
@@ -306,7 +338,7 @@ class Certification extends MY_Admin_Controller {
 			alert('轉出成功',admin_url('certification/user_bankaccount_list?verify=3'));
 		}
 	}
-	
+
 	public function difficult_word_list(){
 		$this->load->model('admin/difficult_word_model');
 		$page_data 	= array('type'=>'list');
@@ -321,7 +353,7 @@ class Certification extends MY_Admin_Controller {
 		$this->load->view('admin/difficult_word_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function difficult_word_add(){
 		$this->load->model('admin/difficult_word_model');
 		$page_data 	= array('type'=>'add');
@@ -351,20 +383,20 @@ class Certification extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
 	public function difficult_word_edit(){
 		$this->load->model('admin/difficult_word_model');
 		$page_data 	= array('type'=>'edit');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
+
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
 			if($id){
 				$info = $this->difficult_word_model->get_by('id', $id);
 				if($info){
 					$page_data['data'] 			= $info;
-					
+
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/difficult_word_edit',$page_data);

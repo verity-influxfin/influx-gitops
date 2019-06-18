@@ -1,4 +1,13 @@
-
+        <script type="text/javascript">
+            function check_fail(){
+                var status = $('#status :selected').val();
+                if(status==2){
+                    $('#fail_div').show();
+                }else{
+                    $('#fail_div').hide();
+                }
+            }
+        </script>
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -41,6 +50,19 @@
 										<label>驗證狀況</label>
 										<p class="form-control-static"><?=isset($data->verify)?$verify_list[$data->verify]:"" ?></p>
 									</div>
+                                    <h1>審核</h1>
+                                    <form role="form" method="post">
+                                        <fieldset>
+                                            <div class="form-group hide">
+                                                <select id="status" name="status" class="form-control" onchange="check_fail();" >
+                                                    <option value="2"></option>
+                                                </select>
+                                                <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+                                                <input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">作廢</button>
+                                        </fieldset>
+                                    </form>
                                 </div>
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
