@@ -1546,11 +1546,12 @@ class Transfer extends REST_Controller {
 		]]);
     }
 
-    public function cancel_get($transfers)
+    public function cancel_get()
     {
+        $input 			= $this->input->get();
         $user_id        = $this->user_info->id;
-        $ids            = explode(',',$transfers);
-        $cancel_success = $this->transfer_lib->cancel_transfer_apply($ids,$user_id);
+        $transfer_ids 	= explode(',',$input['transfer_ids']);
+        $cancel_success = $this->transfer_lib->cancel_transfer_apply($transfer_ids,$user_id);
         if($cancel_success){
             $this->response(array('result' => 'SUCCESS'));
         }else{
