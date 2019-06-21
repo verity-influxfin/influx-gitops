@@ -39,13 +39,17 @@ class Target extends MY_Admin_Controller {
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
 				foreach($list as $key => $value){
-					if($value->status==2 || $value->status==23){
+					if($value->status==2 || $value->status==23 && $value->sub_status==0 ){
 						$bank_account 		= $this->user_bankaccount_model->get_by(array(
 							'user_id'	=> $value->user_id,
 							'investor'	=> 0,
 							'status'	=> 1,
 							'verify'	=> 1,
 						));
+						if($value->order_id!=0){
+						    //消費貸申請金額包含平台手續費+債轉手續費
+
+                        }
 						$list[$key]->bank_account_verify = $bank_account?1:0;
 					}
 				}
@@ -80,6 +84,7 @@ class Target extends MY_Admin_Controller {
 				$investments 						= [];
 				$investments_amortization_table 	= [];
 				$investments_amortization_schedule 	= [];
+				$order                              = [];
 				if($info->status==5 || $info->status==10){
 					$amortization_table = $this->target_lib->get_amortization_table($info);
 					$investments = $this->investment_model->get_many_by(array('target_id'=>$info->id,'status'=>array(3,10)));
@@ -115,6 +120,11 @@ class Target extends MY_Admin_Controller {
 					}
 				}
 
+                if($info->order_id!=0){
+                    $this->load->model('transaction/order_model');
+                    $order = $this->order_model->get($info->order_id);
+                }
+
 				$user_id 			= $info->user_id;
 				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
 					'user_id'	=> $user_id,
@@ -132,6 +142,7 @@ class Target extends MY_Admin_Controller {
 				$credit_list						= $this->credit_model->get_many_by(array('user_id'=>$user_id));
 				$user_info 							= $this->user_model->get($user_id);
 				$page_data['data'] 					= $info;
+                $page_data['order']					= $order;
 				$page_data['user_info'] 			= $user_info;
 				$page_data['amortization_table'] 	= $amortization_table;
 				$page_data['investments'] 			= $investments;
@@ -262,7 +273,7 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if(in_array($value->status,array(2,23))){
+				if($value->status==2 || $value->status==23 && $value->sub_status==0 ){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_id'	=> $value->user_id,
 						'investor'	=> 0,
@@ -898,5 +909,59 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_signing',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+    public function waiting_approve_order_transfer(){
+        $page_data 	  = array('type'=>'list');
+        $waiting_list = array();
+        $list 		  = $this->target_model->get_many_by(['status'=>[24]]);
+        if($list){
+            foreach($list as $key => $value){
+                if($value->status==24){
+                    $bank_account 	= $this->user_bankaccount_model->get_by(array(
+                        'user_id'	=> $value->user_id,
+                        'investor'	=> 0,
+                        'status'	=> 1,
+                        'verify'	=> 1,
+                    ));
+                }
+                if($bank_account){
+                    $waiting_list[] = $value;
+                }
+            }
+        }
+        $page_data['instalment_list']	= $this->config->item('instalment');
+        $page_data['repayment_type']	= $this->config->item('repayment_type');
+        $page_data['list'] 				= $waiting_list;
+        $page_data['product_list']		= $this->config->item('product_list');
+        $page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['name_list'] 		= $this->admin_model->get_name_list();
+
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/target/approve_order_transfer',$page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    function approve_order_transfer(){
+        $get 	= $this->input->get(NULL, TRUE);
+        $id 	= isset($get['id'])?intval($get['id']):0;
+        if($id){
+            $info = $this->target_model->get($id);
+            if($info && in_array($info->status,array(24))){
+                $this->load->library('Transaction_lib');
+                $rs = $this->transaction_lib->order_success($id);
+                if($rs){
+                    echo '更新成功';die();
+                }else{
+                    echo '更新失敗';die();
+                }
+            }else{
+                echo '查無此ID';die();
+            }
+        }else{
+            echo '查無此ID';die();
+        }
+    }
 }
 ?>

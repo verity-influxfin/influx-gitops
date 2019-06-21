@@ -939,7 +939,7 @@ class Product extends REST_Controller {
                         'phone'             => $orders->phone,
                         'type'              => 'product',
                     ],0);
-                    if($result->result == 'SUCCESS') {
+                    if(isset($result->result) && $result->result == 'SUCCESS') {
                         $item_info[] = $result->data->list;
                     }
 
@@ -1371,7 +1371,7 @@ class Product extends REST_Controller {
             'phone'          => $phone,
             'address'        => $address,
         ],$user_id);
-        if($result->result == 'SUCCESS'){
+        if(isset($result->result) && $result->result == 'SUCCESS'){
             $item_name = $result->data->product_name.($result->data->product_spec!='-'?
                     $result->data->product_spec:'');
             $merchant_order_no = $result->data->merchant_order_no;
@@ -1383,9 +1383,8 @@ class Product extends REST_Controller {
             //建立主系統訂單
             $order_insert = false;
             if($product_price > 0){
-                $platform_fee = intval(round( $product_price * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-                $platform_fee = $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
-                $transfer_fee = intval(round($product_price *DEBT_TRANSFER_FEES/100,0));
+                $platform_fee = $this->financial_lib->get_platform_fee2($input['amount']);
+                $transfer_fee = $this->financial_lib->get_transfer_fee($product_price);
                 $total        = $amount + $platform_fee + $transfer_fee;
             }
             $order_parm = [

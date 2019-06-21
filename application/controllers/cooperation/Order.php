@@ -10,6 +10,8 @@ class Order extends REST_Controller {
     {
         parent::__construct();
         $this->load->model('transaction/order_model');
+        $this->load->library('order_lib');
+        $this->load->library('target_lib');
 
 		$authorization 	= isset($this->input->request_headers()['Authorization'])?$this->input->request_headers()['Authorization']:'';
 		$time 			= isset($this->input->request_headers()['Timestamp'])?$this->input->request_headers()['Timestamp']:'';
@@ -236,8 +238,7 @@ class Order extends REST_Controller {
 
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
 			$product_info 	= $product_list[$input['product_id']];
-			$platform_fees 	= intval(round( $input['amount'] * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-			$platform_fees 	= $platform_fees > PLATFORM_FEES_MIN ? $platform_fees : PLATFORM_FEES_MIN;
+			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
 			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				$list = [];
@@ -405,8 +406,7 @@ class Order extends REST_Controller {
 		
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
 			$product_info 	= $product_list[$input['product_id']];
-			$platform_fees 	= intval(round( $input['amount'] * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-			$platform_fees 	= $platform_fees > PLATFORM_FEES_MIN ? $platform_fees : PLATFORM_FEES_MIN;
+			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
 			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				if(in_array($input['instalment'],$product_info['instalment'])){
@@ -542,8 +542,7 @@ class Order extends REST_Controller {
 			$this->response(['result' => 'ERROR','error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
 		}
 		
-		$content['platform_fee'] 	= intval(round( $total * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-		$content['platform_fee'] 	= $content['platform_fee'] > PLATFORM_FEES_MIN ? $content['platform_fee'] : PLATFORM_FEES_MIN;
+		$content['platform_fee'] 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
 		$content['total'] 			= $total + $content['platform_fee'];
 		$content['company_user_id'] = $this->cooperation_info->company_user_id;
 		$content['order_no'] 		= $this->get_order_no();
@@ -804,10 +803,8 @@ class Order extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-        $merchant_order_no = $content['merchant_order_no'];
-        $phone             = $content['phone'];
         $quotes            = $content['quotes'];
-        $order             = $this->get_order($merchant_order_no,$phone);
+        $order             = $this->get_order($content['merchant_order_no'],$content['phone']);
         if($order){
             if($order->status == 0){
                 $product_info = $product_list[$order->product_id];
@@ -815,56 +812,36 @@ class Order extends REST_Controller {
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
                 }
                 $amount         = $quotes;
-                $platform_fee   = intval(round( $quotes * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
-                $platform_fee   = $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
-                $transfer_fee   = intval(round($quotes *DEBT_TRANSFER_FEES/100,0));
+                $platform_fee   = $this->financial_lib->get_platform_fee2($quotes);
+                $transfer_fee   = $this->financial_lib->get_transfer_fee($quotes);
                 $total 		    = $quotes + $platform_fee + $transfer_fee;
                 $data['amount'] = $quotes;
-                $rs = $this->order_model->update_by(
-                    [
-                        'merchant_order_no' => $merchant_order_no,
-                        'phone'             => $phone,
-                        'status'            => 0,
-                    ],
-                    [
+
+                $rs = $this->order_lib->order_change($order->id,0, [
                         'amount'            => $amount,
                         'platform_fee'      => $platform_fee,
                         'transfer_fee'      => $transfer_fee,
                         'total'             => $total,
                         'item_price'        => $quotes,
                         'status'            => 1,
-                    ]
-                );
+                    ],$order->company_user_id);
                 if($rs){
-                    $rs2 = $this->target_model->update_by(
-                        [
-                            'order_id'      => $order->id,
-                            'status'        => 20,
-                        ],
-                        [
+                    $rs2 = $this->target_lib->order_target_change($order->id,20,[
                             'amount'        => $quotes,
                             'platform_fee'  => $platform_fee,
                             'status'        => 21,
-                        ]
-                    );
+                        ],$order->company_user_id);
                     if($rs2){
                         $this->response(array('result' => 'SUCCESS'));
                     }else{
-                        $this->order_model->update_by(
-                            [
-                                'merchant_order_no' => $merchant_order_no,
-                                'phone'             => $phone,
-                                'status'            => 1,
-                            ],
-                            [
-                                'amount'            => 0,
-                                'platform_fee'      => 0,
-                                'transfer_fee'      => 0,
-                                'total'             => 0,
-                                'item_price'        => 0,
-                                'status'            => 0,
-                            ]
-                        );
+                        $this->order_lib->order_change($order->id,1, [
+                            'amount'            => 0,
+                            'platform_fee'      => 0,
+                            'transfer_fee'      => 0,
+                            'total'             => 0,
+                            'item_price'        => 0,
+                            'status'            => 0,
+                        ],$order->company_user_id);
                     }
                 }
                 $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
@@ -877,7 +854,7 @@ class Order extends REST_Controller {
     public function shipped_post()
     {
         $input 	      = $this->input->post(NULL, TRUE);
-        $fields       = ['merchant_order_no','phone','shipped_image'];
+        $fields       = ['merchant_order_no','phone','shipped_image','shipped_number'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -885,54 +862,36 @@ class Order extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-        $merchant_order_no = $content['merchant_order_no'];
-        $phone             = $content['phone'];
-        $order             = $this->get_order($merchant_order_no,$phone);
+        $order = $this->get_order($content['merchant_order_no'],$content['phone']);
         if($order){
             if($order->status == 2){
-                $rs = $this->order_model->update_by(
-                    [
-                        'merchant_order_no' => $merchant_order_no,
-                        'phone'             => $phone,
-                    ],
-                    [
-                        'status'            => 3,
-                    ]
-                );
+                $rs = $this->order_lib->order_change($order->id,2, [
+                    'shipped_number' => $content['shipped_number'],
+                    'shipped_image'  => $content['shipped_image'],
+                    'status'         => 3,
+                ],$order->company_user_id);
                 if($rs){
+                    $status     = 24;
                     $sub_status = 0;
-                    $status     = 25;
 
                     //線上交易
-                    if($order->delivery === 1){
-                        $status     = 24;
-                        $sub_status = 1;
+                    if($order->delivery == 1){
+                        $status     = 23;
+                        $sub_status = 6;
                     }
-                    $rs2 = $this->target_model->update_by(
-                        [
-                            'order_id'      => $order->id,
-                            'status'        => 24,
-                        ],
-                        [
-                            'person_image'  => $content['shipped_image'],
-                            'status'        => $status,
-                            'sub_status'    => $sub_status,
-                        ]
-                    );
+                    $rs2 = $this->target_lib->order_target_change($order->id,23,[
+                        'person_image'  => $content['shipped_image'],
+                        'status'        => $status,
+                        'sub_status'    => $sub_status,
+                    ],$order->company_user_id);
                     if($rs2){
                         $this->response(array('result' => 'SUCCESS'));
                     }else{
-                        $this->order_model->update_by(
-                            [
-                                'merchant_order_no' => $merchant_order_no,
-                                'phone'             => $phone,
-                                'status'            => 3,
-                            ],
-                            [
-                                'person_image'      => '',
-                                'status'            => 2,
-                            ]
-                        );
+                        $this->order_lib->order_change($order->id,3, [
+                            'shipped_number'    => '',
+                            'shipped_image'     => '',
+                            'status'            => 2,
+                        ],$order->company_user_id);
                     }
                 }
                 $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
@@ -952,10 +911,6 @@ class Order extends REST_Controller {
             'merchant_order_no'	=> $merchant_order_no,
             'phone'	            => $phone,
         ]);
-
-        $order_info = [
-
-        ];
         return $order;
     }
 }

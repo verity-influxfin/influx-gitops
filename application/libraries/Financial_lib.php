@@ -190,8 +190,30 @@ class Financial_lib{
 		}
 		return 0;
 	}
-	
-	public function get_delay_interest($remaining_principal=0,$delay_days=0){
+
+    public function get_platform_fee($price=0){
+        if($price){
+            $platform_fee = intval(round($price/100*PLATFORM_FEES,0));
+            return $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
+        }
+        return 0;
+    }
+
+    public function get_platform_fee2($price=0){
+        if($price){
+            $platform_fee = intval(round( $price * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+            return $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
+        }
+        return 0;
+    }
+
+    public function get_transfer_fee($price=0){
+        if($price){
+            return intval(round($price *DEBT_TRANSFER_FEES/100,0));
+        }
+        return 0;
+    }
+    public function get_delay_interest($remaining_principal=0,$delay_days=0){
 		if($remaining_principal && $delay_days > GRACE_PERIOD){
 			return intval(round($remaining_principal*DELAY_INTEREST*$delay_days/100,0));
 		}

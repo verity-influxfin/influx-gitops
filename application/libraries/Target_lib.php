@@ -51,8 +51,49 @@ class Target_lib{
         }
         return false;
     }
-	
-	//全案退回
+
+    //分期貸
+    public function order_target_change( $order_id, $status, $param, $user_id, $admin_id=0 ){
+        if($order_id){
+            $rs = $this->CI->target_model->update_by(
+                [
+                    'order_id' => $order_id,
+                    'status'   => $status,
+                ],$param
+            );
+            if($rs){
+                $target = $this->CI->target_model->get_by('order_id',$order_id);
+                $this->insert_change_log($target->id,[
+                    'status'	 => $param['status'],
+                    'sub_status' => isset($param['sub_status'])?$param['sub_status']:null,
+                ], $user_id);
+            }
+            return $rs;
+        }
+        return false;
+    }
+
+    public function order_verify_success($target = [],$admin_id=0){
+        $result = $this->coop_status_change_no($target->order_id,'shipment');
+        if(isset($result->result) && $result->result == 'SUCCESS') {
+            $this->CI->load->model('transaction/order_model');
+            $order = $this->CI->order_model->get_by([
+                'id'    => $target->order_id
+            ]);
+            $this->order_target_change($order->id,23,[
+                'status' => 23,
+                'sub_status' => 5,
+            ],0,$admin_id);
+            $this->CI->load->library('Order_lib');
+            $this->CI->order_lib->order_change($target->order_id,1, [
+                'status'            => 2,
+            ],0,$admin_id);
+            return true;
+        }
+        return false;
+    }
+
+    //全案退回
 	public function cancel_success_target($target,$admin_id=0){
 		if($target && in_array($target->status,[3,4]) && $target->script_status==0 ){
 			$param = [
@@ -166,7 +207,9 @@ class Target_lib{
 	}
 
     private function coop_status_change_no($order_id,$type){
+        $this->CI->load->model('transaction/order_model');
         $order = $this->CI->order_model->get($order_id);
+        $this->CI->load->library('coop_lib');
         $rs = $this->CI->coop_lib->coop_request('order/supdate',[
             'merchant_order_no' => $order->merchant_order_no,
             'phone'             => $order->phone,
@@ -202,7 +245,7 @@ class Target_lib{
 					$target_list 	= $this->CI->target_model->get_many_by([
 						'id !='		=> $target->id,
 						'user_id'	=> $user_id,
-						'status'	=> [0,1,2,3,4,5,20,21,22,23,24,25]
+						'status'	=> [0,1,2,3,4,5,20,21,22,23,24]
 					]);
                     if($target_list){
                         foreach($target_list as $key =>$value){
@@ -241,14 +284,13 @@ class Target_lib{
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
                         $loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
-                        $platform_fee		= round($loan_amount/100*PLATFORM_FEES,0);
-                        $platform_fee		= $platform_fee>PLATFORM_FEES_MIN?$platform_fee:PLATFORM_FEES_MIN;
 
                         if( ($product_info['type']==1 && $loan_amount >= $product_info['loan_range_s']) ||
                             ($product_info['type']==2 && $loan_amount == $target->amount)
                         ) {
 
                             if($product_info['type']==1){
+                                $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
                                 if($contract_id){
                                     $param = [
@@ -266,6 +308,7 @@ class Target_lib{
                                     }
                                 }
                             }else if($product_info['type']==2){
+                                $platform_fee		    = $this->CI->financial_lib->get_platform_fee2($loan_amount);
                                 $param = [
                                     'loan_amount'		=> $loan_amount,
                                     'credit_level'		=> $credit['level'],
@@ -318,7 +361,6 @@ class Target_lib{
         if($target->order_id !=0){
             $this->CI->load->model('transaction/order_model');
             $this->CI->order_model->update($target->order_id,['status'=>9]);
-            $this->CI->load->library('coop_lib');
             $this->coop_status_change_no($target->order_id,'approve_fail');
         }
     }
@@ -338,23 +380,6 @@ class Target_lib{
 		}
 		return false;
 	}
-
-    public function order_verify_success($target = [],$admin_id=0){
-        //
-        $this->CI->load->model('transaction/order_model');
-        $this->CI->load->library('coop_lib');
-        $result = $this->coop_status_change_no($target->order_id,'shipment');
-        if($result->result == 'SUCCESS') {
-            $target_update_param = [
-                'status' => 24
-            ];
-            $this->CI->target_model->update($target->id, $target_update_param);
-            $this->CI->load->library('target_lib');
-            $this->CI->target_lib->insert_change_log($target->id, $target_update_param, 0, $admin_id);
-            $this->CI->order_model->update($target->order_id, ['status' => 2]);
-        }
-        return false;
-    }
 
     public function target_verify_failed($target = [],$admin_id=0,$remark='審批不通過'){
 		if(!empty($target)){

@@ -362,6 +362,7 @@ class Target extends REST_Controller {
 				'user' 				=> $user,
 				'amortization_schedule' => $amortization_schedule,
 			);
+            $target->order_id!=0?$data['order_image']=$target->person_image:null;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}

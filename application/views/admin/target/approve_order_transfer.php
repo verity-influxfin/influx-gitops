@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 待審批</h1>
+                    <h1 class="page-header">消費貸 - 待批覆債轉</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -10,7 +10,7 @@
 					if(confirm("確認審批過件？")){
 						if(id){
 							$.ajax({
-								url: './verify_success?id='+id,
+								url: './approve_order_transfer?id='+id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -30,7 +30,7 @@
 								remark = encodeURIComponent(p);
 							}
 							$.ajax({
-								url: './verify_failed?id='+id+'&remark='+remark,
+								url: './order_transfer_deny?id='+id+'&remark='+remark,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -89,8 +89,7 @@
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td>
-												<button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?> class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批<?=isset($value->order_id)&&$value->order_id!=0?'出貨':'上架' ?></button>
-												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
+												<button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?> class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
                                                 <?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>

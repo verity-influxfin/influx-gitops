@@ -103,7 +103,7 @@ class Transfer_lib{
 						$target->user_id,
 					]);
 					$instalment = $target->instalment - $instalment_paid;
-					$fee 		= intval(round($principal*DEBT_TRANSFER_FEES/100,0));
+					$fee 		= $this->CI->financial_lib->get_transfer_fee($principal);
 
 					$data 		= [
 						'total'						=> $total,

@@ -77,7 +77,7 @@
 												</td>
 												<td><p class="form-control-static">備註</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->remark)?$data->remark:"";?></p>
+													<p class="form-control-static"><? echo $data->remark!=''?$data->remark:"無";?></p>
 												</td>
 											</tr>
 											<tr>
@@ -110,13 +110,21 @@
 													<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
 												</td>
 											</tr>
+                                            <? if(isset($order->transfer_fee)){ ?>
+                                            <tr>
+                                                <td><p class="form-control-static">債轉服務費</p></td>
+                                                <td colspan="3">
+                                                    <p class="form-control-static"><?=isset($order->transfer_fee)?$order->transfer_fee:"";?></p>
+                                                </td>
+                                            </tr>
+                                            <? } ?>
                                             <tr>
                                                 <td><p class="form-control-static">借款原因</p></td>
                                                 <td colspan="3">
-                                                    <p class="form-control-static"><?=isset($data->reason)?$data->reason:"";?></p>
+                                                    <p class="form-control-static"><? echo $data->reason!=''?$data->reason:"未填寫";?></p>
                                                 </td>
                                             </tr>
-                                            <? if($data->status < 20 || $data->status == 25){ ?>
+                                            <? if($data->status < 20 || $data->status == 23 && $data->sbu_status == 6 ||$data->status == 24){ ?>
 											<tr>
 												<td><p class="form-control-static">簽約照片</p></td>
 												<td colspan="3">
@@ -253,30 +261,37 @@
 												<td>
 													<p class="form-control-static"><?=isset($value->user_info->name)?$value->user_info->name:"";?></p>
 												</td>
-
+                                             <? if(strlen($value->user_info->id_number) == 10){ ?>
 												<td><p class="form-control-static">Email</p></td>
 												<td colspan="3">
 													<p class="form-control-static"><?=isset($value->user_info->email)?$value->user_info->email:"";?></p>
 												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">發證地點</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->user_info->id_card_place)?$value->user_info->id_card_place:"";?></p>
-												</td>
-												<td><p class="form-control-static">發證日期</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->user_info->id_card_date)?$value->user_info->id_card_date:"";?></p>
-												</td>
-												<td><p class="form-control-static">身分證字號</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->user_info->id_number)?$value->user_info->id_number:"";?></p>
-												</td>
-												<td><p class="form-control-static">性別</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($value->user_info->sex)?$value->user_info->sex:"";?></p>
-												</td>
-											</tr>
+                                            </tr>
+                                            <tr>
+                                                <td><p class="form-control-static">發證地點</p></td>
+                                                <td>
+                                                    <p class="form-control-static"><?=isset($value->user_info->id_card_place)?$value->user_info->id_card_place:"";?></p>
+                                                </td>
+                                                <td><p class="form-control-static">發證日期</p></td>
+                                                <td>
+                                                    <p class="form-control-static"><?=isset($value->user_info->id_card_date)?$value->user_info->id_card_date:"";?></p>
+                                                </td>
+                                                <td><p class="form-control-static">身分證字號</p></td>
+                                                <td>
+                                                    <p class="form-control-static"><?=isset($value->user_info->id_number)?$value->user_info->id_number:"";?></p>
+                                                </td>
+                                                <td><p class="form-control-static">性別</p></td>
+                                                <td>
+                                                    <p class="form-control-static"><?=isset($value->user_info->sex)?$value->user_info->sex:"";?></p>
+                                                </td>
+                                            </tr>
+                                             <? }else{ ?>
+                                                    <td><p class="form-control-static">統編</p></td>
+                                                    <td colspan="3">
+                                                        <p class="form-control-static"><?=isset($value->user_info->id_number)?$value->user_info->id_number:"";?></p>
+                                                    </td>
+                                             <? } ?>
+
 											<tr>
 												<td><p class="form-control-static">投標</p></td>
 												<td>

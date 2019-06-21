@@ -45,7 +45,7 @@
 											 </td>
                                             <td><?=isset($value->investment->user_id)&&$value->investment->user_id?$value->investment->user_id:"" ?></td>
                                             <td><?=isset($value->investment->loan_amount)&&$value->investment->loan_amount?$value->investment->loan_amount:"" ?></td>
-                                            <td><?=isset($value->target->loan_amount)&&$value->target->loan_amount?$value->target->loan_amount:"" ?></td>
+                                            <td><?=isset($value->target->loan_amount)&&$value->target->loan_amount?($value->target->order_id!=0?$value->amount:$value->target->loan_amount):"" ?></td>
                                             <td><?=isset($value->target->interest_rate)&&$value->target->interest_rate?floatval($value->target->interest_rate).'%':"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                             <td><?=isset($value->principal)?$value->principal:"" ?></td>

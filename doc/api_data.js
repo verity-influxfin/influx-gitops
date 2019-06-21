@@ -23073,6 +23073,13 @@ define({
                             "optional": false,
                             "field": "amortization_schedule.total.total_payment",
                             "description": "<p>加總</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "order_image",
+                            "description": "<p>出貨或持機照</p>"
                         }
                     ]
                 },
@@ -29506,7 +29513,7 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/transfer/cancel/:id",
+            "url": "/v2/transfer/cancel",
             "title": "出借方 取消債權收購",
             "version": "0.2.0",
             "name": "GetTransferCancel",
@@ -29531,7 +29538,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
-                            "field": "id",
+                            "field": "transfer_ids",
                             "description": "<p>Transfers IDs (複選使用逗號隔開1,3,10,21)</p>"
                         }
                     ]
@@ -29602,7 +29609,7 @@ define({
             "groupTitle": "Transfer",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/transfer/cancel/:id"
+                    "url": "/api/v2/transfer/cancel"
                 }
             ]
         },

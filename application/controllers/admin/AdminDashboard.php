@@ -16,16 +16,17 @@ class AdminDashboard extends MY_Admin_Controller {
 	{
 		$data 			= array();
 		$target_count 	= array(
-			"approve"	=> 0,
-			"bidding"	=> 0,
-			"success"	=> 0,
-			"delay"		=> 0,
-			"prepayment"=> 0,
-			"transfer_bidding"=> 0,
-			"transfer_success"=> 0,
-			"withdraw"	=> 0,
+			"approve"						 => 0,
+			"bidding"						 => 0,
+			"success"						 => 0,
+			"delay"							 => 0,
+			"prepayment"					 => 0,
+			"transfer_bidding"			 	 => 0,
+			"transfer_success"			 	 => 0,
+			"withdraw"						 => 0,
+			"waiting_approve_order_transfer" => 0,
 		);
-		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5,23)));
+		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5,23,24)));
 		$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
 		if($transfer_list){
@@ -51,7 +52,7 @@ class AdminDashboard extends MY_Admin_Controller {
 					if($value->delay==1 && $value->status==5){
 						$target_count["delay"] += 1;
 					}
-					if($value->status==2 || $value->status==23){
+					if($value->status==2 || $value->status==23 && $value->sub_status==0){
 						$target_count["approve"] += 1;	
 					}
 					
@@ -65,6 +66,9 @@ class AdminDashboard extends MY_Admin_Controller {
 					
 					if($value->sub_status==3 && $value->status==5){
 						$target_count["prepayment"] += 1;
+					}
+					if($value->status==24){
+						$target_count["waiting_approve_order_transfer"] += 1;
 					}
 				}
 			}
