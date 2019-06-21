@@ -231,31 +231,32 @@ class S3_upload {
 		
 	}
 
-    public function public_image_by_data ($image_data='',$user_id=0)
-    {
-        $type = md5(time().rand(1,9).rand(1,9).rand(1,9));
-        $name = sha1(time().rand(1,9).rand(1,9).rand(1,9)).'.jpg';
-        if (!empty($image_data)) {
-            $result = $this->client->putObject(array(
-                'Bucket' 		=> S3_SELLER_PUBLIC_BUCKET,
-                'Key'    		=> $type.'/'.$name,
-                'Body'   		=> $image_data,
-                'ACL'    		=> 'public-read'
-            ));
-            if(isset($result['ObjectURL'])){
-                $data = array(
-                    'type'		=> 'temp_image',
-                    'user_id'	=> $user_id,
-                    'file_name'	=> $name,
-                    'url'		=> $result['ObjectURL'],
-                    'exif'		=> 'public',
-                );
-                $this->CI->log_image_model->insert($data);
-                return $result['ObjectURL'];
-            }
-        }
-        return false;
-    }
+	public function public_image_by_data ($image_data='',$user_id=0)
+	{
+		$type = md5(time().rand(1,9).rand(1,9).rand(1,9));
+		$name = sha1(time().rand(1,9).rand(1,9).rand(1,9)).'.jpg';
+		if (!empty($image_data)) {
+			$result = $this->client->putObject(array(
+				'Bucket' 		=> FRONT_S3_BUCKET,
+				'Key'    		=> $type.'/'.$name,
+				'Body'   		=> $image_data,
+				'ACL'    		=> 'public-read'
+			));
+			if(isset($result['ObjectURL'])){
+				$data = array(
+					'type'		=> 'temp_image',
+					'user_id'	=> $user_id,
+					'file_name'	=> $name,
+					'url'		=> $result['ObjectURL'],
+					'exif'		=> 'public',
+				);
+
+				$this->CI->log_image_model->insert($data);
+				return $result['ObjectURL'];
+			}
+		}
+		return false;
+	}
 
     public function pdf ($files='',$name='test.pdf',$user_id='',$type='test')
     {
