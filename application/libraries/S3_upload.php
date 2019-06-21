@@ -237,7 +237,7 @@ class S3_upload {
         $name = sha1(time().rand(1,9).rand(1,9).rand(1,9)).'.jpg';
         if (!empty($image_data)) {
             $result = $this->client->putObject(array(
-                'Bucket' 		=> FRONT_S3_BUCKET,
+                'Bucket' 		=> S3_SELLER_PUBLIC_BUCKET,
                 'Key'    		=> $type.'/'.$name,
                 'Body'   		=> $image_data,
                 'ACL'    		=> 'public-read'

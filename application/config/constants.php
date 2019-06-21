@@ -302,6 +302,7 @@ defined('AWS_ACCESS_TOKEN')         	OR define('AWS_ACCESS_TOKEN'		, getenv('ENV
 defined('AWS_SECRET_TOKEN')      	OR define('AWS_SECRET_TOKEN'		, getenv('ENV_AWS_SECRET_TOKEN'));
 defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('FRONT_S3_BUCKET')     		OR define('FRONT_S3_BUCKET'			, getenv('ENV_FRONT_S3_BUCKET'));
+defined('S3_SELLER_PUBLIC_BUCKET')    OR define('S3_SELLER_PUBLIC_BUCKET' , getenv('ENV_S3_SELLER_PUBLIC_BUCKET'));
 defined('FRONT_CDN_URL')     		OR define('FRONT_CDN_URL'			, 'https://d3imllwf4as09k.cloudfront.net/');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 

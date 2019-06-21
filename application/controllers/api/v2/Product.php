@@ -902,6 +902,7 @@ class Product extends REST_Controller {
 
             $order_info = [];
             if($target->order_id != 0){
+                $shipped_image = '';
                 $this->load->model('transaction/order_model');
                 $orders 	= $this->order_model->get_by([
                     'id'		=> $target->order_id,
@@ -943,8 +944,10 @@ class Product extends REST_Controller {
                         $item_info[] = $result->data->list;
                     }
 
-                    $this->load->library('S3_upload');
-                    $shipped_image = $this->s3_upload->public_image_by_data(file_get_contents($order_info->shipped_image));
+                    if($orders->shipped_image!=''){
+                        $this->load->library('S3_upload');
+                        $shipped_image = $this->s3_upload->public_image_by_data(file_get_contents($orders->shipped_image));
+                    }
 
                     $order_info['order_no'] 		 = $orders->order_no;
                     $order_info['company'] 			 = $company;
