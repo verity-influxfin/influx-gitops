@@ -103,7 +103,7 @@
 											<tr>
 												<td><p class="form-control-static">逾期狀態 - 天數</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->delay)?$data->delay.'-'.$data->delay_days:"";?></p>
+													<p class="form-control-static"><?=isset($data->delay)?$data->delay.' - '.$data->delay_days:"";?></p>
 												</td>
 												<td><p class="form-control-static">申請日期</p></td>
 												<td>
@@ -124,7 +124,7 @@
                                                     <p class="form-control-static"><? echo $data->reason!=''?$data->reason:"未填寫";?></p>
                                                 </td>
                                             </tr>
-                                            <? if($data->status < 20 || $data->status == 23 && $data->sbu_status == 6 ||$data->status == 24){ ?>
+                                            <? if($data->status < 20 || $data->status == 23 && $data->sub_status == 6 ||$data->status == 24){ ?>
 											<tr>
 												<td><p class="form-control-static">簽約照片</p></td>
 												<td colspan="3">

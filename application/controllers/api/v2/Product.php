@@ -922,7 +922,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    if($target->status > 20){
+                    if(in_array($target->status,array(21,22,23,24))){
                         $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
