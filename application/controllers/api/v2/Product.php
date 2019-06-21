@@ -920,7 +920,7 @@ class Product extends REST_Controller {
                     foreach($item_count as $k => $v){
                         $items[] = $item_name[$k].' x '.$v;
                         $item_count[$k] = intval($v);
-                    }
+                     }
 
                     if(in_array($target->status,array(21,22,23,24))){
                         $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
@@ -943,12 +943,17 @@ class Product extends REST_Controller {
                         $item_info[] = $result->data->list;
                     }
 
+                    $this->load->library('S3_upload');
+                    $shipped_image = $this->s3_upload->public_image_by_data(file_get_contents($order_info->shipped_image));
+
                     $order_info['order_no'] 		 = $orders->order_no;
                     $order_info['company'] 			 = $company;
                     $order_info['merchant_order_no'] = $orders->merchant_order_no;
                     $order_info['item_info']   	     = $item_info;
                     $order_info['item_name'] 		 = $item_name;
                     $order_info['item_count'] 		 = $item_count;
+                    $order_info['shipped_number'] 	 = $orders->shipped_number;
+                    $order_info['shipped_image'] 	 = $shipped_image;
                     $order_info['delivery'] 		 = intval($orders->delivery);
                     $order_info['status'] 		     = intval($orders->status);
                     $order_info['created_at'] 		 = intval($orders->created_at);
