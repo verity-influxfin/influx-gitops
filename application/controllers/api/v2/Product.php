@@ -664,33 +664,44 @@ class Product extends REST_Controller {
      */
     public function applylist_get()
     {
-        $input 				= $this->input->get(NULL, TRUE);
-        $user_id 			= $this->user_info->id;
-        $investor 			= $this->user_info->investor;
-        $param				= ['user_id'=> $user_id];
-        $targets 			= $this->target_model->get_many_by($param);
-        $list				= [];
+        $this->load->library('Subloan_lib');
+        $input 				       = $this->input->get(NULL, TRUE);
+        $user_id 			       = $this->user_info->id;
+        $investor 			       = $this->user_info->investor;
+        $param				       = ['user_id'=> $user_id];
+        $targets 			       = $this->target_model->get_many_by($param);
+        $list				       = [];
+        $subloan_target_status     = '';
+        $subloan_target_sub_status = '';
         if(!empty($targets)){
             foreach($targets as $key => $value){
-
+                if($value->sub_status == 1){
+                    $subloan     = $this->subloan_lib ->get_subloan($value);
+                    $new_target  = $this->target_model->get($subloan->new_target_id);
+                    $subloan_target_status     = $new_target->status;
+                    $subloan_target_sub_status = $new_target->sub_status;
+                }
                 $list[] = [
-                    'id' 				=> intval($value->id),
-                    'target_no' 		=> $value->target_no,
-                    'product_id' 		=> intval($value->product_id),
-                    'user_id' 			=> intval($value->user_id),
-                    'amount' 			=> intval($value->amount),
-                    'loan_amount' 		=> intval($value->loan_amount),
-                    'platform_fee' 		=> intval($value->platform_fee),
-                    'interest_rate' 	=> floatval($value->interest_rate),
-                    'instalment' 		=> intval($value->instalment),
-                    'repayment' 		=> intval($value->repayment),
-                    'reason' 			=> $value->reason,
-                    'remark' 			=> $value->remark,
-                    'delay' 			=> intval($value->delay),
-                    'status' 			=> intval($value->status),
-                    'sub_status' 		=> intval($value->sub_status),
-                    'created_at' 		=> intval($value->created_at),
+                    'id' 				         => intval($value->id),
+                    'target_no' 		         => $value->target_no,
+                    'product_id' 		         => intval($value->product_id),
+                    'user_id' 			         => intval($value->user_id),
+                    'amount' 			         => intval($value->amount),
+                    'loan_amount' 		         => intval($value->loan_amount),
+                    'platform_fee' 		         => intval($value->platform_fee),
+                    'interest_rate' 	         => floatval($value->interest_rate),
+                    'instalment' 		         => intval($value->instalment),
+                    'repayment' 		         => intval($value->repayment),
+                    'reason' 			         => $value->reason,
+                    'remark' 			         => $value->remark,
+                    'delay' 			         => intval($value->delay),
+                    'status' 			         => intval($value->status),
+                    'sub_status' 		         => intval($value->sub_status),
+                    'subloan_target_status'      => intval($subloan_target_status),
+                    'subloan_target_sub_status'  => intval($subloan_target_sub_status),
+                    'created_at' 		         => intval($value->created_at),
                 ];
+
             }
         }
         $this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);

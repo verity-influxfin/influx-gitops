@@ -6389,19 +6389,25 @@ define({
                             "description": "<p>公司統一編號</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "Success 200",
                             "type": "String",
-                            "size": "2..15",
-                            "optional": true,
-                            "field": "cooperation_contact",
-                            "description": "<p>聯絡人</p>"
+                            "optional": false,
+                            "field": "bank_code",
+                            "description": "<p>銀行代碼三碼</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "Success 200",
                             "type": "String",
-                            "optional": true,
-                            "field": "cooperation_phone",
-                            "description": "<p>電話</p>"
+                            "optional": false,
+                            "field": "branch_code",
+                            "description": "<p>分支機構代號四碼</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "bank_account",
+                            "description": "<p>銀行帳號</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6421,6 +6427,21 @@ define({
                             "field": "cooperation",
                             "defaultValue": "0",
                             "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "size": "2..15",
+                            "optional": true,
+                            "field": "cooperation_contact",
+                            "description": "<p>聯絡人</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "cooperation_phone",
+                            "description": "<p>電話</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6486,6 +6507,30 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "202",
                             "description": "<p>未通過所需的驗證(實名驗證)</p>"
                         },
@@ -6504,44 +6549,44 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "214",
-                            "description": "<p>此公司已申請過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "201",
-                            "description": "<p>新增時發生錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
                             "field": "213",
                             "description": "<p>非法人負責人</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "214",
+                            "description": "<p>此公司已申請過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "216",
                             "description": "<p>不支援法人帳號使用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "506",
+                            "description": "<p>銀行代碼長度錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "507",
+                            "description": "<p>分支機構代號長度錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "508",
+                            "description": "<p>銀行帳號長度錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "509",
+                            "description": "<p>銀行帳號已存在</p>"
                         }
                     ]
                 },
@@ -9017,6 +9062,20 @@ define({
                             "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subloan_target_status",
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subloan_target_sub_status",
+                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
                         }
                     ]
                 },
@@ -9026,78 +9085,46 @@ define({
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
                             "    \"data\": {\n" +
-                            "        \"list\": [\n" +
+                            "        \"list\": [\n"+
                             "            {\n" +
-                            "                \"id\": 6770,\n" +
-                            "                \"target_no\": \"STN2019032807528\",\n" +
-                            "                \"product_id\": 1,\n" +
-                            "                \"user_id\": 12820,\n" +
-                            "                \"amount\": 30000,\n" +
-                            "                \"loan_amount\": 27000,\n" +
-                            "                \"platform_fee\": 810,\n" +
-                            "                \"interest_rate\": 12,\n" +
-                            "                \"instalment\": 6,\n" +
-                            "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"\",\n" +
-                            "                \"remark\": \"\",\n" +
-                            "                \"delay\": 0,\n" +
-                            "                \"status\": 10,\n" +
-                            "                \"sub_status\": 4,\n" +
-                            "                \"created_at\": 1553705897\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"id\": 7025,\n" +
-                            "                \"target_no\": \"STN2019040492514\",\n" +
-                            "                \"product_id\": 1,\n" +
-                            "                \"user_id\": 12820,\n" +
-                            "                \"amount\": 5000,\n" +
-                            "                \"loan_amount\": 0,\n" +
-                            "                \"platform_fee\": 0,\n" +
-                            "                \"interest_rate\": 0,\n" +
-                            "                \"instalment\": 18,\n" +
-                            "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"\",\n" +
-                            "                \"remark\": \"\",\n" +
-                            "                \"delay\": 0,\n" +
-                            "                \"status\": 8,\n" +
-                            "                \"sub_status\": 0,\n" +
-                            "                \"created_at\": 1554349266\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"id\": 8786,\n" +
-                            "                \"target_no\": \"STI2019060857987\",\n" +
+                            "                \"id\": 10426,\n" +
+                            "                \"target_no\": \"STI2019062296186\",\n" +
                             "                \"product_id\": 2,\n" +
-                            "                \"user_id\": 12820,\n" +
-                            "                \"amount\": 0,\n" +
+                            "                \"user_id\": 724,\n" +
+                            "                \"amount\": 23700,\n" +
                             "                \"loan_amount\": 0,\n" +
-                            "                \"platform_fee\": 0,\n" +
+                            "                \"platform_fee\": 733,\n" +
                             "                \"interest_rate\": 0,\n" +
-                            "                \"instalment\": 6,\n" +
+                            "                \"instalment\": 24,\n" +
                             "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"分期:Apple iPhone 7 (128GB)\",\n" +
+                            "                \"reason\": \"分期:ASUS ROG Phone (ZS600KL)\",\n" +
                             "                \"remark\": \"\",\n" +
                             "                \"delay\": 0,\n" +
-                            "                \"status\": 8,\n" +
+                            "                \"status\": 22,\n" +
                             "                \"sub_status\": 0,\n" +
-                            "                \"created_at\": 1559954919\n" +
+                            "                \"subloan_target_status\": 2,\n" +
+                            "                \"subloan_target_sub_status\": 8,\n" +
+                            "                \"created_at\": 1561218582\n" +
                             "            },\n" +
                             "            {\n" +
-                            "                \"id\": 8788,\n" +
-                            "                \"target_no\": \"STI2019060889753\",\n" +
+                            "                \"id\": 10427,\n" +
+                            "                \"target_no\": \"STI2019062373438\",\n" +
                             "                \"product_id\": 2,\n" +
-                            "                \"user_id\": 12820,\n" +
-                            "                \"amount\": 16500,\n" +
-                            "                \"loan_amount\": 16500,\n" +
-                            "                \"platform_fee\": 500,\n" +
-                            "                \"interest_rate\": 18,\n" +
-                            "                \"instalment\": 3,\n" +
+                            "                \"user_id\": 724,\n" +
+                            "                \"amount\": 23700,\n" +
+                            "                \"loan_amount\": 0,\n" +
+                            "                \"platform_fee\": 733,\n" +
+                            "                \"interest_rate\": 0,\n" +
+                            "                \"instalment\": 24,\n" +
                             "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"分期:LG V30 \",\n" +
+                            "                \"reason\": \"分期:ASUS ROG Phone (ZS600KL)\",\n" +
                             "                \"remark\": \"\",\n" +
                             "                \"delay\": 0,\n" +
-                            "                \"status\": 21,\n" +
+                            "                \"status\": 22,\n" +
                             "                \"sub_status\": 0,\n" +
-                            "                \"created_at\": 1559982650\n" +
+                            "                \"subloan_target_status\": 2,\n" +
+                            "                \"subloan_target_sub_status\": 8,\n" +
+                            "                \"created_at\": 1561220972\n" +
                             "            }\n" +
                             "        ]\n" +
                             "    }\n" +
