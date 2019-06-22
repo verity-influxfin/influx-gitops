@@ -6447,6 +6447,13 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
+                            "field": "enterprise_registration_image",
+                            "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
                             "field": "facade_image",
                             "description": "<p>店門正面照(經銷商必填)( 圖片ID )</p>"
                         },
@@ -6455,7 +6462,7 @@ define({
                             "type": "Number",
                             "optional": true,
                             "field": "store_image",
-                            "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6469,14 +6476,14 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
                     ]
                 }
@@ -6709,7 +6716,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "store_image",
-                            "description": "<p>店內正面照 ( 圖片ID )( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>店內正面照 ( 圖片ID )( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6723,14 +6730,14 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個)</p>"
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
                     ]
                 }

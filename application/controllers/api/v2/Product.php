@@ -671,10 +671,10 @@ class Product extends REST_Controller {
         $param				       = ['user_id'=> $user_id];
         $targets 			       = $this->target_model->get_many_by($param);
         $list				       = [];
-        $subloan_target_status     = '';
-        $subloan_target_sub_status = '';
         if(!empty($targets)){
             foreach($targets as $key => $value){
+                $subloan_target_status     = '';
+                $subloan_target_sub_status = '';
                 if($value->sub_status == 1){
                     $subloan     = $this->subloan_lib ->get_subloan($value);
                     $new_target  = $this->target_model->get($subloan->new_target_id);
