@@ -21,7 +21,7 @@ class Judicialperson_lib{
 					'phone' => $judicial_person->tax_id
 				]);
 				if(!$exist){
-                    $judicial_person_data = explode(',',$judicial_person->company_user_id);
+                    $judicial_person_data = explode(',',$judicial_person->sign_video);
                     $transaction_password = $judicial_person_data[0];
                     $bank_code            = $judicial_person_data[1];
                     $branch_code          = $judicial_person_data[2];
@@ -35,7 +35,7 @@ class Judicialperson_lib{
                         'email'                => $email,
 						'id_number'			   => $judicial_person->tax_id,
 						'company_status'	   => 1,
-                        'transaction_password' => $transaction_password
+                        'transaction_password' => $transaction_password,
 					];
 					$user_id = $this->CI->user_model->insert($user_param);
 					if($user_id){
@@ -62,19 +62,21 @@ class Judicialperson_lib{
                         $bankaccount_info = [
                             'user_id'               => $user_id,
                             'investor'              => 1,
-                            'user_certification_id' => 0,
+                            'user_certification_id' => 1,
                             'bank_code'             => $bank_code,
                             'branch_code'           => $branch_code,
                             'bank_account'          => $bank_account,
                             'verify'                => 1,
                         ];
 
-						$this->CI->load->model('user/virtual_account_model');
-                        $this->CI->luser_bankaccount_model->insert($bankaccount_info);
+                        $this->CI->load->model('user/user_bankaccount_model');
+                        $this->CI->user_bankaccount_model->insert($bankaccount_info);
+                        $this->CI->load->model('user/virtual_account_model');
 						$this->CI->virtual_account_model->insert_many($virtual_data);
 						$this->CI->judicial_person_model->update($person_id,[
 							'status' 			=> 1,
-							'company_user_id'	=> $user_id
+							'company_user_id'	=> $user_id,
+                            'sign_video'        => '',
 						]);
 						return true;
 					}
