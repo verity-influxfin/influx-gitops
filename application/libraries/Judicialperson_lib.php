@@ -33,7 +33,7 @@ class Judicialperson_lib{
 						'phone'				   => $judicial_person->tax_id,
 						'id_number'			   => $judicial_person->tax_id,
 						'company_status'	   => 1,
-                        'transaction_password' => $judicial_person->company_user_id
+                        'transaction_password' => $transaction_password
 					];
 					$user_id = $this->CI->user_model->insert($user_param);
 					if($user_id){
