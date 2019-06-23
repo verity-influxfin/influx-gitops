@@ -38,8 +38,8 @@ $config['admin_menu'] = [
 	],
 	'Judicialperson' 	=> [
 		'parent_name'				=> '法人帳號管理',
-		'index?status=0'			=> '申請列表',
-		'cooperation?cooperation=2'	=> '經銷商申請',
+		'index?status=0'			=> '法人管理列表',
+		'cooperation?cooperation=2'	=> '經銷商管理列表',
 	],
 	'Certification' => [
 		'parent_name'				=> '認證管理',
