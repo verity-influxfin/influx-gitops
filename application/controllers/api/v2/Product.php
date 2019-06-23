@@ -1529,8 +1529,9 @@ class Product extends REST_Controller {
         $this->load->model('user/cooperation_model');
         if(isset($input['type'])&&$input['type']!=null){
             $cooperation = $this->cooperation_model->get_many_by([
-                'type'	 => $input['type'],
-                'status' => 1,
+                'server_ip !=' => '',
+                'type'	    => $input['type'],
+                'status'    => 1,
             ]);
         }
         if($cooperation){

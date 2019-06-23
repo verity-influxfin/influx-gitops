@@ -152,7 +152,17 @@ class Cooperation extends REST_Controller {
         ];
         $this->response(array('result' => 'SUCCESS','data' => $data));
     }
-	
+
+    public function reg_get()
+    {
+        $rs = $this->cooperation_model->update_by(
+            ['company_user_id' => $this->cooperation_info->company_user_id],
+            ['server_ip'       => '0.0.0.0']
+        );
+        if($rs){
+            $this->response(array('result' => 'SUCCESS'));
+        }
+    }
 	
 	/**
      * @api {post} /cooperation/contact Contact Us
