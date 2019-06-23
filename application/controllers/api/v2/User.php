@@ -1039,7 +1039,13 @@ class User extends REST_Controller {
 		if(!$rs){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 		}
-		
+        $this->load->model('user/judicial_person_model');
+        $judicial_person = $this->judicial_person_model->get_by([
+            'user_id'=> $user_info->id
+        ]);
+        if($judicial_person){
+            $this->user_model->update($judicial_person->company_user_id,array('transaction_password'=>$data['new_password']));
+        }
 		$res = $this->user_model->update($user_info->id,array('transaction_password'=>$data['new_password']));
 		if($res){
 			$this->load->library('notification_lib'); 
