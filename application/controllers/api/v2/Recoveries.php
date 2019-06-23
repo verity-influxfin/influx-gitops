@@ -617,7 +617,7 @@ class Recoveries extends REST_Controller {
 					'amount'		=> 0,
 				];
 				$transaction = $this->transaction_model->get_by([
-					'source'		=> [SOURCE_TRANSFER,SOURCE_LENDING],
+					'source'		=> [SOURCE_TRANSFER,SOURCE_LENDING,SOURCE_TRANSFER_FEE],
 					'user_from'		=> $user_id,
 					'target_id'		=> $value->target_id,
 					'investment_id'	=> $value->id,
