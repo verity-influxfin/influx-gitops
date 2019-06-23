@@ -560,6 +560,14 @@ class Certification_lib{
 			}
 
 			if($rs){
+                $this->CI->load->model('user/judicial_person_model');
+                $judicial_person = $this->CI->judicial_person_model->get_by([
+                    'user_id'=> $info->user_id
+                ]);
+                if($judicial_person){
+                    $this->CI->user_model->update($judicial_person->company_user_id,array('email'=> $content['email']));
+                }
+
 				$this->CI->user_model->update($info->user_id,array('email'=> $content['email']));
 				$this->CI->user_certification_model->update($info->id,array('status'=>1));
 				$this->CI->user_certification_model->update_by(array(

@@ -332,7 +332,7 @@ class Judicialperson extends REST_Controller {
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
 
-            $param['company_user_id'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'];
+            $param['company_user_id'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email;
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],

@@ -26,11 +26,13 @@ class Judicialperson_lib{
                     $bank_code            = $judicial_person_data[1];
                     $branch_code          = $judicial_person_data[2];
                     $bank_account         = $judicial_person_data[3];
+                    $email                = $judicial_person_data[4];
 					$user_param = [
 						'name'				   => $judicial_person->company,
 						'nickname'			   => $judicial_person->company,
 						'password'			   => md5($judicial_person->user_id),
 						'phone'				   => $judicial_person->tax_id,
+                        'email'                => $email,
 						'id_number'			   => $judicial_person->tax_id,
 						'company_status'	   => 1,
                         'transaction_password' => $transaction_password
