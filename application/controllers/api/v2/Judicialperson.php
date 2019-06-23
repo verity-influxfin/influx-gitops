@@ -182,14 +182,15 @@ class Judicialperson extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= array('user_id'=> $user_id);
+		$bank_parm  = [];
 
 		//必填欄位
-		$fields 	= ['company_type','tax_id'];
+		$fields 	= ['company_type','tax_id','bank_code','branch_code','bank_account'];
 		foreach ($fields as $field) {
 			if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
-				$param[$field] = $input[$field];
+			    !preg_match('/bank|branch_code/i',$field)?$param[$field]=$input[$field]:$bank_parm[$field]=$input[$field];
 			}
 		}
 		$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
@@ -224,6 +225,57 @@ class Judicialperson extends REST_Controller {
 			if($exist){
 				$this->response(array('result' => 'ERROR','error' => COMPANY_EXIST ));
 			}
+
+			//綁定金融帳號
+            $this->load->model('user/user_bankaccount_model');
+            $this->certification = $this->config->item('certifications');
+            $certification 		 = $this->certification[3];
+            if($certification && $certification['status']==1) {
+                if (strlen($bank_parm['bank_code']) != 3) {
+                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_CODE_ERROR));
+                }
+                if (strlen($bank_parm['branch_code']) != 4) {
+                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BRANCH_CODE_ERROR));
+                }
+                if (strlen(intval($bank_parm['bank_account'])) < 8 || strlen($bank_parm['bank_account']) < 10 || strlen($bank_parm['bank_account']) > 14 || is_virtual_account($bank_parm['bank_account'])) {
+                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_ERROR));
+                }
+
+                $where = [
+                    'investor' => $investor,
+                    'bank_code' => $bank_parm['bank_code'],
+                    'bank_account' => $bank_parm['bank_account'],
+                    'status' => 1,
+                ];
+
+                $user_bankaccount = $this->user_bankaccount_model->get_by($where);
+                if ($user_bankaccount) {
+                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
+                }
+
+                //營利事業登記證
+                $file_fields 	= ['enterprise_registration_image'];
+                foreach ($file_fields as $field) {
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>4){
+                        $image_ids = array_slice($image_ids,0,4);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $pic[$field] = [];
+                        foreach($list as $k => $v){
+                            $pic[$field][] = $v->url;
+                        }
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+                $param['enterprise_registration'] = json_encode($pic);
+            }
 
 			if($param['cooperation']==2){
                 $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
@@ -278,10 +330,9 @@ class Judicialperson extends REST_Controller {
 
 				$param['cooperation_content'] 	  = json_encode($content);
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
-                $param['company_user_id']         = $this->user_info->transaction_password;
 			}
 
-
+            $param['company_user_id'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'];
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],

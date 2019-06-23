@@ -10,6 +10,7 @@ class User_bankaccount_model extends MY_Model
 	public $investor_list  	= array(
 		0 =>	"借款端",
 		1 =>	"投資端",
+        2 =>	"投資端 (法人)",
 	);
 	
 	public $verify_list  	= array(

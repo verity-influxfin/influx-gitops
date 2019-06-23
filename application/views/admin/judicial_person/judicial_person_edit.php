@@ -121,6 +121,17 @@
 										</table>
 									<?}?>
 								</div>
+                                <div class="col-lg-6">
+                                    <h1>圖片</h1>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">營利事業變更登記表正本</label>
+                                        <? foreach($content['enterprise_registration_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                            </a>
+                                        <? } ?>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 						<!-- /.row (nested) -->

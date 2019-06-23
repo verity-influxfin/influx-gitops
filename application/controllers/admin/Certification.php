@@ -176,16 +176,21 @@ class Certification extends MY_Admin_Controller {
 	public function user_bankaccount_list(){
 		$page_data 			= array('type'=>'list','list'=>array());
 		$input 				= $this->input->get(NULL, TRUE);
-		$where				= array();
+		$where				= array('status'=> 1);
 
 		//必填欄位
 		$fields 	= ['investor','verify'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
-				$where[$field] = $input[$field];
+			    if($field == 'investor' && $input['investor'] ==2){
+                    $where['investor']              = 1;
+                    $where['user_certification_id'] = 0;
+                }
+				else{
+				    $where[$field] = $input[$field];
+				}
 			}
 		}
-
 		$list = $this->user_bankaccount_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){

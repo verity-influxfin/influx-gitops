@@ -21,6 +21,11 @@ class Judicialperson_lib{
 					'phone' => $judicial_person->tax_id
 				]);
 				if(!$exist){
+                    $judicial_person_data = explode(',',$judicial_person->company_user_id);
+                    $transaction_password = $judicial_person_data[0];
+                    $bank_code            = $judicial_person_data[1];
+                    $branch_code          = $judicial_person_data[2];
+                    $bank_account         = $judicial_person_data[3];
 					$user_param = [
 						'name'				   => $judicial_person->company,
 						'nickname'			   => $judicial_person->company,
@@ -50,7 +55,20 @@ class Judicialperson_lib{
 							'user_id'			=> $user_id,			
 							'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
 						];
+
+						//建立金融帳號
+                        $bankaccount_info = [
+                            'user_id'               => $user_id,
+                            'investor'              => 1,
+                            'user_certification_id' => 0,
+                            'bank_code'             => $bank_code,
+                            'branch_code'           => $branch_code,
+                            'bank_account'          => $bank_account,
+                            'verify'                => 1,
+                        ];
+
 						$this->CI->load->model('user/virtual_account_model');
+                        $this->CI->luser_bankaccount_model->insert($bankaccount_info);
 						$this->CI->virtual_account_model->insert_many($virtual_data);
 						$this->CI->judicial_person_model->update($person_id,[
 							'status' 			=> 1,
