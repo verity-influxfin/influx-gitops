@@ -6411,10 +6411,10 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "cooperation_address",
-                            "description": "<p>地址</p>"
+                            "type": "Number",
+                            "optional": false,
+                            "field": "enterprise_registration_image",
+                            "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6445,10 +6445,10 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "Number",
+                            "type": "String",
                             "optional": true,
-                            "field": "enterprise_registration_image",
-                            "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                            "field": "cooperation_address",
+                            "description": "<p>地址</p>"
                         },
                         {
                             "group": "Parameter",

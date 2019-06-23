@@ -256,25 +256,27 @@ class Judicialperson extends REST_Controller {
                 //營利事業登記證
                 $file_fields 	= ['enterprise_registration_image'];
                 foreach ($file_fields as $field) {
-                    $image_ids = explode(',',$input[$field]);
-                    if(count($image_ids)>4){
-                        $image_ids = array_slice($image_ids,0,4);
-                    }
-                    $list = $this->log_image_model->get_many_by([
-                        'id'		=> $image_ids,
-                        'user_id'	=> $user_id,
-                    ]);
-
-                    if($list && count($list)==count($image_ids)){
-                        $pic[$field] = [];
-                        foreach($list as $k => $v){
-                            $pic[$field][] = $v->url;
+                    if(isset($input[$field])){
+                        $image_ids = explode(',',$input[$field]);
+                        if(count($image_ids)>4){
+                            $image_ids = array_slice($image_ids,0,4);
                         }
-                    }else{
+                        $list = $this->log_image_model->get_many_by([
+                            'id'		=> $image_ids,
+                            'user_id'	=> $user_id,
+                        ]);
+                        if($list && count($list)==count($image_ids)){
+                            $pic[$field] = [];
+                            foreach($list as $k => $v){
+                                $pic[$field][] = $v->url;
+                            }
+                        }
+                    }
+                    else{
                         $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                     }
                 }
-                $param['enterprise_registration'] = json_encode($pic);
+                $param['enterprise_registration'] = isset($pic)?json_encode($pic):'';
             }
 
 			if($param['cooperation']==2){
@@ -309,23 +311,25 @@ class Judicialperson extends REST_Controller {
 				//多個檔案欄位
 				$file_fields 	= ['store_image','passbook_image','bankbook_image'];
 				foreach ($file_fields as $field) {
-					$image_ids = explode(',',$input[$field]);
-					if(count($image_ids)>4){
-						$image_ids = array_slice($image_ids,0,4);
-					}
-					$list = $this->log_image_model->get_many_by([
-						'id'		=> $image_ids,
-						'user_id'	=> $user_id,
-					]);
+                    if(isset($input[$field])) {
+                        $image_ids = explode(',', $input[$field]);
+                        if (count($image_ids) > 4) {
+                            $image_ids = array_slice($image_ids, 0, 4);
+                        }
+                        $list = $this->log_image_model->get_many_by([
+                            'id' => $image_ids,
+                            'user_id' => $user_id,
+                        ]);
 
-					if($list && count($list)==count($image_ids)){
-						$content[$field] = [];
-						foreach($list as $k => $v){
-							$content[$field][] = $v->url;
-						}
-					}else{
-						$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-					}
+                        if ($list && count($list) == count($image_ids)) {
+                            $content[$field] = [];
+                            foreach ($list as $k => $v) {
+                                $content[$field][] = $v->url;
+                            }
+                        }
+                    }else {
+                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                    }
 				}
 
 				$param['cooperation_content'] 	  = json_encode($content);
