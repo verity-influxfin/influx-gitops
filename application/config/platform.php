@@ -129,7 +129,7 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '普匯學生貸
+		'description'		=> '學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -139,7 +139,7 @@ $config['product_list']= [
 		'type'				=> 2,
 		'identity'			=> 1,
 		'alias'				=> 'STI',
-		'name'				=> '學生分期',
+		'name'				=> '學生手機貸',
 		'loan_range_s'		=> 5000,
 		'loan_range_e'		=> 120000,
 		'interest_rate_s'	=> 18,
@@ -147,7 +147,7 @@ $config['product_list']= [
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '普匯學生貸
+		'description'		=> '學生手機貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -165,7 +165,7 @@ $config['product_list']= [
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '普匯學生貸
+		'description'		=> '新鮮人貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -175,7 +175,7 @@ $config['product_list']= [
 		'type'				=> 2,
 		'identity'			=> 2,
 		'alias'				=> 'FGI',
-		'name'				=> '新鮮人分期',
+		'name'				=> '新鮮人手機貸',
 		'loan_range_s'		=> 10000,
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 18,
@@ -183,7 +183,7 @@ $config['product_list']= [
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '普匯學生貸
+		'description'		=> '新鮮人手機貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
