@@ -1435,7 +1435,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$ids = explode(',',$input['ids']);
-		if(!empty($ids)){
+		if(!empty($ids)&&count($ids)==1){
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
@@ -1459,7 +1459,7 @@ class Recoveries extends REST_Controller {
 					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
 				}
 			}
-			
+
  			if($combination==1){
 				$data = [
 					'password' 	 			=> $password,
@@ -1484,7 +1484,7 @@ class Recoveries extends REST_Controller {
 				}else{
 					$delay = 0;
 				}
-			
+
 				foreach( $investments as $key => $value ){
 					$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
 					if($delay==1 && $info['delay_interest']==0){
@@ -1496,7 +1496,7 @@ class Recoveries extends REST_Controller {
 					if($info['settlement_date'] != $first_info['settlement_date']){
 						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
 					}
-					
+
 					$target = $this->target_model->get($value->target_id);
 					$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
 					$interest_rate_d += $value->loan_amount*$target->instalment;
@@ -1530,7 +1530,7 @@ class Recoveries extends REST_Controller {
 				if($interest_rate_n && $interest_rate_d){
 					$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
 				}
-				
+
 				$this->load->model('loan/transfer_combination_model');
 				$combination_id = $this->transfer_combination_model->insert($data);
 			}else{
@@ -1546,9 +1546,9 @@ class Recoveries extends REST_Controller {
                 }
 			}
 			foreach( $investments as $key => $value ){
-				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount);
+				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount,$combination);
 			}
-			
+
 			$this->response(array('result' => 'SUCCESS'));
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
