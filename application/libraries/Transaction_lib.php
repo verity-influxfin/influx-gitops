@@ -632,7 +632,7 @@ class Transaction_lib{
                                     if ($investment) {
                                         $this->CI->load->library('Transfer_lib');
                                         $this->CI->transfer_lib->apply_transfer($investment, 0, 0, $total_amount);
-                                    return true;
+                                        return true;
                                     }
                                 }
                             }
@@ -684,13 +684,13 @@ class Transaction_lib{
 							}
 						}
 					}
-					
+
 					$transfer_investments 	= $this->CI->transfer_investment_model->get_by(array(
 						'transfer_id'	=> $transfer_id,
 						'status'		=> 2,
 						'frozen_status'	=> 1
 					));
-						
+
 					if($principal==$transfer->principal && $transfer_investments){
 
 						$investment_data = array(
@@ -701,20 +701,20 @@ class Transaction_lib{
 							'contract_id'	=> $transfer_investments->contract_id,
 							'status'		=> $investment->status,
 						);
-						
+
 						$new_investment = $this->CI->investment_model->insert($investment_data);
 						if($new_investment){
-							
+
 							$this->CI->investment_model->update($investment->id,['status'=>10,'transfer_status'=>2]);
 							$this->CI->load->library('target_lib');
 							$this->CI->target_lib->insert_investment_change_log($investment->id,['status'=>10,'transfer_status'=>2],0,$admin_id);
 							$this->CI->transfer_investment_model->update($transfer_investments->id,['status'=>10]);
 							$this->CI->frozen_amount_model->update($transfer_investments->frozen_id,['status'=>0]);
-							
+
 							$transfer_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$investment->user_id,'investor'=>1]);
 							$virtual_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$transfer_investments->user_id,'investor'=>1]);
 							if($transfer_account && $virtual_account){
-							
+
 								//手續費
 								$transaction[]	= [
 									'source'			=> SOURCE_TRANSFER_FEE,
@@ -729,7 +729,7 @@ class Transaction_lib{
 									'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 									'status'			=> 2
 								];
-								
+
 								//放款
 								$transaction[]		= [
 									'source'			=> SOURCE_TRANSFER,
@@ -745,7 +745,7 @@ class Transaction_lib{
 									'status'			=> 2
 								];
 
-								
+
 								//攤還表
 								if($transaction_list){
 									foreach($transaction_list as $k => $v){
@@ -781,7 +781,7 @@ class Transaction_lib{
 										$this->CI->transaction_model->update($v->id,array('status'=>0));
 									}
 								}
-								
+
 								$rs  = $this->CI->transaction_model->insert_many($transaction);
 								if($rs && is_array($rs)){
 									$this->CI->transfer_model->update($transfer_id,array(
@@ -792,7 +792,7 @@ class Transaction_lib{
 									foreach($rs as $key => $value){
 										$this->CI->passbook_lib->enter_account($value);
 									}
-									
+
 									$this->CI->notification_lib->transfer_success($investment->user_id,1,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
 									$this->CI->notification_lib->transfer_success($transfer_investments->user_id,1,1,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
 									$this->CI->notification_lib->transfer_success($target->user_id,0,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
@@ -801,6 +801,23 @@ class Transaction_lib{
 						}
 					}
 					$this->CI->target_model->update($target->id,array('script_status'=>0));
+
+                    if($target->order_id!=0){
+                        $this->CI->load->model('transaction/order_model');
+                        $order = $this->CI->order_model->get($target->order_id);
+                        $this->CI->load->library('coop_lib');
+                        $result = $this->CI->coop_lib->coop_request('order/supdate',[
+                            'merchant_order_no' => $order->merchant_order_no,
+                            'phone'             => $order->phone,
+                            'type'              => 'finish',
+                        ],$admin_id);
+                        if($result) {
+                            $this->CI->load->library('order_lib');
+                            $this->CI->order_lib->order_change($order->id,5, [
+                                'status'          => 10,
+                            ],$admin_id);
+                        }
+                    }
 					return true;
 				}
 			}
