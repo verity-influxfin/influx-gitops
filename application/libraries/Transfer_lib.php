@@ -23,8 +23,8 @@ class Transfer_lib{
 	債轉期間於寬限期內且跨到逾期日：結息日調整至逾期前一日，利息為上期利息金額
 	逾期債轉：已發生利息 + 依照逾期日計算延滯息
 	*/
-	public function get_pretransfer_info($investment,$bargain_rate=0,$amount=0){
-		if($investment && $investment->status==3){
+	public function get_pretransfer_info($investment,$bargain_rate=0,$amount=0,$get_data=false){
+		if($investment && $investment->status==3||$get_data){
 			$this->CI->load->model('transaction/transaction_model');
 			$this->CI->load->library('Financial_lib');
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by(array(
@@ -124,7 +124,7 @@ class Transfer_lib{
 		return false;
 	}
 	
-	public function apply_transfer($investment,$bargain_rate=0,$combination=0,$amount=0){
+	public function apply_transfer($investment,$bargain_rate=0,$combination_id=0,$amount=0,$combination=0){
 		if($investment && $investment->status==3 && $investment->transfer_status==0){
 			$target 	= $this->CI->target_model->get($investment->target_id);
 			$info  		= $this->get_pretransfer_info($investment,$bargain_rate,$amount);
@@ -152,7 +152,7 @@ class Transfer_lib{
 					if($rs){
 						$this->CI->load->library('target_lib');
 						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
-						$infoAmount = $combination == 0?$info['total']:$info['principal'];
+						$infoAmount = $combination == 1?$info['total']:$info['principal'];
 						$param = [
 							'target_id'				=> $investment->target_id,
 							'investment_id'			=> $investment->id,
@@ -165,7 +165,7 @@ class Transfer_lib{
 							'instalment'			=> $info['instalment'],
 							'accounts_receivable'	=> $info['accounts_receivable'],
 							'expire_time'			=> strtotime($info['settlement_date'].' 23:59:59'),
-							'combination'			=> $combination,
+							'combination'			=> $combination_id,
 							'contract_id'			=> $contract,
 						];
 						$res = $this->CI->transfer_model->insert($param);

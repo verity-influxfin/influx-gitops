@@ -1043,17 +1043,29 @@ class Transfer extends REST_Controller {
 		$list				= [];
 		if(!empty($transfer_investment)){
 			foreach($transfer_investment as $key => $value){
-				$transfer_info 		= $this->transfer_lib->get_transfer($value->transfer_id);
+				$transfer_info = $this->transfer_lib->get_transfer($value->transfer_id);
+				//動態回寫accounts_receivable
+				if($transfer_info->accounts_receivable == 0){
+                    $this->load->model('loan/investment_model');
+                    $investment           = $this->investment_model->get($transfer_info->investment_id);
+                    if($investment->status != 10){
+                        $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true);
+                        $accounts_receivable= $get_pretransfer_info['accounts_receivable'];
+                        $this->load->model('loan/transfer_model');
+                        $this->transfer_model->update($transfer_info->id,['accounts_receivable' => $accounts_receivable]);
+                        $transfer_info->accounts_receivable = $accounts_receivable;
+                    }
+                }
 				$transfer 	= [
-					'id'				=> intval($transfer_info->id),
-					'amount'			=> intval($transfer_info->amount),
-					'principal'			=> intval($transfer_info->principal),
-					'interest'			=> intval($transfer_info->interest),
-					'delay_interest'	=> intval($transfer_info->delay_interest),
-					'bargain_rate'		=> floatval($transfer_info->bargain_rate),
-					'instalment'		=> intval($transfer_info->instalment),
-					'combination'		=> intval($transfer_info->combination),
-					'expire_time'		=> intval($transfer_info->expire_time),
+					'id'				  => intval($transfer_info->id),
+					'amount'			  => intval($transfer_info->amount),
+					'principal'			  => intval($transfer_info->principal),
+					'interest'			  => intval($transfer_info->interest),
+					'delay_interest'	  => intval($transfer_info->delay_interest),
+					'bargain_rate'		  => floatval($transfer_info->bargain_rate),
+					'instalment'		  => intval($transfer_info->instalment),
+					'combination'		  => intval($transfer_info->combination),
+					'expire_time'		  => intval($transfer_info->expire_time),
 					'accounts_receivable' => intval($transfer_info->accounts_receivable),
 				];
 
