@@ -502,6 +502,19 @@ class Subloan extends REST_Controller {
 			
 			$new_target  = $this->target_model->get($subloan->new_target_id);
 
+            $product_list 		= $this->config->item('product_list');
+            $product 			= $product_list[$target->product_id];
+            $certification		= [];
+            $this->load->library('Certification_lib');
+            $certification_list	= $this->certification_lib->get_status($user_id,0);
+            if(!empty($certification_list)){
+                foreach($certification_list as $key => $value){
+                    if(in_array($key,$product['certifications'])){
+                        $certification[] = $value;
+                    }
+                }
+            }
+
 			$amortization_schedule = array();
 			if($new_target->status==1){
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target->instalment,$new_target->interest_rate,$date='',$new_target->repayment);
@@ -521,6 +534,7 @@ class Subloan extends REST_Controller {
 			$subloan_target['contract'] 				= $contract;
 			$subloan_target['amortization_schedule'] 	= $amortization_schedule;
 			$data['subloan_target']						= $subloan_target;
+            $data['certification']						= $certification;
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
