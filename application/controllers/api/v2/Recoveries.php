@@ -1460,7 +1460,7 @@ class Recoveries extends REST_Controller {
 				}
 			}
 			
-			if($combination==1){
+ 			if($combination==1){
 				$data = [
 					'password' 	 			=> $password,
 					'transfer_fee' 			=> 0,
@@ -1534,19 +1534,16 @@ class Recoveries extends REST_Controller {
 				$this->load->model('loan/transfer_combination_model');
 				$combination_id = $this->transfer_combination_model->insert($data);
 			}else{
-				//if($bargain_rate > 0){
-					foreach( $investments as $key => $value ){
-						$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
-                        $minAmount      = intval(round($info['accounts_receivable'] * (100 - 20) /100,0));
-                        $maxAmount      = $info['accounts_receivable'];
-                        if($amount < $minAmount || $amount > $maxAmount){
-                        	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
-                        }
-						//if(($info['total'] + $info['fee']) > $info['accounts_receivable']){
-						//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
-						//}
-					}
-				//}
+                $t_loan_amount = 0;
+                foreach( $investments as $key => $value ){
+                    $info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
+                    $t_loan_amount += $info['accounts_receivable'];
+                }
+                $minAmount      = intval(round($t_loan_amount * (100 - 20) /100,0));
+                $maxAmount      = $t_loan_amount;
+                if($amount < $minAmount || $amount > $maxAmount){
+                    $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+                }
 			}
 			foreach( $investments as $key => $value ){
 				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount);
