@@ -1402,8 +1402,8 @@ class Product extends REST_Controller {
             //建立主系統訂單
             $order_insert = false;
             if($product_price > 0){
-                $platform_fee = $this->financial_lib->get_platform_fee2($input['amount']);
-                $transfer_fee = $this->financial_lib->get_transfer_fee($product_price);
+                $platform_fee = $this->financial_lib->get_platform_fee2($product_price);
+                $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
                 $total        = $amount + $platform_fee + $transfer_fee;
             }
             $order_parm = [
@@ -1429,7 +1429,7 @@ class Product extends REST_Controller {
                 $param = [
                     'product_id'	=> $product_id,
                     'user_id'		=> $user_id,
-                    'amount'		=> $product_price,
+                    'amount'		=> $total,
                     'instalment'	=> $instalment,
                     'platform_fee'  => $platform_fee,
                     'order_id'		=> $order_insert,

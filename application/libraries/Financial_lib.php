@@ -24,7 +24,8 @@ class Financial_lib{
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
 		$rate 		= floatval($rate);
-		$total_payment 		= $this->PMT($rate,$instalment,$amount);
+		$first_total_payment = 0;
+		$total_payment 		 = $this->PMT($rate,$instalment,$amount);
 		if($total_payment){
 			$xirr_dates		= array($date);
 			$xirr_value		= array($amount*(-1));
@@ -59,16 +60,22 @@ class Financial_lib{
 				$principal	= $total_payment - $interest;
 				
 				//最後一期本金
-				if($i==$instalment && $product_type == 1){
+                if($i==$instalment){
 					$principal = $schedule['amount'] - $t_amount;
 				}
-				
-				$total_payment = $interest + $principal;
-				$t_interest	+= $interest;
-				$t_amount	+= $principal;
-				$t_min		+= $interest + $principal;
-				
-				$list[$i] = array(	
+
+                //消費貸
+                $i==1?$first_total_payment=$total_payment:0;
+                if($i==$instalment && $product_type==2){
+                    $interest += $first_total_payment - ($interest + $principal);
+                }
+
+                $t_interest	+= $interest;
+                $t_amount	+= $principal;
+                $t_min		+= $interest + $principal;
+                $total_payment = $interest + $principal;
+
+                $list[$i] = array(
 					'instalment'			=> $i,
 					'repayment_date'		=> $date,
 					'days'					=> $days,
@@ -76,7 +83,7 @@ class Financial_lib{
 					'principal'				=> $principal,
 					'interest'				=> $interest,
 					'total_payment'			=> $total_payment,
-				);	
+				);
 				$xirr_dates[] = $date;
 				$xirr_value[] = $total_payment;
 				$amount = $amount - $principal;

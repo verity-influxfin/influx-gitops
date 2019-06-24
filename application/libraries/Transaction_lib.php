@@ -504,7 +504,7 @@ class Transaction_lib{
 					if($target_account && $company_account){
                         $platform_fee = intval($target->platform_fee);
                         $transfer_fee = intval($order->transfer_fee);
-					    $total_amount = $target->loan_amount + $platform_fee + $transfer_fee;
+					    $total_amount = $target->loan_amount;
 
 						//平台手續費
 						$transaction[]	= [

@@ -811,14 +811,13 @@ class Order extends REST_Controller {
                 if($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']){
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
                 }
-                $amount         = $quotes;
+
                 $platform_fee   = $this->financial_lib->get_platform_fee2($quotes);
-                $transfer_fee   = $this->financial_lib->get_transfer_fee($quotes);
+                $transfer_fee   = $this->financial_lib->get_transfer_fee($quotes+$platform_fee);
                 $total 		    = $quotes + $platform_fee + $transfer_fee;
-                $data['amount'] = $quotes;
 
                 $rs = $this->order_lib->order_change($order->id,0, [
-                        'amount'            => $amount,
+                        'amount'            => $quotes,
                         'platform_fee'      => $platform_fee,
                         'transfer_fee'      => $transfer_fee,
                         'total'             => $total,
@@ -827,7 +826,7 @@ class Order extends REST_Controller {
                     ],$order->company_user_id);
                 if($rs){
                     $rs2 = $this->target_lib->order_target_change($order->id,20,[
-                            'amount'        => $quotes,
+                            'amount'        => $total,
                             'platform_fee'  => $platform_fee,
                             'status'        => 21,
                         ],$order->company_user_id);
