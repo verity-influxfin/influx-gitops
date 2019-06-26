@@ -668,7 +668,7 @@ class Product extends REST_Controller {
         $input 				       = $this->input->get(NULL, TRUE);
         $user_id 			       = $this->user_info->id;
         $investor 			       = $this->user_info->investor;
-        $param				       = ['user_id'=> $user_id];
+        $param				       = ['user_id'=> $user_id,'status !='=> 8];
         $targets 			       = $this->target_model->get_many_by($param);
         $list				       = [];
         if(!empty($targets)){
