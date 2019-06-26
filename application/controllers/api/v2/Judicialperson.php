@@ -187,7 +187,7 @@ class Judicialperson extends REST_Controller {
 		//必填欄位
 		$fields 	= ['company_type','tax_id','bank_code','branch_code','bank_account'];
 		foreach ($fields as $field) {
-			if (empty($input[$field])) {
+			if (!isset($input[$field]) && !$input[$field]) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}else{
 			    !preg_match('/bank|branch_code/i',$field)?$param[$field]=$input[$field]:$bank_parm[$field]=$input[$field];
@@ -760,7 +760,7 @@ class Judicialperson extends REST_Controller {
 
         $fields 	= ['business_model','selling_type'];
         foreach ($fields as $field) {
-            if (empty($input[$field])) {
+            if (!isset($input[$field]) && !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
                 $business[$field] = intval($input[$field]);
