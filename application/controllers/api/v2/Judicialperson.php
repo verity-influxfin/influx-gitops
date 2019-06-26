@@ -281,8 +281,10 @@ class Judicialperson extends REST_Controller {
 
 			if($param['cooperation']==2){
                 $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
-                $param['cooperation_phone'] = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
+                $param['cooperation_phone']   = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
                 $param['cooperation_address'] = isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'';
+                $param['business_model']      = isset($input['business_model'])&&$input['business_model']?$input['business_model']:'';
+                $param['selling_type']        = isset($input['selling_type'])&&$input['selling_type']?$input['selling_type']:'';
 
 				//if (empty($input['server_ip'])) {
 					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -756,6 +758,15 @@ class Judicialperson extends REST_Controller {
 		$this->load->library('S3_upload');
         $company_user_id = $this->user_info->id;
 
+        $fields 	= ['business_model','selling_type'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $business[$field] = intval($input[$field]);
+            }
+        }
+
 		$judicial_person = $this->judicial_person_model->get_by(array(
 			'company_user_id' 	=> $company_user_id,
 		));
@@ -815,6 +826,8 @@ class Judicialperson extends REST_Controller {
 
 		if($judicial_person){
 			$param	= array(
+                'business_model'        => $business['business_model'],
+                'selling_type'          => $business['selling_type'],
 				'cooperation'			=> 2,
                 'cooperation_contact'	=> isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'',
 				'cooperation_address'   => $input['cooperation_address'],

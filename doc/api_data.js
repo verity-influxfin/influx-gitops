@@ -6454,12 +6454,26 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "optional": true,
+                            "field": "business_model",
+                            "description": "<p>營運模式 0:線下 1:線上</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "selling_type",
+                            "description": "<p>商品類型 0:手機 1:遊學 2:外匯車 999:其它</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
                             "field": "facade_image",
                             "description": "<p>店門正面照(經銷商必填)( 圖片ID )</p>"
                         },
                         {
                             "group": "Parameter",
-                            "type": "Number",
+                            "type": "String",
                             "optional": true,
                             "field": "store_image",
                             "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
@@ -6686,14 +6700,14 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "size": "2..15",
-                            "optional": true,
+                            "optional": false,
                             "field": "cooperation_contact",
                             "description": "<p>聯絡人</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "cooperation_phone",
                             "description": "<p>電話</p>"
                         },
@@ -6703,6 +6717,19 @@ define({
                             "optional": false,
                             "field": "cooperation_address",
                             "description": "<p>地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "business_model",
+                            "description": "<p>營運模式 0:線下 1:線上</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "selling_type",
+                            "description": "<p>商品類型 0:手機 1:遊學 2:外匯車 999:其它</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6713,7 +6740,7 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "Number",
+                            "type": "String",
                             "optional": false,
                             "field": "store_image",
                             "description": "<p>店內正面照 ( 圖片ID )( 圖片IDs 以逗號隔開，最多四個 )</p>"
@@ -6735,7 +6762,7 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "bankbook_image",
                             "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
