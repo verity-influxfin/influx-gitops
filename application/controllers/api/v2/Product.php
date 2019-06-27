@@ -173,7 +173,8 @@ class Product extends REST_Controller {
                         'user_id'		=> $this->user_info->id,
                         'product_id'	=> $value['id']
                     ));
-                    if($targets){
+
+                   if($targets){
                         $target = [
                             'id'			=> intval($targets->id),
                             'target_no'		=> $targets->target_no,
@@ -194,7 +195,7 @@ class Product extends REST_Controller {
                     }
                 }
 
-                $list[] = array(
+                $parm = array(
                     'id' 					=> $value['id'],
                     'type' 					=> $value['type'],
                     'identity' 				=> $value['identity'],
@@ -211,6 +212,10 @@ class Product extends REST_Controller {
                     'target'				=> $target,
                     'certification'			=> $certification,
                 );
+                if($value['type'] == 2){
+                    $parm['selling_type'] = $this->config->item('selling_type');;
+                }
+                $list[] = $parm;
             }
         }
 

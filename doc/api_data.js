@@ -10265,6 +10265,13 @@ define({
                             "optional": false,
                             "field": "certification",
                             "description": "<p>認證完成資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "selling_type",
+                            "description": "<p>0:手機 1:遊學 2:外匯車 999:其它</p>"
                         }
                     ]
                 },

@@ -354,3 +354,10 @@ $config['industry_name']= [
 $config['action_Keyword']= [
 	0   => '轉換產品',
 ];
+
+$config['selling_type']= [
+    0   => '手機',
+    1   => '遊學',
+    2   => '外匯車',
+    999 => '其它',
+];
