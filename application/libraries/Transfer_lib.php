@@ -85,7 +85,7 @@ class Transfer_lib{
 						}
 					}
 
-					$accounts_receivable = $accounts_receivable + $principal + $delay_interest + $interest;
+					$accounts_receivable = $accounts_receivable + $principal + $delay_interest;
 					//190525 顯示不加利息
 					//$total = $principal + $interest + $delay_interest;
                     $total = intval($amount);
