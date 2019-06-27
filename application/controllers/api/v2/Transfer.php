@@ -216,7 +216,6 @@ class Transfer extends REST_Controller {
 
                 //動態回寫accounts_receivable
                 if($value->accounts_receivable == 0){
-                    $this->load->model('loan/investment_model');
                     $investment           = $this->investment_model->get($value->investment_id);
                     if($investment->status != 10){
                         $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true);
@@ -1059,7 +1058,6 @@ class Transfer extends REST_Controller {
 				$transfer_info = $this->transfer_lib->get_transfer($value->transfer_id);
 				//動態回寫accounts_receivable
 				if($transfer_info->accounts_receivable == 0){
-                    $this->load->model('loan/investment_model');
                     $investment           = $this->investment_model->get($transfer_info->investment_id);
                     if($investment->status != 10){
                         $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true);
