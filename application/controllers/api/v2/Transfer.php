@@ -214,6 +214,19 @@ class Transfer extends REST_Controller {
                     );
                 }
 
+                //動態回寫accounts_receivable
+                if($value->accounts_receivable == 0){
+                    $this->load->model('loan/investment_model');
+                    $investment           = $this->investment_model->get($value->investment_id);
+                    if($investment->status != 10){
+                        $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true);
+                        $accounts_receivable= $get_pretransfer_info['accounts_receivable'];
+                        $this->load->model('loan/transfer_model');
+                        $this->transfer_model->update($value->id,['accounts_receivable' => $accounts_receivable]);
+                        $value->accounts_receivable = $accounts_receivable;
+                    }
+                }
+
                 $target_info = [
                     'id' 				=> intval($target->id),
                     'target_no' 		=> $target->target_no,
@@ -586,7 +599,7 @@ class Transfer extends REST_Controller {
                                 if(!isset($repayment[$v['repayment_date']])){
                                     $repayment[$v['repayment_date']] = 0;
                                 }
-                                $repayment[$v['repayment_date']] += $v['total_payment'] + $v['ar_fees'];
+                                $repayment[$v['repayment_date']] += $v['total_payment'];//+ $v['ar_fees']
                             }
                         }
 						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);

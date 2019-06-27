@@ -1288,10 +1288,10 @@ class Recoveries extends REST_Controller {
 				$target = $this->target_model->get($value->target_id);
 				$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
 				$interest_rate_d += $value->loan_amount*$target->instalment;
-                $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
 
 				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
                 if($info){
+                    $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
 					$data['count']++;
 					//$data['amount'] 			 += $info['total'];
 					$data['principal'] 			 += $info['principal'];
@@ -1302,10 +1302,12 @@ class Recoveries extends REST_Controller {
 					$data['contract'][] 	     = $info['debt_transfer_contract'];
 
                     foreach ($amortization_table['list'] as $k => $v) {
-                        if (!isset($data['total_payment'][$v['repayment_date']])) {
-                            $data['total_payment'][$v['repayment_date']] = 0;
+                        if($v['repayment'] == 0){
+                            if (!isset($data['total_payment'][$v['repayment_date']])) {
+                                $data['total_payment'][$v['repayment_date']] = 0;
+                            }
+                            $data['total_payment'][$v['repayment_date']] += $v['total_payment'];
                         }
-                        $data['total_payment'][$v['repayment_date']] += $v['total_payment'];
                     }
 
                     if($data['max_instalment'] < $info['instalment']){
@@ -1435,7 +1437,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$ids = explode(',',$input['ids']);
-		if(!empty($ids)&&count($ids)==1){
+		if(!empty($ids)&&count($ids)==1){//
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
@@ -1544,6 +1546,7 @@ class Recoveries extends REST_Controller {
                 if($amount < $minAmount || $amount > $maxAmount){
                     $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
                 }
+                $combination = count($ids)>1?1:0;
 			}
 			foreach( $investments as $key => $value ){
 				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount,$combination);
