@@ -807,30 +807,33 @@ class Certification extends REST_Controller {
 					$content['household_image'] = $rs->url;
 				}
 			}
-			
-			$name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
-			if(in_array($content['name'],$name_limit)){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
-			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
-			if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
-			
-			if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $content['phone'])){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
-			
-			$phone_exist = $this->user_model->get_by([
-				'phone'		=> $content['phone'],
-				'status'	=> 1,
-			]);
-			if($phone_exist){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
-			
+
+            if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+            if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+
+            if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $content['phone'])){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+
+            if($investor == 0){
+                $name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
+                if(in_array($content['name'],$name_limit)){
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }
+
+                $phone_exist = $this->user_model->get_by([
+                    'phone'		=> $content['phone'],
+                    'status'	=> 1,
+                ]);
+                if($phone_exist){
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }
+            }
+
 			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
