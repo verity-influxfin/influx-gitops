@@ -826,6 +826,7 @@ class Target_lib{
 			foreach($targets as $key => $value){
 				$list[$value->product_id][$value->id] = $value;
 				$ids[] = $value->id;
+				$get_amount = $value->amount;
 			}
 
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
@@ -838,7 +839,9 @@ class Target_lib{
 						$finish		 		= true;
 						foreach($certifications as $certification){
 							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
-								$finish	= false;
+								if(!$get_amount < 30000 && !$product_list[$product_id]['id'] == 4 && !$certification['id'] == 9){
+                                    $finish	= false;
+                                }
 							}
 						}
 						if($finish){
