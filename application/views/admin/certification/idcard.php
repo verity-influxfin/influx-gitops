@@ -121,16 +121,16 @@
 											<label for="disabledSelect">身分證背面照</label><br>
 											<table>
 												<tr>
-													<td rowspan="5">
+													<td width="300px">
 														<a href="<?=isset($content['back_image'])?$content['back_image']:""?>" data-fancybox="images">
 															<img src="<?=isset($content['back_image'])?$content['back_image']:""?>" style='width:100%;max-width:300px;'>
 														</a>
 													</td>
+                                                    <td>
+                                                        <label>父：</label><?=isset($remark["OCR"]["father"])?$remark["OCR"]["father"]:"";?><br>
+                                                        <label>母：</label><?=isset($remark["OCR"]["mother"])?$remark["OCR"]["mother"]:"";?><br>
+                                                    </td>
 												</tr>
-												<tr><td>
-													<label>父：</label><?=isset($remark["OCR"]["father"])?$remark["OCR"]["father"]:"";?><br>
-													<label>母：</label><?=isset($remark["OCR"]["mother"])?$remark["OCR"]["mother"]:"";?><br>
-												</td></tr>
 											</table>
 										</div>
 										<div class="form-group">
