@@ -64,7 +64,7 @@ class User extends MY_Admin_Controller {
 				$bank_account = $this->user_bankaccount_model->get_many_by([
 					'user_id'	=> $id,
 					'status'	=> 1,
-					'verify'	=> 1,
+					//'verify'	=> 1,
 				]);
 
 				$info 			= $this->user_model->get($id);
@@ -124,7 +124,7 @@ class User extends MY_Admin_Controller {
 					$certification_list[$value['alias']] = $value['name'];
 				}
 			}
-		
+
 			$meta_data 			= array();
 			$meta 				= $this->user_meta_model->get_many_by(array('user_id'=>$id));
 			if($meta){
@@ -140,9 +140,12 @@ class User extends MY_Admin_Controller {
 			$credit_list		= $this->credit_model->get_many_by(array('user_id'=>$id));
 			$info = $this->user_model->get($id);
 			if($info){
+                $this->load->library('certification_lib');
 				$page_data['data'] 					= $info;
 				$page_data['meta'] 					= $meta_data;
 				$page_data['school_system'] 		= $this->config->item('school_system');
+                $page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,0,$info->company_status);
+                $page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,1,$info->company_status);
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
 				$page_data['product_list']			= $this->config->item('product_list');

@@ -105,11 +105,19 @@
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover" style="text-align:center;">
 											<tbody>
-											<? if(!empty($bank_account)){
+											<?  $bank_acc_cer_id = 0;
+											    $inv_bank_acc_cer_id = 0;
+                                                if(!empty($bank_account)){
 												foreach($bank_account as $key => $value){
+												    if($value->investor==1){
+                                                        $inv_bank_acc_cer_id = $value->id;
+                                                    }
+                                                    else{
+                                                        $bank_acc_cer_id = $value->id;
+                                                    }
 											?>
 												<tr style="background-color:#f5f5f5;">
-													<td rowspan="2">
+													<td rowspan="3">
 														<p class="form-control-static"><?=isset($value->investor)?$bank_account_investor[$value->investor]:"";?></p>
 													</td>
 													<td>
@@ -128,7 +136,9 @@
 													<td><?=isset($value->front_image)?"<a href='".$value->front_image."' data-fancybox='images'><img src='".$value->front_image."' style='width:30%;'></a>":"";?></td>
 													<td><?=isset($value->back_image)?"<a href='".$value->back_image."' data-fancybox='images'><img src='".$value->back_image."' style='width:30%;'></a>":"";?></td>
 												</tr>
-											<? }} ?>
+                                                <? if($value->verify == 0){?>
+                                                    <tr><td colspan="3"><? echo $bank_account_verify[$value->verify] ?></td></tr>
+											<? }}} ?>
 											</tbody>
 										</table>
 									</div>
@@ -191,33 +201,33 @@
 														if($value['id']==3){
 															switch($value['user_status']){
 																case '3':
-																case '0': 
-																	echo '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
-																	break;
-																case '1':
-																	echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
-																	break;
-																case '2': 
-																	echo '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
-																	break;
-																default:
-																	echo '<p class="form-control-static">無</p>';	
+                                                                case '0':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+                                                                    break;
+                                                                case '1':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+                                                                    break;
+                                                                case '2':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+                                                                    break;
+                                                                default:
+                                                                    echo '<p class="form-control-static">無</p>';
 																	break;
 															}
 														}else{
 															$certification_id = $value['certification_id'];
 															switch($value['user_status']){
-																case '3': 
-																case '0': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
-																	break;
-																case '1':
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
-																	break;
-																case '2': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
-																	break;
-																default:
+																case '3':
+																case '0':
+                                                                echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+                                                                break;
+                                                                case '1':
+                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+                                                                    break;
+                                                                case '2':
+                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+                                                                    break;
+                                                                default:
 																	echo '<p class="form-control-static">無</p>';	
 																	break;
 															}
@@ -243,21 +253,21 @@
 													<td>
 														<? 
 														if($value['id']==3){
-															switch($value['user_status']){
-																case '3':
-																case '0': 
-																	echo '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
-																	break;
-																case '1':
-																	echo '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
-																	break;
-																case '2': 
-																	echo '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
-																	break;
-																default:
-																	echo '<p class="form-control-static">無</p>';	
-																	break;
-															}
+                                                            switch($value['user_status']){
+                                                                case '3':
+                                                                case '0':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$inv_bank_acc_cer_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+                                                                    break;
+                                                                case '1':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$inv_bank_acc_cer_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+                                                                    break;
+                                                                case '2':
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$inv_bank_acc_cer_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+                                                                    break;
+                                                                default:
+                                                                    echo '<p class="form-control-static">無</p>';
+                                                                    break;
+                                                            }
 														}else{
 															$certification_id = $value['certification_id'];
 															switch($value['user_status']){
