@@ -51,7 +51,7 @@
                                     </label>
                                 </div-->
                                 <!-- Change this to a button or input when using this as a form -->
-                                <button type="submit" class="btn btn-lg btn-primary btn-block">登入</a>
+                                <button type="submit" class="btn btn-lg <? echo is_development()?'btn-info':'btn-dangerinfo' ?> btn-block">登入</a>
                             </fieldset>
                         </form>
                     </div>
