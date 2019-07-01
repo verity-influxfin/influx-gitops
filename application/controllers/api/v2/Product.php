@@ -1393,6 +1393,7 @@ class Product extends REST_Controller {
             'interest_rate'  => ORDER_INTEREST_RATE,
             'delivery'       => $delivery,
             'name'           => $user_name,
+            'nickname'       => $nickname,
             'phone'          => $phone,
             'address'        => $address,
         ],$user_id);
@@ -1441,7 +1442,6 @@ class Product extends REST_Controller {
                     'platform_fee'  => $platform_fee,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
-                    'nickname'      => $nickname,
                     'status'        => 20,
                 ];
 
