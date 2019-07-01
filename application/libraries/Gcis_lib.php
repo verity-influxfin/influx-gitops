@@ -41,7 +41,7 @@ class Gcis_lib
 		return false;
 	}
 	
-	//負責人查詢
+	//公司負責人查詢
 	public function check_responsible($account_no='',$name=''){
 		if(!empty($name) && strlen($account_no)==8){
 			$url 	= $this->url.'4B61A0F1-458C-43F9-93F3-9FD6DA5E1B08?$format=json&$filter=Responsible_Name%20eq%20'.$name.'&$skip=0&$top=50';
@@ -57,4 +57,21 @@ class Gcis_lib
 		}
 		return false;
 	}
+
+    //商業負責人查詢
+    public function check_responsible_businesss($account_no='',$name=''){
+        if(!empty($name) && strlen($account_no)==8){
+            $url 	= $this->url.'35BCAB6C-9876-4356-B674-538E4F1DED5E?$format=json&$filter=Business_Current_Status%20eq%2001%20and%20Responsible_Name%20eq%20'.$name.'&$skip=0&$top=50';
+            $rs  	= curl_get($url);
+            $data 	= json_decode($rs,TRUE);
+            if($data){
+                foreach($data as $key => $value){
+                    if($value['President_No']==$account_no){
+                        return $value;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

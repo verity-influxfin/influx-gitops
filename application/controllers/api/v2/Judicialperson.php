@@ -214,7 +214,11 @@ class Judicialperson extends REST_Controller {
 			$this->load->library('Gcis_lib');
 			$company_data = $this->gcis_lib->check_responsible($param['tax_id'],$this->user_info->name);
 			if(!$company_data){
-				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
+                $business_data = $this->gcis_lib->check_responsible_businesss($param['tax_id'],$this->user_info->name);
+                $company_data['Company_Name'] = $business_data['Business_Name'];
+                if(!$business_data) {
+                    $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
+                }
 			}
 
 			$param['company'] = $company_data['Company_Name'];
