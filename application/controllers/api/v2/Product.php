@@ -1320,7 +1320,7 @@ class Product extends REST_Controller {
     {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
-        $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];
+        $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery','nickname'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1334,6 +1334,7 @@ class Product extends REST_Controller {
         $item_id		= $content['item_id'];   //商品ID
         $item_count		= $content['item_count'];//商品數量
         $delivery       = $content['delivery'];  //0:線下 1:線上
+        $nickname       = $content['nickname'];  //暱稱
 
         //檢驗產品規格
         $product_list 	= $this->config->item('product_list');
@@ -1426,6 +1427,7 @@ class Product extends REST_Controller {
                 'transfer_fee'      => $transfer_fee,
                 'total'             => $total,
                 'delivery'          => $delivery,
+                'nickname'          => $nickname,
                 'status'            => 0
             ];
             $this->load->model('transaction/order_model');
@@ -1439,6 +1441,7 @@ class Product extends REST_Controller {
                     'platform_fee'  => $platform_fee,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
+                    'nickname'      => $nickname,
                     'status'        => 20,
                 ];
 
