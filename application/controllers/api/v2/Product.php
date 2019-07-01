@@ -1380,7 +1380,7 @@ class Product extends REST_Controller {
 
         //對經銷商系統建立訂單
         $phone        = $this->user_info->phone;
-        $user_name    = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':'小姐');
+        $user_name    = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':(substr($this->user_info->id_number,1,1)==2?'小姐':'先生/小姐'));
         $order_parm   = [
 
         ];
