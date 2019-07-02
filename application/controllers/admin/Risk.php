@@ -65,7 +65,7 @@ class Risk extends MY_Admin_Controller {
 		}
 		
 		$targets = $this->target_model->get_many_by(array(
-			'status'	=> array(1,2)
+			'status'	=> array(1,2,21,22)
 		));
 		if($targets){
 			foreach($targets as $key => $value){
