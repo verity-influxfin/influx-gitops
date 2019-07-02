@@ -183,8 +183,10 @@ class Certification extends MY_Admin_Controller {
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 			    if($field == 'investor' && $input['investor'] ==2){
-                    $where['investor']              = 1;
-                    $where['user_certification_id'] = 0;
+                    $where['investor']   = 1;
+                    $where['back_image'] = '';
+                }elseif($field == 'investor' && $input['investor'] ==1){
+                    $where['back_image !='] = '';
                 }
 				else{
 				    $where[$field] = $input[$field];

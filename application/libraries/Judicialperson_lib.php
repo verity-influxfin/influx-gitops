@@ -10,6 +10,9 @@ class Judicialperson_lib{
 		$this->CI->load->model('user/judicial_person_model');
 		$this->CI->load->model('user/judicial_agent_model');
 		$this->CI->load->model('user/cooperation_model');
+        $this->CI->load->model('user/user_bankaccount_model');
+        $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->model('user/virtual_account_model');
     }
 	
 	//審核成功
@@ -27,6 +30,7 @@ class Judicialperson_lib{
                     $branch_code          = $judicial_person_data[2];
                     $bank_account         = $judicial_person_data[3];
                     $email                = $judicial_person_data[4];
+                    $bankbook_images      = urldecode($judicial_person_data[5]);
 					$user_param = [
 						'name'				   => $judicial_person->company,
 						'nickname'			   => $judicial_person->company,
@@ -45,34 +49,44 @@ class Judicialperson_lib{
 							'user_id'			=> $judicial_person->user_id,
 						];
 						$this->CI->judicial_agent_model->insert($agent_param);
-						$virtual_data 	= [];
-						$virtual_data[] = [
-							'investor'			=> 1,
-							'user_id'			=> $user_id,			
-							'virtual_account'	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
-						];
-						
-						$virtual_data[] = [
-							'investor'			=> 0,
-							'user_id'			=> $user_id,			
-							'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
-						];
+
+                        $param		= [
+                            'user_id'			=> $user_id,
+                            'certification_id'	=> 3,
+                            'investor'			=> 1,
+                            'expire_time'		=> strtotime('+20 years'),
+                            'content'			=> $bankbook_images,
+                            'status'            => 1,
+                        ];
+                        $insert = $this->CI->user_certification_model->insert($param);
 
 						//建立金融帳號
                         $bankaccount_info = [
                             'user_id'               => $user_id,
                             'investor'              => 1,
-                            'user_certification_id' => 1,
+                            'user_certification_id' => $insert,
                             'bank_code'             => $bank_code,
                             'branch_code'           => $branch_code,
                             'bank_account'          => $bank_account,
+                            'front_image'	        => $bankbook_images,
                             'verify'                => 1,
                         ];
-
-                        $this->CI->load->model('user/user_bankaccount_model');
                         $this->CI->user_bankaccount_model->insert($bankaccount_info);
-                        $this->CI->load->model('user/virtual_account_model');
+
+                        $virtual_data 	= [];
+                        $virtual_data[] = [
+                            'investor'			=> 1,
+                            'user_id'			=> $user_id,
+                            'virtual_account'	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
+                        ];
+
+                        $virtual_data[] = [
+                            'investor'			=> 0,
+                            'user_id'			=> $user_id,
+                            'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
+                        ];
 						$this->CI->virtual_account_model->insert_many($virtual_data);
+
 						$this->CI->judicial_person_model->update($person_id,[
 							'status' 			=> 1,
 							'company_user_id'	=> $user_id,

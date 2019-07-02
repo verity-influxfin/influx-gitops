@@ -257,7 +257,34 @@ class Judicialperson extends REST_Controller {
                     $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
                 }
 
+                //銀行存簿
+                $bankbook_images = [];
+                $file_fields 	 = ['bankbook_image'];
+                foreach ($file_fields as $field) {
+                    if(isset($input[$field])){
+                        $image_ids = explode(',',$input[$field]);
+                        if(count($image_ids)>4){
+                            $image_ids = array_slice($image_ids,0,4);
+                        }
+                        $list = $this->log_image_model->get_many_by([
+                            'id'		=> $image_ids,
+                            'user_id'	=> $user_id,
+                        ]);
+                        if($list && count($list)==count($image_ids)){
+                            $bankbook_images[$field] = [];
+                            foreach($list as $k => $v){
+                                $bankbook_images[$field][] = $v->url;
+                            }
+                        }
+                    }
+                    else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+                $bankbook_images = json_encode($bankbook_images);
+
                 //營利事業登記證
+                $pic = [];
                 $file_fields 	= ['enterprise_registration_image'];
                 foreach ($file_fields as $field) {
                     if(isset($input[$field])){
@@ -276,11 +303,12 @@ class Judicialperson extends REST_Controller {
                             }
                         }
                     }
-                    else{
+                else{
                         $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                     }
                 }
                 $param['enterprise_registration'] = isset($pic)?json_encode($pic):'';
+
             }
 
 			if($param['cooperation']==2){
@@ -290,9 +318,9 @@ class Judicialperson extends REST_Controller {
                 $param['business_model']      = isset($input['business_model'])&&$input['business_model']?$input['business_model']:'';
                 $param['selling_type']        = isset($input['selling_type'])&&$input['selling_type']?$input['selling_type']:'';
 
-                if($param['business_model']==0){
+                if($param['business_model'] == 0){
                     array_push($file_fields,"facade_image");
-                    array_push($file_fields2,"store_image");
+                    array_push($mfile_fields,"store_image");
                 }
 
 				//if (empty($input['server_ip'])) {
@@ -320,8 +348,8 @@ class Judicialperson extends REST_Controller {
 				}
 
 				//多個檔案欄位
-				$file_fields2 	= ['passbook_image','bankbook_image'];
-				foreach ($file_fields2 as $field) {
+				$mfile_fields 	= ['passbook_image'];
+				foreach ($mfile_fields as $field) {
                     if(isset($input[$field])) {
                         $image_ids = explode(',', $input[$field]);
                         if (count($image_ids) > 4) {
@@ -347,7 +375,7 @@ class Judicialperson extends REST_Controller {
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
 
-            $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email;
+            $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
@@ -787,14 +815,19 @@ class Judicialperson extends REST_Controller {
 			//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		//}
 
-        if (empty($input['cooperation_address'])) {
-            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-        }
 
-            //上傳檔案欄位
-		$content		= [];
-		$file_fields 	= ['facade_image','front_image'];
-		foreach ($file_fields as $field) {
+        $file_fields 	= ['front_image'];
+        $mfile_fields 	= ['passbook_image'];
+        if($business['business_model'] == 0 ){
+            array_push($file_fields,'facade_image');
+            array_push($mfile_fields,'store_image');
+            if (!isset($input['cooperation_address'])||empty($input['cooperation_address'])) {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            }
+        }
+        //上傳檔案欄位
+		$content = [];
+        foreach ($file_fields as $field) {
 			$image_id = intval($input[$field]);
 			if (!$image_id) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -811,9 +844,8 @@ class Judicialperson extends REST_Controller {
 				}
 			}
 		}
-		
-		$file_fields 	= ['store_image','passbook_image'];
-		foreach ($file_fields as $field) {
+
+		foreach ($mfile_fields as $field) {
 			$image_ids = explode(',',$input[$field]);
 			if(count($image_ids)>4){
 				$image_ids = array_slice($image_ids,0,4);

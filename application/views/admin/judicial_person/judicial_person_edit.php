@@ -125,11 +125,15 @@
                                     <h1>圖片</h1>
                                     <div class="form-group">
                                         <label for="disabledSelect">營利事業變更登記表正本</label>
-                                        <? if(isset($content['enterprise_registration_image'])){ foreach($content['enterprise_registration_image'] as $key => $value){ ?>
-                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
-                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
-                                            </a>
-                                        <? }}else{echo "未上傳";} ?>
+                                        <?  if(isset($content['enterprise_registration_image'])){
+                                                foreach($content['enterprise_registration_image'] as $key => $value){
+                                                    ?>
+                                                <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                    <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                                </a>
+                                            <?
+                                                }
+                                            }else{echo "未上傳";} ?>
                                     </div>
                                 </div>
 							</div>
