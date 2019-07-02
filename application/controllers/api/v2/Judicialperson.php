@@ -839,7 +839,7 @@ class Judicialperson extends REST_Controller {
                 'selling_type'          => $business['selling_type'],
 				'cooperation'			=> 2,
                 'cooperation_contact'	=> isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'',
-				'cooperation_address'   => $input['cooperation_address'],
+				'cooperation_address'   => isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'',
                 'cooperation_phone'	    => isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'',
 				'cooperation_content'	=> json_encode($content),
 				//'cooperation_server_ip'	=> trim($input['server_ip']),
