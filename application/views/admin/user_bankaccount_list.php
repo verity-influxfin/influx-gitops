@@ -122,7 +122,7 @@
 												}
 											?>
 											</td>
-                                            <td><?=isset($value->investor)?(!$value->user_certification_id =0?$investor_list[$value->investor]:$investor_list[2]):"" ?></td>
+                                            <td><?=isset($value->investor)?(!$value->back_image==''?$investor_list[$value->investor]:$investor_list[2]):"" ?></td>
                                             <td><?=isset($value->bank_code)?$value->bank_code:"" ?></td>
                                             <td><?=isset($value->branch_code)?$value->branch_code:"" ?></td>
                                             <td><?=isset($value->bank_account)?$value->bank_account:"" ?></td>

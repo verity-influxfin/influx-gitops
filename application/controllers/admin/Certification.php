@@ -186,6 +186,7 @@ class Certification extends MY_Admin_Controller {
                     $where['investor']   = 1;
                     $where['back_image'] = '';
                 }elseif($field == 'investor' && $input['investor'] ==1){
+                    $where['investor']      = 1;
                     $where['back_image !='] = '';
                 }
 				else{
