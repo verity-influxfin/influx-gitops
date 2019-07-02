@@ -8000,7 +8000,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 5:已出貨 6:鑑賞期 8:轉貸的target</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",
@@ -9081,7 +9081,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 5:已出貨 6:鑑賞期 8:轉貸的target</p>"
+                            "description": "<p>狀態 狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4:完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",

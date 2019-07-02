@@ -318,6 +318,9 @@ class Judicialperson extends REST_Controller {
                 $param['business_model']      = isset($input['business_model'])&&$input['business_model']?$input['business_model']:'';
                 $param['selling_type']        = isset($input['selling_type'])&&$input['selling_type']?$input['selling_type']:'';
 
+                $content		= [];
+                $file_fields 	= ['front_image'];
+                $mfile_fields 	= ['passbook_image'];
                 if($param['business_model'] == 0){
                     array_push($file_fields,"facade_image");
                     array_push($mfile_fields,"store_image");
@@ -327,8 +330,6 @@ class Judicialperson extends REST_Controller {
 					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				//}
 				//上傳檔案欄位
-				$content		= [];
-				$file_fields 	= ['front_image'];
 				foreach ($file_fields as $field) {
 					$image_id = intval($input[$field]);
 					if (!$image_id) {
@@ -348,7 +349,7 @@ class Judicialperson extends REST_Controller {
 				}
 
 				//多個檔案欄位
-				$mfile_fields 	= ['passbook_image'];
+
 				foreach ($mfile_fields as $field) {
                     if(isset($input[$field])) {
                         $image_ids = explode(',', $input[$field]);
