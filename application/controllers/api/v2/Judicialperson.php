@@ -812,7 +812,7 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 		
-		$file_fields 	= ['store_image','passbook_image','bankbook_image'];
+		$file_fields 	= ['store_image','passbook_image'];
 		foreach ($file_fields as $field) {
 			$image_ids = explode(',',$input[$field]);
 			if(count($image_ids)>4){
