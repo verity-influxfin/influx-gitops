@@ -6411,6 +6411,13 @@ define({
                         },
                         {
                             "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "bankbook_image",
+                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "Number",
                             "optional": false,
                             "field": "enterprise_registration_image",
@@ -6491,13 +6498,6 @@ define({
                             "optional": true,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
                     ]
                 }
@@ -6758,13 +6758,6 @@ define({
                             "optional": false,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
                     ]
                 }
@@ -8000,14 +7993,14 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待核可(分期) 23:待驗證(分期) 24:待出貨 25:待債轉(分期)</p>"
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待驗證(分期) 23:待出貨(分期) 24:待債轉上架</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 8:轉貸的target</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 5:已出貨 6:鑑賞期 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",
@@ -9081,14 +9074,14 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待核可(分期) 23:待驗證(分期) 24:待出貨 25:待債轉(分期) 26:待放款(分期)</p>"
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 20:待報價 21:待簽約(分期) 22:待驗證(分期) 23:待出貨(分期) 24:待債轉上架</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 8:轉貸的target</p>"
+                            "description": "<p>狀態 狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4: 完成提還 5:已出貨 6:鑑賞期 8:轉貸的target</p>"
                         },
                         {
                             "group": "Success 200",
