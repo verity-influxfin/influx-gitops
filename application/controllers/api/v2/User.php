@@ -1178,14 +1178,27 @@ class User extends REST_Controller {
 	public function promote_get()
     {
 		$this->not_support_company();
-		$user_id 		= $this->user_info->id;
-		$promote_code	= $this->user_info->my_promote_code;
-		$url 			= BORROW_URL.'?promote_code='.$promote_code;
-		$qrcode			= get_qrcode($url);
-		$data			= array(
-			'promote_code'	=> $promote_code,
-			'promote_url'	=> $url,
-			'promote_qrcode'=> $qrcode
+		$user_id 		  = $this->user_info->id;
+		$promote_code	  = $this->user_info->my_promote_code;
+        //$url 			  = BORROW_URL.'?promote_code='.$promote_code;
+        $url              = 'https://dev-app-borrow.influxfin.com/?link=https://dev-app-borrow.influxfin.com%3Fpromote_code%3D'.$promote_code.'&apn=com.influxfin.borrow&isi=1463581445&ibi=com.influxfin.borrow';
+		$qrcode			  = get_qrcode($url);
+
+        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'+12 hour'));
+        $lastday = date('Y-m-d H:i', strtotime("$beginDate +1 month"));
+
+        $promote_count    = $this->user_model->get_many_by([
+            'promote_code'  => $promote_code,
+            'created_at >=' => strtotime($beginDate),
+            'created_at <=' => strtotime($lastday),
+        ]);
+
+		$data = array(
+			'promote_code'	    => $promote_code,
+			'promote_url'	    => $url,
+			'promote_qrcode'    => $qrcode,
+            'promote_count'     => count($promote_count),
+            'promote_endtime'   => $lastday,
 		);
 
 		$this->response(array('result' => 'SUCCESS','data'=>$data));
@@ -1281,24 +1294,24 @@ class User extends REST_Controller {
         $bio_key 		= AUTHORIZATION::generateUserToken($token);
 
         $registed = $this->user_bio_model->get_by(array(
-            "user_id"	=> $user_id,
+            'user_id'	=> $user_id,
             'bio_type'	=> $bio_type,
-            "investor"	=> $investor,
+            'investor'	=> $investor,
             'device_id' => $device_id,
         ));
 
         if($registed){
             $insert = $this->user_bio_model->update($registed->id,array(
-                "bio_key"	=> $bio_key,
+                'bio_key'	=> $bio_key,
             ));
         }
         else{
             $insert = $this->user_bio_model->insert(array(
-                "user_id"	=> $user_id,
+                'user_id'	=> $user_id,
                 'bio_type'	=> $bio_type,
-                "investor"	=> $investor,
-                "device_id"	=> $device_id,
-                "bio_key"	=> $bio_key,
+                'investor'	=> $investor,
+                'device_id'	=> $device_id,
+                'bio_key'	=> $bio_key,
             ));
         }
         if(!$insert) {
@@ -1370,7 +1383,7 @@ class User extends REST_Controller {
                 $bio_key = AUTHORIZATION::generateUserToken($ntoken);
 
                 $insert = $this->user_bio_model->update($active->id, array(
-                    "bio_key" => $bio_key,
+                    'bio_key' => $bio_key,
                 ));
 
                 if (!$insert) {
