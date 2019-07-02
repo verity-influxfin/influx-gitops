@@ -62,7 +62,7 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] = $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['data']         = $info;
-                        $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
+                    $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
                     $page_data['name_list']    = $this->admin_model->get_name_list();
                     $page_data['company_type'] = $this->config->item('company_type');
