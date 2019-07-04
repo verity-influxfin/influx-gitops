@@ -1181,7 +1181,7 @@ class User extends REST_Controller {
 		$user_id 		  = $this->user_info->id;
 		$promote_code	  = $this->user_info->my_promote_code;
         //$url 			  = BORROW_URL.'?promote_code='.$promote_code;
-        $url              = 'https://dev-app-borrow.influxfin.com/?link=https://dev-app-borrow.influxfin.com%3Fpromote_code%3D'.$promote_code.'&apn=com.influxfin.borrow&isi=1463581445&ibi=com.influxfin.borrow';
+        $url              = 'https://event.pu-hey.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
 
         $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'+12 hour'));
@@ -1194,7 +1194,8 @@ class User extends REST_Controller {
         ]);
 
 		$data = array(
-			'promote_code'	    => $promote_code,
+            'promote_name'	    => '【無三不成禮 百元送給你】',
+            'promote_code'	    => $promote_code,
 			'promote_url'	    => $url,
 			'promote_qrcode'    => $qrcode,
             'promote_count'     => count($promote_count),

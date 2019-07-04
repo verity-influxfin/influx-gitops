@@ -30626,6 +30626,13 @@ define({
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
+                            "field": "promote_name",
+                            "description": "<p>推廣活動名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
                             "field": "promote_code",
                             "description": "<p>推廣邀請碼</p>"
                         },
@@ -30642,13 +30649,37 @@ define({
                             "optional": false,
                             "field": "promote_qrcode",
                             "description": "<p>推廣QR code</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_count",
+                            "description": "<p>期間點註冊數 (每月1號中午後開始)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_endtime",
+                            "description": "<p>結算時間</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"promote_code\": \"D221BL0K\",\n  \t\"promote_url\": \"http://stage.influxfin.com?promote_code=D221BL0K\",\n  \t\"promote_qrcode\": \"http://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=http%3A%2F%2Fstage.influxfin.com%3Fpromote_code%3DD221BL0K&chs=200x200\"\n  }\n}",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"promote_name\": \"【無三不成禮 百元送給你】\",\n" +
+                            "        \"promote_code\": \"7U1H3BKI\",\n" +
+                            "        \"promote_url\": \"https://event.pu-hey.com/R/url?p=7U1H3BKI\",\n" +
+                            "        \"promote_qrcode\": \"https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl=https%3A%2F%2Fevent.pu-hey.com%2FR%2Furl%3Fp%3D7U1H3BKI&chs=500x500\",\n" +
+                            "        \"promote_count\": 0,\n" +
+                            "        \"promote_endtime\": \"2019-08-01 12:00\"\n" +
+                            "    }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]

@@ -229,23 +229,47 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
-	public function send_estatement_pdf()
-	{	//每五分鐘
-		$this->load->library('Estatement_lib'); 
-		$script  	= 13;
-		$start_time = time();
-		$count 		= $this->estatement_lib->script_send_estatement_pdf();
-		$num		= $count?intval($count):0;
-		$end_time 	= time();
-		$data		= array(
-			"script_name"	=> "send_estatement_pdf",
-			"num"			=> $num,
-			"start_time"	=> $start_time,
-			"end_time"		=> $end_time
-		);
-		$this->log_script_model->insert($data);
-		die('1');
-	}
+    public function re_create_estatement_html()
+    {	//重新產生指定使用者對帳單
+        $this->load->library('Estatement_lib');
+        $start_time = time();
+        $input 	= $this->input->get();
+        $user_id = $input['user_id'];
+        $start = $input['start'];
+        $end = $input['end'];
+        $investor = $input['investor'];
+        $detail = $input['detail'];
+        //user_id,開始時間.結束時間,投資端(option),detail(option)
+        $count 		= $this->estatement_lib->script_re_create_estatement_content($user_id,$start,$end,$investor,$detail);
+        $num		= $count?intval($count):0;
+        $end_time 	= time();
+        $data		= array(
+            "script_name"	=> "re_create_estatement_html",
+            "num"			=> $num,
+            "start_time"	=> $start_time,
+            "end_time"		=> $end_time
+        );
+        $this->log_script_model->insert($data);
+        die("1");
+    }
+
+    public function send_estatement_pdf()
+    {	//每五分鐘
+        $this->load->library('Estatement_lib');
+        $script  	= 13;
+        $start_time = time();
+        $count 		= $this->estatement_lib->script_send_estatement_pdf();
+        $num		= $count?intval($count):0;
+        $end_time 	= time();
+        $data		= array(
+            "script_name"	=> "send_estatement_pdf",
+            "num"			=> $num,
+            "start_time"	=> $start_time,
+            "end_time"		=> $end_time
+        );
+        $this->log_script_model->insert($data);
+        die("1");
+    }
 	
 	public function check_transfer_success()
 	{	//每五分鐘

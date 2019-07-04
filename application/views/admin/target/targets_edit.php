@@ -128,7 +128,7 @@
 											<tr>
 												<td><p class="form-control-static">簽約照片</p></td>
 												<td colspan="3">
-													<?=isset($data->person_image)?"<a href='".$data->person_image."' data-fancybox='images'><img src='".$data->person_image."' style='width:30%;'></a>":"";?>
+													<?=!empty($data->person_image)?"<a href='".$data->person_image."' data-fancybox='images'><img src='".$data->person_image."' style='width:30%;'></a>":"";?>
 												</td>
 											</tr>
                                             <? } ?>
