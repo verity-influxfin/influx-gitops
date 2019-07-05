@@ -200,7 +200,7 @@
 																echo isset($status_list[$value->status])?$status_list[$value->status]:"";
 															}
 														}else{
-                                                            if($value->certification[3]['user_status'] == 1){
+                                                            if($value->certification[3]['user_status'] == 0){
                                                                 echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md" >待金融驗證</a>';
                                                             }else{
                                                                 echo isset($status_list[$value->status])?$status_list[$value->status]:"";
