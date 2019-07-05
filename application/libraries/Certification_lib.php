@@ -116,15 +116,15 @@ class Certification_lib{
 		return false;
 	}
 
-    public function idcard_verify($info = array()){
-        if($info && $info->status ==0 && $info->certification_id==1){
-            $this->CI->load->library('Faceplusplus_lib');
-            $this->CI->load->library('Ocr_lib');
+    public function idcard_verify($info = []){
+       if($info && $info->status ==0 && $info->certification_id==1){
+           $content = json_decode($info->content,true);
 
-            $content = json_decode($info->content,true);
+           $this->CI->load->library('Faceplusplus_lib');
+           $this->CI->load->library('Ocr_lib');
 
-            $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-            $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+           $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+           $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
 
             if(!$person_token){
                 $rotate = $this->face_rotate($content['person_image'],$info->user_id);
@@ -259,7 +259,6 @@ class Certification_lib{
         }
         return false;
     }
-
     public function emergency_verify($info = array()){
 		if($info && $info->status ==0 && $info->certification_id==5){
 			$content	= json_decode($info->content,true);
