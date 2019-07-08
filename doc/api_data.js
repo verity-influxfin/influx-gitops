@@ -6748,14 +6748,14 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "front_image",
                             "description": "<p>銀行流水帳正面 ( 圖片ID )</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         }
