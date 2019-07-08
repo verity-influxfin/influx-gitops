@@ -67,6 +67,7 @@
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
 									<fieldset disabled>
+                                    <? if($bankbook==0){ ?>
 										<div class="form-group">
 											<label for="disabledSelect">金融卡正面照</label><br>
 											<a href="<?=isset($data->front_image)?$data->front_image:""?>" data-fancybox="images">
@@ -79,6 +80,17 @@
 												<img src="<?=isset($data->back_image)?$data->back_image:""?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
+                                    <? }else{  ?>
+                                        <div class="form-group">
+											<label for="disabledSelect">金融卡正/反面照</label><br>
+                                            <? foreach($bankbook_image as $key => $value){ ?>
+                                                <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                    <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                                </a>
+                                            <? } ?>
+
+										</div>                                       
+                                    <? } ?>
 									</fieldset>
 								</div>
                                 <!-- /.col-lg-6 (nested) -->

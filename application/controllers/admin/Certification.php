@@ -1,4 +1,5 @@
 <?php
+use function GuzzleHttp\json_decode;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
@@ -233,8 +234,25 @@ class Certification extends MY_Admin_Controller {
 
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/user_bankaccount_edit',$page_data);
-					$this->load->view('admin/_footer');
+					$front_image=$page_data['data']->front_image;//抓取obj內的front_image
+					$bankbook_image=strpos($front_image,'bankbook_image');//找是否有bankbook_image的關鍵字 若有則回傳位置
+					//error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data bankbook_image= '.print_r($bankbook_image,1)."\n", 3, "application/debug.log");
+
+					if(empty($bankbook_image)){//檢查變數是否為空值
+						$page_data['bankbook']=0;
+						//error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = '.print_r($page_data,1)."\n", 3, "application/debug.log");
+						$this->load->view('admin/user_bankaccount_edit',$page_data);
+						$this->load->view('admin/_footer');	
+					}else{
+						$page_data['bankbook']=1; //法人專用
+						$front_image=json_decode($front_image,TRUE);
+						$page_data['bankbook_image']=$front_image['bankbook_image'];
+						//error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = '.print_r($page_data,1)."\n", 3, "application/debug.log");
+					    $this->load->view('admin/user_bankaccount_edit',$page_data);
+					    $this->load->view('admin/_footer');	
+					}
+				    
+					
 				}else{
 					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 				}
