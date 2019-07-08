@@ -169,7 +169,7 @@ class Judicialperson extends MY_Admin_Controller {
 	public function cooperation_edit(){
 		$page_data 	= array('type'=>'edit');
         $post 		= $this->input->post(NULL, TRUE);
-        $get 		= $this->input->get(NULL, TRUE);
+		$get 		= $this->input->get(NULL, TRUE);
         if(empty($post)) {
             $id 		= isset($get['id'])?intval($get['id']):0;
             if($id){
@@ -180,13 +180,29 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['user_info'] 	= $user_info;
-                    $page_data['data'] 			= $info;
+					$page_data['data'] 			= $info;
                     $page_data['content'] 		= json_decode($info->cooperation_content,true);
                     $page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
                     $page_data['company_type'] 		= $this->config->item('company_type');
                     $this->load->view('admin/_header');
-                    $this->load->view('admin/_title',$this->menu);
-                    $this->load->view('admin/judicial_person/cooperation_edit',$page_data);
+					$this->load->view('admin/_title',$this->menu);
+					$facade_image =array_column($page_data, 'facade_image');//找array內是否有facade_image
+					$store_image =array_column($page_data, 'store_image');//找array內是否有store_image
+					$bankbook_image =array_column($page_data, 'bankbook_image');//找array內是否有bankbook_image
+					
+					if($facade_image ==null){
+						$page_data['content']['facade_image']= 0;
+					}
+					if($store_image ==null){
+						$page_data['content']['store_image']=0;
+					}
+					if($bankbook_image ==null){
+						$page_data['content']['bankbook_image']=0;
+					}
+				 // error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = ' .print_r($page_data,1)."\n", 3, "application/debug.log");
+
+					$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
+
                     $this->load->view('admin/_footer');
                 }else{
                     alert('查無此ID',admin_url('cooperation?cooperation=2'));
