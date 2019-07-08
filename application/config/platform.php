@@ -157,7 +157,7 @@ $config['product_list']= [
 		'type'				=> 1,
 		'identity'			=> 2,
 		'alias'				=> 'FGN',
-		'name'				=> '新鮮人貸',
+		'name'				=> '上班族貸',
 		'loan_range_s'		=> 10000,
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
@@ -165,7 +165,7 @@ $config['product_list']= [
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '新鮮人貸
+		'description'		=> '上班族貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
@@ -175,7 +175,7 @@ $config['product_list']= [
 		'type'				=> 2,
 		'identity'			=> 2,
 		'alias'				=> 'FGI',
-		'name'				=> '新鮮人手機貸',
+		'name'				=> '上班族手機貸',
 		'loan_range_s'		=> 10000,
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 18,
@@ -183,7 +183,7 @@ $config['product_list']= [
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
-		'description'		=> '新鮮人手機貸
+		'description'		=> '上班族手機貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
