@@ -58,8 +58,13 @@ class Judicialperson extends MY_Admin_Controller {
                 if ($info) {
                     $this->load->library('Gcis_lib');
                     $user_info = $this->user_model->get($info->user_id);
-                    $info->user_name = $user_info->name;
-                    $page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);
+					$info->user_name = $user_info->name;
+					$page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);//公司統編查詢
+					$page_data['search_type']=0;
+					if(empty($page_data['company_data'])){//商業統編查詢，利用商業登記基本資料取得商業司資料
+						$page_data['company_data'] = $this->gcis_lib->account_info_businesss($info->tax_id);
+						$page_data['search_type']=1;//查詢方式 0：利用公司統編查詢,1：利用商業統編查詢
+					 }
                     $page_data['shareholders'] = $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['data']         = $info;
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
@@ -67,7 +72,8 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['name_list']    = $this->admin_model->get_name_list();
                     $page_data['company_type'] = $this->config->item('company_type');
                     $this->load->view('admin/_header');
-                    $this->load->view('admin/_title', $this->menu);
+					$this->load->view('admin/_title', $this->menu);
+
                     $this->load->view('admin/judicial_person/judicial_person_edit', $page_data);
                     $this->load->view('admin/_footer');
                 } else {
