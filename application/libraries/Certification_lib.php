@@ -116,7 +116,7 @@ class Certification_lib{
                     if($targets){
                         foreach($targets as $key => $value){
                             $this->CI->target_model->update_by(
-                                ['user_id'  => $value->user_id],
+                                ['id'  => $value->id],
                                 ['status'	=> $value->status==1?0:20]
                             );
                         }
