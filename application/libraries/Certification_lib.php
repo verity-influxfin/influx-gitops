@@ -111,13 +111,13 @@ class Certification_lib{
                     $this->CI->load->library('target_lib');
                     $targets = $this->CI->target_model->get_many_by(array(
                         'user_id'   => $info->user_id,
-                        'status'	=> array(1,21)
+                        'status'	=> array(1,22)
                     ));
                     if($targets){
                         foreach($targets as $key => $value){
                             $this->CI->target_model->update_by(
                                 ['id'  => $value->id],
-                                ['status'	=> $value->status==1?0:20]
+                                ['status'	=> $value->status==1?0:21]
                             );
                         }
                         $this->CI->load->model('loan/credit_model');
