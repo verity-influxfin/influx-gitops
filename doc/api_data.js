@@ -9773,7 +9773,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "identity",
-                            "description": "<p>身份 1:學生 2:社會新鮮人</p>"
+                            "description": "<p>身份 1:學生 2:社會新鮮人 3:法人</p>"
                         },
                         {
                             "group": "Success 200",
@@ -14580,6 +14580,15 @@ define({
                             "optional": true,
                             "field": "amount",
                             "description": "<p>金額</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "size": "0,1",
+                            "optional": true,
+                            "field": "combination",
+                            "defaultValue": "0",
+                            "description": "<p>是否整包</p>"
                         }
                     ]
                 }
