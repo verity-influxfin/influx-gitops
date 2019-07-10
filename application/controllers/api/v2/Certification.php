@@ -210,7 +210,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['parttime','allowance','scholarship','other_income','restaurant','transportation','entertainment','other_expense'];
 						break;
 					case 8: 
-						$fields 	= ['school','system'];
+						$fields 	= ['school','major','department','system'];
 						break;
 					case 9: 
 						$fields 	= ['return_type'];
@@ -1263,11 +1263,15 @@ class Certification extends REST_Controller {
 			//是否驗證過
 			$this->was_verify($certification_id);
 
-			if (empty($input['school'])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}else{
-				$content['school'] = $input['school'];
-			}
+            //必填欄位
+			$fields 	= ['school','major','department'];
+			foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
 			
 			$content['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
 

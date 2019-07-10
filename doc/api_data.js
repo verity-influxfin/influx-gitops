@@ -2491,6 +2491,20 @@ define({
                             "description": "<p>學校名稱</p>"
                         },
                         {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "major",
+                            "description": "<p>學門</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "department",
+                            "description": "<p>系所</p>"
+                        },
+                        {
                             "group": "Parameter",
                             "type": "String",
                             "allowedValues": [
