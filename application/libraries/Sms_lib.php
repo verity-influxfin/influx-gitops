@@ -111,6 +111,19 @@ class Sms_lib {
         return false;
     }
 
+    public function notice_order_quotes($user_id,$item='',$instalment=0,$amount=0){
+        if(!empty($user_id)){
+            $user_info 	= $this->CI->user_model->get($user_id);
+            if($user_info){
+                $phone 		= $user_info->phone;
+                $content 	= "親愛的用戶，您好：
+您在普匯金融科技申請的手機貸廠商已經報價「".$item."」，分期付款 $instalment 期，月付金 $amount 元，請儘快至普匯APP進行身分認證，完成分期申請。";
+                return $this->send('target_notice',$user_id,$phone,$content);
+            }
+        }
+        return false;
+    }
+
     public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){
 			$param = array(

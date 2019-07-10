@@ -319,7 +319,6 @@ class Target_lib{
                                 $rs = $this->CI->target_model->update($target->id,$param);
                                 $this->insert_change_log($target->id,$param);
                                 if($rs){
-                                    $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
                                     $this->CI->load->model('user/user_bankaccount_model');
                                     $bank_account = $this->CI->user_bankaccount_model->get_by([
                                         'status'	=> 1,
@@ -330,6 +329,7 @@ class Target_lib{
                                     if($bank_account){
                                         $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
                                     }
+                                    $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
                                 }
                             }
                         }else{

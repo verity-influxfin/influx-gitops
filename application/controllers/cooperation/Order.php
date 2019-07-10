@@ -12,6 +12,8 @@ class Order extends REST_Controller {
         $this->load->model('transaction/order_model');
         $this->load->library('order_lib');
         $this->load->library('target_lib');
+        $this->load->library('sms_lib');
+        $this->load->library('notification_lib');
 
 		$authorization 	= isset($this->input->request_headers()['Authorization'])?$this->input->request_headers()['Authorization']:'';
 		$time 			= isset($this->input->request_headers()['Timestamp'])?$this->input->request_headers()['Timestamp']:'';
@@ -831,6 +833,10 @@ class Order extends REST_Controller {
                             'status'        => 21,
                         ],$order->company_user_id);
                     if($rs2){
+                        $target = $this->target_model->get_by('order_id',$order->id);
+                        $order_id = $this->order_model->get_by('id',$order->id);
+                        $this->sms_lib->notice_order_quotes($target->user_id,$order_id->item_name,$target->instalment,$total);
+                        $this->notification_lib->notice_order_quotes($target->user_id,$order_id->item_name,$target->instalment,$total);
                         $this->response(array('result' => 'SUCCESS'));
                     }else{
                         $this->order_lib->order_change($order->id,1, [

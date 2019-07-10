@@ -493,6 +493,40 @@ class Notification_lib{
         return $rs;
     }
 
+    public function notice_order_apply($user_id,$item='',$instalment=0){
+
+        $title 		= "【接收到新的訂單】";
+        $content 	= "親愛的用戶，您好：
+您在普匯合作夥伴APP中已經接收到一筆新的訂單「".$item."」，分期付款 $instalment 期、線上寄送，請儘速至APP中完成報價。";
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,$content);
+        return $rs;
+    }
+
+    public function notice_order_quotes($user_id,$item='',$instalment=0,$amount=0){
+
+        $title 		= "【商家報價成功】";
+        $content 	= "親愛的用戶，您好：
+您在普匯金融科技申請的手機貸廠商已經報價「".$item."」，分期付款 $instalment 期，月付金 $amount 元，請儘快至普匯APP進行身分認證，完成分期申請。";
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,$content);
+        return $rs;
+    }
+
     public function account_remaining($user_id,$investor=0){
 
 		$title 		= "【普匯金融科技提醒】";
