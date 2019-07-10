@@ -253,7 +253,7 @@ class Judicialperson extends REST_Controller {
                 ];
 
                 $user_bankaccount = $this->user_bankaccount_model->get_by($where);
-                if ($user_bankaccount) {
+                if ($user_bankaccount && $param['company_type']!=1) {
                     $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
                 }
 
