@@ -108,6 +108,19 @@ class Certification_lib{
 				$certification 	= $this->certification[$info->certification_id];
 				$rs = $this->CI->user_certification_model->update($id,array('status'=>2,'remark'=>json_encode($info->remark)));
 				if($rs){
+                    $this->CI->load->library('target_lib');
+                    $targets = $this->CI->target_model->get_many_by(array(
+                        'user_id'   => $info->user_id,
+                        'status'	=> array(1,21)
+                    ));
+                    if($targets){
+                        foreach($targets as $key => $value){
+                            $this->CI->target_model->update_by(
+                                ['user_id'  => $value->user_id],
+                                ['status'	=> $value->status==1?0:20]
+                            );
+                        }
+                    }
 					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
 				}
 				return $rs;
