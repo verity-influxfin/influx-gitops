@@ -78,7 +78,7 @@
 			  包括金融卡帳戶號碼，提領密碼，帳戶餘額，身分證字號等。
 			  感謝您對普匯的支持，我們將竭誠為您服務。
 			  更多訊息請登入我的手機ATM進行查詢</p>
-			  <p>Line@客服：Line@puhey 歡迎登錄</p>
+			  <p>Line@客服：Line@influxfin 歡迎登錄</p>
 			  <p>普匯網站了解更多最新消息：<a href="https://www.influxfin.com/">https://www.influxfin.com/</a></p>
 			  
 			</td>
