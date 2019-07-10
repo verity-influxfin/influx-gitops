@@ -690,7 +690,9 @@ class Certification_lib{
 			$data 		= array(
 				'diploma_status'	=> 1,
 				'diploma_name'		=> $content['school'],
-				'diploma_system'	=> $content['system'],
+                'diploma_major'		=> $content['major'],
+                'diploma_department'=> $content['department'],
+                'diploma_system'	=> $content['system'],
 				'diploma_image'		=> $content['diploma_image'],
 			);
 
