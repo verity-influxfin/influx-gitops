@@ -67,9 +67,9 @@
 								</form>
 							</div>
 							<div class="col-lg-6">
-								<h1>商業司資料</h1>
-								<div class="form-group">
-									<?if($company_data){?>
+									<?if($company_data&&$search_type==0){?>
+										<h1>商業司資料(公司登記)</h1>
+								 		<div class="form-group">
 										<table class="table table-bordered table-hover table-striped">
 											<tbody>
 												<tr><td><p class="form-control-static">公司統一編號</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Accounting_NO'])?$company_data['Business_Accounting_NO']:'' ?></p></td></tr>
@@ -90,7 +90,28 @@
 												<tr><td><p class="form-control-static">停業/延展期間(迄)</p></td><td><p class="form-control-static"><?=isset($company_data['Sus_End_Date'])?$company_data['Sus_End_Date']:'' ?></p></td></tr>
 											</tbody>
 										</table>
-									<?}?>
+									<?}else{?>
+										<h1>商業司資料(商業登記)</h1>
+								 		<div class="form-group">
+										<table class="table table-bordered table-hover table-striped">
+											<tbody>
+												<tr><td><p class="form-control-static">商業統一編號</p></td><td><p class="form-control-static"><?=isset($company_data['President_No'])?$company_data['President_No']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">商業名稱</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Name'])?$company_data['Business_Name']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">商業狀態</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Current_Status'])?$company_data['Business_Current_Status']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">商業狀態描述</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Current_Status_Desc'])?$company_data['Business_Current_Status_Desc']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">資本額</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Register_Funds'])?$company_data['Business_Register_Funds']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">代表人姓名</p></td><td><p class="form-control-static"><?=isset($company_data['Responsible_Name'])?$company_data['Responsible_Name']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">組織型態</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Organization_Type'])?$company_data['Business_Organization_Type']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">組織型態名稱</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Organization_Type_Desc'])?$company_data['Business_Organization_Type_Desc']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">登記機關</p></td><td><p class="form-control-static"><?=isset($company_data['Agency'])?$company_data['Agency']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">商業登記地址</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Address'])?$company_data['Business_Address']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">登記機關名稱</p></td><td><p class="form-control-static"><?=isset($company_data['Agency_Desc'])?$company_data['Agency_Desc']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">核准設立日期</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Setup_Approve_Date'])?$company_data['Business_Setup_Approve_Date']:'' ?></p></td></tr>
+												<tr><td><p class="form-control-static">變更日期</p></td><td><p class="form-control-static"><?=isset($company_data['Business_Last_Change_Date'])?$company_data['Business_Last_Change_Date']:'' ?></p></td></tr>
+											
+											</tbody>
+										</table>
+										<?}?>
 								</div>
 								<div class="form-group">
 									<?if($shareholders){
