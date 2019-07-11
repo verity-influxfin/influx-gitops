@@ -32,7 +32,7 @@ class Certification extends REST_Controller {
 			}
 			
 			//暫不開放法人
-			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list']) ){
+			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
 
