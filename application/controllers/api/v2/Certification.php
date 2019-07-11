@@ -171,13 +171,16 @@ class Certification extends REST_Controller {
 				$certification 	= $this->certification[$key];
 			}
 		}
-		
+        $data	    = [];
 		if($certification && $certification['status']==1){
-			$user_id 	= $this->user_info->id;
-			$investor 	= $this->user_info->investor;
-			$data		= [];
+            $user_id    = $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            if ($certification['id'] == 4){
+                $exist = $this->user_meta_model->get_by(array('user_id'=>$user_id , 'meta_key' => 'line_access_token'));
+                $line_bind = $exist?1:0;
+            }
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
-			if($rs){
+            if($rs){
 				$data = array(
 					'alias'				=> $alias,
 					'certification_id'	=> $rs->certification_id,
@@ -199,6 +202,7 @@ class Certification extends REST_Controller {
 						break;
 					case 4: 
 						$fields 	= [];
+                        $data['line_bind'] = $line_bind;
 						break;
 					case 5: 
 						$fields 	= ['name','phone','relationship'];
@@ -229,7 +233,8 @@ class Certification extends REST_Controller {
 				}
 				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-			$this->response(array('result' => 'SUCCESS','data' => []));
+            $certification['id'] == 4?$data['line_bind'] = $line_bind:null;
+			$this->response(array('result' => 'SUCCESS','data' => $data));
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
@@ -1201,9 +1206,9 @@ class Certification extends REST_Controller {
             }
 			elseif($type == 'line'){
                 $data = array(
-                    "line_access_token" => base64_decode($input["access_token"]),
+                    "line_access_token" => $input["access_token"],
                     "line_displayName"  => base64_decode($input["displayName"]),
-                    "line_pictureUrl"   => base64_decode($input["pictureUrl"]),
+                    "line_pictureUrl"   => $input["pictureUrl"],
                 );
 
                 $exist 		= $this->user_meta_model->get_by(array('user_id'=>$user_id , 'meta_key' => 'line_access_token'));
