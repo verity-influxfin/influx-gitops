@@ -120,9 +120,9 @@ class Certification_lib{
                                 ['status'	=> $value->status==1?0:21]
                             );
                         }
-                        $this->CI->load->model('loan/credit_model');
-                        $this->CI->credit_model->update_by(['user_id' =>$info->user_id],['status'=>0]);
                     }
+                    $this->CI->load->model('loan/credit_model');
+                    $this->CI->credit_model->update_by(['user_id' =>$info->user_id],['status'=>0]);
 					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
 				}
 				return $rs;
