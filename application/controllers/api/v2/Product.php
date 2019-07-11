@@ -40,7 +40,7 @@ class Product extends REST_Controller {
 
                 //暫不開放法人
                 if(isset($tokenData->company) && $tokenData->company != 0  && !in_array($method,['list'])){
-                    $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+                    //$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
                 }
 
                 if($this->request->method != 'get'){

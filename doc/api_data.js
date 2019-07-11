@@ -4619,7 +4619,8 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "allowedValues": [
-                                "instagram"
+                                "instagram",
+                                "line"
                             ],
                             "optional": false,
                             "field": "type",
@@ -4630,7 +4631,21 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "access_token",
-                            "description": "<p>Instagram AccessToken</p>"
+                            "description": "<p>AccessToken (Line user_id)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "displayName",
+                            "description": "<p>Line displayName (type為Line時必填)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pictureUrl",
+                            "description": "<p>Line pictureUrl (type為Line時必填)</p>"
                         }
                     ]
                 }
@@ -33516,7 +33531,19 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "access_token",
-                            "description": "<p>Facebook AccessToken</p>"
+                            "description": "<p>AccessToken</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "allowedValues": [
+                                "0",
+                                "1"
+                            ],
+                            "optional": true,
+                            "field": "type",
+                            "defaultValue": "0",
+                            "description": "<p>0:Facebook 1:Line</p>"
                         },
                         {
                             "group": "Parameter",
@@ -33528,7 +33555,7 @@ define({
                             "optional": true,
                             "field": "investor",
                             "defaultValue": "0",
-                            "description": "<p>1:投資端 0:借款端</p>"
+                            "description": "<p>0:借款端 1:投資端</p>"
                         }
                     ]
                 }

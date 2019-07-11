@@ -1152,42 +1152,58 @@ class Certification extends REST_Controller {
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
-			$type  		= 'instagram';
+			$type  		= $input['type'];
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 
-			//是否驗證過
-			$this->was_verify($certification_id);
-			
-			$fields = ['access_token'];
-			foreach ($fields as $field) {
-				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}
-			}
+            $fields = ['access_token'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }
+            }
 
-			$this->load->library('instagram_lib'); 
-			$info 		= $this->instagram_lib->get_info($input['access_token']);
-		
-			$content = array(
-				'type'			=> $type,
-				'info'			=> $info,
-				'access_token'	=> $input['access_token'],
-			);
-			
-			$param		= [
-				'user_id'			=> $user_id,
-				'certification_id'	=> $certification_id,
-				'investor'			=> $investor,
-				'content'			=> json_encode($content),
-			];
-			
-			$insert = $this->user_certification_model->insert($param);
-			if($insert){
-				$this->response(array('result' => 'SUCCESS'));
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-			}
+			if($type == 'instagram'){
+                //是否驗證過
+                $this->was_verify($certification_id);
+
+                $this->load->library('instagram_lib');
+                $info 		= $this->instagram_lib->get_info($input['access_token']);
+
+                $content = array(
+                    'type'			=> $type,
+                    'info'			=> $info,
+                    'access_token'	=> $input['access_token'],
+                );
+
+                $param		= [
+                    'user_id'			=> $user_id,
+                    'certification_id'	=> $certification_id,
+                    'investor'			=> $investor,
+                    'content'			=> json_encode($content),
+                ];
+
+                $insert = $this->user_certification_model->insert($param);
+                if($insert){
+                    $this->response(array('result' => 'SUCCESS'));
+                }else{
+                    $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+                }
+            }
+			elseif($type == 'line'){
+                $param = array(
+                    array("user_id"=>$user_id , "meta_key" => "line_access_token"  , "meta_value"=> base64_decode($input["access_token"])),
+                    array("user_id"=>$user_id , "meta_key" => "line_displayName"   , "meta_value"=> base64_decode($input["displayName"])),
+                    array("user_id"=>$user_id , "meta_key" => "line_pictureUrl"    , "meta_value"=> base64_decode($input["pictureUrl"])),
+                );
+                $this->load->model('user/user_meta_model');
+                $rs = $this->user_meta_model->insert_many($param);
+                if($rs){
+                    $this->response(array('result' => 'SUCCESS'));
+                }else{
+                    $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+                }
+            }
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
@@ -1264,7 +1280,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 
             //必填欄位
-			$fields 	= ['school','major','department'];
+			$fields 	= ['school'];//,'major','department'
 			foreach ($fields as $field) {
                 if (empty($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1273,9 +1289,11 @@ class Certification extends REST_Controller {
                 }
             }
 			
-			$content['system'] = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+			$content['system']     = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+            $content['major']      = isset($input['major'])?$input['major']:"";
+            $content['department'] = isset($input['department'])?$input['department']:"";
 
-			
+
 			//上傳檔案欄位		
 			$file_fields 	= ['diploma_image'];
 			foreach ($file_fields as $field) {

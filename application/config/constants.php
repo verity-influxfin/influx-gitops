@@ -224,7 +224,7 @@ defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
 
 //SOURCE
-defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//儲值
+defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//代收
 defined('SOURCE_WITHDRAW')       	OR define('SOURCE_WITHDRAW'			, '2');//提領
 defined('SOURCE_LENDING')       	OR define('SOURCE_LENDING'			, '3');//出借款
 defined('SOURCE_FEES')       		OR define('SOURCE_FEES'				, '4');//平台服務費

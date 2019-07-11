@@ -457,7 +457,7 @@ class Judicialperson extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
 		
-		$investor	= 1;
+		$investor	= isset($input['investor'])?$input['investor']:1;
 		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
 		if($user_info){
             //判斷鎖定狀態並解除
