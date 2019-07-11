@@ -471,6 +471,15 @@ class Certification extends REST_Controller {
 			}
 
 			$content['system'] 	= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+
+			if($content['system'] == 0){
+                $content['system'] = 3;
+            }elseif($content['system'] == 1){
+                $content['system'] = 0;
+            }elseif($content['system'] == 2){
+                $content['system'] = 1;
+            }
+
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
