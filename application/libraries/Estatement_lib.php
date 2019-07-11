@@ -575,7 +575,7 @@ class Estatement_lib{
 								$tmp_list[] = array(
 									"date"				=> $value->entering_date,
 									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
-									"title"				=> "儲值",
+									"title"				=> "代收",
 									"income_principal"	=> intval($value->amount),
 								);
 								break;
@@ -759,6 +759,7 @@ class Estatement_lib{
 			$pdf->setPrintHeader(false);
 			$pdf->setPrintFooter(false);
 			$pdf->setFontSubsetting(true);
+            $pdf->SetFont('msungstdlight', '', 10);
 			$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 			$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 			$pdf->AddPage('L');
@@ -977,6 +978,26 @@ class Estatement_lib{
 		}
 		return $count;
 	}
+    function script_re_create_estatement_content($user_id,$start,$end,$investor=0,$detail=0){
+        $count = 0;
+        $sdate = date("Y-m-d",strtotime($start));
+        $edate = date("Y-m-d",strtotime($end));
+        if($investor==1){
+            if($detail==0) {
+                $rs = $this->get_estatement_investor($user_id, $sdate, $edate);
+                $count++;
+            }
+            else{
+                $rs = $this->get_estatement_investor_detail($user_id,$sdate,$edate);
+                $count++;
+            }
+        }
+        else{
+            $rs = $this->get_estatement_borrower($user_id,$sdate,$edate);
+            $count++;
+        }
+        return $count;
+    }
 }
 
 
