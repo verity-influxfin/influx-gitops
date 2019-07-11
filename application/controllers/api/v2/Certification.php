@@ -1200,13 +1200,31 @@ class Certification extends REST_Controller {
                 }
             }
 			elseif($type == 'line'){
-                $param = array(
-                    array("user_id"=>$user_id , "meta_key" => "line_access_token"  , "meta_value"=> base64_decode($input["access_token"])),
-                    array("user_id"=>$user_id , "meta_key" => "line_displayName"   , "meta_value"=> base64_decode($input["displayName"])),
-                    array("user_id"=>$user_id , "meta_key" => "line_pictureUrl"    , "meta_value"=> base64_decode($input["pictureUrl"])),
+                $data = array(
+                    "line_access_token" => base64_decode($input["access_token"]),
+                    "line_displayName"  => base64_decode($input["displayName"]),
+                    "line_pictureUrl"   => base64_decode($input["pictureUrl"]),
                 );
-                $this->load->model('user/user_meta_model');
-                $rs = $this->user_meta_model->insert_many($param);
+
+                $exist 		= $this->user_meta_model->get_by(array('user_id'=>$user_id , 'meta_key' => 'line_access_token'));
+                if($exist){
+                    foreach($data as $key => $value){
+                        $param = array(
+                            'user_id'		=> $user_id,
+                            'meta_key' 		=> $key,
+                        );
+                        $rs  = $this->user_meta_model->update_by($param,array('meta_value'	=> $value));
+                    }
+                }else{
+                    foreach($data as $key => $value){
+                        $param[] = array(
+                            'user_id'		=> $user_id,
+                            'meta_key' 		=> $key,
+                            'meta_value'	=> $value
+                        );
+                    }
+                    $rs  = $this->user_meta_model->insert_many($param);
+                }
                 if($rs){
                     $this->response(array('result' => 'SUCCESS'));
                 }else{
