@@ -1,9 +1,10 @@
-        <div id="page-wrapper">
+<script   src="<?=base_url()?>assets/admin/js/jquery.table2excel.js"></script>
+       <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">虛擬帳戶餘額明細表 
-						<a href="javascript:void(0)" target="_blank" onclick="" class="btn btn-primary float-right" >匯出</a>
-					</h1>
+                    <button type="button" id="btnExport" onclick="ExportToExcel();">匯出Excel</button> 
+                </h1>
 					
                 </div>
                 <!-- /.col-lg-12 -->
@@ -12,7 +13,18 @@
 				function showChang(){
 					var date 	 = $('#date').val();
 					top.location = './passbook_report?date='+date;
-				}
+                }
+                function ExportToExcel() {      
+                    $("#tableExcel").table2excel({
+                    exclude : ".noExl", //過濾位置的css類名
+                    filename : "虛擬帳號餘明細表.xls", // 
+                    name: "Excel Document Name.xlsx",
+                    exclude_img: false,//是否導出圖片false導出
+                    exclude_links: true,//是否導出link false導出
+                    exclude_inputs: true//是否導出inputs false導出
+                    });            
+                }
+                 
 			</script>
 			<style>
 				td{
@@ -40,9 +52,8 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" >
-                                    <thead>
+                            <div id="myDiv" class="table-responsive">
+                            <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" class="table table-striped table-bordered table-hover" >                                    <thead>
                                         <tr>
                                             <th>虛擬帳號</th>
                                             <th>戶名</th>
