@@ -493,14 +493,14 @@ class Notification_lib{
         return $rs;
     }
 
-    public function notice_order_apply($user_id,$item='',$instalment=0){
+    public function notice_orderapply($user_id,$item='',$instalment=0){
 
         $title 		= "【接收到新的訂單】";
         $content 	= "親愛的用戶，您好：
 您在普匯合作夥伴APP中已經接收到一筆新的訂單「".$item."」，分期付款 $instalment 期、線上寄送，請儘速至APP中完成報價。";
         $param = array(
             "user_id"	=> $user_id,
-            "investor"	=> 0,
+            "investor"	=> 1,
             "title"		=> $title,
             "content"	=> $content,
         );

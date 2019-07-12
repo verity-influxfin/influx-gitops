@@ -1448,12 +1448,7 @@ class Product extends REST_Controller {
                 //建立產品單號
                 $insert = $this->target_lib->add_target($param);
                 if($insert){
-                    $this->load->model('user/judicial_person_model');
-                    $judicial_person = $this->judicial_person_model->get_by([
-                        'company_user_id'=> $company_user_id
-                    ]);
-                    $this->load->library('notification_lib');
-                    $this->notification_lib->notice_order_apply($judicial_person->user_id,$item_name,$instalment);
+                    //$this->notification_lib->notice_order_apply($company_user_id,$item_name,$instalment);
                     $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
                 }
                 else{
