@@ -270,10 +270,14 @@ class Credit_lib{
 		return 0;
 	}
 
-	public function get_job_position_point($position = 0){
+	public function get_job_position_point($position = 0,$job_salary = 0){
 		switch ($position) {
 			case 1:
-				return 150;
+                if($job_salary < 35000){
+                    return 100;
+                }else{
+                    return 150;
+                }
 				break;
 			case 2:
 				return 200;

@@ -42,8 +42,8 @@ class Certification extends REST_Controller {
 			//}
 			
 			if($this->request->method != 'get'){
-				$this->load->model('log/log_request_model');
-				$this->log_request_model->insert(array(
+                    $this->load->model('log/log_request_model');
+                $this->log_request_model->insert(array(
 					'method' 	=> $this->request->method,
 					'url'	 	=> $this->uri->uri_string(),
 					'investor'	=> $tokenData->investor,
@@ -176,7 +176,10 @@ class Certification extends REST_Controller {
             $user_id    = $this->user_info->id;
             $investor 	= $this->user_info->investor;
             if ($certification['id'] == 4){
-                $exist = $this->user_meta_model->get_by(array('user_id'=>$user_id , 'meta_key' => 'line_access_token'));
+                $exist = $this->user_meta_model->get_by(array(
+                    'user_id'  =>$user_id ,
+                    'meta_key' => 'line_access_token'
+                ));
                 $line_bind = $exist?1:0;
             }
 			$rs			= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
