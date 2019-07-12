@@ -80,7 +80,8 @@
                                     <thead>
                                         <tr>
                                             <th>統一編號</th>
-                                            <th>公司名稱</th>
+											<th>公司名稱</th>
+											<th>負責人</th>
                                             <th>申請人 ID</th>
                                             <th>備註</th>
                                             <th>狀態</th>
@@ -96,7 +97,8 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list">
-                                            <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
+											<td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
+											<td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
 											<td><?=isset($value->remark)?$value->remark:"" ?></td>
