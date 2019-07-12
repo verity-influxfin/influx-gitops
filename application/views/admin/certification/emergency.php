@@ -42,6 +42,15 @@
 									<div class="form-group">
 										<label>緊急聯絡人關係</label>
 										<p class="form-control-static"><?=isset($content['relationship'])?$content['relationship']:""?></p>
+										<? if($content['relationship']=='監護人'){ ?>
+										<label>戶口名簿照片</label>
+												<? if(array_key_exists('household_image',$content)){?>
+												<p href="<?=isset($content['household_image'])?$content['household_image']:""?>" data-fancybox="images">
+		                                        <img src="<?=isset($content['household_image'])?$content['household_image']:""?>" style='width:30%;max-width:400px'></p>
+												<? }else{  
+													echo '<p style="color:red;" class="form-control-static">尚未上傳戶口名簿照片</p>';
+											  }  ?>
+										<? }  ?>
 									</div>
 									<div class="form-group">
 										<label>備註</label>
