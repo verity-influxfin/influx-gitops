@@ -56,7 +56,7 @@ class Transaction_lib{
 		return false;
 	}
 	
-	//儲值
+	//代收
 	public function recharge($payment_id=0){
 		$date = get_entering_date();
 		if($payment_id){
