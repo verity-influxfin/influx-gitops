@@ -54,7 +54,7 @@
                                             <th>流標期限</th>
                                             <th>上架日期</th>
                                             <th>邀請碼</th>
-                                            <th>稽核</th>
+                                            <th>二審</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
