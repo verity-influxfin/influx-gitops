@@ -1010,29 +1010,28 @@ class Target extends REST_Controller {
 	public function applylist_get()
     {
 		$input 		= $this->input->get(NULL, TRUE);
-		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$investments	= $this->investment_model->get_many_by([
-			'user_id' 	=> $user_id,
+			'user_id' 	=> $this->user_info->id,
 			'status'	=> [0,1,2]
 		]);
         $list			= [];
 
         $product_list 	= $this->config->item('product_list');
-        $user_info 	= $this->user_model->get($user_id);
 
-		if(!empty($investments)){
-			foreach($investments as $key => $value){
-				$target_info = $this->target_model->get($value->target_id);
-                $age  = get_age($user_info->birthday);
+        if(!empty($investments)){
+            foreach($investments as $key => $value){
+                $target_info      = $this->target_model->get($value->target_id);
+                $target_user_info = $this->user_model->get($target_info->user_id);
+                $age  = get_age($target_user_info->birthday);
                 $user		= [];
                 if($product_list[$target_info->product_id]['identity']==1){
-                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'school_name']);
+                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_user_info->id,'meta_key'=>'school_name']);
                 }else{
-                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'company_name']);
+                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_user_info->id,'meta_key'=>'company_name']);
                 }
                 $user = array(
-                    'sex' 			=> $user_info->sex,
+                    'sex' 			=> $target_user_info->sex,
                     'age'			=> $age,
                     'company_name'	=> $user_meta?$user_meta->meta_value:'',
                 );
