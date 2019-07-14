@@ -23,7 +23,7 @@ class Transfer_lib{
 	債轉期間於寬限期內且跨到逾期日：結息日調整至逾期前一日，利息為上期利息金額
 	逾期債轉：已發生利息 + 依照逾期日計算延滯息
 	*/
-	public function get_pretransfer_info($investment,$bargain_rate=0,$amount=0,$get_data=false){
+	public function get_pretransfer_info($investment,$bargain_rate=0,$amount=0,$get_data=false,$target=false){
 		if($investment && $investment->status==3||$get_data){
 			$this->CI->load->model('transaction/transaction_model');
 			$this->CI->load->library('Financial_lib');
@@ -31,7 +31,9 @@ class Transfer_lib{
 				'investment_id'	=> $investment->id,
 				'status'		=> [1,2]
 			));
-			$target = $this->CI->target_model->get($investment->target_id);
+			if(!$target){
+			    $target = $this->CI->target_model->get($investment->target_id);
+            }
 			
 			if($transaction && $target){
 				$principal				= 0;//本金
@@ -90,18 +92,6 @@ class Transfer_lib{
 					//$total = $principal + $interest + $delay_interest;
                     $total = intval($amount!=0?$amount:$principal);
 					$total = intval(round($total * (100 + $bargain_rate) /100,0));
-					$contract = $this->CI->contract_lib->pretransfer_contract('transfer',[
-						$investment->user_id,
-						'',
-						$target->user_id,
-						$target->target_no,
-						$principal,
-						$principal,
-						$total,
-						$target->user_id,
-						$target->user_id,
-						$target->user_id,
-					]);
 					$instalment = $target->instalment - $instalment_paid;
 					$fee 		= $this->CI->financial_lib->get_transfer_fee($principal);
 
@@ -114,7 +104,6 @@ class Transfer_lib{
 						'bargain_rate'				=> $bargain_rate,
 						'accounts_receivable'		=> intval($accounts_receivable),
 						'fee'						=> intval($fee),
-						'debt_transfer_contract' 	=> $contract,
 						'settlement_date'			=> $settlement_date,//結帳日
 					];
 					return $data;
@@ -124,55 +113,37 @@ class Transfer_lib{
 		return false;
 	}
 	
-	public function apply_transfer($investment,$bargain_rate=0,$combination_id=0,$amount=0,$combination=0){
+	public function apply_transfer($investment,$combination_id=0,$contract=false,$data_arr=[],$i=0,$count){
 		if($investment && $investment->status==3 && $investment->transfer_status==0){
-			$target 	= $this->CI->target_model->get($investment->target_id);
-			$info  		= $this->get_pretransfer_info($investment,$bargain_rate,$amount);
-			if($info){
-				$principal 	= $info['principal'];
-				$total 		= $info['total'];
-				$contract 	= $this->CI->contract_lib->sign_contract('transfer',[
-					$investment->user_id,
-					'',
-					$target->user_id,
-					$target->target_no,
-					$principal,
-					$principal,
-					$total,
-					$target->user_id,
-					$target->user_id,
-					$target->user_id,
-				]);
-				
-				if($contract){
-					$investment_param = array(
-						'transfer_status'		=> 1,
-					);
-					$rs = $this->CI->investment_model->update($investment->id,$investment_param);
-					if($rs){
-						$this->CI->load->library('target_lib');
-						$this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
-						$infoAmount = $combination == 0?$info['total']:$info['principal'];
-						$param = [
-							'target_id'				=> $investment->target_id,
-							'investment_id'			=> $investment->id,
-							'transfer_fee'			=> $info['fee'],
-							'amount'				=> $infoAmount,
-							'principal'				=> $info['principal'],
-							'interest'				=> $info['interest'],
-							'delay_interest'		=> $info['delay_interest'],
-							'bargain_rate'			=> $info['bargain_rate'],
-							'instalment'			=> $info['instalment'],
-							'accounts_receivable'	=> $info['accounts_receivable'],
-							'expire_time'			=> strtotime($info['settlement_date'].' 23:59:59'),
-							'combination'			=> $combination_id,
-							'contract_id'			=> $contract,
-						];
-						$res = $this->CI->transfer_model->insert($param);
-						return $res;
-					}
-				}
-			}
+            if($contract){
+                $contract_id = is_numeric($contract[0])?$contract[0]:$this->CI->contract_lib->sign_contract($combination_id==0?'transfer':'trans_multi',$contract[$i]);
+                $investment_param = array(
+                    'transfer_status' => 1,
+                );
+                $rs = $this->CI->investment_model->update($investment->id,$investment_param);
+                if($rs){
+                    $this->CI->load->library('target_lib');
+                    $this->CI->target_lib->insert_investment_change_log($investment->id,$investment_param,$investment->user_id);
+                    $infoAmount = $combination_id!=0&&$count==1?$data_arr['total'][$i]:($combination_id==0&&$count==1?$data_arr['total'][$i]:$data_arr['principal'][$i]);
+                    $param = [
+                        'target_id'				=> $investment->target_id,
+                        'investment_id'			=> $investment->id,
+                        'transfer_fee'			=> $data_arr['fee'][$i],
+                        'amount'				=> $infoAmount,
+                        'principal'				=> $data_arr['principal'][$i],
+                        'interest'				=> $data_arr['interest'][$i],
+                        'delay_interest'		=> $data_arr['delay_interest'][$i],
+                        'bargain_rate'			=> $data_arr['bargain_rate'][$i],
+                        'instalment'			=> $data_arr['instalment'][$i],
+                        'accounts_receivable'	=> $data_arr['accounts_receivable'][$i],
+                        'expire_time'			=> strtotime($data_arr['settlement_date'][$i].' 23:59:59'),
+                        'combination'			=> $combination_id,
+                        'contract_id'			=> $contract_id,
+                    ];
+                    $res = $this->CI->transfer_model->insert($param);
+                    return $combination_id!=0&&$i!=$count?[$contract_id]:$res;
+                }
+            }
 		}
 		return false;
 	}

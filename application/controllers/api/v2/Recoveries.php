@@ -1224,38 +1224,52 @@ class Recoveries extends REST_Controller {
      */
 	public function pretransfer_post()
     {
-		$input 		= $this->input->post(NULL, TRUE);
-		$user_id 	= $this->user_info->id;
-		$investor 	= $this->user_info->investor;
-		$ids		= array();
-        $amount     = isset($input['amount'])?$input['amount']:0;
+		$input 		   = $this->input->post(NULL, TRUE);
+		$user_id 	   = $this->user_info->id;
+		$investor 	   = $this->user_info->investor;
+		$ids		   = array();
+        $amount        = isset($input['amount'])?$input['amount']:0;
+        $combination   = isset($input['combination'])&&intval($input['combination'])?1:0;
 
 		//必填欄位
 		if (empty($input['ids'])) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 		$bargain_rate = isset($input['bargain_rate'])?round(floatval($input['bargain_rate']),1):0;
-		$ids 	= explode(',',$input['ids']);
-		$count 	= count($ids);
-		if(!empty($ids)){
-			foreach($ids as $key => $id){
-				$id = intval($id);
-				if(intval($id)<=0 ){
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}
-			}
-		}else{
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
-		
-		if($bargain_rate < -20 || $bargain_rate > 20){
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
+        if($bargain_rate < -20 || $bargain_rate > 20){
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
 
-		$investments = $this->investment_model->get_many($ids);
+        $ids 	= explode(',',$input['ids']);
+        $count 	= count($ids);
+        if(!empty($ids)){
+            foreach($ids as $key => $id){
+                $id = intval($id);
+                if(intval($id)<=0 ){
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }
+            }
+        }else{
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
 
-		if(count($investments)==count($ids)){
-			$data = [
+
+        $investments = $this->investment_model->get_many($ids);
+
+        if(count($investments) == $count){
+            foreach( $investments as $key => $value ){
+                if($value->user_id != $user_id){
+                    $this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
+                }
+                if($value->status != 3){
+                    $this->response(array('result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR ));
+                }
+                if($value->transfer_status != 0){
+                    $this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
+                }
+            }
+
+            $data = [
 				'count' 	 			=> 0,
 				'amount' 	 			=> 0,
 				'principal' 	 		=> 0,
@@ -1271,35 +1285,35 @@ class Recoveries extends REST_Controller {
 				'contract' 		 		=> [],
 			];
 
-			foreach( $investments as $key => $value ){
-				if($value->user_id != $user_id){
-					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
-				}
-				if($value->status != 3){
-					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR ));
-				}
-				if($value->transfer_status != 0){
-					$this->response(array('result' => 'ERROR','error' => TRANSFER_EXIST ));
-				}
-			}
-			$interest_rate_n = 0;
-			$interest_rate_d = 0;
+            $interest_rate_n               = 0;
+			$interest_rate_d               = 0;
+            $data_arr['user_id']           = [];
+            $data_arr['target_no']         = [];
+            $data_arr['loan_amount']       = [];
+            $data_arr['interest_rate']     = [];
+            $data_arr['principal']         = [];
+            $data_arr['interest']          = [];
+            $data_arr['delay_interest']    = [];
+            $data_arr['fee']               = [];
+
 			foreach( $investments as $key => $value ){
 				$target = $this->target_model->get($value->target_id);
 				$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
 				$interest_rate_d += $value->loan_amount*$target->instalment;
 
-				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
+				$info 	= $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount,false,$target);
                 if($info){
                     $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
-					$data['count']++;
-					//$data['amount'] 			 += $info['total'];
-					$data['principal'] 			 += $info['principal'];
-					$data['interest'] 			 += $info['interest'];
-					$data['delay_interest'] 	 += $info['delay_interest'];
-					$data['fee'] 				 += $info['fee'];
-					$data['accounts_receivable'] += $info['accounts_receivable'];
-					$data['contract'][] 	     = $info['debt_transfer_contract'];
+                    $data['count']++;
+                    $data_arr['user_id'][] 		         = $target->user_id;
+                    $data_arr['target_no'][]	         = $target->target_no;
+                    $data_arr['loan_amount'][] 		     = $target->loan_amount;
+                    $data_arr['interest_rate'][] 		 = $target->interest_rate;
+                    $data_arr['principal'][] 			 = $info['principal'];
+                    $data_arr['interest'][] 			 = $info['interest'];
+                    $data_arr['delay_interest'][] 	     = $info['delay_interest'];
+                    $data_arr['fee'][] 	                 = $info['fee'];
+                    $data['accounts_receivable']         += $info['accounts_receivable'];
 
                     foreach ($amortization_table['list'] as $k => $v) {
                         if($v['repayment'] == 0){
@@ -1319,24 +1333,32 @@ class Recoveries extends REST_Controller {
 					if($data['settlement_date'] > $info['settlement_date'] || $data['settlement_date']==''){
 						$data['settlement_date'] = $info['settlement_date'];
 					}
-				}
-			}
-            $data['amount'] = $amount;
-			if($interest_rate_n && $interest_rate_d){
-				$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
-			}
-
+                }
+            }
+            $data['principal'] 			 = array_sum($data_arr['principal']);
+            $data['interest'] 			 = array_sum($data_arr['interest']);
+            $data['delay_interest'] 	 = array_sum($data_arr['delay_interest']);
+            $data['fee']                 = array_sum($data_arr['fee']);
+            $data['amount']              = $amount!=0?($count==1||$combination==1?$amount:$data['principal']):$data['principal'];
             $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
             $maxAmount = $data['accounts_receivable'];
             if($amount!=0&&($amount < $minAmount || $amount > $maxAmount)){
                 $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
             }
+            if($combination == 1){
+                $contract[] = $this->contract_lib->build_contract('trans_multi',$user_id,'',$data,$data_arr,$count,$amount,0,1);
+            }else{
+                for ($i = 0; $i < $count; $i++) {
+                    $contract[] = $this->contract_lib->build_contract('transfer',$user_id,'',$data,$data_arr,$count,$amount,$i,1);
+                }
+            }
+            $data['contract']  = $contract;
 
-            //if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
-			//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
-			//}
-			
-			$this->response(array('result' => 'SUCCESS','data' => $data ));
+            if($interest_rate_n && $interest_rate_d){
+                $data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
+            }
+
+            $this->response(array('result' => 'SUCCESS','data' => $data ));
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NOT_EXIST ));
     }
@@ -1437,7 +1459,8 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$ids = explode(',',$input['ids']);
-		if(!empty($ids)&&count($ids)==1){//
+        $count 	= count($ids);
+		if(!empty($ids)){//
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
@@ -1449,7 +1472,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$investments = $this->investment_model->get_many($ids);
-		if(count($investments)==count($ids)){
+		if(count($investments) == $count){
 			foreach( $investments as $key => $value ){
 				if($value->user_id != $user_id){
 					$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_NO_PERMISSION ));
@@ -1462,94 +1485,112 @@ class Recoveries extends REST_Controller {
 				}
 			}
 
- 			if($combination==1){
-				$data = [
-					'password' 	 			=> $password,
-					'transfer_fee' 			=> 0,
-					'count' 	 			=> 0,
-					'amount' 	 			=> 0,
-					'principal' 	 		=> 0,
-					'interest' 		 		=> 0,
-					'max_instalment' 		=> 0,
-					'min_instalment' 		=> 0,
-					'delay_interest' 		=> 0,
-					'bargain_rate' 			=> $bargain_rate,
-					'interest_rate' 		=> 0,
-					'accounts_receivable' 	=> 0,
-				];
-				$first_investment 	 = current($investments);
-				$first_info 		 = $this->transfer_lib->get_pretransfer_info($first_investment,$bargain_rate);
-				$interest_rate_n = 0;
-				$interest_rate_d = 0;
-				if($first_info['delay_interest']>0){
-					$delay = 1;
-				}else{
-					$delay = 0;
-				}
+            $first_investment 	 = current($investments);
+            $first_info 		 = $this->transfer_lib->get_pretransfer_info($first_investment,$bargain_rate);
+            if($first_info['delay_interest']>0){
+                $delay = 1;
+            }else{
+                $delay = 0;
+            }
 
-				foreach( $investments as $key => $value ){
-					$info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount);
-					if($delay==1 && $info['delay_interest']==0){
-						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
-					}
-					if($delay==0 && $info['delay_interest']>0){
-						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
-					}
-					if($info['settlement_date'] != $first_info['settlement_date']){
-						$this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
-					}
+            $data = [
+                'password' 	 			=> $password,
+                'transfer_fee' 			=> 0,
+                'count' 	 			=> 0,
+                'amount' 	 			=> 0,
+                'principal' 	 		=> 0,
+                'interest' 		 		=> 0,
+                'max_instalment' 		=> 0,
+                'min_instalment' 		=> 0,
+                'delay_interest' 		=> 0,
+                'bargain_rate' 			=> $bargain_rate,
+                'interest_rate' 		=> 0,
+                'accounts_receivable' 	=> 0,
+            ];
 
-					$target = $this->target_model->get($value->target_id);
-					$interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
-					$interest_rate_d += $value->loan_amount*$target->instalment;
+            $interest_rate_n = 0;
+            $interest_rate_d = 0;
+            $data_arr['user_id']             = [];
+            $data_arr['target_no']           = [];
+            $data_arr['loan_amount']         = [];
+            $data_arr['interest_rate']       = [];
+            $data_arr['principal']           = [];
+            $data_arr['interest']            = [];
+            $data_arr['delay_interest']      = [];
+            $data_arr['fee']                 = [];
+            $data_arr['bargain_rate']        = [];
+            $data_arr['instalment']          = [];
+            $data_arr['accounts_receivable'] = [];
+            $data_arr['total']               = [];
+            $data_arr['settlement_date']     = [];
 
+            foreach( $investments as $key => $value ){
+                $target = $this->target_model->get($value->target_id);
+                $interest_rate_n += $value->loan_amount*$target->interest_rate*$target->instalment;
+                $interest_rate_d += $value->loan_amount*$target->instalment;
 
-					$data['count']++;
-					//$data['amount'] 			 += $info['total'];
-					$data['principal'] 			 += $info['principal'];
-					$data['interest'] 			 += $info['interest'];
-					$data['delay_interest'] 	 += $info['delay_interest'];
-					$data['transfer_fee'] 		 += $info['fee'];
-					$data['accounts_receivable'] += $info['accounts_receivable'];
-
-					if($data['max_instalment'] < $info['instalment']){
-						$data['max_instalment'] = $info['instalment'];
-					}
-					if($data['min_instalment'] > $info['instalment'] || $data['min_instalment']==0){
-						$data['min_instalment'] = $info['instalment'];
-					}
-				}
-                $data['amount'] = $amount;
-                $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
-                $maxAmount = $data['accounts_receivable'];
-                if($amount < $minAmount || $amount > $maxAmount){
-                    $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+                $info   = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate,$amount,false,$target);
+                if($delay==1 && $info['delay_interest']==0){
+                    $this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
+                }
+                if($delay==0 && $info['delay_interest']>0){
+                    $this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
+                }
+                if($info['settlement_date'] != $first_info['settlement_date']){
+                    $this->response(array('result' => 'ERROR','error' => TRANSFER_COMBINE_STATUS ));
                 }
 
-				//if(($data['amount'] + $data['fee']) > $data['accounts_receivable']){
-				//	$this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
-				//}
-				if($interest_rate_n && $interest_rate_d){
-					$data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
-				}
+                $data['count']++;
+                $data_arr['user_id'][] 		         = $target->user_id;
+                $data_arr['target_no'][] 		     = $target->target_no;
+                $data_arr['loan_amount'][] 		     = $target->loan_amount;
+                $data_arr['interest_rate'][] 		 = $target->interest_rate;
+                $data_arr['principal'][] 			 = $info['principal'];
+                $data_arr['interest'][] 			 = $info['interest'];
+                $data_arr['delay_interest'][] 	     = $info['delay_interest'];
+                $data_arr['fee'][] 	                 = $info['fee'];
+                $data_arr['bargain_rate'][] 	     = $info['bargain_rate'];
+                $data_arr['instalment'][] 	         = $info['instalment'];
+                $data_arr['accounts_receivable'][] 	 = $info['accounts_receivable'];
+                $data_arr['total'][] 	             = $info['total'];
+                $data_arr['settlement_date'][] 	     = $info['settlement_date'];
+                $data['accounts_receivable']         += $info['accounts_receivable'];
 
-				$this->load->model('loan/transfer_combination_model');
-				$combination_id = $this->transfer_combination_model->insert($data);
-			}else{
-                $t_loan_amount = 0;
-                foreach( $investments as $key => $value ){
-                    $info = $this->transfer_lib->get_pretransfer_info($value,$bargain_rate);
-                    $t_loan_amount += $info['accounts_receivable'];
+                if($data['max_instalment'] < $info['instalment']){
+                    $data['max_instalment'] = $info['instalment'];
                 }
-                $minAmount      = intval(round($t_loan_amount * (100 - 20) /100,0));
-                $maxAmount      = $t_loan_amount;
-                if($amount < $minAmount || $amount > $maxAmount){
-                    $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+                if($data['min_instalment'] > $info['instalment'] || $data['min_instalment']==0){
+                    $data['min_instalment'] = $info['instalment'];
                 }
-                $combination = count($ids)>1?1:0;
+            }
+            $data['principal'] 			 = array_sum($data_arr['principal']);
+            $data['interest'] 			 = array_sum($data_arr['interest']);
+            $data['delay_interest'] 	 = array_sum($data_arr['delay_interest']);
+            $data['transfer_fee']        = array_sum($data_arr['fee']);
+            $data['amount']              = $amount!=0?($count==1||$combination==1?$amount:$data['principal']):$data['principal'];
+            $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) /100,0));
+            $maxAmount = $data['accounts_receivable'];
+            if($amount < $minAmount || $amount > $maxAmount){
+                $this->response(array('result' => 'ERROR','error' => TRANSFER_AMOUNT_ERROR ));
+            }
+            if($interest_rate_n && $interest_rate_d){
+                $data['interest_rate'] = round($interest_rate_n / $interest_rate_d,2);
+            }
+            if($combination==1){
+                $contract[] = $this->contract_lib->build_contract('trans_multi',$user_id,'',$data,$data_arr,$count,$amount);
+                $this->load->model('loan/transfer_combination_model');
+                $combination_id = $this->transfer_combination_model->insert($data);
+            }else{
+                for ($i = 0; $i < $count; $i++) {
+                    $contract[] = $this->contract_lib->build_contract('transfer',$user_id,'',$data,$data_arr,$count,$amount,$i);
+                }
 			}
-			foreach( $investments as $key => $value ){
-				$rs = $this->transfer_lib->apply_transfer($value,$bargain_rate,$combination_id,$amount,$combination);
+            $rs='';
+            for ($ia = 0; $ia < $count; $ia++) {
+                if(is_array($rs)){
+                    $contract = $rs;
+                }
+				$rs = $this->transfer_lib->apply_transfer($value,$combination_id,$contract,$data_arr,$ia,$count);
 			}
 
 			$this->response(array('result' => 'SUCCESS'));

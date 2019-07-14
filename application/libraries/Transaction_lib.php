@@ -630,8 +630,32 @@ class Transaction_lib{
 
                                     $investment = $this->CI->investment_model->get($investment_id);
                                     if ($investment) {
+                                        $data_arr['principal']           = [];
+                                        $data_arr['interest']            = [];
+                                        $data_arr['delay_interest']      = [];
+                                        $data_arr['fee']                 = [];
+                                        $data_arr['bargain_rate']        = [];
+                                        $data_arr['instalment']          = [];
+                                        $data_arr['accounts_receivable'] = [];
+                                        $data_arr['total']               = [];
+                                        $data_arr['settlement_date']     = [];
+                                        $target = $this->CI->target_model->get($investment->target_id);
                                         $this->CI->load->library('Transfer_lib');
-                                        $this->CI->transfer_lib->apply_transfer($investment, 0, 0, $total_amount);
+                                        $info  	= $this->CI->transfer_lib->get_pretransfer_info($investment,0,$total_amount,false,$target);
+                                        $data_arr['user_id'][] 		         = $target->user_id;
+                                        $data_arr['target_no'][]	         = $target->target_no;
+                                        $data_arr['principal'][] 			 = $info['principal'];
+                                        $data_arr['interest'][] 			 = $info['interest'];
+                                        $data_arr['delay_interest'][] 	     = $info['delay_interest'];
+                                        $data_arr['fee'][] 	                 = $info['fee'];
+                                        $data_arr['bargain_rate'][] 	     = $info['bargain_rate'];
+                                        $data_arr['instalment'][] 	         = $info['instalment'];
+                                        $data_arr['accounts_receivable'][] 	 = $info['accounts_receivable'];
+                                        $data_arr['total'][] 	             = $info['total'];
+                                        $data_arr['settlement_date'][] 	     = $info['settlement_date'];
+                                        $this->CI->load->library('contract_lib');
+                                        $contract[] = $this->CI->contract_lib->build_contract('transfer',$company_account->user_id,'','',$data_arr,0,$total_amount);
+                                        $this->CI->transfer_lib->apply_transfer($investment, 0,$contract,$data_arr,0,1);
                                         return true;
                                     }
                                 }

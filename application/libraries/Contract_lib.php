@@ -18,8 +18,39 @@ class Contract_lib{
 				$format = $this->CI->contract_format_model->get($contract->format_id);
 				if($format){
 					$content 	= json_decode($contract->content,TRUE);
-					$content 	= vsprintf($format->content,$content);
-					$content 	.= "\n 中華民國 ".(date('Y',$contract->created_at)-1911).' '.date('年 m 月 d 日',$contract->created_at);
+                    if($contract->format_id == 4){
+                        $contract_part = '';
+                        $first_content = '新台幣（以下同）';
+                        $part          = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>'trans_part']);
+                        foreach($content[4] as $key => $value){
+                            $key > 0 ? $first_content = '' : null;
+                            $addpart = [
+                                $value[0],
+                                $value[1],
+                                $value[2],
+                                $value[3],
+                                $value[4],
+                                $value[5],
+                                $value[6],
+                                $value[7],
+                            ];
+                            $part_text = $value[8]==0 ? mb_ereg_replace('已／|不併同／', '', $part->content) : mb_ereg_replace('／未|／併同', '', $part->content);
+                            $contract_part .= vsprintf($part_text, $addpart);
+                        }
+                        $content = [
+                            $content[0],
+                            $content[1],
+                            $content[2],
+                            $content[3],
+                            $contract_part,
+                            $content[5],
+                            $content[6],
+                            $content[7],
+                            $content[8]
+                        ];
+                    }
+                    $content 	= vsprintf($format->content,$content);
+                    $content 	.= "\n 中華民國 ".(date('Y',$contract->created_at)-1911).' '.date('年 m 月 d 日',$contract->created_at);
 					$data = array(
 						'title'		=> $format->title,
 						'content' 	=> $content,
@@ -68,5 +99,72 @@ class Contract_lib{
 		}
 		return false;
 	}
-	
+
+    public function build_contract($type,$user_id,$trans_user_id,$data,$data_arr,$count,$amount,$index=0,$view=0){
+        if($type=='transfer'){
+            $contract_var = [
+                $user_id,
+                $trans_user_id,
+                $data_arr['user_id'][$index],
+                $data_arr['target_no'][$index],
+                $data_arr['principal'][$index],
+                $data_arr['principal'][$index],
+                $count==1&&$amount!=0?$amount:$data_arr['principal'][$index],
+                $data_arr['user_id'][$index],
+                $data_arr['user_id'][$index],
+                $data_arr['user_id'][$index],
+            ];
+            return $view==1?$this->pretransfer_contract('transfer',$contract_var):$contract_var;
+        }elseif($type=='trans_multi'){
+            $contract_part    = '';
+            $contract_arr     = [];
+            $first_content    = '新台幣（以下同）';
+            $normal_principal = 0;
+            $normal_interest  = 0;
+            $delay_principal  = 0;
+            $part             = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>'trans_part']);
+            for ($i = 0; $i < $count; $i++){
+                $delay_target = $data['delay_interest'][$i]==0?0:1;
+                if($delay_target==0){
+                    $normal_principal += $data_arr['principal'][$i];
+                    $normal_interest  += $data_arr['interest'][$i];
+                }
+                else{
+                    $delay_principal  += $data_arr['principal'][$i]+$data_arr['interest'][$i]+$data_arr['delay_interest'][$i];
+                }
+                if($view==1){
+                    $part_text = $delay_target==0?mb_ereg_replace('已／|不併同／','',$part->content):mb_ereg_replace('／未|／併同','',$part->content);
+                    $i>0?$first_content='':null;
+                }
+                $addpart = [
+                    $i+1,
+                    $data_arr['user_id'][$i],
+                    $data_arr['target_no'][$i],
+                    ($i == 0&&$view==1?$first_content.$data_arr['loan_amount'][$i]:$data_arr['loan_amount'][$i]),
+                    $data_arr['principal'][$i],
+                    $data_arr['interest_rate'][$i],
+                    $data_arr['interest'][$i] + $data_arr['delay_interest'][$i],
+                    DELAY_INTEREST,
+                    $delay_target
+                ];
+                if($view==1) {
+                    $contract_part .= vsprintf($part_text,$addpart);
+                }else{
+                    $contract_arr[] = $addpart;
+                }
+            }
+            $contract_var = [
+                $user_id,
+                $trans_user_id,
+                $user_id,
+                $count,
+                $view==1?$contract_part:$contract_arr,
+                $normal_principal,
+                $normal_interest,
+                $delay_principal,
+                $amount==0?$data['principal']:$amount
+            ];
+            return $view==1?$this->pretransfer_contract('trans_multi',$contract_var):$contract_var;
+        }
+    }
 }
