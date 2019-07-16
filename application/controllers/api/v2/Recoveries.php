@@ -1586,11 +1586,11 @@ class Recoveries extends REST_Controller {
                 }
 			}
             $rs='';
-            for ($ia = 0; $ia < $count; $ia++) {
+            foreach( $investments as $key => $value ){
                 if(is_array($rs)){
                     $contract = $rs;
                 }
-				$rs = $this->transfer_lib->apply_transfer($value,$combination_id,$contract,$data_arr,$ia,$count);
+				$rs = $this->transfer_lib->apply_transfer($value,$combination_id,$contract,$data_arr,$key,$count);
 			}
 
 			$this->response(array('result' => 'SUCCESS'));
