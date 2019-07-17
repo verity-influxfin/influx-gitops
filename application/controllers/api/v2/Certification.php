@@ -467,8 +467,8 @@ class Certification extends REST_Controller {
 				'student_id',
 				'email',
 				'major',
-				'sip_account',
-				'sip_password'
+				//'sip_account',
+				//'sip_password'
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
@@ -479,6 +479,8 @@ class Certification extends REST_Controller {
 			}
 
 			$content['system'] 	= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+            $content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
+            $content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
 
 			if($content['system'] == 0){
                 $content['system'] = 3;
