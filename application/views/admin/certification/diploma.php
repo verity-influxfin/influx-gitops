@@ -39,7 +39,19 @@
 										<label>學制</label>
 										<p class="form-control-static"><?=isset($content['system'])?$school_system[$content['system']]:""?></p>
 									</div>
-									<div class="form-group">
+                                    <div class="form-group">
+                                        <label>學門</label>
+                                        <p class="form-control-static"><?=isset($content['major'])?$content['major']:""?></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>系所</label>
+                                        <p class="form-control-static"><?=isset($content['department'])?$content['department']:""?></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>畢業日期</label>
+                                        <p class="form-control-static"><?=isset($content['diploma_date'])?$content['diploma_date']:""?></p>
+                                    </div>
+                                    <div class="form-group">
 										<label>備註</label>
 										<? 
 											if($remark){
@@ -72,12 +84,12 @@
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
 									<fieldset disabled>
-										<div class="form-group">
-											<label>畢業證書</label><br>
-											<a href="<?=isset($content['diploma_image'])?$content['diploma_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['diploma_image'])?$content['diploma_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
-										</div>
+                                        <div class="form-group">
+                                            <label>畢業證書</label><br>
+                                            <a href="<?=isset($content['diploma_image'])?$content['diploma_image']:""?>" data-fancybox="images">
+                                                <img src="<?=isset($content['diploma_image'])?$content['diploma_image']:""?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        </div>
 									</fieldset>
 								</div>
                             </div>
