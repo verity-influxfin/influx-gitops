@@ -1318,10 +1318,10 @@ class Certification extends REST_Controller {
                 }
             }
 			
-			$content['system']     = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            $content['major']      = isset($input['major'])?$input['major']:"";
-            $content['department'] = isset($input['department'])?$input['department']:"";
-
+			$content['system']       = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+            $content['major']        = isset($input['major'])?$input['major']:"";
+            $content['department']   = isset($input['department'])?$input['department']:"";
+            $content['diploma_date'] = isset($input['diploma_date'])?$input['diploma_date']:"";
 
 			//上傳檔案欄位		
 			$file_fields 	= ['diploma_image'];
