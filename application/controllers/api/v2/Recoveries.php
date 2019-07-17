@@ -1459,8 +1459,7 @@ class Recoveries extends REST_Controller {
 		}
 		
 		$ids = explode(',',$input['ids']);
-        $count 	= count($ids);
-		if(!empty($ids)){//
+		if(!empty($ids)&&count($ids)==1){//
 			foreach($ids as $key => $id){
 				$id = intval($id);
 				if(empty($id)){
