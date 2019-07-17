@@ -482,14 +482,6 @@ class Certification extends REST_Controller {
             $content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
             $content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
 
-			if($content['system'] == 0){
-                $content['system'] = 3;
-            }elseif($content['system'] == 1){
-                $content['system'] = 0;
-            }elseif($content['system'] == 2){
-                $content['system'] = 1;
-            }
-
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
