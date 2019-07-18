@@ -5004,14 +5004,14 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "sip_account",
                             "description": "<p>SIP帳號</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "sip_password",
                             "description": "<p>SIP密碼</p>"
                         },
