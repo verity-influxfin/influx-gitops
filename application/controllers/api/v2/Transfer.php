@@ -714,23 +714,27 @@ class Transfer extends REST_Controller {
 			'transfer_ids' 		=> [],
 		];
 		$contract 				= [];
+		$combination_history    = [];
 		$transfers = $this->transfer_lib->get_transfer_list([
 			'id' 		=> $transfer_ids,
 			'status'	=> 0
 		]);
 		if($transfers && count($transfers)==$count){
 			foreach($transfers as $key => $value){
-				$data['total_amount'] += $value->amount;
-				$data['total_count'] ++;
-				if($data['max_instalment'] < $value->instalment){
-					$data['max_instalment'] = intval($value->instalment);
-				}
-				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-					$data['min_instalment'] = intval($value->instalment);
-				}
-				
-				$contract[] 			= $this->contract_lib->get_contract($value->contract_id);
-				$data['transfer_ids'][] = intval($value->id);
+                if((!in_array($value->combination,$combination_history))){
+                    $value->combination!=0&&!in_array($value->combination,$combination_history)?array_push($combination_history,$value->combination):null;
+                    $data['total_amount'] += $value->amount;
+                    $data['total_count'] ++;
+                    if($data['max_instalment'] < $value->instalment){
+                        $data['max_instalment'] = intval($value->instalment);
+                    }
+                    if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+                        $data['min_instalment'] = intval($value->instalment);
+                    }
+
+                    $contract[] 			= $this->contract_lib->get_contract($value->contract_id);
+                    $data['transfer_ids'][] = intval($value->id);
+                }
 			}
 
 			$data['contracts'] 				= $contract;
