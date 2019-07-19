@@ -235,7 +235,7 @@ class Target extends MY_Admin_Controller {
         $this->target_model->update($id,$param);
         $this->load->library('Target_lib');
         $this->target_lib->insert_change_log($id,$param);
-        admin_url('Target/waiting_verify');
+        alert('額度已提升',admin_url('Target/waiting_verify'));
     }
 
 	function verify_success(){

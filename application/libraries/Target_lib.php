@@ -334,7 +334,7 @@ class Target_lib{
                                         if($bank_account){
                                             $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
                                         }
-                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                                        $sub_status!=9?$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount):null;
                                     }
                                 }
                             }
