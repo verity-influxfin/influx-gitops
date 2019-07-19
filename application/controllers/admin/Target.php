@@ -221,22 +221,21 @@ class Target extends MY_Admin_Controller {
         }
         else{
             if(!empty($post['id'])) {
-                $targets = $this->target_model->get($post['id']);
-                $this->order_duo_approve($post['id'],$targets->amount);
+                $id = $post['id'];
+                $targets = $this->target_model->get($id);
+                $param = [
+                    'status'      => $targets->status,
+                    'loan_amount' => $targets->amount,
+                    'sub_status'  => 0,
+                    'remark'      => '核可消費額度',
+                ];
+                $this->target_model->update($id,$param);
+                $this->load->library('Target_lib');
+                $this->target_lib->insert_change_log($id,$param);
+                alert('額度已提升',admin_url('Target/waiting_verify'));
             }
         }
 	}
-
-	function order_duo_approve($id,$approve_amount){
-        $param = [
-            'loan_amount' => $approve_amount,
-            'sub_status'  => 0,
-        ];
-        $this->target_model->update($id,$param);
-        $this->load->library('Target_lib');
-        $this->target_lib->insert_change_log($id,$param);
-        alert('額度已提升',admin_url('Target/waiting_verify'));
-    }
 
 	function verify_success(){
 		$get 	= $this->input->get(NULL, TRUE);
