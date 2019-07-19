@@ -285,9 +285,7 @@ class Target_lib{
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
                         $loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
 
-                        if( ($product_info['type']==1 && $loan_amount >= $product_info['loan_range_s']) ||
-                            ($product_info['type']==2 && $loan_amount == $target->amount)
-                        ) {
+                        if($loan_amount >= $product_info['loan_range_s']) {
 
                             if($product_info['type']==1){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
@@ -307,30 +305,39 @@ class Target_lib{
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
                                     }
                                 }
-                            }else if($product_info['type']==2){
-                                $platform_fee		    = $this->CI->financial_lib->get_platform_fee2($loan_amount);
-                                $param = [
-                                    'loan_amount'		=> $loan_amount,
-                                    'credit_level'		=> $credit['level'],
-                                    'platform_fee'		=> $platform_fee,
-                                    'interest_rate'		=> $interest_rate,
-                                    'status'			=> 23,
-                                ];
-                                $rs = $this->CI->target_model->update($target->id,$param);
-                                $this->insert_change_log($target->id,$param);
-                                if($rs){
-                                    $this->CI->load->model('user/user_bankaccount_model');
-                                    $bank_account = $this->CI->user_bankaccount_model->get_by([
-                                        'status'	=> 1,
-                                        'investor'	=> 0,
-                                        'verify'	=> 0,
-                                        'user_id'	=> $user_id
-                                    ]);
-                                    if($bank_account){
-                                        $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
-                                    }
-                                    $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                            }else if($product_info['type'] == 2){
+                                $allow      = true;
+                                $sub_status = 0;
+                                if($loan_amount < $target->amount){
+                                    $target->amount < 50000?$sub_status=9:$allow=false;
                                 }
+                                if($allow){
+                                    $platform_fee		    = $this->CI->financial_lib->get_platform_fee2($target->amount);
+                                    $param = [
+                                        'loan_amount'		=> $loan_amount,
+                                        'credit_level'		=> $credit['level'],
+                                        'platform_fee'		=> $platform_fee,
+                                        'interest_rate'		=> $interest_rate,
+                                        'status'			=> 23,
+                                        'sub_status'        => $sub_status,
+                                    ];
+                                    $rs = $this->CI->target_model->update($target->id,$param);
+                                    $this->insert_change_log($target->id,$param);
+                                    if($rs){
+                                        $this->CI->load->model('user/user_bankaccount_model');
+                                        $bank_account = $this->CI->user_bankaccount_model->get_by([
+                                            'status'	=> 1,
+                                            'investor'	=> 0,
+                                            'verify'	=> 0,
+                                            'user_id'	=> $user_id
+                                        ]);
+                                        if($bank_account){
+                                            $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
+                                        }
+                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                                    }
+                                }
+                                $this->approve_target_fail($user_id,$target,false,'案件申請中');
                             }
                         }else{
                             $this->approve_target_fail($user_id,$target);
@@ -348,8 +355,9 @@ class Target_lib{
 		return false;
 	}
 
-    private function approve_target_fail($user_id,$target,$maxAmountAlarm=false){
+    private function approve_target_fail($user_id,$target,$maxAmountAlarm=false,$other=false){
 	    $remak = '信用不足'.($maxAmountAlarm?'(多產品總額度超過歸戶)':'');
+        $remak = $other?$remak:'';
         $param = [
             'loan_amount'		=> 0,
             'status'			=> '9',

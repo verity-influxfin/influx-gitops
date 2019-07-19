@@ -30,6 +30,7 @@ class Target_model extends MY_Model
         5 =>	"已通知出貨",
         6 =>	"出貨鑑賞期",
         8 =>	"產轉案件",
+        9 =>	"待2審",
 	);
 
 	public $loan_list   = array(
@@ -43,6 +44,11 @@ class Target_model extends MY_Model
 		0 =>	"無",
 		1 =>	"逾期中",
 	);
+
+    public $delivery_list   = array(
+        0 =>	"線下",
+        1 =>	"線上",
+    );
 	
 	public $simple_fields  = array(
 		"id",

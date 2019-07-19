@@ -74,143 +74,169 @@ class Target extends MY_Admin_Controller {
 	public function edit(){
 		$page_data 	= array('type'=>'edit');
 		$get 		= $this->input->get(NULL, TRUE);
+        $post 		= $this->input->post(NULL, TRUE);
+
 		$id 		= isset($get['id'])?intval($get['id']):0;
 		$display 	= isset($get['display'])?intval($get['display']):0;
-		if($id){
-			$info = $this->target_model->get($id);
-			if($info){
-				$amortization_table 				= [];
-				$investments 						= [];
-				$investments 						= [];
-				$investments_amortization_table 	= [];
-				$investments_amortization_schedule 	= [];
-				$order                              = [];
-				if($info->status==5 || $info->status==10){
-					$amortization_table = $this->target_lib->get_amortization_table($info);
-					$investments = $this->investment_model->get_many_by(array('target_id'=>$info->id,'status'=>array(3,10)));
-					if($investments){
-						foreach($investments as $key =>$value){
-							$investments[$key]->user_info 		= $this->user_model->get($value->user_id);
-							$investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
-								'user_id'	=> $value->user_id,
-								'investor'	=> 1,
-								'status'	=> 1,
-							));
-							$investments_amortization_table[$value->id] = $this->target_lib->get_investment_amortization_table($info,$value);
-						}
-					}
-				}else if($info->status==4){
-					$investments = $this->investment_model->get_many_by(array('target_id'=>$info->id,'status'=>2));
-					if($investments){
-						foreach($investments as $key =>$value){
-							$investments[$key]->user_info 		= $this->user_model->get($value->user_id);
-							$investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
-								'user_id'	=> $value->user_id,
-								'investor'	=> 1,
-								'status'	=> 1,
-							));
-							$investments_amortization_schedule[$value->id] = $this->financial_lib->get_amortization_schedule(
-								$value->loan_amount,
-								$info->instalment,
-								$info->interest_rate,
-								date('Y-m-d'),
-								$info->repayment
-							);
-						}
-					}
-				}
+        if(empty($post)) {
+            if ($id) {
+                $info = $this->target_model->get($id);
+                if ($info) {
+                    $amortization_table = [];
+                    $investments = [];
+                    $investments_amortization_table = [];
+                    $investments_amortization_schedule = [];
+                    $order = [];
+                    if ($info->status == 5 || $info->status == 10) {
+                        $amortization_table = $this->target_lib->get_amortization_table($info);
+                        $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => array(3, 10)));
+                        if ($investments) {
+                            foreach ($investments as $key => $value) {
+                                $investments[$key]->user_info = $this->user_model->get($value->user_id);
+                                $investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
+                                    'user_id' => $value->user_id,
+                                    'investor' => 1,
+                                    'status' => 1,
+                                ));
+                                $investments_amortization_table[$value->id] = $this->target_lib->get_investment_amortization_table($info, $value);
+                            }
+                        }
+                    } else if ($info->status == 4) {
+                        $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => 2));
+                        if ($investments) {
+                            foreach ($investments as $key => $value) {
+                                $investments[$key]->user_info = $this->user_model->get($value->user_id);
+                                $investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
+                                    'user_id' => $value->user_id,
+                                    'investor' => 1,
+                                    'status' => 1,
+                                ));
+                                $investments_amortization_schedule[$value->id] = $this->financial_lib->get_amortization_schedule(
+                                    $value->loan_amount,
+                                    $info->instalment,
+                                    $info->interest_rate,
+                                    date('Y-m-d'),
+                                    $info->repayment
+                                );
+                            }
+                        }
+                    }
 
-                if($info->order_id!=0){
-                    $this->load->model('transaction/order_model');
-                    $order = $this->order_model->get($info->order_id);
+                    if ($info->order_id != 0) {
+                        $this->load->model('transaction/order_model');
+                        $order = $this->order_model->get($info->order_id);
+                        $store_id = explode('-', $order->order_no)[0];
+                        $this->load->model('user/judicial_person_model');
+                        $judicial_person = $this->judicial_person_model->get($store_id);
+                    }
+
+                    $user_id = $info->user_id;
+                    $bank_account = $this->user_bankaccount_model->get_many_by(array(
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                        'verify' => 1,
+                    ));
+                    $virtual_account = $this->virtual_account_model->get_by(array(
+                        'user_id' => $user_id,
+                        'investor' => 0,
+                        'status' => 1,
+                    ));
+
+                    $bank_account_verify = $bank_account ? 1 : 0;
+                    $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
+                    $user_info = $this->user_model->get($user_id);
+                    $page_data['data'] = $info;
+                    $page_data['order'] = $order;
+                    $page_data['user_info'] = $user_info;
+                    $page_data['judicial_person'] = $judicial_person;
+                    $page_data['amortization_table'] = $amortization_table;
+                    $page_data['investments'] = $investments;
+                    $page_data['delivery_list'] = $this->target_model->delivery_list;
+                    $page_data['investments_amortization_table'] = $investments_amortization_table;
+                    $page_data['investments_amortization_schedule'] = $investments_amortization_schedule;
+                    $page_data['credit_list'] = $credit_list;
+                    $page_data['product_list'] = $this->config->item('product_list');
+                    $page_data['bank_account_verify'] = $bank_account_verify;
+                    $page_data['virtual_account'] = $virtual_account;
+                    $page_data['instalment_list'] = $this->config->item('instalment');
+                    $page_data['repayment_type'] = $this->config->item('repayment_type');
+                    $page_data['status_list'] = $this->target_model->status_list;
+                    $page_data['loan_list'] = $this->target_model->loan_list;
+
+                    if (isset($get['risk']) && $get['risk'] != null) {
+                        $this->load->library('certification_lib');
+                        if (isset($get['slist']) && $get['slist'] != null) {
+                            $page_data['slist'] = $get['slist'];
+                        }
+
+                        $user_list = [];
+                        $user_investor_list = [];
+                        $certification_investor_list = [];
+
+                        $targets = $this->target_model->get_many_by(array(
+                            'user_id' => $user_id,
+                            'id' => $info->id
+                        ));
+                        if ($targets) {
+                            foreach ($targets as $key => $value) {
+                                $list[$value->id] = $value;
+                            }
+                        }
+
+                        if ($list) {
+                            ksort($list);
+                            foreach ($list as $key => $value) {
+                                $list[$key]->certification = $this->certification_lib->get_last_status($value->user_id, 0);
+                                if (isset($list[$key]->certification[3]['certification_id'])) {
+                                    $bank_account = $this->user_bankaccount_model->get_by(array(
+                                        'user_certification_id' => $list[$key]->certification[3]['certification_id'],
+                                    ));
+                                    $list[$key]->bank_account = $bank_account;
+                                    $list[$key]->bank_account_verify = $bank_account->verify == 1 ? 1 : 0;
+                                }
+                            }
+                        }
+
+                        $page_data['list'] = $list;
+                        $page_data['certification_investor_list'] = $certification_investor_list;
+                        $page_data['certification'] = $this->config->item('certifications');
+                        $this->load->view('admin/risk/risk_targets_edit', $page_data);
+                    } else {
+                        if (!$display) {
+                            $this->load->view('admin/_title', $this->menu);
+                        }
+                        $this->load->view('admin/target/targets_edit', $page_data);
+                    }
+
+                    $this->load->view('admin/_header');
+                    $this->load->view('admin/_footer');
+
+                } else {
+                    alert('ERROR , id is not exist', admin_url('target/index'));
                 }
-
-				$user_id 			= $info->user_id;
-				$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
-					'user_id'	=> $user_id,
-					'investor'	=> 0,
-					'status'	=> 1,
-					'verify'	=> 1,
-				));
-				$virtual_account 	= $this->virtual_account_model->get_by(array(
-					'user_id'	=> $user_id,
-					'investor'	=> 0,
-					'status'	=> 1,
-				));
-
-				$bank_account_verify 				= $bank_account?1:0;
-				$credit_list						= $this->credit_model->get_many_by(array('user_id'=>$user_id));
-				$user_info 							= $this->user_model->get($user_id);
-				$page_data['data'] 					= $info;
-                $page_data['order']					= $order;
-				$page_data['user_info'] 			= $user_info;
-				$page_data['amortization_table'] 	= $amortization_table;
-				$page_data['investments'] 			= $investments;
-				$page_data['investments_amortization_table'] 	= $investments_amortization_table;
-				$page_data['investments_amortization_schedule'] = $investments_amortization_schedule;
-				$page_data['credit_list'] 			= $credit_list;
-				$page_data['product_list']			= $this->config->item('product_list');
-				$page_data['bank_account_verify'] 	= $bank_account_verify;
-				$page_data['virtual_account'] 		= $virtual_account;
-				$page_data['instalment_list']		= $this->config->item('instalment');
-				$page_data['repayment_type']		= $this->config->item('repayment_type');
-				$page_data['status_list'] 			= $this->target_model->status_list;
-				$page_data['loan_list'] 			= $this->target_model->loan_list;
-
-				if(isset($get['risk'])&&$get['risk']!=null){
-					$this->load->library('certification_lib');
-					if(isset($get['slist'])&&$get['slist']!=null){$page_data['slist']=$get['slist'];}
-
-					$user_list 						= [];
-					$user_investor_list 			= [];
-					$certification_investor_list 	= [];
-
-					$targets = $this->target_model->get_many_by(array(
-						'user_id'	=> $user_id,
-						'id'=>$info->id
-					));
-					if($targets){
-						foreach($targets as $key => $value){
-							$list[$value->id] = $value;
-						}
-					}
-
-					if($list){
-						ksort($list);
-						foreach($list as $key => $value){
-							$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0);
-							if(isset($list[$key]->certification[3]['certification_id'])){
-								$bank_account 	= $this->user_bankaccount_model->get_by(array(
-									'user_certification_id'	=> $list[$key]->certification[3]['certification_id'],
-								));
-								$list[$key]->bank_account 	 	 = $bank_account;
-								$list[$key]->bank_account_verify = $bank_account->verify==1?1:0;
-							}
-						}
-					}
-
-					$page_data['list'] 					= $list;
-					$page_data['certification_investor_list'] 	= $certification_investor_list;
-					$page_data['certification'] 		= $this->config->item('certifications');
-					$this->load->view('admin/risk/risk_targets_edit',$page_data);
-				}
-				else{
-					if(!$display){
-						$this->load->view('admin/_title',$this->menu);
-					}
-					$this->load->view('admin/target/targets_edit',$page_data);
-				}
-				
-				$this->load->view('admin/_header');
-				$this->load->view('admin/_footer');
-				
-			}else{
-				alert('ERROR , id is not exist',admin_url('target/index'));
-			}
-		}else{
-			alert('ERROR , id is not exist',admin_url('target/index'));
-		}
+            } else {
+                alert('ERROR , id is not exist', admin_url('target/index'));
+            }
+        }
+        else{
+            if(!empty($post['id'])) {
+                $targets = $this->target_model->get($post['id']);
+                $this->order_duo_approve($post['id'],$targets->amount);
+            }
+        }
 	}
+
+	function order_duo_approve($id,$approve_amount){
+        $param = [
+            'loan_amount' => $approve_amount,
+            'sub_status'  => 0,
+        ];
+        $this->target_model->update($id,$param);
+        $this->load->library('Target_lib');
+        $this->target_lib->insert_change_log($id,$param);
+        admin_url('Target/waiting_verify');
+    }
 
 	function verify_success(){
 		$get 	= $this->input->get(NULL, TRUE);
@@ -273,7 +299,7 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==2 || $value->status==23 && $value->sub_status==0 ){
+				if($value->status==2 || $value->status==23 && ($value->sub_status==0 || $value->sub_status==9) ){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_id'	=> $value->user_id,
 						'investor'	=> 0,
@@ -301,6 +327,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['list'] 				= $waiting_list;
 		$page_data['product_list']		= $this->config->item('product_list');
 		$page_data['status_list'] 		= $this->target_model->status_list;
+		$page_data['sub_list'] 		    = $this->target_model->sub_list;;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
 

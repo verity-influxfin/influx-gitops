@@ -52,7 +52,7 @@ class AdminDashboard extends MY_Admin_Controller {
 					if($value->delay==1 && $value->status==5){
 						$target_count["delay"] += 1;
 					}
-					if($value->status==2 || $value->status==23 && $value->sub_status==0){
+					if($value->status==2 || $value->status==23 && ($value->sub_status==0 || $value->sub_status==9)){
 						$target_count["approve"] += 1;	
 					}
 					
