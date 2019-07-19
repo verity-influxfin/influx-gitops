@@ -337,7 +337,6 @@ class Target_lib{
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
                                     }
                                 }
-                                $this->approve_target_fail($user_id,$target,false,'案件申請中');
                             }
                         }else{
                             $this->approve_target_fail($user_id,$target);
@@ -355,9 +354,8 @@ class Target_lib{
 		return false;
 	}
 
-    private function approve_target_fail($user_id,$target,$maxAmountAlarm=false,$other=false){
+    private function approve_target_fail($user_id,$target,$maxAmountAlarm=false){
 	    $remak = '信用不足'.($maxAmountAlarm?'(多產品總額度超過歸戶)':'');
-        $remak = $other?$remak:'';
         $param = [
             'loan_amount'		=> 0,
             'status'			=> '9',
