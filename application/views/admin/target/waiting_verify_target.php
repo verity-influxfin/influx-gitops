@@ -93,7 +93,7 @@
                                                   <? if($value->sub_status==9){ ?>
                                                         "  onclick="window.location.href='<?=admin_url('target/edit')."?id=".$value->id ?>'">額度不足</button>
                                                   <? }else{ ?>
-                                                      <?=!isset($value->order_id)?"btn-success":"btn-nfo" ?>
+                                                      <?=$value->order_id==0?"btn-success":"btn-info" ?>"
                                                         onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批<?=isset($value->order_id)&&$value->order_id!=0?'出貨':'上架' ?></button>
                                                   <? } ?>
                                                 <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
