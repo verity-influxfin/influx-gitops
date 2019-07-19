@@ -288,6 +288,16 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
+    //hsiang  串國泰回應API
+	public function get_waiting_loan()
+	{	
+		$this->load->library('Payment_lib'); 
+		 $script  	= 15;
+		 $this->payment_lib->get_batch_status();
+		//if($data!==false){
+
+		//}
+	}
 
 }
 

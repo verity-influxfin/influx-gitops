@@ -676,11 +676,253 @@ class Payment_lib{
 		return false;
 		
 	}
+    // //hsiang  串國泰回應API 邏輯
+	public function get_batch_status(){
+		$this->CI->load->model('log/log_paymentexport_model');
+		$where				= array(
+			"status"		=> 0,
+			"batch_no >="   => '0'
+		);
+		$res		= $this->CI->log_paymentexport_model->order_by("created_at","desc")->limit(3)->get_many_by($where);
+		$res =  json_decode( json_encode( $res),true);//obj轉array
+	    $log_data=array();
+		if($res!==null){
+			foreach($res as $key=>$value){
+ 
+				unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
+                 $log_data[$key]=$value;
+          	}
+			 //return $data;
+			 $this->get_batchno_to_cathay($log_data);
+		}
+		return false;
+	 }
+	 public function get_batchno_to_cathay($log_data){
+
+		$batch_no=null;
+		 //拿batch_no搓國泰API
+		 foreach($log_data as $key=>$value){
+ 
+			$batch_no= $value['batch_no'];
+			$id= $value['id'];
+			$type= $value['type'];
+			$content= json_decode($value['content'],1);//需要對到國泰回傳的array
+			$data=$this->get_batch_info($batch_no);
+     
+			if((!empty($data))){
+				//開始確認資料
+				$this->check_detail_data($batch_no,$id,$content,$type,$data);
+			 
+			}
+		
+		   }
+		   
+
+
+	 }
+
+
+	 public function check_detail_data($batch_no,$id,$content,$type,$data){
+		if(array_key_exists('Rtn_Code',$data)){//一個array 
+			if($data['Rtn_Code']=='0000'){	//國泰回傳交易成功
+			//判斷type
+             switch($type){
+					case "bankaccount": //金融帳號認證
+						 
+						break;
+					case "target_loan": //借款的放款
+				 
+						break;
+					case "withdraw": //投資人 提領
+					 //  $this->get_onlyone_withdraw_detail($batch_no,$id,$content,$data);
+						break;
+
+				 
+					}
+			}
+		}else{                   //多個array
+		   foreach($data as $key=>$value){
+			$content_data=$content[$key];
+				if(array_key_exists('Rtn_Code',$value)){
+					if($value['Rtn_Code']=='0000'){	//國泰回傳交易成功
+						switch($type){
+							case "bankaccount": //金融帳號認證 要姓名跟id
+
+								break;
+							case "target_loan": //借款的放款
+							//$this->get_more_target_loan_detail($batch_no,$id,$content_data,$value);
+
+								break;
+
+							case "withdraw": //投資人 提領
+							$this->get_more_withdraw_detail($batch_no,$id,$content_data,$value);
+								break;
+							}
+					}
+			 }
+		   }
+
+		}
+
+
+	 }
+
+
+	 public function get_more_withdraw_detail($batch_no,$id,$content_data,$value){    //比對國泰跟payment結合
+		$this->CI->load->model('transaction/withdraw_model');
+		$this->CI->load->model('user/user_bankaccount_model');
+		$this->CI->load->model('user/user_model');
+		$this->CI->load->model('log/log_paymentexport_model');
+		
+		$bank_trtime=$value['Tr_Date'];
+		$bank_trtime=date("Y-m-d",strtotime($bank_trtime));
+
+		$bankamount= (int)$value['Amount'];//國泰回的資料
+		//需要的比對資料
+		//
+		$where				= array(
+	      	"bank_id"   => $value['Beneficiary_BankCode'],
+			"ABS(amount)"   => $bankamount,
+			"DATE(tx_datetime)"   => $bank_trtime,
+			"bank_acc like"		=> '%'.$value['Beneficiary_AccountNo']
+		);
+		
+		 $payment_detail=$this->CI->payment_model->get_many_by($where);
+		 $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+
+		 $payment_size=count($payment_detail);
+	 
+
+		
+		  if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
+	 
+			$withdraw_detail=$this->CI->withdraw_model->get($content_data);
+			$withdraw_detail =  json_decode( json_encode( $withdraw_detail),true);//obj轉array
+			 //抓sys_check=0
+			 if((!empty($withdraw_detail)&&($withdraw_detail['sys_check']==0))){
+				//開始update db
+				$this->CI->withdraw_model->update($content_data,['sys_check'=>20]);//已驗證成功
+			   }else{
+				$this->CI->withdraw_model->update($content_data,['sys_check'=>21]);//轉人工
+	
+			   } 
+	
+			   }else{
+				$this->CI->withdraw_model->update($content_data,['sys_check'=>21]);//轉人工
+			
+	      }
+	 
+	
+		 
+	 }
+
+	 public function get_more_target_loan_detail($batch_no,$id,$content_data,$value){    //比對國泰跟payment結合
+		$bank_trtime=$value['Tr_Date'];
+		$bank_trtime=date("Y-m-d",strtotime($bank_trtime));
+
+		$bankamount= (int)$value['Amount'];//國泰回的資料
+		//需要的比對資料
+		//
+		$where				= array(
+	      	"bank_id"   => $value['Beneficiary_BankCode'],
+			"ABS(amount)"   => $bankamount,
+			"DATE(tx_datetime)"   => $bank_trtime,
+			"bank_acc like"		=> '%'.$value['Beneficiary_AccountNo']
+		);
+		
+		 $payment_detail=$this->CI->payment_model->get_many_by($where);
+		 $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+		$payment_size=count($payment_detail);
+	 
+		
+		
+		
+		  if($payment_size==1){ //payment vs 國泰
+
+		// 	$this->CI->log_paymentexport_model->update($id,['status'=>1]);//已驗證
+
+		//  }else{
+		// 	$this->CI->log_paymentexport_model->update($id,['status'=>2]);//轉人工
+
+       
+	      }
+	 
+	
+		 
+	 }
+ 
+
+
+	 public function get_onlyone_withdraw_detail($batch_no,$id,$content,$data){    //比對content跟data結合
+		$content=$content['0'];
+		$this->CI->load->model('transaction/withdraw_model');
+		$this->CI->load->model('user/user_bankaccount_model');
+		$this->CI->load->model('user/user_model');
+		$this->CI->load->model('log/log_paymentexport_model');
+		$bank_trtime=$data['Tr_Date'];
+		$bank_trtime=date("Y-m-d",strtotime($bank_trtime));
+		$bankamount= (int)$data['Amount'];//國泰回的資料
+		//需要的比對資料
+		//
+		$where				= array(
+	      	"bank_id"   => $data['Beneficiary_BankCode'],
+			"ABS(amount)"   => $bankamount,
+			"DATE(tx_datetime)"   => $bank_trtime,
+			"bank_acc like"		=> '%'.$data['Beneficiary_AccountNo']
+		);
+		
+	   $payment_detail=$this->CI->payment_model->get_many_by($where);
+	   $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+	   $payment_size=count($payment_detail);
+	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
+	 
+		$withdraw_detail=$this->CI->withdraw_model->get($content);
+		$withdraw_detail =  json_decode( json_encode( $withdraw_detail),true);//obj轉array
+		 //抓sys_check=0
+		 if((!empty($withdraw_detail)&&($withdraw_detail['sys_check']==0))){
+			//開始update db
+			$this->CI->withdraw_model->update($content,['sys_check'=>20]);//已驗證成功
+		   }else{
+			$this->CI->withdraw_model->update($content,['sys_check'=>21]);//轉人工
+
+		   } 
+
+	   	}else{
+			$this->CI->withdraw_model->update($content,['sys_check'=>21]);//轉人工
+		}
+        // exit();
+		// $withdraw_detail=$this->CI->withdraw_model->get($content);
+		// $withdraw_detail =  json_decode( json_encode( $withdraw_detail),true);//obj轉array
+		// //兩方所有資料確認
+		//  $banktime=$data['Tr_Date'];
+		//  $amount= (int)$data['Amount'];
+		//  $user_id=$withdraw_detail['user_id'];
+		//  $user_bankaccount = $this->CI->user_bankaccount_model->get_by([
+		// 	'user_id'	=> $user_id,
+		// ]);
+		// $user_detail=$this->CI->user_model->get($user_id);
+		// $user_detail =  json_decode( json_encode( $user_detail),true);//obj轉array
+		 
+		// $user_bankaccount =  json_decode( json_encode( $user_bankaccount),true);//obj轉array
+		// $influxtime=date('Ymd',$withdraw_detail['updated_at']);
+		//   //時間 姓名 帳號 金額
+		// 	if( ($influxtime==$data['Tr_Date']) && ($withdraw_detail['amount']==$amount) && ($user_bankaccount['bank_code']==$data['Beneficiary_BankCode']) && ($user_bankaccount['bank_account']==$data['Beneficiary_AccountNo'])  && ($data['Beneficiary_Name'] ==$user_detail['name']) ){
+		// 		//所有認證都一樣  可開始update log status
+		// 		//開始update db
+		// 	}else{
+		// 	}
+	 }
+ 
+
+
+
+ 
+
 	//取得資訊
 	public function get_batch_info($batch_no=""){
-		if(is_development()){
-			return array();
-		}
+		// if(is_development()){
+		// 	return array();
+		// }
 		
 		$date		= date("Ymd");
 		$xml_file 	= 
@@ -695,12 +937,12 @@ class Payment_lib{
 		<PASSWORD>'.CATHAY_CUST_PASSWORD.'</PASSWORD>
 		<USERNO>'.CATHAY_CUST_NICKNAME.'</USERNO>
 		<ACNO>'.CATHAY_CUST_ACCNO.'</ACNO>
-		<FromDate>'.$date.'</FromDate>
+		<FromDate>'.'20190601'.'</FromDate>
 		<ToDate>'.$date.'</ToDate>
-		<FromTime>000000</FromTime>
-		<ToTime>235959</ToTime>
+		<FromTime></FromTime>
+		<ToTime></ToTime>
 		<BatchNo>'.$batch_no.'</BatchNo>
-		<XML>Y</XML>4
+		<XML>Y</XML>
 		<ErrData>N</ErrData>
 		<FileType>BRMT/BRMT/0</FileType>
 	</BODY>
@@ -712,6 +954,7 @@ class Payment_lib{
 		$res 		= iconv('big5', 'big5//IGNORE', $res); 
 		$xml 		= simplexml_load_string($res);
 		$xml 		= json_decode(json_encode($xml),TRUE);
+
 		if($xml && $xml['HEADER']['RETURN_CODE']=='0000'){
 			$data 	= $xml['BODY']['DATAS']['DATA'];
 			return $data;
