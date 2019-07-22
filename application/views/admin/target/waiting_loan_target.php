@@ -114,6 +114,7 @@
                                             <th>實際出帳金額</th>
                                             <th>放款狀態</th>
                                             <th>狀態</th>
+											<th>系統驗證狀態</th>
                                             <th>申請日期</th>
                                             <th>Detail</th>
                                         </tr>
@@ -127,7 +128,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if($value->loan_status==2 && $value->sub_status==0){ ?>
+												<? if(($value->loan_status==2 && $value->sub_status==0)||($value->loan_status==2 && $value->sub_status==20)||($value->loan_status==2 && $value->sub_status==21)){ ?>
 												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:'' ?>" value="<?=isset($value->id)?$value->id:'' ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->target_no)?$value->target_no:'' ?>
@@ -156,6 +157,7 @@
 												?>
 											</td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
+											<td><?=isset($sub_status_list[$value->sub_status])?$sub_status_list[$value->sub_status]:'' ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        

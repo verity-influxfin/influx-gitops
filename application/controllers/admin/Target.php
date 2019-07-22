@@ -346,7 +346,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['loan_list'] 		= $this->target_model->loan_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
-
+		$page_data['sub_status_list'] 		= $this->target_model->sub_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);

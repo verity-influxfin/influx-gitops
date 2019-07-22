@@ -731,10 +731,10 @@ class Payment_lib{
 						 
 						break;
 					case "target_loan": //借款的放款
-				 
+					$this->get_onlyone_target_loan_detail($batch_no,$id,$content,$data);
 						break;
 					case "withdraw": //投資人 提領
-					 //  $this->get_onlyone_withdraw_detail($batch_no,$id,$content,$data);
+					  $this->get_onlyone_withdraw_detail($batch_no,$id,$content,$data);
 						break;
 
 				 
@@ -750,7 +750,7 @@ class Payment_lib{
 
 								break;
 							case "target_loan": //借款的放款
-							//$this->get_more_target_loan_detail($batch_no,$id,$content_data,$value);
+							$this->get_more_target_loan_detail($batch_no,$id,$content_data,$value);
 
 								break;
 
@@ -832,22 +832,45 @@ class Payment_lib{
 		
 		 $payment_detail=$this->CI->payment_model->get_many_by($where);
 		 $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
-		$payment_size=count($payment_detail);
+		 $payment_size=count($payment_detail);
 	 
 		
+		 $this->CI->load->model('log/Log_targetschange_model');
 		
-		
-		  if($payment_size==1){ //payment vs 國泰
-
-		// 	$this->CI->log_paymentexport_model->update($id,['status'=>1]);//已驗證
-
-		//  }else{
-		// 	$this->CI->log_paymentexport_model->update($id,['status'=>2]);//轉人工
-
-       
-	      }
+		  if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 	 
+			$target_detail=$this->CI->target_model->get($content_data);
+			$target_detail =  json_decode( json_encode( $target_detail),true);//obj轉array
+			error_log(__CLASS__ . '::' . __FUNCTION__ . ' target_detail = ' .print_r($target_detail,1)."\n", 3, "application/debug.log");
+		// exit();
+			 //抓sub_status=0
+			 //status sub script loan 4 0 0 2
+					if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==2)){ 
+						error_log(__CLASS__ . '::' . __FUNCTION__ . ' 77777' ."\n", 3, "application/debug.log");
+
+							//開始update db
+							$this->CI->target_model->update($content_data,['sub_status'=>20]);//已驗證成功
+							//加db log
+							$param		= [
+								'target_id'		=> $target_detail['id'],
+								'sub_status'	=> 20
+							];
+							$this->CI->Log_targetschange_model->insert($param);
+					
 	
+					}else{
+						error_log(__CLASS__ . '::' . __FUNCTION__ . ' 7hhhh ' ."\n", 3, "application/debug.log");
+
+							$this->CI->target_model->update($content_data,['sub_status'=>21]);//轉人工
+							$param		= [
+								'target_id'		=> $target_detail['id'],
+								'sub_status'	=> 21
+							];
+							$this->CI->Log_targetschange_model->insert($param);
+					} 
+	 
+			   }
+	 
 		 
 	 }
  
@@ -913,7 +936,56 @@ class Payment_lib{
 		// 	}
 	 }
  
+	 public function get_onlyone_target_loan_detail($batch_no,$id,$content,$data){    //比對content跟data結合
+		$content=$content['0'];
+		$bank_trtime=$data['Tr_Date'];
+		$bank_trtime=date("Y-m-d",strtotime($bank_trtime));
+		$bankamount= (int)$data['Amount'];//國泰回的資料
+		//需要的比對資料
+		//
+		$where				= array(
+	      	"bank_id"   => $data['Beneficiary_BankCode'],
+			"ABS(amount)"   => $bankamount,
+			"DATE(tx_datetime)"   => $bank_trtime,
+			"bank_acc like"		=> '%'.$data['Beneficiary_AccountNo']
+		);
+		
+	   $payment_detail=$this->CI->payment_model->get_many_by($where);
+	   $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+ 
+	   $payment_size=count($payment_detail);
+ 
+	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
+	 
+		$target_detail=$this->CI->target_model->get($content);
+		$target_detail =  json_decode( json_encode( $target_detail),true);//obj轉array
+	 
+		$this->CI->load->model('log/Log_targetschange_model');
+		 //抓sub_status=0
+		 //status sub script loan 4 0 0 2
+		 if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==2)){ 
+				 
+				//開始update db
+				$this->CI->target_model->update($content,['sub_status'=>20]);//已驗證成功
+				//加db log
+				$param		= [
+					'target_id'		=> $target_detail['id'],
+					'sub_status'	=> 20
+				];
+				$this->CI->Log_targetschange_model->insert($param);
+				
 
+		   }else{
+				$this->CI->target_model->update($content,['sub_status'=>21]);//轉人工
+				$param		= [
+					'target_id'		=> $target_detail['id'],
+					'sub_status'	=> 21
+				];
+				$this->CI->Log_targetschange_model->insert($param);
+		   } 
+ 
+	   	}
+	 }
 
 
  
