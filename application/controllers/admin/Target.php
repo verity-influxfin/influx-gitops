@@ -121,7 +121,7 @@ class Target extends MY_Admin_Controller {
                             }
                         }
                     }
-
+                    $judicial_person = '';
                     if ($info->order_id != 0) {
                         $this->load->model('transaction/order_model');
                         $order = $this->order_model->get($info->order_id);
