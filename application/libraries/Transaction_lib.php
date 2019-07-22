@@ -818,7 +818,9 @@ class Transaction_lib{
 									}
 
 									$this->CI->notification_lib->transfer_success($investment->user_id,1,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
-									$this->CI->notification_lib->transfer_success($transfer_investments->user_id,1,1,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
+                                    if(!in_array($transfer_investments->user_id,[21194,21197])){
+                                        $this->CI->notification_lib->transfer_success($transfer_investments->user_id,1,1,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
+                                    }
 									$this->CI->notification_lib->transfer_success($target->user_id,0,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
 								}
 							}
