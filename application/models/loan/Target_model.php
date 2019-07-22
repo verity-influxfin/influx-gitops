@@ -30,7 +30,7 @@ class Target_model extends MY_Model
         5 =>	"已通知出貨",
         6 =>	"出貨鑑賞期",
         8 =>	"產轉案件",
-        9 =>	"待2審",
+        9 =>	"待二審",
 	);
 
 	public $loan_list   = array(

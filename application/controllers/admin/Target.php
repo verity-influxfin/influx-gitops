@@ -246,7 +246,7 @@ class Target extends MY_Admin_Controller {
 				if($info->sub_status==8){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
-				}if($info->order_id!=0){
+				}if($info->status == 23 && $info->sub_status == 0){
                     $this->target_lib->order_verify_success($info,$this->login_info->id);
 				}else{
 					$this->target_lib->target_verify_success($info,$this->login_info->id);

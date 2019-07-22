@@ -871,7 +871,7 @@ class Transfer extends REST_Controller {
 		}
 		
 		$transfers = $this->transfer_lib->get_transfer_many($transfer_ids);
-		if(count($transfers)==count($transfer_ids)){
+		if(count($transfers) == $count){
 			if(count($transfers)>1){
 				$param = [];
 				foreach($transfers as $key => $value){
