@@ -1457,9 +1457,10 @@ class Transfer extends REST_Controller {
 				$target_list[$value->id] = $value;
 			}
 			$transfer 	= $this->transfer_lib->get_transfer_list([
-				'status' 	=> 0,
-				'id' 		=> $transfer_ids,
-				'target_id'	=> $target_ids
+				'status' 	  => 0,
+				'id' 		  => $transfer_ids,
+				'target_id'	  => $target_ids,
+                'combination' => 0
 			]);
 			if($transfer){
 				$numerator = $denominator = 0;
