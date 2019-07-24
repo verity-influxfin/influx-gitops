@@ -1262,13 +1262,11 @@ class User extends REST_Controller {
       $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr  
       $promotecount=count($promote_count);
       $collect_count= $promotecount/3;
-      error_log(__CLASS__ . '::' . __FUNCTION__ . ' collect_count = ' .print_r($collect_count,1)."\n", 3, "application/debug.log");
       $my_line_id  = $this->user_meta_model->get_by([
         'user_id'  => $user_id,
         'meta_key'  => 'line_access_token'
          ]);
         $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
-        error_log(__CLASS__ . '::' . __FUNCTION__ . ' my_line_id = ' .print_r($my_line_id,1)."\n", 3, "application/debug.log");
             $this->load->library('game_lib'); 
             if((!empty($my_line_id))){
                 $my_line_id  = $my_line_id['meta_value'];   

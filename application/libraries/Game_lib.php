@@ -39,7 +39,6 @@ class Game_lib{
 			$this->CI->log_game_model->insert($param);
 			$done_collect_count = $this->CI->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_fifty_points'));
 			$size=count($done_collect_count); 
-			error_log(__CLASS__ . '::' . __FUNCTION__ . ' size = ' .print_r($size,1)."\n", 3, "application/debug.log");
 
 			if($size==0&&$collect_count>=0){
 			//送出第一次linebot 
