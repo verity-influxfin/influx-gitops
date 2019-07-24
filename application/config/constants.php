@@ -261,6 +261,10 @@ defined('INSTAGRAM_CLIENT_SECRET')  OR define('INSTAGRAM_CLIENT_SECRET'	, getenv
 defined('LINE_CHANNEL_ID')     	 	OR define('LINE_CHANNEL_ID'			, '1508139296');
 defined('LINE_CHANNEL_SECRET')  	OR define('LINE_CHANNEL_SECRET'		, '7f57ae86e8ff067d9e11248b2a75973e');
 
+//LineBotURL
+defined('LINEBOT_URL')           	OR define('LINEBOT_URL'			    , getenv('ENV_LINEBOT_URL'));
+
+
 //曠視
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'WW6FytNauCGA4U4UZuVbT4bqYq2tNtJo');
 defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PPlwd8Ue3EdErHHdBTNFSZ2-Yh');
