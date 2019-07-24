@@ -1150,7 +1150,7 @@ class User extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /v2/user/promote 會員 推薦有獎
+     * @api {get} /v2/user/promote 會員 推薦有獎 Line Point 活動
 	 * @apiVersion 0.2.0
 	 * @apiName GetUserPromote
      * @apiGroup User
@@ -1175,16 +1175,17 @@ class User extends REST_Controller {
 	 * @apiUse IsCompany
      * 
      */
+    /** 
+     * 
+    */
 	public function promote_get()
-    {
+    { 	$this->load->model('log/log_game_model');
 		$this->not_support_company();
 		$user_id 		  = $this->user_info->id;
 		$promote_code	  = $this->user_info->my_promote_code;
-        //$url 			  = BORROW_URL.'?promote_code='.$promote_code;
-        $url              = 'https://event.pu-hey.com/R/url?p='.$promote_code;
+        $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-
-        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'+12 hour'));
+        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'-1 hour'));
         $lastday = date('Y-m-d H:i', strtotime("$beginDate +1 month"));
 
         $promote_count    = $this->user_model->get_many_by([
@@ -1193,18 +1194,91 @@ class User extends REST_Controller {
             'created_at <=' => strtotime($lastday),
         ]);
 
+        $my_detail    = $this->user_model->get_by([
+            'id'  => $user_id,
+            'created_at >=' => strtotime($beginDate),
+            'created_at <=' => strtotime($lastday),
+        ]);
+        $my_detail  =  json_decode(json_encode($my_detail),true);//obj 轉arr
+        $my_point= empty($my_detail['promote_code'])? 0:$my_point=1;
+        $this->load->model('user/user_meta_model');
+        $my_line_id  = $this->user_meta_model->get_by([
+            'user_id'  => $user_id,
+            'meta_key'  => 'line_access_token'
+        ]);
+        $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
+        $this->load->library('game_lib');
+        if(($my_point==1)&&(!empty($my_line_id))){
+            $my_line_id  = $my_line_id['meta_value'];   
+            //需用linebot 發five points
+             $this->game_lib->check_five_points($user_id,$my_line_id);
+        }
+        $check_50send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_fifty_points'));
+        $check_50send   =  json_decode(json_encode($check_50send ),true);//obj 轉arr
+        $check_50send =count( $check_50send );
+        $promotecount=count($promote_count);
+        $collect_count= $promotecount/3;
+     
+    
+        //$this->game_lib->start_line_pionts_game($user_id,$promote_code,$promotecount);
 		$data = array(
-            'promote_name'	    => '【無三不成禮 百元送給你】',
-            'promote_code'	    => $promote_code,
-			'promote_url'	    => $url,
-			'promote_qrcode'    => $qrcode,
-            'promote_count'     => count($promote_count),
-            'promote_endtime'   => $lastday,
+            'promote_name'	           => '【無三不成禮 百元送給你】',
+            'promote_code'	           => $promote_code,
+			'promote_url'	           => $url,
+			'promote_qrcode'           => $qrcode,
+            'promote_count'            => count($promote_count),
+            'promote_endtime'          => $lastday,
+            'collect_count'            => intval($collect_count), //跟50點有關 可領取次數
+            'done_collect_count'       =>  intval($check_50send),//跟50點有關 已領取次數
+            'my_point'                 =>  intval($my_point),//'領五元的依據 0沒有推薦人  1.已發送 2.未發送' //非空的話就送五點 與ct有關  //大於beginDate
+            'game_status'               => true
 		);
 
 		$this->response(array('result' => 'SUCCESS','data'=>$data));
     }
-	
+    
+    
+	/**
+     * @api {post} /v2/user/promote 會員   Line Point 活動
+	 * @apiVersion 0.2.0
+     * 
+    */
+	public function promote_post()
+    {
+        $this->not_support_company();
+	 
+        $user_id 	= $this->user_info->id;
+        $promote_code	  = $this->user_info->my_promote_code;
+        $this->load->library('game_lib');
+        $this->load->model('user/user_meta_model');
+        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'-1 hour'));
+        $lastday = date('Y-m-d H:i', strtotime("$beginDate +1 month"));
+        $promote_count    = $this->user_model->get_many_by([
+            'promote_code'  => $promote_code,
+            'created_at >=' => strtotime($beginDate),
+            'created_at <=' => strtotime($lastday),
+        ]);
+
+      $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr  
+      $promotecount=count($promote_count);
+      $collect_count= $promotecount/3;
+      error_log(__CLASS__ . '::' . __FUNCTION__ . ' collect_count = ' .print_r($collect_count,1)."\n", 3, "application/debug.log");
+      $my_line_id  = $this->user_meta_model->get_by([
+        'user_id'  => $user_id,
+        'meta_key'  => 'line_access_token'
+         ]);
+        $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
+        error_log(__CLASS__ . '::' . __FUNCTION__ . ' my_line_id = ' .print_r($my_line_id,1)."\n", 3, "application/debug.log");
+            $this->load->library('game_lib'); 
+            if((!empty($my_line_id))){
+                $my_line_id  = $my_line_id['meta_value'];   
+                //需用linebot 發50 points
+                $this->game_lib->check_fifty_points($user_id,$my_line_id,$collect_count);
+            }
+            $this->response(array('result' => 'SUCCESS'));
+    }
+
+    
 	/**
      * @api {post} /v2/user/upload 會員 上傳圖片
 	 * @apiVersion 0.2.0

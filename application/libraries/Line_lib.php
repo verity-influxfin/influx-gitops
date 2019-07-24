@@ -92,4 +92,20 @@ class Line_lib{
 		return FALSE;
 	}
 	
+
+	public function send_five_points($line_id){
+		$this->CI->load->model('log/log_line_model');
+		curl_get(LINEBOT_URL.'/send_line_five_points?'.$line_id);
+		$param = array(
+		 "line_user_id"=>$line_id , "response" => "SUCCESS", "type"=> "text","content"=> "send_line_five_points");
+		 $this->CI->log_line_model->insert($param);
+	}
+
+	public function send_fifty_points($line_id){
+		$this->CI->load->model('log/log_line_model');
+		curl_get(LINEBOT_URL.'/send_line_fifty_points?'.$line_id);
+		$param = array(
+		 "line_user_id"=>$line_id , "response" => "SUCCESS", "type"=> "text","content"=> "send_line_fifty_points");
+		 $this->CI->log_line_model->insert($param);
+	}
 }
