@@ -1222,7 +1222,7 @@ class User extends REST_Controller {
     
         //$this->game_lib->start_line_pionts_game($user_id,$promote_code,$promotecount);
 		$data = array(
-            'promote_name'	           => '【無三不成禮 百元送給你】',
+            'promote_name'	           => '【好友幫幫忙 Line point拿到爽】',
             'promote_code'	           => $promote_code,
 			'promote_url'	           => $url,
 			'promote_qrcode'           => $qrcode,
