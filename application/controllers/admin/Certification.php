@@ -177,7 +177,7 @@ class Certification extends MY_Admin_Controller {
 	public function user_bankaccount_list(){
 		$page_data 			= array('type'=>'list','list'=>array());
 		$input 				= $this->input->get(NULL, TRUE);
-		$where				= array('status'=> 1);
+		$where				= array();//'status'=> 1
 
 		//必填欄位
 		$fields 	= ['investor','verify'];

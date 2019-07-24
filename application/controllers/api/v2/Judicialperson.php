@@ -319,8 +319,8 @@ class Judicialperson extends REST_Controller {
                 $param['selling_type']        = isset($input['selling_type'])&&$input['selling_type']?$input['selling_type']:'';
 
                 $content		= [];
-                $file_fields 	= ['front_image'];
-                $mfile_fields 	= ['passbook_image'];
+                $file_fields 	= [];
+                $mfile_fields 	= [];
                 if($param['business_model'] == 0){
                     array_push($file_fields,"facade_image");
                     array_push($mfile_fields,"store_image");
@@ -819,8 +819,6 @@ class Judicialperson extends REST_Controller {
 
         $file_fields 	= [];
         $mfile_fields 	= [];
-        isset($input['front_image'])?array_push($file_fields,'front_image'):'';
-        isset($input['passbook_image'])?array_push($mfile_fields,'passbook_image'):'';
         if($business['business_model'] == 0 ){
             array_push($file_fields,'facade_image');
             array_push($mfile_fields,'store_image');
