@@ -1202,6 +1202,7 @@ class User extends REST_Controller {
         ]);
         $my_detail  =  json_decode(json_encode($my_detail),true);//obj 轉arr
         $my_point= empty($my_detail['promote_code'])? 0:$my_point=1;
+   
         $this->load->model('user/user_meta_model');
         $my_line_id  = $this->user_meta_model->get_by([
             'user_id'  => $user_id,
@@ -1209,10 +1210,12 @@ class User extends REST_Controller {
         ]);
         $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
         $this->load->library('game_lib');
-        if(($my_point==1)&&(!empty($my_line_id))){
+    
+        if(($my_point==1)&&(!empty($my_line_id)) &&(strlen($my_detail['promote_code'])==8)&&($my_detail['promote_code']!=='fbpost01') ){
             $my_line_id  = $my_line_id['meta_value'];   
             //需用linebot 發five points
              $this->game_lib->check_five_points($user_id,$my_line_id);
+           
         }
         $check_50send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_fifty_points'));
         $check_50send   =  json_decode(json_encode($check_50send ),true);//obj 轉arr
