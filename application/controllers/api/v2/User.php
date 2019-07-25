@@ -1185,8 +1185,9 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'-1 hour'));
-        $lastday = date('Y-m-d H:i', strtotime("$beginDate +1 month"));
+        $beginDate = '2019-07-22 23:00';
+        $lastday = '2019-09-25 23:00';
+        
 
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1251,8 +1252,8 @@ class User extends REST_Controller {
         $promote_code	  = $this->user_info->my_promote_code;
         $this->load->library('game_lib');
         $this->load->model('user/user_meta_model');
-        $beginDate = date('Y-m-01 H:i', strtotime(date('Y-m-d').'-1 hour'));
-        $lastday = date('Y-m-d H:i', strtotime("$beginDate +1 month"));
+        $beginDate = '2019-07-22 23:00';
+        $lastday = '2019-09-25 23:00';
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
             'created_at >=' => strtotime($beginDate),
