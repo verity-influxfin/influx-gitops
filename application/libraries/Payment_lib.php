@@ -676,7 +676,7 @@ class Payment_lib{
 		return false;
 		
 	}
-    // //hsiang  串國泰回應API 邏輯
+	// //hsiang  串國泰回應API 邏輯
 	public function get_batch_status(){
 		$this->CI->load->model('log/log_paymentexport_model');
 		$where				= array(
@@ -684,7 +684,7 @@ class Payment_lib{
 			"batch_no >="   => '0'
 		);
 		$res		= $this->CI->log_paymentexport_model->order_by("created_at","desc")->limit(3)->get_many_by($where);
-		$res =  json_decode( json_encode( $res),true);//obj轉array
+		$res =$this->object_array($res);//obj轉array
 	    $log_data=array();
 		if($res!==null){
 			foreach($res as $key=>$value){
@@ -788,7 +788,7 @@ class Payment_lib{
 		);
 		
 		 $payment_detail=$this->CI->payment_model->get_many_by($where);
-		 $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+		 $payment_detail =$this->object_array($payment_detail); //obj轉array
 
 		 $payment_size=count($payment_detail);
 	 
@@ -797,7 +797,7 @@ class Payment_lib{
 		  if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 	 
 			$withdraw_detail=$this->CI->withdraw_model->get($content_data);
-			$withdraw_detail =  json_decode( json_encode( $withdraw_detail),true);//obj轉array
+			$withdraw_detail =  $this->object_array($withdraw_detail);//obj轉array
 			 //抓sys_check=0
 			 if((!empty($withdraw_detail)&&($withdraw_detail['sys_check']==0))){
 				//開始update db
@@ -831,7 +831,7 @@ class Payment_lib{
 		);
 		
 		 $payment_detail=$this->CI->payment_model->get_many_by($where);
-		 $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+		 $payment_detail  =$this->object_array($payment_detail);//obj轉array
 		 $payment_size=count($payment_detail);
 	 
 		
@@ -840,7 +840,7 @@ class Payment_lib{
 		  if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 	 
 			$target_detail=$this->CI->target_model->get($content_data);
-			$target_detail =  json_decode( json_encode( $target_detail),true);//obj轉array
+			$target_detail = $this->object_array($target_detail);//obj轉array
 			error_log(__CLASS__ . '::' . __FUNCTION__ . ' target_detail = ' .print_r($target_detail,1)."\n", 3, "application/debug.log");
 		// exit();
 			 //抓sub_status=0
@@ -895,12 +895,12 @@ class Payment_lib{
 		);
 		
 	   $payment_detail=$this->CI->payment_model->get_many_by($where);
-	   $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+	   $payment_detail = $this->object_array($payment_detail);//obj轉array
 	   $payment_size=count($payment_detail);
 	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 	 
 		$withdraw_detail=$this->CI->withdraw_model->get($content);
-		$withdraw_detail =  json_decode( json_encode( $withdraw_detail),true);//obj轉array
+		$withdraw_detail =  $this->object_array($withdraw_detail);//obj轉array
 		 //抓sys_check=0
 		 if((!empty($withdraw_detail)&&($withdraw_detail['sys_check']==0))){
 			//開始update db
@@ -951,14 +951,14 @@ class Payment_lib{
 		);
 		
 	   $payment_detail=$this->CI->payment_model->get_many_by($where);
-	   $payment_detail =  json_decode( json_encode( $payment_detail),true);//obj轉array
+	   $payment_detail =  $this->object_array($payment_detail);//obj轉array
  
 	   $payment_size=count($payment_detail);
  
 	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 	 
 		$target_detail=$this->CI->target_model->get($content);
-		$target_detail =  json_decode( json_encode( $target_detail),true);//obj轉array
+		$target_detail = $this->object_array($target_detail);//obj轉array
 	 
 		$this->CI->load->model('log/Log_targetschange_model');
 		 //抓sub_status=0
@@ -1045,7 +1045,16 @@ class Payment_lib{
         $encrypted 	= openssl_encrypt($src, $method, mb_convert_encoding($key, 'big5', 'utf-8'), OPENSSL_RAW_DATA, $iv);
         return base64_encode($iv . $encrypted);
     }
-	
+	private  function object_array($array) {  
+		if(is_object($array)) {  
+			$array = (array)$array;  
+		 } if(is_array($array)) {  
+			 foreach($array as $key=>$value) {  
+				 $array[$key] = $this->object_array($value);  
+				 }  
+		 }  
+		 return $array;  
+	}
 	private function strToHex($string){
 		$hex='';
 		for ($i=0; $i < strlen($string); $i++){
