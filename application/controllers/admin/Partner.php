@@ -19,8 +19,10 @@ class Partner extends MY_Admin_Controller {
 		$name_list	= array();
 		if(!empty($list)){
 			foreach($list as $key => $value){
-				$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
-				$qrcode			= get_qrcode($url);
+                $my_promote_code = $value->my_promote_code;
+				//$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
+                $url 					= 'https://event.pu-hey.com/r/url?p='.$my_promote_code;
+                $qrcode			= get_qrcode($url);
 				$value->qrcode	= $qrcode;
 				$list[$key] 	= $value;
 			}
@@ -104,7 +106,9 @@ class Partner extends MY_Admin_Controller {
 			if($id){
 				$partner_info = $this->partner_model->get_by('id', $id);
 				if($partner_info){
-					$url 					= BORROW_URL.'?promote_code='.$partner_info->my_promote_code;
+                    $my_promote_code = $partner_info->my_promote_code;
+					//$url 					= BORROW_URL.'?promote_code='.$partner_info->my_promote_code;
+                    $url 					= 'https://event.pu-hey.com/r/url?p='.$my_promote_code;
 					$qrcode					= get_qrcode($url);
 					$partner_info->qrcode	= $qrcode;
 					unset($page_data['partner_name'][$id]);
