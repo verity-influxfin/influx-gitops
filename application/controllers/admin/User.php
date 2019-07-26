@@ -179,6 +179,14 @@ class User extends MY_Admin_Controller {
         }
         else{
             $success = $this->user_model->update($get['id'], ["block_status" => 0]);
+            $this->load->model('log/log_userlogin_model');
+            $info = $this->user_model->get($get['id']);
+            $this->log_userlogin_model->insert(array(
+                'account'	=> $info->phone,
+                'investor'	=> 0,
+                'user_id'	=> $info->id,
+                'status'	=> 1
+            ));
             if($success===true){
                 alert('更新成功',admin_url('user/block_user'));
             }else{

@@ -1186,7 +1186,7 @@ class User extends REST_Controller {
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
         $beginDate = '2019-07-22 23:00';
-        $lastday = '2019-09-25 23:00';
+        $lastday = '2019-09-15 23:59';
         
 
         $promote_count    = $this->user_model->get_many_by([
