@@ -9,9 +9,11 @@
 				function showChang(){
 					var user_id 			= $('#user_id').val();
 					var target_no 			= $('#target_no').val();
+                    var user_name 			= $('#user_name').val();
+                    var user_id_number 		= $('#user_id_number').val();
 					var delay 				= $('#delay :selected').val();
 					var status 				= $('#status :selected').val();
-					top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no;
+					top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number;
 				}
 			</script>
             <!-- /.row -->
@@ -25,6 +27,10 @@
 									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>	
 									<td>案號：</td>
 									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" /></td>
+                                    <td>姓名：</td>
+									<td><input type="text" value="<?=isset($_GET['user_name'])&&$_GET['user_name']!=''?$_GET['user_name']:''?>" id="user_name" /></td>
+                                    <td>身份證：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id_number'])&&$_GET['user_id_number']!=''?$_GET['user_id_number']:''?>" id="user_id_number" /></td>
 									<td></td>
 								</tr>
 								<tr>
