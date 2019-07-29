@@ -29,8 +29,14 @@ class Target_model extends MY_Model
 		4 =>	"提還成功",
         5 =>	"已通知出貨",
         6 =>	"出貨鑑賞期",
+ 
         8 =>	"產轉案件",
         9 =>	"待二審",
+ 
+		
+		20 =>	"交易成功(系統自動)",
+        21 =>    "需轉人工",
+  
 	);
 
 	public $loan_list   = array(

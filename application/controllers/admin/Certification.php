@@ -210,7 +210,7 @@ class Certification extends MY_Admin_Controller {
 		$page_data['verify_list'] 	= $this->user_bankaccount_model->verify_list;
 		$page_data['investor_list'] = $this->user_bankaccount_model->investor_list;
 		$page_data['word_list'] 	= $this->difficult_word_model->get_name_list();
-
+		$page_data['sys_check_list']     = $this->user_bankaccount_model->sys_check_list;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/user_bankaccount_list',$page_data);

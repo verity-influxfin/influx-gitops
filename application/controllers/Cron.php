@@ -288,6 +288,24 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
+    //hsiang  串國泰回應API
+	public function check_batchno_to_cathay()
+	{	//每六分鐘
+		 $this->load->library('Payment_lib'); 
+		 $script  	 = 15;
+		 $start_time = time();
+		 $count 	 = $this->payment_lib->check_batchno_to_cathay();
+		 $num		= $count?intval($count):0;
+		 $end_time 	= time();
+		 $data		= [
+			'script_name'	=> 'check_batchno_to_cathay',
+			'num'			=> $num,
+			'start_time'	=> $start_time,
+			'end_time'		=> $end_time
+		];
+		$this->log_script_model->insert($data);
+		die('1');
+	}
 
 }
 

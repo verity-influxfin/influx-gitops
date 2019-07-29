@@ -91,7 +91,8 @@
                                             <th>銀行代碼</th>
                                             <th>分行代碼</th>
                                             <th>銀行帳號</th>
-                                            <th>驗證狀況</th>
+											<th>驗證狀況</th>
+											<th>系統驗證狀態</th>
 											<th>失敗</th>
                                             <th>申請日期</th>
                                             <th>Detail</th>
@@ -138,6 +139,7 @@
 												}
 											?>
 											</td>
+											<td><?=isset($value->sys_check)?$sys_check_list[$value->sys_check]:"" ?></td>											
 											<td>
 											<? 	
 												if($value->verify!=1 && $value->verify!=4){
