@@ -5,6 +5,11 @@ class Withdraw_model extends MY_Model
 	public $_table = 'withdraw';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
+	public $sys_check_list = array(
+		0 =>	"未驗證",
+		20 =>	"交易成功(系統自動)",
+		21 =>	"需轉人工",
+	);
 	public $status_list  	= array(
 		0 =>	"待出款",
 		1 =>	"提領成功",

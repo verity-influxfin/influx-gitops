@@ -6,7 +6,12 @@ class User_bankaccount_model extends MY_Model
 	public $before_create 	= array( 'before_data_c' );
 	public $before_update 	= array( 'before_data_u' );
 	public $fields			= array("user_id","bank_code","bank_account","front_image","back_image");
-	
+	public $sys_check_list = array(
+		0 =>	"未驗證",
+		20 =>	"交易成功(系統自動)",
+		21 =>	"需轉人工",
+	);
+
 	public $investor_list  	= array(
 		0 =>	"借款端",
 		1 =>	"投資端",

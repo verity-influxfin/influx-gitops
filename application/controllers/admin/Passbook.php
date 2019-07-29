@@ -134,6 +134,7 @@ class Passbook extends MY_Admin_Controller {
 			$page_data['list'] 				= $list;
 			$page_data['status_list'] 		= $this->withdraw_model->status_list;
 			$page_data['investor_list'] 	= $this->withdraw_model->investor_list;
+			$page_data['sys_check_list'] 	= $this->withdraw_model->sys_check_list;
 		}
 
 		$this->load->view('admin/_header');
