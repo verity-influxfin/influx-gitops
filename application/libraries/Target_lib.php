@@ -312,11 +312,9 @@ class Target_lib{
                                     $target->amount < 50000?$sub_status=9:$allow=false;
                                 }
                                 if($allow){
-                                    $platform_fee		    = $this->CI->financial_lib->get_platform_fee2($target->amount);
                                     $param = [
                                         'loan_amount'		=> $loan_amount,
                                         'credit_level'		=> $credit['level'],
-                                        'platform_fee'		=> $platform_fee,
                                         'interest_rate'		=> $interest_rate,
                                         'status'			=> 23,
                                         'sub_status'        => $sub_status,
