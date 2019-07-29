@@ -35,6 +35,38 @@ class Target extends MY_Admin_Controller {
 				}
 			}
 		}
+		//hsiang 新增name id_number 收尋欄位＋＋
+		if (isset($input['user_name'])&&$input['user_name']!='') {
+			$user_name=$input['user_name'];
+			$name		= $this->user_model->get_many_by(array(
+				'name'	=> $user_name,
+				'status'	=> 1
+		 
+			));
+            if(count($name)==1){
+				$where['user_id'] = $name->id;//反撈user_id
+			}
+			if(count($name)>=1){
+				foreach($name as $key => $value){
+						$id[$key] = $value->id;
+				 }
+			    $str = implode(" OR user_id = ", $id);
+				$where= " user_id = ".  $str ;
+				//$where= $name->id;//反撈user_id
+			}
+		}
+		if (isset($input['user_id_number'])&&$input['user_id_number']!='') {
+			$user_id_number=$input['user_id_number'];
+			$id_number		= $this->user_model->get_by(array(
+				'id_number'	=> $user_id_number,
+				'status'	=> 1
+		 
+			));
+            if(count($id_number)==1){
+				$where['user_id'] = $id_number->id;//反撈user_id
+			}
+		}
+		//hsiang 新增name id_number 收尋欄--
 		if(!empty($where)){
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
