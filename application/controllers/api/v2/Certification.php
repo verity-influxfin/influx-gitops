@@ -545,6 +545,8 @@ class Certification extends REST_Controller {
 					$content['transcript_image'] = $rs->url;
 				}
 			}
+
+            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:"";
 			
 			$param		= array(
 				'user_id'			=> $user_id,

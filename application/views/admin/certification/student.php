@@ -66,7 +66,11 @@
 									<div class="form-group">
 										<label>SIP密碼</label>
 										<p class="form-control-static"><?=isset($content['sip_password'])?$content['sip_password']:""?></p>
-									</div>		
+									</div>
+                                    <div class="form-group">
+                                        <label>預計畢業時間</label>
+                                        <p class="form-control-static"><?=isset($content['graduate_date'])?$content['graduate_date']:"未填寫"?></p>
+                                    </div>
 									<div class="form-group">
 										<label>備註</label>
 										<? 

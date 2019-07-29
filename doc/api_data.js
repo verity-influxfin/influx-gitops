@@ -2523,6 +2523,13 @@ define({
                             "optional": false,
                             "field": "diploma_image",
                             "description": "<p>畢業證書照 ( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "diploma_date",
+                            "description": "<p>畢業日期</p>"
                         }
                     ]
                 }
@@ -5021,6 +5028,13 @@ define({
                             "optional": true,
                             "field": "transcript_image",
                             "description": "<p>成績單 ( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "graduate_date",
+                            "description": "<p>預計畢業時間</p>"
                         }
                     ]
                 }
