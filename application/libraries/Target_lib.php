@@ -843,7 +843,8 @@ class Target_lib{
 						$finish		 		= true;
 						foreach($certifications as $certification){
 							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
-								if($get_amount < 31083 && $product_list[$product_id]['id'] == 4 && $certification['id'] == 9){
+								//if($get_amount < 31083 && $product_list[$product_id]['id'] == 4 && $certification['id'] == 9){
+                                if($certification['id'] == 9){
                                     $finish	= true;
                                 }
 								else{

@@ -1433,7 +1433,20 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
-			
+
+            $this->load->library('target_lib');
+            $this->load->model('loan/credit_model');
+            $targets = $this->target_model->get_many_by(array(
+                'user_id'   => $user_id,
+                'status'	=> array(0,22)
+            ));
+            if($targets){
+                $this->credit_model->update_by([
+                    'user_id'    =>$user_id,
+                    'product_id' =>[3,4],
+                ],['status'=>0]);
+            }
+
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
