@@ -190,6 +190,7 @@ class Product extends REST_Controller {
                 if(!empty($certification_list)){
                     foreach($certification_list as $k => $v){
                         if(in_array($k,$value['certifications'])){
+                            $v['optional'] = ($v['id']==9 && in_array($value['id'],$v['optional'])?true:false);
                             $certification[] = $v;
                         }
                     }

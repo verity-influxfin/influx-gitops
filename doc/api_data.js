@@ -1515,6 +1515,13 @@ define({
                             "optional": false,
                             "field": "user_status",
                             "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "optional",
+                            "description": "<p>可選填的產品ID</p>"
                         }
                     ]
                 },
@@ -10301,6 +10308,48 @@ define({
                             "optional": false,
                             "field": "certification",
                             "description": "<p>認證完成資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification.id",
+                            "description": "<p>Certification ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification.name",
+                            "description": "<p>名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification.description",
+                            "description": "<p>簡介</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification.alias",
+                            "description": "<p>認證代號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "certification.optional",
+                            "description": "<p>是否選填</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "certification.user_status",
+                            "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
                         },
                         {
                             "group": "Success 200",

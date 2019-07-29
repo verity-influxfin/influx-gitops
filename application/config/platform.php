@@ -254,6 +254,9 @@ $config['transaction_source']= [
 	13	=> '應付借款利息',
 	14	=> '還款利息',
 
+    50	=> '平台服務費沖正',
+    51	=> '債權轉讓服務費沖正',
+
 	81	=> '平台驗證費',
 	82	=> '平台驗證費退回',
 	83	=> '跨行轉帳費',
@@ -277,16 +280,16 @@ $config['transaction_type_name']= [
 ];
 
 $config['certifications']= [
-	1 	=> ['id'=>1,'alias'=>'idcard'			,'name'=>'實名認證'		,'status'=>1,'description'=>'驗證個人身份資訊'],
-	2 	=> ['id'=>2,'alias'=>'student'			,'name'=>'學生身份認證'	,'status'=>1,'description'=>'驗證學生身份'],
-	3 	=> ['id'=>3,'alias'=>'debitcard'		,'name'=>'金融帳號認證'	,'status'=>1,'description'=>'驗證個人金融帳號'],
-	4 	=> ['id'=>4,'alias'=>'social'			,'name'=>'社交認證'		,'status'=>1,'description'=>'個人社交帳號認證'],
-	5 	=> ['id'=>5,'alias'=>'emergency'		,'name'=>'緊急聯絡人'	,'status'=>1,'description'=>'設定緊急連絡人資訊'],
-	6 	=> ['id'=>6,'alias'=>'email'			,'name'=>'常用電子信箱'	,'status'=>1,'description'=>'驗證常用E-Mail位址'],
-	7 	=> ['id'=>7,'alias'=>'financial'		,'name'=>'財務訊息認證'	,'status'=>1,'description'=>'提供財務訊息資訊'	],
-	8 	=> ['id'=>8,'alias'=>'diploma'			,'name'=>'最高學歷認證'	,'status'=>1,'description'=>'提供最高學歷畢業資訊'	],
-	9 	=> ['id'=>9,'alias'=>'investigation'	,'name'=>'聯合徵信認證'	,'status'=>1,'description'=>'提供聯合徵信資訊'	],
-	10 	=> ['id'=>10,'alias'=>'job'			    ,'name'=>'工作認證'		,'status'=>1,'description'=>'提供工作訊息資訊'	],
+	1 	=> ['id'=>1,'alias'=>'idcard'			,'name'=>'實名認證'		,'status'=>1,'description'=>'驗證個人身份資訊','optional'=>[]],
+	2 	=> ['id'=>2,'alias'=>'student'			,'name'=>'學生身份認證'	,'status'=>1,'description'=>'驗證學生身份','optional'=>[]],
+	3 	=> ['id'=>3,'alias'=>'debitcard'		,'name'=>'金融帳號認證'	,'status'=>1,'description'=>'驗證個人金融帳號','optional'=>[]],
+	4 	=> ['id'=>4,'alias'=>'social'			,'name'=>'社交認證'		,'status'=>1,'description'=>'個人社交帳號認證','optional'=>[]],
+	5 	=> ['id'=>5,'alias'=>'emergency'		,'name'=>'緊急聯絡人'	,'status'=>1,'description'=>'設定緊急連絡人資訊','optional'=>[]],
+	6 	=> ['id'=>6,'alias'=>'email'			,'name'=>'常用電子信箱'	,'status'=>1,'description'=>'驗證常用E-Mail位址','optional'=>[]],
+	7 	=> ['id'=>7,'alias'=>'financial'		,'name'=>'財務訊息認證'	,'status'=>1,'description'=>'提供財務訊息資訊','optional'=>[]],
+	8 	=> ['id'=>8,'alias'=>'diploma'			,'name'=>'最高學歷認證'	,'status'=>1,'description'=>'提供最高學歷畢業資訊','optional'=>[]],
+	9 	=> ['id'=>9,'alias'=>'investigation'	,'name'=>'聯合徵信認證'	,'status'=>1,'description'=>'提供聯合徵信資訊','optional'=>[3,4]],
+	10 	=> ['id'=>10,'alias'=>'job'			    ,'name'=>'工作認證'		,'status'=>1,'description'=>'提供工作訊息資訊','optional'=>[3,4]],
 ];
 
 //支援XML銀行列表
