@@ -767,7 +767,8 @@ class Payment_lib{
 		$bank_txtime=$value['TxDate'];
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 
-		$bankamount= (int)$value['Amount'];//國泰回的資料
+		$bankamount= (int)$value['Amount'];//
+		$bankamount= $bankamount-$value['Fee'];//國泰回的資料-手續費
 		//需要的比對資料
 		//
 		$value['Beneficiary_BankCode']=substr( $value['Beneficiary_BankCode'],0, 3); //取前三碼
@@ -803,7 +804,9 @@ class Payment_lib{
 	 public function get_more_target_loan_detail($batch_no,$id,$content_data,$value){    //比對國泰跟payment結合
 		$bank_txtime=$value['TxDate'];
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
-		$bankamount= (int)$value['Amount'];//國泰回的資料
+		$bankamount= (int)$value['Amount'];//
+		$bankamount= $bankamount-$value['Fee'];//國泰回的資料-手續費
+
 		//需要的比對資料
 		//
 		$value['Beneficiary_BankCode']=substr( $value['Beneficiary_BankCode'],0, 3); //取前三碼
@@ -863,6 +866,7 @@ class Payment_lib{
 		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('log/Log_userbankaccount_model');
 		$bankamount= (int)$value['Amount'];//國泰回的資料
+		$bankamount= $bankamount-$value['Fee'];//國泰回的資料-手續費
 		//需要的比對資料
         $value['Beneficiary_BankCode']=substr( $value['Beneficiary_BankCode'],0, 3); //取前三碼
 		$where				= array(
@@ -912,6 +916,7 @@ class Payment_lib{
 		$bank_txtime=$data['TxDate'];
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$data['Amount'];//國泰回的資料
+		$bankamount= $bankamount-$data['Fee'];//國泰回的資料-手續費
 		//需要的比對資料
         $data['Beneficiary_BankCode']=substr( $data['Beneficiary_BankCode'],0, 3); //取前三碼
 		$where				= array(
@@ -962,6 +967,7 @@ class Payment_lib{
 		$bank_txtime=$data['TxDate'];
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$data['Amount'];//國泰回的資料
+		$bankamount= $bankamount-$data['Fee'];//國泰回的資料-手續費
 		$data['Beneficiary_BankCode']=substr( $data['Beneficiary_BankCode'],0, 3); //取前三碼
 		//需要的比對資料
 		//
@@ -996,6 +1002,8 @@ class Payment_lib{
 		$bank_txtime=$data['TxDate'];
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$data['Amount'];//國泰回的資料
+		$bankamount= $bankamount-$data['Fee'];//國泰回的資料-手續費
+
 		$data['Beneficiary_BankCode']=substr( $data['Beneficiary_BankCode'],0, 3); //取前三碼
 		//需要的比對資料
 		//
