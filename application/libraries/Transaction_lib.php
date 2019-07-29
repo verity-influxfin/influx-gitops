@@ -502,23 +502,8 @@ class Transaction_lib{
 					]);
 
 					if($target_account && $company_account){
-                        $platform_fee = intval($target->platform_fee);
                         $transfer_fee = intval($order->transfer_fee);
 					    $total_amount = $target->loan_amount;
-
-						//平台手續費
-						$transaction[]	= [
-							'source'			=> SOURCE_FEES,
-							'entering_date'		=> $date,
-							'user_from'			=> $company_account->user_id,
-							'bank_account_from'	=> $company_account->virtual_account,
-							'amount'			=> $platform_fee,
-							'target_id'			=> $target->id,
-							'instalment_no'		=> 0,
-							'user_to'			=> 0,
-							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
-							'status'			=> 2
-						];
 
 						$investment_id 	= $this->CI->investment_model->insert([
 							'target_id'		=> $target->id,
@@ -530,21 +515,6 @@ class Transaction_lib{
 							'contract_id'	=> $target->contract_id,
 							'status'		=> 3,
 						]);
-
-                        //經銷商債轉手續費
-                        $transaction[]	= [
-                            'source'			=> SOURCE_TRANSFER_FEE,
-                            'entering_date'		=> $date,
-                            'user_from'			=> $company_account->user_id,
-                            'bank_account_from'	=> $company_account->virtual_account,
-                            'amount'			=> $transfer_fee,
-                            'target_id'			=> $target->id,
-                            'investment_id'		=> $investment_id,
-                            'instalment_no'		=> 0,
-                            'user_to'			=> 0,
-                            'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
-                            'status'			=> 2
-                        ];
 
 						if($investment_id){
 							//攤還表
@@ -647,7 +617,7 @@ class Transaction_lib{
                                         $data_arr['principal'][] 			 = $info['principal'];
                                         $data_arr['interest'][] 			 = $info['interest'];
                                         $data_arr['delay_interest'][] 	     = $info['delay_interest'];
-                                        $data_arr['fee'][] 	                 = $info['fee'];
+                                        $data_arr['fee'][] 	                 = $transfer_fee;
                                         $data_arr['bargain_rate'][] 	     = $info['bargain_rate'];
                                         $data_arr['instalment'][] 	         = $info['instalment'];
                                         $data_arr['accounts_receivable'][] 	 = $info['accounts_receivable'];
@@ -738,6 +708,34 @@ class Transaction_lib{
 							$transfer_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$investment->user_id,'investor'=>1]);
 							$virtual_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$transfer_investments->user_id,'investor'=>1]);
 							if($transfer_account && $virtual_account){
+                                $amount = $transfer->amount;
+							    if($target->order_id != 0){
+                                    $this->CI->load->model('transaction/order_model');
+                                    $order = $this->CI->order_model->get($target->order_id);
+                                    $this->CI->load->model('user/user_bankaccount_model');
+                                    $user_bankaccount 	= $this->CI->user_bankaccount_model->get_by([
+                                        'user_id'	=> $target->user_id,
+                                        'status'	=> 1,
+                                        'verify'	=> 1,
+                                        'investor'	=> 0
+                                    ]);
+                                    $platform_fee = intval($order->platform_fee);
+
+                                    //消費貸消費者平台手續費
+                                    $transaction[]	= array(
+                                        'source'			=> SOURCE_FEES,
+                                        'entering_date'		=> $date,
+                                        'user_from'			=> $target->user_id,
+                                        'bank_account_from'	=> $user_bankaccount->bank_account,
+                                        'amount'			=> $platform_fee,
+                                        'target_id'			=> $target->id,
+                                        'instalment_no'		=> 0,
+                                        'user_to'			=> 0,
+                                        'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
+                                        'status'			=> 2
+                                    );
+                                    $amount -= $platform_fee;
+                                }
 
 								//手續費
 								$transaction[]	= [
@@ -760,7 +758,7 @@ class Transaction_lib{
 									'entering_date'		=> $date,
 									'user_from'			=> $transfer_investments->user_id,
 									'bank_account_from'	=> $virtual_account->virtual_account,
-									'amount'			=> intval($transfer->amount),
+									'amount'			=> intval($amount),
 									'target_id'			=> $target->id,
 									'investment_id'		=> $new_investment,
 									'instalment_no'		=> 0,
