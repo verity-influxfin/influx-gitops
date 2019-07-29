@@ -144,7 +144,7 @@
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:'' ?></td>
                                             <td>
 												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:'' ?>
-												<? if($value->loan_status==3 && $value->sub_status==0){
+												<? if($value->loan_status==3 && ($value->sub_status==0 || $value->sub_status==20 || $value->sub_status==21)){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
