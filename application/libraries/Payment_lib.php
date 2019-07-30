@@ -882,7 +882,7 @@ class Payment_lib{
 		 	$user_id=$bankaccount_detail->user_id;
 		 	$user_detail=$this->CI->user_model->get($user_id);
 		//開始比對資料
-		if((!empty($bankaccount_detail)&&$bankaccount_detail->sys_check==0)&&($bankaccount_detail->verify==2)){
+		if((!empty($bankaccount_detail)&&$bankaccount_detail->sys_check==0)&&($bankaccount_detail->verify==3)){//verify=3檢查已發送
 				if($user_detail->name==$value['Beneficiary_Name'] ){ //比對姓名	
 				  //開始update db
 					$this->CI->user_bankaccount_model->update($content_data,array("sys_check"=>20));//已驗證成功
@@ -930,7 +930,7 @@ class Payment_lib{
 		 	$user_id=$bankaccount_detail->user_id;
 		 	$user_detail=$this->CI->user_model->get($user_id);
 		//開始比對資料
-		if((!empty($bankaccount_detail)&&($bankaccount_detail->sys_check==0))&&(($bankaccount_detail->verify==2) )){
+		if((!empty($bankaccount_detail)&&($bankaccount_detail->sys_check==0))&&(($bankaccount_detail->verify==3) )){//verify=3檢查已發送
                 	//開始update db
 				if($user_detail->name==$data['Beneficiary_Name'] ){ //比對姓名	
 						//開始update db
