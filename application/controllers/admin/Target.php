@@ -158,8 +158,13 @@ class Target extends MY_Admin_Controller {
                         $this->load->model('transaction/order_model');
                         $order = $this->order_model->get($info->order_id);
                         $store_id = explode('-', $order->order_no)[0];
+                        $this->load->model('user/cooperation_model');
+                        $cooperation = $this->cooperation_model->get($store_id);
                         $this->load->model('user/judicial_person_model');
-                        $judicial_person = $this->judicial_person_model->get($store_id);
+                        $judicial_person = $this->judicial_person_model->get_by([
+                            'company_user_id' => $cooperation->company_user_id
+                        ]);
+                        $judicial_person->store_id = $store_id;
                     }
 
                     $user_id = $info->user_id;
