@@ -791,7 +791,7 @@ class Payment_lib{
 			 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0))&&($withdraw_detail->status==0))){
 				 //sys_check=0才開始檢查 並檢查一次
 				//開始update db
-				if( (abs($withdraw_detail->amount)==$value['Amount'])&&($created_at==$bank_txtime)){ //比對金額 時間
+				if( (abs($withdraw_detail->amount)==$bankamount+$value['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 					$this->CI->withdraw_model->update($content_data,['sys_check'=>20]);//已驗證成功
 					}else{
 						$this->CI->withdraw_model->update($content_data,['sys_check'=>21]);//轉人工
@@ -985,7 +985,7 @@ class Payment_lib{
 		 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0))&&($withdraw_detail->status==0))){
 			 //sys_check=0才開始檢查 並檢查一次
 			//開始update db
-			if( (abs($withdraw_detail->amount)==$bankamount)&&($created_at==$bank_txtime)){ //比對金額 時間
+			if( (abs($withdraw_detail->amount)==$bankamount+$data['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 				$this->CI->withdraw_model->update($content,['sys_check'=>20]);//已驗證成功
 				}else{
 					$this->CI->withdraw_model->update($content,['sys_check'=>21]);//轉人工
