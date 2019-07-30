@@ -758,7 +758,7 @@ class Transaction_lib{
 									'entering_date'		=> $date,
 									'user_from'			=> $transfer_investments->user_id,
 									'bank_account_from'	=> $virtual_account->virtual_account,
-									'amount'			=> intval($amount),
+									'amount'			=> intval($transfer->amount),
 									'target_id'			=> $target->id,
 									'investment_id'		=> $new_investment,
 									'instalment_no'		=> 0,
