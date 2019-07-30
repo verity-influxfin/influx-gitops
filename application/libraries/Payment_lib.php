@@ -806,7 +806,7 @@ class Payment_lib{
 		$bank_txtime=date("Y-m-d",strtotime($bank_txtime));
 		$bankamount= (int)$value['Amount'];//
 		$bankamount= $bankamount-$value['Fee'];//國泰回的資料-手續費
-
+     
 		//需要的比對資料
 		//
 		$value['Beneficiary_BankCode']=substr( $value['Beneficiary_BankCode'],0, 3); //取前三碼
@@ -832,7 +832,7 @@ class Payment_lib{
 				//抓sub_status=0
 				//status sub script loan 4 0 0 3
 				if(((!empty($target_detail))&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){ 
-					if( ($target_detail_amout==$bankamount)&&($created_at==$bank_txtime)){ //比對金額 時間
+					if( ($target_detail_amout==$bankamount+$value['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 					$this->CI->target_model->update($content_data,['sub_status'=>20]);//已驗證成功
 					//加db log
 		
@@ -1030,7 +1030,7 @@ class Payment_lib{
 		 //status sub script loan 4 0 0 3
 		 if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){ 
 
-			if( ($target_detail_amout==$bankamount)&&($created_at==$bank_txtime)){ //比對金額 時間
+			if( ($target_detail_amout==$bankamount+$data['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 			 $this->CI->target_model->update($content,['sub_status'=>20]);//已驗證成功
 			 //加db log
  
