@@ -144,12 +144,12 @@
                                         <tr style="background-color:#f5f5f5;">
                                             <td colspan="8">消費資訊</td>
                                         </tr>
-                                        <tr><td width="110px">訂單編號</td><td width="150px"><?=$order->merchant_order_no;?></td><td width="110px">法人商號(賣家)</td><td colspan="3"><a class="fancyframe" href="<?=admin_url('judicialperson/cooperation_edit?id='.$judicial_person->store_id) ?>" ><?=isset($judicial_person->user_id)?$judicial_person->company:"";?></a></td></tr>
+                                        <tr><td width="110px">訂單編號</td><td width="150px"><?=$order->merchant_order_no;?></td><td width="110px">法人商號(賣家)</td><td colspan="3"><a class="fancyframe" href="<?=admin_url('judicialperson/cooperation_edit?id='.$judicial_person->id) ?>" ><?=isset($judicial_person->user_id)?$judicial_person->company:"";?></a></td></tr>
                                         <tr><td>商品名稱</td><td><?=$order->item_name;?></td><td>數量</td><td><?=$order->item_count;?></td><td width="110px">報價金額</td><td width="100px"><?=$order->amount;?></td></tr>
                                         <tr><td>買家暱稱</td><td><?=$order->nickname;?></td><td>交易方式</td><td colspan="3"><?=$delivery_list[$order->delivery];?></td></tr>
                                         <tr><td>出貨照片</td><td colspan="5"><?=$order->shipped_image != ''?"<a href='".$order->shipped_image."' data-fancybox='images'><img src='".$order->shipped_image."' style='width:30%;'></a>":'尚未出貨';?></td></tr>
                                         <? if($order->delivery == 1){?>
-                                            <tr><td>貨運單號</td><td colspan="5"><?=$order->merchant_orshipped_numberder_no;?></td></tr>
+                                            <tr><td>貨運單號</td><td colspan="5"><?=$order->merchant_orshipped_numberder_no!=''?$order->merchant_orshipped_numberder_no:'尚未出貨';?></td></tr>
                                         <? } ?>
                                         <? if($data->sub_status == 9){?>
                                             <tr><td colspan="6">

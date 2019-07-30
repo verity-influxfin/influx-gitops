@@ -164,7 +164,6 @@ class Target extends MY_Admin_Controller {
                         $judicial_person = $this->judicial_person_model->get_by([
                             'company_user_id' => $cooperation->company_user_id
                         ]);
-                        $judicial_person->store_id = $store_id;
                     }
 
                     $user_id = $info->user_id;
