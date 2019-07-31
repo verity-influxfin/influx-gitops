@@ -709,33 +709,45 @@ class Transaction_lib{
 							$virtual_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$transfer_investments->user_id,'investor'=>1]);
 							if($transfer_account && $virtual_account){
                                 $amount = $transfer->amount;
-							    if($target->order_id != 0){
+
+                                if($target->order_id != 0){
                                     $this->CI->load->model('transaction/order_model');
                                     $order = $this->CI->order_model->get($target->order_id);
-                                    $this->CI->load->model('user/user_bankaccount_model');
-                                    $user_bankaccount 	= $this->CI->user_bankaccount_model->get_by([
-                                        'user_id'	=> $target->user_id,
-                                        'status'	=> 1,
-                                        'verify'	=> 1,
-                                        'investor'	=> 0
-                                    ]);
                                     $platform_fee = intval($order->platform_fee);
+                                    $transfer_fee = intval($transfer->transfer_fee);
+                                    $amount -= ($platform_fee + $transfer_fee);
+                                }
 
-                                    //消費貸消費者平台手續費
-                                    $transaction[]	= array(
-                                        'source'			=> SOURCE_FEES,
+                                //放款
+                                $transaction[]		= [
+                                    'source'			=> SOURCE_TRANSFER,
+                                    'entering_date'		=> $date,
+                                    'user_from'			=> $transfer_investments->user_id,
+                                    'bank_account_from'	=> $virtual_account->virtual_account,
+                                    'amount'			=> intval($amount),
+                                    'target_id'			=> $target->id,
+                                    'investment_id'		=> $new_investment,
+                                    'instalment_no'		=> 0,
+                                    'user_to'			=> $investment->user_id,
+                                    'bank_account_to'	=> $transfer_account->virtual_account,
+                                    'status'			=> 2
+                                ];
+
+                                if($target->order_id != 0) {
+                                    //放款(經銷商債轉服務費)
+                                    $transaction[]		= [
+                                        'source'			=> SOURCE_TRANSFER,
                                         'entering_date'		=> $date,
-                                        'user_from'			=> $target->user_id,
-                                        'bank_account_from'	=> $user_bankaccount->bank_account,
-                                        'amount'			=> $platform_fee,
+                                        'user_from'			=> $transfer_investments->user_id,
+                                        'bank_account_from'	=> $virtual_account->virtual_account,
+                                        'amount'			=> $transfer_fee,
                                         'target_id'			=> $target->id,
                                         'investment_id'		=> 0,
                                         'instalment_no'		=> 0,
-                                        'user_to'			=> 0,
-                                        'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
+                                        'user_to'			=> $investment->user_id,
+                                        'bank_account_to'	=> $transfer_account->virtual_account,
                                         'status'			=> 2
-                                    );
-                                    $amount -= $platform_fee;
+                                    ];
                                 }
 
 								//手續費
@@ -754,37 +766,41 @@ class Transaction_lib{
 								];
 
                                 if($target->order_id != 0){
-                                    //消費貸平台服務費
+                                    $user_bankaccount = $this->CI->virtual_account_model->get_by([
+                                        'user_id' => $target->user_id,
+                                        'investor'=> 0
+                                    ]);
+
+                                    //放款(消費貸平台服務費)
                                     $transaction[]		= [
                                         'source'			=> SOURCE_TRANSFER,
                                         'entering_date'		=> $date,
                                         'user_from'			=> $transfer_investments->user_id,
                                         'bank_account_from'	=> $virtual_account->virtual_account,
-                                        'amount'			=> intval($target->platform_fee),
+                                        'amount'			=> $platform_fee,
+                                        'target_id'			=> $target->id,
+                                        'investment_id'		=> 0,
+                                        'instalment_no'		=> 0,
+                                        'user_to'			=> $target->user_id,
+                                        'bank_account_to'	=> $user_bankaccount->virtual_account,
+                                        'status'			=> 2
+                                    ];
+
+                                    //消費貸消費者平台手續費
+                                    $transaction[]	= array(
+                                        'source'			=> SOURCE_FEES,
+                                        'entering_date'		=> $date,
+                                        'user_from'			=> $target->user_id,
+                                        'bank_account_from'	=> $user_bankaccount->virtual_account,
+                                        'amount'			=> $platform_fee,
                                         'target_id'			=> $target->id,
                                         'investment_id'		=> 0,
                                         'instalment_no'		=> 0,
                                         'user_to'			=> 0,
                                         'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
                                         'status'			=> 2
-                                    ];
+                                    );
                                 }
-
-								//放款
-								$transaction[]		= [
-									'source'			=> SOURCE_TRANSFER,
-									'entering_date'		=> $date,
-									'user_from'			=> $transfer_investments->user_id,
-									'bank_account_from'	=> $virtual_account->virtual_account,
-									'amount'			=> intval($amount),
-									'target_id'			=> $target->id,
-									'investment_id'		=> $new_investment,
-									'instalment_no'		=> 0,
-									'user_to'			=> $investment->user_id,
-									'bank_account_to'	=> $transfer_account->virtual_account,
-									'status'			=> 2
-								];
-
 
 								//攤還表
 								if($transaction_list){
