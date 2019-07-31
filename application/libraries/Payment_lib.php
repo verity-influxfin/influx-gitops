@@ -689,8 +689,10 @@ class Payment_lib{
 		if($res!==null){
 			foreach($res as $key=>$value){
  
-				unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
-                 $log_data[$key]=$value;
+				 unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
+				 $log_data[$key]=$value;
+				 $this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
+
           	}
 			 $this->get_batchno_to_cathay($log_data);
 		}
@@ -1062,7 +1064,7 @@ class Payment_lib{
 			$date = date("Ymd");
 		}
 		
-		$from_date 	= date("Ymd",strtotime($date." -1 day"));
+		$from_date 	= date("Ymd",strtotime($date));
 		$to_date 	= date("Ymd",strtotime($date));
 	
 		$xml_file 	= 
