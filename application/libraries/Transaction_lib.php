@@ -729,6 +729,7 @@ class Transaction_lib{
                                         'bank_account_from'	=> $user_bankaccount->bank_account,
                                         'amount'			=> $platform_fee,
                                         'target_id'			=> $target->id,
+                                        'investment_id'		=> 0,
                                         'instalment_no'		=> 0,
                                         'user_to'			=> 0,
                                         'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
@@ -751,6 +752,23 @@ class Transaction_lib{
 									'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 									'status'			=> 2
 								];
+
+                                if($target->order_id != 0){
+                                    //消費貸平台服務費
+                                    $transaction[]		= [
+                                        'source'			=> SOURCE_TRANSFER,
+                                        'entering_date'		=> $date,
+                                        'user_from'			=> $transfer_investments->user_id,
+                                        'bank_account_from'	=> $virtual_account->virtual_account,
+                                        'amount'			=> intval($target->platform_fee),
+                                        'target_id'			=> $target->id,
+                                        'investment_id'		=> 0,
+                                        'instalment_no'		=> 0,
+                                        'user_to'			=> 0,
+                                        'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
+                                        'status'			=> 2
+                                    ];
+                                }
 
 								//放款
 								$transaction[]		= [
