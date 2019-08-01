@@ -679,18 +679,24 @@ class Payment_lib{
 	// //hsiang  串國泰回應API 邏輯
 	public function check_batchno_to_cathay(){
 		$this->CI->load->model('log/log_paymentexport_model');
+		$now=time();
+		$yesterday =$now-86400;
 		$where				= array(
 			"status"		=> 0,
-			"batch_no >="   => '0'
+			"batch_no >="   => '0',
+			"created_at >="   => $yesterday,
 		);
+		
 		$res		= $this->CI->log_paymentexport_model->order_by("created_at","desc")->get_many_by($where);
 		$res =$this->object_array($res);//obj轉array
 	    $log_data=array();
 		if($res!==null){
 			foreach($res as $key=>$value){
  
-				unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
-                 $log_data[$key]=$value;
+				 unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
+				 $log_data[$key]=$value;
+				 $this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
+
           	}
 			 $this->get_batchno_to_cathay($log_data);
 		}
@@ -1062,7 +1068,7 @@ class Payment_lib{
 			$date = date("Ymd");
 		}
 		
-		$from_date 	= date("Ymd",strtotime($date." -1 day"));
+		$from_date 	= date("Ymd",strtotime($date));
 		$to_date 	= date("Ymd",strtotime($date));
 	
 		$xml_file 	= 
