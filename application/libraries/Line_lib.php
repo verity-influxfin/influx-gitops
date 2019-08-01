@@ -101,6 +101,37 @@ class Line_lib{
 		 $this->CI->log_line_model->insert($param);
 	}
 
+
+	public function check_fifty_points(){
+		$this->CI->load->model('log/log_line_model');
+		$url = LINEBOT_URL.'/check_fifty_points';
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$output = curl_exec($ch);
+		
+		curl_close($ch);
+
+		return $output ;
+	}
+
+
+	public function check_five_points(){
+		$this->CI->load->model('log/log_line_model');
+		$url = LINEBOT_URL.'/check_five_points';
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$output = curl_exec($ch);
+		
+		curl_close($ch);
+
+		return $output ;
+	}
+
+
 	public function send_fifty_points($line_id){
 		$this->CI->load->model('log/log_line_model');
 		curl_get(LINEBOT_URL.'/send_line_fifty_points?'.$line_id);
