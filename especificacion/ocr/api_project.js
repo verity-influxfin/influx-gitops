@@ -1,29 +1,23 @@
 define({
-  "name": "普匯金融科技 經銷商App API文檔",
+  "name": "inFlux Especificacion documentation",
   "version": "0.1.0",
   "description": "",
-  "title": "普匯金融科技 經銷商App API文檔",
+  "title": "inFlux Especificacion documentation",
   "url": "/",
   "order": [
-      "PostUserRegister",
-      "PostUserLogin",
-      "PostUserEditpw",
-      "PostUserForgotpw",
-      "GetUserInfo",
-      "GetProductBrand",
-      "GetProductIist",
-      "PostOrderList",
-      "PostOrderInfo",
-      "PostOrderQuotes",
-      "PostOrderShipped"
+      "OcrIdcardFront",
+      "OcrIdcardBack",
+      "OcrPersonImage",
+      "OcrHealthCard",
+      "OcrDebitCard",
+      "OcrBankBook",,
+      "OcrPassBook",
+      "OcrStudentCard"
   ],
-  "sampleUrl": false,
-  "defaultVersion": "0.0.0",
-  "apidoc": "0.3.0",
   "generator": {
-    "name": "apidoc",
-    "time": "2019-05-07T04:07:19.461Z",
-    "url": "http://apidocjs.com",
-    "version": "0.17.6"
+      "name": "BrianChang",
+      "time": "2019-08-01",
+      "url": "https://www.influxfin.com",
+      "version": "0.1.0"
   }
 });

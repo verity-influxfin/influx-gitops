@@ -1893,7 +1893,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "system",
-                            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+                            "description": "<p>學制 3:五專 0:大學 1:碩士 2:博士</p>"
                         },
                         {
                             "group": "Success 200",
@@ -2522,7 +2522,7 @@ define({
                             "optional": true,
                             "field": "system",
                             "defaultValue": "0",
-                            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+                            "description": "<p>學制 3:五專 0:大學 1:碩士 2:博士</p>"
                         },
                         {
                             "group": "Parameter",
@@ -4964,7 +4964,7 @@ define({
                             "optional": true,
                             "field": "system",
                             "defaultValue": "0",
-                            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+                            "description": "<p>學制 3:五專 0:大學 1:碩士 2:博士</p>"
                         },
                         {
                             "group": "Parameter",
@@ -5233,7 +5233,7 @@ define({
                             "optional": true,
                             "field": "system",
                             "defaultValue": "0",
-                            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+                            "description": "<p>學制 3:五專 0:大學 1:碩士 2:博士</p>"
                         },
                         {
                             "group": "Parameter",
@@ -30757,6 +30757,34 @@ define({
                             "optional": false,
                             "field": "promote_endtime",
                             "description": "<p>結算時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "可領取次數",
+                            "description": "<p>結算時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "已領取次數",
+                            "description": "<p>結算時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "my_point",
+                            "description": "<p>我的被推薦點數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "game_status",
+                            "description": "<p>活動狀態</p>"
                         }
                     ]
                 },
@@ -31543,7 +31571,7 @@ define({
                             "optional": true,
                             "field": "system",
                             "defaultValue": "0",
-                            "description": "<p>學制 0:大學 1:碩士 2:博士</p>"
+                            "description": "<p>學制 3:五專 0:大學 1:碩士 2:博士</p>"
                         },
                         {
                             "group": "Parameter",
