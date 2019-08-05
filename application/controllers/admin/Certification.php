@@ -116,7 +116,13 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',$back_url);
 			}
 		}else{
-			if(!empty($post['id'])){
+            if(!empty($post['salary'])){
+                $info = $this->user_certification_model->get($post['id']);
+                $content = json_decode($info->content,true);
+                $content['salary'] = $post['salary'];
+                $this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
+                alert('更新成功','user_certification_edit?id='.$post['id']);
+            }elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
 				$fail 	= isset($post['fail'])?$post['fail']:'';
 				if(!empty($from)){
@@ -167,7 +173,8 @@ class Certification extends MY_Admin_Controller {
 				}else{
 					alert('ERROR , id is not exist',$back_url);
 				}
-			}else{
+			}
+			else{
 				alert('ERROR , id is not exist',$back_url);
 			}
 		}
