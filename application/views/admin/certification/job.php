@@ -60,10 +60,15 @@
 										<label>此公司工作期間</label>
 										<p class="form-control-static"><?=isset($content['job_seniority'])?$seniority_range[$content['job_seniority']]:""?></p>
 									</div>
-									<div class="form-group">
-										<label>月薪</label>
-										<p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
-									</div>
+                                    <form role="form" method="post">
+                                        <div class="form-group">
+                                            <label>月薪</label><br />
+                                            <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" data-toggle="datepicker" />
+                                            <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+                                            <input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">修改月薪</button>
+                                    </form><br /><br />
 									<div class="form-group">
 										<label>備註</label>
 										<? 
@@ -75,7 +80,7 @@
 										?>
 									</div>
 									<h1>審核</h1>
-                                    <form role="form" method="post">
+                                        <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
 												<? if($data->status==1){?>
