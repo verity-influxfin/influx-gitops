@@ -80,9 +80,9 @@ class Credit_lib{
 		}
 		
 		//SIP
-		if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
-			$total += 150;
-		}
+		//if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
+			//$total += 150;
+		//}
 		//成績單
 		if(isset($data['transcript_front']) && !empty($data['transcript_front'])){
 			$total += 100;
