@@ -1180,14 +1180,18 @@ class User extends REST_Controller {
     */
 	public function promote_get()
     { 	$this->load->model('log/log_game_model');
-		$this->not_support_company();
+        $this->not_support_company();
+        $this->load->library('line_lib');
 		$user_id 		  = $this->user_info->id;
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
         $beginDate = '2019-07-22 23:00';
         $lastday = '2019-09-15 23:59';
-        
+        $check= $this->line_lib->check_five_points();
+        if( $check=='error'){
+            $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
+        }
 
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1255,6 +1259,7 @@ class User extends REST_Controller {
         $user_id 	= $this->user_info->id;
         $promote_code	  = $this->user_info->my_promote_code;
         $this->load->library('game_lib');
+        $this->load->library('line_lib');
         $this->load->model('user/user_meta_model');
         $beginDate = '2019-07-22 23:00';
         $lastday = '2019-09-25 23:00';
@@ -1264,6 +1269,10 @@ class User extends REST_Controller {
             'created_at <=' => strtotime($lastday),
         ]);
 
+        $check= $this->line_lib->check_fifty_points();
+        if( $check=='error'){
+            $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
+        }
       $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr  
       $promotecount=count($promote_count);
       
@@ -1274,7 +1283,6 @@ class User extends REST_Controller {
          ]);
 
         $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
-            $this->load->library('game_lib'); 
             if((!empty($my_line_id))){
                 $my_line_id  = $my_line_id['meta_value'];   
                 if($my_line_id!==0&&(!empty($my_line_id))){

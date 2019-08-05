@@ -39,14 +39,15 @@ class Target extends MY_Admin_Controller {
 		if (isset($input['user_name'])&&$input['user_name']!='') {
 			$user_name=$input['user_name'];
 			$name		= $this->user_model->get_many_by(array(
-				'name'	=> $user_name,
-				'status'	=> 1
-		 
+				'name like '	=> '%'.$user_name.'%',
+				'status'	=> 1	 
 			));
             if(count($name)==1){
 				$where['user_id'] = $name->id;//反撈user_id
 			}
-			if(count($name)>=1){
+         
+			if(count($name)>1){
+				//
 				foreach($name as $key => $value){
 						$id[$key] = $value->id;
 				 }
@@ -58,7 +59,7 @@ class Target extends MY_Admin_Controller {
 		if (isset($input['user_id_number'])&&$input['user_id_number']!='') {
 			$user_id_number=$input['user_id_number'];
 			$id_number		= $this->user_model->get_by(array(
-				'id_number'	=> $user_id_number,
+				'id_number  like'	=> '%'.$user_id_number.'%',
 				'status'	=> 1
 		 
 			));
