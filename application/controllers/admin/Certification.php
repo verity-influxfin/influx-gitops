@@ -117,11 +117,37 @@ class Certification extends MY_Admin_Controller {
 			}
 		}else{
             if(!empty($post['salary'])){
-                $info = $this->user_certification_model->get($post['id']);
+                $id = $post['id'];
+                $info = $this->user_certification_model->get($id);
                 $content = json_decode($info->content,true);
                 $content['salary'] = $post['salary'];
-                $this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
-                alert('更新成功','user_certification_edit?id='.$post['id']);
+                $this->user_certification_model->update($id,['content'=>json_encode($content)]);
+
+                //失效信評分數
+                $this->load->model('loan/credit_model');
+                $this->credit_model->update_by([
+                    'user_id'    =>$info->user_id,
+                    'product_id' =>[3,4],
+                ],['status'=>0]);
+
+                //退案件狀態
+                $this->load->library('target_lib');
+                $targets = $this->target_model->get_many_by(array(
+                    'user_id'   => $info->user_id,
+                    'product_id' =>[3,4],
+                    'status'	=> array(1,2)
+                ));
+                if($targets){
+                    $param = [
+                        'status'      => 0,
+                    ];
+                    $this->load->library('Target_lib');
+                    foreach($targets as $key => $value){
+                        $this->target_model->update($value->id,$param);
+                        $this->target_lib->insert_change_log($value->id,$param);
+                    }
+                }
+                alert('更新成功','user_certification_edit?id='.$id);
             }elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
 				$fail 	= isset($post['fail'])?$post['fail']:'';
@@ -249,17 +275,17 @@ class Certification extends MY_Admin_Controller {
 						$page_data['bankbook']=0;
 						//error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = '.print_r($page_data,1)."\n", 3, "application/debug.log");
 						$this->load->view('admin/user_bankaccount_edit',$page_data);
-						$this->load->view('admin/_footer');	
+						$this->load->view('admin/_footer');
 					}else{
 						$page_data['bankbook']=1; //法人專用
 						$front_image=json_decode($front_image,TRUE);
 						$page_data['bankbook_image']=$front_image['bankbook_image'];
 						//error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = '.print_r($page_data,1)."\n", 3, "application/debug.log");
 					    $this->load->view('admin/user_bankaccount_edit',$page_data);
-					    $this->load->view('admin/_footer');	
+					    $this->load->view('admin/_footer');
 					}
-				    
-					
+
+
 				}else{
 					alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 				}

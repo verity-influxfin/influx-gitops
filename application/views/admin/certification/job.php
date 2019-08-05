@@ -65,7 +65,7 @@
                                             <label>月薪</label><br />
                                             <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" data-toggle="datepicker" />
                                             <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-                                            <input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
+                                            <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                         </div>
                                         <button type="submit" class="btn btn-primary">修改月薪</button>
                                     </form><br /><br />
