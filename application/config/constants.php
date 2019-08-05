@@ -291,7 +291,14 @@ defined('EZPAY_KEY')     			OR define('EZPAY_KEY'				, getenv('ENV_EZPAY_KEY'));
 defined('EZPAY_IV')     			OR define('EZPAY_IV'				, getenv('ENV_EZPAY_IV'));
 
 //OCR 
-defined('OCR_API_URL')      		OR define('OCR_API_URL'				, 'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl'); 
+defined('OCR_API_URL')      		OR define('OCR_API_URL'				,'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl'); 
+
+
+//Azure
+defined('AZURE_API_URL')      		OR define('AZURE_API_URL'		    ,getenv('ENV_AZURE_API_URL'));
+defined('AZURE_API_KEY')      		OR define('AZURE_API_KEY'		    ,getenv('ENV_AZURE_API_KEY'));
+
+
 
 //SMS
 defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME'			, 1800); 
