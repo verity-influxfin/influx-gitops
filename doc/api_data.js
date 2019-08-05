@@ -4457,6 +4457,13 @@ define({
                         },
                         {
                             "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "incomeDate",
+                            "description": "<p>發薪日 1~31 非範圍數值自動為5</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "Number",
                             "optional": false,
                             "field": "business_image",

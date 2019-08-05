@@ -1575,6 +1575,8 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 
+            isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
+
 			$rs = $this->log_image_model->get_by([
 				'id'		=> intval($input['business_image']),
 				'user_id'	=> $user_id,
