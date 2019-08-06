@@ -708,10 +708,13 @@ class Target extends MY_Admin_Controller {
 		$get = $this->input->get(NULL, TRUE);
 		$ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
 		if($ids && is_array($ids)){
-			$where = ['id'=>$ids,'status'=>[]];
+			$where = [
+			    'id'     =>$ids,
+                'status' =>5
+            ];
 		}else{
 			$where = [
-			    'status'    =>5,
+			    'status' =>5,
             ];
 		}
 
@@ -726,7 +729,6 @@ class Target extends MY_Admin_Controller {
             $repayment           = 0;
             $r_principal         = 0;
             $r_interest          = 0;
-            $r_delay_interest    = 0;
 
 			foreach($list as $key => $value){
 				$amortization_table = $this->target_lib->get_amortization_table($value);
@@ -767,7 +769,7 @@ class Target extends MY_Admin_Controller {
 		}
         $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
         $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
-        $html .= '<tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>剩餘本金</th></tr>';
+        $html .= '<tr><th>日期</th><th>合計</th><th>應收本金</th><th>應收利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>未收本金</th><th>本金餘額</th></tr>';
 		if(isset($data) && !empty($data)){
 			foreach($data as $key => $value){
 				$html .= '<tr>';
@@ -777,6 +779,7 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$value['interest'].'</td>';
                 $html .= '<td>'.$value['r_principal'].'</td>';
                 $html .= '<td>'.$value['r_interest'].'</td>';
+                $html .= '<td>'.($value['principal']-$value['r_principal']).'</td>';
                 $html .= '<td>'.$value['repayment'].'</td>';
 				$html .= '</tr>';
 			}
