@@ -710,9 +710,11 @@ class Target extends MY_Admin_Controller {
 		if($ids && is_array($ids)){
 			$where = ['id'=>$ids,'status'=>[]];
 		}else{
-			$where = ['status'=>5];
+			$where = [
+			    'status'    =>5,
+            ];
 		}
-		
+
 		$data 		= [];
 		$first_data = [];
 		$list 	= $this->target_model->get_many_by($where);
@@ -722,6 +724,10 @@ class Target extends MY_Admin_Controller {
             $principal           = 0;
             $interest            = 0;
             $repayment           = 0;
+            $r_principal         = 0;
+            $r_interest          = 0;
+            $r_delay_interest    = 0;
+
 			foreach($list as $key => $value){
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				if($amortization_table){
@@ -729,20 +735,24 @@ class Target extends MY_Admin_Controller {
 					foreach($amortization_table['list'] as $instalment => $value){
 						@$data[$value['repayment_date']]['total_payment'] 	+= $value['total_payment'];
 						@$data[$value['repayment_date']]['repayment'] 		+= $value['repayment'];
-						@$data[$value['repayment_date']]['interest'] 		+= $value['interest'];
-						@$data[$value['repayment_date']]['principal'] 		+= $value['principal'];
+                        @$data[$value['repayment_date']]['interest'] 		+= $value['interest'];
+                        @$data[$value['repayment_date']]['principal'] 		+= $value['principal'];
+                        @$data[$value['repayment_date']]['r_principal'] 	+= $value['r_principal'];
+                        @$data[$value['repayment_date']]['r_interest'] 		+= $value['repayment']-$value['r_principal'];
                         @$total_payment         		                    += $value['total_payment'];
                         @$principal         		                        += $value['principal'];
                         @$interest         		                            += $value['interest'];
                         @$repayment         		                        += $value['repayment'];
+                        @$r_principal         		                        += $value['r_principal'];
+                        @$r_interest         		                        += $value['repayment']-$value['r_principal'];
 					}
                     @$remaining_principal         		                    += $amortization_table['remaining_principal'];
 				}
 			}
 		}
-		
-		header('Content-type:application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename=amortization_'.date('Ymd').'.xls');
+
+		//header('Content-type:application/vnd.ms-excel');
+		//header('Content-Disposition: attachment; filename=amortization_'.date('Ymd').'.xls');
 		$html = '<table>';
 		if(isset($first_data) && !empty($first_data)){
 		    $sumvalue = 0;
@@ -757,7 +767,7 @@ class Target extends MY_Admin_Controller {
 		}
         $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
         $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
-        $html .= '<tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已回款</th><th>剩餘本金</th></tr>';
+        $html .= '<tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>剩餘本金</th></tr>';
 		if(isset($data) && !empty($data)){
 			foreach($data as $key => $value){
 				$html .= '<tr>';
@@ -765,11 +775,13 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$value['total_payment'].'</td>';
 				$html .= '<td>'.$value['principal'].'</td>';
 				$html .= '<td>'.$value['interest'].'</td>';
-				$html .= '<td>'.$value['repayment'].'</td>';
+                $html .= '<td>'.$value['r_principal'].'</td>';
+                $html .= '<td>'.$value['r_interest'].'</td>';
+                $html .= '<td>'.$value['repayment'].'</td>';
 				$html .= '</tr>';
 			}
 		}
-        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$repayment.'</td><td>'.$remaining_principal.'</td></tr>';
+        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$r_principal.'</td><td>'.$r_interest.'</td><td>'.$repayment.'</td><td>'.$remaining_principal.'</td></tr>';
         $html .= '</tbody></table>';
 		echo $html;
 	}

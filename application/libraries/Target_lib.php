@@ -627,7 +627,8 @@ class Target_lib{
 						'liquidated_damages'	=> 0,//違約金
 						'days'					=> 0,//本期天數
 						'remaining_principal'	=> 0,//期初本金
-						'repayment_date'		=> $value->limit_date//還款日
+						'repayment_date'		=> $value->limit_date,//還款日
+                        'r_principal'		    => 0,
 					];
 				}
 				switch($value->source){
@@ -649,9 +650,10 @@ class Target_lib{
 					case SOURCE_FEES: 
 						$schedule['platform_fees'] += $value->amount;
 						break;
-					case SOURCE_PRINCIPAL: 
-					case SOURCE_INTEREST: 
-					case SOURCE_DELAYINTEREST: 
+					case SOURCE_PRINCIPAL:
+                        $list[$value->instalment_no]['r_principal'] 		+= $value->amount;
+					case SOURCE_INTEREST:
+					case SOURCE_DELAYINTEREST:
 					case SOURCE_DAMAGE: 
 					case SOURCE_PREPAYMENT_DAMAGE: 
 						$list[$value->instalment_no]['repayment'] += $value->amount;
