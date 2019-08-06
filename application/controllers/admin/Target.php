@@ -751,8 +751,8 @@ class Target extends MY_Admin_Controller {
 			}
 		}
 
-		//header('Content-type:application/vnd.ms-excel');
-		//header('Content-Disposition: attachment; filename=amortization_'.date('Ymd').'.xls');
+		header('Content-type:application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename=amortization_'.date('Ymd').'.xls');
 		$html = '<table>';
 		if(isset($first_data) && !empty($first_data)){
 		    $sumvalue = 0;
