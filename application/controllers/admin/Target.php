@@ -708,7 +708,7 @@ class Target extends MY_Admin_Controller {
 		$get = $this->input->get(NULL, TRUE);
 		$ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
 		if($ids && is_array($ids)){
-			$where = ['id'=>$ids,'status'=>5];
+			$where = ['id'=>$ids,'status'=>[]];
 		}else{
 			$where = ['status'=>5];
 		}
@@ -717,6 +717,11 @@ class Target extends MY_Admin_Controller {
 		$first_data = [];
 		$list 	= $this->target_model->get_many_by($where);
 		if($list){
+            $remaining_principal = 0;
+            $total_payment       = 0;
+            $principal           = 0;
+            $interest            = 0;
+            $repayment           = 0;
 			foreach($list as $key => $value){
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				if($amortization_table){
@@ -726,24 +731,33 @@ class Target extends MY_Admin_Controller {
 						@$data[$value['repayment_date']]['repayment'] 		+= $value['repayment'];
 						@$data[$value['repayment_date']]['interest'] 		+= $value['interest'];
 						@$data[$value['repayment_date']]['principal'] 		+= $value['principal'];
+                        @$total_payment         		                    += $value['total_payment'];
+                        @$principal         		                        += $value['principal'];
+                        @$interest         		                            += $value['interest'];
+                        @$repayment         		                        += $value['repayment'];
 					}
-					
+                    @$remaining_principal         		                    += $amortization_table['remaining_principal'];
 				}
 			}
 		}
 		
 		header('Content-type:application/vnd.ms-excel');
 		header('Content-Disposition: attachment; filename=amortization_'.date('Ymd').'.xls');
-		$html = '<table><thead><tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已回款</th></tr></thead><tbody>';
+		$html = '<table>';
 		if(isset($first_data) && !empty($first_data)){
+		    $sumvalue = 0;
 			foreach($first_data as $key => $value){
 				$html .= '<tr>';
 				$html .= '<td>'.$key.'</td>';
 				$html .= '<td>'.$value.'</td>';
-				$html .= '<td></td><td></td><td></td>';
+				$html .= '<td></td><td></td><td></td><td></td>';
 				$html .= '</tr>';
+                $sumvalue -= $value;
 			}
 		}
+        $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
+        $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
+        $html .= '<tr><th>日期</th><th>合計</th><th>本金</th><th>利息</th><th>已回款</th><th>剩餘本金</th></tr>';
 		if(isset($data) && !empty($data)){
 			foreach($data as $key => $value){
 				$html .= '<tr>';
@@ -755,6 +769,7 @@ class Target extends MY_Admin_Controller {
 				$html .= '</tr>';
 			}
 		}
+        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$repayment.'</td><td>'.$remaining_principal.'</td></tr>';
         $html .= '</tbody></table>';
 		echo $html;
 	}
