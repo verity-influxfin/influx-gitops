@@ -722,7 +722,6 @@ class Target extends MY_Admin_Controller {
 		$first_data = [];
 		$list 	= $this->target_model->get_many_by($where);
 		if($list){
-            $remaining_principal = 0;
             $total_payment       = 0;
             $principal           = 0;
             $interest            = 0;
@@ -748,7 +747,6 @@ class Target extends MY_Admin_Controller {
                         @$r_principal         		                        += $value['r_principal'];
                         @$r_interest         		                        += $value['repayment']-$value['r_principal'];
 					}
-                    @$remaining_principal         		                    += $amortization_table['remaining_principal'];
 				}
 			}
 		}
@@ -769,7 +767,7 @@ class Target extends MY_Admin_Controller {
 		}
         $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
         $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
-        $html .= '<tr><th>日期</th><th>合計</th><th>應收本金</th><th>應收利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>未收本金</th><th>本金餘額</th></tr>';
+        $html .= '<tr><th>日期</th><th>合計</th><th>應收本金</th><th>應收利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>本金餘額</th></tr>';
 		if(isset($data) && !empty($data)){
 		    $total_unrepayment = 0;
 			foreach($data as $key => $value){
@@ -787,7 +785,7 @@ class Target extends MY_Admin_Controller {
                 $total_unrepayment +=$unrepayment;
 			}
 		}
-        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$r_principal.'</td><td>'.$r_interest.'</td><td>'.$repayment.'</td><td>'.$total_unrepayment.'</td><td>'.$remaining_principal.'</td></tr>';
+        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$r_principal.'</td><td>'.$r_interest.'</td><td>'.$repayment.'</td><td>'.$total_unrepayment.'</td></tr>';
         $html .= '</tbody></table>';
 		echo $html;
 	}
