@@ -11,6 +11,7 @@ class Azure_lib
     {
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
+        $this->CI->load->library('S3_lib');
     }
 	//Azure API Face - Detect
 	public function detect($url){
@@ -21,6 +22,7 @@ class Azure_lib
 			'url' =>  $s3_url,
 		];
         $result = $this->azure_face_curl($api_url,$data);
+        $this->CI->s3_lib->public_delete_image($s3_url,$bucket);
 		return  $result;
 	}
 
