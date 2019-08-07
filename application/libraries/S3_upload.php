@@ -231,13 +231,13 @@ class S3_upload {
 		
 	}
 
-	public function public_image_by_data ($image_data='',$user_id=0)
+	public function public_image_by_data ($image_data='',$bucket=S3_SELLER_PUBLIC_BUCKET,$user_id=0)
 	{
 		$type = md5(time().rand(1,9).rand(1,9).rand(1,9));
 		$name = sha1(time().rand(1,9).rand(1,9).rand(1,9)).'.jpg';
 		if (!empty($image_data)) {
 			$result = $this->client->putObject(array(
-				'Bucket' 		=> S3_SELLER_PUBLIC_BUCKET,
+				'Bucket' 		=> $bucket,
 				'Key'    		=> $type.'/'.$name,
 				'Body'   		=> $image_data,
 				'ACL'    		=> 'public-read'
