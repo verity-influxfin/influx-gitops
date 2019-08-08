@@ -219,15 +219,7 @@ class Recoveries extends REST_Controller {
 			]);
 			if($transfer_investment){
 				foreach($transfer_investment as $key => $value){
-                    $transfer = $this->transfer_model->get($value->transfer_id);
-                    if($transfer->combination!=0){
-                        $this->load->model('loan/transfer_combination_model');
-                        $combinations = $this->transfer_combination_model->get($transfer->combination);
-                        $payable += $combinations->amount;
-                    }
-					else{
-					    $payable += $value->amount;
-					}
+					$payable += $value->amount;
 				}
 			}
 		}else{
