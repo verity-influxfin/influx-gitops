@@ -218,9 +218,19 @@ class Recoveries extends REST_Controller {
 				'status'	=> 0
 			]);
 			if($transfer_investment){
+			    $combination_ids = [];
 				foreach($transfer_investment as $key => $value){
-					$payable += $value->amount;
-				}
+                    $transfer = $this->transfer_model->get($value->transfer_id);
+                    if($transfer->combination!=0 && !in_array($transfer->combination,$combination_ids)){
+                        $this->load->model('loan/transfer_combination_model');
+                        $combinations = $this->transfer_combination_model->get($transfer->combination);
+                        $payable += $combinations->amount;
+                        array_push($combination_ids,$transfer->combination);
+                    }
+                    elseif(!in_array($transfer->combination,$combination_ids)){
+                        $payable += $value->amount;
+                    }
+                }
 			}
 		}else{
 			$funds			 = array(
