@@ -106,7 +106,7 @@
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td align="center">
-														<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/atm-logo.png" border="0" style="font:bold 12px/12px Arial, Helvetica, sans-serif; color:#606060;" width="90" height="90" alt="INFLUXFIN.COM" />
+													<img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png" border="0" style="font:bold 300px/100px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
 													</td>
 												</tr>
 												<tr>
@@ -118,6 +118,12 @@
 													<td data-color="text" data-size="size text" data-min="10" data-max="26" data-link-color="link text color" data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;" align="center" style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; padding:0 0 23px;">
 														{content}
 													</td>
+												</tr>
+												<tr>
+												<td align="center">	
+													<a href="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW"/></a> 
+													<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" /></a>													 
+												</td>
 												</tr>
 											</table>
 										</td>
