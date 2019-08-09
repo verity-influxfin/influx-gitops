@@ -586,7 +586,7 @@ class Transfer extends REST_Controller {
 					'status' 		=> 0
 				]);
 				if($transfers){
-					$contracts = [];
+					$contracts = '';
                     $repayment=[];
                     foreach($transfers as $key => $value){
                         //現金流
@@ -601,8 +601,10 @@ class Transfer extends REST_Controller {
                                 $repayment[$v['repayment_date']] += $v['total_payment'];//+ $v['ar_fees']
                             }
                         }
-						$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
-						$contracts[]	= isset($contract_data['content'])?$contract_data['content']:'';
+                        if($key==0){
+                            $contract_data 	= $this->contract_lib->get_contract($value->contract_id);
+                            $contracts  	= isset($contract_data['content'])?$contract_data['content']:'';
+                        }
 					}
 
 					$data 	= [
