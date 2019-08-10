@@ -34,9 +34,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>內容</label>
-                                    <textarea id="content" name="content" class="form-control" rows="3" style="width: 725px; height: 800px;">
-										<?=isset($contract->content)?$contract->content:"";?>
-										</textarea>
+                                    <textarea id="content" name="content" class="form-control" rows="3" style="width: 725px; height: 800px;"><?=isset($contract->content)?$contract->content:"";?></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>版本</label>
