@@ -906,9 +906,10 @@ class Estatement_lib{
 					$m = date("m",strtotime($estatement->sdate));
 					$this->CI->user_estatement_model->update($estatement_id,array("status"=>1));
 					$estatement_url  		= $estatement->url;
+					$investor_status=$user_info->investor_status;
 					$title = '【普匯金融科技對帳單】';
 					$content = '親愛的 '.$user_info->name.' '.($user_info->sex=='M'?'先生':($user_info->sex=='F'?'小姐':'')).'您好：<br> 　　茲寄送您'.$y.'年'.$m.'月綜合對帳單，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;">＊附件綜合對帳單已設為加密信件，開啟密碼個人戶為身分證字號(英文字母請輸入大寫)，公司戶為統一編號。</p>';
-					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url);
+					return $this->CI->sendemail->email_file_estatement($user_info->email,$title,$content,$estatement_url,$estatement_detail_url,$investor_status);
 				}
 			}
 		}

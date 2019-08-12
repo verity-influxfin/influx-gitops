@@ -123,9 +123,9 @@ class Sendemail
 		return $this->send($admin_email,$title,$content);
 	}
 	
-	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail=""){
+	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status=""){
 		if($email){
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content,"investor_status"=>$investor_status),TRUE);
 			$this->CI->email->initialize($this->config);
 			$this->CI->email->clear(TRUE);
 			$this->CI->email->to($email);
