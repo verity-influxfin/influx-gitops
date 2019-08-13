@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Passbook extends MY_Admin_Controller {
 	
-	protected $edit_method = array('withdraw_loan','loan_success','loan_failed','unknown_refund','withdraw_by_admin');
+	protected $edit_method = array('withdraw_loan','loan_success','loan_failed','unknown_refund','withdraw_by_admin','withdraw_deny');
 	
 	public function __construct() {
 		parent::__construct();
