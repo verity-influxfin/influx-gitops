@@ -625,6 +625,7 @@ class Account extends MY_Admin_Controller {
 		$page_data['edate'] 		= $edate;
 		$page_data['list'] 			= $list?$list:array();
 		$page_data['investor_list'] = $this->user_estatement_model->investor_list;
+		$page_data['status_list']   = $this->user_estatement_model->status_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);

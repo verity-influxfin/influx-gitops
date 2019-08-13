@@ -73,6 +73,7 @@
                                             <th>會員 ID</th>
                                             <th>會員姓名</th>
                                             <th>對帳單</th>
+                                            <th>狀態</th>
                                             <th>產生日期</th>
                                         </tr>
                                     </thead>
@@ -95,7 +96,8 @@
                                                     <a type="button" href="./estatement_excel?sdate=<?=isset($value->sdate)?$value->sdate:'' ?>&edate=<?=isset($value->edate)?$value->edate:'' ?>&user_id=<?=isset($value->user_id)?$value->user_id:"" ?>" class="btn btn-success"><i class="fa fa-download"></i></a>
                                                 <? } ?>
                                             </td>
-											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
+                                            <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
+                                            <td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 										</tr>                                        
 									<?php 
 										}}
