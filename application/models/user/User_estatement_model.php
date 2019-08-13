@@ -8,6 +8,11 @@ class User_estatement_model extends MY_Model
 		0 =>	"借款端",
 		1 =>	"出借端",
 	);
+	public $status_list  	= array(
+		0 =>	"未發送",
+		1 =>	"已發送",
+		2 =>	"作廢",
+	);
 	
 	public function __construct()
 	{
