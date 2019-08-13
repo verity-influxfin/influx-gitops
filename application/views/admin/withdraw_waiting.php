@@ -57,6 +57,21 @@
 					}
 				}
 
+                function withdraw_deny(id) {
+                    if (confirm("確認駁回提領?？")) {
+                        if (id) {
+                            $.ajax({
+                                url: './withdraw_deny?id=' + id,
+                                type: 'GET',
+                                success: function (response) {
+                                    alert(response);
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                }
+
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -79,6 +94,7 @@
                                             <th>待交易流水號</th>
                                             <th>狀態</th>
 											<th>系統驗證狀態</th>
+											<th>審核</th>
                                             <th>創建日期</th>
                                         </tr>
                                     </thead>
@@ -111,6 +127,7 @@
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>';
 												} ?></td>
 											<td><?=isset($value->sys_check)?$sys_check_list[$value->sys_check]:"" ?></td>
+											<td><button class="btn btn-danger" onclick="withdraw_deny(<?=isset($value->id)?$value->id:"" ?>)">駁回</button></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 

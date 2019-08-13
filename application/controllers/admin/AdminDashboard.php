@@ -115,7 +115,7 @@ class AdminDashboard extends MY_Admin_Controller {
 			"frozen_id >" 	=> 0
 		));
 		if(!empty($list)){
-			$target_count["withdraw"]++;
+			$target_count["withdraw"] = count($list);
 		}
 		
 		$data["chart_list"] 	= $chart_list;

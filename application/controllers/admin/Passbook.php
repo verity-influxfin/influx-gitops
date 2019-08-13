@@ -267,4 +267,23 @@ class Passbook extends MY_Admin_Controller {
 			echo '金額過小';die();
 		}
 	}
+
+    function withdraw_deny(){
+        $get 	= $this->input->get(NULL, TRUE);
+        $id 	= isset($get['id'])?intval($get['id']):0;
+        if($id){
+            $info = $this->withdraw_model->get($id);
+            if($info && $info->status==0 && $info->frozen_id>0){
+                $this->withdraw_model->update($id,array('status'=>3));
+                $this->frozen_amount_model->update($info->frozen_id,array('status'=>0));
+                echo '提領駁回成功，已取消凍結';die();
+            }else{
+                echo '查無此ID';die();
+            }
+        }else{
+            echo '查無此ID';die();
+        }
+    }
+
+
 }
