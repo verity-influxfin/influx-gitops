@@ -58,7 +58,7 @@
 				}
 
                 function withdraw_deny(id) {
-                    if (confirm("確認駁回提領?？")) {
+                    if (confirm("確認退回提領?？")) {
                         if (id) {
                             $.ajax({
                                 url: './withdraw_deny?id=' + id,
@@ -127,7 +127,7 @@
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">不成功</button>';
 												} ?></td>
 											<td><?=isset($value->sys_check)?$sys_check_list[$value->sys_check]:"" ?></td>
-											<td><button class="btn btn-danger" onclick="withdraw_deny(<?=isset($value->id)?$value->id:"" ?>)">駁回</button></td>
+											<td><button class="btn btn-danger" onclick="withdraw_deny(<?=isset($value->id)?$value->id:"" ?>)">逾期退回</button></td>
 											<td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
                                         </tr>                                        
 									<?php 
