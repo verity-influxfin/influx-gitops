@@ -121,13 +121,18 @@
 												</tr>
 												<tr>
 													<td align="center">	
-													<?php if($investor_status==1){?>
-													<a href="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW"/></a> 
-													<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" /></a>
-													<?php } else{ ?>
-													<a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a> 
-													<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
-													<?php }?>
+													<?php if(isset($investor_status)){?>
+															<?php if($investor_status==1){?>
+															<a href="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW"/></a> 
+															<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" /></a>
+															<?php } else{ ?>
+															<a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a> 
+															<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+															<?php }?>
+														<?php } else{ ?>
+														<a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="206" height="61" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a> 
+														<a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="206" height="61" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+														<?php }?>
 													</td>
 												</tr>
 											</table>
