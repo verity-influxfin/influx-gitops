@@ -25,7 +25,6 @@
                                         <th>債權金額</th>
                                         <th>案件總額</th>
                                         <th>年化利率</th>
-                                        <th>價金</th>
                                         <th>剩餘本金</th>
                                         <th>本期利息</th>
                                         <th>本期回款手續費</th>
@@ -49,7 +48,6 @@
                                                 <td><?=isset($value->investment->loan_amount)&&$value->investment->loan_amount?$value->investment->loan_amount:"" ?></td>
                                                 <td><?=isset($value->target->loan_amount)&&$value->target->loan_amount?($value->target->order_id!=0?$value->amount:$value->target->loan_amount):"" ?></td>
                                                 <td><?=isset($value->target->interest_rate)&&$value->target->interest_rate?floatval($value->target->interest_rate).'%':"" ?></td>
-                                                <td><?=isset($value->amount)?$value->amount:"" ?></td>
                                                 <td><?=isset($value->principal)?$value->principal:"" ?></td>
                                                 <td><?=isset($value->interest)?$value->interest:"" ?></td>
                                                 <td><?=isset($value->platform_fee)?$value->platform_fee:"" ?></td>
