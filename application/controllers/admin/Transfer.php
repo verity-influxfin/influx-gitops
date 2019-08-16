@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Transfer extends MY_Admin_Controller {
 	
-	protected $edit_method = array('assets_export','amortization_export','transfer_success','transfer_cancel');
+	protected $edit_method = array('assets_export','amortization_export','transfer_success','transfer_cancel','combination_transfer_cancel');
 	
 	public function __construct() {
 		parent::__construct();
@@ -272,28 +272,40 @@ class Transfer extends MY_Admin_Controller {
 	
 	public function waiting_transfer(){
 		$page_data 		= array('type'=>'list');
-		$list 			= array();
-		$transfers 		= array();
-		$targets 		= array();
-		$input 			= $this->input->get(NULL, TRUE);
+        $this->load->model('loan/transfer_combination_model');
+		$transfers        = [];
+        $combinations    = [];
 		$where			= array(
 			'status'	=> 0
 		);
-		$target_no		= '';
 		$list 	= $this->transfer_model->get_many_by($where);
 		if($list){
-			foreach($list as $key => $value){
-				$list[$key]->target 	= $this->target_model->get($value->target_id);
-				$list[$key]->investment = $this->investment_model->get($value->investment_id);
+            $combination_ids = [];
+            foreach($list as $key => $value){
+                if(!in_array($value->combination,$combination_ids)) {
+                    if ($value->combination != 0) {
+                        array_push($combination_ids, $value->combination);
+                        $investment = $this->investment_model->get($value->investment_id);
+                        $combination_info = $this->transfer_combination_model->get($value->combination);
+                        $combination_info->user_id = $investment->user_id;
+                        $combination_info->expire_time = $value->expire_time;
+                        $combinations[] = $combination_info;
+                        array_splice($list, $key, 1);
+                    } else {
+                        $transfer_info = $value;
+                        $transfer_info->target = $this->target_model->get($value->target_id);
+                        $transfer_info->investment = $this->investment_model->get($value->investment_id);
+                        $transfers[] = $transfer_info;
+                    }
+                }
 			}
 		}
 
 		$page_data['instalment_list']			= $this->config->item('instalment');
 		$page_data['repayment_type']			= $this->config->item('repayment_type');
-		$page_data['list'] 						= $list;
+		$page_data['list'] 						= $transfers;
+		$page_data['combinations'] 				= $combinations;
 		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
-		$page_data['transfers'] 				= $transfers;
-		$page_data['targets'] 					= $targets;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -301,34 +313,68 @@ class Transfer extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 	
-	public function waiting_transfer_success(){
+    public function transfer_combination(){
 		$page_data 		= array('type'=>'list');
-		$list 			= array();
-		$transfers 		= array();
-		$targets 		= array();
-		$input 			= $this->input->get(NULL, TRUE);
+        $input 			= $this->input->get(NULL, TRUE);
 		$where			= array(
-			'status'	=> 1
+			'combination'	=> $input['id']
 		);
-		$target_no		= '';
-		$list 	= $this->transfer_model->get_many_by($where);
-		if($list){
-			foreach($list as $key => $value){
-				$list[$key]->target 	= $this->target_model->get($value->target_id);
-				$list[$key]->investment = $this->investment_model->get($value->investment_id);
-				$list[$key]->transfer_investment = $this->transfer_investment_model->get_by(array(
-					'transfer_id'	=> $value->id,
-					'status'		=> 2,
-				));
-			}
-		}
+        $list 	= $this->transfer_model->get_many_by($where);
+        if($list){
+            foreach($list as $key => $value){
+                $list[$key]->target 	= $this->target_model->get($value->target_id);
+                $list[$key]->investment = $this->investment_model->get($value->investment_id);
+            }
+        }
 
 		$page_data['instalment_list']			= $this->config->item('instalment');
 		$page_data['repayment_type']			= $this->config->item('repayment_type');
 		$page_data['list'] 						= $list;
+		$page_data['no'] 						= $input['no'];
 		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
-		$page_data['transfers'] 				= $transfers;
-		$page_data['targets'] 					= $targets;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/transfer/transfer_combination',$page_data);
+		$this->load->view('admin/_footer');
+	}
+
+	public function waiting_transfer_success(){
+		$page_data 		= array('type'=>'list');
+        $this->load->model('loan/transfer_combination_model');
+        $transfers        = [];
+        $combinations    = [];
+		$where			= array(
+			'status'	=> 1
+		);
+        $list 	= $this->transfer_model->get_many_by($where);
+        if($list){
+            $combination_ids = [];
+            foreach($list as $key => $value){
+                if(!in_array($value->combination,$combination_ids)) {
+                    if ($value->combination != 0) {
+                        array_push($combination_ids, $value->combination);
+                        $investment = $this->investment_model->get($value->investment_id);
+                        $combination_info = $this->transfer_combination_model->get($value->combination);
+                        $combination_info->transfer = $value->id;
+                        $combination_info->user_id = $investment->user_id;
+                        $combination_info->expire_time = $value->expire_time;
+                        $combinations[] = $combination_info;
+                        array_splice($list, $key, 1);
+                    } else {
+                        $transfer_info = $value;
+                        $transfer_info->target = $this->target_model->get($value->target_id);
+                        $transfer_info->investment = $this->investment_model->get($value->investment_id);
+                        $transfers[] = $transfer_info;
+                    }
+                }
+            }
+        }
+
+        $page_data['instalment_list']			= $this->config->item('instalment');
+        $page_data['repayment_type']			= $this->config->item('repayment_type');
+        $page_data['list'] 						= $transfers;
+        $page_data['combinations'] 				= $combinations;
+		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -344,7 +390,11 @@ class Transfer extends MY_Admin_Controller {
 			foreach($ids as $key => $id){
 				$rs = $this->transaction_lib->transfer_success($id,$this->login_info->id);
 			}
-			echo '放行成功';die();
+            if($rs){
+                echo '更新成功';die();
+            }else{
+                echo '更新失敗';die();
+            }
 		}else{
 			echo '查無此ID';die();
 		}
@@ -370,5 +420,28 @@ class Transfer extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
+
+    function c_transfer_cancel(){
+        $get 	= $this->input->get(NULL, TRUE);
+        $id 	= isset($get['id'])?intval($get['id']):0;
+        if($id){
+            $this->load->model('loan/transfer_combination_model');
+            $combination = $this->transfer_combination_model->get([ 'combination' =>$id]);
+            $transfer    = $this->transfer_model->get_many_by([ 'combination' =>$id]);
+            if($combination->count && count($transfer)){
+                $this->load->library('transfer_lib');
+                $rs = $this->transfer_lib->cancel_combination_transfer($transfer);
+                if($rs){
+                    echo '更新成功';die();
+                }else{
+                    echo '更新失敗';die();
+                }
+            }else{
+                echo '查無此ID';die();
+            }
+        }else{
+            echo '查無此ID';die();
+        }
+    }
 }
 ?>

@@ -18335,8 +18335,8 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "404",
-                            "description": "<p>此申請不存在</p>"
+                            "field": "407",
+                            "description": "<p>目前狀態無法完成此動作</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -18347,8 +18347,20 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "407",
-                            "description": "<p>目前狀態無法完成此動作</p>"
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "211",
+                            "description": "<p>可用餘額不足</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -18359,20 +18371,14 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
                             "field": "101",
                             "description": "<p>帳戶已黑名單</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
                         }
                     ]
                 },
@@ -18821,6 +18827,12 @@ define({
                             "optional": false,
                             "field": "407",
                             "description": "<p>目前狀態無法完成此動作</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "211",
+                            "description": "<p>可用餘額不足</p>"
                         },
                         {
                             "group": "Error 4xx",

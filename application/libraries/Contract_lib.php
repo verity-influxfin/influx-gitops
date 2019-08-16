@@ -167,4 +167,7 @@ class Contract_lib{
             return $view==1?$this->pretransfer_contract('trans_multi',$contract_var):$contract_var;
         }
     }
+    public function raw_contract($contract_id){
+        return $this->CI->contract_model->get($contract_id);
+	}
 }

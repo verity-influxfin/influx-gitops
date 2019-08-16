@@ -149,7 +149,11 @@ class Transfer_lib{
 	}
 
 	public function cancel_transfer($transfers,$admin=0){
-		if($transfers){
+        $transfers_status 	= $this->CI->transfer_model->get_by([
+            'id'	    	=> $transfers->id,
+            'script_status'	=> 0
+        ]);
+		if($transfers_status){
 			$rs = $this->CI->transfer_model->update($transfers->id,['status' => 8]);
 			if($rs){
 				$transfer_investments = $this->CI->transfer_investment_model->get_many_by([
@@ -160,18 +164,55 @@ class Transfer_lib{
 					foreach($transfer_investments as $key => $value){
 						$this->CI->transfer_investment_model->update($value->id,['status'=>9]);
 						if($value->frozen_status==1 && $value->frozen_id){
+                            $this->CI->load->model('transaction/frozen_amount_model');
 							$this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
 						}
 					}
 				}
 				
 				$investment_param = ['transfer_status' => 0];
-				$rs = $this->CI->investment_model->update($transfers->investment_id,$investment_param);
+				$this->CI->investment_model->update($transfers->investment_id,$investment_param);
 				$this->CI->load->library('target_lib');
 				$this->CI->target_lib->insert_investment_change_log($transfers->investment_id,$investment_param,0,$admin);
 				return true;
 				
 			}
+		}
+		return false;
+	}
+
+	public function cancel_combination_transfer($transfers,$admin=0){
+		if($transfers){
+            foreach($transfers as $k => $v) {
+                $transfers_status 	= $this->CI->transfer_model->get_by([
+                    'id'	    	=> $v->id,
+                    'script_status'	=> 0
+                ]);
+                if($transfers_status){
+                    $rs = $this->CI->transfer_model->update($v->id,['status' => 8]);
+                    if($rs){
+                        $transfer_investments = $this->CI->transfer_investment_model->get_many_by([
+                            'transfer_id'	=> $v->id,
+                            'status'		=> [0,1,2]
+                        ]);
+                        if($transfer_investments){
+                            foreach($transfer_investments as $key => $value){
+                                $this->CI->transfer_investment_model->update($value->id,['status'=>9]);
+                                if($value->frozen_status==1 && $value->frozen_id){
+                                    $this->CI->load->model('transaction/frozen_amount_model');
+                                    $this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
+                                }
+                            }
+                        }
+
+                        $investment_param = ['transfer_status' => 0];
+                        $rs = $this->CI->investment_model->update($v->investment_id,$investment_param);
+                        $this->CI->load->library('target_lib');
+                        $this->CI->target_lib->insert_investment_change_log($v->investment_id,$investment_param,0,$admin);
+                    }
+                }
+            }
+            return true;
 		}
 		return false;
 	}
@@ -192,6 +233,24 @@ class Transfer_lib{
            return true;
         }
         return false;
+    }
+
+
+    //案件改變觸發中斷債轉
+    function break_transfer($target_id)
+    {
+        $transfer_list = $this->CI->transfer_model->get_many_by([
+            'target_id' => $target_id,
+            'status'     => [0,1]
+        ]);
+        foreach($transfer_list as $key => $value){
+            if($value->combination!=0){
+                $transfer = $this->CI->transfer_model->get_many_by(['combination' => $value->combination]);
+                $this->cancel_combination_transfer($transfer);
+            }else{
+                $this->cancel_transfer($value);
+            }
+        }
     }
 	
 	public function get_transfer_list($where = ['status' => 0]){
@@ -229,56 +288,90 @@ class Transfer_lib{
 	
 	//判斷流標或結標或凍結款項
 	function check_bidding($transfers=[]){
-		if($transfers && $transfers->status==0){
-			$transfer_investments = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
+        $r_status = true;
+        if ($transfers->combination != 0) {
+            $this->CI->load->model('loan/transfer_combination_model');
+            $combinations_info = $this->CI->transfer_combination_model->get($transfers->combination);
+            //取得打包債權資訊
+            $combination_transfers = $this->CI->transfer_model->get_many_by([
+                'combination'   => $transfers->combination,
+                'status'        => 0
+            ]);
+            if($combinations_info->count == count($combination_transfers)){
+                //取得打包債權所有投資人
+                $combination_transfer_ids = [];
+                foreach($combination_transfers as $keys => $values){
+                    $transfer_investment = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
+                        'transfer_id'	=> $values->id,
+                        'status'		=> [0,1],
+                    ]);
+                    if($transfer_investment){
+                        foreach($transfer_investment as $keys2 => $values2) {
+                            $combination_transfer_ids[$values2->user_id]['id'][]          = $values2->id;
+                            $combination_transfer_ids[$values2->user_id]['transfer_id'][] = $values2->transfer_id;
+                        }
+                    }
+                }
+            }
+            else{
+                $r_status = false;
+            }
+        }
+		if($transfers && $transfers->status==0 && $r_status){
+            $transfer_investments = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
 				'transfer_id'	=> $transfers->id,
 				'status'		=> [0,1]
 			]);
-			if($transfer_investments){
-				$ended = false;
-				$this->CI->load->library('Transaction_lib');
-				foreach($transfer_investments as $key => $value){
-					if($value->status ==0 && $value->frozen_status==0){
-						$virtual_account = $this->CI->virtual_account_model->get_by([
-							'status'	=> 1,
-							'investor'	=> 1,
-							'user_id'	=> $value->user_id
-						]);
-						if($virtual_account){
-							$this->CI->virtual_account_model->update($virtual_account->id,['status'=>2]);
-							$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
-							if($funds){
-								$total = intval($funds['total']) - intval($funds['frozen']) - intval($value->amount);
-								if($total >= 0 ){
-									$last_recharge_date = strtotime($funds['last_recharge_date']);
-									$tx_datetime = $last_recharge_date < $value->created_at?$value->created_at:$last_recharge_date;
-									$tx_datetime = date('Y-m-d H:i:s',$tx_datetime);
-									$param = [
-										'type'				=> 2,
-										'virtual_account'	=> $virtual_account->virtual_account,
-										'amount'			=> intval($value->amount),
-										'tx_datetime'		=> $tx_datetime,
-									];
-									$frozen_id = $this->CI->frozen_amount_model->insert($param);
-									if($frozen_id){
-										$this->CI->transfer_investment_model->update($value->id,[
-											'frozen_status'		=> 1,
-											'frozen_id'			=> $frozen_id,
-											'status'			=> 1,
-											'tx_datetime'		=> $tx_datetime
-										]);
-										$ended = true;
-									}
-								}
-							}
-							$this->CI->virtual_account_model->update($virtual_account->id,['status'=>1]);
-						}
-					}
+            if($transfer_investments){
+                $ended = false;
+                $this->CI->load->library('Transaction_lib');
+                foreach($transfer_investments as $key => $value){
+                    $virtual_account = $this->CI->virtual_account_model->get_by([
+                        'status'	=> 1,
+                        'investor'	=> 1,
+                        'user_id'	=> $value->user_id
+                    ]);
+                    if($virtual_account) {
+                        $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
+                        $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+                        $last_recharge_date = strtotime($funds['last_recharge_date']);
+                        $tx_datetime = $last_recharge_date < $value->created_at ? $value->created_at : $last_recharge_date;
+                        $tx_datetime = date('Y-m-d H:i:s', $tx_datetime);
+                        if ($funds){
+                            if ($value->status == 0 && $value->frozen_status == 0) {
+                                if ($transfers->combination != 0) {
+                                    $ids = $combination_transfer_ids[$value->user_id]['id'];
+                                    $amount = $combinations_info->amount;
+                                }else{
+                                    $ids    = [$value->id];
+                                    $amount = $value->amount;
+                                }
+                                $total = intval($funds['total']) - intval($funds['frozen']) - intval($amount);
+                                if ($total >= 0) {
+                                    $frozen_id = $this->CI->frozen_amount_model->insert([
+                                        'type' => 2,
+                                        'virtual_account' => $virtual_account->virtual_account,
+                                        'amount' => intval($amount),
+                                        'tx_datetime' => $tx_datetime,
+                                    ]);
+                                    if ($frozen_id) {
+                                        $this->CI->transfer_investment_model->update_many($ids, [
+                                            'frozen_status' => 1,
+                                            'frozen_id' => $frozen_id,
+                                            'status' => 1,
+                                            'tx_datetime' => $tx_datetime
+                                        ]);
+                                        $ended = true;
+                                    }
+                                }
+                            }
+                        }
+                        $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 1]);
+                    }
 				}
-				
 				if($ended){
 					if($transfers->combination != 0){
-						$this->combine_bidding_success($transfers);
+						$this->combine_bidding_success($transfers,$combination_transfer_ids);
 					}else{
 						$this->bidding_success($transfers);
 					}
@@ -302,6 +395,7 @@ class Transfer_lib{
 			if($transfer_investments){
 				$rs = $this->CI->transfer_model->update($transfers->id,['status'=>1]);
 				if($rs){
+                    $this->CI->load->library('contract_lib');
 					$ended = true;
 					foreach($transfer_investments as $key => $value){
 						$param = ['status'=>9];
@@ -309,18 +403,12 @@ class Transfer_lib{
 							if($transfers->amount == $value->amount && $ended){
 								$investment  = $this->CI->investment_model->get($transfers->investment_id);
 								$target		 = $this->CI->target_model->get($transfers->target_id);
-								$contract_id = $this->CI->contract_lib->sign_contract('transfer',[
-									$investment->user_id,
-									$value->user_id,
-									$target->user_id,
-									$target->target_no,
-									$transfers->principal,
-									$transfers->principal,
-									$value->amount,
-									$target->user_id,
-									$target->user_id,
-									$target->user_id,
-								]);
+								$contract    = $this->CI->contract_lib->build_contract('transfer',$investment->user_id,$value->user_id,[],[
+                                    'user_id'   => [$target->user_id],
+                                    'target_no' => [$target->target_no],
+                                    'principal' => [$transfers->principal],
+                                ],1,$value->amount,0);
+								$contract_id = $this->CI->contract_lib->sign_contract('transfer',$contract);
 								$param 			= [
 									'status'		=> 2,
 									'contract_id'	=> $contract_id
@@ -339,76 +427,38 @@ class Transfer_lib{
 		return false;
 	}
 
-	function combine_bidding_success($transfers=[]){
-		//結標
-		if($transfers && $transfers->status==0 && $transfers->combination!=0){
-			$combination_list = $this->CI->transfer_model->get_many_by([
-				'combination'	=> $transfers->combination,
-				'status'		=> $transfers->status,
-			]);
-			if($combination_list){
-				$success_user	 = 0;
-				$success 		 = [];
-				$combination_ids = [];
-				$transfers_list  = [];
-				foreach($combination_list as $key => $value){
-					$combination_ids[] = $value->id;
-					$transfers_list[$value->id] = $value;
-				}
-				$transfer_investments = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
-					'transfer_id'	=> $combination_ids,
-					'status'		=> [0,1]
-				]);
-				if($transfer_investments){
-					foreach($transfer_investments as $key => $value){
-						if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
-							$success[$value->user_id][] = $value->transfer_id;
-							
-							if($success_user==0 && count($success[$value->user_id])==count($combination_ids)){
-								$success_user = $value->user_id;
-							}
-						}
-					}
-					
-					if($success_user != 0){
-						$this->CI->transfer_model->update_many($combination_ids,['status'=>1]);
-						
-						foreach($transfer_investments as $key => $value){
-							$param = ['status'=>9];
-							if($value->status==1 && $value->frozen_status==1 && $value->frozen_id){
-								if($value->user_id==$success_user){
-									$transfer 	 = $transfers_list[$value->transfer_id];
-									$investment  = $this->CI->investment_model->get($transfer->investment_id);
-									$target		 = $this->CI->target_model->get($transfer->target_id);
-									$contract_id = $this->CI->contract_lib->sign_contract('transfer',[
-										$investment->user_id,
-										$value->user_id,
-										$target->user_id,
-										$target->target_no,
-										$transfer->principal,
-										$transfer->principal,
-										$value->amount,
-										$target->user_id,
-										$target->user_id,
-										$target->user_id,
-									]);
-									$param 			= [
-										'status'		=> 2,
-										'contract_id'	=> $contract_id
-									];
-									$ended 			= false;
-								}else{
-									$this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
-								}
-							}
-							$this->CI->transfer_investment_model->update($value->id,$param);
-						}
-					}
-					return true;
-				}
-			}
-		}
-		return false;
+	function combine_bidding_success($transfers,$combination_transfer_ids){
+        //結標
+        if($transfers && $transfers->status==0 && $transfers->combination!=0){
+            $transfer_investments = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
+                'transfer_id'	=> $transfers->id,
+                'status'		=> [0,1]
+            ]);
+            if($transfer_investments){
+                $this->CI->load->library('contract_lib');
+                $ended = true;
+                foreach($transfer_investments as $key => $value){
+                    $this->CI->transfer_model->update_many($combination_transfer_ids[$value->user_id]['transfer_id'],['status'=>1]);
+                    $param = ['status'=>9];
+                    if($transfers->amount == $value->amount && $ended){
+                        $raw_contract = $this->CI->contract_lib->raw_contract($transfers->contract_id);
+                        $contract     = json_decode($raw_contract->content,true);
+                        $contract[1]  = $value->user_id;
+                        $contract_id  = $this->CI->contract_lib->sign_contract('trans_multi',$contract);
+                        $param 			= [
+                            'status'		=> 2,
+                            'contract_id'	=> $contract_id
+                        ];
+                        $ended 			= false;
+                    }else{
+                        $this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
+                    }
+                    $this->CI->transfer_investment_model->update_many($combination_transfer_ids[$value->user_id]['id'],$param);
+                }
+                return true;
+            }
+        }
+        return false;
 	}
 	
 	public function script_check_bidding(){
@@ -420,23 +470,21 @@ class Transfer_lib{
 			'script_status'	=> 0
 		]);
 		if($transfers && !empty($transfers)){
-			foreach($transfers as $key => $value){
-				$ids[] = $value->id;
-			}
-			$update_rs 	= $this->CI->transfer_model->update_many($ids,['script_status'=>$script]);
-			if($update_rs){
-				foreach($transfers as $key => $value){
-					$check = $this->check_bidding($value);
-					if($check){
-						$count++;
-					}
-					$this->CI->transfer_model->update($value->id,array('script_status'=>0));
-				}
-			}
-		}
+            $combination_ids = [];
+            foreach($transfers as $key => $value){
+                if(!in_array($value->combination,$combination_ids)) {
+                    $this->CI->transfer_model->update($value->id,['script_status'=>$script]);
+                    $value->combination!=0?array_push($combination_ids, $value->combination):null;
+                    $check = $this->check_bidding($value);
+                    $this->CI->transfer_model->update($value->id,array('script_status'=>0));
+                }
+                if($check){
+                    $count++;
+                }
+            }
+        }
 		return $count;
 	}
-	
 	public function script_transfer_success(){
 		$script  	= 14;
 		$count 		= 0;
@@ -447,20 +495,18 @@ class Transfer_lib{
 		]);
 		
 		if($transfers && !empty($transfers)){
-			foreach($transfers as $key => $value){
-				$ids[] = $value->id;
-			}
-			$update_rs 	= $this->CI->transfer_model->update_many($ids,['script_status'=>$script]);
-			if($update_rs){
-				$this->CI->load->library('Transaction_lib');
-				foreach($transfers as $key => $value){
-					$success = $this->CI->transaction_lib->transfer_success($value->id,0);
-					if($success){
-						$count++;
-					}
-					$this->CI->transfer_model->update($value->id,['script_status'=>0]);
-				}
-			}
+            $this->CI->load->library('Transaction_lib');
+            $combination_ids = [];
+            foreach($transfers as $key => $value){
+                if(!in_array($value->combination,$combination_ids)) {
+                    $this->CI->transfer_model->update($value->id,['script_status'=>$script]);
+                    $value->combination!=0?array_push($combination_ids, $value->combination):null;
+                    $success = $this->CI->transaction_lib->transfer_success($value->id,0);
+                }
+                if($success){
+                    $count++;
+                }
+            }
 		}
 		return $count;
 	}

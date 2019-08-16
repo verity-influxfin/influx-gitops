@@ -752,7 +752,7 @@ class Repayment extends REST_Controller {
 		$target 			= $this->target_model->get($input['target_id']);
 		if(!empty($target)){
 			
-			if($target->status != 5 || $target->delay_days > 0 ){
+			if($target->status != 5 || $target->delay_days > 0 || $target->script_status != 0){
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
 			

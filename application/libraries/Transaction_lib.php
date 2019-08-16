@@ -656,230 +656,274 @@ class Transaction_lib{
 	//債轉成功
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
-		$transaction 	= [];
+        //$r_status = true;
 		if($transfer_id){
-			$this->CI->load->model('loan/transfer_model');
-			$this->CI->load->model('loan/transfer_investment_model');
-			$transfer = $this->CI->transfer_model->get($transfer_id);
-			if( $transfer && $transfer->status == 1){
-				$target 	= $this->CI->target_model->get($transfer->target_id);
-				$investment = $this->CI->investment_model->get($transfer->investment_id);
-				if($investment && $investment->status==3 && $target && $target->script_status==0){
-					$this->CI->target_model->update($target->id,array('script_status'=>10));
-					$transaction_list 	= $this->CI->transaction_model->get_many_by(array(
-						'investment_id'	=> $investment->id,
-						'status'		=> 1
-					));
-					$principal			= 0;
-					if($transaction_list){
-						foreach($transaction_list as $k => $v){
-							if($v->source == SOURCE_AR_PRINCIPAL){
-								$principal 	+= $v->amount;
-							}
-						}
-					}
+            $this->CI->load->model('loan/transfer_model');
+            $this->CI->load->model('loan/transfer_investment_model');
+            $this->CI->load->model('transaction/order_model');
+            $this->CI->load->library('target_lib');
+            $o_transfer = $this->CI->transfer_model->get($transfer_id);
+            $amount     = $o_transfer->amount;
+            $target_no  = $o_transfer->target_no;
+            if ($o_transfer->combination != 0) {
+                $this->CI->load->model('loan/transfer_combination_model');
+                $combinations_info = $this->CI->transfer_combination_model->get($o_transfer->combination);
+                $amount            = $combinations_info->amount;
+                $target_no         = $combinations_info->combination_no;
+                $target_id         = $combinations_info->id;
+                //取得打包債權資訊
+                $combination_transfers = $this->CI->transfer_model->get_many_by([
+                    'combination' => $o_transfer->combination,
+                    'status' => 1
+                ]);
+                $combinations_info->count == count($combination_transfers)?$transfers=$combination_transfers:null;
+            }
+            else{
+                $transfers[] = $o_transfer;
+            }
 
-					$transfer_investments 	= $this->CI->transfer_investment_model->get_by(array(
-						'transfer_id'	=> $transfer_id,
-						'status'		=> 2,
-						'frozen_status'	=> 1
-					));
-
-					if($principal==$transfer->principal && $transfer_investments){
-
-						$investment_data = array(
-							'target_id'		=> $investment->target_id,
-							'user_id'		=> $transfer_investments->user_id,
-							'amount'		=> intval($transfer->principal),
-							'loan_amount'	=> intval($transfer->principal),
-							'contract_id'	=> $transfer_investments->contract_id,
-							'status'		=> $investment->status,
-						);
-
-						$new_investment = $this->CI->investment_model->insert($investment_data);
-						if($new_investment){
-
-							$this->CI->investment_model->update($investment->id,['status'=>10,'transfer_status'=>2]);
-							$this->CI->load->library('target_lib');
-							$this->CI->target_lib->insert_investment_change_log($investment->id,['status'=>10,'transfer_status'=>2],0,$admin_id);
-							$this->CI->transfer_investment_model->update($transfer_investments->id,['status'=>10]);
-							$this->CI->frozen_amount_model->update($transfer_investments->frozen_id,['status'=>0]);
-
-							$transfer_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$investment->user_id,'investor'=>1]);
-							$virtual_account 	= $this->CI->virtual_account_model->get_by(['user_id'=>$transfer_investments->user_id,'investor'=>1]);
-							if($transfer_account && $virtual_account){
-                                $amount = $transfer->amount;
-
-                                if($target->order_id != 0){
-                                    $this->CI->load->model('transaction/order_model');
-                                    $order = $this->CI->order_model->get($target->order_id);
-                                    $platform_fee = intval($order->platform_fee);
-                                    $transfer_fee = intval($transfer->transfer_fee);
-                                    $amount -= ($platform_fee + $transfer_fee);
+            //lock target
+            $unlock        = true;
+            $transfer_info = [];
+            $target_ids    = [];
+            $transfer_ids  = [];
+            foreach($transfers as $tc => $transfer_check) {
+                $infos                  = [];
+                $target_ids[]           = $transfer_check->target_id;
+                $transfer_ids[]         = $transfer_check->id;
+                $infos['targets']       = $this->CI->target_model->get($transfer_check->target_id);
+                $infos['investment']    = $this->CI->investment_model->get($transfer_check->investment_id);
+                if($infos['targets']->script_status != 0 && $infos['investment']->status != 3 ){
+                    $unlock = false;
+                }
+                $transfer_info[] = $infos;
+            }
+            $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
+            $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
+            if($mrs && $rs && $unlock){
+                $transfer_account = '';
+                $virtual_account  = '';
+                foreach($transfers as $t => $transfer) {
+                    $transaction 	= [];
+                    if ($transfer && $transfer->status == 1) {
+                        $target     = $transfer_info[$t]['targets'];
+                        $investment = $transfer_info[$t]['investment'];
+                        $transaction_list = $this->CI->transaction_model->get_many_by(array(
+                            'investment_id' => $investment->id,
+                            'status' => 1
+                        ));
+                        $principal = 0;
+                        if ($transaction_list) {
+                            foreach ($transaction_list as $k => $v) {
+                                if ($v->source == SOURCE_AR_PRINCIPAL) {
+                                    $principal += $v->amount;
                                 }
+                            }
+                        }
 
-                                //放款
-                                $transaction[]		= [
-                                    'source'			=> SOURCE_TRANSFER,
-                                    'entering_date'		=> $date,
-                                    'user_from'			=> $transfer_investments->user_id,
-                                    'bank_account_from'	=> $virtual_account->virtual_account,
-                                    'amount'			=> intval($amount),
-                                    'target_id'			=> $target->id,
-                                    'investment_id'		=> $new_investment,
-                                    'instalment_no'		=> 0,
-                                    'user_to'			=> $investment->user_id,
-                                    'bank_account_to'	=> $transfer_account->virtual_account,
-                                    'status'			=> 2
-                                ];
+                        $transfer_investments = $this->CI->transfer_investment_model->get_by(array(
+                            'transfer_id' => $transfer_ids[$t],
+                            'status' => 2,
+                            'frozen_status' => 1
+                        ));
 
-                                if($target->order_id != 0) {
-                                    //放款(經銷商債轉服務費)
-                                    $transaction[]		= [
-                                        'source'			=> SOURCE_TRANSFER,
-                                        'entering_date'		=> $date,
-                                        'user_from'			=> $transfer_investments->user_id,
-                                        'bank_account_from'	=> $virtual_account->virtual_account,
-                                        'amount'			=> $transfer_fee,
-                                        'target_id'			=> $target->id,
-                                        'investment_id'		=> 0,
-                                        'instalment_no'		=> 0,
-                                        'user_to'			=> $investment->user_id,
-                                        'bank_account_to'	=> $transfer_account->virtual_account,
-                                        'status'			=> 2
-                                    ];
-                                }
+                        if ($principal == $transfer->principal &&$transfer_investments) {
+                            $investment_data = array(
+                                'target_id' => $investment->target_id,
+                                'user_id' => $transfer_investments->user_id,
+                                'amount' => intval($transfer->principal),
+                                'loan_amount' => intval($transfer->principal),
+                                'contract_id' => $transfer_investments->contract_id,
+                                'status' => $investment->status,
+                            );
 
-								//手續費
-								$transaction[]	= [
-									'source'			=> SOURCE_TRANSFER_FEE,
-									'entering_date'		=> $date,
-									'user_from'			=> $investment->user_id,
-									'bank_account_from'	=> $transfer_account->virtual_account,
-									'amount'			=> $transfer->transfer_fee,
-									'target_id'			=> $target->id,
-									'investment_id'		=> $new_investment,
-									'instalment_no'		=> 0,
-									'user_to'			=> 0,
-									'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
-									'status'			=> 2
-								];
+                            $new_investment = $this->CI->investment_model->insert($investment_data);
+                            if ($new_investment) {
 
-                                if($target->order_id != 0){
-                                    $user_bankaccount = $this->CI->virtual_account_model->get_by([
-                                        'user_id' => $target->user_id,
-                                        'investor'=> 0
-                                    ]);
+                                $this->CI->investment_model->update($investment->id, ['status' => 10, 'transfer_status' => 2]);
+                                $this->CI->target_lib->insert_investment_change_log($investment->id, ['status' => 10, 'transfer_status' => 2], 0, $admin_id);
+                                $this->CI->transfer_investment_model->update($transfer_investments->id, ['status' => 10]);
 
-                                    //放款(消費貸平台服務費)
-                                    $transaction[]		= [
-                                        'source'			=> SOURCE_TRANSFER,
-                                        'entering_date'		=> $date,
-                                        'user_from'			=> $transfer_investments->user_id,
-                                        'bank_account_from'	=> $virtual_account->virtual_account,
-                                        'amount'			=> $platform_fee,
-                                        'target_id'			=> $target->id,
-                                        'investment_id'		=> 0,
-                                        'instalment_no'		=> 0,
-                                        'user_to'			=> $target->user_id,
-                                        'bank_account_to'	=> $user_bankaccount->virtual_account,
-                                        'status'			=> 2
-                                    ];
-
-                                    //消費貸消費者平台手續費
-                                    $transaction[]	= array(
-                                        'source'			=> SOURCE_FEES,
-                                        'entering_date'		=> $date,
-                                        'user_from'			=> $target->user_id,
-                                        'bank_account_from'	=> $user_bankaccount->virtual_account,
-                                        'amount'			=> $platform_fee,
-                                        'target_id'			=> $target->id,
-                                        'investment_id'		=> 0,
-                                        'instalment_no'		=> 0,
-                                        'user_to'			=> 0,
-                                        'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
-                                        'status'			=> 2
-                                    );
-                                }
-
-								//攤還表
-								if($transaction_list){
-									foreach($transaction_list as $k => $v){
-										if($v->user_from==$investment->user_id){
-											$transaction[]	= [
-												'source'			=> $v->source,
-												'entering_date'		=> $date,
-												'user_from'			=> $transfer_investments->user_id,
-												'bank_account_from'	=> $virtual_account->virtual_account,
-												'amount'			=> intval($v->amount),
-												'target_id'			=> $v->target_id,
-												'investment_id'		=> $new_investment,
-												'instalment_no'		=> $v->instalment_no,
-												'user_to'			=> $v->user_to,
-												'bank_account_to'	=> $v->bank_account_to,
-												'limit_date'		=> $v->limit_date,
-											];
-										}else if($v->user_to==$investment->user_id){
-											$transaction[]	= [
-												'source'			=> $v->source,
-												'entering_date'		=> $date,
-												'user_from'			=> $v->user_from,
-												'bank_account_from'	=> $v->bank_account_from,
-												'amount'			=> intval($v->amount),
-												'target_id'			=> $v->target_id,
-												'investment_id'		=> $new_investment,
-												'instalment_no'		=> $v->instalment_no,
-												'user_to'			=> $transfer_investments->user_id,
-												'bank_account_to'	=> $virtual_account->virtual_account,
-												'limit_date'		=> $v->limit_date,
-											];
-										}
-										$this->CI->transaction_model->update($v->id,array('status'=>0));
-									}
-								}
-
-								$rs  = $this->CI->transaction_model->insert_many($transaction);
-								if($rs && is_array($rs)){
-									$this->CI->transfer_model->update($transfer_id,array(
-										'status'			=> 10,
-										'transfer_date'		=> $date,
-										'new_investment'	=> $new_investment
-									));
-									foreach($rs as $key => $value){
-										$this->CI->passbook_lib->enter_account($value);
-									}
-
-									$this->CI->notification_lib->transfer_success($investment->user_id,1,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
-                                    if(!in_array($transfer_investments->user_id,[21194,21197])){
-                                        $this->CI->notification_lib->transfer_success($transfer_investments->user_id,1,1,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
+                                $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
+                                $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
+                                if ($transfer_account && $virtual_account) {
+                                    if ($target->order_id != 0) {
+                                        $order = $this->CI->order_model->get($target->order_id);
+                                        $platform_fee = intval($order->platform_fee);
+                                        $transfer_fee = intval($transfer->transfer_fee);
+                                        $amount -= ($platform_fee + $transfer_fee);
                                     }
-									$this->CI->notification_lib->transfer_success($target->user_id,0,0,$target->target_no,$transfer->amount, $transfer_investments->user_id,$date);
-								}
-							}
-						}
-					}
-					$this->CI->target_model->update($target->id,array('script_status'=>0));
 
-                    if($target->order_id!=0){
-                        $this->CI->load->model('transaction/order_model');
-                        $order = $this->CI->order_model->get($target->order_id);
-                        $this->CI->load->library('coop_lib');
-                        $result = $this->CI->coop_lib->coop_request('order/supdate',[
-                            'merchant_order_no' => $order->merchant_order_no,
-                            'phone'             => $order->phone,
-                            'type'              => 'finish',
-                        ],$admin_id);
-                        if($result) {
-                            $this->CI->load->library('order_lib');
-                            $this->CI->order_lib->order_change($order->id,5, [
-                                'status'          => 10,
-                            ],$admin_id);
+                                    if($t==(count($transfers)-1)){
+                                        $this->CI->frozen_amount_model->update($transfer_investments->frozen_id, ['status' => 0]);
+                                        //放款
+                                        $transaction[] = [
+                                            'source' => SOURCE_TRANSFER,
+                                            'entering_date' => $date,
+                                            'user_from' => $transfer_investments->user_id,
+                                            'bank_account_from' => $virtual_account->virtual_account,
+                                            'amount' => intval($amount),
+                                            'target_id' => $target->id,
+                                            'investment_id' => $new_investment,
+                                            'instalment_no' => 0,
+                                            'user_to' => $investment->user_id,
+                                            'bank_account_to' => $transfer_account->virtual_account,
+                                            'status' => 2
+                                        ];
+                                    }
+
+                                    if ($target->order_id != 0) {
+                                        //放款(經銷商債轉服務費)
+                                        $transaction[] = [
+                                            'source' => SOURCE_TRANSFER,
+                                            'entering_date' => $date,
+                                            'user_from' => $transfer_investments->user_id,
+                                            'bank_account_from' => $virtual_account->virtual_account,
+                                            'amount' => $transfer_fee,
+                                            'target_id' => $target->id,
+                                            'investment_id' => 0,
+                                            'instalment_no' => 0,
+                                            'user_to' => $investment->user_id,
+                                            'bank_account_to' => $transfer_account->virtual_account,
+                                            'status' => 2
+                                        ];
+                                    }
+
+                                    //手續費
+                                    $transaction[] = [
+                                        'source' => SOURCE_TRANSFER_FEE,
+                                        'entering_date' => $date,
+                                        'user_from' => $investment->user_id,
+                                        'bank_account_from' => $transfer_account->virtual_account,
+                                        'amount' => $transfer->transfer_fee,
+                                        'target_id' => $target->id,
+                                        'investment_id' => $new_investment,
+                                        'instalment_no' => 0,
+                                        'user_to' => 0,
+                                        'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
+                                        'status' => 2
+                                    ];
+
+                                    if ($target->order_id != 0) {
+                                        $user_bankaccount = $this->CI->virtual_account_model->get_by([
+                                            'user_id' => $target->user_id,
+                                            'investor' => 0
+                                        ]);
+
+                                        //放款(消費貸平台服務費)
+                                        $transaction[] = [
+                                            'source' => SOURCE_TRANSFER,
+                                            'entering_date' => $date,
+                                            'user_from' => $transfer_investments->user_id,
+                                            'bank_account_from' => $virtual_account->virtual_account,
+                                            'amount' => $platform_fee,
+                                            'target_id' => $target->id,
+                                            'investment_id' => 0,
+                                            'instalment_no' => 0,
+                                            'user_to' => $target->user_id,
+                                            'bank_account_to' => $user_bankaccount->virtual_account,
+                                            'status' => 2
+                                        ];
+
+                                        //消費貸消費者平台手續費
+                                        $transaction[] = array(
+                                            'source' => SOURCE_FEES,
+                                            'entering_date' => $date,
+                                            'user_from' => $target->user_id,
+                                            'bank_account_from' => $user_bankaccount->virtual_account,
+                                            'amount' => $platform_fee,
+                                            'target_id' => $target->id,
+                                            'investment_id' => 0,
+                                            'instalment_no' => 0,
+                                            'user_to' => 0,
+                                            'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
+                                            'status' => 2
+                                        );
+                                    }
+
+                                    //攤還表
+                                    if ($transaction_list) {
+                                        foreach ($transaction_list as $k => $v) {
+                                            if ($v->user_from == $investment->user_id) {
+                                                $transaction[] = [
+                                                    'source' => $v->source,
+                                                    'entering_date' => $date,
+                                                    'user_from' => $transfer_investments->user_id,
+                                                    'bank_account_from' => $virtual_account->virtual_account,
+                                                    'amount' => intval($v->amount),
+                                                    'target_id' => $v->target_id,
+                                                    'investment_id' => $new_investment,
+                                                    'instalment_no' => $v->instalment_no,
+                                                    'user_to' => $v->user_to,
+                                                    'bank_account_to' => $v->bank_account_to,
+                                                    'limit_date' => $v->limit_date,
+                                                ];
+                                            } else if ($v->user_to == $investment->user_id) {
+                                                $transaction[] = [
+                                                    'source' => $v->source,
+                                                    'entering_date' => $date,
+                                                    'user_from' => $v->user_from,
+                                                    'bank_account_from' => $v->bank_account_from,
+                                                    'amount' => intval($v->amount),
+                                                    'target_id' => $v->target_id,
+                                                    'investment_id' => $new_investment,
+                                                    'instalment_no' => $v->instalment_no,
+                                                    'user_to' => $transfer_investments->user_id,
+                                                    'bank_account_to' => $virtual_account->virtual_account,
+                                                    'limit_date' => $v->limit_date,
+                                                ];
+                                            }
+                                            $this->CI->transaction_model->update($v->id, array('status' => 0));
+                                        }
+                                    }
+
+                                    if($transaction){
+                                        $this->CI->transfer_model->update($transfer_ids[$t], array(
+                                            'status' => 10,
+                                            'transfer_date' => $date,
+                                            'new_investment' => $new_investment
+                                        ));
+                                        $rs = $this->CI->transaction_model->insert_many($transaction);
+                                        if ($rs && is_array($rs)) {
+                                            foreach ($rs as $key => $value) {
+                                                $this->CI->passbook_lib->enter_account($value);
+                                            }
+                                            if($t==(count($transfers)-1)) {
+                                                $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
+                                                //if (!in_array($transfer_investments->user_id, [21194, 21197])) {
+                                                    $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);
+                                                //}
+                                            }
+                                            $this->CI->notification_lib->transfer_success($target->user_id, 0, 0, $target->target_no, $transfer->amount, $transfer_investments->user_id, $date);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if ($target->order_id != 0) {
+                            $this->CI->load->model('transaction/order_model');
+                            $order = $this->CI->order_model->get($target->order_id);
+                            $this->CI->load->library('coop_lib');
+                            $result = $this->CI->coop_lib->coop_request('order/supdate', [
+                                'merchant_order_no' => $order->merchant_order_no,
+                                'phone' => $order->phone,
+                                'type' => 'finish',
+                            ], $admin_id);
+                            if ($result) {
+                                $this->CI->load->library('order_lib');
+                                $this->CI->order_lib->order_change($order->id, 5, [
+                                    'status' => 10,
+                                ], $admin_id);
+                            }
                         }
                     }
-					return true;
-				}
-			}
-		}
+                }
+            }
+            //unlock target
+            $this->CI->target_model->update_many($target_ids, array('script_status' => 0));
+            $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 0));
+            return true;
+        }
 		return false;
 	}
 	

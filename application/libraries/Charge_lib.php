@@ -342,7 +342,10 @@ class Charge_lib
 				}else{
 					$param = ['status'=>10];
 				}
-				
+
+                $this->CI->load->library('Transfer_lib');
+                $this->CI->transfer_lib->break_transfer($target->id);
+
 				$this->CI->target_model->update($target->id,$param);
 				$this->CI->target_lib->insert_change_log($target->id,$param,0,0);
 				
