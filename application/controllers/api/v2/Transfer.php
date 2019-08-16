@@ -583,7 +583,7 @@ class Transfer extends REST_Controller {
 			if($combinations){
 				$transfers		= $this->transfer_lib->get_transfer_list([
 					'combination'	=> $combination_id,
-					'status' 		=> 0
+					'status' 		=> [0,1,2,10]
 				]);
 				if($transfers){
 					$contracts = [];
