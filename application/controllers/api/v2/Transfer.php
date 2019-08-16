@@ -189,7 +189,7 @@ class Transfer extends REST_Controller {
         $product_list 	= $this->config->item('product_list');
         $orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
         $sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
-        $transfer 		= $this->transfer_lib->get_transfer_list();
+        $transfer 		= $this->transfer_lib->get_transfer_list(['status' => [0,1,2]]);
         $my_investment  = array();
         $my_combination = array();
         $user_id 			= $this->user_info->id;
