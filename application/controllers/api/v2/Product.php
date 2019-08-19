@@ -895,9 +895,11 @@ class Product extends REST_Controller {
             $certification		= [];
             $certification_list	= $this->certification_lib->get_status($user_id,$investor);
             if(!empty($certification_list)){
+                $diploma = '';
                 foreach($certification_list as $key => $value){
+                    $key==8?$diploma=$value:null;
                     if(in_array($key,$product['certifications'])){
-                        $value['optional'] = ($value['id']==9 && in_array($target->product_id,$value['optional'])?true:false);
+                        $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $certification[] = $value;
                     }
                 }

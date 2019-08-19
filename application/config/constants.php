@@ -217,6 +217,7 @@ defined('BALLOON_MORTGAGE_RULE')   	OR define('BALLOON_MORTGAGE_RULE'   , 3); //
 defined('PREPAYMENT_RANGE_DAYS')   	OR define('PREPAYMENT_RANGE_DAYS'	, 2); //提前還款結息天數
 defined('SUBLOAN_RANGE_DAYS')   	OR define('SUBLOAN_RANGE_DAYS'		, 3); //轉換產品結息天數
 defined('TRANSFER_RANGE_DAYS')   	OR define('TRANSFER_RANGE_DAYS'		, 1); //債權轉讓結息天數
+defined('DIPLOMA_RANGE_DAYS')   	OR define('DIPLOMA_RANGE_DAYS'		, 365); //最高學歷允許免年徵畢業時間
 defined('TAX_RATE')   				OR define('TAX_RATE'				, 5); //稅率
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
 defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');

@@ -132,14 +132,14 @@ class Certification_lib{
 	}
 
     public function idcard_verify($info = []){
-       if($info && $info->status ==0 && $info->certification_id==1){
-           $content = json_decode($info->content,true);
+        if($info && $info->status ==0 && $info->certification_id==1){
+            $content = json_decode($info->content,true);
 
-           $this->CI->load->library('Faceplusplus_lib');
-           $this->CI->load->library('Ocr_lib');
+            $this->CI->load->library('Faceplusplus_lib');
+            $this->CI->load->library('Ocr_lib');
 
-           $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-           $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+            $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+            $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
 
             if(!$person_token){
                 $rotate = $this->face_rotate($content['person_image'],$info->user_id);
@@ -836,8 +836,8 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
-	public function get_status($user_id,$investor=0,$company=0){
+
+    public function get_status($user_id,$investor=0,$company=0){
 		if($user_id){
 			$certification = array();
 			if($company){
@@ -860,23 +860,34 @@ class Certification_lib{
 			foreach($certification as $key => $value){
 				$user_certification = $this->get_certification_info($user_id,$key,$investor);
 				if($user_certification){
-					$value['user_status'] 		= intval($user_certification->status);
-					$value['certification_id'] 	= intval($user_certification->id);
-					$value['updated_at'] 		= intval($user_certification->updated_at);
+					$value['user_status'] 		   = intval($user_certification->status);
+					$value['certification_id'] 	   = intval($user_certification->id);
+                    $value['updated_at'] 		   = intval($user_certification->updated_at);
+                    $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
+                    $key==8?$value['diploma_date']=$dipoma:null;
 				}else{
-					$value['user_status'] 		= null;
-					$value['certification_id'] 	= null;
-					$value['updated_at'] 		= null;
+					$value['user_status'] 		 = null;
+					$value['certification_id'] 	 = null;
+					$value['updated_at'] 		 = null;
 				}
-				
+
 				$certification_list[$key] = $value;
 			}
 			return $certification_list;
 		}
 		return false;
 	}
-	
-	public function get_last_status($user_id,$investor=0,$company=0){
+
+    public function option_investigation($product_id,$value,$diploma){
+        if($value['id']==9 && in_array($product_id,$value['optional'])){
+            if($diploma['diploma_date']!=null && is_numeric($diploma['diploma_date'])){
+                return get_range_days($diploma['diploma_date']+19110000,date('Ymd',strtotime(get_entering_date())))>=DIPLOMA_RANGE_DAYS?false:true;
+            }
+        }
+        return false;
+    }
+
+    public function get_last_status($user_id,$investor=0,$company=0){
 		if($user_id){
 			$certification = [];
 			if($company){
