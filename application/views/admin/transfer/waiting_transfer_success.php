@@ -153,8 +153,8 @@
 												<?=isset($value->target->target_no)?$value->target->target_no:"" ?>
 											 </td>
                                             <td><?=isset($value->investment->user_id)&&$value->investment->user_id?$value->investment->user_id:"" ?></td>
-                                            <td><?=isset($value->transfer_investment->user_id)&&$value->transfer_investment->user_id?$value->transfer_investment->user_id:"" ?></td>
-                                            <td><?=isset($value->transfer_investment->tx_datetime)&&$value->transfer_investment->tx_datetime?$value->transfer_investment->tx_datetime:"" ?></td>
+                                            <td><?=isset($value->transfer_investments->user_id)&&$value->transfer_investments->user_id?$value->transfer_investments->user_id:"" ?></td>
+                                            <td><?=isset($value->transfer_investments->tx_datetime)&&$value->transfer_investments->tx_datetime?$value->transfer_investments->tx_datetime:"" ?></td>
                                             <td><?=isset($value->investment->loan_amount)&&$value->investment->loan_amount?$value->investment->loan_amount:"" ?></td>
                                             <td><?=isset($value->target->interest_rate)&&$value->target->interest_rate?floatval($value->target->interest_rate).'%':"" ?></td>
                                             <td><?=isset($value->amount)?$value->amount:"" ?></td>

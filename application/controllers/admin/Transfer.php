@@ -341,6 +341,7 @@ class Transfer extends MY_Admin_Controller {
 	public function waiting_transfer_success(){
 		$page_data 		= array('type'=>'list');
         $this->load->model('loan/transfer_combination_model');
+        $this->load->model('loan/transfer_investment_model');
         $transfers        = [];
         $combinations    = [];
 		$where			= array(
@@ -364,6 +365,7 @@ class Transfer extends MY_Admin_Controller {
                         $transfer_info = $value;
                         $transfer_info->target = $this->target_model->get($value->target_id);
                         $transfer_info->investment = $this->investment_model->get($value->investment_id);
+                        $transfer_info->transfer_investments = $transfer_investments = $this->transfer_investment_model->get_by(array('transfer_id' => $value->id,));
                         $transfers[] = $transfer_info;
                     }
                 }
