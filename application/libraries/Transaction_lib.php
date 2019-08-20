@@ -754,7 +754,7 @@ class Transaction_lib{
                                         $amount -= ($platform_fee + $transfer_fee);
                                     }
 
-                                    if($t==(count($transfers)-1)){
+                                    if($t == 0){
                                         $this->CI->frozen_amount_model->update($transfer_investments->frozen_id, ['status' => 0]);
                                         //放款
                                         $transaction[] = [

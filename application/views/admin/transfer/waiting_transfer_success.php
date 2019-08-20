@@ -229,7 +229,7 @@
                                                 <td><?=isset($value->max_instalment)?$value->max_instalment:"" ?></td>
                                                 <td><?=isset($value->expire_time)?date("Y-m-d",$value->expire_time):"" ?></td>
                                                 <td><button class="btn btn-danger" onclick="cancelpkg(<?=isset($value->id)?$value->id:"" ?>)">退回整包債轉</button></td>
-                                                <td><a href="<?=admin_url('transfer/transfer_combination')."?id=".(isset($value->id)?$value->id:"")."&no=",(isset($value->combination_no)?$value->combination_no:"") ?>" class="btn btn-default fancyframe">詳情</a></td>
+                                                <td><a href="<?=admin_url('transfer/transfer_combination_success')."?id=".(isset($value->id)?$value->id:"")."&no=",(isset($value->combination_no)?$value->combination_no:"") ?>" class="btn btn-default fancyframe">詳情</a></td>
                                             </tr>
                                             <?php
                                         }}

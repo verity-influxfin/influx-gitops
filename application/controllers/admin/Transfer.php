@@ -338,6 +338,32 @@ class Transfer extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+    public function transfer_combination_success(){
+		$page_data 		= array('type'=>'list');
+        $input 			= $this->input->get(NULL, TRUE);
+		$where			= array(
+			'combination'	=> $input['id']
+		);
+        $list 	= $this->transfer_model->get_many_by($where);
+        if($list){
+            foreach($list as $key => $value){
+                $list[$key]->target 	= $this->target_model->get($value->target_id);
+                $list[$key]->investment = $this->investment_model->get($value->investment_id);
+                $list[$key]->transfer_investments = $transfer_investments = $this->transfer_investment_model->get_by(array('transfer_id' => $value->id,));
+            }
+        }
+
+		$page_data['instalment_list']			= $this->config->item('instalment');
+		$page_data['repayment_type']			= $this->config->item('repayment_type');
+		$page_data['list'] 						= $list;
+		$page_data['no'] 						= $input['no'];
+		$page_data['transfer_status_list'] 		= $this->investment_model->transfer_status_list;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/transfer/transfer_combination_success',$page_data);
+		$this->load->view('admin/_footer');
+	}
+
 	public function waiting_transfer_success(){
 		$page_data 		= array('type'=>'list');
         $this->load->model('loan/transfer_combination_model');
