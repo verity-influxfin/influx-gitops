@@ -14,6 +14,7 @@ class Account extends MY_Admin_Controller {
 		$this->load->model('transaction/transaction_model');
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('user/user_estatement_model');
+        $this->load->library('Transfer_lib');
 	}
 	
 	public function index(){
@@ -200,6 +201,13 @@ class Account extends MY_Admin_Controller {
 				}
 
 				if($value->source == SOURCE_TRANSFER){
+				    $item_no           = $value->target_no;
+				    $item_platform_fee = 0;
+                    $combinations_info = $this->transfer_lib->check_combination($value->target_id,$value->investment_id);
+                    if($combinations_info){
+                        $item_no           = $combinations_info[0];
+                        $item_platform_fee = $combinations_info[2];
+                    }
 					$sub_list = array();
 					foreach($data as $k =>$v){
 						if($v->source==SOURCE_TRANSFER_FEE && $v->investment_id==$value->investment_id && $v->user_from==$value->user_to){
@@ -209,14 +217,14 @@ class Account extends MY_Admin_Controller {
 								"amount_to"				=> $value->amount_to,
 								"v_bank_account_to"		=> $value->v_bank_account_to,
 								"v_amount_to"			=> $value->v_amount_to - $v->amount,
-								"platform_fee"			=> $v->amount,
+								"platform_fee"			=> $combinations_info?$item_platform_fee:$v->amount,
 							);
 						}
 					}
 					
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
-						"target_no"				=> $value->target_no,
+						"target_no"				=> $item_no,
 						"source_type"			=> 'transfer',
 						"user_from"				=> $user_name[$value->user_from],
 						"bank_account_from"		=> $value->bank_account_from,
