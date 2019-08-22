@@ -122,7 +122,19 @@ class Certification_lib{
                         }
                     }
                     $this->CI->load->model('loan/credit_model');
-                    $this->CI->credit_model->update_by(['user_id' =>$info->user_id],['status'=>0]);
+                    $credit_list = $this->CI->credit_model->get_many_by(array(
+                        'user_id'=>$info->user_id,
+                        'status'=> 1
+                    ));
+                    foreach($credit_list as $ckey => $cvalue){
+                        if(!in_array($cvalue->level,[11,12,13])){
+                            $this->CI->credit_model->update_by(
+                                ['id'    => $cvalue->id],
+                                ['status'=> 0]
+                            );
+                        }
+                    }
+
 					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
 				}
 				return $rs;

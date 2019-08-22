@@ -1441,10 +1441,19 @@ class Certification extends REST_Controller {
                 'status'	=> array(0,22)
             ));
             if($targets){
-                $this->credit_model->update_by([
-                    'user_id'    =>$user_id,
-                    'product_id' =>[3,4],
-                ],['status'=>0]);
+                $credit_list = $this->credit_model->get_many_by([
+                    'user_id'    => $user_id,
+                    'product_id' => [3,4],
+                    'status'     => 1
+                ]);
+                foreach($credit_list as $ckey => $cvalue){
+                    if(!in_array($cvalue->level,[11,12,13])){
+                        $this->credit_model->update_by(
+                            ['id'    => $cvalue->id],
+                            ['status'=> 0]
+                        );
+                    }
+                }
             }
 
 			$param		= array(
