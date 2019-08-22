@@ -1430,7 +1430,7 @@ class User extends REST_Controller {
         $investor = $bio_keyData->investor;
         $device_id = $bio_keyData->device_id;
 
-        if ($pdevice_id != $bio_keyData->device_id || (empty($bio_keyData->user_id)||empty($bio_keyData->investor)||empty($bio_keyData->device_id))) {
+        if ($pdevice_id != $bio_keyData->device_id ) {
             $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
 
