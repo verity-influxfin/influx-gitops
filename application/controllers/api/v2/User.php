@@ -1420,24 +1420,28 @@ class User extends REST_Controller {
     {
         $bio_key 		= isset($this->input->request_headers()['bio_key'])?$this->input->request_headers()['bio_key']:'';
         $bio_keyData 	= AUTHORIZATION::getUserInfoByToken($bio_key);
+        $input = $this->input->post(NULL, TRUE);
+        $pdevice_id = isset($input['device_id'])?trim($input['device_id']):'';
+        $user_id = $bio_keyData->user_id;
+        $bio_type = $bio_keyData->bio_type;
+        $investor = $bio_keyData->investor;
+        $device_id = $bio_keyData->device_id;
 
-        if (empty($bio_keyData->user_id)||empty($bio_keyData->investor)||empty($bio_keyData->device_id)) {
+        if ($pdevice_id != $bio_keyData->device_id || (empty($bio_keyData->user_id)||empty($bio_keyData->investor)||empty($bio_keyData->device_id))) {
             $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
-        if($bio_keyData) {
-            $user_id = $bio_keyData->user_id;
-            $bio_type = $bio_keyData->bio_type;
-            $investor = $bio_keyData->investor;
-            $device_id = $bio_keyData->device_id;
 
-            $this->load->model('user/user_bio_model');
-            $active = $this->user_bio_model->get_by(array(
-                'user_id'	=> $user_id,
-                'bio_type'	=> $bio_type,
-                'investor'	=> $investor,
-                'device_id' => $device_id,
-                'bio_key'   => $bio_key
-            ));
+
+        $this->load->model('user/user_bio_model');
+        $active = $this->user_bio_model->get_by(array(
+            'user_id'	=> $user_id,
+            'bio_type'	=> $bio_type,
+            'investor'	=> $investor,
+            'device_id' => $device_id,
+            'bio_key'   => $bio_key
+        ));
+
+        if($bio_keyData && isset($active)) {
             if($bio_key !== $active->bio_key) {
                 $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
             }
@@ -1476,17 +1480,17 @@ class User extends REST_Controller {
                     'bio_key' => $bio_key,
                 ));
 
-                if (!$insert) {
-                    $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                if ($insert) {
+                    $this->response([
+                        'result' => 'SUCCESS',
+                        'data' => [
+                            'bio_key' => $bio_key,
+                            'token' => $request_token,
+                            'expiry_time' => $token->expiry_time,
+                        ]
+                    ]);
                 }
-                $this->response([
-                    'result' => 'SUCCESS',
-                    'data' => [
-                        'bio_key' => $bio_key,
-                        'token' => $request_token,
-                        'expiry_time' => $token->expiry_time,
-                    ]
-                ]);
+                $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
             }
         }
         else{
