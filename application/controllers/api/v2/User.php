@@ -1421,85 +1421,83 @@ class User extends REST_Controller {
     public function biologin_post()
     {
         $bio_key 		= isset($this->input->request_headers()['bio_key'])?$this->input->request_headers()['bio_key']:'';
-        if($bio_key){
-            $bio_keyData 	= AUTHORIZATION::getUserInfoByToken($bio_key);
-            $input = $this->input->post(NULL, TRUE);
-            $pdevice_id = isset($input['device_id'])?trim($input['device_id']):'';
-            $location   = isset($input['location'])?trim($input['location']):'';
-            $user_id    = $bio_keyData->user_id;
-            $bio_type   = $bio_keyData->bio_type;
-            $investor   = $bio_keyData->investor;
-            $device_id  = $bio_keyData->device_id;
+        $bio_keyData 	= AUTHORIZATION::getUserInfoByToken($bio_key);
+        $input = $this->input->post(NULL, TRUE);
+        $pdevice_id = isset($input['device_id'])?trim($input['device_id']):'';
+        $location   = isset($input['location'])?trim($input['location']):'';
+        $user_id    = $bio_keyData->user_id;
+        $bio_type   = $bio_keyData->bio_type;
+        $investor   = $bio_keyData->investor;
+        $device_id  = $bio_keyData->device_id;
 
-            if ($pdevice_id != $bio_keyData->device_id ) {
+        if ($pdevice_id != $bio_keyData->device_id ) {
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
+        }
+
+
+        $this->load->model('user/user_bio_model');
+        $active = $this->user_bio_model->get_by(array(
+            'user_id'	=> $user_id,
+            'bio_type'	=> $bio_type,
+            'investor'	=> $investor,
+            'device_id' => $device_id,
+            'bio_key'   => $bio_key
+        ));
+
+        if($bio_keyData && isset($active)) {
+            if($bio_key !== $active->bio_key) {
                 $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
             }
 
-
-            $this->load->model('user/user_bio_model');
-            $active = $this->user_bio_model->get_by(array(
-                'user_id'	=> $user_id,
-                'bio_type'	=> $bio_type,
-                'investor'	=> $investor,
-                'device_id' => $device_id,
-                'bio_key'   => $bio_key
-            ));
-
-            if($bio_keyData && isset($active)) {
-                if($bio_key !== $active->bio_key) {
-                    $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
+            $user_info = $this->user_model->get($user_id);
+            if ($user_info) {
+                if ($user_info->block_status != 0) {
+                    $this->response(array('result' => 'ERROR', 'error' => BLOCK_USER));
                 }
 
-                $user_info = $this->user_model->get($user_id);
-                if ($user_info) {
-                    if ($user_info->block_status != 0) {
-                        $this->response(array('result' => 'ERROR', 'error' => BLOCK_USER));
-                    }
+                $token = (object)[
+                    'id' => $user_info->id,
+                    'phone' => $user_info->phone,
+                    'auth_otp' => get_rand_token(),
+                    'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
+                    'investor' => $investor,
+                    'company' => 0,
+                    'incharge' => 0,
+                    'agent' => 0,
+                ];
+                $request_token = AUTHORIZATION::generateUserToken($token);
+                $this->user_model->update($user_info->id, array('auth_otp' => $token->auth_otp));
+                $this->insert_login_log($user_info->phone, $investor, 1, $user_info->id, $device_id,$location);
 
-                    $token = (object)[
-                        'id' => $user_info->id,
-                        'phone' => $user_info->phone,
-                        'auth_otp' => get_rand_token(),
-                        'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
-                        'investor' => $investor,
-                        'company' => 0,
-                        'incharge' => 0,
-                        'agent' => 0,
-                    ];
-                    $request_token = AUTHORIZATION::generateUserToken($token);
-                    $this->user_model->update($user_info->id, array('auth_otp' => $token->auth_otp));
-                    $this->insert_login_log($user_info->phone, $investor, 1, $user_info->id, $device_id,$location);
+                //new biokey
+                $ntoken = (object)[
+                    'user_id' => $user_id,
+                    'bio_type' => $bio_type,
+                    'investor' => $investor,
+                    'device_id' => $device_id,
+                    'auth_otp' => get_rand_token(),
+                ];
+                $bio_key = AUTHORIZATION::generateUserToken($ntoken);
 
-                    //new biokey
-                    $ntoken = (object)[
-                        'user_id' => $user_id,
-                        'bio_type' => $bio_type,
-                        'investor' => $investor,
-                        'device_id' => $device_id,
-                        'auth_otp' => get_rand_token(),
-                    ];
-                    $bio_key = AUTHORIZATION::generateUserToken($ntoken);
+                $insert = $this->user_bio_model->update($active->id, array(
+                    'bio_key' => $bio_key,
+                ));
 
-                    $insert = $this->user_bio_model->update($active->id, array(
-                        'bio_key' => $bio_key,
-                    ));
-
-                    if ($insert) {
-                        $this->response([
-                            'result' => 'SUCCESS',
-                            'data' => [
-                                'bio_key' => $bio_key,
-                                'token' => $request_token,
-                                'expiry_time' => $token->expiry_time,
-                            ]
-                        ]);
-                    }
-                    $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                if ($insert) {
+                    $this->response([
+                        'result' => 'SUCCESS',
+                        'data' => [
+                            'bio_key' => $bio_key,
+                            'token' => $request_token,
+                            'expiry_time' => $token->expiry_time,
+                        ]
+                    ]);
                 }
+                $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
             }
-            else{
-                $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
-            }
+        }
+        else{
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
     }
 	
