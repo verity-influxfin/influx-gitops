@@ -6983,6 +6983,13 @@ define({
                             "optional": true,
                             "field": "device_id",
                             "description": "<p>裝置ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "location",
+                            "description": "<p>定位</p>"
                         }
                     ]
                 }
@@ -30011,6 +30018,25 @@ define({
                         }
                     ]
                 }
+            },"parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "location",
+                            "description": "<p>定位</p>"
+                        }
+                    ]
+                }
             },
             "success": {
                 "fields": {
@@ -32610,6 +32636,13 @@ define({
                             "optional": true,
                             "field": "device_id",
                             "description": "<p>裝置ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "location",
+                            "description": "<p>定位</p>"
                         }
                     ]
                 }

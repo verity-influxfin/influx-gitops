@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX'		, 125); // highest au
 //Error Code
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
 defined('BLOCK_USER')   				    OR define('BLOCK_USER'					, 101); // block status
-defined('KEY_FAIL')   			        OR define('BIO_KEY_FAIL'		        , 102); // key not exit
+defined('KEY_FAIL')   			        OR define('KEY_FAIL'		        , 102); // key not exit
 defined('SYSTEM_BLOCK_USER')			    OR define('SYSTEM_BLOCK_USER'	    	, 120); // SYSTEM_BLOCK_USER
 defined('TEMP_BLOCK_USER')			    OR define('TEMP_BLOCK_USER'			    , 121); // TEMP_BLOCK_USER
 defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.

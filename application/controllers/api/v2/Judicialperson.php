@@ -446,6 +446,7 @@ class Judicialperson extends REST_Controller {
 
 		$input = $this->input->post(NULL, TRUE);
         $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
+        $location   = isset($input['location'])?trim($input['location']):'';
         $fields 	= ['tax_id','phone','password'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
@@ -508,7 +509,7 @@ class Judicialperson extends REST_Controller {
 						$this->user_model->update($company_info->id,array(
 							'auth_otp'	=> $token->auth_otp
 						));
-						$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id,$device_id);
+						$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id,$device_id,$location);
 						if($first_time){
 							$this->load->library('notification_lib'); 
 							$this->notification_lib->first_login($user_info->id,$investor);
@@ -520,10 +521,10 @@ class Judicialperson extends REST_Controller {
 						)));
 					}
 				}
-				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$device_id);
+				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$device_id,$location);
 				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 			}
-            $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id);
+            $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location);
             $this->response([
                 'result' => 'ERROR',
                 'error'  => PASSWORD_ERROR,
@@ -532,7 +533,7 @@ class Judicialperson extends REST_Controller {
                 ]
             ]);
 		}
-		$this->insert_login_log($input['phone'],$investor,0,0,$device_id);
+		$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location);
 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 	}
 	
@@ -955,7 +956,7 @@ class Judicialperson extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 	
-	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null){
+	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');
 
@@ -964,6 +965,7 @@ class Judicialperson extends REST_Controller {
             'account'	=> $account,
             'investor'	=> $investor,
             'user_id'	=> $user_id,
+            'location'	=> $location,
             'status'	=> $status
         ));
 
