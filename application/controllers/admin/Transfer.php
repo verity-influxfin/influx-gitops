@@ -253,16 +253,18 @@ class Transfer extends MY_Admin_Controller {
 			if(isset($list) && !empty($list)){
 				ksort($list);
 				foreach($list as $key => $value){
-					$total 	= $value['principal']+$value['interest'];
-					$profit = $value['principal']+$value['interest']-$value['ar_fees'];
-					$html .= '<tr>';
-					$html .= '<td>'.$key.'</td>';
-					$html .= '<td>'.$value['principal'].'</td>';
-					$html .= '<td>'.$value['interest'].'</td>';
-					$html .= '<td>'.$total.'</td>';
-					$html .= '<td>'.$value['repayment'].'</td>';
-					$html .= '<td>'.$profit.'</td>';
-					$html .= '</tr>';
+				    if(substr($key, -2)=='10'){
+                        $total 	= $value['principal']+$value['interest'];
+                        $profit = $value['principal']+$value['interest']-$value['ar_fees'];
+                        $html .= '<tr>';
+                        $html .= '<td>'.$key.'</td>';
+                        $html .= '<td>'.$value['principal'].'</td>';
+                        $html .= '<td>'.$value['interest'].'</td>';
+                        $html .= '<td>'.$total.'</td>';
+                        $html .= '<td>'.$value['repayment'].'</td>';
+                        $html .= '<td>'.$profit.'</td>';
+                        $html .= '</tr>';
+                    }
 				}
 			}
 			$html .= '</tbody></table>';
