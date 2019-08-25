@@ -126,7 +126,7 @@ class Certification extends MY_Admin_Controller {
                 //失效信評分數
                 $this->load->model('loan/credit_model');
                 $credit_list = $this->credit_model->get_many_by([
-                    'user_id'    =>999999,
+                    'user_id'    =>$info->user_id,
                     'product_id' =>[3,4],
                     'status'     => 1
                 ]);
