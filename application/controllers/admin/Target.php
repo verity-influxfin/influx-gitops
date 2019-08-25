@@ -23,7 +23,9 @@ class Target extends MY_Admin_Controller {
 		
 		$page_data 	= ['type'=>'list'];
 		$input 		= $this->input->get(NULL, TRUE);
-		$where		= [];
+		$where		= [
+		    'status' => [5,10]
+        ];
 		$list		= [];
 		$fields 	= ['status','target_no','user_id','delay','all'];
 		foreach ($fields as $field) {

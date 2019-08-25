@@ -25,7 +25,9 @@ class Transfer extends MY_Admin_Controller {
 		$school_list 	= array();
 		$input 			= $this->input->get(NULL, TRUE);
 		$show_status 	= array(3,10);
-		$where			= array();
+		$where			= array(
+		    'status' => [3,10]
+        );
 		$target_no		= '';
 		$fields 		= ['status','target_no','user_id'];
 		
@@ -38,14 +40,15 @@ class Transfer extends MY_Admin_Controller {
 				}
 			}
 		}
-		
+
 		if($target_no!='' || !empty($where)){
 			$where['status'] = isset($where['status'])?$where['status']:$show_status;
-			if(!empty($target_no)){
+			$query = $target_no!=''?['target_no like' => $target_no]:($where['status']==3?['status' => [5]]:['status' => [5,10]]);
+			if(!empty($target_no)||$query){
 				$target_ids 	= array();
-				$target_list 	= $this->target_model->get_many_by(array(
-					'target_no like' => $target_no
-				));
+				$target_list 	= $this->target_model->get_many_by(
+                    $query
+				);
 				if($target_list){
 					foreach($target_list as $key => $value){
 						$target_ids[] = $value->id;
@@ -62,13 +65,13 @@ class Transfer extends MY_Admin_Controller {
 				$target_ids 	= array();
 				$ids 			= array();
 				$user_list 		= array();
-				
+
 				foreach($list as $key => $value){
 					$target_ids[] 	= $value->target_id;
 					$ids[] 			= $value->id;
 				}
-				
-				$target_list 	= $this->target_model->get_many($target_ids);
+
+				//$target_list 	= $this->target_model->get_many($target_ids);
 				if($target_list){
 					foreach($target_list as $key => $value){
 						$user_list[] 		 = $value->user_id;
