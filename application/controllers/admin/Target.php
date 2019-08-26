@@ -68,6 +68,9 @@ class Target extends MY_Admin_Controller {
 			}
 		}
 		//hsiang 新增name id_number 收尋欄--
+        if(isset($input['user_id_number'])&&$input['user_id_number']==''&&isset($input['user_id'])&&$input['user_id']==''&&isset($input['target_no'])&&$input['target_no']==''&&isset($input['user_name'])&&$input['user_name']==''&&isset($input['status'])&&$input['status']==''&&isset($input['delay'])&&$input['delay']==''){
+            $where = [5,10];
+        }
 		if(!empty($where)){
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
