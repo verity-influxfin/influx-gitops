@@ -185,7 +185,7 @@ class Credit_lib{
 				}
 			}
 		}
-		$param['amount'] = $param['amount']>300000?300000:$param['amount'];
+		$param['amount'] = $param['amount']>200000?200000:$param['amount'];
 		$param['amount'] = $param['amount']<20000?0:$param['amount'];
 		if(intval($data['job_salary'])<=35000){
 			$job_salary = intval($data['job_salary'])*2;
@@ -356,9 +356,9 @@ class Credit_lib{
 		$point 	= 0;
 		if($months >= 12){
 			$point = 300;
-		}else if($months >= 6 && $rate < 12){
+		}else if($months >= 6 && $months < 12){
 			$point = 200;
-		}else if($months >= 3 && $rate < 6){
+		}else if($months >= 3 && $months < 6){
 			$point = 100;
 		}
 		return $point;
