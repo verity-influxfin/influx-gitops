@@ -26,7 +26,7 @@ class Transfer extends MY_Admin_Controller {
 		$input 			= $this->input->get(NULL, TRUE);
 		$show_status 	= array(3,10);
 		$where			= array(
-		    'status' => [3,10]
+		    //'status' => [3,10]
         );
 		$target_no		= '';
 		$fields 		= ['status','target_no','user_id'];
