@@ -893,7 +893,7 @@ class Certification_lib{
     public function option_investigation($product_id,$value,$diploma){
         if($value['id']==9 && in_array($product_id,$value['optional'])){
             if($diploma['diploma_date']!=null && is_numeric($diploma['diploma_date'])){
-                return get_range_days($diploma['diploma_date']+19110000,date('Ymd',strtotime(get_entering_date())))>=DIPLOMA_RANGE_DAYS?false:true;
+                return get_range_days(intval($diploma['diploma_date'])+19110000,date('Ymd',strtotime(get_entering_date())))>=DIPLOMA_RANGE_DAYS?false:true;
             }
         }
         return false;
