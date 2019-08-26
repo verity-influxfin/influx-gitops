@@ -656,7 +656,6 @@ class Transaction_lib{
 	//債轉成功
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
-        //$r_status = true;
 		if($transfer_id){
             $this->CI->load->model('loan/transfer_model');
             $this->CI->load->model('loan/transfer_investment_model');
@@ -684,6 +683,7 @@ class Transaction_lib{
 
             //lock target
             $unlock        = true;
+            $is_order      = false;
             $transfer_info = [];
             $target_ids    = [];
             $transfer_ids  = [];
@@ -748,10 +748,16 @@ class Transaction_lib{
                                 $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
                                 if ($transfer_account && $virtual_account) {
                                     if ($target->order_id != 0) {
-                                        $order = $this->CI->order_model->get($target->order_id);
-                                        $platform_fee = intval($order->platform_fee);
-                                        $transfer_fee = intval($transfer->transfer_fee);
-                                        $amount -= ($platform_fee + $transfer_fee);
+                                        $target_inves = $this->CI->investment_model->get_many_by([
+                                            'target_id' => $target->id
+                                        ]);
+                                        $is_order = count($target_inves)==0;
+                                        if ($is_order) {
+                                            $order = $this->CI->order_model->get($target->order_id);
+                                            $platform_fee = intval($order->platform_fee);
+                                            $transfer_fee = intval($transfer->transfer_fee);
+                                            $amount -= ($platform_fee + $transfer_fee);
+                                        }
                                     }
 
                                     if($t == 0){
@@ -772,7 +778,7 @@ class Transaction_lib{
                                         ];
                                     }
 
-                                    if ($target->order_id != 0) {
+                                    if ($is_order) {
                                         //放款(經銷商債轉服務費)
                                         $transaction[] = [
                                             'source' => SOURCE_TRANSFER,
@@ -804,7 +810,7 @@ class Transaction_lib{
                                         'status' => 2
                                     ];
 
-                                    if ($target->order_id != 0) {
+                                    if ($is_order) {
                                         $user_bankaccount = $this->CI->virtual_account_model->get_by([
                                             'user_id' => $target->user_id,
                                             'investor' => 0
@@ -900,7 +906,7 @@ class Transaction_lib{
                                 }
                             }
                         }
-                        if ($target->order_id != 0) {
+                        if ($is_order) {
                             $this->CI->load->model('transaction/order_model');
                             $order = $this->CI->order_model->get($target->order_id);
                             $this->CI->load->library('coop_lib');
