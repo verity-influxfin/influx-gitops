@@ -11,7 +11,12 @@
 					var user_id 			= $('#user_id').val();
 					var target_no 			= $('#target_no').val();
 					var status 				= $('#status :selected').val();
-					top.location = './index?status='+status+'&user_id='+user_id+'&target_no='+target_no;
+                    if(user_id==''&&target_no==''&&status==''){
+                        top.location = './index?all=all';
+                    }
+                    else {
+                        top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no;
+                    }
 				}
 
 				function checked_all(){

@@ -6,14 +6,19 @@
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
-				function showChang(){
-					var user_id 			= $('#user_id').val();
-					var target_no 			= $('#target_no').val();
+                function showChang(){
+                    var user_id 			= $('#user_id').val();
+                    var target_no 			= $('#target_no').val();
                     var user_name 			= $('#user_name').val();
                     var user_id_number 		= $('#user_id_number').val();
-					var delay 				= $('#delay :selected').val();
-					var status 				= $('#status :selected').val();
-					top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number;
+                    var delay 				= $('#delay :selected').val();
+                    var status 				= $('#status :selected').val();
+                    if(user_id==''&&target_no==''&&user_name==''&&user_id_number==''&&delay==''&&status==''){
+                        top.location = './index?all=all';
+                    }
+                    else{
+                        top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number;
+                    }
 				}
 			</script>
             <!-- /.row -->
