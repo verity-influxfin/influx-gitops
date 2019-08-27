@@ -307,16 +307,16 @@ class Target extends MY_Admin_Controller {
 		$remark = isset($get['remark'])?$get['remark']:'';
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(0,1,2,23))){
+			if($info && in_array($info->status,array(0,1,2,22,23))){
 				if($info->sub_status==8){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
 				}else{
 					$this->target_lib->target_verify_failed($info,$this->login_info->id,$remark);
 				}
-				echo '更新成功';die();
+				echo '更新失敗';die();
 			}else{
-				echo '查無此ID';die();
+				echo '更新失敗';die();
 			}
 		}else{
 			echo '查無此ID';die();
