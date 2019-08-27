@@ -14,7 +14,9 @@
                     var delay 				= $('#delay :selected').val();
                     var status 				= $('#status :selected').val();
                     if(user_id==''&&target_no==''&&user_name==''&&user_id_number==''&&delay==''&&status==''){
-                        top.location = './index?all=all';
+                        if(confirm(target_no+"即將撈取各狀態案件，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
+                            top.location = './index?all=all';
+                        }
                     }
                     else{
                         top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number;

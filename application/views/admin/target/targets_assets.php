@@ -12,7 +12,9 @@
 					var target_no 			= $('#target_no').val();
 					var status 				= $('#status :selected').val();
                     if(user_id==''&&target_no==''&&status==''){
-                        top.location = './index?all=all';
+                        if(confirm(target_no+"即將撈取各狀態分割債權，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
+                            top.location = './index?all=all';
+                        }
                     }
                     else {
                         top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no;
