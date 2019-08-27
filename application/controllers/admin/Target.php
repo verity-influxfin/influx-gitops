@@ -64,7 +64,7 @@ class Target extends MY_Admin_Controller {
 				'status'	=> 1
 		 
 			));
-            if(count($id_number)==1){
+            if($id_number){
 				$where['user_id'] = $id_number->id;//反撈user_id
 			}
 		}
