@@ -314,7 +314,7 @@ class Target extends MY_Admin_Controller {
 				}else{
 					$this->target_lib->target_verify_failed($info,$this->login_info->id,$remark);
 				}
-				echo '更新失敗';die();
+				echo '更新成功';die();
 			}else{
 				echo '更新失敗';die();
 			}
