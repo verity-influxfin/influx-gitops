@@ -25,7 +25,7 @@ class Target extends MY_Admin_Controller {
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= [];
 		$list		= [];
-		$fields 	= ['status','target_no','user_id','delay','all'];
+		$fields 	= ['status','target_no','user_id','delay'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				if($field=='target_no'){
@@ -36,6 +36,7 @@ class Target extends MY_Admin_Controller {
 			}
 		}
 		//hsiang 新增name id_number 收尋欄位＋＋
+        isset($input['all'])&&$input['all']=='all'?$where=['status' => [5,10]]:'';
 		if (isset($input['user_name'])&&$input['user_name']!='') {
 			$user_name=$input['user_name'];
 			$name		= $this->user_model->get_many_by(array(

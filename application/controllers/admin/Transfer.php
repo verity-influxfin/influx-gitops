@@ -39,9 +39,7 @@ class Transfer extends MY_Admin_Controller {
 			}
 		}
 
-        if(isset($input['status'])&&$input['status']==''&&isset($input['target_no'])&&$input['target_no']==''&&isset($input['user_id'])&&$input['user_id']==''){
-            $where = [3,10];
-        }
+        isset($input['all'])&&$input['all']=='all'?$where=['status' => [3,10]]:'';
 		if($target_no!='' || !empty($where)){
 			$where['status'] = isset($where['status'])?$where['status']:$show_status;
 			$query = $target_no!=''?['target_no like' => $target_no]:($where['status']==3?['status' => [5]]:['status' => [5,10]]);
