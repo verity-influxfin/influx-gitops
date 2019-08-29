@@ -18,7 +18,7 @@ class Estatement_lib{
 		$this->CI->load->library('sendemail');
     }
  
-	public function get_estatement_investor($user_id=0,$sdate="",$edate=""){
+	public function get_estatement_investor($user_id=0,$sdate="",$edate="",$export=false){
 		$user_info = $this->CI->user_model->get($user_id);
 		if($user_info){
 			$virtual_account = $this->CI->virtual_account_model->get_by(array(
@@ -218,6 +218,14 @@ class Estatement_lib{
 					"virtual_account"			=> $virtual_account->virtual_account,
 				);
 				$html 	= $this->CI->parser->parse('estatement/investor', $data,TRUE);
+
+                if($export){
+                    header('Content-type:application/vnd.ms-excel');
+                    header('Content-Disposition: attachment; filename=estatement_'.date('Ymd').'.xls');
+                    echo $html;
+                    return true;
+                }
+
 				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
 					"type"		=> "estatement",
@@ -484,6 +492,7 @@ class Estatement_lib{
 	
 	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate="",$export=false){
 		$user_info = $this->CI->user_model->get($user_id);
+        $this->CI->load->library('Transfer_lib');
 		if($user_info){
 			$virtual_account = $this->CI->virtual_account_model->get_by(array(
 				"status"	=> 1,
@@ -501,6 +510,9 @@ class Estatement_lib{
 				$transaction_id = array();
 				$target_id 		= array();
 				$target_list 	= array();
+				$combinations_list  = [];
+				$combinations_ids   = [];
+				$combinations_ids_u = [];
 				if($edatetime){
 					$virtual_passbook = $this->CI->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
 						"virtual_account" 	=> $virtual_account->virtual_account,
@@ -533,20 +545,34 @@ class Estatement_lib{
 						}
 					}
 				}
-				
+
 				if($transaction_id){
 					$transactions 	= $this->CI->transaction_model->get_many($transaction_id);
 					foreach($transactions as $key => $value){
+                        if(!in_array($value->target_id,$combinations_ids)) {
+                            $combinations_info = $this->CI->transfer_lib->check_combination($value->target_id, $value->investment_id);
+                            $combinations_list[$value->target_id] = $combinations_info;
+                            $combinations_info?$combinations_ids[] = $value->target_id:'';
+                        }
 						switch ($value->source) {
-							case SOURCE_TRANSFER_FEE: 
-								$tmp_list[$value->investment_id.'-t'.$value->entering_date] = array(
+							case SOURCE_TRANSFER_FEE:
+                                if(in_array($value->target_id,$combinations_ids)&&!in_array($combinations_info[0],$combinations_ids_u)&&$combinations_info[0]!=null){
+                                    $tmp_list[$value->investment_id.'-tc'.$value->entering_date] = array(
+                                        "date"			    => $value->entering_date,
+                                        "target_no"		    => $combinations_info[0],
+                                        "title"			    => "債權出讓",
+                                        "income_principal"	=> $combinations_info[1],
+                                    );
+                                    $combinations_ids_u[] = $combinations_info[0];
+                                }
+                                $tmp_list[$value->investment_id.'-t'.$value->entering_date] = array(
 									"date"			=> $value->entering_date,
 									"target_no"		=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
 									"title"			=> "債權出讓",
 									"cost_fee"		=> intval($value->amount),
 									"income_principal"	=> 0,
 								);
-								break;
+                                break;
 							case SOURCE_PRINCIPAL: 
 								$instalment = isset($target_list[$value->target_id])?$target_list[$value->target_id]->instalment:"";
 								if(isset($tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date])){
@@ -587,30 +613,60 @@ class Estatement_lib{
 									"cost_principal"	=> intval($value->amount),
 								);
 								break;
-							case SOURCE_LENDING:
-								$tmp_list[] = array(
-									"date"				=> $value->entering_date,
-									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
-									"title"				=> "投資",
-									"cost_principal"	=> intval($value->amount),
-								);
-								break;
-							case SOURCE_TRANSFER:
-								if($value->user_from == $user_id){
-									$tmp_list[] = array(
-										"date"				=> $value->entering_date,
-										"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
-										"title"				=> "債權受讓",
-										"cost_principal"	=> intval($value->amount),
-									);
+                            case SOURCE_LENDING:
+                                $tmp_list[] = array(
+                                    "date"				=> $value->entering_date,
+                                    "target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+                                    "title"				=> "投資",
+                                    "cost_principal"	=> intval($value->amount),
+                                );
+                                break;
+                            case SOURCE_TRANSFER_B:
+                                if($value->user_from == $user_id){
+                                    $tmp_list[] = array(
+                                        "date"				=> $value->entering_date,
+                                        "target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+                                        "title"				=> "債權轉讓金沖正",
+                                        "cost_principal"	=> intval($value->amount),
+                                    );
+                                }
+                                if($value->user_to == $user_id){
+                                    $tmp_list[] = array(
+                                        "date"				=> $value->entering_date,
+                                        "target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+                                        "title"				=> "債權轉讓金沖正",
+                                        "income_principal"	=> intval($value->amount),
+                                    );
+                                }
+                                break;
+                            case SOURCE_TRANSFER:
+                                if($value->user_from == $user_id){
+                                    if(!in_array($combinations_info[0],$combinations_ids_u)){
+                                        $combinations_info = $this->CI->transfer_lib->check_combination($value->target_id, $value->investment_id);
+                                        $combinations_list[$value->target_id] = $combinations_info;
+                                        $combinations_info?$combinations_ids[] = $value->target_id:'';
+                                        $t_target_no = $combinations_info[0];
+                                        $combinations_ids_u[] = $combinations_info[0];
+                                    }
+                                    else{
+                                        $t_target_no = isset($target_list[$value->target_id]) ? $target_list[$value->target_id]->target_no : "";
+                                    }
+                                    $tmp_list[] = array(
+                                        "date" => $value->entering_date,
+                                        "target_no" => $t_target_no,
+                                        "title" => "債權受讓",
+                                        "cost_principal" => intval($value->amount),
+                                    );
 								}
 								if($value->user_to == $user_id){
 									if(isset($tmp_list[$value->investment_id.'-t'.$value->entering_date])){
-										$tmp_list[$value->investment_id.'-t'.$value->entering_date]["income_principal"] += intval($value->amount);
+									    if(!in_array($value->target_id,$combinations_ids)){
+                                            $tmp_list[$value->investment_id.'-t'.$value->entering_date]["income_principal"] += intval($value->amount);
+                                        }
 									}else{
 										$tmp_list[$value->investment_id.'-t'.$value->entering_date] = array(
 											"date"				=> $value->entering_date,
-											"target_no"		=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+											"target_no"		    => isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
 											"title"				=> "債權出讓",
 											"income_principal"	=> intval($value->amount),
 										);

@@ -240,6 +240,10 @@ defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還�
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
 
+defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
+defined('SOURCE_TRANSFER_FEES_B')   OR define('SOURCE_TRANSFER_FEES_B'	, '51');//債權轉讓服務費沖正
+defined('SOURCE_TRANSFER_B')       	OR define('SOURCE_TRANSFER_B'		, '52');//債權轉讓費沖正
+
 defined('SOURCE_VERIFY_FEE')     	OR define('SOURCE_VERIFY_FEE'		, '81');//平台驗證費
 defined('SOURCE_VERIFY_FEE_R')     	OR define('SOURCE_VERIFY_FEE_R'		, '82');//平台驗證費退回
 defined('SOURCE_REMITTANCE_FEE')    OR define('SOURCE_REMITTANCE_FEE'	, '83');//跨行轉帳費

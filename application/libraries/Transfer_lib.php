@@ -512,16 +512,18 @@ class Transfer_lib{
 	}
 
 	public function check_combination($target_id,$new_investment){
-		$transfers 	= $this->CI->transfer_model->get_by([
-			'target_id'		   => $target_id,
-			'new_investment'   => $new_investment,
-            'combination !='   => 0,
-		]);;
-		if($transfers){
-            $this->CI->load->model('loan/transfer_combination_model');
-		    $combination = $this->CI->transfer_combination_model->get($transfers->combination);
-            return [$combination->combination_no,$combination->amount,$combination->transfer_fee];
-		}
-		return false;
+		if($new_investment!=0){
+            $transfers 	= $this->CI->transfer_model->get_by([
+                'target_id'		   => $target_id,
+                'new_investment'   => $new_investment,
+                'combination !='   => 0,
+            ]);
+            if($transfers){
+                $this->CI->load->model('loan/transfer_combination_model');
+                $combination = $this->CI->transfer_combination_model->get($transfers->combination);
+                return [$combination->combination_no,$combination->amount,$combination->transfer_fee];
+            }
+        }
+        return false;
 	}
 }

@@ -256,6 +256,7 @@ $config['transaction_source']= [
 
     50	=> '平台服務費沖正',
     51	=> '債權轉讓服務費沖正',
+    52	=> '債權轉讓金沖正',
 
 	81	=> '平台驗證費',
 	82	=> '平台驗證費退回',
@@ -271,12 +272,13 @@ $config['transaction_source']= [
 $config['transaction_type_name']= [
 	'recharge'		=> '代收',
 	'withdraw'		=> '提領',
-	'lending'		=> '放款',
-	'subloan'		=> '產品轉換',
-	'transfer'		=> '債權轉讓',
-	'prepayment'	=> '提前還款',
-	'charge_delay'	=> '逾期清償',
-	'charge_normal'	=> '還款',
+    'lending'		=> '放款',
+    'subloan'		=> '產品轉換',
+    'transfer'		=> '債權轉讓',
+    'transfer_b'	=> '債權轉讓費沖正',
+    'prepayment'	=> '提前還款',
+    'charge_delay'	=> '逾期清償',
+    'charge_normal'	=> '還款',
 ];
 
 $config['certifications']= [

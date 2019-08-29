@@ -26,13 +26,14 @@ class Account extends MY_Admin_Controller {
 			SOURCE_FEES,
 			SOURCE_SUBLOAN_FEE,
 			SOURCE_TRANSFER_FEE,
+            SOURCE_TRANSFER_B,
 			SOURCE_PREPAYMENT_DAMAGE,
 			SOURCE_VERIFY_FEE_R,
 			SOURCE_REMITTANCE_FEE_R,
 			SOURCE_DAMAGE,
 			SOURCE_PREPAYMENT_ALLOWANCE,
 			SOURCE_VERIFY_FEE,
-			SOURCE_REMITTANCE_FEE
+			SOURCE_REMITTANCE_FEE,
 		);
 		$list 		= array();
 
@@ -170,7 +171,7 @@ class Account extends MY_Admin_Controller {
 					$target_no[$value->id] = $value->target_no;
 				}
 			}
-		
+            $id_use  = [];
 			foreach($data as $key =>$value){
 				if($value->target_id){
 					$value->target_no = $target_no[$value->target_id];
@@ -186,12 +187,12 @@ class Account extends MY_Admin_Controller {
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
 						"source_type"			=> $source_type,
-						"user_from"				=> $user_name[$value->user_from],
+						"user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:0,
 						"bank_account_from"		=> $value->bank_account_from,
 						"amount_from"			=> $value->amount_from,
 						"v_bank_account_from"	=> $value->v_bank_account_from,
 						"v_amount_from"			=> $value->v_amount_from,
-						"user_to"				=> $user_name[$value->user_to],
+						"user_to"				=> isset($user_name[$value->user_to])?$user_name[$value->user_to]:0,
 						"bank_account_to"		=> $value->bank_account_to,
 						"amount_to"				=> $value->amount_to,
 						"v_bank_account_to"		=> $value->v_bank_account_to,
@@ -200,25 +201,55 @@ class Account extends MY_Admin_Controller {
 					);
 				}
 
+				if($value->source == SOURCE_TRANSFER_B) {
+                    $item_no           = $value->target_no;
+                    $item_platform_fee = 0;
+                    $sub_list 	= array();
+                    $sub_list[] = array(
+                        "user_to"				=> $user_name[$value->user_to],
+                        "bank_account_to"		=> $value->bank_account_to,
+                        "amount_to"				=> $value->amount_to,
+                        "v_bank_account_to"		=> $value->v_bank_account_to,
+                        "v_amount_to"			=> $value->v_amount_to,
+                        "platform_fee"			=> $item_platform_fee,
+                    );
+                    $list[] = array(
+                        "entering_date"			=> $value->entering_date,
+                        "target_no"				=> $item_no,
+                        "source_type"			=> 'transfer_b',
+                        "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
+                        "bank_account_from"		=> $value->bank_account_from,
+                        "amount_from"			=> $value->amount_from,
+                        "v_bank_account_from"	=> $value->v_bank_account_from,
+                        "v_amount_from"			=> $value->v_amount_from,
+                        "sub_list"				=> $sub_list,
+                        "created_at"			=> $value->created_at,
+                    );
+                }
+
 				if($value->source == SOURCE_TRANSFER){
 				    $item_no           = $value->target_no;
 				    $item_platform_fee = 0;
                     $combinations_info = $this->transfer_lib->check_combination($value->target_id,$value->investment_id);
                     if($combinations_info){
-                        $item_no           = $combinations_info[0];
-                        $item_platform_fee = $combinations_info[2];
+                        $item_no            = $combinations_info[0];
+                        $item_platform_fee  = $combinations_info[2];
+                        $id_use[] = $item_no;
                     }
 					$sub_list = array();
 					foreach($data as $k =>$v){
-						if($v->source==SOURCE_TRANSFER_FEE && $v->investment_id==$value->investment_id && $v->user_from==$value->user_to){
-							$sub_list[] = array(
-								"user_to"				=> $user_name[$value->user_to],
-								"bank_account_to"		=> $value->bank_account_to,
-								"amount_to"				=> $value->amount_to,
-								"v_bank_account_to"		=> $value->v_bank_account_to,
-								"v_amount_to"			=> $value->v_amount_to - $v->amount,
-								"platform_fee"			=> $combinations_info?$item_platform_fee:$v->amount,
-							);
+                        if($v->source==SOURCE_TRANSFER_FEE && $v->investment_id==$value->investment_id && $v->user_from==$value->user_to ||$v->source == SOURCE_FEES && $v->investment_id==$value->investment_id){
+                            $source_fee = ($v->source == SOURCE_FEES&&$v->amount==$value->amount?$v->amount:(!$combinations_info&&$v->source != SOURCE_FEES?$v->amount:''));
+                            if(count($sub_list)==0){
+                                $sub_list[] = array(
+                                    "user_to"				=> isset($user_name[$value->user_to])?$user_name[$value->user_to]:'',
+                                    "bank_account_to"		=> $value->bank_account_to,
+                                    "amount_to"				=> $value->amount_to,
+                                    "v_bank_account_to"		=> $value->v_bank_account_to,
+                                    "v_amount_to"			=> ($combinations_info?$value->v_amount_to - $v->amount:($v->investment_id==0?$value->amount:$value->v_amount_to - $v->amount)),
+                                    "platform_fee"			=> $combinations_info?$item_platform_fee:$source_fee,
+                                );
+                            }
 						}
 					}
 					
@@ -644,5 +675,11 @@ class Account extends MY_Admin_Controller {
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('Estatement_lib');
         $this->estatement_lib->get_estatement_investor_detail($get['user_id'],$get['sdate'],$get['edate'],true);
+    }
+
+    public function estatement_s_excel(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('Estatement_lib');
+        $this->estatement_lib->get_estatement_investor($get['user_id'],$get['sdate'],$get['edate'],true);
     }
 }
