@@ -10,7 +10,7 @@ class User extends REST_Controller {
     {
         parent::__construct();
         $method 		= $this->router->fetch_method();
-        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin'];
+        $nonAuthMethods = ['register','registerphone','login','sociallogin','smslogin','smsloginphone','forgotpw','credittest','biologin','fraud'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -1499,6 +1499,16 @@ class User extends REST_Controller {
         else{
             $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
         }
+    }
+
+    public function fraud_post()
+    {
+        $this->response(array(
+            'result' => 'SUCCESS',
+            'data' 	 => array(
+                'SimonSay'   => 'Hey Hey Hey...',
+            )
+        ));
     }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
