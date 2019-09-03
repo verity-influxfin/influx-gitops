@@ -120,9 +120,9 @@ class Transfer extends MY_Admin_Controller {
 	}
 
 	public function assets_export(){
-		$get 			= $this->input->get(NULL, TRUE);
+		$post 			= $this->input->post(NULL, TRUE);
 		$html 			= '';
-		$ids 			= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
+		$ids 			= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
 		$list 			= array();
 		$targets 		= array();
 		$school_list 	= array();
@@ -217,9 +217,9 @@ class Transfer extends MY_Admin_Controller {
 	}
 	
 	public function amortization_export(){
-		$get 			= $this->input->get(NULL, TRUE);
+		$post 			= $this->input->post(NULL, TRUE);
 		$html 			= '';
-		$ids 			= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
+		$ids 			= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
 		$list 			= array();
 		if($ids && is_array($ids)){
 			$investments 			= $this->investment_model->order_by('target_id','ASC')->get_many($ids);

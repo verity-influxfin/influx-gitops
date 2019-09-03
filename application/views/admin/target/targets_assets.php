@@ -25,30 +25,27 @@
 					$('.investment').prop("checked", true);
 					check_checked();
 				}
-				
-				function check_checked(){
-					var ids					= "";
-					var assets_export 		= '<?=admin_url('transfer/assets_export') ?>';
-					var amortization_export = '<?=admin_url('transfer/amortization_export') ?>';
-					
+
+                function check_checked(){
+                    var ids = "",ctr = $('#amortization_export,#assets_export').parent().find('.btn');
 					$('.investment:checked').each(function() {
-						if(ids==""){
-							ids += this.value;
-						}else{
-							ids += ',' + this.value;
-						}		
-					});
-					
+
+                        if(ids==""){
+                            ids += this.value;
+                        }else{
+                            ids += ',' + this.value;
+                        }
+                    });
 					if(ids!=""){
-						$('#assets_export').attr('href',assets_export + '?ids=' + ids);
-						$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
-					}else{
-						$('#assets_export').attr('href',"javascript:alert('請先選擇債權');");
-						$('#amortization_export').attr('href',"javascript:alert('請先選擇債權');");
-					}
-					
-				}
-			</script>
+                        $('#assets_export').val(ids);
+                        $('#amortization_export').val(ids);
+                        ctr.prop('disabled',false);
+                    }
+                    else{
+                        ctr.prop('disabled',true);
+                    }
+                }
+            </script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -82,8 +79,14 @@
 									</td>
 								</tr>
 							</table>
-							<a id="assets_export" href="javascript:alert('請先選擇債權');" target="_blank"  class="btn btn-primary float-right" >債權明細表</a>
-							<a id="amortization_export" href="javascript:alert('請先選擇債權');" target="_blank"  class="btn btn-primary float-right" >預期本息回款明細表</a>
+                            <form action="<?=admin_url('transfer/assets_export') ?>" method="post" style="display: inline-block">
+                                <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled />
+                                <input id="assets_export" type="hidden" name="ids" />
+                            </form>
+                            <form action="<?=admin_url('transfer/amortization_export') ?>" method="post" style="display: inline-block">
+                                <input type="submit" class="btn btn-primary float-right" value="預期本息回款明細表" disabled />
+                                <input id="amortization_export" type="hidden" name="ids" />
+                            </form>
 							
 						</div>
                         <!-- /.panel-heading -->
