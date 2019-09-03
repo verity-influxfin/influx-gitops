@@ -7,6 +7,11 @@
 					$('#fail_div').hide();
 				}
 			}
+            $(document).off("change","select#fail").on("change","select#fail" ,  function(){
+                var sel=$(this).find(':selected');
+                $('input#fail').attr('disabled',sel.attr('value')=='other'?false:true);
+                $('input#fail').val(sel.attr('data-value'));
+            });
 		</script>
         <div id="page-wrapper">
             <div class="row">
@@ -89,7 +94,14 @@
 											</div>
 											<div class="form-group" id="fail_div" style="display:none">
 												<label>失敗原因</label>
-												<input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" >
+                                                <select id="fail" name="fail" class="form-control">
+                                                    <option value="" disabled selected>選擇回覆內容</option>
+                                                    <? foreach($certifications_msg[1] as $key => $value){ ?>
+                                                        <option value="<?=$key?>" data-value="<?=$value?>" <?=$data->status==$key?"selected":""?>><?=$key?></option>
+                                                    <? } ?>
+                                                    <option value="other" data-value="" <?=$data->status=='其它'?"selected":""?>>其它</option>
+                                                </select>
+												<input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important" disable="false">
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
                                         </fieldset>
