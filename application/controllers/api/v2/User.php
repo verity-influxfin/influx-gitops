@@ -1506,7 +1506,7 @@ class User extends REST_Controller {
         $this->response(array(
             'result' => 'SUCCESS',
             'data' 	 => array(
-                'SimonSay'   => 'Hey Hey Hey...',
+
             )
         ));
     }
