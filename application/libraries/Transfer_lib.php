@@ -297,17 +297,25 @@ class Transfer_lib{
                 'status'        => 0
             ]);
             if($combinations_info->count == count($combination_transfers)){
-                //取得打包債權所有投資人
-                $combination_transfer_ids = [];
-                foreach($combination_transfers as $keys => $values){
-                    $transfer_investment = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
-                        'transfer_id'	=> $values->id,
-                        'status'		=> [0,1],
-                    ]);
-                    if($transfer_investment){
-                        foreach($transfer_investment as $keys2 => $values2) {
-                            $combination_transfer_ids[$values2->user_id]['id'][]          = $values2->id;
-                            $combination_transfer_ids[$values2->user_id]['transfer_id'][] = $values2->transfer_id;
+                if($transfers->expire_time < time()){
+                    foreach($combination_transfers as $keys => $values) {
+                        $this->cancel_transfer($values);
+                    }
+                    return true;
+                }
+                else{
+                    //取得打包債權所有投資人
+                    $combination_transfer_ids = [];
+                    foreach($combination_transfers as $keys => $values){
+                        $transfer_investment = $this->CI->transfer_investment_model->order_by('tx_datetime','asc')->get_many_by([
+                            'transfer_id'	=> $values->id,
+                            'status'		=> [0,1],
+                        ]);
+                        if($transfer_investment){
+                            foreach($transfer_investment as $keys2 => $values2) {
+                                $combination_transfer_ids[$values2->user_id]['id'][]          = $values2->id;
+                                $combination_transfer_ids[$values2->user_id]['transfer_id'][] = $values2->transfer_id;
+                            }
                         }
                     }
                 }
