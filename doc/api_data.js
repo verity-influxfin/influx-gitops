@@ -30134,6 +30134,75 @@ define({
             }
         },
         {
+            "type": "post",
+            "url": "/v2/user/fraud",
+            "title": "會員 行為分析工具",
+            "version": "0.2.0",
+            "name": "GetUserFraud",
+            "group": "User",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "request_token",
+                            "description": "<p>request_token</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "device_id",
+                            "description": "<p>裝置ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "location",
+                            "description": "<p>定位</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "behavion",
+                            "description": "<p>行為</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/fraud"
+                }
+            ]
+        },
+        {
             "type": "get",
             "url": "/user/chagetoken",
             "title": "會員 交換Token",

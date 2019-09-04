@@ -151,7 +151,6 @@ class Transfer_lib{
 	public function cancel_transfer($transfers,$admin=0){
         $transfers_status 	= $this->CI->transfer_model->get_by([
             'id'	    	=> $transfers->id,
-            'script_status'	=> 0
         ]);
 		if($transfers_status){
 			$rs = $this->CI->transfer_model->update($transfers->id,['status' => 8]);
