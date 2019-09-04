@@ -640,9 +640,9 @@ class Target extends MY_Admin_Controller {
 	}
 	
 	public function target_export(){
-		$get 	= $this->input->get(NULL, TRUE);
-		$ids 	= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
-		$status = isset($get['status'])&&$get['status']?$get['status']:5;
+		$post 	= $this->input->post(NULL, TRUE);
+		$ids 	= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
+		$status = isset($post['status'])&&$post['status']?$post['status']:5;
 		if($ids && is_array($ids)){
 			$where = ['id'=>$ids];
 		}else{
@@ -743,8 +743,8 @@ class Target extends MY_Admin_Controller {
 	}
 	
 	public function amortization_export(){
-		$get = $this->input->get(NULL, TRUE);
-		$ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
+		$post = $this->input->post(NULL, TRUE);
+		$ids = isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
 		if($ids && is_array($ids)){
 			$where = [
 			    'id'     =>$ids,

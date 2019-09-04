@@ -12,19 +12,22 @@
 				}
 				
 				function check_checked(){
-					var ids					= "";
-					var target_export	= '<?=admin_url('target/target_export?status=5') ?>';
-					var amortization_export = '<?=admin_url('target/amortization_export') ?>';
-					
-					$('.targets:checked').each(function() {
-						if(ids==''){
-							ids += this.value;
-						}else{
-							ids += ',' + this.value;
-						}		
-					});
-					$('#target_export').attr('href',target_export + '&ids=' + ids);
-					$('#amortization_export').attr('href',amortization_export + '?ids=' + ids);
+                    var ids = "",ctr = $('#amortization_export,#target_export').parent().find('.btn');
+                    $('.targets:checked').each(function() {
+                        if(ids==''){
+                            ids += this.value;
+                        }else{
+                            ids += ',' + this.value;
+                        }
+                    });
+                    if(ids!=""){
+                        $('#target_export').val(ids);
+                        $('#amortization_export').val(ids);
+                        ctr.prop('disabled',false);
+                    }
+                    else{
+                        ctr.prop('disabled',true);
+                    }
 				}
 			</script>
             <!-- /.row -->
@@ -32,8 +35,14 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export?status=5') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
-							<a id="amortization_export" href="<?=admin_url('target/amortization_export') ?>" target="_blank"  class="btn btn-primary float-right" >匯出攤還表</a>
+                            <form action="<?=admin_url('target/target_export?status=5') ?>" method="post" style="display: inline-block">
+                                <input type="submit" class="btn btn-primary float-right" value="匯出Excel" disabled />
+                                <input id="target_export" type="hidden" name="ids" />
+                            </form>
+                            <form action="<?=admin_url('target/amortization_export') ?>" method="post" style="display: inline-block">
+                                <input type="submit" class="btn btn-primary float-right" value="匯出攤還表" disabled />
+                                <input id="amortization_export" type="hidden" name="ids" />
+                            </form>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
