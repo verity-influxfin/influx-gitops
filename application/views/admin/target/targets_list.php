@@ -31,36 +31,37 @@
 							<table>
 								<tr>
 									<td>會員ID：</td>
-									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>	
+									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>
 									<td>案號：</td>
-									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" /></td>
+									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" /></td>
                                     <td>姓名：</td>
-									<td><input type="text" value="<?=isset($_GET['user_name'])&&$_GET['user_name']!=''?$_GET['user_name']:''?>" id="user_name" /></td>
+									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_name'])&&$_GET['user_name']!=''?$_GET['user_name']:''?>" id="user_name" /></td>
                                     <td>身份證：</td>
-									<td><input type="text" value="<?=isset($_GET['user_id_number'])&&$_GET['user_id_number']!=''?$_GET['user_id_number']:''?>" id="user_id_number" /></td>
+									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_id_number'])&&$_GET['user_id_number']!=''?$_GET['user_id_number']:''?>" id="user_id_number" /></td>
 									<td></td>
 								</tr>
 								<tr>
-									<td>狀態：</td>
-									<td>
-										<select id="status">
-											<option value='' >請選擇</option>
-											<? foreach($status_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
-											<? } ?>
-										</select>
-									</td>
-									<td>逾期：</td>
-									<td>
-										<select id="delay">
-											<option value='' >請選擇</option>
-											<? foreach($delay_list as $key => $value){ ?>
-												<option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=''&&intval($_GET['delay'])==intval($key)?"selected":''?>><?=$value?></option>
-											<? } ?>
-										</select>
-									</td>
-									<td>
-										<a href="javascript:showChang();" class="btn btn-default">查詢</a>
+                                    <td>逾期：</td>
+                                    <td>
+                                        <select id="delay">
+                                            <option value='' >請選擇</option>
+                                            <? foreach($delay_list as $key => $value){ ?>
+                                                <option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=''&&intval($_GET['delay'])==intval($key)?"selected":''?>><?=$value?></option>
+                                            <? } ?>
+                                        </select>
+                                    </td>
+                                    <td>狀態：</td>
+                                    <td>
+                                    <select id="status">
+                                    <option value='' >請選擇</option>
+                                    <? foreach($status_list as $key => $value){ ?>
+                                    <option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
+                                    <? } ?>
+                                    </select>
+                                    </td><td></td>
+									<td><a href="javascript:showChang();" class="btn btn-default" style="margin-top: 6px;">查詢</a> - Excel：<input type="checkbox" id="export" value="1" style="width:15px;"></td><td></td>
+                                    <td>
+
 									</td>
 								</tr>
 							</table>

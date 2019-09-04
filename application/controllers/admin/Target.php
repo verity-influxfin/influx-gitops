@@ -92,21 +92,55 @@ class Target extends MY_Admin_Controller {
 				}
 			}
 		}
-		
-		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['instalment_list']	= $this->config->item('instalment');
-		$page_data['repayment_type']	= $this->config->item('repayment_type');
-		$page_data['list'] 				= $list;
-		$page_data['status_list'] 		= $this->target_model->status_list;
-		$page_data['delay_list'] 		= $this->target_model->delay_list;
-		$page_data['name_list'] 		= $this->admin_model->get_name_list();
+        $product_list    = $this->config->item('product_list');
+        $instalment_list = $this->config->item('instalment');
+        $repayment_type  = $this->config->item('repayment_type');
+        $status_list     = $this->target_model->status_list;
+        $delay_list      = $this->target_model->delay_list;
+		if(isset($input['export'])){
+            header('Content-type:application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
+            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>申請金額</th><th>核准金額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>備註</th><th>邀請碼</th></tr></thead><tbody>';
+
+            if(isset($list) && !empty($list)){
+                foreach($list as $key => $value){
+                    $html .= '<tr>';
+                    $html .= '<td>'.$value->target_no.'</td>';
+                    $html .= '<td>'.$product_list[$value->product_id]['name'].'</td>';
+                    $html .= '<td>'.$value->user_id.'</td>';
+                    $html .= '<td>'.$value->amount.'</td>';
+                    $html .= '<td>'.$value->loan_amount.'</td>';
+                    $html .= '<td>'.floatval($value->interest_rate).'</td>';
+                    $html .= '<td>'.$instalment_list[$value->instalment].'</td>';
+                    $html .= '<td>'.$repayment_type[$value->repayment].'</td>';
+                    $html .= '<td>'.$delay_list[$value->delay].'</td>';
+                    $html .= '<td>'.intval($value->delay_days).'</td>';
+                    $html .= '<td>'.$status_list[$value->status].'</td>';
+                    $html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
+                    $html .= '<td>'.$value->remark.'</td>';
+                    $html .= '<td>'.$value->promote_code.'</td>';
+                    $html .= '</tr>';
+                }
+            }
+            $html .= '</tbody></table>';
+            echo $html;
+        }
+		else{
+            $page_data['product_list']		= $product_list;
+            $page_data['instalment_list']	= $instalment_list;
+            $page_data['repayment_type']	= $repayment_type;
+            $page_data['list'] 				= $list;
+            $page_data['status_list'] 		= $status_list;
+            $page_data['delay_list'] 		= $delay_list;
+            $page_data['name_list'] 		= $this->admin_model->get_name_list();
 
 
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/target/targets_list',$page_data);
-		$this->load->view('admin/_footer');
-	}
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title',$this->menu);
+            $this->load->view('admin/target/targets_list',$page_data);
+            $this->load->view('admin/_footer');
+        }
+    }
 
 	public function edit(){
 		$page_data 	= array('type'=>'edit');
