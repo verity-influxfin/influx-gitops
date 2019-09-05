@@ -1503,11 +1503,29 @@ class User extends REST_Controller {
 
     public function fraud_post()
     {
+        $input = $this->input->post(NULL, TRUE);
+        $request_token = $input['request_token'];
+        $device_id     = $input['device_id'];
+        $location      = $input['location'];
+        $behavion      = $input['behavion'];
+        $token 		= isset($request_token)?$request_token:'';
+        $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
+
+        $user_id  = isset($tokenData->id)?$tokenData->id:'';
+        $identity = isset($tokenData->investor)?$tokenData->investor:'';
+
+        $this->load->model('behavion/beh_user_model');
+        $this->beh_user_model->insert(array(
+            'user_id'	    => $user_id,
+            'identity'	    => $identity,
+            'device_id'	    => $device_id,
+            'location'	    => $location,
+            'behavior'	    => $behavion,
+        ));
+
         $this->response(array(
             'result' => 'SUCCESS',
-            'data' 	 => array(
-
-            )
+            'data' 	 => []
         ));
     }
 	
