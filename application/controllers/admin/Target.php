@@ -36,7 +36,10 @@ class Target extends MY_Admin_Controller {
 			}
 		}
 		//hsiang 新增name id_number 收尋欄位＋＋
-        isset($input['all'])&&$input['all']=='all'?$where=['status' => [5,10]]:'';
+        !isset($where['status'])&&count($where)!=0||isset($where['status'])&&$where['status']=='510'?$where['status'] = [5,10]:'';
+        if($where['status']==99){
+            unset($where['status']);
+        }
 		if (isset($input['user_name'])&&$input['user_name']!='') {
 			$user_name=$input['user_name'];
 			$name		= $this->user_model->get_many_by(array(
@@ -69,10 +72,12 @@ class Target extends MY_Admin_Controller {
 			}
 		}
 		//hsiang 新增name id_number 收尋欄--
-        if(isset($input['user_id_number'])&&$input['user_id_number']==''&&isset($input['user_id'])&&$input['user_id']==''&&isset($input['target_no'])&&$input['target_no']==''&&isset($input['user_name'])&&$input['user_name']==''&&isset($input['status'])&&$input['status']==''&&isset($input['delay'])&&$input['delay']==''){
-            $where = [5,10];
-        }
+        //if(isset($input['user_id_number'])&&$input['user_id_number']==''&&isset($input['user_id'])&&$input['user_id']==''&&isset($input['target_no'])&&$input['target_no']==''&&isset($input['user_name'])&&$input['user_name']==''&&isset($input['status'])&&$input['status']==''&&isset($input['delay'])&&$input['delay']==''){
+          //  $where = [5,10];
+        //}
 		if(!empty($where)){
+            isset($input['sdate'])?$where['created_at >=']=strtotime($input['sdate']):'';
+            isset($input['edate'])?$where['created_at <=']=strtotime($input['edate']):'';
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
 				foreach($list as $key => $value){
@@ -97,7 +102,7 @@ class Target extends MY_Admin_Controller {
         $repayment_type  = $this->config->item('repayment_type');
         $status_list     = $this->target_model->status_list;
         $delay_list      = $this->target_model->delay_list;
-		if(isset($input['export'])){
+		if(isset($input['export'])&&$input['export']==1){
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
             $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>申請金額</th><th>核准金額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>備註</th><th>邀請碼</th></tr></thead><tbody>';

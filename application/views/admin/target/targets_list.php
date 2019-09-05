@@ -13,14 +13,15 @@
                     var user_id_number 		= $('#user_id_number').val();
                     var delay 				= $('#delay :selected').val();
                     var status 				= $('#status :selected').val();
-                    var exports 			= $('#export:checked').val();
+                    var exports 			= $('#export :selected').val();
+                    var dateRange           = '&sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
                     if(user_id==''&&target_no==''&&user_name==''&&user_id_number==''&&delay==''&&status==''){
                         if(confirm(target_no+"即將撈取各狀態案件，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
-                            top.location = './index?all=all'+(exports==1?'&export=1':'');
+                            top.location = './index?status=99'+(exports==1?'&export=1':'')+dateRange;
                         }
                     }
                     else{
-                        top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number+(exports==1?'&export=1':'');
+                        top.location = './index?delay='+delay+'&status='+status+'&user_id='+user_id+'&target_no='+target_no+'&user_name='+user_name+'&user_id_number='+user_id_number+(exports==1?'&export=1':'')+dateRange;
                     }
 				}
 			</script>
@@ -32,40 +33,51 @@
 							<table>
 								<tr>
 									<td>會員ID：</td>
-									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>
+									<td style="padding-right: 15px;"><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=''?$_GET['user_id']:''?>" id="user_id" /></td>
 									<td>案號：</td>
-									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" /></td>
+									<td style="padding-right: 15px;"><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=''?$_GET['target_no']:''?>" id="target_no" style="width: 182px;" /></td>
                                     <td>姓名：</td>
-									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_name'])&&$_GET['user_name']!=''?$_GET['user_name']:''?>" id="user_name" /></td>
+									<td style="padding-right: 15px;"><input type="text" value="<?=isset($_GET['user_name'])&&$_GET['user_name']!=''?$_GET['user_name']:''?>" id="user_name" /></td>
                                     <td>身份證：</td>
-									<td style="padding-right: 10px;"><input type="text" value="<?=isset($_GET['user_id_number'])&&$_GET['user_id_number']!=''?$_GET['user_id_number']:''?>" id="user_id_number" /></td>
+									<td><input type="text" value="<?=isset($_GET['user_id_number'])&&$_GET['user_id_number']!=''?$_GET['user_id_number']:''?>" id="user_id_number" /></td>
 									<td></td>
 								</tr>
 								<tr>
-                                    <td>逾期：</td>
+                                    <td style="padding-top: 9px;">逾期：</td>
                                     <td>
-                                        <select id="delay">
+                                        <select id="delay" style="margin-top: 9px;">
                                             <option value='' >請選擇</option>
                                             <? foreach($delay_list as $key => $value){ ?>
                                                 <option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=''&&intval($_GET['delay'])==intval($key)?"selected":''?>><?=$value?></option>
                                             <? } ?>
                                         </select>
                                     </td>
-                                    <td>狀態：</td>
+                                    <td style="padding-top: 9px;">狀態：</td>
                                     <td>
-                                    <select id="status">
-                                    <option value='' >請選擇</option>
-                                    <? foreach($status_list as $key => $value){ ?>
-                                    <option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
-                                    <? } ?>
-                                    </select>
-                                    </td><td></td>
-									<td><a href="javascript:showChang();" class="btn btn-default" style="margin-top: 6px;">查詢</a> - Excel：<input type="checkbox" id="export" value="1" style="width:15px;"></td><td></td>
-                                    <td>
-
-									</td>
+                                        <select id="status" style="margin-top: 9px;">
+                                            <option value='99' <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])=='99'?"selected":''?>>全部狀態</option>
+                                            <option value='510' <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])=='510'?"selected":''?>>交易案件(還款中+已結案)</option>
+                                            <? foreach($status_list as $key => $value){ ?>
+                                            <option value="<?=$key?>" <?=isset($_GET['status'])&&$_GET['status']!=''&&intval($_GET['status'])==intval($key)?"selected":''?>><?=$value?></option>
+                                            <? } ?>
+                                        </select>
+                                    </td>
 								</tr>
-							</table>
+                                <tr>
+                                    <td>從：</td>
+                                    <td><input type="text" value="<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?>" id="sdate" data-toggle="datepicker" placeholder="未指定區間" /></td>
+                                    <td>到：</td>
+                                    <td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="未指定區間" /></td>
+                                    <td>輸出：</td>
+                                    <td>
+                                        <select id="export">
+                                            <option value='0' >頁面顯示</option>
+                                            <option value='1' >Excel輸出</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default" style="margin-top: 6px;">查詢</a></td>
+                                </tr>
+                            </table>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
