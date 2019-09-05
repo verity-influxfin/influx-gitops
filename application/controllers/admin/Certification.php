@@ -123,6 +123,11 @@ class Certification extends MY_Admin_Controller {
                 $content = json_decode($info->content,true);
                 $content['salary'] = $post['salary'];
                 $this->user_certification_model->update($id,['content'=>json_encode($content)]);
+                $param = [
+                    'user_id'		=> $info->user_id,
+                    'meta_key' 		=> 'job_salary',
+                ];
+                $this->user_meta_model->update_by($param,['meta_value'	=> $content['salary']]);
 
                 //失效信評分數
                 $this->load->model('loan/credit_model');
