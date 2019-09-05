@@ -1514,8 +1514,8 @@ class User extends REST_Controller {
         $user_id  = isset($tokenData->id)?$tokenData->id:'';
         $identity = isset($tokenData->investor)?$tokenData->investor:'';
 
-        $this->load->model('behavion/beh_user_model');
-        $this->beh_user_model->insert(array(
+        $this->load->model('behavion/beha_user_model');
+        $this->beha_user_model->insert(array(
             'user_id'	    => $user_id,
             'identity'	    => $identity,
             'device_id'	    => $device_id,
