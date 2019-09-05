@@ -37,7 +37,7 @@ class Target extends MY_Admin_Controller {
 		}
 		//hsiang 新增name id_number 收尋欄位＋＋
         !isset($where['status'])&&count($where)!=0||isset($where['status'])&&$where['status']=='510'?$where['status'] = [5,10]:'';
-        if($where['status']==99){
+        if(isset($where['status'])&&$where['status']==99){
             unset($where['status']);
         }
 		if (isset($input['user_name'])&&$input['user_name']!='') {
@@ -75,9 +75,9 @@ class Target extends MY_Admin_Controller {
         //if(isset($input['user_id_number'])&&$input['user_id_number']==''&&isset($input['user_id'])&&$input['user_id']==''&&isset($input['target_no'])&&$input['target_no']==''&&isset($input['user_name'])&&$input['user_name']==''&&isset($input['status'])&&$input['status']==''&&isset($input['delay'])&&$input['delay']==''){
           //  $where = [5,10];
         //}
-		if(!empty($where)){
-            isset($input['sdate'])?$where['created_at >=']=strtotime($input['sdate']):'';
-            isset($input['edate'])?$where['created_at <=']=strtotime($input['edate']):'';
+		if(!empty($where)||isset($input['status'])&&$input['status']==99){
+            isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
+            isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
 			$list 						= $this->target_model->get_many_by($where);
 			if($list){
 				foreach($list as $key => $value){
