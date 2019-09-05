@@ -1504,10 +1504,10 @@ class User extends REST_Controller {
     public function fraud_post()
     {
         $input = $this->input->post(NULL, TRUE);
-        $request_token = $input['request_token'];
-        $device_id     = $input['device_id'];
-        $location      = $input['location'];
-        $behavion      = $input['behavion'];
+        $request_token = isset($input['request_token'])?$input['request_token']:'';
+        $device_id     = isset($input['device_id'])?$input['device_id']:'';
+        $location      = isset($input['location'])?$input['location']:'';
+        $behavion      = isset($input['behavion'])?$input['behavion']:'';
         $token 		= isset($request_token)?$request_token:'';
         $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
 
