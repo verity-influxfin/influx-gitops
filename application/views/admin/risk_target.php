@@ -46,12 +46,12 @@
 					}
 				}
                 $(document).off("click","a#fontchange").on("click","a#fontchange" ,  function(){
-                    if(!$(this).hasClass('active')){
-                        $(this).addClass('active');
+                    if($(this).hasClass('active')){
+                        $(this).removeClass('active');
                         $('.nhide').css('display','inherit');
                         $('.sword').css('display','none');
                     }else{
-                        $(this).removeClass('active');
+                        $(this).addClass('active');
                         $('.nhide').css('display','none');
                         $('.sword').css('display','block');
                     }
@@ -85,7 +85,7 @@
 									查看備註
 									</td>
                                     <td>
-                                        <a id="fontchange" class="btn btn-default" style="margin-top: 6px;">Icon mode</a>
+                                        <a id="fontchange" class="btn btn-default" style="margin-top: 6px;">Font mode</a>
 									</td>
 								</tr>
 							</table>
