@@ -25,53 +25,51 @@ class Target extends MY_Admin_Controller {
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= [];
 		$list		= [];
-		$fields 	= ['status','target_no','user_id','delay'];
+		$fields 	= ['status','delay'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
-				if($field=='target_no'){
-					$where[$field.' like'] = '%'.$input[$field].'%';
-				}else{
-					$where[$field] = $input[$field];
-				}
-			}
-		}
-		//hsiang 新增name id_number 收尋欄位＋＋
+			    $where[$field] = $input[$field];
+            }
+        }
+        if(isset($input[$field])&&$input['tsearch']!=''){
+            $tsearch = $input['tsearch'];
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+            {
+                $name = $this->user_model->get_many_by(array(
+                    'name like '    => '%'.$tsearch.'%',
+                    'status'	    => 1
+                ));
+                if($name){
+                    foreach($name as $k => $v){
+                        $where['user_id'][] = $v->id;
+                    }
+                }
+            }else{
+                if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$tsearch.'%',
+                        'status'	        => 1
+                    ));
+                    if($id_number){
+                        foreach($id_number as $k => $v){
+                            $where['user_id'][] = $v->id;
+                        }
+                    }
+                }
+                elseif(preg_match_all('/\D/', $tsearch)==0){
+                    $where['user_id'] = $tsearch;
+                }
+                else{
+                    $where['target_no like'] = '%'.$tsearch.'%';
+                }
+            }
+        }
+
         !isset($where['status'])&&count($where)!=0||isset($where['status'])&&$where['status']=='510'?$where['status'] = [5,10]:'';
         if(isset($where['status'])&&$where['status']==99){
             unset($where['status']);
         }
-		if (isset($input['user_name'])&&$input['user_name']!='') {
-			$user_name=$input['user_name'];
-			$name		= $this->user_model->get_many_by(array(
-				'name like '	=> '%'.$user_name.'%',
-				'status'	=> 1	 
-			));
-            if(count($name)==1){
-				$where['user_id'] = $name->id;//反撈user_id
-			}
-         
-			if(count($name)>1){
-				//
-				foreach($name as $key => $value){
-						$id[$key] = $value->id;
-				 }
-			    $str = implode(" OR user_id = ", $id);
-				$where= " user_id = ".  $str ;
-				//$where= $name->id;//反撈user_id
-			}
-		}
-		if (isset($input['user_id_number'])&&$input['user_id_number']!='') {
-			$user_id_number=$input['user_id_number'];
-			$id_number		= $this->user_model->get_by(array(
-				'id_number  like'	=> '%'.$user_id_number.'%',
-				'status'	=> 1
-		 
-			));
-            if($id_number){
-				$where['user_id'] = $id_number->id;//反撈user_id
-			}
-		}
-		//hsiang 新增name id_number 收尋欄--
+
 		if(!empty($where)||isset($input['status'])&&$input['status']==99){
             isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
             isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
