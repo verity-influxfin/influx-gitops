@@ -31,7 +31,12 @@
                         top.location = './index?delay='+delay+'&status='+status+'&tsearch='+tsearch+(exports==1?'&export=1':'')+dateRange;
                     }
 				}
-                $('input[type=text]').keypress(function(){$('a#tsend').click();})
+                $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
+                    code = (e.keyCode ? e.keyCode : e.which);
+                    if (code == 13){
+                        showChang();
+                    }
+                });
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -76,7 +81,7 @@
                                             <option value='1' >Excel輸出</option>
                                         </select>
                                     </td>
-                                    <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default" id="tsend">查詢</a></td>
+                                    <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
                                 </tr>
                             </table>
                         </div>
