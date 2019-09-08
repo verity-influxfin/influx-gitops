@@ -12,9 +12,7 @@
 				}
 				
 				function check_checked(){
-					var ids					= "";
-					var target_export	= '<?=admin_url('target/target_export?status=10') ?>';
-					
+                    var ids = "",ctr = $('#target_export').parent().find('.btn');
 					$('.targets:checked').each(function() {
 						if(ids==""){
 							ids += this.value;
@@ -22,7 +20,13 @@
 							ids += ',' + this.value;
 						}		
 					});
-					$('#target_export').attr('href',target_export + '&ids=' + ids);
+                    if(ids!=""){
+                        $('#target_export').val(ids);
+                        ctr.prop('disabled',false);
+                    }
+                    else{
+                        ctr.prop('disabled',true);
+                    }
 				}
 			</script>
             <!-- /.row -->
@@ -30,7 +34,11 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							<a id="target_export" href="<?=admin_url('target/target_export?status=10') ?>" target="_blank"  class="btn btn-primary float-right" >匯出Excel</a>
+                            <form action="<?=admin_url('target/target_export') ?>" method="post" style="display: inline-block">
+                                <input type="submit" class="btn btn-primary float-right" value="匯出Excel" disabled />
+                                <input id="target_export" type="hidden" name="ids" />
+                                <input type="hidden" name="status" value="10" />
+                            </form>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
