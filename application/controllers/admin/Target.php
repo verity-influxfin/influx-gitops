@@ -702,8 +702,8 @@ class Target extends MY_Admin_Controller {
 		$status_list 		= $this->target_model->status_list;
 		$sub_list 			= $this->target_model->sub_list;
 
-		header('Content-type:application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename=targets_'.date('Ymd').'.xls');
+		//header('Content-type:application/vnd.ms-excel');
+		//header('Content-Disposition: attachment; filename=targets_'.date('Ymd').'.xls');
 		$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
                 <th>申請金額</th><th>核准金額</th><th>剩餘本金</th><th>年化利率</th><th>期數</th>
                 <th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
@@ -719,8 +719,8 @@ class Target extends MY_Admin_Controller {
 				$html .= '<td>'.$product_list[$value->product_id]['name'].'</td>';
 				$html .= '<td>'.$value->user_id.'</td>';
 				$html .= '<td>'.$value->credit_level.'</td>';
-				$html .= '<td>'.$school_list[$value->user_id]['school_name'].'</td>';
-				$html .= '<td>'.$school_list[$value->user_id]['school_department'].'</td>';
+				$html .= '<td>'.(isset($school_list[$value->user_id]['school_name'])?$school_list[$value->user_id]['school_name']:'').'</td>';
+				$html .= '<td>'.(isset($school_list[$value->user_id]['school_department'])?$school_list[$value->user_id]['school_department']:'').'</td>';
 				$html .= '<td>'.$value->amount.'</td>';
 				$html .= '<td>'.$value->loan_amount.'</td>';
 				$html .= '<td>'.$value->amortization_table['remaining_principal'].'</td>';
