@@ -10,9 +10,8 @@
 					$('.targets').prop("checked", true);
 					check_checked();
 				}
-				
 				function check_checked(){
-                    var ids = "",ctr = $('#amortization_export,#target_export').parent().find('.btn');
+                    var ids = "",ctr = $('#amortization_export,#target_export').parent().find('.btn');;
                     $('.targets:checked').each(function() {
                         if(ids==''){
                             ids += this.value;
@@ -29,6 +28,10 @@
                         ctr.prop('disabled',true);
                     }
 				}
+                $(document).off("click","#selAll").on("click","#selAll" ,  function(){
+                    var ctr = $('#amortization_export,#target_export').parent().find('.btn');
+                    $(this).prop('checked')==true?($('.targets,#chl').hide(),ctr.prop('disabled',false)):($('.targets,#chl').show(),ctr.prop('disabled',true));
+                });
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -43,6 +46,7 @@
                                 <input type="submit" class="btn btn-primary float-right" value="匯出攤還表" disabled />
                                 <input id="amortization_export" type="hidden" name="ids" />
                             </form>
+                            <input type="checkbox" id="selAll" style="margin: 0 2px 0 10px;">所有還款中資料
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -50,7 +54,7 @@
                                 <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn" >全選</a></th>
+                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" id="chl" class="btn" >全選</a></th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信用等級</th>
