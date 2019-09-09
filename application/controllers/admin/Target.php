@@ -73,23 +73,53 @@ class Target extends MY_Admin_Controller {
 		if(!empty($where)||isset($input['status'])&&$input['status']==99){
             isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
             isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
-			$list 						= $this->target_model->get_many_by($where);
+			$list = $this->target_model->get_many_by($where);
+			$tmp  = [];
 			if($list){
 				foreach($list as $key => $value){
 					if($value->status==2 || $value->status==23 && $value->sub_status==0 ){
-						$bank_account 		= $this->user_bankaccount_model->get_by(array(
-							'user_id'	=> $value->user_id,
-							'investor'	=> 0,
-							'status'	=> 1,
-							'verify'	=> 1,
-						));
-						if($value->order_id!=0){
-						    //消費貸申請金額包含平台手續費+債轉手續費
-
+					    if(!isset($tmp[$value->user_id]['bank_account_verify'])){
+                            $bank_account 		= $this->user_bankaccount_model->get_by(array(
+                                'user_id'	=> $value->user_id,
+                                'investor'	=> 0,
+                                'status'	=> 1,
+                                'verify'	=> 1,
+                            ));
+                            $tmp[$value->user_id]['bank_account_verify'] = $bank_account?1:0;
                         }
-						$list[$key]->bank_account_verify = $bank_account?1:0;
-					}
-				}
+						$list[$key]->bank_account_verify = $tmp[$value->user_id]['bank_account_verify'];
+                    }
+
+                    if(!isset($tmp[$value->user_id]['school'])) {
+                        $this->load->model('user/user_meta_model');
+                        $users_school = $this->user_meta_model->get_many_by([
+                            'meta_key' => ['school_name', 'school_department'],
+                            'user_id' => $value->user_id,
+                        ]);
+                        if ($users_school) {
+                            foreach ($users_school as $skey => $svalue) {
+                                $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value;
+                            }
+                        }
+                    }
+                    if(isset($tmp[$value->user_id]['school']['school_name'])){
+                        $list[$key]->school_name       = $tmp[$value->user_id]['school']['school_name'];
+                        $list[$key]->school_department = $tmp[$value->user_id]['school']['school_department'];
+                    }
+
+                    $amortization_table = $this->target_lib->get_amortization_table($value);
+                    $list[$key]->remaining_principal = $amortization_table['remaining_principal'];
+
+                    $limit_date  = $value->created_at + (TARGET_APPROVE_LIMIT*86400);
+                    $credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
+                        'product_id' 	=> $value->product_id,
+                        'user_id' 		=> $value->user_id,
+                        'created_at <=' => $limit_date,
+                    ]);
+                    if($credit){
+                        $list[$key]->credit = $credit;
+                    }
+                }
 			}
 		}
         $product_list    = $this->config->item('product_list');
@@ -100,7 +130,7 @@ class Target extends MY_Admin_Controller {
 		if(isset($input['export'])&&$input['export']==1){
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
-            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>申請金額</th><th>核准金額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>備註</th><th>邀請碼</th></tr></thead><tbody>';
+            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動筆金額(借款金額)</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
 
             if(isset($list) && !empty($list)){
                 foreach($list as $key => $value){
@@ -108,17 +138,24 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->target_no.'</td>';
                     $html .= '<td>'.$product_list[$value->product_id]['name'].'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
+                    $html .= '<td>'.$value->credit_level.'</td>';
+                    $html .= '<td>'.$value->school_name.'</td>';
+                    $html .= '<td>'.$value->school_department.'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
+                    $html .= '<td>'.$value->credit->amount.'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';
+                    $html .= '<td>'.$value->remaining_principal.'</td>';
                     $html .= '<td>'.floatval($value->interest_rate).'</td>';
                     $html .= '<td>'.$instalment_list[$value->instalment].'</td>';
                     $html .= '<td>'.$repayment_type[$value->repayment].'</td>';
+                    $html .= '<td>'.$value->loan_date.'</td>';
                     $html .= '<td>'.$delay_list[$value->delay].'</td>';
                     $html .= '<td>'.intval($value->delay_days).'</td>';
                     $html .= '<td>'.$status_list[$value->status].'</td>';
                     $html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
-                    $html .= '<td>'.$value->remark.'</td>';
+                    $html .= '<td>'.date("Y-m-d H:i:s",$value->credit->created_at).'</td>';
                     $html .= '<td>'.$value->promote_code.'</td>';
+                    $html .= '<td>'.$value->remark.'</td>';
                     $html .= '</tr>';
                 }
             }
