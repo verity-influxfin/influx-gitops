@@ -68,7 +68,7 @@
                                     <form role="form" method="post">
                                         <div class="form-group">
                                             <label>月薪</label><br />
-                                            <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" data-toggle="datepicker" />
+                                            <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
                                             <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                             <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                         </div>
