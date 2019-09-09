@@ -139,10 +139,10 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$product_list[$value->product_id]['name'].'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
-                    $html .= '<td>'.$value->school_name.'</td>';
-                    $html .= '<td>'.$value->school_department.'</td>';
+                    $html .= '<td>'.(isset($value->school_name)?$value->school_name:'').'</td>';
+                    $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
-                    $html .= '<td>'.$value->credit->amount.'</td>';
+                    $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';
                     $html .= '<td>'.$value->remaining_principal.'</td>';
                     $html .= '<td>'.floatval($value->interest_rate).'</td>';
@@ -153,7 +153,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.intval($value->delay_days).'</td>';
                     $html .= '<td>'.$status_list[$value->status].'</td>';
                     $html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
-                    $html .= '<td>'.date("Y-m-d H:i:s",$value->credit->created_at).'</td>';
+                    $html .= '<td>'.(isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'').'</td>';
                     $html .= '<td>'.$value->promote_code.'</td>';
                     $html .= '<td>'.$value->remark.'</td>';
                     $html .= '</tr>';
