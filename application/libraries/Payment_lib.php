@@ -231,7 +231,7 @@ class Payment_lib{
 					}
 
 					$this->CI->user_bankaccount_model->update($value->id,array("verify"=>3,"verify_at"=>time(),"sys_check"=>0));
-					$fxml_list = in_array($value->bank_code,$xml_bank_list);
+
 					$data = array(
 						"code"			=> "0",
 						"upload_date"	=> "",
@@ -248,7 +248,7 @@ class Payment_lib{
 						"bankcode_to"	=> $value->bank_code.$value->branch_code,
 						"bankacc_to"	=> $value->bank_account,
 						"tax_to"		=> strtoupper($user_info->id_number),
-						"name_to"		=> (!$fxml_list?nf_to_wf($user_info->name):''),
+						"name_to"		=> nf_to_wf($user_info->name),
 						"alert_to"		=> "0",
 						"email_to"		=> "",
 						"fee_type"		=> "15",
@@ -258,7 +258,8 @@ class Payment_lib{
 				
 					$data = $this->check_len($data);
 					
-					if($fxml_list){
+					if(!$difficult && in_array($value->bank_code,$xml_bank_list)){
+						$xml_ids[] = $value->id;
 						if($xml_content != ""){
 							$xml_content .= "\n";
 						}
@@ -694,7 +695,7 @@ class Payment_lib{
  
 				 unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
 				 $log_data[$key]=$value;
-				 //$this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
+				 $this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
 
           	}
 			 $this->get_batchno_to_cathay($log_data);
