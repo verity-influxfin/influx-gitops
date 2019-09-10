@@ -258,7 +258,7 @@ class Payment_lib{
 				
 					$data = $this->check_len($data);
 					
-					if(!$difficult && in_array($value->bank_code,$xml_bank_list)){
+					if(in_array($value->bank_code,$xml_bank_list)){
 						$xml_ids[] = $value->id;
 						if($xml_content != ""){
 							$xml_content .= "\n";
