@@ -151,32 +151,32 @@
 											<? if(!empty($credit_list)){
 												foreach($credit_list as $key => $value){
 											?>
-												<tr>
-													<td><p class="form-control-static">產品</p></td>
+												<tr style="border-top:2px solid black">
+													<td style="background-color: #f5f5f5"><p class="form-control-static">產品</p></td>
 													<td>
 														<p class="form-control-static"><?=isset($value->product_id)?$product_list[$value->product_id]['name']:"";?></p>
 													</td>
-													<td><p class="form-control-static">信用等級</p></td>
-													<td>
+													<td style="background-color: #f5f5f5"><p class="form-control-static">信用等級</p></td>
+													<td<?=isset($value->status)&&$value->status==0?" style='text-decoration:line-through'":"";?>>
 														<p class="form-control-static"><?=isset($value->level)?$value->level:"";?></p>
 													</td>
 												</tr>
 												<tr>
-													<td><p class="form-control-static">信用評分</p></td>
-													<td>
+													<td style="background-color: #f5f5f5"><p class="form-control-static">信用評分</p></td>
+													<td<?=isset($value->status)&&$value->status==0?" style='text-decoration:line-through'":"";?>>
 														<p class="form-control-static"><?=isset($value->points)?$value->points:"";?></p>
 													</td>
-													<td><p class="form-control-static">信用額度</p></td>
-													<td>
+													<td style="background-color: #f5f5f5"><p class="form-control-static">信用額度</p></td>
+													<td<?=isset($value->status)&&$value->status==0?" style='text-decoration:line-through'":"";?>>
 														<p class="form-control-static"><?=isset($value->amount)?$value->amount:"";?></p>
 													</td>
 												</tr>
 												<tr>
-													<td><p class="form-control-static">有效時間</p></td>
-													<td>
+													<td style="background-color: #f5f5f5"><p class="form-control-static">有效時間</p></td>
+													<td<?=isset($value->status)&&$value->status==0?" style='text-decoration:line-through'":"";?>>
 														<p class="form-control-static"><?=isset($value->expire_time)&&!empty($value->expire_time)?date("Y-m-d H:i:s",$value->expire_time):"";?></p>
 													</td>
-													<td><p class="form-control-static">核准時間</p></td>
+													<td style="background-color: #f5f5f5"><p class="form-control-static">核准時間</p></td>
 													<td>
 														<p class="form-control-static"><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"";?></p>
 													</td>
