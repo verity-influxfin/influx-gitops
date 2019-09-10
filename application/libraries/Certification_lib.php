@@ -148,6 +148,7 @@ class Certification_lib{
             $user_id        = $info->user_id;
             $msg            = '';
             $ocr            = [];
+            $answer         = [];
             $rawData        = [];
             $person_compare = [];
 
@@ -220,13 +221,20 @@ class Certification_lib{
                 if($remark['face'][0]  < 60 || $remark['face'][1]  < 90){
                     $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
                     $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
-                    foreach($person_token as $token){
-                        $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
+                    $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
+                    $ffront_count 	= $front_token&&is_array($front_token)?count($front_token):0;
+                    if($fperson_count ==2 && $ffront_count == 1 ){
+                        foreach($person_token as $token){
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
+                        }
+                        sort($answer);
+                        $remark['faceplus'] = $answer;
+                        if($answer[0]<60 || $answer[1]<90){
+                            $remark['error'] .= '人臉比對分數不足，可能帶眼鏡或反光';
+                        }
                     }
-                    sort($answer);
-                    $remark['faceplus'] = $answer;
-                    if($answer[0]<60 || $answer[1]<90){
-                        $remark['error'] .= '人臉比對分數不足';
+                    else{
+                        $remark['error'] .= '人臉比對分數不足，可能帶眼鏡或反光';
                     }
                 }
             }
