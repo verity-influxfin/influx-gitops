@@ -230,11 +230,11 @@ class Certification_lib{
                         sort($answer);
                         $remark['faceplus'] = $answer;
                         if($answer[0]<60 || $answer[1]<90){
-                            $remark['error'] .= '人臉比對分數不足，可能帶眼鏡或反光';
+                            $remark['error'] .= '人臉比對分數不足';
                         }
                     }
                     else{
-                        $remark['error'] .= '人臉比對分數不足，可能帶眼鏡或反光';
+                        $remark['error'] .= '人臉比對分數不足';
                     }
                 }
             }
