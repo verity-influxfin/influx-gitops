@@ -124,7 +124,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/STS|STNS|STIS|FGNS|FGIS/',$value->target_no)?'(產品轉換)':''):'' ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->school_name)?$value->school_name:'' ?></td>

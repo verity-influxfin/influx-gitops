@@ -136,7 +136,7 @@ class Target extends MY_Admin_Controller {
                 foreach($list as $key => $value){
                     $html .= '<tr>';
                     $html .= '<td>'.$value->target_no.'</td>';
-                    $html .= '<td>'.$product_list[$value->product_id]['name'].'</td>';
+                    $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/STS|STNS|STIS|FGNS|FGIS/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->school_name)?$value->school_name:'').'</td>';
