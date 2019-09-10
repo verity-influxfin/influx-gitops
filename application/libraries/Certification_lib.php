@@ -3,9 +3,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
-	
+
 	public $certification;
-	
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -14,7 +14,7 @@ class Certification_lib{
 		$this->CI->load->library('Notification_lib');
 		$this->certification = $this->CI->config->item('certifications');
     }
-	
+
 	public function get_certification_info($user_id,$certification_id,$investor=0){
 		if($user_id && $certification_id){
 			$param = array(
@@ -39,7 +39,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	public function get_last_certification_info($user_id,$certification_id,$investor=0){
 		if($user_id && $certification_id){
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by([
@@ -62,7 +62,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	public function set_success($id){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
@@ -81,7 +81,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	public function verify($info){
 		if($info && $info->status != 1){
 			$certification 	= $this->certification[$info->certification_id];
@@ -97,7 +97,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	public function set_failed($id,$fail=''){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
@@ -145,141 +145,105 @@ class Certification_lib{
 
     public function idcard_verify($info = []){
         if($info && $info->status ==0 && $info->certification_id==1){
+            $user_id        = $info->user_id;
+            $msg            = '';
+            $ocr            = [];
+            $rawData        = [];
+            $person_compare = [];
+
             $content = json_decode($info->content,true);
-
+            $this->CI->load->library('Scan_lib');
+            $this->CI->load->library('Compare_lib');
+            $this->CI->load->library('Azure_lib');
             $this->CI->load->library('Faceplusplus_lib');
-            $this->CI->load->library('Ocr_lib');
 
-            $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-            $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
-
-            if(!$person_token){
-                $rotate = $this->face_rotate($content['person_image'],$info->user_id);
-                if($rotate){
-                    $content['person_image'] 	= $rotate['url'];
-                    $person_token				= $rotate['count'];
-                }
-            }
-            if(!$front_token){
-                $rotate = $this->face_rotate($content['front_image'],$info->user_id);
-                if($rotate){
-                    $content['front_image'] 	= $rotate['url'];
-                    $front_token				= $rotate['count'];
-                }
+            $person_face       = $this->CI->azure_lib->detect($content['person_image'],$user_id);
+            $front_face        = $this->CI->azure_lib->detect($content['front_image'],$user_id);
+            //$healthcard_face   = $this->CI->azure_lib->detect($content['healthcard_image'],$user_id);
+            foreach($person_face as $token){
+                $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id);
             }
 
-            $error 	= '';
-            $ocr = array();
-            $ocr['front_image'] 	 = preg_replace('/\s/','',$this->CI->ocr_lib->detect_text($content['front_image']));
-            $ocr['back_image'] 		 = preg_replace('/\\n/','',$this->CI->ocr_lib->detect_text($content['back_image']));
-            $ocr['healthcard_image'] = $this->CI->ocr_lib->detect_text($content['healthcard_image']);
+            $person_count = count($person_face);
+            $front_count  = count($front_face);
 
-            $ocr['front_image'] = preg_replace_callback(
-                '/年|\d{1,2}月/',
-                function ($matches) {
-                    $match = '';
-                    if(strpos($matches[0],'月')){
-                        $match = (preg_match('/\d/',$matches[0])==1?'0':'').preg_replace('/\D/','',$matches[0]);
+            if($person_count==2 && $front_count==1){
+                $rawData['front_image'] = $this->CI->scan_lib->scanData($content['front_image'],$user_id);
+                $rawData['back_image'] = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id);
+                $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id);
+
+                //身分證正面
+                $ocr['name']            = $this->CI->compare_lib->contentCheck($content['name'],$rawData['front_image'],1);
+                $ocr['id_number']       = $this->CI->compare_lib->contentCheck($content['id_number'],$rawData['front_image']);
+                $ocr['birthday']        = $this->CI->compare_lib->dateContentCheck($content['birthday'],$rawData['front_image']);
+                $ocr['id_card_date']    = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$rawData['front_image']);
+                $ocr['id_card_place']   = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$rawData['front_image'],1);
+                $check_name = ['姓名','身分證字號','發證日','生日'];
+                $check_item = ['name','id_number','id_card_date','birthday'];
+                foreach($check_item as $k => $v){
+                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'不相符或樣本反光不清晰<br>':null;
+                }
+
+                //身分證背面
+                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,5}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$rawData['back_image'],1);
+                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$rawData['back_image'],1);
+                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$rawData['back_image'],1);
+                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$rawData['back_image'],1);
+                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\p{Han}{1,6}\|{0,1}','生地|\|',$rawData['back_image'],1);
+                $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
+                $ocr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?\|)|'.$ocr['born'].'\|(.*?\|)','住|址|\||'.$ocr['born'],$rawData['back_image'],1);
+
+                //健保卡
+                $ocr['healthcard_name']      = $this->CI->compare_lib->contentCheck($content['name'],$rawData['healthcard_image'],1);
+                $ocr['healthcard_id_number'] = $this->CI->compare_lib->contentCheck($content['id_number'],$rawData['healthcard_image']);
+                $ocr['healthcard_birthday']  = $this->CI->compare_lib->contentCheck($content['birthday'],$rawData['healthcard_image']);
+                $ocr['healthcard_number']    = $this->CI->compare_lib->dataExtraction('\|\d{12}','\|',preg_replace('/'.$ocr['healthcard_id_number'].'/','',$rawData['healthcard_image']));
+                $check_name = ['姓名','身分證字號','生日'];//,'發證區域'
+                $check_item = ['healthcard_name','healthcard_id_number','healthcard_birthday'];
+                foreach($check_item as $k => $v){
+                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'不相符或樣本反光不清晰<br>':null;
+                }
+
+                $remark = array(
+                    'error'			    => $msg,
+                    'OCR'			    => $ocr,
+                    'face'			    => [],
+                    'face_flag'		    => [],
+                    'faceplus'		    => [],
+                    'face_count'	        => array(
+                        'person_count'	=> $person_count,
+                        'front_count'	=> $front_count
+                    ),
+                );
+                $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
+                $remark['face_flag']  = [$person_compare[0]['isIdentical'],$person_compare[1]['isIdentical']];
+                if($remark['face'][0]  < 60 || $remark['face'][1]  < 90){
+                    $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
+                    $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+                    foreach($person_token as $token){
+                        $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
                     }
-                    else{//
-                        $match = preg_replace('/\D/','',$matches[0]);
-                    }
-                    return $match;
-                },
-                $ocr['front_image']
-            );
-
-            $ocr['healthcard_image'] = preg_replace_callback(
-                '/\d{2,3}-\d{1,2}-\d{1,2}/',
-                function ($matches) {
-                    $matchArr=preg_split('/-/',$matches[0]);
-                    return $matchArr[0].$matchArr[1].$matchArr[2];
-                },
-                str_replace('/','-',$ocr['healthcard_image'])
-            );
-            $ocr['healthcard_image'] = preg_replace('/\s/','',$ocr['healthcard_image']);
-
-            $check_name = ['姓名','身分證字號','發證日','生日'];//,'發證區域'
-            $check_item = ['name','id_number','id_card_date','birthday'];//,'id_card_place'
-            foreach($check_item as $k => $v){
-                //身分證正面資訊
-                if(in_array($v,['name','id_number','id_card_date','birthday'])){//,'id_card_place'
-                    !strpos($ocr['front_image'],$content[$v])?$error .= '身分證'.$check_name[$k].'需人工確認<br>':$ocr[$v]=$content[$v];
-                }
-            }
-
-            //身分證正面發證區
-            $ocr['id_card_place'] = preg_match('/\(\p{Han}{2,3}\)\p{Han}{2}/u', $ocr['front_image'], $matches)?$matches[0]:null;
-
-            //健保卡
-            //!strpos($ocr['healthcard_image'],'全民健康保險')?$error .= '"健保卡清晰度需人工確認"<br>':'';
-            //$ocr['healthcard_number'] = preg_match('/\d{16}/', $ocr['healthcard_image'], $matches)?$matches[0]:null;
-            !strpos($ocr['healthcard_image'],$content['name'])?$error .= '健保卡姓名需人工確認<br>':$ocr['healthcard_name']=$content['name'];
-            !strpos($ocr['healthcard_image'],$content['id_number'])?$error .= '健保卡身分證字號需人工確認<br>':$ocr['healthcard_id_number']=$content['id_number'];
-            !strpos($ocr['healthcard_image'],$content['birthday'])?$error .= '健保卡生日需人工確認<br>':$ocr['healthcard_birthday']=$content['birthday'];
-            $ocr['healthcard_number'] = isset($ocr['healthcard_birthday'])?preg_split('/'.$ocr['healthcard_birthday'].'/', $ocr['healthcard_image'])[1]:null;
-            preg_match('/\d{12}/', $ocr['healthcard_number'], $matches)?$ocr['healthcard_number'] = $matches[0]:$ocr['healthcard_number'] = null;
-
-            //$ocr['back_image'] = preg_replace('//','*',$ocr['back_image']);//
-            //身分證背面-父
-            $ocr['father'] = preg_split('/-/',preg_replace('/母/','-',preg_replace('/父/','',$ocr['back_image'])))[0];
-            //身分證背面-母
-            $ocr['mother'] = preg_match('/母\p{Han}{2,4}役別|母\p{Han}{2,4}配偶/u', $ocr['back_image'], $matches)?preg_replace('/母|役別|配偶/','',$matches[0]):null;
-            //$ocr['mother']==null?$ocr['mother']=preg_split('/母/', $ocr['mother'])[1]:null;
-
-            //身分證背面-配偶
-            $ocr['spouse'] = preg_match('/配偶\p{Han}{2,4}出生/u', $ocr['back_image'], $matches)?preg_replace('/配偶|出生/','',$matches[0]):null;
-            //身分證背面-役別
-            $ocr['military_service'] = preg_match('/役別\p{Han}{2}\({0,1}\p{Han}{0,2}\){0,1}\p{Han}{0,1}配偶|役別\p{Han}{2}\({0,1}\p{Han}{0,2}\){0,1}\p{Han}{0,1}役|役別\p{Han}{2}\({0,1}\p{Han}{0,2}\){0,1}\p{Han}{0,1}兵/u', $ocr['back_image'], $matches)?preg_replace('/役別|配偶/','',$matches[0]):null;
-            //身分證背面-地址
-            $ocr['address'] = preg_match('/住址.+?\d{5}/', $ocr['back_image'], $matches)?preg_replace('/住址|\d{5}/','',$matches[0]):null;
-            preg_match('/役別/', $ocr['address'])>0&&isset($ocr['military_service'])?$ocr['address']=preg_replace('/役別'.$ocr['military_service'].'/','',$ocr['address']):null;
-
-            //身分證背面-自然人
-            $ocr['natural_person'] = preg_match('/\d{10}/', $ocr['back_image'], $matches)?$matches[0]:null;
-
-
-            $person_count 	= $person_token&&is_array($person_token)?count($person_token):0;
-            $front_count 	= $front_token&&is_array($front_token)?count($front_token):0;
-            $answer			= array();
-            $remark			= array(
-                'error'			=> $error,
-                'OCR'			=> $ocr,
-                'face'			=> array(),
-                'face_count'	=> array(
-                    'person_count'	=> $person_count,
-                    'front_count'	=> $front_count
-                ),
-            );
-
-            if($person_count > 0 && $front_count > 0 ){
-                foreach($person_token as $token){
-                    $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
-                }
-                sort($answer);
-                $remark['face'] = $answer;
-                if(count($answer)==2){
+                    sort($answer);
+                    $remark['faceplus'] = $answer;
                     if($answer[0]<60 || $answer[1]<90){
                         $remark['error'] .= '人臉比對分數不足';
                     }
-                }else{
-                    $remark['error'] .= '人臉數量錯誤';
                 }
-            }else{
-                $remark['error'] .= '人臉數量錯誤';
             }
 
             if($remark['error']==''){
                 $this->CI->user_certification_model->update($info->id,array(
-                    'remark'	=> json_encode($remark),
-                    'content'	=> json_encode($content),
+                    'remark'	    => json_encode($remark),
+                    'content'	    => json_encode($content),
+                    'sys_check'     => 1,
                 ));
                 $this->set_success($info->id);
             }else{
                 $this->CI->user_certification_model->update($info->id,array(
-                    'status'	=> 3,
-                    'remark'	=> json_encode($remark),
-                    'content'	=> json_encode($content),
+                    'status'	    => 3,
+                    'remark'	    => json_encode($remark),
+                    'content'	    => json_encode($content),
+                    'sys_check'     => 1,
                 ));
             }
             return true;
@@ -311,7 +275,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	public function face_rotate($url='',$user_id=0){
 		$this->CI->load->library('faceplusplus_lib');
 		$this->CI->load->library('s3_upload');
@@ -342,10 +306,10 @@ class Certification_lib{
 					$output_h = IMAGE_MAX_WIDTH;
 					$output_w = IMAGE_MAX_WIDTH;
 				}
-				
+
 				$output = imagecreatetruecolor($output_w, $output_h);
 				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
-				
+
 				ob_start();
 				imagejpeg($output, NULL, 90);
 				$image_data = ob_get_contents();
@@ -360,7 +324,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function idcard_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -369,7 +333,7 @@ class Certification_lib{
 			if($id_number_used && $id_number_used->id != $info->user_id){
 				return false;
 			}
-			
+
 			$data 		= array(
 				'id_card_status'	=> 1,
 				'id_card_front'		=> $content['front_image'],
@@ -377,7 +341,7 @@ class Certification_lib{
 				'id_card_person'	=> $content['person_image'],
 				'health_card_front'	=> $content['healthcard_image'],
 			);
-			
+
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'id_card_status'));
 			if($exist){
 				foreach($data as $key => $value){
@@ -424,16 +388,16 @@ class Certification_lib{
 						'address'			=> $content['address'],
                         "birthday"			=> $birthday,
 					);
-					
+
 					$virtual_data[] = array(
 						'investor'			=> 1,
-						'user_id'			=> $info->user_id,				
+						'user_id'			=> $info->user_id,
 						'virtual_account'	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.substr($content['id_number'],1,9),
 					);
-					
+
 					$virtual_data[] = array(
 						'investor'			=> 0,
-						'user_id'			=> $info->user_id,				
+						'user_id'			=> $info->user_id,
 						'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.substr($content['id_number'],1,9),
 					);
 					$this->CI->load->model('user/virtual_account_model');
@@ -448,7 +412,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function student_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -467,7 +431,7 @@ class Certification_lib{
 				'student_sip_password'	=> $content['sip_password'],
 				'transcript_front'		=> $content['transcript_image'],
 			);
-			
+
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'student_status'));
 			if($exist){
 				foreach($data as $key => $value){
@@ -500,7 +464,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function debitcard_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -530,7 +494,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function emergency_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -540,7 +504,7 @@ class Certification_lib{
 				'emergency_phone'			=> $content['phone'],
 				'emergency_relationship'	=> $content['relationship'],
 			);
-			
+
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'emergency_status'));
 			if($exist){
 				foreach($data as $key => $value){
@@ -573,14 +537,14 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function email_success($info){
 		if($info){
 			$content 	= $info->content;
 			$data 		= array(
 				'email_status'	=> 1,
 			);
-			
+
 			$exist 		= $this->CI->user_meta_model->get_by(array('user_id'=>$info->user_id , 'meta_key' => 'email_status'));
 			if($exist){
 				foreach($data as $key => $value){
@@ -598,7 +562,7 @@ class Certification_lib{
 						'meta_value'	=> $value
 					);
 				}
-				$rs  = $this->CI->user_meta_model->insert_many($param); 
+				$rs  = $this->CI->user_meta_model->insert_many($param);
 			}
 
 			if($rs){
@@ -622,7 +586,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function financial_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -670,7 +634,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function social_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -710,7 +674,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function diploma_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -755,7 +719,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function investigation_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -798,7 +762,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	
+
 	private function job_success($info){
 		if($info){
 			$content 	= $info->content;
@@ -925,19 +889,21 @@ class Certification_lib{
 					$value['user_status'] 		= intval($user_certification->status);
 					$value['certification_id'] 	= intval($user_certification->id);
 					$value['updated_at'] 		= intval($user_certification->updated_at);
+					$value['sys_check'] 		= intval($user_certification->sys_check);
 				}else{
 					$value['user_status'] 		= null;
 					$value['certification_id'] 	= null;
 					$value['updated_at'] 		= null;
+					$value['sys_check'] 		= 0;
 				}
-				
+
 				$certification_list[$key] = $value;
 			}
 			return $certification_list;
 		}
 		return false;
 	}
-		
+
 	public function script_check_certification(){
 		$script  		= 8;
 		$count 			= 0;
@@ -950,7 +916,7 @@ class Certification_lib{
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
-					case 2: 
+					case 2:
 					case 6:
 						if(time() > ($value->created_at + 3600)){
 							$this->set_failed($value->id,'未在有效時間內完成認證');
@@ -960,7 +926,7 @@ class Certification_lib{
 						$this->verify($value);
 						break;
 				}
-				$count++; 
+				$count++;
 			}
 		}
 		return $count;
