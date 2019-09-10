@@ -695,7 +695,7 @@ class Payment_lib{
  
 				 unset($value['cdata'],$value['admin_id'],$value['created_ip']); //刪除元素
 				 $log_data[$key]=$value;
-				 $this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
+				 //$this->CI->log_paymentexport_model->update($log_data[$key]['id'],['status'=>1]);
 
           	}
 			 $this->get_batchno_to_cathay($log_data);
