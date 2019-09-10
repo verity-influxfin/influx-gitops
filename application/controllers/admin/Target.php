@@ -130,7 +130,7 @@ class Target extends MY_Admin_Controller {
 		if(isset($input['export'])&&$input['export']==1){
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
-            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動筆金額(借款金額)</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
+            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
 
             if(isset($list) && !empty($list)){
                 foreach($list as $key => $value){
