@@ -61,6 +61,10 @@
                                 <p class="form-control-static"><?=isset($content['address'])?$content['address']:""?></p>
                             </div>
                             <div class="form-group">
+                                <label>系統初審</label>
+                                <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==1?"是":"否"?></p>
+                            </div>
+                            <div class="form-group">
                                 <label>備註</label>
                                 <?
                                 if($remark){
@@ -71,11 +75,18 @@
                                         echo '<p style="color:red;" class="form-control-static">錯誤：<br />'.$remark["error"].'</p>';
                                     }
                                     if($remark["face"] && is_array($remark["face"])){
-                                        echo '<p class="form-control-static">照片比對結果：';
+                                        echo '<p class="form-control-static">照片比對結果(Sys1)：';
                                         foreach($remark["face"] as $key => $value){
                                             echo $value."% ";
                                         }
                                         echo '</p>';
+                                        if(isset($remark["faceplus"])&&count($remark["faceplus"])>0){
+                                            echo '<p class="form-control-static">照片比對結果(Sys2)：';
+                                            foreach($remark["faceplus"] as $key => $value){
+                                                echo $value."% ";
+                                            }
+                                            echo '</p>';
+                                        }
                                     }
                                 }
                                 ?>
@@ -122,10 +133,10 @@
                                         </tr>
                                         <tr><td>
                                                 <label>人臉數量：</label><?=isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;?><br>
-                                                <label>姓名：</label><?=isset($remark["OCR"]["name"])?$remark["OCR"]["name"]:"";?><br>
-                                                <label>生日：</label><?=isset($remark["OCR"]["birthday"])?$remark["OCR"]["birthday"]:"";?><br>
-                                                <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])?$remark["OCR"]["id_card_date"]:"";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])?$remark["OCR"]["id_number"]:"";?>
+                                                <label>姓名：</label><?=isset($remark["OCR"]["name"])&&$remark["OCR"]["name"]!=''?$remark["OCR"]["name"]:"辨識失敗";?><br>
+                                                <label>生日：</label><?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?$remark["OCR"]["birthday"]:"辨識失敗";?><br>
+                                                <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?$remark["OCR"]["id_card_date"]:"辨識失敗";?><br>
+                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?$remark["OCR"]["id_number"]:"辨識失敗";?>
                                             </td></tr>
                                     </table>
                                 </div>
@@ -139,8 +150,15 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <label>父：</label><?=isset($remark["OCR"]["father"])?$remark["OCR"]["father"]:"";?><br>
-                                                <label>母：</label><?=isset($remark["OCR"]["mother"])?$remark["OCR"]["mother"]:"";?><br>
+                                                <?
+                                                //if($remark["OCR"]["father"]!=''){echo'<label>父：</label>'.$remark["OCR"]["father"].'<br>';}
+                                                //if($remark["OCR"]["mother"]!=''){echo'<label>母：</label>'.$remark["OCR"]["mother"].'<br>';}
+                                                //if($remark["OCR"]["spouse"]!=''){echo'<label>配偶：</label>'.$remark["OCR"]["spouse"].'<br>';}
+                                                //if($remark["OCR"]["military_service"]!=''){echo'<label>役別：</label>'.$remark["OCR"]["military_service"].'<br>';}
+                                                //if($remark["OCR"]["born"]!=''){echo'<label>出生地：</label>'.$remark["OCR"]["born"].'<br>';}
+                                                //if($remark["OCR"]["address"]!=''){echo'<label>住址：</label>'.$remark["OCR"]["address"].'<br>';}
+                                                //if($remark["OCR"]["gnumber"]!=''){echo'<label>綠色號碼：</label>'.$remark["OCR"]["gnumber"].'<br>';}
+                                                ?>
                                             </td>
                                         </tr>
                                     </table>
@@ -169,9 +187,10 @@
                                             </td>
                                         </tr>
                                         <tr><td>
-                                                <label>姓名：</label><?=isset($remark["OCR"]["name"])?$remark["OCR"]["name"]:"";?><br>
-                                                <label>生日：</label><?=isset($remark["OCR"]["birthday"])?$remark["OCR"]["birthday"]:"";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])?$remark["OCR"]["id_number"]:"";?>
+                                                <label>姓名：</label><?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?$remark["OCR"]["healthcard_name"]:"辨識失敗";?><br>
+                                                <label>生日：</label><?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?$remark["OCR"]["healthcard_id_number"]:"辨識失敗";?><br>
+                                                <label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?$remark["OCR"]["healthcard_birthday"]:"辨識失敗";?><br>
+                                                <label>健保卡號：</label><?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?$remark["OCR"]["healthcard_number"]:"辨識失敗";?>
                                             </td></tr>
                                     </table>
                                 </div>
@@ -188,4 +207,3 @@
     </div>
     <!-- /.row -->
 </div>
-<!-- /#page-wrapper -->
