@@ -752,11 +752,11 @@ class Transaction_lib{
                                             'target_id' => $target->id,
                                             'status'    => 10,
                                         ]);
-                                        $is_order = count($target_inves)==0;
-                                        if ($is_order&&count($transfers)==1) {
+                                        $is_order = $target_inves==false;
+                                        if ($is_order) {
                                             $order = $this->CI->order_model->get($target->order_id);
                                             $platform_fee = intval($order->platform_fee);
-                                            $transfer_fee = intval($transfer->transfer_fee);
+                                            $transfer_fee = intval($order->transfer_fee);
                                             $amount -= ($platform_fee + $transfer_fee);
                                         }
                                     }
