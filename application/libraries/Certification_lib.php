@@ -106,7 +106,10 @@ class Certification_lib{
 				$info->remark 			= json_decode($info->remark,true);
 				$info->remark['fail'] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
-				$rs = $this->CI->user_certification_model->update($id,array('status'=>2,'remark'=>json_encode($info->remark)));
+				$rs = $this->CI->user_certification_model->update($id,array(
+				    'status'    => 2,
+                    'remark'    => json_encode($info->remark)
+                ));
 				if($rs){
                     $this->CI->load->library('target_lib');
                     $targets = $this->CI->target_model->get_many_by(array(
@@ -291,17 +294,26 @@ class Certification_lib{
 			if($idcard && $idcard->status==1){
 				$status 		= 3;
 				$id_card_remark = json_decode($idcard->remark,true);
-				if($id_card_remark && isset($id_card_remark['OCR']['back_image'])){
-					$father = $id_card_remark['OCR']['back_image']['father'];
-					$mother = $id_card_remark['OCR']['back_image']['mother'];
+				if($id_card_remark && isset($id_card_remark['OCR'])){
+					$father = $id_card_remark['OCR']['father'];
+					$mother = $id_card_remark['OCR']['mother'];
 					if(in_array($name,array($father,$mother))){
-						$this->set_success($info->id);
-						return true;
+                        $phone_used = $this->CI->user_model->get_by(array(
+                            'id'    => $info->user_id,
+                            'phone' => $content['phone'],
+                        ));
+					    if($phone_used){
+                            $this->set_failed($info->id,'與註冊電話相同');
+                        }
+					    else{
+                            $this->set_success($info->id);
+                        }
 					}
 				}
 
 				$this->CI->user_certification_model->update($info->id,array(
 					'status'	=> $status,
+					'sys_check'	=> 1,
 				));
 				return true;
 			}
