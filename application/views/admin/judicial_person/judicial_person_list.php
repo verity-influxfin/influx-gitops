@@ -82,6 +82,7 @@
                                             <th>統一編號</th>
                                             <th>公司類型</th>
                                             <th>公司名稱</th>
+                                            <th>法人 User ID</th>
                                             <th>申請人 ID</th>
                                             <th>申請人</th>
                                             <th>聯絡人</th>
@@ -104,6 +105,7 @@
                                             <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
                                             <td><?=isset($company_type[$value->company_type])?$company_type[$value->company_type]:"" ?></td>
                                             <td><?=isset($value->company)?$value->company:"" ?></td>
+                                            <td><?=isset($value->company_user_id)?$value->company_user_id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
                                             <td><?=isset($value->cooperation_contact)?$value->cooperation_contact:"" ?></td>
