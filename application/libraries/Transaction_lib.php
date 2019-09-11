@@ -749,10 +749,11 @@ class Transaction_lib{
                                 if ($transfer_account && $virtual_account) {
                                     if ($target->order_id != 0) {
                                         $target_inves = $this->CI->investment_model->get_many_by([
-                                            'target_id' => $target->id
+                                            'target_id' => $target->id,
+                                            'status'    => 10,
                                         ]);
                                         $is_order = count($target_inves)==0;
-                                        if ($is_order) {
+                                        if ($is_order&&count($transfers)==1) {
                                             $order = $this->CI->order_model->get($target->order_id);
                                             $platform_fee = intval($order->platform_fee);
                                             $transfer_fee = intval($transfer->transfer_fee);
