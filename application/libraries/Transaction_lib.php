@@ -599,6 +599,8 @@ class Transaction_lib{
                                     }
 
                                     $investment = $this->CI->investment_model->get($investment_id);
+                                    $entering_date		= get_entering_date();
+                                    $settlement_date 	= date('Y-m-d',strtotime($entering_date.' +'.ORDER_TRANSFER_RANGE_DAYS.' days'));
                                     if ($investment) {
                                         $data_arr['principal']           = [];
                                         $data_arr['interest']            = [];
@@ -622,7 +624,7 @@ class Transaction_lib{
                                         $data_arr['instalment'][] 	         = $info['instalment'];
                                         $data_arr['accounts_receivable'][] 	 = $info['accounts_receivable'];
                                         $data_arr['total'][] 	             = $info['total'];
-                                        $data_arr['settlement_date'][] 	     = $info['settlement_date'];
+                                        $data_arr['settlement_date'][] 	     = $settlement_date;
                                         $this->CI->load->library('contract_lib');
                                         $contract[] = $this->CI->contract_lib->build_contract('transfer',$company_account->user_id,'','',$data_arr,0,$total_amount);
                                         $this->CI->transfer_lib->apply_transfer($investment, 0,$contract,$data_arr,0,1);
