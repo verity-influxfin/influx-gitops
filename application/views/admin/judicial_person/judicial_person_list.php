@@ -105,7 +105,7 @@
                                             <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
                                             <td><?=isset($company_type[$value->company_type])?$company_type[$value->company_type]:"" ?></td>
                                             <td><?=isset($value->company)?$value->company:"" ?></td>
-                                            <td><?=isset($value->company_user_id)?$value->company_user_id:"" ?></td>
+                                            <td><?=isset($value->company_user_id)&&$value->company_user_id!=0?$value->company_user_id:"審核中" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
                                             <td><?=isset($value->cooperation_contact)?$value->cooperation_contact:"" ?></td>
