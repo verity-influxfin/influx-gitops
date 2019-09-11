@@ -8,12 +8,14 @@ class Scan_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->library('Googlevision_lib');
+        $this->CI->load->library('Azure_lib');
     }
-	
-	public function idcardFront($img_url,$user_id){
-        $content       = $this->CI->googlevision_lib->google_document($img_url,$user_id);
-        $formatContent = $this->contentFormat(implode('',$content));
-        return $formatContent;
+
+	public function azureScanData($img_url,$user_id){
+        $content       = $this->CI->azure_lib->OCR($img_url,$user_id);
+        $pure_text     = $this->CI->azure_lib->pure_text($content);
+        //$formatContent = $this->contentFormat(implode('',$pure_text));
+        return $pure_text;
 	}
 
     public function scanData($img_url,$user_id){

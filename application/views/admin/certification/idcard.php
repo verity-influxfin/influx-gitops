@@ -61,7 +61,7 @@
                                 <p class="form-control-static"><?=isset($content['address'])?$content['address']:""?></p>
                             </div>
                             <div class="form-group">
-                                <label>系統初審</label>
+                                <label>系統檢核</label>
                                 <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==1?"是":"否"?></p>
                             </div>
                             <div class="form-group">
@@ -133,10 +133,10 @@
                                         </tr>
                                         <tr><td>
                                                 <label>人臉數量：</label><?=isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;?><br>
-                                                <label>姓名：</label><?=isset($remark["OCR"]["name"])&&$remark["OCR"]["name"]!=''?$remark["OCR"]["name"]:"辨識失敗";?><br>
-                                                <label>生日：</label><?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?$remark["OCR"]["birthday"]:"辨識失敗";?><br>
-                                                <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?$remark["OCR"]["id_card_date"]:"辨識失敗";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?$remark["OCR"]["id_number"]:"辨識失敗";?>
+                                                <?=isset($remark["OCR"]["name"])&&$remark["OCR"]["name"]!=''?"<label>姓名：</label>".$remark["OCR"]["name"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?"<label>生日：</label>".$remark["OCR"]["birthday"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?"<label>換發日期：</label>".$remark["OCR"]["id_card_date"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"<label>身分證字號：</label>".$remark["OCR"]["id_number"]."<br>":"";?>
                                             </td></tr>
                                     </table>
                                 </div>
@@ -187,10 +187,10 @@
                                             </td>
                                         </tr>
                                         <tr><td>
-                                                <label>姓名：</label><?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?$remark["OCR"]["healthcard_name"]:"辨識失敗";?><br>
-                                                <label>生日：</label><?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?$remark["OCR"]["healthcard_id_number"]:"辨識失敗";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?$remark["OCR"]["healthcard_birthday"]:"辨識失敗";?><br>
-                                                <label>健保卡號：</label><?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?$remark["OCR"]["healthcard_number"]:"辨識失敗";?>
+                                                <?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?"<label>姓名：</label>".$remark["OCR"]["healthcard_name"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?"<label>生日：</label>".$remark["OCR"]["healthcard_id_number"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?"<label>身分證字號：</label>".$remark["OCR"]["healthcard_birthday"]."<br>":"";?>
+                                                <?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?"<label>健保卡號：</label>".$remark["OCR"]["healthcard_number"]."<br>":"";?>
                                             </td></tr>
                                     </table>
                                 </div>

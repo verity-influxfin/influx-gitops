@@ -151,6 +151,7 @@ class Certification_lib{
             $answer         = [];
             $rawData        = [];
             $person_compare = [];
+            $done           = false;
 
             $content = json_decode($info->content,true);
             $this->CI->load->library('Scan_lib');
@@ -161,16 +162,44 @@ class Certification_lib{
             $person_face       = $this->CI->azure_lib->detect($content['person_image'],$user_id);
             $front_face        = $this->CI->azure_lib->detect($content['front_image'],$user_id);
             //$healthcard_face   = $this->CI->azure_lib->detect($content['healthcard_image'],$user_id);
-            foreach($person_face as $token){
-                $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id);
-            }
 
             $person_count = count($person_face);
             $front_count  = count($front_face);
 
-            if($person_count==2 && $front_count==1){
-                $rawData['front_image'] = $this->CI->scan_lib->scanData($content['front_image'],$user_id);
-                $rawData['back_image'] = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id);
+            //嘗試轉向找人臉
+            if($person_count==0){
+                $rotate = $this->face_rotate($content['person_image'],$user_id);
+                if($rotate){
+                    $content['person_image'] 	= $rotate['url'];
+                    $person_count				= $rotate['count'];
+                }
+            }
+            if($front_count==0){
+                $rotate = $this->face_rotate($content['front_image'],$user_id);
+                if($rotate){
+                    $content['front_image'] 	= $rotate['url'];
+                    $front_count				= $rotate['count'];
+                }
+            }
+
+            $remark = array(
+                'error'			    => '',
+                'OCR'			    => '',
+                'face'			    => [],
+                'face_flag'		    => [],
+                'faceplus'		    => [],
+                'face_count'	        => array(
+                    'person_count'	=> $person_count,
+                    'front_count'	=> $front_count
+                ),
+            );
+
+            if($person_count>=2 && $person_count<=3 && $front_count==1){
+                foreach($person_face as $token){
+                    $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id);
+                }
+                $rawData['front_image']      = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id);
+                $rawData['back_image']       = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id);
                 $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id);
 
                 //身分證正面
@@ -182,7 +211,7 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','發證日','生日'];
                 $check_item = ['name','id_number','id_card_date','birthday'];
                 foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'不相符或樣本反光不清晰<br>':null;
+                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'不相符<br />':null;
                 }
 
                 //身分證背面
@@ -202,23 +231,12 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','生日'];//,'發證區域'
                 $check_item = ['healthcard_name','healthcard_id_number','healthcard_birthday'];
                 foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'不相符或樣本反光不清晰<br>':null;
+                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'不相符<br />':null;
                 }
 
-                $remark = array(
-                    'error'			    => $msg,
-                    'OCR'			    => $ocr,
-                    'face'			    => [],
-                    'face_flag'		    => [],
-                    'faceplus'		    => [],
-                    'face_count'	        => array(
-                        'person_count'	=> $person_count,
-                        'front_count'	=> $front_count
-                    ),
-                );
                 $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
                 $remark['face_flag']  = [$person_compare[0]['isIdentical'],$person_compare[1]['isIdentical']];
-                if($remark['face'][0]  < 60 || $remark['face'][1]  < 90){
+                if($remark['face'][0]  < 65 || $remark['face'][1]  < 80){
                     $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
                     $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
                     $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
@@ -229,17 +247,24 @@ class Certification_lib{
                         }
                         sort($answer);
                         $remark['faceplus'] = $answer;
-                        if($answer[0]<60 || $answer[1]<90){
-                            $remark['error'] .= '人臉比對分數不足';
+                        if($answer[0]<65 || $answer[1]<80){
+                            $msg .= '系統判定人臉比對分數不足';
                         }
                     }
                     else{
-                        $remark['error'] .= '人臉比對分數不足';
+                        $msg .= '系統判定人臉比對分數不足';
                     }
                 }
+                $done = true;
+            }
+            else{
+                $msg .= '系統判定人臉數量不正確，可能有陰影或其他因素';
             }
 
-            if($remark['error']==''){
+            $remark['error'] = $msg;
+            $remark['OCR']   = $ocr;
+
+            if($remark['error']==''&&$done){
                 $this->CI->user_certification_model->update($info->id,array(
                     'remark'	    => json_encode($remark),
                     'content'	    => json_encode($content),
@@ -285,7 +310,7 @@ class Certification_lib{
 	}
 
 	public function face_rotate($url='',$user_id=0){
-		$this->CI->load->library('faceplusplus_lib');
+        $this->CI->load->library('Azure_lib');
 		$this->CI->load->library('s3_upload');
 		$image 	= file_get_contents($url);
 		if($image){
@@ -323,9 +348,9 @@ class Certification_lib{
 				$image_data = ob_get_contents();
 				ob_end_clean();
 				$base64 = base64_encode($image_data);
-				$count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,1);
+                $url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,'id_card','rotate');
+                $count  = count($this->CI->azure_lib->detect($url,$user_id));
 				if($count){
-					$url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,'id_card','rotate');
 					return array('count' => $count,'url' => $url);
 				}
 			}
