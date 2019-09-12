@@ -11644,6 +11644,12 @@ define({
                             "type": "String",
                             "field": "address",
                             "description": "<p>地址</p>"
+                        },
+                        {
+                            "group": "Parameter0",
+                            "type": "String",
+                            "field": "nickname",
+                            "description": "<p>暱稱</p>"
                         }
                     ]
                 }
