@@ -63,13 +63,18 @@ class Certification_lib{
 		return false;
 	}
 
-	public function set_success($id){
+	public function set_success($id,$sys_check=false){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 1){
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+                $this->CI->user_certification_model->update($id,array(
+                    'status'    => 2,
+                    'sys_check' => ($sys_check==true?1:0),
+                    'remark'    => json_encode($info->remark)
+                ));
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -98,7 +103,7 @@ class Certification_lib{
 		return false;
 	}
 
-	public function set_failed($id,$fail=''){
+	public function set_failed($id,$fail='',$sys_check=false){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
@@ -108,6 +113,7 @@ class Certification_lib{
 				$certification 	= $this->certification[$info->certification_id];
 				$rs = $this->CI->user_certification_model->update($id,array(
 				    'status'    => 2,
+                    'sys_check' => ($sys_check==true?1:0),
                     'remark'    => json_encode($info->remark)
                 ));
 				if($rs){
@@ -214,7 +220,7 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','發證日','生日'];
                 $check_item = ['name','id_number','id_card_date','birthday'];
                 foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'不相符<br />':null;
+                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'無法辨識<br />':null;
                 }
 
                 //身分證背面
@@ -234,7 +240,7 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','生日'];//,'發證區域'
                 $check_item = ['healthcard_name','healthcard_id_number','healthcard_birthday'];
                 foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'不相符<br />':null;
+                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'無法辨識<br />':null;
                 }
 
                 $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
@@ -286,6 +292,28 @@ class Certification_lib{
         }
         return false;
     }
+    public function social_verify($info = array()){
+        if($info && $info->status ==0 && $info->certification_id==4) {
+            $status 	 = 3;
+            $content     = json_decode($info->content);
+            $media       = $content->info->counts->media;
+            $followed_by = $content->info->counts->followed_by;
+            if($media >= 10 && $followed_by >= 10){
+                $status = 1;
+                $this->set_success($info->id);
+            }
+            //else {
+            //    $followed_by > 10 ? $this->set_failed($info->id, '') : $this->set_failed($info->id, '');
+            //}
+            $this->CI->user_certification_model->update($info->id,array(
+                'status'	=> $status,
+                'sys_check'	=> 1,
+            ));
+            return true;
+        }
+        return false;
+    }
+
     public function emergency_verify($info = array()){
 		if($info && $info->status ==0 && $info->certification_id==5){
 			$content	= json_decode($info->content,true);
@@ -303,25 +331,25 @@ class Certification_lib{
                             'phone' => $content['phone'],
                         ));
 					    if($phone_used){
-                            $this->set_failed($info->id,'與註冊電話相同');
+                            $this->set_failed($info->id,'與註冊電話相同',true);
+                            return true;
                         }
 					    else{
                             $this->set_success($info->id);
+                            $this->CI->user_certification_model->update($info->id,array(
+                                'status'	=> 1,
+                                'sys_check'	=> 1,
+                            ));
+                            return true;
                         }
 					}
 				}
-
-				$this->CI->user_certification_model->update($info->id,array(
-					'status'	=> $status,
-					'sys_check'	=> 1,
-				));
-				return true;
 			}
 		}
 		return false;
 	}
 
-	public function face_rotate($url='',$user_id=0){
+    public function face_rotate($url='',$user_id=0){
         $this->CI->load->library('Azure_lib');
 		$this->CI->load->library('s3_upload');
 		$image 	= file_get_contents($url);
@@ -370,7 +398,7 @@ class Certification_lib{
 		return false;
 	}
 
-	private function idcard_success($info){
+    private function idcard_success($info){
 		if($info){
 			$content 	= $info->content;
 			//檢查身分證字號

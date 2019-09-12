@@ -61,8 +61,8 @@
                                 <p class="form-control-static"><?=isset($content['address'])?$content['address']:""?></p>
                             </div>
                             <div class="form-group">
-                                <label>系統檢核</label>
-                                <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==1?"是":"否"?></p>
+                                <label>審核</label>
+                                <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==0?"人工":"系統"?></p>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
