@@ -70,11 +70,6 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
-                $this->CI->user_certification_model->update($id,array(
-                    'status'    => 2,
-                    'sys_check' => ($sys_check==true?1:0),
-                    'remark'    => json_encode($info->remark)
-                ));
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -108,7 +103,7 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
 				$info->content 			= json_decode($info->content,true);
-				$info->remark 			= json_decode($info->remark,true);
+                $info->remark!=''?$info->remark=json_decode($info->remark,true):[];
 				$info->remark['fail'] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$rs = $this->CI->user_certification_model->update($id,array(
@@ -157,8 +152,10 @@ class Certification_lib{
             $user_id        = $info->user_id;
             $msg            = '';
             $ocr            = [];
+            $socr           = [];
             $answer         = [];
             $rawData        = [];
+            $srawData       = false;
             $person_compare = [];
             $done           = false;
 
@@ -207,7 +204,7 @@ class Certification_lib{
                 foreach($person_face as $token){
                     $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id);
                 }
-                $rawData['front_image']      = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id);
+                $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id);
                 $rawData['back_image']       = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id);
                 $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id);
 
@@ -220,7 +217,22 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','發證日','生日'];
                 $check_item = ['name','id_number','id_card_date','birthday'];
                 foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='身分證'.$check_name[$k].'無法辨識<br />':null;
+                    if($srawData==false){
+                        $srawData['front_image'] = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id);
+
+                        $socr['name']             = $this->CI->compare_lib->contentCheck($content['name'],$srawData['front_image'],1);
+                        $socr['id_number']        = $this->CI->compare_lib->contentCheck($content['id_number'],$srawData['front_image']);
+                        $socr['birthday']         = $this->CI->compare_lib->dateContentCheck($content['birthday'],$srawData['front_image']);
+                        $socr['id_card_date']     = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$srawData['front_image']);
+                        $socr['id_card_place']    = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$srawData['front_image'],1);
+                    }
+                    if($ocr[$v] == false){
+                        if($socr[$v]!=false){
+                            $ocr[$v]=$socr[$v];
+                        }else{
+                            $msg.='身分證'.$check_name[$k].'無法辨識<br />';
+                        }
+                    }
                 }
 
                 //身分證背面
@@ -302,9 +314,6 @@ class Certification_lib{
                 $status = 1;
                 $this->set_success($info->id);
             }
-            //else {
-            //    $followed_by > 10 ? $this->set_failed($info->id, '') : $this->set_failed($info->id, '');
-            //}
             $this->CI->user_certification_model->update($info->id,array(
                 'status'	=> $status,
                 'sys_check'	=> 1,

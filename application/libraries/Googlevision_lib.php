@@ -47,7 +47,7 @@ class Googlevision_lib
 		return $content; 
 	}
 
-    function detect_text($path)
+    function detect_text($path,$user_id=0)
     {
         $result = "";
         $imageAnnotator = new ImageAnnotatorClient();
@@ -69,8 +69,9 @@ class Googlevision_lib
             //    }
             //     print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         }
-        return $result;
         $imageAnnotator->close();
+        $this->log_event('detect_text',$user_id,$result,$path);
+        return $result;
     }
 
     function detect_label($path)

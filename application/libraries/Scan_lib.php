@@ -14,7 +14,6 @@ class Scan_lib{
 	public function azureScanData($img_url,$user_id){
         $content       = $this->CI->azure_lib->OCR($img_url,$user_id);
         $pure_text     = $this->CI->azure_lib->pure_text($content);
-        //$formatContent = $this->contentFormat(implode('',$pure_text));
         return $pure_text;
 	}
 
@@ -32,7 +31,7 @@ class Scan_lib{
 
     private function contentFormat($content)
     {
-        $content = preg_replace('/\s|\//','',strtoupper($content));
+        $content = preg_replace('/\s|\/|\\n/','',strtoupper($content));
         return $content;
     }
 }
