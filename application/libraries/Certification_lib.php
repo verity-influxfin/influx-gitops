@@ -150,6 +150,7 @@ class Certification_lib{
     public function idcard_verify($info = []){
         if($info && $info->status ==0 && $info->certification_id==1){
             $user_id        = $info->user_id;
+            $cer_id         = $info->id;
             $msg            = '';
             $ocr            = [];
             $socr           = [];
@@ -165,8 +166,8 @@ class Certification_lib{
             $this->CI->load->library('Azure_lib');
             $this->CI->load->library('Faceplusplus_lib');
 
-            $person_face       = $this->CI->azure_lib->detect($content['person_image'],$user_id);
-            $front_face        = $this->CI->azure_lib->detect($content['front_image'],$user_id);
+            $person_face       = $this->CI->azure_lib->detect($content['person_image'],$user_id,$cer_id);
+            $front_face        = $this->CI->azure_lib->detect($content['front_image'],$user_id,$cer_id);
             //$healthcard_face   = $this->CI->azure_lib->detect($content['healthcard_image'],$user_id);
 
             $person_count = count($person_face);
@@ -202,11 +203,11 @@ class Certification_lib{
 
             if($person_count>=2 && $person_count<=3 && $front_count==1){
                 foreach($person_face as $token){
-                    $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id);
+                    $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id,$cer_id);
                 }
-                $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id);
-                $rawData['back_image']       = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id);
-                $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id);
+                $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
+                $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
+                $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id,$cer_id);
 
                 //身分證正面
                 $ocr['name']            = $this->CI->compare_lib->contentCheck($content['name'],$rawData['front_image'],1);
@@ -217,16 +218,16 @@ class Certification_lib{
                 $check_name = ['姓名','身分證字號','發證日','生日'];
                 $check_item = ['name','id_number','id_card_date','birthday'];
                 foreach($check_item as $k => $v){
-                    if($srawData==false){
-                        $srawData['front_image'] = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id);
-
-                        $socr['name']             = $this->CI->compare_lib->contentCheck($content['name'],$srawData['front_image'],1);
-                        $socr['id_number']        = $this->CI->compare_lib->contentCheck($content['id_number'],$srawData['front_image']);
-                        $socr['birthday']         = $this->CI->compare_lib->dateContentCheck($content['birthday'],$srawData['front_image']);
-                        $socr['id_card_date']     = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$srawData['front_image']);
-                        $socr['id_card_place']    = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$srawData['front_image'],1);
-                    }
                     if($ocr[$v] == false){
+                        if(!isset($srawData['front_image'])){
+                            $srawData['front_image'] = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id,$cer_id);
+
+                            $socr['name']            = $this->CI->compare_lib->contentCheck($content['name'],$srawData['front_image'],1);
+                            $socr['id_number']       = $this->CI->compare_lib->contentCheck($content['id_number'],$srawData['front_image']);
+                            $socr['birthday']        = $this->CI->compare_lib->dateContentCheck($content['birthday'],$srawData['front_image']);
+                            $socr['id_card_date']    = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$srawData['front_image']);
+                            $socr['id_card_place']   = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$srawData['front_image'],1);
+                        }
                         if($socr[$v]!=false){
                             $ocr[$v]=$socr[$v];
                         }else{
@@ -236,13 +237,36 @@ class Certification_lib{
                 }
 
                 //身分證背面
-                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,5}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$rawData['back_image'],1);
-                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$rawData['back_image'],1);
-                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$rawData['back_image'],1);
-                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$rawData['back_image'],1);
-                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\p{Han}{1,6}\|{0,1}','生地|\|',$rawData['back_image'],1);
+                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別','父|役別|\\n',$rawData['back_image'],1);
+                mb_strlen($ocr['father'])==6?$ocr['father']=mb_substr($ocr['father'],0,3):null;
+                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別','父|母|役別|\\n|'.$ocr['father'],$rawData['back_image'],1);
+                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生','配偶|出生|\\n',$rawData['back_image'],1);
+                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','役別|配偶|\\n',$rawData['back_image'],1);
+                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,6}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
                 $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
-                $ocr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?\|)|'.$ocr['born'].'\|(.*?\|)','住|址|\||'.$ocr['born'],$rawData['back_image'],1);
+                $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
+                $ocr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?'.$ocr['gnumber'].')','址|\\n|'.$ocr['gnumber'],$rawData['back_image'],1);
+                $check_item = ['father','mother','born','gnumber','address'];
+                foreach($check_item as $k => $v){
+                    if($ocr[$v] == false){
+                        if(!isset($srawData['back_image'])){
+                            //$srawData['back_image'] = $this->CI->scan_lib->azureScanData($content['back_image'],$user_id,$cer_id);
+                            $srawData['back_image']  = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id,$cer_id);
+
+                            $socr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,5}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$srawData['back_image'],1);
+                            $socr['mother']           = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$srawData['back_image'],1);
+                            $socr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$srawData['back_image'],1);
+                            $socr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$srawData['back_image'],1);
+                            $socr['born']             = $this->CI->compare_lib->dataExtraction('生地\p{Han}{1,6}\|{0,1}','生地|\|',$srawData['back_image'],1);
+                            $socr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$srawData['back_image']);
+                            $socr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?\|)|'.$socr['born'].'\|(.*?\|)','住|址|\||'.$socr['born'],$srawData['back_image'],1);
+                        }
+                        if($socr[$v]!=false){
+                            $ocr[$v]=$socr[$v];
+                        }
+                    }
+                }
+
 
                 //健保卡
                 $ocr['healthcard_name']      = $this->CI->compare_lib->contentCheck($content['name'],$rawData['healthcard_image'],1);
