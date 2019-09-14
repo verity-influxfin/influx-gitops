@@ -103,7 +103,7 @@ class Certification_lib{
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
 				$info->content 			= json_decode($info->content,true);
-                $info->remark!=''?$info->remark=json_decode($info->remark,true):[];
+                $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
 				$info->remark['fail'] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
 				$rs = $this->CI->user_certification_model->update($id,array(
@@ -237,12 +237,12 @@ class Certification_lib{
                 }
 
                 //身分證背面
-                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別','父|役別|\\n',$rawData['back_image'],1);
+                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別|父\p{Han}{1,6}母','父|母|役別|\\n',$rawData['back_image'],1);
                 mb_strlen($ocr['father'])==6?$ocr['father']=mb_substr($ocr['father'],0,3):null;
                 $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別','父|母|役別|\\n|'.$ocr['father'],$rawData['back_image'],1);
                 $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生','配偶|出生|\\n',$rawData['back_image'],1);
                 $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','役別|配偶|\\n',$rawData['back_image'],1);
-                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,6}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
+                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,3}\\n{0,1}\p{Han}{1,3}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
                 $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
                 $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
                 $ocr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?'.$ocr['gnumber'].')','址|\\n|'.$ocr['gnumber'],$rawData['back_image'],1);
@@ -253,7 +253,7 @@ class Certification_lib{
                             //$srawData['back_image'] = $this->CI->scan_lib->azureScanData($content['back_image'],$user_id,$cer_id);
                             $srawData['back_image']  = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id,$cer_id);
 
-                            $socr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,5}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$srawData['back_image'],1);
+                            $socr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,3}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$srawData['back_image'],1);
                             $socr['mother']           = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$srawData['back_image'],1);
                             $socr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$srawData['back_image'],1);
                             $socr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$srawData['back_image'],1);
@@ -272,7 +272,7 @@ class Certification_lib{
                 $ocr['healthcard_name']      = $this->CI->compare_lib->contentCheck($content['name'],$rawData['healthcard_image'],1);
                 $ocr['healthcard_id_number'] = $this->CI->compare_lib->contentCheck($content['id_number'],$rawData['healthcard_image']);
                 $ocr['healthcard_birthday']  = $this->CI->compare_lib->contentCheck($content['birthday'],$rawData['healthcard_image']);
-                $ocr['healthcard_number']    = $this->CI->compare_lib->dataExtraction('\|\d{12}','\|',preg_replace('/'.$ocr['healthcard_id_number'].'/','',$rawData['healthcard_image']));
+                $ocr['healthcard_number']    = $this->CI->compare_lib->dataExtraction('\|\d{11,12}','\|',preg_replace('/'.$ocr['healthcard_id_number'].'/','',$rawData['healthcard_image']));
                 $check_name = ['姓名','身分證字號','生日'];//,'發證區域'
                 $check_item = ['healthcard_name','healthcard_id_number','healthcard_birthday'];
                 foreach($check_item as $k => $v){
@@ -282,13 +282,13 @@ class Certification_lib{
                 $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
                 $remark['face_flag']  = [$person_compare[0]['isIdentical'],$person_compare[1]['isIdentical']];
                 if($remark['face'][0]  < 65 || $remark['face'][1]  < 80){
-                    $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id);
-                    $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id);
+                    $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id,$cer_id);
+                    $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id,$cer_id);
                     $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
                     $ffront_count 	= $front_token&&is_array($front_token)?count($front_token):0;
                     if($fperson_count ==2 && $ffront_count == 1 ){
                         foreach($person_token as $token){
-                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id);
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id,$cer_id);
                         }
                         sort($answer);
                         $remark['faceplus'] = $answer;

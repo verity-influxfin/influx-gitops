@@ -43,7 +43,7 @@ class Faceplusplus_lib{
 		return FALSE;
 	}
 
-	public function get_face_token($image="",$user_id=0){
+	public function get_face_token($image="",$user_id=0,$cer_id=0){
 		if(!empty($image)){
 			$file_content = base64_encode( file_get_contents( $image ) );
 			$url 		= $this->api_url."detect";
@@ -58,6 +58,7 @@ class Faceplusplus_lib{
 			$log_data	= array(
 				"type"		=> "detect",
 				"user_id"	=> $user_id,
+				"cer_id"	=> $cer_id,
 				"response"	=> $rs,
 				"request"	=> $image,
 			);
@@ -135,7 +136,7 @@ class Faceplusplus_lib{
 		return FALSE;
 	}
 	
-	public function token_compare($face1="",$face2="",$user_id=0){
+	public function token_compare($face1="",$face2="",$user_id=0,$cer_id=0){
 		if(!empty($face1) && !empty($face2)){
 			
 			$url 		= $this->api_url."compare";
@@ -150,6 +151,7 @@ class Faceplusplus_lib{
 			$log_data	= array(
 				"type"		=> "compare",
 				"user_id"	=> $user_id,
+                "cer_id"	=> $cer_id,
 				"response"	=> $rs,
 				"request"	=> json_encode($data),
 			);
