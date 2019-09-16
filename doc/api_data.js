@@ -30174,7 +30174,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "behavion",
+                            "field": "behavior",
                             "description": "<p>行為</p>"
                         }
                     ]
