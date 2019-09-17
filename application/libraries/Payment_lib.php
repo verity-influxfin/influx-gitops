@@ -1068,7 +1068,7 @@ class Payment_lib{
 			$date = date("Ymd");
 		}
 		
-		$from_date 	= date("Ymd",strtotime($date));
+		$from_date 	= date("Ymd",strtotime($date."-1 day"));
 		$to_date 	= date("Ymd",strtotime($date));
 	
 		$xml_file 	= 
