@@ -838,7 +838,7 @@ class Estatement_lib{
 			$user_list 			= array();
 			if($edatetime){
 				$transaction 	= $this->CI->transaction_model->get_many_by(array(
-					"source" 				=> "1",
+					"source" 				=> [1,10],
 					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
 					"entering_date <=" 		=> $edate,
 				));
