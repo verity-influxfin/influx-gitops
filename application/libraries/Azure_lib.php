@@ -15,7 +15,7 @@ class Azure_lib
         $this->CI->load->model('log/log_azure_model');
     }
 	//Azure Computer Vision API - OCR
-	public function OCR($url,$user_id=0,$lang=0){
+	public function OCR($url,$user_id=0,$cer_id=0,$lang=0){
         $language = $lang==0?'zh-Hant':'en';
 		$api_url=AZURE_API_URL.'vision/v1.0/ocr?language='.$language.'&detectOrientation=true';
         $bucket=AZURE_S3_BUCKET;
@@ -25,7 +25,7 @@ class Azure_lib
 		];
         $result = $this->azure_curl($api_url,$data);
         $this->CI->s3_lib->public_delete_image($s3_url,$bucket);
-        $this->log_event('OCR',$user_id,$result,$data);
+        $this->log_event('OCR',$user_id,$cer_id,$result,$data);
 		return  $result;
 	}
 
@@ -42,7 +42,7 @@ class Azure_lib
     }
 
 	//Azure API Face - Detect
-	public function detect($url,$user_id=0){
+	public function detect($url,$user_id=0,$cer_id=0){
 		$api_url=AZURE_API_URL.'face/v1.0/detect?returnFaceId=true&recognitionModel=recognition_02&returnRecognitionModel=true&detectionModel=detection_02';
         $bucket=AZURE_S3_BUCKET;
         $s3_url=$this->CI->s3_upload->public_image_by_data(file_get_contents($url),$bucket);
@@ -51,12 +51,12 @@ class Azure_lib
 		];
         $result = $this->azure_curl($api_url,$data);
         $this->CI->s3_lib->public_delete_image($s3_url,$bucket);
-        $this->log_event('detect',$user_id,$result,$data);
+        $this->log_event('detect',$user_id,$cer_id,$result,$data);
 		return  $result;
 	}
 
 	//Azure API Face - Verify
-	public function verify($var1,$var2,$user_id=0){
+	public function verify($var1,$var2,$user_id=0,$cer_id=0){
         $api_url=AZURE_API_URL.'face/v1.0/verify';
         if(preg_match('/\-/',$var1)){
             $faceId1=$var1;
@@ -75,7 +75,7 @@ class Azure_lib
 		];
    
 		$result = $this->azure_curl($api_url,$data);
-        $this->log_event('verify',$user_id,$result,$data);
+        $this->log_event('verify',$user_id,$cer_id,$result,$data);
 		return  $result;
     }
     
@@ -100,12 +100,13 @@ class Azure_lib
 
     }
 
-    private function log_event($type,$user_id,$rs,$image){
+    private function log_event($type,$user_id,$cer_id,$rs,$image){
         $log_data	= array(
             "type"		=> $type,
             "user_id"	=> $user_id,
-            "response"	=> json_encode($rs),
+            "cer_id"	=> $cer_id,
             "request"	=> json_encode($image),
+            "response"	=> json_encode($rs),
         );
         $this->CI->log_azure_model->insert($log_data);
     }

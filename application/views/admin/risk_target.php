@@ -127,6 +127,7 @@
 													if(isset($value[$k]["user_status"]) && $value[$k]["user_status"]!==null){
 														$user_status 		= $value[$k]["user_status"];
 														$certification_id 	= $value[$k]["certification_id"];
+                                                        $sys_check = $value[$k]["sys_check"]===0?" btn-circle":" ";
 														if($k==3){
 															switch($user_status){
 																case '0': 
@@ -137,10 +138,10 @@
 																	}
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-success btn-circle nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-danger btn-circle nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
 																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md nhide" >金融驗證</a><span class="sword" style="display:none">可金融驗證</span>';
@@ -154,10 +155,10 @@
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
 																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
@@ -232,7 +233,7 @@
 													echo '<td>';
 													if(isset($value->certification) && $value->certification[$k]["user_status"]!==null){
 														$certification_id 	= $value->certification[$k]["certification_id"];
-                                                        $sys_check = $value->certification[$k]["sys_check"]!=1?" btn-circle":" dddd";
+                                                        $sys_check = $value->certification[$k]["sys_check"]===0?" btn-circle":" ";
 														if($k==3){
 															switch($value->certification[$k]["user_status"]){
 																case '0': 

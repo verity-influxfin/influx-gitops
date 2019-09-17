@@ -25,7 +25,7 @@ class Version extends REST_Controller {
             $data = array(
                 'version'     => $version -> version,
                 'description' => $version -> description,
-                'events'      => "aaa,193101,aaa"
+                'events'      => ""
             );
         }
         $this->response(array('result' => 'SUCCESS','data' => $data ));

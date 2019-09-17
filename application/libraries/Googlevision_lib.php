@@ -13,7 +13,7 @@ class Googlevision_lib
         $this->CI->load->model('log/log_googlevision_model');
     }
 	
-	public function google_document($url = '',$user_id=0){
+	public function google_document($url = '',$user_id=0,$cer_id=0){
 		$image 	 = file_get_contents($url);
 		$content = [];
 		try {
@@ -43,11 +43,11 @@ class Googlevision_lib
 			}
 			$imageAnnotator->close();
 		}
-        $this->log_event('google_document',$user_id,$content,$url);
+        $this->log_event('google_document',$user_id,$cer_id,$content,$url);
 		return $content; 
 	}
 
-    function detect_text($path)
+    function detect_text($path,$user_id=0,$cer_id=0)
     {
         $result = "";
         $imageAnnotator = new ImageAnnotatorClient();
@@ -69,8 +69,9 @@ class Googlevision_lib
             //    }
             //     print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         }
-        return $result;
         $imageAnnotator->close();
+        $this->log_event('detect_text',$user_id,$cer_id,$result,$path);
+        return $result;
     }
 
     function detect_label($path)
@@ -134,12 +135,13 @@ class Googlevision_lib
         return count($faces);
     }
 
-    private function log_event($type,$user_id,$rs,$image){
+    private function log_event($type,$user_id,$cer_id,$rs,$image){
         $log_data	= array(
             "type"		=> $type,
             "user_id"	=> $user_id,
-            "response"	=> json_encode($rs),
+            "cer_id"	=> $cer_id,
             "request"	=> json_encode($image),
+            "response"	=> json_encode($rs),
         );
         $this->CI->log_googlevision_model->insert($log_data);
     }
