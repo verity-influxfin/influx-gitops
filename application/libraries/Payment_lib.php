@@ -794,7 +794,7 @@ class Payment_lib{
 				$withdraw_detail=$this->CI->withdraw_model->get($content_data);
 				//$created_at=date('Y-m-d',$withdraw_detail->created_at);
 			 	//抓sys_check=0   status=0//提領 - 待放款
-			 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0))&&($withdraw_detail->status==0))){
+			 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0)))){
 				//sys_check=0才開始檢查 並檢查一次
 				//開始update db
 				//if ((abs($withdraw_detail->amount) == $bankamount + $value['Fee']) && ($created_at == $bank_txtime)) { //比對金額 時間
@@ -1055,7 +1055,7 @@ class Payment_lib{
 		$withdraw_detail=$this->CI->withdraw_model->get($content);
        // $created_at=date('Y-m-d',$withdraw_detail->created_at);
 		 //抓sys_check=0   status=0//提領 - 待放款
-		 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0))&&($withdraw_detail->status==0))){
+		 if(((!empty($withdraw_detail)&&($withdraw_detail->sys_check==0)))){
 				//sys_check=0才開始檢查 並檢查一次
 				//開始update db
 			if ((abs($withdraw_detail->amount) == $bankamount + $data['Fee'])) { //比對金額 時間
