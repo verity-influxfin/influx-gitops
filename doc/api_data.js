@@ -2537,7 +2537,28 @@ define({
                             "optional": true,
                             "field": "diploma_date",
                             "description": "<p>畢業日期</p>"
-                        }
+						},
+						{
+							"group": "Parameter",
+							"type": "String",
+							"optional": true,
+							"field": "sip_account",
+							"description": "<p>SIP帳號</p>"
+						},
+						{
+							"group": "Parameter",
+							"type": "String",
+							"optional": true,
+							"field": "sip_password",
+							"description": "<p>SIP密碼</p>"
+						},
+						{
+							"group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "transcript_image",
+                            "description": "<p>成績單  ( 圖片IDs 以逗號隔開，最多五張)</p>"
+						}
                     ]
                 }
             },
