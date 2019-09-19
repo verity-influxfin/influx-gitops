@@ -46,7 +46,6 @@ class Certification_lib{
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
-				'expire_time >='	=> time(),
 			]);
 			if(!empty($certification)){
 				$certification->id 					= intval($certification->id);
@@ -54,6 +53,7 @@ class Certification_lib{
 				$certification->investor 			= intval($certification->investor);
 				$certification->status 				= intval($certification->status);
 				$certification->certification_id 	= intval($certification->certification_id);
+				$certification->expire_time 		= intval($certification->expire_time);
 				$certification->created_at 			= intval($certification->created_at);
 				$certification->updated_at 			= intval($certification->updated_at);
 				$certification->content = json_decode($certification->content,true);
@@ -993,13 +993,15 @@ class Certification_lib{
 				$user_certification = $this->get_last_certification_info($user_id,$key,$investor);
 				if($user_certification){
 					$value['user_status'] 		= intval($user_certification->status);
-					$value['certification_id'] 	= intval($user_certification->id);
-					$value['updated_at'] 		= intval($user_certification->updated_at);
-					$value['sys_check'] 		= intval($user_certification->sys_check);
-				}else{
+                    $value['certification_id'] 	= intval($user_certification->id);
+                    $value['updated_at'] 		= intval($user_certification->updated_at);
+                    $value['expire_time'] 		= $user_certification->expire_time;
+                    $value['sys_check'] 		= intval($user_certification->sys_check);
+                }else{
 					$value['user_status'] 		= null;
 					$value['certification_id'] 	= null;
 					$value['updated_at'] 		= null;
+					$value['expire_time'] 		= 0;
 					$value['sys_check'] 		= 0;
 				}
 

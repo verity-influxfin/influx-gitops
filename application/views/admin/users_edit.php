@@ -197,7 +197,9 @@
 												<tr>
 													<td><p class="form-control-static"><?=$value['name']?></p></td>
 													<td>
-														<? 
+														<?
+                                                            $status      = ($value['expire_time']>=time()?'success':'warning');
+														    $expire_time = date( "Y/m/d", $value['expire_time']);
 														if($value['id']==3){
 															switch($value['user_status']){
 																case '3':
@@ -205,7 +207,7 @@
                                                                     echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
                                                                     break;
                                                                 case '1':
-                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-'.$status.' btn-circle"><i class="fa fa-check"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';
                                                                     break;
                                                                 case '2':
                                                                     echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
@@ -222,13 +224,13 @@
                                                                 echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
                                                                 break;
                                                                 case '1':
-                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-'.$status.' btn-circle"><i class="fa fa-check"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';;
                                                                     break;
                                                                 case '2':
                                                                     echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
                                                                     break;
                                                                 default:
-																	echo '<p class="form-control-static">無</p>';	
+																	echo '<p class="form-control-static">無</p>';
 																	break;
 															}
 														}
@@ -251,7 +253,7 @@
 												<tr>
 													<td><p class="form-control-static"><?=$value['name']?></p></td>
 													<td>
-														<? 
+														<?
 														if($value['id']==3){
                                                             switch($value['user_status']){
                                                                 case '3':
