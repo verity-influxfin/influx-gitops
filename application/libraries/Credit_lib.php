@@ -417,7 +417,6 @@ class Credit_lib{
 		if($user_id && $delay_days > GRACE_PERIOD){
 			$param = array(
 				'user_id'			=> $user_id,
-				'status'			=> 1,
 			);
 			
 			$amount 		= 0;
