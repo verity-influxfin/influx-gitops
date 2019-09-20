@@ -1345,27 +1345,29 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
-			$file_fields 	= ['transcript_image'];
-			foreach ($file_fields as $field) {
-				$image_ids = explode(',', $input[$field]);
-				if (count($image_ids) > 5) {
-					$image_ids = array_slice($image_ids, 0, 5);
-				}
-				$list = $this->log_image_model->get_many_by([
-					'id'		=> $image_ids,
-					'user_id'	=> $user_id,
-				]);
-
-				if ($list && count($list) == count($image_ids)) {
-					$content[$field] = [];
-					foreach ($list as $k => $v) {
-						$content[$field][] = $v->url;
+			$content['transcript_image'] 	= isset($input['transcript_image']) ? $input['transcript_image'] : "";
+			if (!empty($content['transcript_image'])) {
+				$file_fields 	= ['transcript_image'];
+				foreach ($file_fields as $field) {
+					$image_ids = explode(',', $input[$field]);
+					if (count($image_ids) > 5) {
+						$image_ids = array_slice($image_ids, 0, 5);
 					}
-				} else {
-					$this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+					$list = $this->log_image_model->get_many_by([
+						'id'		=> $image_ids,
+						'user_id'	=> $user_id,
+					]);
+
+					if ($list && count($list) == count($image_ids)) {
+						$content[$field] = [];
+						foreach ($list as $k => $v) {
+							$content[$field][] = $v->url;
+						}
+					} else {
+						$this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+					}
 				}
 			}
-			
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
