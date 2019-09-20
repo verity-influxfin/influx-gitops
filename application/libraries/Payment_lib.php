@@ -874,8 +874,6 @@ class Payment_lib{
 		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('log/Log_userbankaccount_model');
 		$bankamount= (int)$value['Amount']; //國泰回的資料
-		$xml_bank_list = $this->CI->config->item('xml_bank_list');
-		$white_list = in_array($value['Beneficiary_BankCode'], $xml_bank_list);
 		$bankamount_add_fee = (int) $value['Amount'] + (int) $value['Fee'];
 		//需要的比對資料
         $value['Beneficiary_BankCode']=substr( $value['Beneficiary_BankCode'],0, 3); //取前三碼
@@ -887,7 +885,7 @@ class Payment_lib{
 		);
 		$payment_detail=$this->CI->payment_model->get_many_by($where);
 	   $payment_size=count($payment_detail);
-	   if($payment_size== 1 && ($white_list)){ //第一層邏輯 payment vs 國泰 資料比對    
+	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
 
 		 	$bankaccount_detail=$this->CI->user_bankaccount_model->get($content_data);
 		 	$user_id=$bankaccount_detail->user_id;
@@ -913,7 +911,7 @@ class Payment_lib{
 						$this->CI->Log_userbankaccount_model->insert($param);
 					}
 			 } 
-	 	  } elseif ($payment_size == 0 && ($white_list)) {
+	 	  } elseif ($payment_size == 0) {
 			//代表金融驗證撈取為空 需要撈有加手續費的
 			$where				= array(
 				"ABS(amount)"   => $bankamount_add_fee,
@@ -950,7 +948,7 @@ class Payment_lib{
 	 
 	 public function get_onlyone_bankaccount_detail($batch_no,$id,$content,$data){    //比對content跟data結合
 		$content = $content['0'];
-		$xml_bank_list 	= $this->CI->config->item('xml_bank_list');
+
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('log/Log_userbankaccount_model'); 
@@ -959,9 +957,7 @@ class Payment_lib{
 		$bankamount= (int)$data['Amount']; //國泰回的資料
 		$bankamount_add_fee= (int) $data['Amount']+ (int) $data['Fee'];
 		//需要的比對資料
-		$data['Beneficiary_BankCode']=substr( $data['Beneficiary_BankCode'],0, 3); //取前三碼
-		$white_list=in_array($data['Beneficiary_BankCode'], $xml_bank_list);
-
+        $data['Beneficiary_BankCode']=substr( $data['Beneficiary_BankCode'],0, 3); //取前三碼
 		$where				= array(
 			"bank_id"   => $data['Beneficiary_BankCode'],
 			"ABS(amount)"   => $bankamount,
@@ -970,7 +966,7 @@ class Payment_lib{
 		);
 		$payment_detail = $this->CI->payment_model->get_many_by($where);
 		$payment_size = count($payment_detail);
-		if ($payment_size == 1 && ($white_list)) { //第一層邏輯 payment vs 國泰 資料比對    
+		if ($payment_size == 1) { //第一層邏輯 payment vs 國泰 資料比對    
 			$bankaccount_detail = $this->CI->user_bankaccount_model->get($content);
 			$user_id = $bankaccount_detail->user_id;
 			$user_detail = $this->CI->user_model->get($user_id);
@@ -996,7 +992,7 @@ class Payment_lib{
 					$this->CI->Log_userbankaccount_model->insert($param);
 				}
 			}
-		} elseif($payment_size== 0 && ($white_list)){
+		} elseif($payment_size==0){
 			//代表金融驗證撈取為空 需要撈有加手續費的
 			$where				= array(
 				"ABS(amount)"   => $bankamount_add_fee,
