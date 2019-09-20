@@ -198,7 +198,7 @@
 													<td><p class="form-control-static"><?=$value['name']?></p></td>
 													<td>
 														<?
-                                                            $status      = ($value['expire_time']>=time()?'success':'warning');
+                                                            $status      = ($value['expire_time']>=time()?'success':'danger');
 														    $expire_time = date( "Y/m/d", $value['expire_time']);
 														if($value['id']==3){
 															switch($value['user_status']){
