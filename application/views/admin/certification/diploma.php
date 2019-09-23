@@ -57,12 +57,17 @@
 										<p class="form-control-static"><?= isset($content['diploma_date']) ? $content['diploma_date'] : "" ?></p>
 									</div>
 									<div class="form-group">
-										<label>SIP帳號</label>
+										<label>SIP 帳號</label>
 										<p class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
 									</div>
 									<div class="form-group">
-										<label>SIP密碼</label>
+										<label>SIP 密碼</label>
 										<p class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
+									</div>
+									<div class="form-group">
+										<label>SIP 網址</label><br>
+										<a href="<?= isset($content['sipURL']) ? $content['sipURL'] : "" ?>" target="_blank">SIP連結
+										</a>
 									</div>
 									<div class="form-group">
 										<label>備註</label>
