@@ -665,13 +665,12 @@ class Transaction_lib{
             $this->CI->load->library('target_lib');
             $o_transfer = $this->CI->transfer_model->get($transfer_id);
             $amount     = $o_transfer->amount;
-            $target_no  = $o_transfer->target_no;
+            $target_no  = false;
             if ($o_transfer->combination != 0) {
                 $this->CI->load->model('loan/transfer_combination_model');
                 $combinations_info = $this->CI->transfer_combination_model->get($o_transfer->combination);
                 $amount            = $combinations_info->amount;
                 $target_no         = $combinations_info->combination_no;
-                $target_id         = $combinations_info->id;
                 //取得打包債權資訊
                 $combination_transfers = $this->CI->transfer_model->get_many_by([
                     'combination' => $o_transfer->combination,
@@ -898,6 +897,7 @@ class Transaction_lib{
                                                 $this->CI->passbook_lib->enter_account($value);
                                             }
                                             if($t==(count($transfers)-1)) {
+                                                $target_no==false?$target_no=$target->target_no:'';
                                                 $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
                                                 //if (!in_array($transfer_investments->user_id, [21194, 21197])) {
                                                     $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);
