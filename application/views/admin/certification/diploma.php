@@ -57,6 +57,19 @@
 										<p class="form-control-static"><?= isset($content['diploma_date']) ? $content['diploma_date'] : "" ?></p>
 									</div>
 									<div class="form-group">
+										<label>SIP 帳號</label>
+										<p class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
+									</div>
+									<div class="form-group">
+										<label>SIP 密碼</label>
+										<p class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
+									</div>
+									<div class="form-group">
+										<label>SIP 網址</label><br>
+										<a href="<?= isset($content['sipURL']) ? $content['sipURL'] : "" ?>" target="_blank">SIP連結
+										</a>
+									</div>
+									<div class="form-group">
 										<label>備註</label>
 										<?
 										if ($remark) {
@@ -104,10 +117,12 @@
 										</div>
 										<div class="form-group">
 											<label>成績單</label><br>
-											<? foreach ($content['transcript_image'] as $key => $value) { ?>
-												<a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-													<img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-												</a>
+											<? if (!empty($content['transcript_image'])) { ?>
+												<? foreach ($content['transcript_image'] as $key => $value) { ?>
+													<a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+														<img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+													</a>
+												<? } ?>
 											<? } ?>
 										</div>
 									</fieldset>
