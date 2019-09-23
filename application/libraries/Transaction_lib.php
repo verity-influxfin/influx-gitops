@@ -741,18 +741,14 @@ class Transaction_lib{
 
                             $new_investment = $this->CI->investment_model->insert($investment_data);
                             if ($new_investment) {
-
-                                $this->CI->investment_model->update($investment->id, ['status' => 10, 'transfer_status' => 2]);
-                                $this->CI->target_lib->insert_investment_change_log($investment->id, ['status' => 10, 'transfer_status' => 2], 0, $admin_id);
-                                $this->CI->transfer_investment_model->update($transfer_investments->id, ['status' => 10]);
-
                                 $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
                                 $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
                                 if ($transfer_account && $virtual_account) {
                                     if ($target->order_id != 0) {
                                         $target_inves = $this->CI->investment_model->get_many_by([
-                                            'target_id' => $target->id,
-                                            'status'    => 10,
+                                            'target_id'         => $target->id,
+                                            'status'            => 10,
+                                            'transfer_status'   => 2,
                                         ]);
                                         $is_order = $target_inves==false;
                                         if ($is_order) {
@@ -762,6 +758,10 @@ class Transaction_lib{
                                             $amount -= ($platform_fee + $transfer_fee);
                                         }
                                     }
+
+                                    $this->CI->investment_model->update($investment->id, ['status' => 10, 'transfer_status' => 2]);
+                                    $this->CI->target_lib->insert_investment_change_log($investment->id, ['status' => 10, 'transfer_status' => 2], 0, $admin_id);
+                                    $this->CI->transfer_investment_model->update($transfer_investments->id, ['status' => 10]);
 
                                     if($t == 0){
                                         $this->CI->frozen_amount_model->update($transfer_investments->frozen_id, ['status' => 0]);
