@@ -43,7 +43,7 @@
                                 <input id="target_export" type="hidden" name="ids" />
                             </form>
                             <form action="<?=admin_url('target/amortization_export') ?>" method="post" style="display: inline-block">
-                                <input type="submit" class="btn btn-primary float-right" value="匯出攤還表" disabled />
+                                <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled />
                                 <input id="amortization_export" type="hidden" name="ids" />
                             </form>
                             <input type="checkbox" id="selAll" style="margin: 0 2px 0 10px;">所有還款中資料

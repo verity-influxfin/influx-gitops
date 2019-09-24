@@ -84,7 +84,7 @@
                                 <input id="assets_export" type="hidden" name="ids" />
                             </form>
                             <form action="<?=admin_url('transfer/amortization_export') ?>" method="post" style="display: inline-block">
-                                <input type="submit" class="btn btn-primary float-right" value="預期本息回款明細表" disabled />
+                                <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled />
                                 <input id="amortization_export" type="hidden" name="ids" />
                             </form>
 							
