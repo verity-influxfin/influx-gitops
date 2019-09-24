@@ -842,25 +842,25 @@ class Target extends MY_Admin_Controller {
 		}
         $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
         $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
-        $html .= '<tr><th>日期</th><th>合計</th><th>應收本金</th><th>應收利息</th><th>已收本金</th><th>已收利息</th><th>已回款</th><th>本金餘額</th></tr>';
+        $html .= '<tr><th>日期</th><th>應收本金</th><th>應收利息</th><th>合計</th><th>(當期)本金餘額</th><th>已實現本金</th><th>已實現利息</th><th>已回款</th></tr>';
 		if(isset($data) && !empty($data)){
 		    $total_unrepayment = 0;
 			foreach($data as $key => $value){
 			    $unrepayment = $value['principal']-$value['r_principal'];
 				$html .= '<tr>';
 				$html .= '<td>'.$key.'</td>';
-				$html .= '<td>'.$value['total_payment'].'</td>';
-				$html .= '<td>'.$value['principal'].'</td>';
-				$html .= '<td>'.$value['interest'].'</td>';
+                $html .= '<td>'.$value['principal'].'</td>';
+                $html .= '<td>'.$value['interest'].'</td>';
+                $html .= '<td>'.$value['total_payment'].'</td>';
+                $html .= '<td>'.$unrepayment.'</td>';
                 $html .= '<td>'.$value['r_principal'].'</td>';
                 $html .= '<td>'.$value['r_interest'].'</td>';
                 $html .= '<td>'.$value['repayment'].'</td>';
-                $html .= '<td>'.$unrepayment.'</td>';
 				$html .= '</tr>';
                 $total_unrepayment +=$unrepayment;
 			}
 		}
-        $html .= '<tr><td></td><td>'.$total_payment.'</td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$r_principal.'</td><td>'.$r_interest.'</td><td>'.$repayment.'</td><td>'.$total_unrepayment.'</td></tr>';
+        $html .= '<tr><td></td><td>'.$principal.'</td><td>'.$interest.'</td><td>'.$total_payment.'</td><td>'.$total_unrepayment.'</td><td>'.$r_principal.'</td><td>'.$r_interest.'</td><td>'.$repayment.'</td></tr>';
         $html .= '</tbody></table>';
 		echo $html;
 	}

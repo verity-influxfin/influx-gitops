@@ -665,13 +665,12 @@ class Transaction_lib{
             $this->CI->load->library('target_lib');
             $o_transfer = $this->CI->transfer_model->get($transfer_id);
             $amount     = $o_transfer->amount;
-            $target_no  = $o_transfer->target_no;
+            $target_no  = false;
             if ($o_transfer->combination != 0) {
                 $this->CI->load->model('loan/transfer_combination_model');
                 $combinations_info = $this->CI->transfer_combination_model->get($o_transfer->combination);
                 $amount            = $combinations_info->amount;
                 $target_no         = $combinations_info->combination_no;
-                $target_id         = $combinations_info->id;
                 //取得打包債權資訊
                 $combination_transfers = $this->CI->transfer_model->get_many_by([
                     'combination' => $o_transfer->combination,
@@ -741,18 +740,14 @@ class Transaction_lib{
 
                             $new_investment = $this->CI->investment_model->insert($investment_data);
                             if ($new_investment) {
-
-                                $this->CI->investment_model->update($investment->id, ['status' => 10, 'transfer_status' => 2]);
-                                $this->CI->target_lib->insert_investment_change_log($investment->id, ['status' => 10, 'transfer_status' => 2], 0, $admin_id);
-                                $this->CI->transfer_investment_model->update($transfer_investments->id, ['status' => 10]);
-
                                 $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
                                 $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
                                 if ($transfer_account && $virtual_account) {
                                     if ($target->order_id != 0) {
                                         $target_inves = $this->CI->investment_model->get_many_by([
-                                            'target_id' => $target->id,
-                                            'status'    => 10,
+                                            'target_id'         => $target->id,
+                                            'status'            => 10,
+                                            'transfer_status'   => 2,
                                         ]);
                                         $is_order = $target_inves==false;
                                         if ($is_order) {
@@ -762,6 +757,10 @@ class Transaction_lib{
                                             $amount -= ($platform_fee + $transfer_fee);
                                         }
                                     }
+
+                                    $this->CI->investment_model->update($investment->id, ['status' => 10, 'transfer_status' => 2]);
+                                    $this->CI->target_lib->insert_investment_change_log($investment->id, ['status' => 10, 'transfer_status' => 2], 0, $admin_id);
+                                    $this->CI->transfer_investment_model->update($transfer_investments->id, ['status' => 10]);
 
                                     if($t == 0){
                                         $this->CI->frozen_amount_model->update($transfer_investments->frozen_id, ['status' => 0]);
@@ -898,6 +897,7 @@ class Transaction_lib{
                                                 $this->CI->passbook_lib->enter_account($value);
                                             }
                                             if($t==(count($transfers)-1)) {
+                                                $target_no==false?$target_no=$target->target_no:'';
                                                 $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
                                                 //if (!in_array($transfer_investments->user_id, [21194, 21197])) {
                                                     $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);

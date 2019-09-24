@@ -11762,6 +11762,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "361",
+                            "description": "<p>子系統-商品不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "362",
                             "description": "<p>子系統-訂單建立失敗</p>"
                         },

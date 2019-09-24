@@ -24,6 +24,9 @@ class Certification_lib{
 				'status !='			=> 2,
 				'expire_time >='	=> time(),
 			);
+            if($investor==1){
+                unset($param['expire_time >=']);
+            }
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
 				$certification->id 					= intval($certification->id);
@@ -328,6 +331,28 @@ class Certification_lib{
         }
         return false;
     }
+
+    //public function student_verify($info = array()){
+    //    if($info && $info->status ==0 && $info->certification_id==2) {
+    //        $status 	 = 3;
+    //        $content     = json_decode($info->content);
+    //        $user_id        = $info->user_id;
+    //        $cer_id         = $info->id;
+    //        $school       = $content->info->counts->school;
+    //        $student_id   = $content->info->counts->student_id;
+
+    //        $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
+    //        $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
+
+    //        $this->CI->user_certification_model->update($info->id,array(
+    //            'status'	=> $status,
+    //            'sys_check'	=> 1,
+    //        ));
+    //        return true;
+    //    }
+    //    return false;
+    //}
+
     public function social_verify($info = array()){
         if($info && $info->status ==0 && $info->certification_id==4) {
             $status 	 = 3;
