@@ -26,7 +26,10 @@ class Account extends MY_Admin_Controller {
 			SOURCE_FEES,
 			SOURCE_SUBLOAN_FEE,
 			SOURCE_TRANSFER_FEE,
+            SOURCE_FEES_B,
             SOURCE_TRANSFER_B,
+            SOURCE_TRANSFER_FEES_B,
+            SOURCE_BANK_WRONG_TX_B,
 			SOURCE_PREPAYMENT_DAMAGE,
 			SOURCE_VERIFY_FEE_R,
 			SOURCE_REMITTANCE_FEE_R,
@@ -217,6 +220,32 @@ class Account extends MY_Admin_Controller {
                         "entering_date"			=> $value->entering_date,
                         "target_no"				=> $item_no,
                         "source_type"			=> 'transfer_b',
+                        "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
+                        "bank_account_from"		=> $value->bank_account_from,
+                        "amount_from"			=> $value->amount_from,
+                        "v_bank_account_from"	=> $value->v_bank_account_from,
+                        "v_amount_from"			=> $value->v_amount_from,
+                        "sub_list"				=> $sub_list,
+                        "created_at"			=> $value->created_at,
+                    );
+                }
+
+                if($value->source == SOURCE_BANK_WRONG_TX_B) {
+                    $item_no           = $value->target_no;
+                    $item_platform_fee = 0;
+                    $sub_list 	= array();
+                    $sub_list[] = array(
+                        "user_to"				=> $user_name[$value->user_to],
+                        "bank_account_to"		=> $value->bank_account_to,
+                        "amount_to"				=> $value->amount_to,
+                        "v_bank_account_to"		=> $value->v_bank_account_to,
+                        "v_amount_to"			=> $value->v_amount_to,
+                        "platform_fee"			=> $item_platform_fee,
+                    );
+                    $list[] = array(
+                        "entering_date"			=> $value->entering_date,
+                        "target_no"				=> $item_no,
+                        "source_type"			=> 'bank_wrong_tx',
                         "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
                         "bank_account_from"		=> $value->bank_account_from,
                         "amount_from"			=> $value->amount_from,

@@ -257,6 +257,7 @@ $config['transaction_source']= [
     50	=> '平台服務費沖正',
     51	=> '債權轉讓服務費沖正',
     52	=> '債權轉讓金沖正',
+    53	=> '銀行錯帳撥還',
 
 	81	=> '平台驗證費',
 	82	=> '平台驗證費退回',
@@ -276,6 +277,7 @@ $config['transaction_type_name']= [
     'subloan'		=> '產品轉換',
     'transfer'		=> '債權轉讓',
     'transfer_b'	=> '債權轉讓費沖正',
+    'bank_wrong_tx'	=> '錯帳匯費支出',
     'prepayment'	=> '提前還款',
     'charge_delay'	=> '逾期清償',
     'charge_normal'	=> '還款',

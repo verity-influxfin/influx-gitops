@@ -605,6 +605,14 @@ class Estatement_lib{
 									"income_principal"	=> intval($value->amount),
 								);
 								break;
+							case SOURCE_BANK_WRONG_TX_B:
+								$tmp_list[] = array(
+									"date"				=> $value->entering_date,
+									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
+									"title"				=> "銀行錯帳撥還",
+									"income_principal"	=> intval($value->amount),
+								);
+								break;
 							case SOURCE_WITHDRAW:
 								$tmp_list[] = array(
 									"date"				=> $value->entering_date,

@@ -244,6 +244,7 @@ defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款
 defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
 defined('SOURCE_TRANSFER_FEES_B')   OR define('SOURCE_TRANSFER_FEES_B'	, '51');//債權轉讓服務費沖正
 defined('SOURCE_TRANSFER_B')       	OR define('SOURCE_TRANSFER_B'		, '52');//債權轉讓費沖正
+defined('SOURCE_BANK_WRONG_TX_B')   OR define('SOURCE_BANK_WRONG_TX_B'	, '53');//銀行錯帳撥還
 
 defined('SOURCE_VERIFY_FEE')     	OR define('SOURCE_VERIFY_FEE'		, '81');//平台驗證費
 defined('SOURCE_VERIFY_FEE_R')     	OR define('SOURCE_VERIFY_FEE_R'		, '82');//平台驗證費退回
