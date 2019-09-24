@@ -66,8 +66,12 @@
 									</div>
 									<div class="form-group">
 										<label>SIP 網址</label><br>
-										<a href="<?= isset($content['sipURL']) ? $content['sipURL'] : "" ?>" target="_blank">SIP連結
-										</a>
+										<? if (!empty($content['sipURL'])) { ?>
+											<? foreach ($content['sipURL'] as $key => $value) { ?>
+												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結
+												</a>
+											<? } ?>
+										<? } ?>
 									</div>
 									<div class="form-group">
 										<label>備註</label>
