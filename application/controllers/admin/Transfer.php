@@ -250,7 +250,7 @@ class Transfer extends MY_Admin_Controller {
 
 			header('Content-type:application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename=repayment_schedule_'.date('Ymd').'.xls');
-			$html = '<table><thead><tr><th>還款日</th><th>還款本金</th><th>還款利息</th><th>還款合計</th><th>已還款</th><th>每期回款金額</th></tr></thead><tbody>';
+			$html = '<table><thead><tr><th>還款日</th><th>已實現本金</th><th>已實現利息</th><th>還款合計</th><th>已還款</th><th>每期回款金額</th></tr></thead><tbody>';
 
 			if(isset($list) && !empty($list)){
 				ksort($list);
