@@ -83,7 +83,7 @@ class Account extends MY_Admin_Controller {
 		}
 		$page_data['list'] 					= $list;
 		$page_data['sum'] 					= array("debit"=>0,"credit"=>0);
-		$page_data['transaction_source'] 	= $this->config->item('transaction_source');
+		$page_data['transaction_source'] 	= $this->config->item('internal_transaction_source');
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/account_report',$page_data);
