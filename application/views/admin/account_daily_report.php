@@ -115,7 +115,7 @@
                                         <tr <?=$count%2==0?"style='background-color: #DCDCDC;'":""; ?>>
                                             <td rowspan="<?=isset($value["sub_list"])?count($value["sub_list"])+1:""?>"><?=isset($value["entering_date"])?$value["entering_date"]:"" ?></td>
                                             <td><?=isset($value["target_no"])?$value["target_no"]:"" ?></td>
-                                            <td><?=isset($transaction_type_name[$value["source_type"]])?$transaction_type_name[$value["source_type"]]:"" ?></td>
+                                            <td><?=isset($transaction_type_name[$value["source_type"]])?($value["source_type"]!='bank_wrong_tx'?$transaction_type_name[$value["source_type"]]:(($value["v_bank_account_from"]!=PLATFORM_VIRTUAL_ACCOUNT?$transaction_type_name[$value["source_type"]]:'錯帳匯費支出'))):"" ?></td>
                                             <td><?=isset($value["user_from"])?$value["user_from"]:"" ?></td>
                                             <td><?=isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:"" ?></td>
                                             <td class="num"><?=isset($value["v_amount_from"])&&$value["v_amount_from"]?number_format($value["v_amount_from"]):"" ?></td>

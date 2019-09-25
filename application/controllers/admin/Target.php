@@ -842,7 +842,7 @@ class Target extends MY_Admin_Controller {
 		}
         $html .= '<tr><td></td><td>'.$sumvalue.'</td><td></td><td></td><td></td></tr>';
         $html .= '<tr><td></td><td></td><td></td><td></td><td></td></tr>';
-        $html .= '<tr><th>日期</th><th>應收本金</th><th>應收利息</th><th>合計</th><th>(當期)本金餘額</th><th>已實現本金</th><th>已實現利息</th><th>已回款</th></tr>';
+        $html .= '<tr><th>日期</th><th>應收本金</th><th>應收利息</th><th>合計</th><th>當期本金餘額</th><th>已實現本金</th><th>已實現利息</th><th>已回款</th></tr>';
 		if(isset($data) && !empty($data)){
 		    $total_unrepayment = 0;
 			foreach($data as $key => $value){

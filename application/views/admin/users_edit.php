@@ -210,7 +210,7 @@
                                                                     echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-'.$status.' btn-circle"><i class="fa fa-check"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';
                                                                     break;
                                                                 case '2':
-                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+                                                                    echo '<a href="'.admin_url('certification/user_bankaccount_edit?id='.$bank_acc_cer_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';
                                                                     break;
                                                                 default:
                                                                     echo '<p class="form-control-static">無</p>';
@@ -227,7 +227,7 @@
                                                                     echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-'.$status.' btn-circle"><i class="fa fa-check"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';;
                                                                     break;
                                                                 case '2':
-                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+                                                                    echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>'.($value['expire_time']<=time()?(' ('.$expire_time.')'):'').'';
                                                                     break;
                                                                 default:
 																	echo '<p class="form-control-static">無</p>';

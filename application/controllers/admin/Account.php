@@ -60,19 +60,25 @@ class Account extends MY_Admin_Controller {
 			"edate"	=> $edate
 		);
 		$data 		= $this->transaction_model->order_by("source","ASC")->get_many_by($where);
+		$return     = [SOURCE_VERIFY_FEE_R,SOURCE_REMITTANCE_FEE_R];
 		if(!empty($data)){
 			foreach($data as $key =>$value){
 				if(!isset($list[$value->source])){
 					$list[$value->source] = array("debit"=>0,"credit"=>0);
 				}
-				
-				if($value->bank_account_from==PLATFORM_VIRTUAL_ACCOUNT){
-					$list[$value->source]['credit'] += $value->amount;
-				}
-				
-				if($value->bank_account_to==PLATFORM_VIRTUAL_ACCOUNT){
-					$list[$value->source]['debit'] += $value->amount;
-				}
+
+                if($value->bank_account_from==PLATFORM_VIRTUAL_ACCOUNT||in_array($value->source,$return)){
+                    if(in_array($value->source,$return)){
+                        $list[$value->source]['credit'] -= $value->amount;
+                    }
+                    else{
+                        $list[$value->source]['credit'] += $value->amount;
+                    }
+                }
+
+                if($value->bank_account_to==PLATFORM_VIRTUAL_ACCOUNT&&!in_array($value->source,$return)){
+                    $list[$value->source]['debit'] += $value->amount;
+                }
 			}
 		}
 		$page_data['list'] 					= $list;

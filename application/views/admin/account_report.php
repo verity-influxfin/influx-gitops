@@ -74,7 +74,7 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($key)?$transaction_source[$key]:"" ?></td>
+                                            <td><?=isset($key)?($key!=53?$transaction_source[$key]:'錯帳匯費支出'):"" ?></td>
                                             <td style="text-align:right;"><?=isset($value['debit'])&&$value['debit']?number_format($value['debit']):"" ?></td>
                                             <td style="text-align:right;"><?=isset($value['credit'])&&$value['credit']?number_format($value['credit']):"" ?></td>
                                         </tr>                                        
