@@ -166,7 +166,7 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->model('transaction/payment_model');
 		$page_data 	= array('type'=>'list');
 		$where		= array(
-			'status' 		=> array(4,5),
+			'status' 		=> array(4,5,6),
 		);
 		$list = $this->payment_model->get_many_by($where);
 		if(!empty($list)){

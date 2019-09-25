@@ -12,6 +12,7 @@ class Payment_model extends MY_Model
 		3 =>	"需人工",
 		4 =>	"已退款",
 		5 =>	"不明資金",
+		6 =>	"已處理",
 	);
 	
 	public function __construct()
