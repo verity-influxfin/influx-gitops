@@ -12,7 +12,8 @@ class Judicialperson extends MY_Admin_Controller {
 		$this->load->model('user/judicial_person_model');
 		$this->load->model('user/cooperation_model');
 		$this->load->library('Judicialperson_lib');
- 	}
+		$this->load->library('S3_upload');
+	}
 	
 	public function index(){
 		$page_data 	= array('type'=>'list');
@@ -46,7 +47,17 @@ class Judicialperson extends MY_Admin_Controller {
 		$this->load->view('admin/judicial_person/judicial_person_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-
+	
+	public function media_upload()
+	{
+		$post 		= $this->input->post(NULL, TRUE);  //接到user_id
+		$media	= $this->s3_upload->media($_FILES,'media', $post['user_id'], 'confirmation_for_judicial_person');
+		if ($media) {
+			alert('檔案上傳成功', 'index?status=0');
+		} else {
+			alert('檔案上傳失敗，請洽工程師', 'index?status=0');
+		}
+	}
 	public function edit(){
 		$page_data 	= array('type'=>'edit');
         $post 		= $this->input->post(NULL, TRUE);

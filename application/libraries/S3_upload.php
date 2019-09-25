@@ -286,8 +286,23 @@ class S3_upload {
 		}
 		
 		return false;
-    }
-	
+	}
+
+	public function media($files, $name = 'media', $user_id = 0, $type = 'test')
+	{
+		$format= strrchr($files['media']['name'],'.');
+		$result = $this->client->putObject(array(
+			'Bucket' 		=> S3_BUCKET,
+			'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) .$format,
+			'SourceFile'   		=> $files['media']['tmp_name']
+		));
+
+		if (isset($result['ObjectURL'])) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	//upload to public bucket
 	public function image_public ($files,$name='image')
     {
