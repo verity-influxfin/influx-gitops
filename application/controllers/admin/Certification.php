@@ -93,6 +93,15 @@ class Certification extends MY_Admin_Controller {
 					$page_data['certification_list'] 	= $this->certification_name_list;
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
+					
+					//加入SIP網址++
+					$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
+					$school_data  = json_decode($school_data, true);
+					$school = $page_data['content']['school'];
+					$sipURL = $school_data[$school]['sipURL'];
+					$page_data['content']['sipURL']= isset($sipURL) ? $sipURL : "";
+					//加入SIP網址--
+					
 					$page_data['remark'] 				= json_decode($info->remark,true);
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
