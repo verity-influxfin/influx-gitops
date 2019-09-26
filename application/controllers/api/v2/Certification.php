@@ -1368,13 +1368,6 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
-			//最高學歷SIP認證取網址Json++
-			$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
-			$school_data = json_decode($school_data,true);
-			$school= $content['school']; 
-			$sipURL= $school_data[$school]['sipURL'];
-			$content['sipURL']  = isset($sipURL) ? $sipURL : "";
-			//最高學歷SIP認證取網址Json--
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
