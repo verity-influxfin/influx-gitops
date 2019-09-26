@@ -19,7 +19,7 @@ class Admin extends MY_Admin_Controller {
 		$name_list	= array();
 		if(!empty($list)){
 			foreach($list as $key => $value){
-				$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
+                $url 			= 'https://event.influxfin.com/r/url?p='.$value->my_promote_code;
 				$qrcode			= get_qrcode($url);
 				$value->qrcode	= $qrcode;
 				$list[$key] 	= $value;
@@ -136,7 +136,7 @@ class Admin extends MY_Admin_Controller {
 			if($id){
 				$admin_info = $this->admin_model->get_by('id', $id);
 				if($admin_info){
-					$url 						= BORROW_URL.'?promote_code='.$admin_info->my_promote_code;
+					$url 						= 'https://event.influxfin.com/r/url?p='.$admin_info->my_promote_code;
 					$admin_info->qrcode			= get_qrcode($url);
 					$page_data['data'] 			= $admin_info;
 					$page_data['status_list'] 	= $this->admin_model->status_list;

@@ -46,7 +46,7 @@
                                             <td><?=isset($value->phone)?$value->phone:"" ?></td>
                                             <td><?=isset($value->birthday)?date("m/d",strtotime($value->birthday)):"" ?></td>
                                             <td><?=isset($value->email)?$value->email:"" ?></td>
-											<td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" ><?=$value->my_promote_code ?></a></td>
+											<td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" >https://event.influxfin.com/r/url?p=<?=$value->my_promote_code ?></a></td>
                                             <td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
                                             <td <?=$value->status==0?'style="color:red;"':"" ?>><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
 											<td><a href="<?=admin_url('admin/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 

@@ -20,7 +20,6 @@ class Partner extends MY_Admin_Controller {
 		if(!empty($list)){
 			foreach($list as $key => $value){
                 $my_promote_code = $value->my_promote_code;
-				//$url 			= BORROW_URL.'?promote_code='.$value->my_promote_code;
                 $url 					= 'https://event.influxfin.com/r/url?p='.$my_promote_code;
                 $qrcode			= get_qrcode($url);
 				$value->qrcode	= $qrcode;
