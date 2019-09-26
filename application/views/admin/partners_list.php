@@ -44,7 +44,7 @@
 											<td><?=$value->type&&isset($partner_type[$value->type])?$partner_type[$value->type]:"" ?></td> 
 											<td><?=$value->parent_id&&isset($partner_name[$value->parent_id])?$partner_name[$value->parent_id]:"" ?></td>
                                             <td><?=isset($value->school)?$value->school:"" ?></td>
-                                            <td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" ><?=$value->my_promote_code ?></a></td>
+                                            <td><a href="<?=isset($value->my_promote_code)?$value->qrcode:"" ?>" data-fancybox="images" >https://event.influxfin.com/r/url?p=<?=$value->my_promote_code ?></a></td>
                                             <td><?=$value->admin_id&&isset($name_list[$value->admin_id])?$name_list[$value->admin_id]:"" ?></td> 
 											<td><?=isset($name_list[$value->creator_id])?$name_list[$value->creator_id]:"" ?></td>
 											<td><a href="<?=admin_url('partner/edit')."?id=".$value->id ?>" class="btn btn-default">Edit</a></td> 
