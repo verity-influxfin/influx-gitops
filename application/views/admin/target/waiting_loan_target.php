@@ -79,10 +79,24 @@
 				}
 
 				function rollback(id){
-					if(confirm("確認整案退回？得標者全數流標")){
+					if(confirm("確認整案退回？得標者將全數流標")){
 						if(id){
 							$.ajax({
 								url: './loan_return?id='+id,
+								type: 'GET',
+								success: function(response) {
+									alert(response);
+									location.reload();
+								}
+							});
+						}
+					}
+				}
+				function re(id){
+					if(confirm("確認重新上架？得標者將全數流標")){
+						if(id){
+							$.ajax({
+								url: './re_subloan?id='+id,
 								type: 'GET',
 								success: function(response) {
 									alert(response);
@@ -143,7 +157,7 @@
                                             <td><?=isset($value->platform_fee)&&$value->platform_fee?$value->platform_fee:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:'' ?></td>
                                             <td>
-												<?=isset($loan_list[$value->loan_status])?$loan_list[$value->loan_status]:'' ?>
+												<?=isset($loan_list[$value->loan_status])?(time()>=$value->expire_time&&$value->sub_status==8?'已過期':$loan_list[$value->loan_status]):'' ?>
 												<? if($value->loan_status==3 && ($value->sub_status==0 || $value->sub_status==20 || $value->sub_status==21)){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
@@ -152,6 +166,9 @@
 													if(time()<=$value->expire_time){
 														echo '<button class="btn btn-success" onclick="subloan_success('.$value->id.')">轉換產品放款</button>&nbsp;';
 													}
+													else{
+                                                        echo '<button class="btn btn-info" onclick="re('.$value->id.')">流標並重新上架</button>&nbsp;';
+                                                    }
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
 												}
 												?>

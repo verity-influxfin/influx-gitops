@@ -520,9 +520,9 @@ class Target extends MY_Admin_Controller {
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->subloan_success($id,$this->login_info->id);
 				if($rs){
-					echo '更新成功';die();
+					echo '產轉放款成功';die();
 				}else{
-					echo '更新失敗';die();
+					echo '產轉放款失敗';die();
 				}
 			}else{
 				echo '查無此ID';die();
@@ -531,7 +531,28 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
+	function re_subloan(){
+		$get 	= $this->input->get(NULL, TRUE);
+		$id 	= isset($get['id'])?intval($get['id']):0;
+		if($id){
+			$info = $this->target_model->get($id);
+			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
+                $this->load->library('subloan_lib');
+				$rs = $this->subloan_lib->rollback_success_target($info,$this->login_info->id);
+				if($rs){
+					echo '重新上架成功';die();
+				}else{
+					echo '操作失敗';die();
+				}
+			}else{
+				echo '查無此ID';die();
+			}
+		}else{
+			echo '查無此ID';die();
+		}
+	}
+
 	function loan_return(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;

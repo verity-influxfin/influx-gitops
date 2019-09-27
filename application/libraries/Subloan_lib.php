@@ -22,8 +22,7 @@ class Subloan_lib{
 			);
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by($where);
 			if($transaction){
-				$entering_date		= get_entering_date();
-				$settlement_date 	= date('Y-m-d',strtotime($entering_date.' +'.SUBLOAN_RANGE_DAYS.' days'));
+				$settlement_date 	= entering_date_range(get_entering_date())['edatetime'];
 
 				$data = array(
 					'remaining_principal'		=> 0,//剩餘本金
@@ -63,7 +62,7 @@ class Subloan_lib{
 				if($remaining_principal){
 					foreach($remaining_principal as $k => $v){
 						$data['remaining_principal'] 	+= $v;
-						$data['delay_interest_payable'] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days + SUBLOAN_RANGE_DAYS);
+						$data['delay_interest_payable'] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days);
 					}
 					
 					foreach($interest_payable as $k => $v){
@@ -145,7 +144,7 @@ class Subloan_lib{
 						'status'			=> '1',
 						'sub_status'		=> '8',
 						'remark'			=> $target->target_no.',轉換產品',
-						'expire_time'		=> strtotime($subloan['settlement_date'].' 23:59:59'),
+						'expire_time'		=> strtotime($subloan['settlement_date']),
 					);
 
 					$rs = $this->CI->target_model->insert($param);
@@ -184,6 +183,9 @@ class Subloan_lib{
 			));
 			
 			if($subloan){
+			    if($target->expire_time < time()){
+                    $this->renew_subloan($target,false);
+                }
 				$param = array(
 					'status' 		=> 3 , 
 					'launch_times'	=> 1
@@ -245,11 +247,11 @@ class Subloan_lib{
         return false;
     }
 
-    //流標
-	public function auction_ended($target){
-		if($target->status == 3 && $target->expire_time < time()){
+    //更新借款金額
+	public function renew_subloan($target,$msg=true){
+		if(in_array($target->status,[2,3])&& $target->expire_time < time()){
 			$subloan	= $this->CI->subloan_model->get_by(array(
-				'status'		=> 2,
+				'status'		=> [1,2],
 				'new_target_id'	=> $target->id
 			));
 			if($subloan){
@@ -268,9 +270,10 @@ class Subloan_lib{
 						'loan_amount'		=> $info['total'],
 						'platform_fee'		=> $info['platform_fees'],
 						'launch_times'		=> $target->launch_times + 1,
-						'expire_time'		=> strtotime($info['settlement_date'].' 23:59:59'),
+						'expire_time'		=> strtotime($info['settlement_date']),
 						'invested'			=> 0,
 					);
+                    $this->CI->load->library('contract_lib');
 					$contract = $this->CI->contract_lib->update_contract($target->contract_id,['',$target->user_id,$info['total'],$target->interest_rate,'']);
 					if($contract){
 						$rs = $this->CI->subloan_model->update($subloan->id,$subloan_param);
@@ -279,10 +282,57 @@ class Subloan_lib{
 							return $rs;
 						}
 					}
+					if($msg){
+                        $user_info = $this->user_model->get($target->user_id);
+                        $this->CI->notification_lib->subloan_auction_failed($target->user_id,date('Y-m-d',$target->created_at),$target->amount,$target->target_no,$user_info->name);
+                    }
 				}
 			}
 		}
 	}
+
+    //流標並重新上架
+    public function rollback_success_target($target,$admin_id=0){
+        if($target && $target->status==4 && $target->script_status==0 ){
+            $param = [
+                'status'	=> 2,
+            ];
+            $rs = $this->CI->target_model->update($target->id,$param);
+            $this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
+            $target->status = 2;
+            if($rs){
+                $this->CI->load->model('loan/investment_model');
+                $this->CI->load->model('transaction/frozen_amount_model');
+                $investments = $this->CI->investment_model->get_many_by([
+                    'target_id'	=> $target->id,
+                    'status'	=> [0,1,2]
+                ]);
+                if($investments){
+                    foreach($investments as $key => $value){
+                        $this->CI->target_lib->insert_investment_change_log($value->id,['status'=>9],0,$admin_id);
+                        $this->CI->investment_model->update($value->id,['status'=>9]);
+                        if($value->frozen_status==1 && $value->frozen_id){
+                            $this->CI->frozen_amount_model->update($value->frozen_id,['status'=>0]);
+                        }
+                    }
+                }
+
+                $subloan	= $this->CI->subloan_model->get_by(array(
+                    'status'		=> 2,
+                    'new_target_id'	=> $target->id
+                ));
+                if($subloan){
+                    $this->renew_subloan($target);
+                    $param = array(
+                        'status' 		=> 3 ,
+                    );
+                    $this->CI->target_model->update($target->id, $param);
+                    $this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
+                }
+            }
+        }
+        return false;
+    }
 
 	public function get_subloan($target){
 		if($target){

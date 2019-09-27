@@ -106,7 +106,8 @@ class Judicialperson_lib{
 			$judicial_person = $this->CI->judicial_person_model->get($person_id);
 			if( $judicial_person && $judicial_person->status == 0){
 				$param = array(
-					'status'	=> 2,
+					'status'	    => 2,
+					'cooperation'	=> 0,
 				);
 				return $this->CI->judicial_person_model->update($person_id,$param);
 			}

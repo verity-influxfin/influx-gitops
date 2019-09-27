@@ -102,6 +102,7 @@ class Target_lib{
 			];
 			$rs = $this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
+			
 			$this->CI->load->model('loan/investment_model');
 			$this->CI->load->model('transaction/frozen_amount_model');
 			$investments = $this->CI->investment_model->get_many_by([
@@ -117,6 +118,7 @@ class Target_lib{
 					}
 				}
 			}
+			
 			if($target->sub_status==8){
 				$this->CI->load->library('Subloan_lib');
 				$this->CI->subloan_lib->subloan_success_return($target,$admin_id);
@@ -374,10 +376,10 @@ class Target_lib{
 			$product_list 	= $this->CI->config->item('product_list');
 			$product_info 	= $product_list[$target->product_id];
 			$param = [
-				'status' 		=> 3 , 
-				'expire_time'	=> strtotime('+2 days', time()),
+				'status' 		=> 3 ,
 				'launch_times'	=> 1
 			];
+			$target->sub_status!=8?$param['expire_time']=strtotime('+2 days', time()):'';
 			$this->CI->target_model->update($target->id, $param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
 			$this->CI->notification_lib->target_verify_success($target);
@@ -492,7 +494,7 @@ class Target_lib{
 					if($target->expire_time < time()){
 						//流標
 						if($target->sub_status==8){
-							$this->CI->subloan_lib->auction_ended($target);
+							$this->CI->subloan_lib->renew_subloan($target);
 						}else{
 							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
@@ -561,7 +563,7 @@ class Target_lib{
 			}else{
 				if($target->expire_time < time()){
 					if($target->sub_status==8){
-						$this->CI->subloan_lib->auction_ended($target);
+						$this->CI->subloan_lib->renew_subloan($target);
 					}else{
 						$this->CI->target_model->update($target->id,[
 							'launch_times'	=> $target->launch_times + 1,

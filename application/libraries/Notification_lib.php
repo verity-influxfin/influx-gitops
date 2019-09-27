@@ -208,7 +208,26 @@ class Notification_lib{
 		$this->CI->sendemail->user_notification($user_id,$title,$content);
 		return $rs;
 	}
-	
+
+    public function subloan_auction_failed($user_id,$date="",$amount=0,$target_no="",$name=""){
+        $title = "【產品轉換失敗通知】";
+        $content = "親愛的用戶：
+$name 您好，您於普匯inFlux申請的產品轉換案件，案號 $target_no 搓合失敗，
+加計至 $date 之清償金額為 $amount 元，
+已為您更新金額重新上架，您可對債務進行全額清償或嘗試等待投資人協助進行展延，若有疑問請聯繫客服協助處理。";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,$content);
+        return $rs;
+    }
+
 	public function auction_closed($user_id,$investor,$target_no,$amount=0){
 		if($investor==1){
 			$title = "【標的籌滿】 您申請的標的 $target_no 已滿標";
