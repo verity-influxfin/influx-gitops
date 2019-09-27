@@ -161,8 +161,11 @@ class Cron extends CI_Controller {
 	{	//每天下午一點
 		$this->load->library('Payment_lib'); 
 		$script  	= 9;
+        $input 	= $this->input->get();
+        $start  = isset($input['dstart'])?$input['dstart']:'';
+        $end    = isset($input['dend'])?$input['dend']:'';
 		$start_time = time();
-		$count 		= $this->payment_lib->script_daily_tax();
+		$count 		= $this->payment_lib->script_daily_tax($start,$end);
 		$num		= $count?intval($count):0;
 		$end_time 	= time();
 		$data		= [
