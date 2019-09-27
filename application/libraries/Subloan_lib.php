@@ -279,12 +279,13 @@ class Subloan_lib{
 						$rs = $this->CI->subloan_model->update($subloan->id,$subloan_param);
 						if($rs){
 							$this->CI->target_model->update($target->id,$target_param);
-							return $rs;
-						}
-					}
-					if($msg){
-                        $user_info = $this->user_model->get($target->user_id);
-                        $this->CI->notification_lib->subloan_auction_failed($target->user_id,date('Y-m-d',$target->created_at),$target->amount,$target->target_no,$user_info->name);
+                            if($msg){
+                                $this->CI->load->model('user/user_model');
+                                $user_info = $this->CI->user_model->get($target->user_id);
+                                $this->CI->notification_lib->subloan_auction_failed($target->user_id,date('Y-m-d',$target->created_at),$target->amount,$target->target_no,$user_info->name);
+                            }
+                            return $rs;
+                        }
                     }
 				}
 			}
@@ -330,6 +331,7 @@ class Subloan_lib{
                     $this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
                 }
             }
+            return true;
         }
         return false;
     }
