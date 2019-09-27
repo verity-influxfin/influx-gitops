@@ -323,7 +323,7 @@ class Subloan_lib{
                     'new_target_id'	=> $target->id
                 ));
                 if($subloan){
-                    $this->renew_subloan($target);
+                    $this->renew_subloan($target,false);
                     $param = array(
                         'status' 		=> 3 ,
                     );
