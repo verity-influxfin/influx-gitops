@@ -130,7 +130,8 @@ class Target extends REST_Controller {
 				if($user_info){
 					$age  = get_age($user_info->birthday);
 					if($product_list[$value->product_id]['identity']==1){
-						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
+						$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
+                        $user_meta->meta_value 	= preg_replace('/\(自填\)/', '',$user_meta->meta_value);
 					}else{
 						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'company_name']);
 					}
