@@ -326,7 +326,8 @@ class Target extends REST_Controller {
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
 				$age  		= get_age($user_info->birthday);
 				if($product_info['identity']==1){
-					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
+					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
+                    $user_meta->meta_value 	= preg_replace('/\(自填\)/', '',$user_meta->meta_value);
 				}else{
 					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'company_name']);
 				}
