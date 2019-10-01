@@ -49,11 +49,26 @@ class Judicialperson extends MY_Admin_Controller {
 	}
 	
 	public function media_upload()
-	{
+	{   
 		$post 		= $this->input->post(NULL, TRUE);  //接到user_id
-		$media	= $this->s3_upload->media($_FILES,'media', $post['user_id'], 'confirmation_for_judicial_person');
-		if ($media) {
-			alert('檔案上傳成功', 'index?status=0');
+		if (!empty($post)) {
+			$media	= $this->s3_upload->media($_FILES, 'media', $post['user_id'], 'confirmation_for_judicial_person');
+			if ($media === false) {
+				alert('檔案上傳失敗，請洽工程師', 'index?status=0');
+			} else {
+				$sign_video= $this->judicial_person_model->get($post['id'])->sign_video;
+				if(empty($sign_video)){
+					$this->judicial_person_model->update($post['id'], [
+						'sign_video' 			=> $media
+					]);	
+				}else{
+					$media= $sign_video.','. $media;
+					$this->judicial_person_model->update($post['id'], [
+						'sign_video' 			=> $media
+					]);	
+				}
+				alert('檔案上傳成功', 'index?status=0');
+			}
 		} else {
 			alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 		}
@@ -80,7 +95,12 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['data']         = $info;
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
-                    $page_data['name_list']    = $this->admin_model->get_name_list();
+					$page_data['name_list']    = $this->admin_model->get_name_list();
+					$media =$info->sign_video;
+					if (!empty($media)) {
+						$media = explode(',', $info->sign_video);
+						$page_data['media_list'] = $media;
+					}
                     $page_data['company_type'] = $this->config->item('company_type');
                     $this->load->view('admin/_header');
 					$this->load->view('admin/_title', $this->menu);

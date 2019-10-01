@@ -298,7 +298,7 @@ class S3_upload {
 		));
 
 		if (isset($result['ObjectURL'])) {
-			return true;
+			return $result['ObjectURL'];
 		} else {
 			return false;
 		}
