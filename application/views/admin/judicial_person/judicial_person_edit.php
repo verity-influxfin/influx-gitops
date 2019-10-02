@@ -68,8 +68,18 @@
 								<form action="<?= admin_url('Judicialperson/media_upload') ?>" method="post" enctype="multipart/form-data">
 									檔案名稱:<input type="file" name="media" /><br />
 									<input type="hidden" name="user_id" value="<?= isset($data->user_id) ? $data->user_id : ""; ?>">
+									<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 									<input type="submit" class="btn btn-primary" value="上傳檔案" />
 								</form>
+							</div>
+							<div class="form-group">
+								<? if (!empty($media_list)) { ?>
+									<h1>下載已上傳之對保影片</h1>
+									<? foreach ($media_list as $key => $value) { ?>
+										<a href="<?= isset($value) ? $value : "" ?>" target="_blank">下載連結
+										</a>
+									<? } ?>
+								<? } ?>
 							</div>
 						</div>
 						<div class="col-lg-6">

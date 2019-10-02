@@ -1,5 +1,7 @@
 <?php
 ini_set('memory_limit','256M');
+ini_set('upload_max_filesize', '200M');
+ini_set('post_max_size', '253M');
 /*
  *                       _oo0oo_					|                               |~~~~~~~|
  *                      o8888888o					|                               |       |
