@@ -36,10 +36,24 @@
 											<p><?=isset($data->user_id)?$data->user_id:"" ?></p>
 										</a>
 									</div>
-									<div class="form-group">
-										<label>公司</label>
-										<p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
-										<p class="form-control-static"><?=isset($content['company'])?$content['company']:""?></p>
+                                    <div class="form-group">
+                                        <label>公司</label>
+                                        <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
+                                    <?
+                                    if($content['company']==''&&$data->status==3){
+                                        echo '<form role="form" method="post">
+                                        <div class="form-group">
+                                            <input type="text" name="company" value="' . $content['company'] . '" />
+                                            <input type="hidden" name="id" value="' . $data->id . '" >
+                                            <input type="hidden" name="from" value="' . $from . '" >
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">確認公司名</button>
+                                        </form><br />';
+                                    }
+                                    else {
+                                        echo '<p class="form-control-static">'.isset($content['company'])?$content['company']:"".'</p>';
+                                    }
+                                     ?>
 									</div>
 									<div class="form-group">
 										<label>公司類型</label>
@@ -121,7 +135,7 @@
                                                 </select>
                                                 <input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
-											<button type="submit" class="btn btn-primary">送出</button>
+											<button type="submit" class="btn btn-primary" <?=$content['company']==''&&$data->status==3?'disabled':''; ?>>送出</button>
                                         </fieldset>
                                     </form>
                                 </div>

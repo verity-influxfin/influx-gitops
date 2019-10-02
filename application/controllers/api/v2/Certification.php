@@ -314,7 +314,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 			
 			//必填欄位
-			$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address'];
+			$fields 	= ['id_number','id_card_date','id_card_place','birthday'];//'name',,'address'
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -322,7 +322,10 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
-			
+
+            $content['name'] 	= isset($input['name'])?$input['name']:"";
+            $content['address'] = isset($input['address'])?$input['address']:"";
+
 			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
@@ -801,7 +804,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 			
 			//必填欄位
-			$fields 	= ['name','phone','relationship'];
+			$fields 	= ['phone','relationship'];//'name',
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -809,6 +812,8 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+
+            $content['name'] 	= isset($input['name'])?$input['name']:"";
 			
 			$content['household_image'] = '';
 			if (isset($input['household_image']) && $input['household_image']) {
@@ -1583,7 +1588,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 
 			//必填欄位
-			$fields 	= ['tax_id','company','industry','salary','labor_image','business_image','passbook_image','auxiliary_image'];
+			$fields 	= ['tax_id','industry','salary','labor_image','business_image','passbook_image','auxiliary_image'];//,'company'
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1591,6 +1596,8 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+
+            $content['company'] 	= isset($input['company'])?$input['company']:"";
 			
 			$employee_range 		= $this->config->item('employee_range');
 			$position_name 			= $this->config->item('position_name');

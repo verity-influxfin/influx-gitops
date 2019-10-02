@@ -36,10 +36,26 @@
                                     <p><?=isset($data->user_id)?$data->user_id:"" ?></p>
                                 </a>
                             </div>
-                            <div class="form-group">
+
+                            <?
+                            if($content['name']==''&&$data->status==3){
+                                echo '<form role="form" method="post">
+                                <div class="form-group">
+                                    <label>姓名</label>
+                                    <input type="text" name="name" value="' . $content['name'] . '" />
+                                    <input type="hidden" name="id" value="' .$data->id. '" >
+                                    <input type="hidden" name="from" value="' .$from. '" >
+                                </div>
+                                <button type="submit" class="btn btn-primary">確認姓名</button>
+                                </form><br />';
+                            }
+                            else {
+                                echo '<div class="form-group">
                                 <label>姓名</label>
-                                <p class="form-control-static"><?=isset($content['name'])?$content['name']:""?></p>
-                            </div>
+                                <p class="form-control-static">'.$content['name'].'</p>
+                                </div>';
+                            }
+                            ?>
                             <div class="form-group">
                                 <label>身分證字號</label>
                                 <p class="form-control-static"><?=isset($content['id_number'])?$content['id_number']:""?></p>
@@ -56,10 +72,25 @@
                                 <label>生日</label>
                                 <p class="form-control-static"><?=isset($content['birthday'])?$content['birthday']:""?></p>
                             </div>
-                            <div class="form-group">
+                            <?
+                            if($content['address']==''&&$data->status==3){
+                                echo '<form role="form" method="post">
+                                <div class="form-group">
+                                    <label>地址</label>
+                                    <input type="text" name="address" value="' . $content['address'] . '" />
+                                    <input type="hidden" name="id" value="' . $data->id . '" >
+                                    <input type="hidden" name="from" value="' . $from . '" >
+                                </div>
+                                <button type="submit" class="btn btn-primary">確認地址</button>
+                                </form><br />';
+                            }
+                            else {
+                                echo '<div class="form-group">
                                 <label>地址</label>
-                                <p class="form-control-static"><?=isset($content['address'])?$content['address']:""?></p>
-                            </div>
+                                    <p class="form-control-static">'.$content['address'].'</p>
+                                </div>';
+                            }
+                            ?>
                             <div class="form-group">
                                 <label>審核</label>
                                 <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==0?"人工":"系統"?></p>
@@ -114,7 +145,7 @@
                                         </select>
                                         <input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important;display:none" disabled="false">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">送出</button>
+                                    <button type="submit" class="btn btn-primary" <?=($content['name']==''||$content['address']=='')&&$data->status==3?'disabled':''; ?>>送出</button>
                                 </fieldset>
                             </form>
                         </div>

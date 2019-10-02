@@ -37,8 +37,22 @@
 										</a>
 									</div>
 									<div class="form-group">
-										<label>緊急聯絡人姓名</label>
-										<p class="form-control-static"><?=isset($content['name'])?$content['name']:""?></p>
+										<label>緊急聯絡人姓名</label><br />
+                                        <?
+                                        if($content['name']==''&&$data->status==3){
+                                            echo '<form role="form" method="post">
+                                <div class="form-group">
+                                    <input type="text" name="name" value="' . $content['name'] . '" />
+                                    <input type="hidden" name="id" value="' . $data->id . '" >
+                                    <input type="hidden" name="from" value="' . $from . '" >
+                                </div>
+                                <button type="submit" class="btn btn-primary">確認姓名</button>
+                                </form><br />';
+                                        }
+                                        else {
+                                            echo '<p class="form-control-static">'.isset($content['name'])?$content['name']:"".'</p>';
+                                        }
+                                        ?>
 									</div>
 									<div class="form-group">
 										<label>緊急聯絡人電話</label>
@@ -90,7 +104,7 @@
                                                 </select>
                                                 <input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
-											<button type="submit" class="btn btn-primary">送出</button>
+											<button type="submit" class="btn btn-primary" <?=$content['name']==''&&$data->status==3?'disabled':''; ?>>送出</button>
                                         </fieldset>
                                     </form>
                                 </div>
