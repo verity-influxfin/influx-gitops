@@ -13,6 +13,7 @@ class User extends MY_Admin_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('loan/credit_model');
+		$this->load->model('log/log_userlogin_model');
 		$this->certification = $this->config->item('certifications');
  	}
 	
@@ -23,7 +24,7 @@ class User extends MY_Admin_Controller {
 		$where				= array();
 		$list				= array();
 		$fields 			= ['id','name','phone'];
-		
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				if($field=='phone' || $field=='name'){
@@ -33,6 +34,8 @@ class User extends MY_Admin_Controller {
 				}
 			}
 		}
+
+
 		if(!empty($where)){
 			$list 	= $this->user_model->get_many_by($where);
 		}
@@ -80,6 +83,26 @@ class User extends MY_Admin_Controller {
 					$page_data['bank_account'] 			= $bank_account;
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
+					//新增設備ID ++
+					$device_id_invest 	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+						'user_id' 		=> $info->id,
+						'investor' 		=> 1
+					])->client;
+					$device_id_invest 	= json_decode($device_id_invest);
+			
+					if ($device_id_invest) {
+						$page_data['device_id_invest'] = $device_id_invest->device_id;
+					}
+					$device_id_borrow	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+						'user_id' 		=> $info->id,
+						'investor' 		=> 0
+					])->client;
+					
+					$device_id_borrow	 	= json_decode($device_id_borrow);
+					if ($device_id_borrow) {
+					$page_data['device_id_borrow'] = $device_id_borrow->device_id;
+					}
+					//新增設備ID --
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
 					$this->load->view('admin/users_edit',$page_data);
