@@ -326,13 +326,13 @@ class Certification extends REST_Controller {
             $content['name'] 	= isset($input['name'])?$input['name']:"";
             $content['address'] = isset($input['address'])?$input['address']:"";
 
-			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
+			//if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			//}
 			
-			if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
+			//if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			//}
 			
 			//檢查身分證字號
 			$id_check = check_cardid($input['id_number']);
