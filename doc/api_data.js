@@ -9208,7 +9208,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4:完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4:完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target 9:待二審</p>"
                         },
                         {
                             "group": "Success 200",
@@ -9222,14 +9222,14 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "subloan_target_status",
-                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+                            "description": "<p>同上 status</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "subloan_target_sub_status",
-                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還</p>"
+                            "description": "<p>同上 sub_status</p>"
                         }
                     ]
                 },
