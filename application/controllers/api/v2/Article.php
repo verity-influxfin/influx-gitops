@@ -139,12 +139,13 @@ class Article extends REST_Controller {
     {
         $input = $this->input->post(NULL, TRUE);
         $this->load->model('behavion/beha_user_model');
-        if(isset($input['promo'])){
+        $get_num = 0;
+        if(isset($input['promo'])&&$input['promo']!=''){
             $query = '%first_open":"'.$input['promo'].'"%';
             $get_num = $this->beha_user_model->count_by([
                 'behavior like'   => $query,
             ]);
-            $this->response($get_num);
         }
+        $this->response($get_num);
     }
 }
