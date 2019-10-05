@@ -337,6 +337,7 @@ class Target_lib{
                                         $sub_status!=9?$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount):null;
                                     }
                                 }
+                                $this->approve_target_fail($user_id,$target);
                             }
                         }else{
                             $this->approve_target_fail($user_id,$target);
