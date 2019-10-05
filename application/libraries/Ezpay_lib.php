@@ -23,7 +23,7 @@ class Ezpay_lib{
 				}else{
 					$url 		= 'https://inv.ezpay.com.tw/Api/invoice_issue';
 				}
-				
+
 				$data		= array(
 					'RespondType'		=> 'JSON',
 					'Version'			=> '1.4',
@@ -46,7 +46,14 @@ class Ezpay_lib{
 					'ItemUnit'			=> '筆',//商品單位
 					'ItemPrice'			=> intval($amount),//商品單價
 					'ItemAmt'			=> intval($amount),//商品小計
-				);  
+				);
+				if (strlen($user_info->id_number) === 8) {
+					$data['Category'] = 'B2B';
+					$data['CarrierType'] = null;
+					$data['PrintFlag'] = 'Y';
+					$data['BuyerUBN'] = $user_info->id_number;
+					$data['CarrierNum'] = null;
+				}
 				$post_data_str = http_build_query($data);
 
 				if (phpversion() > 7) {
