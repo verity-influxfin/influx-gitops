@@ -1331,28 +1331,9 @@ class Certification extends REST_Controller {
 			$content['diploma_date'] = isset($input['diploma_date'])?$input['diploma_date']:"";
 			$content['sip_account'] 	= isset($input['sip_account']) ? $input['sip_account'] : "";
 			$content['sip_password'] 	= isset($input['sip_password']) ? $input['sip_password'] : "";
-			//上傳檔案欄位		
-			$file_fields 	= ['diploma_image'];
-			foreach ($file_fields as $field) {
-				$image_id = intval($input[$field]);
-				if (!$image_id) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$rs = $this->log_image_model->get_by([
-						'id'		=> $image_id,
-						'user_id'	=> $user_id,
-					]);
-
-					if($rs){
-						$content[$field] = $rs->url;
-					}else{
-						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-					}
-				}
-			}
 			$content['transcript_image'] 	= isset($input['transcript_image']) ? $input['transcript_image'] : "";
-			if (!empty($content['transcript_image'])) {
-				$file_fields 	= ['transcript_image'];
+			if (!empty($content['transcript_image'])||!empty($content['transcript_image'])) {
+				$file_fields 	= ['transcript_image','diploma_image'];
 				foreach ($file_fields as $field) {
 					$image_ids = explode(',', $input[$field]);
 					if (count($image_ids) > 5) {
