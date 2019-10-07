@@ -1350,8 +1350,6 @@ class Certification extends REST_Controller {
                         foreach ($list as $k => $v) {
                             $content[$field][] = $v->url;
                         }
-                    } else {
-                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
                     }
                 }
             }
