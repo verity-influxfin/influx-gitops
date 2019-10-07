@@ -1331,30 +1331,30 @@ class Certification extends REST_Controller {
 			$content['diploma_date']     = isset($input['diploma_date'])?$input['diploma_date']:"";
 			$content['sip_account'] 	 = isset($input['sip_account']) ? $input['sip_account'] : "";
 			$content['sip_password'] 	 = isset($input['sip_password']) ? $input['sip_password'] : "";
-			$content['transcript_image'] = isset($input['transcript_image']) ? $input['transcript_image'] : "";
-			$content['diploma_image'] 	 = isset($input['diploma_image']) ? $input['diploma_image'] : "";
-			if (!empty($content['transcript_image'])||!empty($content['diploma_image'])) {
-				$file_fields 	= ['transcript_image','diploma_image'];
-				foreach ($file_fields as $field) {
-					$image_ids = explode(',', $input[$field]);
-					if (count($image_ids) > 5) {
-						$image_ids = array_slice($image_ids, 0, 5);
-					}
-					$list = $this->log_image_model->get_many_by([
-						'id'		=> $image_ids,
-						'user_id'	=> $user_id,
-					]);
+            $content['transcript_image'] = isset($input['transcript_image']) ? $input['transcript_image'] : "";
+            $content['diploma_image'] 	 = isset($input['diploma_image']) ? $input['diploma_image'] : "";
+            $file_fields 	= ['transcript_image','diploma_image'];
+            foreach ($file_fields as $field) {
+                if (!empty($content['transcript_image'])||!empty($content['diploma_image'])) {
+                    $image_ids = explode(',', $input[$field]);
+                    if (count($image_ids) > 5) {
+                        $image_ids = array_slice($image_ids, 0, 5);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id' => $image_ids,
+                        'user_id' => $user_id,
+                    ]);
 
-					if ($list && count($list) == count($image_ids)) {
-						$content[$field] = [];
-						foreach ($list as $k => $v) {
-							$content[$field][] = $v->url;
-						}
-					} else {
-						$this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-					}
-				}
-			}
+                    if ($list && count($list) == count($image_ids)) {
+                        $content[$field] = [];
+                        foreach ($list as $k => $v) {
+                            $content[$field][] = $v->url;
+                        }
+                    } else {
+                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+            }
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
