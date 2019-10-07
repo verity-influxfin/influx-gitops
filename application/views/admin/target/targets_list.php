@@ -148,9 +148,9 @@
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
-											<td><?=isset($value->remark)?$value->remark:'' ?></td>
-											<td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+                                            <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
+                                            <td><?=isset($value->remark)?$value->remark:'' ?></td>
+											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}
