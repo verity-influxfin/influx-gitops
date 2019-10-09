@@ -49,20 +49,6 @@
 								<label>備註</label>
 								<p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
 							</div>
-							<h1>審核</h1>
-							<form role="form" method="post">
-								<fieldset>
-									<div class="form-group">
-										<select id="status" name="status" class="form-control" onchange="check_fail();">
-											<? foreach ($status_list as $key => $value) { ?>
-												<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-											<? } ?>
-										</select>
-										<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
-									</div>
-									<button type="submit" class="btn btn-primary">送出</button>
-								</fieldset>
-							</form>
 							<h1>上傳對保影片</h1>
 							<div class="form-group">
 								<form action="<?= admin_url('Judicialperson/media_upload') ?>" method="post" enctype="multipart/form-data">
@@ -81,6 +67,20 @@
 									<? } ?>
 								<? } ?>
 							</div>
+							<h1>審核</h1>
+							<form role="form" method="post">
+								<fieldset>
+									<div class="form-group">
+										<select id="status" name="status" class="form-control" onchange="check_fail();">
+											<? foreach ($status_list as $key => $value) { ?>
+												<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+											<? } ?>
+										</select>
+										<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
+									</div>
+									<button type="submit" class="btn btn-primary">送出</button>
+								</fieldset>
+							</form>
 						</div>
 						<div class="col-lg-6">
 							<? if ($company_data && $search_type == 0) { ?>

@@ -24,22 +24,29 @@ class Judicialperson_lib{
 					'phone' => $judicial_person->tax_id
 				]);
 				if(!$exist){
-                    $judicial_person_data = explode(',',$judicial_person->sign_video);
+					$judicial_person_data = explode(',',$judicial_person->sign_video);
                     $transaction_password = $judicial_person_data[0];
                     $bank_code            = $judicial_person_data[1];
                     $branch_code          = $judicial_person_data[2];
                     $bank_account         = $judicial_person_data[3];
                     $email                = $judicial_person_data[4];
-                    $bankbook_images      = urldecode($judicial_person_data[5]);
+					$bankbook_images      = urldecode($judicial_person_data[5]);
+					unset( $judicial_person_data[0], $judicial_person_data[1], $judicial_person_data[2], $judicial_person_data[3], $judicial_person_data[4], $judicial_person_data[5]);
+					if(empty($judicial_person_data))
+					{
+						echo '請先上傳法人對保影片';die();
+					}
+					$media=$judicial_person_data;
+					$media=implode(",",$media);
 					$user_param = [
 						'name'				   => $judicial_person->company,
 						'nickname'			   => $judicial_person->company,
 						'password'			   => md5($judicial_person->user_id),
 						'phone'				   => $judicial_person->tax_id,
-                        'email'                => $email,
+						'email'                => $email,
 						'id_number'			   => $judicial_person->tax_id,
 						'company_status'	   => 1,
-                        'transaction_password' => $transaction_password,
+						'transaction_password' => $transaction_password,
 					];
 					$user_id = $this->CI->user_model->insert($user_param);
 					if($user_id){
@@ -49,7 +56,6 @@ class Judicialperson_lib{
 							'user_id'			=> $judicial_person->user_id,
 						];
 						$this->CI->judicial_agent_model->insert($agent_param);
-
                         $param		= [
                             'user_id'			=> $user_id,
                             'certification_id'	=> 3,
@@ -59,7 +65,6 @@ class Judicialperson_lib{
                             'status'            => 1,
                         ];
                         $insert = $this->CI->user_certification_model->insert($param);
-
 						//建立金融帳號
                         $bankaccount_info = [
                             'user_id'               => $user_id,
@@ -86,11 +91,10 @@ class Judicialperson_lib{
                             'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
                         ];
 						$this->CI->virtual_account_model->insert_many($virtual_data);
-
-						$this->CI->judicial_person_model->update($person_id,[
+						$this->CI->judicial_person_model->update($person_id, [
 							'status' 			=> 1,
 							'company_user_id'	=> $user_id,
-                            'sign_video'        => '',
+							'sign_video'        => $media,
 						]);
 						return true;
 					}
