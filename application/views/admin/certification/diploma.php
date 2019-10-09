@@ -115,9 +115,12 @@
 									<fieldset disabled>
 										<div class="form-group">
 											<label>畢業證書</label><br>
-											<a href="<?= isset($content['diploma_image']) ? $content['diploma_image'] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['diploma_image']) ? $content['diploma_image'] : "" ?>" style='width:30%;max-width:400px'>
-											</a>
+                                            <?  isset($content['diploma_image'])&&!is_array($content['diploma_image'])?$content['diploma_image']=array($content['diploma_image']):'';
+                                                foreach ($content['diploma_image'] as $key => $value) { ?>
+                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                    <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                                </a>
+                                            <? } ?>
 										</div>
 										<div class="form-group">
 											<label>成績單</label><br>
