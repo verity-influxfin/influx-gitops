@@ -49,9 +49,9 @@
 											<td><?=isset($value->status)&&$value->status?"正常":"未申請" ?></td>
 											<td><?=isset($value->investor_status)&&$value->investor_status?"正常":"未申請" ?></td>
 											<td><?=isset($value->block_status)&&$value->block_status?$block_status_list[$value->block_status]:null ?></td>
-											<td><a href="<?=admin_url('user/block_user')."?id=".$value->id ?>" class="btn btn-default">解除鎖定</a></td>
-                                        </tr>                                        
-									<?php 
+											<td><a href="<?=admin_url('user/block_users')."?id=".$value->id."&status=unblocked" ?>" class="btn btn-default">解除鎖定</a></td>
+                                        </tr>
+									<?php
 										}}
 									?>
                                     </tbody>

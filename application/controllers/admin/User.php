@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class User extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array('edit');
 	public $certification;
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
@@ -16,9 +16,9 @@ class User extends MY_Admin_Controller {
 		$this->load->model('log/log_userlogin_model');
 		$this->certification = $this->config->item('certifications');
  	}
-	
+
 	public function index(){
-		
+
 		$page_data 			= array('type'=>'list');
 		$input 				= $this->input->get(NULL, TRUE);
 		$where				= array();
@@ -45,15 +45,15 @@ class User extends MY_Admin_Controller {
 		$this->load->view('admin/users_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function edit(){
 		$page_data 	= array('type'=>'edit');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
+
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
-			if($id){		
+			if($id){
 				$meta_data 			= [];
 				$meta 				= $this->user_meta_model->get_many_by([
 					'user_id'	=> $id,
@@ -89,7 +89,7 @@ class User extends MY_Admin_Controller {
 						'investor' 		=> 1
 					])->client;
 					$device_id_invest 	= json_decode($device_id_invest);
-			
+
 					if ($device_id_invest) {
 						$page_data['device_id_invest'] = $device_id_invest->device_id;
 					}
@@ -97,7 +97,7 @@ class User extends MY_Admin_Controller {
 						'user_id' 		=> $info->id,
 						'investor' 		=> 0
 					])->client;
-					
+
 					$device_id_borrow	 	= json_decode($device_id_borrow);
 					if ($device_id_borrow) {
 					$page_data['device_id_borrow'] = $device_id_borrow->device_id;
@@ -133,7 +133,7 @@ class User extends MY_Admin_Controller {
 		}
 	}
 
-		
+
 
 	public function display(){
 
@@ -186,36 +186,57 @@ class User extends MY_Admin_Controller {
 		}
 	}
 
-    public function block_user(){
+    public function blocked_users() {
         $get 		= $this->input->get(NULL, TRUE);
-        if(empty($get)) {
-            $page_data = [];
-            $block_user = $this->user_model->get_many_by(array("block_status" => [1, 2, 3]));
-            if ($block_user && !empty($block_user)) {
-                $page_data['list'] = $block_user;
-                $page_data['block_status_list'] = $this->user_model->block_status_list;
-            }
-            $this->load->view('admin/_header');
-            $this->load->view('admin/_title', $this->menu);
-            $this->load->view('admin/users_block_list', $page_data);
-            $this->load->view('admin/_footer');
+
+        $page_data = [];
+        $block_user = $this->user_model->get_many_by(array("block_status" => [1, 2, 3]));
+        if ($block_user && !empty($block_user)) {
+            $page_data['list'] = $block_user;
+            $page_data['block_status_list'] = $this->user_model->block_status_list;
         }
-        else{
-            $success = $this->user_model->update($get['id'], ["block_status" => 0]);
-            $this->load->model('log/log_userlogin_model');
-            $info = $this->user_model->get($get['id']);
-            $this->log_userlogin_model->insert(array(
-                'account'	=> $info->phone,
-                'investor'	=> 0,
-                'user_id'	=> $info->id,
-                'status'	=> 1
-            ));
-            if($success===true){
-                alert('更新成功',admin_url('user/block_user'));
-            }else{
-                alert('更新失敗，請洽工程師',admin_url('user/block_user'));
-            }
-        }
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/users_block_list', $page_data);
+        $this->load->view('admin/_footer');
     }
+
+	public function block_users() {
+		$input = $this->input->get(NULL, TRUE);
+		if (!is_array($input)) {
+			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+		}
+
+		$status = isset($input['status']) ? $input['status'] : '';
+		$userId = isset($input['id']) ? intval($input['id']) : 0;
+		if (!$status || $userId <= 0) {
+			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+		}
+
+		try {
+			$this->load->library('block/mapping/blockstatus', ["status" => $status]);
+		} catch (OutOfBoundsException $e) {
+			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+		}
+
+		$success = $this->user_model->update(
+			$userId,
+			["block_status" => $this->blockstatus->getValueInDB()]
+		);
+		$this->load->model('log/log_userlogin_model');
+		$info = $this->user_model->get($userId);
+		$this->log_userlogin_model->insert([
+			'account'	=> $info->phone,
+			'investor'	=> 0,
+			'user_id'	=> $info->id,
+			'status'	=> 1
+		]);
+
+		if ($success === true) {
+			alert('更新成功',admin_url('user/blocked_users'));
+		} else {
+			alert('更新失敗，請洽工程師',admin_url('user/blocked_users'));
+		}
+	}
 }
 ?>

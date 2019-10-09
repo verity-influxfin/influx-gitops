@@ -60,7 +60,7 @@ $config['admin_menu'] = [
 	'User' 					=> [
 	    'parent_name'       => '會員管理',
 	    'index'             => '會員列表',
-        'block_user'        => '鎖定帳號管理',
+        'blocked_users'        => '鎖定帳號管理',
     ],
 	'Admin' 				=> [
 		'parent_name'		=> '後台人員管理',
@@ -94,7 +94,7 @@ if(ENVIRONMENT=='development'){
 	$config['admin_email'] = ['news@influxfin.com'];
 }else{
 	$config['admin_email'] = ['yaomu@influxfin.com','rogerkuo@influxfin.com','lc@influxfin.com'];//,'mori2.tw@gmail.com'
-} 
+}
 
 //期數
 $config['instalment']= [
