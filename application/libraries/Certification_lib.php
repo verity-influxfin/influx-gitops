@@ -22,13 +22,12 @@ class Certification_lib{
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'status !='			=> 2,
-				'expire_time >='	=> time(),
 			);
-            if($investor==1){
-                unset($param['expire_time >=']);
-            }
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
+			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[1,3,5,6])){
+                    return false;
+                }
 				$certification->id 					= intval($certification->id);
 				$certification->user_id 			= intval($certification->user_id);
 				$certification->investor 			= intval($certification->investor);
@@ -390,17 +389,16 @@ class Certification_lib{
                         ));
 					    if($phone_used){
                             $this->set_failed($info->id,'與註冊電話相同',true);
-                            return true;
                         }
 					    else{
                             $this->set_success($info->id);
-                            $this->CI->user_certification_model->update($info->id,array(
-                                'status'	=> 1,
-                                'sys_check'	=> 1,
-                            ));
-                            return true;
                         }
 					}
+                    $this->CI->user_certification_model->update($info->id,array(
+                        'status'	=> $status,
+                        'sys_check'	=> 1,
+                    ));
+                    return true;
 				}
 			}
 		}
