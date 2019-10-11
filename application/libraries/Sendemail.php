@@ -98,12 +98,32 @@ class Sendemail
 		return false;
 	}
 	
-	public function user_notification($user_id=0,$title="",$content=""){
+	public function user_notification($user_id=0,$title="",$content="",$attach=false,$replay_to=false,$replay_to_name=false){
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
 			if($user_info && $user_info->email){
 				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
-				return $this->send($user_info->email,$title,$content);
+				if($attach){
+                    $this->CI->email->initialize($this->config);
+                    $this->CI->email->clear(TRUE);
+                    $this->CI->email->to($user_info->email);
+                    $this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
+                    $this->CI->email->subject($title);
+                    $this->CI->email->message($content);
+                    foreach($attach as $key => $value) {
+                        $this->CI->email->attach($value,"",$key.".pdf");
+                    }
+                    $rs = $this->CI->email->send();
+                }
+				else{
+                    $rs = $this->send($user_info->email,$title,$content,$replay_to,$replay_to_name);
+                }
+                if($rs){
+                    $this->CI->email->clear(true);
+                    return true;
+                }else{
+                    return false;
+                }
 			}
 		}
 		return false;
@@ -119,7 +139,7 @@ class Sendemail
 	
 	public function admin_notification($title="",$content=""){
 		$admin_email 	= $this->CI->config->item('admin_email');
-		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content ),TRUE);
+		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content , "url"=> base_url()),TRUE);
 		return $this->send($admin_email,$title,$content);
 	}
 	
@@ -148,7 +168,7 @@ class Sendemail
 		}
 	}
 	
-    private function send($email,$subject,$content)
+    private function send($email,$subject,$content,$reply_to=false,$reply_to_name='')
     {
 		$this->CI->email->initialize($this->config);
 		$this->CI->email->clear();
@@ -156,7 +176,9 @@ class Sendemail
 		$this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($content);
-		
+
+        $reply_to?$this->CI->email->reply_to($reply_to,$reply_to_name):'';
+
 		$rs = $this->CI->email->send();
 		if($rs){
 			return true;
