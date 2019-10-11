@@ -1421,26 +1421,45 @@ class Certification extends REST_Controller {
 			
 			$content['return_type'] = isset($input['return_type']) && intval($input['return_type'])?$input['return_type']:0;
 			
-			//上傳檔案欄位
-			$file_fields 	= ['postal_image'];
-			foreach ($file_fields as $field) {
-				$image_id = intval($input[$field]);
-				if (!$image_id) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				}else{
-					$rs = $this->log_image_model->get_by([
-						'id'		=> $image_id,
-						'user_id'	=> $user_id,
-					]);
+			if($content['return_type']==0){
+                //上傳檔案欄位
+                $file_fields 	= ['postal_image'];
+                foreach ($file_fields as $field) {
+                    $image_id = intval($input[$field]);
+                    if (!$image_id) {
+                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    }else{
+                        $rs = $this->log_image_model->get_by([
+                            'id'		=> $image_id,
+                            'user_id'	=> $user_id,
+                        ]);
 
-					if($rs){
-						$content[$field] = $rs->url;
-					}else{
-						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-					}
-				}
-			}
+                        if($rs){
+                            $content[$field] = $rs->url;
+                        }else{
+                            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                        }
+                    }
+                }
+            }else{
+			    $target = [];
+                $targets = $this->target_model->get_many_by(array(
+                    'user_id'       => $user_id,
+                    'status'		=> [20,21,22,23],
+                ));
+                foreach ($targets as $value){
+                    $target[] = $value->target_no;
+                }
+                $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
+                if(!$user_certification){
+                    $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
+                }
+                $this->load->library('Notification_lib');
+                $this->notification_lib->notice_investigation($user_id, implode(' / ', $target));
+            }
 
+
+			//退信評
             $this->load->library('target_lib');
             $this->load->model('loan/credit_model');
             $targets = $this->target_model->get_many_by(array(
