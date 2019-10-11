@@ -50,7 +50,7 @@
 										<label>驗證狀況</label>
 										<p class="form-control-static"><?=isset($data->verify)?$verify_list[$data->verify]:"" ?></p>
 									</div>
-                                    <h1>審核</h1>
+                                    <h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>
                                             <div class="form-group hide">

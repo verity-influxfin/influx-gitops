@@ -44,6 +44,10 @@
 										<label>access_token</label>
 										<p class="form-control-static"><?=isset($content['access_token'])?$content['access_token']:""?></p>
 									</div>
+                                    <div class="form-group">
+                                        <label>審核狀態</label>
+                                        <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==0?"人工":"系統"?></p>
+                                    </div>
 									<div class="form-group">
 										<label>備註</label>
 										<? 
@@ -54,7 +58,7 @@
 											}
 										?>
 									</div>									
-									<h1>審核</h1>
+									<h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
