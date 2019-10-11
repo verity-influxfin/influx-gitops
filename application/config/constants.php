@@ -155,6 +155,19 @@ defined('CERTIFICATION_BANK_ACCOUNT_ERROR') OR define('CERTIFICATION_BANK_ACCOUN
 defined('CERTIFICATION_BANK_ACCOUNT_EXIST') OR define('CERTIFICATION_BANK_ACCOUNT_EXIST', 509);
 defined('CERTIFICATION_STUDENTID_EXIST') 	OR define('CERTIFICATION_STUDENTID_EXIST'	, 510);
 defined('CERTIFICATION_STUDENTEMAIL_EXIST') OR define('CERTIFICATION_STUDENTEMAIL_EXIST', 511);
+
+//Certification
+defined('IDCARD')        OR define('IDCARD'            , 1);
+defined('STUDENT')       OR define('STUDENT'           , 2);
+defined('DEBITCARD')     OR define('DEBITCARD'         , 3);
+defined('SOCIAL')        OR define('SOCIAL'            , 4);
+defined('EMERGENCY')     OR define('EMERGENCY'         , 5);
+defined('EMAIL')         OR define('EMAIL'             , 6);
+defined('FINANCIAL')     OR define('FINANCIAL'         , 7);
+defined('DIPLOMA')       OR define('DIPLOMA'           , 8);
+defined('INVESTIGATION') OR define('INVESTIGATION'     , 9);
+defined('JOB')           OR define('JOB'               , 10);
+
 //Notification Error Code
 defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601); 
 //Agreement Error Code
@@ -224,6 +237,7 @@ defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630
 defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
+defined('CREDIT_EMAIL') 			OR define('CREDIT_EMAIL'		, getenv('ENV_CREDIT_EMAIL'));
 
 //SOURCE
 defined('SOURCE_RECHARGE')       	OR define('SOURCE_RECHARGE'			, '1');//代收

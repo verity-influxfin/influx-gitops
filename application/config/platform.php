@@ -91,7 +91,7 @@ $config['admin_menu'] = [
 
 //內部通知Email
 if(ENVIRONMENT=='development'){
-	$config['admin_email'] = ['news@influxfin.com'];
+	$config['admin_email'] = ['news@influxfin.com','brian@influxfin.com'];
 }else{
 	$config['admin_email'] = ['yaomu@influxfin.com','rogerkuo@influxfin.com','lc@influxfin.com'];//,'mori2.tw@gmail.com'
 } 
@@ -207,6 +207,9 @@ $config['product_list']= [
 普匯陪你一起實現夢想'
 	],*/
 ];
+
+//產品轉換代碼
+$config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 
 //產品型態
 $config['product_type']= [
