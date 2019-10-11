@@ -4224,7 +4224,7 @@ define({
                             "optional": true,
                             "field": "return_type",
                             "defaultValue": "0",
-                            "description": "<p>回寄方式 0:不需寄回 1:Email</p>"
+                            "description": "<p>回寄方式 0:郵局 1:自然人憑證 2:投資人行動網</p>"
                         },
                         {
                             "group": "Parameter",
@@ -4269,7 +4269,13 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "502",
-                            "description": "<p>此驗證已通過驗證</p>"
+                            "description": "<p>此驗證已過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>Email未認證</p>"
                         },
                         {
                             "group": "Error 4xx",
