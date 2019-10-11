@@ -432,6 +432,8 @@ class Product extends REST_Controller {
 
             $insert = $this->target_lib->add_target($param);
             if($insert){
+                $this->load->library('Certification_lib');
+                $this->certification_lib->expire_certification($user_id);
                 $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
             }else{
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
@@ -1451,6 +1453,8 @@ class Product extends REST_Controller {
                 $insert = $this->target_lib->add_target($param);
                 if($insert){
                     //$this->notification_lib->notice_order_apply($company_user_id,$item_name,$instalment);
+                    $this->load->library('Certification_lib');
+                    $this->certification_lib->expire_certification($user_id);
                     $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
                 }
                 else{

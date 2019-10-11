@@ -125,6 +125,7 @@ class Subloan_lib{
 		if($credit){
 			$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$subloan['instalment'],$product_id);
 			if($interest_rate){
+			    $subloan_remark = $this->subloan_history($target->id);
 				$this->CI->load->library('contract_lib');
 				$contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$subloan['amount'],$interest_rate,'']);
 				if($contract_id){
@@ -141,9 +142,9 @@ class Subloan_lib{
 						'platform_fee'		=> $subloan['platform_fee'],
 						'interest_rate'		=> $interest_rate,
 						'contract_id'		=> $contract_id,
-						'status'			=> '1',
+						'status'			=> '0',
 						'sub_status'		=> '8',
-						'remark'			=> $target->target_no.',轉換產品',
+						'remark'			=> $subloan_remark,
 						'expire_time'		=> strtotime($subloan['settlement_date']),
 					);
 
@@ -393,5 +394,39 @@ class Subloan_lib{
 			return $code;
 		}
 	}
-	
+
+    public function subloan_history($current_target=false){
+	    $subloan_history_target[] = $current_target;
+        $old_target = $current_target;
+        $descri     = '此案件為產品轉換標的:
+';
+        while ($current_target) {
+            $subloan_target = $this->CI->subloan_model->order_by('created_at','desc')->get_by([
+                'new_target_id' => $old_target,
+                'status'        => 10
+            ]);
+            if($subloan_target){
+                $old_target = $subloan_target->target_id;
+                $subloan_history_target[] = $old_target;
+            }
+            else{break;}
+        }
+        $targets = $this->CI->target_model->get_many_by('id',$subloan_history_target);
+        if($targets){
+            $count = count($subloan_history_target);
+            foreach ($targets as $key => $value){
+                $targets_status = $value->target_no.' 逾期'.($count==1||$count==($key-1)&&$count!=1?$value->delay_days:get_range_days($value->loan_date,$value->handle_date)).'天';
+                if($key==0){
+                    $descri .= '首次申請：'.$targets_status;
+                }
+                else{
+                    $count = $key==1?'首':$key;
+                    $descri .= '
+'.$count.'次轉換成功：'.$targets_status;
+                }
+            }
+            return $descri;
+        }
+        return false;
+    }
 }

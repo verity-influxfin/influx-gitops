@@ -280,7 +280,8 @@ class Target_lib{
                     }
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-                    if($user_current_credit_amount >= 1000){
+                    $subloan_list = $this->config->item('subloan_list');
+                    if($user_current_credit_amount >= 1000 || preg_match('/'.$subloan_list.'/',$target->target_no)?true:false){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
@@ -847,7 +848,7 @@ class Target_lib{
 					$product_list 			= $this->CI->config->item('product_list');
 					$product_certification 	= $product_list[$product_id]['certifications'];
 					foreach($targets as $target_id => $value){
-						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0);
+						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,true);
 						$finish		 		= true;
 						foreach($certifications as $key => $certification){
                             $key==8?$diploma=$certification:null;
