@@ -222,9 +222,24 @@
 		}
 		return false;
 	}
+
+	function get_hidden_name($name){
+        $word_m = '';
+        $word   = $name;
+        $len    = mb_strlen($word);
+        $w_midle_len = $len>2?$len:0;
+        for ($i = 0, $c = $w_midle_len-2; $i < $c; $i++){
+            $word_m .= '○';
+        }
+        return mb_substr($word,0,1).$word_m.(mb_strlen($word)==2?'○':mb_substr($word,-1));
+    }
+
+    function get_hidden_id($id){
+        return substr($id,0,4).'○○○'.substr($id,-3);
+    }
 	
 	function get_age($date) {
-		return intval(date('Y', time() - strtotime($date))) - 1970;
+        return date_diff(date_create($date), date_create('today'))->y;
 	}
 
 	function get_range_days($sdate,$edate) {
