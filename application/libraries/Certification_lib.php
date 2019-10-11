@@ -15,7 +15,7 @@ class Certification_lib{
 		$this->certification = $this->CI->config->item('certifications');
     }
 
-	public function get_certification_info($user_id,$certification_id,$investor=0){
+	public function get_certification_info($user_id,$certification_id,$investor=0,$set_fail=false){
 		if($user_id && $certification_id){
 			$param = array(
 				'user_id'			=> $user_id,
@@ -25,7 +25,8 @@ class Certification_lib{
 			);
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
-			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[1,3,5,6])){
+			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])){
+			        $set_fail?$this->set_failed($certification->id, '認證已逾期。', true):'';
                     return false;
                 }
 				$certification->id 					= intval($certification->id);
@@ -535,6 +536,8 @@ class Certification_lib{
 
 				$this->CI->user_model->update_many($info->user_id,$user_info);
 				$this->CI->user_certification_model->update($info->id,array('status'=>1));
+
+				//失效其他認證
 				$this->CI->user_certification_model->update_by(array('user_id'=> $info->user_id,'certification_id'=>$info->certification_id,'status'=>0),array('status'=>2));
 				return true;
 			}
@@ -942,7 +945,7 @@ class Certification_lib{
 		return false;
 	}
 
-    public function get_status($user_id,$investor=0,$company=0){
+    public function get_status($user_id,$investor=0,$company=0,$set_fail=false){
 		if($user_id){
 			$certification = array();
 			if($company){
@@ -963,7 +966,7 @@ class Certification_lib{
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-				$user_certification = $this->get_certification_info($user_id,$key,$investor);
+				$user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
 				if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
@@ -1062,4 +1065,22 @@ class Certification_lib{
 		}
 		return $count;
 	}
+
+    public function expire_certification($user_id,$investor=0){
+        if($user_id) {
+            $certification = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
+                'user_id' => $user_id,
+                'investor' => $investor,
+                'status !=' => 2,
+            ]);
+            if($certification) {
+                foreach ($certification as $key => $value) {
+                    if ($value->expire_time <= time() && $investor == 0 && !in_array($value->certification_id, [IDCARD, DEBITCARD, EMERGENCY, EMAIL])) {
+                        $this->set_failed($value->id, '認證已逾期。', true);
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
