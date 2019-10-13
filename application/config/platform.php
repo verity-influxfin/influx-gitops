@@ -13,7 +13,8 @@ $config['admin_menu'] = [
 		'repayment'					      => '還款中',
 		'finished'					      => '已結案',
 		'prepayment'				      => '提前還款',
-        'waiting_approve_order_transfer'  => '消費貸債轉待批覆',
+		'order_target' 				      => '消費貸 - 案件列表',
+        'waiting_approve_order_transfer'  => '消費貸 - 債轉待批覆',
 	],
 	'Transfer' 						=> [
 		'parent_name'				=> '債權管理',

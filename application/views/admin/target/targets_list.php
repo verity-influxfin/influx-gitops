@@ -141,7 +141,7 @@
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
 											<td><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
                                             <td>
-											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
+											<?=isset($value->status)?($value->sub_status==5?'待廠商出貨 (分期)':$status_list[$value->status]):'' ?>
 											<? 	if($value->status==2 && !$value->bank_account_verify){
 													echo '<p style="color:red;">金融帳號未驗證</p>';
 												}

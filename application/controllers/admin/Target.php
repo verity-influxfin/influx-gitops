@@ -1134,6 +1134,24 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
+public function order_target(){
+        $page_data 	  = array('type'=>'list');
+        $list 		  = $this->target_model->get_many_by(['status'=>[20,21,22,23,24]]);
+
+        $page_data['instalment_list']	= $this->config->item('instalment');
+        $page_data['repayment_type']	= $this->config->item('repayment_type');
+        $page_data['list'] 				= $list;
+        $page_data['product_list']		= $this->config->item('product_list');
+        $page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['name_list'] 		= $this->admin_model->get_name_list();
+
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/target/order_target',$page_data);
+        $this->load->view('admin/_footer');
+    }
+
     function approve_order_transfer(){
         $get 	= $this->input->get(NULL, TRUE);
         $id 	= isset($get['id'])?intval($get['id']):0;
