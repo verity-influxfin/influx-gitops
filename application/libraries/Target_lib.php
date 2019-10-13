@@ -280,7 +280,7 @@ class Target_lib{
                     }
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-                    $subloan_list = $this->config->item('subloan_list');
+                    $subloan_list = $this->CI->config->item('subloan_list');
                     if($user_current_credit_amount >= 1000 || preg_match('/'.$subloan_list.'/',$target->target_no)?true:false){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
@@ -335,7 +335,6 @@ class Target_lib{
                                         if($bank_account){
                                             $this->CI->user_bankaccount_model->update($bank_account->id,['verify'=>2]);
                                         }
-                                        $sub_status!=9?$this->CI->notification_lib->approve_target($user_id,'1',$loan_amount):null;
                                     }
                                 }
                                 else{
@@ -848,7 +847,7 @@ class Target_lib{
 					$product_list 			= $this->CI->config->item('product_list');
 					$product_certification 	= $product_list[$product_id]['certifications'];
 					foreach($targets as $target_id => $value){
-						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,true);
+						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,0,true);
 						$finish		 		= true;
 						foreach($certifications as $key => $certification){
                             $key==8?$diploma=$certification:null;
