@@ -26,18 +26,19 @@ class Certification_lib{
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
 			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])){
-			        $set_fail?$this->set_failed($certification->id, '認證已逾期。', true):'';
                     return false;
                 }
-				$certification->id 					= intval($certification->id);
-				$certification->user_id 			= intval($certification->user_id);
-				$certification->investor 			= intval($certification->investor);
-				$certification->status 				= intval($certification->status);
-				$certification->certification_id 	= intval($certification->certification_id);
-				$certification->created_at 			= intval($certification->created_at);
-				$certification->updated_at 			= intval($certification->updated_at);
-				$certification->content = json_decode($certification->content,true);
-				return $certification;
+			    else{
+                    $certification->id 					= intval($certification->id);
+                    $certification->user_id 			= intval($certification->user_id);
+                    $certification->investor 			= intval($certification->investor);
+                    $certification->status 				= intval($certification->status);
+                    $certification->certification_id 	= intval($certification->certification_id);
+                    $certification->created_at 			= intval($certification->created_at);
+                    $certification->updated_at 			= intval($certification->updated_at);
+                    $certification->content = json_decode($certification->content,true);
+                    return $certification;
+                }
 			}
 		}
 		return false;
