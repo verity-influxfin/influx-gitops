@@ -142,8 +142,7 @@ class Notification_lib{
 			$content = "親愛的用戶，您好！
 <br />非常抱歉，您的借款審批未能通過，
 <br />普匯將會對您的申請信息進行嚴格保密，
-<br />非常感謝您的申請及對我們的信任。
-退件原因：".$remark;
+<br />非常感謝您的申請及對我們的信任。".($remark?"<br />退件原因：".$remark:'');
 
 		$param = array(
 			"user_id"	=> $user_id,
@@ -245,8 +244,7 @@ class Notification_lib{
 	public function auction_closed($user_id,$investor,$target_no,$amount=0){
 		if($investor==1){
 			$title = "【標的籌滿】 您申請的標的 $target_no 已滿標";
-			$content = "親愛的用戶，
-<br />您好！
+			$content = "親愛的用戶，您好！
 <br />您申請的標的 $target_no ，已成功籌滿，
 <br />您的得標金額為 $amount 元，感謝您的關注與信任。";
 		}else{
@@ -269,15 +267,13 @@ class Notification_lib{
 	public function lending_success($user_id,$investor,$target_no,$amount=0,$bankaccount=""){
 		if($investor==1){
 			$title 		= "【借款放款成功】 您申請的標的 $target_no 已放款成功";
-			$content 	= "親愛的用戶，
-<br />您好！
+			$content 	= "親愛的用戶，您好！
 <br />您申請的標的 $target_no ，核可金額 $amount 元，
 <br />已成功放款。";
 		}else{
 			$bankaccount = substr($bankaccount, -4, 4);
 			$title 		= "【借款放款成功】 您的借款 $target_no 已發放成功";
-			$content 	= "親愛的用戶，
-<br />您好！
+			$content 	= "親愛的用戶，您好！
 <br />您的借款 $target_no ，
 <br />借款金額 $amount 元已發放至您的綁定金融卡賬戶尾號 $bankaccount 內，
 <br />請您妥善安排用款。
@@ -299,11 +295,10 @@ class Notification_lib{
 	
 	public function subloan_success($user_id,$target_no,$amount=0){
 		$title 		= "【轉換產品成功】 您的借款 $target_no 已發放成功";
-		$content 	= "親愛的用戶，
-<br />您好！
+		$content 	= "親愛的用戶，您好！
 <br />您的借款 $target_no ，
 <br />借款金額 $amount 元已經完成產品轉換，已為你清償原借款。
-<br />相關繳款訊息請登錄手機ATM查詢。
+<br />相關繳款訊息請登錄普匯APP查詢。
 <br />普匯金融科技提醒你，準時繳款可以避免違約罰款產生。
 <br />
 <br />敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號。";
@@ -323,14 +318,12 @@ class Notification_lib{
 	public function recharge_success($user_id,$investor){
 		if($investor==1){
 			$title 		= "【資金匯入通知】";
-			$content 	= "親愛的用戶，
-<br />您好！
+			$content 	= "親愛的用戶，您好！
 <br />目前在您綁定的虛擬帳戶中，偵測到資金投入，
 <br />請登入服務後，在我的→虛擬帳戶餘額中查詢。";
 		}else{
 			$title 		= "【款項確認通知】";
-			$content 	= "親愛的用戶，
-<br />您好！
+			$content 	= "親愛的用戶，您好！
 <br />普匯專屬您的還款帳號已收到款項入帳，
 <br />平台將代為轉付給出借人，如有任何問題請您與平台聯繫。";
 		}
@@ -349,24 +342,22 @@ class Notification_lib{
 		if($investor==1){
 			if($buy==1){
 				$title 		= "【債權受讓成功】";
-				$content 	= "親愛的用戶，
-<br />您好！
+				$content 	= "親愛的用戶，您好！
 <br />親愛的用戶，您於 $date 受讓標的 $target_no ，
 <br />金額 $amount 元，已成功受讓，
 <br />還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
 			}else{
 				$title 		= "【債權出讓成功】";
-				$content 	= "親愛的用戶，
-<br />您好！
+				$content 	= "親愛的用戶，您好！
 <br />親愛的用戶，您於 $date 出讓標的 $target_no ，
 <br />金額 $amount 元，已成功出讓，
 <br />還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
 			}
 		}else{
 			$title 		= "【債權轉讓通知】";
-			$content 	= "親愛的用戶，
-<br />您好！
-<br />您於本平台的借款(使用者編號 $user_id ，借款案號 $target_no )，
+			$content 	= "親愛的用戶，您好！
+<br />您於本平台的借款，
+<br />(使用者編號 $user_id ，借款案號 $target_no )，
 <br />債權已轉讓與新債權人(使用者編號 $new_user_id )，
 <br />您的還款方式仍按原有約定辦理，僅此通知。";
 		}
@@ -553,12 +544,13 @@ class Notification_lib{
         return $rs;
     }
 
-    public function notice_orderapply($user_id,$item='',$instalment=0){
+    public function notice_order_apply($user_id,$item='',$instalment=0,$delivery=0){
 
+        $delivery==0?'線下':'線上';
         $title 		= "【接收到新的訂單】";
         $content 	= "親愛的用戶，您好！
-<br />您在普匯合作夥伴APP中已經接收到一筆新的訂單「".$item."」，
-<br />分期付款 $instalment 期、線上寄送，
+<br />您在普匯合作夥伴APP中已經接收到一筆新的訂單，
+<br />「".$item."分期付款 $instalment 期、".$delivery."交易，
 <br />請儘速至APP中完成報價。";
         $param = array(
             "user_id"	=> $user_id,
@@ -576,8 +568,8 @@ class Notification_lib{
 
         $title 		= "【商家報價成功】";
         $content 	= "親愛的用戶，您好！
-<br />您在普匯金融科技申請的手機貸廠商已經報價「".$item."」，
-<br />分期付款 $instalment 期，月付金 $amount 元，
+<br />您在普匯金融科技申請的手機貸廠商已經報價，
+<br />「".$item."」分期付款 $instalment 期，月付金 $amount 元，
 <br />請儘快至普匯APP進行身分認證，完成分期申請。";
         $param = array(
             "user_id"	=> $user_id,
