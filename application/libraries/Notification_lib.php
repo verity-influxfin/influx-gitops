@@ -471,7 +471,7 @@ class Notification_lib{
 			$title 		= "【借款還款成功】 您的還款已成功，還款金額 $amount 元";
 			$content 	= "親愛的用戶，
 您好！
-您的借款 $target_no ，還款金額 $amount 元已全額還清，感謝您對手機ATM的信任，在您有資金需求的時候，我們總會及時出現。";
+您的借款 $target_no ，還款金額 $amount 元已全額還清，感謝您對普匯inFlux的信任，在您有資金需求的時候，我們總會及時出現。";
 		}
 		
 		$param = array(

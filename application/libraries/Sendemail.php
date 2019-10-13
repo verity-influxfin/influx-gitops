@@ -32,7 +32,7 @@ class Sendemail
 			$code	 = md5($email.time());
 			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
 			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link),TRUE);
-			$subject = "手機ATM - 學校電子郵件認證";
+			$subject = "普匯inFlux - 學校電子郵件認證";
 			$param = array(
 				"certification_id"	=> $certification_id,
 				"type" 			=> $type,
@@ -58,7 +58,7 @@ class Sendemail
 			}
 			
 			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link),TRUE);
-			$subject = '手機ATM - 電子郵件認證';
+			$subject = '普匯inFlux - 電子郵件認證';
 			$param = array(
 				'certification_id'	=> $certification_id,
 				'type' 				=> $type,
