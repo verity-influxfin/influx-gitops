@@ -546,7 +546,7 @@ class Notification_lib{
 
     public function notice_order_apply($user_id,$item='',$instalment=0,$delivery=0){
 
-        $delivery==0?'線下':'線上';
+        $delivery = $delivery==0?'線下':'線上';
         $title 		= "【接收到新的訂單】";
         $content 	= "親愛的用戶，您好！
 <br />您在普匯合作夥伴APP中已經接收到一筆新的訂單，
