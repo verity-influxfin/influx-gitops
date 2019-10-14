@@ -1452,7 +1452,7 @@ class Certification extends REST_Controller {
                 }
                 $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
                 if($user_certification->status!=1){
-                    $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
+                    $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
                 }
                 $this->load->library('Notification_lib');
                 $this->notification_lib->notice_investigation($user_id, implode(' / ', $target));

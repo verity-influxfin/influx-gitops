@@ -4274,7 +4274,7 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "503",
+                            "field": "212",
                             "description": "<p>Email未認證</p>"
                         },
                         {
