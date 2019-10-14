@@ -601,9 +601,10 @@ class Notification_lib{
 	}
 
 	public function notice_investigation($user_id,$target_no){
+        $descri     = $target_no!=''?'[ 消費貸 ]，案號[ ".$target_no." ]':'';
         $title 		= "您的聯合徵信申請已送出";
         $content 	= "親愛的用戶，
-您好！您申請的普匯inFlux[ 消費貸 ]，案號[ ".$target_no." ]聯合徵信認證信件已送出，
+您好！您申請的普匯inFlux".$descri."聯合徵信認證信件已送出，
 請至綁定信箱收信，並依內容回覆相關文件。";
 		$param = array(
 			"user_id"	=> $user_id,
@@ -615,7 +616,7 @@ class Notification_lib{
 
 		$etitle 		= "【認證】聯合徵信申請";
 		$econtent 	= "親愛的用戶，
-<br />您好！感謝您申請普匯inFlux[ 消費貸 ]，案號[ ".$target_no." ]聯合徵信認證，
+<br />您好！感謝您申請普匯inFlux".$descri."聯合徵信認證，
 <br />請將您申請完之徵信報告；以附件形式回覆此封mail，
 <br />系統收到您的來信後會直接更新驗證內容，
 <br />請進入普匯inFlux確認您的認證狀態。";
