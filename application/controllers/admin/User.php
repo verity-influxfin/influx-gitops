@@ -35,15 +35,25 @@ class User extends MY_Admin_Controller {
 			}
 		}
 
-
 		if(!empty($where)){
 			$list 	= $this->user_model->get_many_by($where);
 		}
-		$page_data['list'] = $list;
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/users_list',$page_data);
-		$this->load->view('admin/_footer');
+
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+			$this->load->library('output/user/user_output', ["data" => $list]);
+
+			if (!$list) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+			$this->json_output->setStatusCode(200)->setResponse(["users" => $this->user_output->toMany()])->send();
+		} else {
+			$page_data['list'] = $list;
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/users_list',$page_data);
+			$this->load->view('admin/_footer');
+		}
 	}
 
 	public function edit(){
