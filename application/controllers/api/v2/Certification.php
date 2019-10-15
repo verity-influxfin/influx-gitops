@@ -1473,6 +1473,7 @@ class Certification extends REST_Controller {
                     'status'     => 1
                 ]);
                 foreach($credit_list as $ckey => $cvalue){
+                    //信用低落
                     if(!in_array($cvalue->level,[11,12,13])){
                         $this->credit_model->update_by(
                             ['id'    => $cvalue->id],

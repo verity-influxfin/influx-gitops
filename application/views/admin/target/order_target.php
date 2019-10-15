@@ -14,7 +14,7 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover" width="100%" >
+                        <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables">
                             <thead>
                             <tr>
                                 <th>案號</th>
