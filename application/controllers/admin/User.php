@@ -14,6 +14,7 @@ class User extends MY_Admin_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('loan/credit_model');
 		$this->load->model('log/log_userlogin_model');
+		$this->load->model('log/log_blockedlist_model');
 		$this->certification = $this->config->item('certifications');
  	}
 
@@ -212,13 +213,14 @@ class User extends MY_Admin_Controller {
     }
 
 	public function block_users() {
-		$input = $this->input->get(NULL, TRUE);
+		$input = $this->input->post(NULL, TRUE);
 		if (!is_array($input)) {
 			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
 		}
 
 		$status = isset($input['status']) ? $input['status'] : '';
 		$userId = isset($input['id']) ? intval($input['id']) : 0;
+		$reason = isset($input['reason']) ? strval($input['reason']) : '';
 		if (!$status || $userId <= 0) {
 			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
 		}
@@ -229,10 +231,20 @@ class User extends MY_Admin_Controller {
 			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
 		}
 
+		if ($this->blockstatus->isBlocked()) {
+			$this->log_blockedlist_model->insert([
+				'admin_id' => $this->login_info->id,
+				'user_id' => $userId,
+				'status' => $this->blockstatus->getValueInDB(),
+				'reason' => $reason,
+			]);
+		}
+
 		$success = $this->user_model->update(
 			$userId,
 			["block_status" => $this->blockstatus->getValueInDB()]
 		);
+
 		$this->load->model('log/log_userlogin_model');
 		$info = $this->user_model->get($userId);
 		$this->log_userlogin_model->insert([
@@ -242,10 +254,22 @@ class User extends MY_Admin_Controller {
 			'status'	=> 1
 		]);
 
-		if ($success === true) {
-			alert('更新成功',admin_url('user/blocked_users'));
+		$user = $this->user_model->get($userId);
+
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+			$this->load->library('output/user/user_output', ["data" => $user]);
+
+			if ($success !== true) {
+				$this->json_output->setStatusCode(500)->send();
+			}
+			$this->json_output->setStatusCode(200)->setResponse(["user" => $this->user_output->toOne()])->send();
 		} else {
-			alert('更新失敗，請洽工程師',admin_url('user/blocked_users'));
+			if ($success === true) {
+				alert('更新成功',admin_url('user/blocked_users'));
+			} else {
+				alert('更新失敗，請洽工程師',admin_url('user/blocked_users'));
+			}
 		}
 	}
 }

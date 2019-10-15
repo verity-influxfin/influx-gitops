@@ -44,6 +44,11 @@ class BlockStatus
         return $this->status;
     }
 
+    public function isBlocked()
+    {
+        return $this->status != self::UNBLOCKED;
+    }
+
     private function generateDomainToDB()
     {
         $this->domainToDBMapping = [
