@@ -201,11 +201,14 @@ class User extends MY_Admin_Controller {
         $get 		= $this->input->get(NULL, TRUE);
 
         $page_data = [];
-        $block_user = $this->user_model->get_many_by(array("block_status" => [1, 2, 3]));
+		$block_user = $this->log_blockedlist_model->getBlockedLogs();
+		$this->load->library('output/log/block_output', ["data" => $block_user]);
+
         if ($block_user && !empty($block_user)) {
-            $page_data['list'] = $block_user;
+            $page_data['list'] = $this->block_output->toMany();
             $page_data['block_status_list'] = $this->user_model->block_status_list;
         }
+
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
         $this->load->view('admin/users_block_list', $page_data);
@@ -231,7 +234,17 @@ class User extends MY_Admin_Controller {
 			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
 		}
 
-		if ($this->blockstatus->isBlocked()) {
+		$block = $this->log_blockedlist_model->get_by(['user_id' => $userId]);
+		if ($block) {
+			$this->log_blockedlist_model->update_by(
+				['user_id' => $userId],
+				[
+					"admin_id" => $this->login_info->id,
+					"status" => $this->blockstatus->getValueInDB(),
+					"reason" => $reason,
+				]
+			);
+		} else {
 			$this->log_blockedlist_model->insert([
 				'admin_id' => $this->login_info->id,
 				'user_id' => $userId,
@@ -254,16 +267,16 @@ class User extends MY_Admin_Controller {
 			'status'	=> 1
 		]);
 
-		$user = $this->user_model->get($userId);
+		$blockRecord = $this->log_blockedlist_model->findByUserId($userId);
 
 		if ($this->input->is_ajax_request()) {
 			$this->load->library('output/json_output');
-			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->library('output/log/block_output', ["data" => $blockRecord]);
 
 			if ($success !== true) {
 				$this->json_output->setStatusCode(500)->send();
 			}
-			$this->json_output->setStatusCode(200)->setResponse(["user" => $this->user_output->toOne()])->send();
+			$this->json_output->setStatusCode(200)->setResponse(["block" => $this->block_output->toOne()])->send();
 		} else {
 			if ($success === true) {
 				alert('更新成功',admin_url('user/blocked_users'));

@@ -12,22 +12,59 @@
                     var $searchLoadingImage = $('#searchLoadingImage').hide();
                     var $blockLoadingImage = $('#blockLoadingImage').hide();
 
-                    function appendUserDetail(tableId, i, user) {
-                        var block_status_text = typeof block_status_list[user.block_status] === 'undefined' ? "未定義" : block_status_list[user.block_status];
-                        var borrowing_account_status_text = user.status ? "正常":"未申請";
-                        var lending_account_status_text = user.investor_status ? "正常":"未申請";
-                        var should_block_disabled = user.block_status != 0 ? "disabled" : "";
-                        var button = tableId == "#users"
-                            ? $('<button class="btn btn-default blockBtn" ' + should_block_disabled + ' />').text("封鎖")
-                            : $('<button class="btn btn-default unblockBtn" />').text("解除鎖定")
+                    function mapInputJson(input) {
+                        if (typeof input['user'] === 'undefined') {
+                            user = {
+                                'id' : input.id,
+                                'name' : input.name,
+                                'phone' : input.phone,
+                                'sex' : input.sex,
+                                'email' : input.email,
+                                'status' : input.status,
+                                'investor_status' : input.investor_status
+                            }
+                            admin = {}
+                        } else {
+                            user = input.user
+                            admin = input.admin
+                        }
+                        input.user = user
+                        input.admin = admin
+                        return input
+                    }
+
+                    function appendUserDetail(tableId, i, input) {
+                        input = mapInputJson(input);
+
+                        var block_status_text = typeof block_status_list[input.block_status] === 'undefined' ? "未定義" : block_status_list[input.block_status];
+                        var borrowing_account_status_text = input.user.status ? "正常":"未申請";
+                        var lending_account_status_text = input.user.investor_status ? "正常":"未申請";
+                        var should_block_disabled = input.block_status != 0 ? "disabled" : "";
+
+                        if (tableId == "#users") {
+                            if (typeof input["user"] === 'undefined') {
+                                var thirdCol = input.sex;
+                                var forthCol = input.email;
+                            } else {
+                                var thirdCol = input.user.sex;
+                                var forthCol = input.user.email;
+                            }
+                            var button = $('<button class="btn btn-default blockBtn" ' + should_block_disabled + ' />').text("封鎖");
+                        } else {
+                            var thirdCol = input.admin.name;
+                            var forthCol = input.reason;
+                            var button = $('<button class="btn btn-default unblockBtn" />').text("解除鎖定");
+                        }
+
+                        var userLink = '<a href="/admin/user/edit?id=' + input.user.id + '">' + input.user.id + '</a>'
 
                         var trTag = i % 2 == 0 ? '<tr class="even list">' : '<tr class="odd list">';
                         $(trTag).append(
-                            $('<td>').text(user.id),
-                            $('<td>').text(user.name),
-                            $('<td>').text(user.phone),
-                            $('<td>').text(user.sex),
-                            $('<td>').text(user.email),
+                            $('<td>').append(userLink),
+                            $('<td>').text(input.user.name),
+                            $('<td>').text(input.user.phone),
+                            $('<td>').text(thirdCol),
+                            $('<td>').text(forthCol),
                             $('<td>').text(borrowing_account_status_text),
                             $('<td>').text(lending_account_status_text),
                             $('<td>').text(block_status_text),
@@ -100,7 +137,7 @@
                         showBlockForm();
 
                         var row = $(this).closest("tr").find('td');
-                        var user_id = row.eq(0).html();
+                        var user_id = row.eq(0).find('a').html();
                         var user_name = row.eq(1).html();
 
                         clickedBlockButton = $(this).closest("tr").find('button');
@@ -115,9 +152,15 @@
                     });
 
                     $('#blockedUsers').on('click', '.unblockBtn', function() {
+                        var isConfirmed = confirm("確認是否要解除封鎖？");
+                        if (!isConfirmed){
+                            return false;
+                        }
+
                         var rowTd = $(this).closest("tr").find('td');
                         var rowButton = $(this).closest("tr").find("button");
-                        var user_id = rowTd.eq(0).html();
+                        var user_id = rowTd.eq(0).find('a').html();
+
                         var data = {
                             'id' : user_id,
                             'status' : 'unblocked'
@@ -149,7 +192,16 @@
                         e.preventDefault();
 
                         var form = $(this);
+                        var name = form.find('input[name="name"]').val();
+
+                        var isConfirmed = confirm("確認是否要封鎖用戶「" + name + "」？");
+                        if (!isConfirmed){
+                            return false;
+                        }
+
                         var url = form.attr('action');
+                        var userId = form.find('input[name="id"]').val();
+                        form.find('input[name="id"]').val(userId)
 
                         $.ajax({
                            type: "POST",
@@ -163,18 +215,24 @@
                                $blockLoadingImage.hide();
                            },
                            success: function(response) {
-                               clickedBlockButton.attr("disabled", true);
-                               if (response.status.code != 200) {
+                               if (
+                                   typeof response.status === 'undefined'
+                                   || response.status.code != 200)
+                               {
+                                   $('#blockForm').show();
+                                   $blockLoadingImage.hide();
                                    alert('封鎖失敗，請再試一次');
                                    return;
                                }
+                               clickedBlockButton.attr("disabled", true);
                                alert('已經成功封鎖該用戶。');
 
-                               appendUserDetail('#blockedUsers', 10, response.response.user);
+                               appendUserDetail('#blockedUsers', 10, response.response.block);
                                changeBlockStatus($('#blockForm').find('input[name="id"]').val(), "blocked");
                            },
                            error: function() {
                                $('#blockForm').show();
+                               $blockLoadingImage.hide();
                            }
                          });
                     });
@@ -246,12 +304,7 @@
                         <input type="text" style="border: 0;" name="id" readonly><br>
                         會員名稱:
                         <input type="text" style="border: 0;" name="name" readonly><br>
-                        封鎖狀態:
-                        <select name="status">
-                          <option value="blocked">封鎖</option>
-                          <option value="temp_blocked">暫時封鎖</option>
-                          <option value="system_blocked">系統封鎖</option>
-                        </select><br>
+                        <input type="hidden" style="border: 0;" name="status" value="blocked">
                         封鎖原因:
                         <input type="text" name="reason" value=""><br><br>
                         <input class="btn btn-default" type="submit" value="Submit">
@@ -283,8 +336,8 @@
                                             <th width="10%">會員 ID</th>
                                             <th width="10%">姓名</th>
                                             <th width="15%">電話</th>
-                                            <th width="10%">性別</th>
-                                            <th width="20%">Email</th>
+                                            <th width="10%">封鎖人</th>
+                                            <th width="20%">封鎖原因</th>
                                             <th>借款端帳號</th>
                                             <th>出借帳號</th>
                                             <th>封鎖狀態</th>
@@ -292,26 +345,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-									<?php
-										if(isset($list) && !empty($list)){
-											$count = 0;
-											foreach($list as $key => $value){
-												$count++;
-									?>
+                                    <?php
+                                        if(isset($list) && !empty($list)){
+                                            $count = 0;
+                                            foreach($list as $key => $value){
+                                                $count++;
+                                    ?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->id)?$value->id:"" ?>">
-                                            <td><?=isset($value->id)?$value->id:"" ?></td>
-                                            <td><?=isset($value->name)?$value->name:"" ?></td>
-                                            <td><?=isset($value->phone)?$value->phone:"" ?></td>
-                                            <td><?=isset($value->sex)?$value->sex:"" ?></td>
-                                            <td><?=isset($value->email)?$value->email:"" ?></td>
-											<td><?=isset($value->status)&&$value->status?"正常":"未申請" ?></td>
-											<td><?=isset($value->investor_status)&&$value->investor_status?"正常":"未申請" ?></td>
-											<td><?=isset($value->block_status)&&$value->block_status?$block_status_list[$value->block_status]:null ?></td>
-											<td><button class="btn btn-default unblockBtn">解除鎖定</button></td>
+                                            <td><a href="/admin/user/edit?id=<?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?>"><?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?></a></td>
+                                            <td><?=isset($value["user"]["name"])?$value["user"]["name"]:"" ?></td>
+                                            <td><?=isset($value["user"]["phone"])?$value["user"]["phone"]:"" ?></td>
+                                            <td><?=isset($value["admin"]["name"])?$value["admin"]["name"]:"" ?></td>
+                                            <td><?=isset($value["reason"])?$value["reason"]:"" ?></td>
+                                            <td><?=isset($value["user"]["status"])&&$value["user"]["status"]?"正常":"未申請" ?></td>
+                                            <td><?=isset($value["user"]["investor_status"])&&$value["user"]["investor_status"]?"正常":"未申請" ?></td>
+                                            <td><?=isset($value["block_status"])&&$value["block_status"]?$block_status_list[$value["block_status"]]:null ?></td>
+                                            <td><button class="btn btn-default unblockBtn">解除鎖定</button></td>
                                         </tr>
-									<?php
-										}}
-									?>
+                                    <?php
+                                        }}
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
