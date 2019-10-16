@@ -236,7 +236,7 @@ class User extends MY_Admin_Controller {
 		}
 
 		try {
-			$this->load->library('block/mapping/blockstatus', ["status" => $status]);
+			$this->load->library('mapping/block/blockstatus', ["status" => $status]);
 		} catch (OutOfBoundsException $e) {
 			$this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
