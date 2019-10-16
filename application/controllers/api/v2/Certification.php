@@ -11,6 +11,7 @@ class Certification extends REST_Controller {
         parent::__construct();
 		$this->load->model('user/user_certification_model');
 		$this->load->model('log/log_image_model');
+        $this->load->library('Notification_lib');
 		$this->load->library('Certification_lib');
         $method 				= $this->router->fetch_method();
 		$this->certification 	= $this->config->item('certifications');
@@ -1420,7 +1421,8 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 			
 			$content['return_type'] = isset($input['return_type']) && intval($input['return_type'])?$input['return_type']:0;
-			
+
+			$send_mail = false;
 			if($content['return_type']==0){
                 //上傳檔案欄位
                 $file_fields 	= ['postal_image'];
@@ -1450,12 +1452,8 @@ class Certification extends REST_Controller {
                 foreach ($targets as $value){
                     $target[] = $value->target_no;
                 }
-                $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
-                if($user_certification->status!=1){
-                    $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-                }
-                $this->load->library('Notification_lib');
-                $this->notification_lib->notice_investigation($user_id, implode(' / ', $target));
+
+                $send_mail = true;
             }
 
 
@@ -1491,6 +1489,10 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+			    if($send_mail){
+                    $this->mail_check($user_id,$investor);
+                    $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
+                }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -1582,13 +1584,14 @@ class Certification extends REST_Controller {
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-			$content	= array();
+			$content	= [];
+			$file_fields= [];
 
 			//是否驗證過
 			$this->was_verify($certification_id);
 
 			//必填欄位
-			$fields 	= ['tax_id','industry','salary','labor_image','business_image','passbook_image','auxiliary_image'];//,'company'
+			$fields 	= ['tax_id','industry','salary'];//,'company'
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1596,51 +1599,48 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+            $content['company'] 	  = isset($input['company'])?$input['company']:"";
 
-            $content['company'] 	= isset($input['company'])?$input['company']:"";
-			
-			$employee_range 		= $this->config->item('employee_range');
-			$position_name 			= $this->config->item('position_name');
-			$seniority_range 		= $this->config->item('seniority_range');
-			$industry_name 			= $this->config->item('industry_name');
-			$job_type_name 			= $this->config->item('job_type_name');
-			$content['employee'] 	= array_key_exists(intval($input['employee']),$employee_range)?intval($input['employee']):0;
-			$content['position'] 	= array_key_exists(intval($input['position']),$position_name)?intval($input['position']):0;
-			$content['type'] 		= array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
-			$content['seniority'] 	= array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
-			$content['job_seniority'] 	= array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+            $employee_range 		  = $this->config->item('employee_range');
+			$position_name 			  = $this->config->item('position_name');
+			$seniority_range 		  = $this->config->item('seniority_range');
+			$industry_name 			  = $this->config->item('industry_name');
+			$job_type_name 			  = $this->config->item('job_type_name');
+			$content['employee'] 	  = array_key_exists(intval($input['employee']),$employee_range)?intval($input['employee']):0;
+			$content['position'] 	  = array_key_exists(intval($input['position']),$position_name)?intval($input['position']):0;
+			$content['type'] 		  = array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
+			$content['seniority'] 	  = array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
+			$content['job_seniority'] = array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
 			if(!array_key_exists($input['industry'],$industry_name)){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 
             isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
 
-			$rs = $this->log_image_model->get_by([
-				'id'		=> intval($input['business_image']),
-				'user_id'	=> $user_id,
-			]);
-			if($rs){
-				$content['business_image'] = $rs->url;
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}
+            $send_mail = false;
+            $file_fields = ['business_image','license_image','auxiliary_image','income_prove_image'];
+            if(isset($input['labor_type'])){
+                if($input['labor_type']==0){
+                    $file_fields[] = 'labor_image';
+                }
+                elseif($input['labor_type']==1){
+                    $send_mail =true;
+                }
+            }
+            if(isset($input['passbook_image_type'])){
+                if($input['passbook_image_type']==0){
+                    array_push($file_fields, 'passbook_cover_image','passbook_image');
+                }
+                elseif($input['passbook_image_type']==1){
+                    $file_fields[] = 'passbook_image';
+                }
+            }
 
-			if(isset($input['license_image'])){
-				$rs = $this->log_image_model->get_by([
-					'id'		=> intval($input['license_image']),
-					'user_id'	=> $user_id,
-				]);
-				if($rs){
-					$content['license_image'] = $rs->url;
-				}
-			}
-			
 			//多個檔案欄位
-			$file_fields 	= ['labor_image','passbook_image','auxiliary_image'];
 			foreach ($file_fields as $field) {
 				$image_ids = explode(',',$input[$field]);
-				if(count($image_ids)>3){
-					$image_ids = array_slice($image_ids,0,3);
+				if(count($image_ids)>15){
+					$image_ids = array_slice($image_ids,0,15);
 				}
 				$list = $this->log_image_model->get_many_by([
 					'id'		=> $image_ids,
@@ -1665,6 +1665,10 @@ class Certification extends REST_Controller {
 			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+			    if($send_mail){
+                    $this->mail_check($user_id,$investor);
+                    $this->notification_lib->notice_cer_job($user_id);
+                }
 				$this->response(['result' => 'SUCCESS']);
 			}else{
 				$this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
@@ -1679,4 +1683,11 @@ class Certification extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 		}
 	}
+
+	private function mail_check($user_id,$investor){
+        $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
+        if($user_certification->status!=1){
+            $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+        }
+    }
 }

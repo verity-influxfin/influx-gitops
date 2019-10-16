@@ -853,8 +853,6 @@ class Target_lib{
                             $key==8?$diploma=$certification:null;
 							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
                                 if($certification['id'] == 9){
-                                    //if($get_amount < 31083 && $product_list[$product_id]['id'] == 4 && $certification['id'] == 9) {
-                                    //}
                                     $finish = $this->CI->certification_lib->option_investigation($product_id, $certification, $diploma);
                                 }
                                 else{
@@ -944,6 +942,5 @@ class Target_lib{
 		}
 		return false;
 	}
-
 
 }
