@@ -4505,7 +4505,7 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "number",
+                            "type": "String",
                             "optional": true,
                             "field": "labor_type",
                             "description": "<p>0：紙本，1：自然人憑證(若為1送出系統要寄信) <br />勞保卡上傳類型</p>"
@@ -4519,7 +4519,7 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "number",
+                            "type": "String",
                             "optional": true,
                             "field": "passbook_image_type",
                             "description": "<p>0：紙本，1：網銀 <br />存款證明類型</p>"
