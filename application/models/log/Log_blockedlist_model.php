@@ -4,6 +4,7 @@ class Log_blockedlist_model extends MY_Model
 {
 	public $_table = 'blocked_list';
 	public $before_create = array( 'before_data_c' );
+	public $before_update = array( 'before_data_u' );
 
 	public function __construct()
 	{
@@ -15,6 +16,14 @@ class Log_blockedlist_model extends MY_Model
     {
         $data['created_at'] = time();
         $data['updated_at'] = time();
+        $data['created_ip'] = get_ip();
+        return $data;
+    }
+
+    protected function before_data_u($data)
+    {
+        $data['updated_at'] = time();
+        $data['updated_ip'] = get_ip();
         return $data;
     }
 
