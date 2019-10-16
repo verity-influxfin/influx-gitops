@@ -4491,38 +4491,66 @@ define({
                         },
                         {
                             "group": "Parameter",
-                            "type": "Number",
-                            "optional": false,
+                            "type": "String",
+                            "optional": true,
                             "field": "business_image",
-                            "description": "<p>名片/工作證明 ( 圖片ID )</p>"
+                            "description": "<p>名片/工作證明正反面 ( 圖片IDs 以逗號隔開，最多2個)</p>"
                         },
                         {
                             "group": "Parameter",
-                            "type": "Number",
+                            "type": "String",
                             "optional": true,
                             "field": "license_image",
-                            "description": "<p>專業證照 ( 圖片ID )</p>"
+                            "description": "<p>其它專業認證 ( 圖片IDs 以逗號隔開，最多3個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "number",
+                            "optional": true,
+                            "field": "labor_type",
+                            "description": "<p>0：紙本，1：自然人憑證(若為1送出系統要寄信) <br />勞保卡上傳類型</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "labor_image",
-                            "description": "<p>勞健保卡 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>勞保卡 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "number",
+                            "optional": true,
+                            "field": "passbook_image_type",
+                            "description": "<p>0：紙本，1：網銀 <br />存款證明類型</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
+                            "field": "passbook_cover_image",
+                            "description": "<p>存摺封面照 ( 圖片IDs 以逗號隔開，最多2個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "passbook_image",
-                            "description": "<p>存摺內頁照 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>存摺內頁照 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "auxiliary_image",
-                            "description": "<p>收入輔助證明 ( 圖片IDs 以逗號隔開，最多三個)</p>"
+                            "description": "<p>收入輔助證明 ( 圖片IDs 以逗號隔開，最多3個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "income_prove_image",
+                            "description": "<p>公司申請的薪資證明 ( 圖片IDs 以逗號隔開，最多3個)</p>"
                         }
                     ]
                 }
