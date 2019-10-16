@@ -43,7 +43,7 @@ class Json_Output
         if ($this->errorCode) {
             $response["error"] = [
                 "code" => intval($this->errorCode),
-                "message" => intval($this->errorMessage),
+                "message" => strval($this->errorMessage),
             ];
         }
         $response["response"] = $this->response;
