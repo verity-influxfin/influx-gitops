@@ -7,6 +7,7 @@
             </div>
 			<script type="text/javascript">
                 var block_status_list = <?php echo json_encode($block_status_list); ?>;
+                var ajaxRequestLock = false;
 
                 $(document).ready(function() {
                     var $searchLoadingImage = $('#searchLoadingImage').hide();
@@ -101,6 +102,10 @@
                     }
 
                     $("#searchBtn").click(function(){
+                        if (ajaxRequestLock) {
+                            return;
+                        }
+
                         hideBlockForm();
                         $("#searchBtn").attr("disabled", true);
                         var user_id = $('#user_id').val();
@@ -113,9 +118,11 @@
                             type: "GET",
                             url: "/admin/User?id=" + user_id + "&phone=" + phone + "&name=" + name,
                             beforeSend: function () {
+                                ajaxRequestLock = true;
                                 $('#searchLoadingImage').show();
                             },
                             complete: function () {
+                                ajaxRequestLock = false;
                                 $('#searchLoadingImage').hide();
                             },
                             success: function(response) {
@@ -134,6 +141,9 @@
                     var clickedBlockButton;
                     $('#blockFormDiv').hide();
                     $('#users').on('click', '.blockBtn', function() {
+                        if (ajaxRequestLock) {
+                            return;
+                        }
                         showBlockForm();
 
                         var row = $(this).closest("tr").find('td');
@@ -152,6 +162,10 @@
                     });
 
                     $('#blockedUsers').on('click', '.unblockBtn', function() {
+                        if (ajaxRequestLock) {
+                            return;
+                        }
+
                         var isConfirmed = confirm("確認是否要解除封鎖？");
                         if (!isConfirmed){
                             return false;
@@ -170,6 +184,12 @@
                            type: "POST",
                            url: 'block_users',
                            data: data, // serializes the form's elements.
+                           beforeSend: function () {
+                               ajaxRequestLock = true;
+                           },
+                           complete: function () {
+                               ajaxRequestLock = false;
+                           },
                            success: function(response) {
                                if (response.status.code != 200) {
                                    alert('解鎖失敗，請再試一次');
@@ -191,6 +211,10 @@
                     $("#blockForm").submit(function(e) {
                         e.preventDefault();
 
+                        if (ajaxRequestLock) {
+                            return;
+                        }
+
                         var form = $(this);
                         var name = form.find('input[name="name"]').val();
 
@@ -210,8 +234,10 @@
                            beforeSend: function () {
                                $blockLoadingImage.show();
                                $('#blockForm').hide();
+                               ajaxRequestLock = true;
                            },
                            complete: function () {
+                               ajaxRequestLock = false;
                                $blockLoadingImage.hide();
                            },
                            success: function(response) {
