@@ -57,7 +57,7 @@ class MY_Admin_Controller extends CI_Controller{
 						}
 					}
 					
-					if(in_array($method,$this->edit_method)){
+					if(in_array($method,$this->edit_method) || $method == "block_users"){
 						$this->log_admin_model->insert(array(
 							'admin_id' 		=> $this->login_info->id,
 							'url'	 		=> $this->uri->uri_string(),
