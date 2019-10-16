@@ -251,8 +251,10 @@
 													</td>
 													<td>
 														<?
-																$status      = ($value['expire_time'] >= time() ? 'success' : 'danger');
-																$expire_time = date("Y/m/d", $value['expire_time']);
+																$status        = ($value['expire_time'] <= time()&&!in_array($key,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])? 'danger' : 'success');
+																$expire_time   = date("Y/m/d", $value['expire_time']);
+																$expire_status = $value['expire_time'] <= time()&&!in_array($key,[IDCARD,DEBITCARD,EMERGENCY,EMAIL]) ? (' (' . $expire_time . ')') : '';
+
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
 																		case '3':
@@ -260,10 +262,10 @@
 																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . ($value['expire_time'] <= time() ? (' (' . $expire_time . ')') : '') . '';
+																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . ($value['expire_time'] <= time() ? (' (' . $expire_time . ')') : '') . '';
+																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -277,10 +279,10 @@
 																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . ($value['expire_time'] <= time() ? (' (' . $expire_time . ')') : '') . '';;
+																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . ($value['expire_time'] <= time() ? (' (' . $expire_time . ')') : '') . '';
+																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';

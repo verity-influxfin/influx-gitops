@@ -453,6 +453,7 @@ class Transaction_lib{
 							if($rs && is_array($rs)){
 								$target_update_param = [
 									'status'		=> 5,
+                                    'sub_status'    => 0,
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
 								];
@@ -468,7 +469,8 @@ class Transaction_lib{
 								foreach($rs as $key => $value){
 									$this->CI->passbook_lib->enter_account($value);
 								}
-								
+
+                                $this->reset_credit_expire_time($target);
 								return true;
 							}
 						}
@@ -588,6 +590,7 @@ class Transaction_lib{
                                         $this->CI->load->library('target_lib');
                                         $rs3 = $this->CI->target_lib->order_target_change($order->id,24,[
                                             'status'      => 5,
+                                            'sub_status'  => 0,
                                             'loan_date'   => $date,
                                             'loan_status' => 1,
                                         ],$order->company_user_id);
@@ -628,6 +631,7 @@ class Transaction_lib{
                                         $this->CI->load->library('contract_lib');
                                         $contract[] = $this->CI->contract_lib->build_contract('transfer',$company_account->user_id,'','',$data_arr,0,$total_amount);
                                         $this->CI->transfer_lib->apply_transfer($investment, 0,$contract,$data_arr,0,1);
+                                        $this->reset_credit_expire_time($target);
                                         return true;
                                     }
                                 }
@@ -659,9 +663,12 @@ class Transaction_lib{
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
 		if($transfer_id){
+            $this->CI->config->item('product_list');
             $this->CI->load->model('loan/transfer_model');
             $this->CI->load->model('loan/transfer_investment_model');
             $this->CI->load->model('transaction/order_model');
+            $this->CI->load->library('Estatement_lib');
+            $this->CI->load->library('Contract_lib');
             $this->CI->load->library('target_lib');
             $o_transfer = $this->CI->transfer_model->get($transfer_id);
             $amount     = $o_transfer->amount;
@@ -688,16 +695,21 @@ class Transaction_lib{
             $transfer_info = [];
             $target_ids    = [];
             $transfer_ids  = [];
+            $user_info     = [];
+            $contract      = false;
+            $products      = [];
             foreach($transfers as $tc => $transfer_check) {
                 $infos                  = [];
                 $target_ids[]           = $transfer_check->target_id;
                 $transfer_ids[]         = $transfer_check->id;
                 $infos['targets']       = $this->CI->target_model->get($transfer_check->target_id);
                 $infos['investment']    = $this->CI->investment_model->get($transfer_check->investment_id);
+                //$infos
                 if($infos['targets']->script_status != 0 && $infos['investment']->status != 3 ){
                     $unlock = false;
                 }
                 $transfer_info[] = $infos;
+                $products[$infos['targets']->product_id][] = $infos['targets']->id;
             }
             $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
             $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
@@ -740,6 +752,8 @@ class Transaction_lib{
 
                             $new_investment = $this->CI->investment_model->insert($investment_data);
                             if ($new_investment) {
+                                $platform_fee = 0;
+                                $transfer_fee = 0;
                                 $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
                                 $virtual_account==''?$virtual_account=$this->CI->virtual_account_model->get_by(['user_id' => $transfer_investments->user_id, 'investor' => 1]):null;
                                 if ($transfer_account && $virtual_account) {
@@ -896,14 +910,44 @@ class Transaction_lib{
                                             foreach ($rs as $key => $value) {
                                                 $this->CI->passbook_lib->enter_account($value);
                                             }
-                                            if($t==(count($transfers)-1)) {
-                                                $target_no==false?$target_no=$target->target_no:'';
-                                                $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
-                                                //if (!in_array($transfer_investments->user_id, [21194, 21197])) {
-                                                    $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);
-                                                //}
-                                            }
                                             $this->CI->notification_lib->transfer_success($target->user_id, 0, 0, $target->target_no, $transfer->amount, $transfer_investments->user_id, $date);
+                                            //!isset($user_info[$target->user_id])?($user_info[$target->user_id]=$this->CI->user_model->get($target->user_id)):'';
+                                            if($t==(count($transfers)-1)) {
+                                                $amount = $amount + $platform_fee + $transfer_fee;
+                                                $target_no==false?$target_no=$target->target_no:'';
+                                                //!isset($user_info[$investment->user_id])?($user_info[$investment->user_id]=$this->CI->user_model->get($investment->user_id)):'';
+                                                //!isset($user_info[$transfer_investments->user_id])?($user_info[$transfer_investments->user_id]=$this->CI->user_model->get($transfer_investments->user_id)):'';
+
+                                                ////crate contract
+                                                //$contract    = $this->CI->contract_lib->get_contract($transfer_investments->contract_id,$user_info,false);
+                                                //$create_date = date("Y-m-d",$contract['created_at']);
+                                                //$file_name   = $target_no."-".$create_date;
+                                                //$attach[$file_name] = $this->CI->parser->parse('email/contract_content', [
+                                                //    "title"   => $contract['title'] ,
+                                                //    "content" => nl2br($contract['content']),
+                                                //    "time" => nl2br("\n 中華民國 ".(date('Y',$contract['created_at'])-1911).' '.date('年 m 月 d 日',$contract['created_at'])),
+                                                //],TRUE);
+                                                //$attach[$file_name] = $this->CI->estatement_lib->upload_pdf(
+                                                //    $target->user_id,
+                                                //    $attach[$file_name],
+                                                //    $user_info[$investment->user_id]->id_number,
+                                                //    $file_name,
+                                                //    "temp_contract.pdf",
+                                                //    "investor"
+                                                //    ,true
+                                                //);
+
+                                                ////crate amortization
+                                                ////$alias = $product_list[$product_id]['alias'];
+                                                //foreach ($products  as $k => $v){
+                                                //    $this->transfer_amortization($v);
+                                                //}
+
+                                                //$this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
+                                                //$this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
+                                                $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
+                                                $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);
+                                            }
                                         }
                                     }
                                 }
@@ -1074,6 +1118,7 @@ class Transaction_lib{
 							if($rs && is_array($rs)){
 								$target_update_param = array(
 									'status'		=> 5,
+                                    'sub_status'    => 0,
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
 								);
@@ -1095,6 +1140,7 @@ class Transaction_lib{
 								$old_target = $this->CI->target_model->get($subloan->target_id);
 								$this->CI->load->library('charge_lib');
 								$this->CI->charge_lib->charge_normal_target($old_target);
+                                $this->reset_credit_expire_time($target);
 								return true;
 							}
 						}
@@ -1104,4 +1150,68 @@ class Transaction_lib{
 		}
 		return false;
 	}
+
+    private function transfer_amortization($ids=false){
+        $html 			= '';
+        $list 			= array();
+        if($ids && is_array($ids)){
+            $investments 			= $this->CI->investment_model->order_by('target_id','ASC')->get_many($ids);
+            if($investments){
+                $this->CI->load->library('target_lib');
+                foreach($investments as $key => $value){
+                    $target = $this->CI->target_model->get($value->target_id);
+                    $amortization_table = $this->target_lib->get_investment_amortization_table($target,$value);
+                    if($amortization_table && !empty($amortization_table['list'])){
+                        foreach($amortization_table['list'] as $k => $v){
+                            if(!isset($list[$v['repayment_date']])){
+                                $list[$v['repayment_date']] = array(
+                                    'principal'	=> 0,
+                                    'interest'	=> 0,
+                                    'ar_fees'	=> 0,
+                                    'repayment'	=> 0,
+                                );
+                            }
+                            $list[$v['repayment_date']]['principal'] 	+= $v['principal'];
+                            $list[$v['repayment_date']]['interest'] 	+= $v['interest'];
+                            $list[$v['repayment_date']]['ar_fees'] 		+= $v['ar_fees'];
+                            $list[$v['repayment_date']]['repayment'] 	+= $v['repayment'];
+                        }
+                    }
+                }
+                header('Content-type:application/vnd.ms-excel');
+                header('Content-Disposition: attachment; filename=repayment_schedule_'.date('Ymd').'.xls');
+                $html = '<table><thead><tr><th>日期</th><th>應收本金</th><th>應收利息</th><th>合計</th><th>當期本金餘額</th></tr></thead><tbody>';
+
+                if(isset($list) && !empty($list)){
+                    ksort($list);
+                    foreach($list as $key => $value){
+                        if(substr($key, -2)=='10'){
+                            $profit = $value['principal']+$value['interest']-$value['ar_fees'];
+                            $html .= '<tr>';
+                            $html .= '<td>'.$key.'</td>';
+                            $html .= '<td>'.$value['principal'].'</td>';
+                            $html .= '<td>'.$value['interest'].'</td>';
+                            $html .= '<td>'.$profit.'</td>';
+                            $html .= '<td>'.($value['repayment']-$value['ar_fees']).'</td>';
+                            $html .= '</tr>';
+                        }
+                    }
+                }
+                return $html .= '</tbody></table>';
+            }
+        }
+        return false;
+    }
+
+    private function reset_credit_expire_time($target=[]){
+        $this->CI->load->library('credit_lib');
+        $credit = $this->CI->credit_lib->get_credit($target->user_id,$target->product_id);
+        $expire_time = $credit['expire_time'];
+        $max_time = strtotime("+2 months", time());
+        $this->CI->load->model('loan/credit_model');
+        $this->CI->credit_model->update($credit['id'],[
+            'expire_time'=> ($expire_time>=$max_time)?$max_time:$expire_time,
+        ]);
+        return true;
+    }
 }

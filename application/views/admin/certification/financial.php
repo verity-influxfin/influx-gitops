@@ -73,7 +73,7 @@
 											}
 										?>
 									</div>									
-									<h1>審核</h1>
+									<h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">

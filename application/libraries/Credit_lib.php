@@ -19,33 +19,45 @@ class Credit_lib{
 	//信用評比
 	public function approve_credit($user_id,$product_id){
 		if($user_id && $product_id){
-			
-			//信用低落
-			$low = $this->CI->credit_model->order_by('level','desc')->get_by([
-				'user_id'		=> $user_id,
-				'status'		=> 1,
-				'points <'		=> 0,
-			]);
-			if($low){
-				return $this->CI->credit_model->insert([
-					'product_id' 	=> $product_id,
-					'user_id'		=> $user_id,
-					'points'		=> $low->points,
-					'level'			=> $low->level,
-					'amount'		=> $low->amount,
-				]);
-			}
-		
+
+            //信用低落
+            $low = $this->CI->credit_model->order_by('level','desc')->get_by([
+                'user_id'		=> $user_id,
+                'status'		=> 1,
+                'points <'		=> 0,
+            ]);
+            if($low){
+                return $this->CI->credit_model->insert([
+                    'product_id' 	=> $product_id,
+                    'user_id'		=> $user_id,
+                    'points'		=> $low->points,
+                    'level'			=> $low->level,
+                    'amount'		=> $low->amount,
+                ]);
+            }
+
+            $expire_time     = $max_expire_time = strtotime("+6 months", time());
+
+            //few target
+            $target  = $this->CI->target_model->order_by('loan_date','asc')->get_by([
+                'user_id'     => $user_id,
+                'status'      => 5,
+                'loan_date >' => date('Y-m-d',strtotime("-2 months", time())),
+            ]);
+            if($target){
+                $expire_time = strtotime("+2 months", strtotime($target->loan_date));
+            }
+
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id);
+				$rs = $this->$method($user_id,$product_id,$expire_time);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id,$product_id){
+	private function approve_1($user_id,$product_id,$expire_time){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -94,24 +106,26 @@ class Credit_lib{
 		
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= intval($total);
-		$param['level'] 	= $this->get_credit_level($total,$product_id);
-		if(isset($this->credit['credit_amount_'.$product_id])){
-			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
-				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-					$param['amount'] = $value['amount'];
-					break;
-				}
-			}
-		}
-		$rs 		= $this->CI->credit_model->insert($param);
+        $param['level'] 	= $this->get_credit_level($total,$product_id);
+        if(isset($this->credit['credit_amount_'.$product_id])){
+            foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+                if($param['points']>=$value['start'] && $param['points']<=$value['end']){
+                    $param['amount'] = $value['amount'];
+                    break;
+                }
+            }
+        }
+        $param['expire_time'] = $expire_time;
+
+        $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
 	
-	private function approve_2($user_id,$product_id){
-		return $this->approve_1($user_id,$product_id);
+	private function approve_2($user_id,$product_id,$expire_time){
+		return $this->approve_1($user_id,$product_id,$expire_time);
 	}
 
-	private function approve_3($user_id,$product_id){
+	private function approve_3($user_id,$product_id,$expire_time){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -185,8 +199,9 @@ class Credit_lib{
 				}
 			}
 		}
-		$param['amount'] = $param['amount']>200000?200000:$param['amount'];
-		$param['amount'] = $param['amount']<20000?0:$param['amount'];
+		$param['amount']      = $param['amount']>200000?200000:$param['amount'];
+		$param['amount']      = $param['amount']<20000?0:$param['amount'];
+        $param['expire_time'] = $expire_time;
 		if(intval($data['job_salary'])<=35000){
 			$job_salary = intval($data['job_salary'])*2;
 			$param['amount'] = $param['amount']>$job_salary?$job_salary:$param['amount'];
@@ -196,8 +211,8 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id){
-		return $this->approve_3($user_id,$product_id);
+	private function approve_4($user_id,$product_id,$expire_time){
+		return $this->approve_3($user_id,$product_id,$expire_time);
 	}
 	
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
@@ -377,10 +392,12 @@ class Credit_lib{
 			$rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
 			if($rs){
 				$data = [
+				    'id'         => intval($rs->id),
 					'level'		 => intval($rs->level),
 					'points'	 => intval($rs->points),
 					'amount'	 => intval($rs->amount),
 					'created_at' => intval($rs->created_at),
+					'expire_time'=> intval($rs->expire_time),
 				];
 				return $data;
 			}

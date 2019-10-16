@@ -309,6 +309,8 @@ class Subloan extends REST_Controller {
 			
 			$rs = $this->subloan_lib->apply_subloan($target,$param);
 			if($rs){
+                $this->load->library('Certification_lib');
+                $this->certification_lib->expire_certification($user_id);
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));

@@ -18,7 +18,7 @@ class Sms_lib {
 	public function send_register($phone=""){
 		if(!empty($phone)){
 			$code	 = get_rand_token();
-			$content = "手機ATM，會員註冊簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$content = "普匯inFlux，會員註冊簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
 			$param = array(
 				"type" 			=> 'register',
 				"phone"			=> $phone,
@@ -36,7 +36,7 @@ class Sms_lib {
 	public function send_verify_code($user_id,$phone=""){
 		if(!empty($phone)){
 			$code	 = get_rand_token();
-			$content = "手機ATM，認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
+			$content = "普匯inFlux，認證簡訊，您的驗證碼為".$code."，請注意有效時間為30分鐘以內";
 			$param = array(
 				"type" 			=> 'verify',
 				"phone"			=> $phone,
@@ -60,7 +60,7 @@ class Sms_lib {
 					$content 	= "親愛的用戶：您好！您申請的標的 $target_no ，核可金額 $amount 元，已成功放款。";
 				}else{
 					$bankaccount = substr($bankaccount, -4, 4);
-					$content = "【手機ATM用戶通知】您的借款 $target_no ，借款金額為 $amount 元已發放至您的綁定金融卡帳戶尾號 $bankaccount 內! 立即登入手機Atm查看最新資訊 https://borrow.influxfin.com/ ，祝您一切順心。";
+					$content = "【普匯inFlux用戶通知】您的借款 $target_no ，借款金額為 $amount 元已發放至您的綁定金融卡帳戶尾號 $bankaccount 內! 立即登入普匯inFlux查看最新資訊 https://borrow.influxfin.com/ ，祝您一切順心。";
 				}
 				return $this->send('lending_success',$user_id,$phone,$content);
 			}
@@ -74,7 +74,7 @@ class Sms_lib {
 			if($user_info){
 				$phone 		= $user_info->phone;
 				//$content 	= "親愛的用戶，您好！
-				//			您的借款 $target_no ，本期應還本息合計為 $amount 元，您的應還款日為 $date ，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可在我的手機ATM服務內點擊我的→我的還款查看，如已還款，請忽略本訊息。
+				//			您的借款 $target_no ，本期應還本息合計為 $amount 元，您的應還款日為 $date ，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可在我的普匯inFlux服務內點擊我的→我的還款查看，如已還款，請忽略本訊息。
 				//			敬告用戶，本公司不會以短信、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號，若有收到類似通知，謹防詐騙，或致電普匯客服電話02-25079990舉報，感謝您的配合。";
                 $content 	= "親愛的用戶：
 您好！專屬您的借款app「普匯inFlux」已經上線，網頁版服務將於7/25關閉，請至app商店搜尋「普匯inFlux」下載。網址：https://reurl.cc/6z2Yb
@@ -91,7 +91,7 @@ class Sms_lib {
 			if($user_info){
 				$phone 		= $user_info->phone;
 				$content 	= "親愛的用戶：
-				您好！您在手機ATM申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
+				您好！您在普匯inFlux申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
 		}				

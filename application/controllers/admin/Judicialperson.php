@@ -96,9 +96,11 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
 					$page_data['name_list']    = $this->admin_model->get_name_list();
-					$media =$info->sign_video;
-					if (!empty($media)) {
-						$media = explode(',', $info->sign_video);
+					$media_data =urldecode($info->sign_video);
+					$media_data =strrchr($media_data,']}');
+					if (!empty($media_data) && $media_data != false && $media_data != ']}') {
+						$media = str_replace(']},', "", $media_data);
+						$media = explode(',', $media);
 						$page_data['media_list'] = $media;
 					}
                     $page_data['company_type'] = $this->config->item('company_type');
@@ -115,25 +117,30 @@ class Judicialperson extends MY_Admin_Controller {
             }
         }else {
             if (!empty($post['id'])) {
-                $info = $this->judicial_person_model->get($post['id']);
-                if ($info) {
-                    if ($post['status'] == '1') {
-                        $rs = $this->judicialperson_lib->apply_success($post['id']);
-                    } else if ($post['status'] == '2') {
-                        $rs = $this->judicialperson_lib->apply_failed($post['id']);
-                    }
+				$info = $this->judicial_person_model->get($post['id']);
+				$media_data =urldecode($info->sign_video);
+				$media_data =strrchr($media_data,']}');
+				$media_data =str_replace(']},',"",$media_data);
+				if ($info && !empty($media_data) && $media_data != false && $media_data != ']}') {
+					if ($post['status'] == '1') {
+						$rs = $this->judicialperson_lib->apply_success($post['id']);
+					} else if ($post['status'] == '2') {
+						$rs = $this->judicialperson_lib->apply_failed($post['id']);
+					}
 
-                    if ($rs === true) {
-                        alert('更新成功', 'index?status=0');
-                    } else {
-                        alert('更新失敗，請洽工程師', 'index?status=0');
-                    }
-                } else {
-                    alert('查無此ID', admin_url('index?status=0'));
-                }
-            } else {
-                alert('查無此ID', admin_url('index?status=0'));
-            }
+					if ($rs === true) {
+						alert('更新成功', 'index?status=0');
+					} else {
+						alert('更新失敗，請洽工程師', 'index?status=0');
+					}
+				} else if ($info && (empty($media_data) || $media_data == ']}')) {
+					alert('請先上傳法人影片', 'index?status=0');
+				} else {
+					alert('查無此ID', admin_url('index?status=0'));
+				}
+			} else {
+				alert('查無此ID', admin_url('index?status=0'));
+			}
         }
 	}
 
@@ -142,11 +149,18 @@ class Judicialperson extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->judicial_person_model->get($id);
-			if($info && $info->status==0){
-				$this->judicialperson_lib->apply_success($id,$this->login_info->id);
-				echo '更新成功';die();
-			}else{
-				echo '查無此ID';die();
+			if ($info && $info->status == 0) {
+				$res = $this->judicialperson_lib->apply_success($id, $this->login_info->id);
+				if ($res===false) { 
+					echo '更新失敗';
+					die();
+				} else {
+					echo '更新成功';
+					die();
+				}
+			} else {
+				echo '查無此ID';
+				die();
 			}
 		}else{
 			echo '查無此ID';die();

@@ -79,7 +79,7 @@
 												</td>
 												<td><p class="form-control-static">備註</p></td>
 												<td>
-													<p class="form-control-static"><? echo $data->remark!=''?$data->remark:"無";?></p>
+													<p class="form-control-static"><? echo $data->remark!=''?nl2br($data->remark):"無";?></p>
 												</td>
 											</tr>
 											<tr>

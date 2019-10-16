@@ -111,20 +111,21 @@
                                             <th>申請日期</th>
                                             <th>核准日期</th>
                                             <th>邀請碼</th>
-                                            <th>備註</th>
+                                            <th style="width: 280px;">備註</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 									<?php 
 										if(isset($list) && !empty($list)){
+                                            $subloan_list = $this->config->item('subloan_list');
 											$count = 0;
 											foreach($list as $key => $value){
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/STS|STNS|STIS|FGNS|FGIS/',$value->target_no)?'(產品轉換)':''):'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->school_name)?$value->school_name:'' ?></td>
@@ -140,7 +141,7 @@
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:'' ?></td>
 											<td><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
                                             <td>
-											<?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?>
+											<?=isset($value->status)?($value->sub_status==5?'待廠商出貨 (分期)':$status_list[$value->status]):'' ?>
 											<? 	if($value->status==2 && !$value->bank_account_verify){
 													echo '<p style="color:red;">金融帳號未驗證</p>';
 												}
@@ -149,7 +150,7 @@
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
-                                            <td><?=isset($value->remark)?$value->remark:'' ?></td>
+                                            <td><?=isset($value->remark)?nl2br($value->remark):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 

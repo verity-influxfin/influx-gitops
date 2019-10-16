@@ -13,7 +13,8 @@ $config['admin_menu'] = [
 		'repayment'					      => '還款中',
 		'finished'					      => '已結案',
 		'prepayment'				      => '提前還款',
-        'waiting_approve_order_transfer'  => '消費貸債轉待批覆',
+		'order_target' 				      => '消費貸 - 案件列表',
+        'waiting_approve_order_transfer'  => '消費貸 - 債轉待批覆',
 	],
 	'Transfer' 						=> [
 		'parent_name'				=> '債權管理',
@@ -91,7 +92,7 @@ $config['admin_menu'] = [
 
 //內部通知Email
 if(ENVIRONMENT=='development'){
-	$config['admin_email'] = ['news@influxfin.com'];
+	$config['admin_email'] = ['news@influxfin.com','brian@influxfin.com'];
 }else{
 	$config['admin_email'] = ['yaomu@influxfin.com','rogerkuo@influxfin.com','lc@influxfin.com'];//,'mori2.tw@gmail.com'
 }
@@ -207,6 +208,9 @@ $config['product_list']= [
 普匯陪你一起實現夢想'
 	],*/
 ];
+
+//產品轉換代碼
+$config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 
 //產品型態
 $config['product_type']= [

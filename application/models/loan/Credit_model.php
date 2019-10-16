@@ -20,7 +20,6 @@ class Credit_model extends MY_Model
     {
         $data['created_at'] 	= $data['updated_at'] = time();
         $data['created_ip'] 	= $data['updated_ip'] = get_ip();
-		$data['expire_time'] 	= strtotime("+2 months", $data['created_at']);
         return $data;
     }
 	

@@ -88,9 +88,19 @@
                                         </div>
                                         <button type="submit" class="btn btn-primary">修改月薪</button>
                                     </form><br /><br />
+									<?
+										if (isset($content['incomeDate'])) {
+											echo '
+												<div class="form-group">
+													<label>發薪日</label>
+													<p class="form-control-static">' . $content['incomeDate'] . '號</p>
+												</div>
+											';
+										}
+									?>
 									<div class="form-group">
 										<label>備註</label>
-										<? 
+										<?
 											if($remark){
 												if(isset($remark["fail"]) && $remark["fail"]){
 													echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
@@ -98,7 +108,7 @@
 											}
 										?>
 									</div>
-									<h1>審核</h1>
+									<h4>審核</h4>
                                         <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
@@ -148,6 +158,18 @@
 												<img src="<?=isset($content['business_image'])?$content['business_image']:""?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
+										<?
+											if (isset($content['license_image'])) {
+												echo '
+													<div class="form-group">
+														<label for="disabledSelect">專業證照</label><br>
+														<a href="' . $content['license_image'] . '" data-fancybox="images">
+															<img src="' . $content['license_image'] . '" style="width:30%;max-width:400px">
+														</a>
+													</div>
+												';
+											}
+										?>
 										<div class="form-group">
 											<label for="disabledSelect">勞健保卡</label><br>
 											<? if(!empty($content['labor_image'])){

@@ -133,10 +133,11 @@ class Target extends MY_Admin_Controller {
             $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
 
             if(isset($list) && !empty($list)){
+                $subloan_list = $this->config->item('subloan_list');
                 foreach($list as $key => $value){
                     $html .= '<tr>';
                     $html .= '<td>'.$value->target_no.'</td>';
-                    $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/STS|STNS|STIS|FGNS|FGIS/',$value->target_no)?'(產品轉換)':'').'</td>';
+                    $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->school_name)?$value->school_name:'').'</td>';
@@ -1130,6 +1131,24 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/target/approve_order_transfer',$page_data);
+        $this->load->view('admin/_footer');
+    }
+
+public function order_target(){
+        $page_data 	  = array('type'=>'list');
+        $list 		  = $this->target_model->get_many_by(['status'=>[20,21,22,23,24]]);
+
+        $page_data['instalment_list']	= $this->config->item('instalment');
+        $page_data['repayment_type']	= $this->config->item('repayment_type');
+        $page_data['list'] 				= $list;
+        $page_data['product_list']		= $this->config->item('product_list');
+        $page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['name_list'] 		= $this->admin_model->get_name_list();
+
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/target/order_target',$page_data);
         $this->load->view('admin/_footer');
     }
 

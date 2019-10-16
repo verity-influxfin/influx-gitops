@@ -1,8 +1,8 @@
 {
-	"name": "普匯金融科技 手機ATM API文檔",
+	"name": "普匯金融科技 普匯inFlux API文檔",
 	"version": "0.2.0",
 	"description": "web上線版本 0.1.0 (2018/08/03)(不支援法人帳號)<br>app上線版本 0.2.0 (開發中)",
-	"title": "普匯金融科技 手機ATM API文檔",
+	"title": "普匯金融科技 普匯inFlux API文檔",
 	"url": "https://dev-api.influxfin.com/api",
 	"sampleUrl": "https://dev-api.influxfin.com/api",
 	"order": [

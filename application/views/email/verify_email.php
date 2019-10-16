@@ -85,7 +85,7 @@
 				<td class="hide">
 					<table width="600" cellpadding="0" cellspacing="0" style="width:600px !important;">
 						<tr>
-							<td style="min-width:600px; font-size:0; line-height:0;">&nbsp;</td>
+							<td style="min-width:600px; font-size:0; line-height:0;">www.inFluxfin.com</td>
 						</tr>
 					</table>
 				</td>
@@ -102,21 +102,21 @@
 										<td class="img-flex"><img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/banner.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
 									</tr>
 									<tr>
-										<td data-bgcolor="bg-block" class="holder" style="padding:58px 60px 52px;" bgcolor="#f9f9f9">
+										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bgcolor="#f9f9f9">
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td align="center">
-														<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/atm-logo.png" border="0" style="font:bold 12px/12px Arial, Helvetica, sans-serif; color:#606060;" width="90" height="90" alt="INFLUXFIN.COM" />
+														<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/logo.png" border="0" style="font:bold 30px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
 													</td>
 												</tr>
 												<tr>
-													<td data-color="title" data-size="size title" data-min="25" data-max="45" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:35px/38px Arial, Helvetica, sans-serif; color:#292c34; padding:0 0 24px;">
+													<td data-color="title" data-size="size title" data-min="25" data-max="45" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:30px Arial, Helvetica, sans-serif; color:#292c34; padding:15px 0 15px;letter-spacing: 2px">
 														EMAIL驗證信
 													</td>
 												</tr>
 												<tr>
-													<td data-color="text" data-size="size text" data-min="10" data-max="26" data-link-color="link text color" data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;" align="center" style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; padding:0 0 23px;">
-														手機ATM 電子信箱驗證信，請點擊下方按鈕完成認證
+													<td data-color="text" data-size="size text" data-min="10" data-max="26" data-link-color="link text color" data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;" align="center" style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; padding:0 0 23px;letter-spacing: 1.2px">
+														普匯inFlux 電子信箱驗證信，請點擊下方按鈕完成認證
 													</td>
 												</tr>
 												<tr>
@@ -124,7 +124,7 @@
 														<table width="134" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
 															<tr>
 																<td data-bgcolor="bg-button" data-size="size button" data-min="10" data-max="16" class="btn" align="center" style="font:12px/14px Arial, Helvetica, sans-serif; color:#f8f9fb; text-transform:uppercase; mso-padding-alt:12px 10px 10px; border-radius:2px;" bgcolor="#7bb84f">
-																	<a target="_blank" style="text-decoration:none; color:#f8f9fb; display:block; padding:12px 10px 10px;" href="{link}">驗證連結</a>
+																	<a target="_blank" style="text-decoration:none; color:#f8f9fb; display:block; padding:12px 10px 10px;letter-spacing: 2.5px;font-size: 14px;font-weight: bold" href="{link}">驗證連結</a>
 																</td>
 															</tr>
 														</table>
