@@ -241,10 +241,10 @@ class User extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
 
-		$block = $this->log_blockedlist_model->get_by(['user_id' => $userId]);
+		$block = $this->log_blockedlist_model->get_by(['blocked_user_id' => $userId]);
 		if ($block) {
 			$this->log_blockedlist_model->update_by(
-				['user_id' => $userId],
+				['blocked_user_id' => $userId],
 				[
 					"admin_id" => $this->login_info->id,
 					"status" => $this->blockstatus->getValueInDB(),
@@ -254,7 +254,7 @@ class User extends MY_Admin_Controller {
 		} else {
 			$this->log_blockedlist_model->insert([
 				'admin_id' => $this->login_info->id,
-				'user_id' => $userId,
+				'blocked_user_id' => $userId,
 				'status' => $this->blockstatus->getValueInDB(),
 				'reason' => $reason,
 			]);

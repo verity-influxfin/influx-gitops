@@ -37,7 +37,7 @@ class Log_blockedlist_model extends MY_Model
 					 blocked_list.updated_at
 				 ')
 				 ->from('p2p_user.users as users')
-				 ->join('p2p_log.' . $this->_table . ' as blocked_list', 'blocked_list.user_id IS NOT NULL AND users.id = blocked_list.user_id', 'left')
+				 ->join('p2p_log.' . $this->_table . ' as blocked_list', 'users.id = blocked_list.blocked_user_id', 'left')
 				 ->join('p2p_admin.admins as admins', 'blocked_list.admin_id IS NOT NULL AND admins.id = blocked_list.admin_id', 'left')
 				 ->where('users.id', $userId);
 		$query = $this->db->get();
@@ -63,7 +63,7 @@ class Log_blockedlist_model extends MY_Model
 					 blocked_list.updated_at
 				 ')
 				 ->from('p2p_user.users as users')
-				 ->join('p2p_log.' . $this->_table . ' as blocked_list', 'blocked_list.user_id IS NOT NULL AND users.id = blocked_list.user_id', 'left')
+				 ->join('p2p_log.' . $this->_table . ' as blocked_list', 'users.id = blocked_list.blocked_user_id', 'left')
 				 ->join('p2p_admin.admins as admins', 'blocked_list.admin_id IS NOT NULL AND admins.id = blocked_list.admin_id', 'left')
 				 ->where_in('users.block_status', [1,2,3]);
 		$query = $this->db->get();
