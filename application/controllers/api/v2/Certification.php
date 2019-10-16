@@ -1617,8 +1617,11 @@ class Certification extends REST_Controller {
 
             isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
 
+            isset($input['business_image'])?$file_fields[]='business_image':'';
+            isset($input['license_image'])?$file_fields[]='license_image':'';
+            isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
+            isset($input['income_prove_image'])?$file_fields[]='income_prove_image':'';
             $send_mail = false;
-            $file_fields = ['business_image','license_image','auxiliary_image','income_prove_image'];
             if(isset($input['labor_type'])){
                 if($input['labor_type']==0){
                     $file_fields[] = 'labor_image';
