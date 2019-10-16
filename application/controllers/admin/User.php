@@ -217,21 +217,28 @@ class User extends MY_Admin_Controller {
 
 	public function block_users() {
 		$input = $this->input->post(NULL, TRUE);
+
+		if (!$this->input->is_ajax_request()) {
+			alert('ERROR, 只接受Ajax', admin_url('user/blocked_users'));
+		}
+
+		$this->load->library('output/json_output');
+
 		if (!is_array($input)) {
-			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+			$this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
 
 		$status = isset($input['status']) ? $input['status'] : '';
 		$userId = isset($input['id']) ? intval($input['id']) : 0;
 		$reason = isset($input['reason']) ? strval($input['reason']) : '';
 		if (!$status || $userId <= 0) {
-			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+			$this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
 
 		try {
 			$this->load->library('block/mapping/blockstatus', ["status" => $status]);
 		} catch (OutOfBoundsException $e) {
-			alert('ERROR, 參數錯誤',admin_url('user/blocked_users'));
+			$this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
 
 		$block = $this->log_blockedlist_model->get_by(['user_id' => $userId]);
@@ -269,21 +276,12 @@ class User extends MY_Admin_Controller {
 
 		$blockRecord = $this->log_blockedlist_model->findByUserId($userId);
 
-		if ($this->input->is_ajax_request()) {
-			$this->load->library('output/json_output');
-			$this->load->library('output/log/block_output', ["data" => $blockRecord]);
+		$this->load->library('output/log/block_output', ["data" => $blockRecord]);
 
-			if ($success !== true) {
-				$this->json_output->setStatusCode(500)->send();
-			}
-			$this->json_output->setStatusCode(200)->setResponse(["block" => $this->block_output->toOne()])->send();
-		} else {
-			if ($success === true) {
-				alert('更新成功',admin_url('user/blocked_users'));
-			} else {
-				alert('更新失敗，請洽工程師',admin_url('user/blocked_users'));
-			}
+		if ($success !== true) {
+			$this->json_output->setStatusCode(500)->setErrorCode(InsertError)->send();
 		}
+		$this->json_output->setStatusCode(200)->setResponse(["block" => $this->block_output->toOne()])->send();
 	}
 }
 ?>
