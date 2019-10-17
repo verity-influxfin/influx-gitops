@@ -1325,32 +1325,30 @@ class Certification extends REST_Controller {
                     $content[$field] = $input[$field];
                 }
             }
-			
-			$content['system']           = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+
+            $file_fields 	= [];
+            $content['system']           = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
             $content['major']            = isset($input['major'])?$input['major']:"";
             $content['department']       = isset($input['department'])?$input['department']:"";
-			$content['diploma_date']     = isset($input['diploma_date'])?$input['diploma_date']:"";
-			$content['sip_account'] 	 = isset($input['sip_account']) ? $input['sip_account'] : "";
-			$content['sip_password'] 	 = isset($input['sip_password']) ? $input['sip_password'] : "";
-            $content['transcript_image'] = isset($input['transcript_image']) ? $input['transcript_image'] : "";
-            $content['diploma_image'] 	 = isset($input['diploma_image']) ? $input['diploma_image'] : "";
-            $file_fields 	= ['transcript_image','diploma_image'];
+            $content['diploma_date']     = isset($input['diploma_date'])?$input['diploma_date']:"";
+            $content['sip_account'] 	 = isset($input['sip_account']) ? $input['sip_account'] : "";
+            $content['sip_password'] 	 = isset($input['sip_password']) ? $input['sip_password'] : "";
+            $content['transcript_image'] = isset($input['transcript_image']) ? $file_fields[]='transcript_image' : "";
+            $content['diploma_image'] 	 = isset($input['diploma_image']) ? $file_fields[]='diploma_image' : "";
             foreach ($file_fields as $field) {
-                if (!empty($content['transcript_image'])||!empty($content['diploma_image'])) {
-                    $image_ids = explode(',', $input[$field]);
-                    if (count($image_ids) > 5) {
-                        $image_ids = array_slice($image_ids, 0, 5);
-                    }
-                    $list = $this->log_image_model->get_many_by([
-                        'id' => $image_ids,
-                        'user_id' => $user_id,
-                    ]);
+                $image_ids = explode(',', $input[$field]);
+                if (count($image_ids) > 5) {
+                    $image_ids = array_slice($image_ids, 0, 5);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id' => $image_ids,
+                    'user_id' => $user_id,
+                ]);
 
-                    if ($list && count($list) == count($image_ids)) {
-                        $content[$field] = [];
-                        foreach ($list as $k => $v) {
-                            $content[$field][] = $v->url;
-                        }
+                if ($list && count($list) == count($image_ids)) {
+                    $content[$field] = [];
+                    foreach ($list as $k => $v) {
+                        $content[$field][] = $v->url;
                     }
                 }
             }
