@@ -1,6 +1,6 @@
 <?php
 
-class Json_Output
+class Json_output
 {
     /**
      * @var int

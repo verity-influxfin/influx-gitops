@@ -1,6 +1,6 @@
 <?php
 
-class Block_Output
+class Block_output
 {
     protected $blocks;
     protected $block;

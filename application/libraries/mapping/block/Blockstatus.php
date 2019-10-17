@@ -1,6 +1,6 @@
 <?php
 
-class BlockStatus
+class Blockstatus
 {
     const UNBLOCKED = 'unblocked';
     const BLOCKED = 'blocked';
