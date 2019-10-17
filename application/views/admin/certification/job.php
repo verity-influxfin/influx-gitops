@@ -193,7 +193,7 @@
                                                 }
                                             }
                                             if (isset($content['auxiliary_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">扣最近年度報稅扣繳憑證</label><br>';
+                                                echo '<div class="form-group"><label for="disabledSelect">最近年度報稅扣繳憑證</label><br>';
                                                 foreach($content['auxiliary_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
