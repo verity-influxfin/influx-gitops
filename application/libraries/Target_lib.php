@@ -280,15 +280,16 @@ class Target_lib{
                     }
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-                    $subloan_list = $this->CI->config->item('subloan_list');
-                    if($user_current_credit_amount >= 1000 || preg_match('/'.$subloan_list.'/',$target->target_no)?true:false){
+                    $subloan_list   = $this->CI->config->item('subloan_list');
+                    $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
+                    if($user_current_credit_amount >= 1000 || $subloan_status){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
                         $loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
 
-                        if($loan_amount >= $product_info['loan_range_s']) {
+                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status) {
 
                             if($product_info['type']==1){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
