@@ -305,7 +305,7 @@ class Target_lib{
                                     ];
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
-                                    if($rs){
+                                    if($rs&&$subloan_status==false){
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
                                     }
                                 }
@@ -374,7 +374,7 @@ class Target_lib{
             $this->coop_status_change_no($target->order_id,'approve_fail');
         }
     }
-	
+
 	public function target_verify_success($target = [],$admin_id=0){
 		if(!empty($target) && $target->status==2){
 			$product_list 	= $this->CI->config->item('product_list');
