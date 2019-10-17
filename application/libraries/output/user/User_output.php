@@ -1,6 +1,6 @@
 <?php
 
-class User_Output
+class User_output
 {
     protected $users;
     protected $user;
