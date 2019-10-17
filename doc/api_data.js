@@ -4522,7 +4522,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "passbook_image_type",
-                            "description": "<p>0：紙本，1：網銀 <br />存款證明類型</p>"
+                            "description": "<p>存款證明類型<br />0：紙本，1：網銀 2：薪資證明</p>"
                         },
                         {
                             "group": "Parameter",

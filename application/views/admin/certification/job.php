@@ -152,62 +152,49 @@
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
 									<fieldset disabled>
-										<div class="form-group">
-											<label for="disabledSelect">名片/工作證明</label><br>
-											<a href="<?=isset($content['business_image'])?$content['business_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['business_image'])?$content['business_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
-										</div>
-										<?
-											if (isset($content['license_image'])) {
-												echo '
-													<div class="form-group">
-														<label for="disabledSelect">專業證照</label><br>
-														<a href="' . $content['license_image'] . '" data-fancybox="images">
-															<img src="' . $content['license_image'] . '" style="width:30%;max-width:400px">
-														</a>
-													</div>
-												';
-											}
-										?>
-										<div class="form-group">
-											<label for="disabledSelect">勞健保卡</label><br>
-											<? if(!empty($content['labor_image'])){
-												foreach($content['labor_image'] as $key => $value){
-											?>
-											<a href="<?=$value ?>" data-fancybox="images">
-												<img src="<?=$value ?>" style='width:30%;max-width:400px'>
-											</a>
-											<?}}?>
-										</div>
-										<div class="form-group">
-											<label for="disabledSelect">存摺內頁照</label><br>
-											<? if(!empty($content['passbook_image'])){
-												foreach($content['passbook_image'] as $key => $value){
-											?>
-											<a href="<?=$value ?>" data-fancybox="images">
-												<img src="<?=$value ?>" style='width:30%;max-width:400px'>
-											</a>
-											<?}}?>
-										</div>
-										<div class="form-group">
-											<label for="disabledSelect">收入輔助證明</label><br>
-											<? if(!empty($content['auxiliary_image'])){
-												foreach($content['auxiliary_image'] as $key => $value){
-											?>
-											<a href="<?=$value ?>" data-fancybox="images">
-												<img src="<?=$value ?>" style='width:30%;max-width:400px'>
-											</a>
-											<?}}?>
-										</div>
-										<? if(!empty($content['license_image'])){ ?>
-										<div class="form-group">
-											<label for="disabledSelect">專業證書</label><br>
-											<a href="<?=isset($content['license_image'])?$content['license_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['license_image'])?$content['license_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
-										</div>
-										<? } ?>
+
+                                            <? if (isset($content['business_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">名片/工作證明</label><br>';
+                                                foreach($content['business_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
+										    <? if (isset($content['license_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">專業證照</label><br>';
+                                                foreach($content['license_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
+                                            <? if (isset($content['labor_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">勞健保卡</label><br>';
+                                                foreach($content['labor_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
+                                            <? if (isset($content['passbook_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">存摺內頁照</label><br>';
+                                                foreach($content['passbook_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
+                                            <? if (isset($content['auxiliary_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">收入輔助證明</label><br>';
+                                                foreach($content['auxiliary_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
+                                            <? if (isset($content['license_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">專業證書</label><br>';
+                                                foreach($content['license_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                            }?>
+
 									</fieldset>
 								</div>
                             </div>

@@ -1620,7 +1620,7 @@ class Certification extends REST_Controller {
             isset($input['business_image'])?$file_fields[]='business_image':'';
             isset($input['license_image'])?$file_fields[]='license_image':'';
             isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
-            isset($input['income_prove_image'])?$file_fields[]='income_prove_image':'';
+
             $send_mail = false;
             if(isset($input['labor_type'])){
                 if($input['labor_type']==0){
@@ -1636,6 +1636,9 @@ class Certification extends REST_Controller {
                 }
                 elseif($input['passbook_image_type']==1){
                     $file_fields[] = 'passbook_image';
+                }
+                elseif($input['passbook_image_type']==2){
+                    $file_fields[] = 'income_prove_image';
                 }
             }
 
