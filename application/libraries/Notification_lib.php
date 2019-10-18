@@ -65,14 +65,15 @@ class Notification_lib{
 		return $rs;
 	}
 	
-	public function approve_target($user_id,$status,$amount=0){
+	public function approve_target($user_id,$status,$amount=0,$subloan=false){
 		if($status==1){
-			$title = "【借款審核】 您的借款審核已通過";
+            $loan_type = $subloan?'產品轉換':'借款';
+			$title = "【".$loan_type."審核】 您的審核已通過";
 			$content = "親愛的用戶，您好！
-<br />您的借款審核已通過，
-<br />審核額度為 $amount 元，
+<br />您的".$loan_type."審核已通過，
+".($subloan?'':'<br />審核額度為 '.$amount.' 元，')."
 <br />您已經可以預約申請簽約了，
-<br />請登錄並在首頁您申請的產品處進入簽約頁面。";
+<br />請登錄普匯APP並在您申請的產品進入簽約頁面。";
 		}
 		
 		if($status==9){

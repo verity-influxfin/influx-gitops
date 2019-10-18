@@ -110,7 +110,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td colspan="2" data-color="title" data-size="size title" data-min="25" data-max="45" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:30px Arial, Helvetica, sans-serif; color:#292c34; padding:15px 0 15px;letter-spacing: 1.5px">
+													<td colspan="2" data-color="title" data-size="size title" data-min="25" data-max="45" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:30px Arial, Helvetica, sans-serif; color:#292c34; padding:15px 0 15px;letter-spacing: 1.2px">
 														{title}
 													</td>
 												</tr>

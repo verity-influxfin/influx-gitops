@@ -305,8 +305,8 @@ class Target_lib{
                                     ];
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
-                                    if($rs&&$subloan_status==false){
-                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount);
+                                    if($rs){
+                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
                                     }
                                 }
                             }else if($product_info['type'] == 2){
