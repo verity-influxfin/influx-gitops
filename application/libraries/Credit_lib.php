@@ -26,6 +26,8 @@ class Credit_lib{
                 'status'		=> 1,
                 'points <'		=> 0,
             ]);
+            $expire_time     = $max_expire_time = strtotime("+6 months", time());
+
             if($low){
                 return $this->CI->credit_model->insert([
                     'product_id' 	=> $product_id,
@@ -33,10 +35,10 @@ class Credit_lib{
                     'points'		=> $low->points,
                     'level'			=> $low->level,
                     'amount'		=> $low->amount,
+                    'expire_time'   => $expire_time,
                 ]);
             }
 
-            $expire_time     = $max_expire_time = strtotime("+6 months", time());
 
             //few target
             $target  = $this->CI->target_model->order_by('loan_date','asc')->get_by([
