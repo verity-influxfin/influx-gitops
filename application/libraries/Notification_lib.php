@@ -71,7 +71,7 @@ class Notification_lib{
 			$title = "【".$loan_type."審核】 您的審核已通過";
 			$content = "親愛的用戶，您好！
 <br />您的".$loan_type."審核已通過，
-".($subloan?'':'<br />審核額度為 '.$amount.' 元，')."
+<br />審核額度為 $amount 元，
 <br />您已經可以預約申請簽約了，
 <br />請登錄普匯APP並在您申請的產品進入簽約頁面。";
 		}

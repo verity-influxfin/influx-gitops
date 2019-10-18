@@ -287,7 +287,7 @@ class Target_lib{
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
-                        $loan_amount 		= $target->amount > $credit['amount']?$credit['amount']:$target->amount;
+                        $loan_amount 		= $target->amount > $credit['amount']&&$subloan_status==false?$credit['amount']:$target->amount;
 
                         if($loan_amount >= $product_info['loan_range_s']||$subloan_status) {
 
