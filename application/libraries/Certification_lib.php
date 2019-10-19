@@ -292,17 +292,19 @@ class Certification_lib{
                     $ffront_count 	= $front_token&&is_array($front_token)?count($front_token):0;
                     //嘗試轉向找人臉
                     if($fperson_count==0){
-                        $rotate = $this->face_rotate($content['person_image'],$user_id,'faceplusplus');
+                        $rotate = $this->face_rotate($content['person_image'],$user_id,$cer_id,'faceplusplus');
                         if($rotate){
                             $content['person_image'] 	= $rotate['url'];
                             $fperson_count				= $rotate['count'];
+                            $person_token               = $fperson_count;
                         }
                     }
                     if($ffront_count==0){
-                        $rotate = $this->face_rotate($content['front_image'],$user_id,'faceplusplus');
+                        $rotate = $this->face_rotate($content['front_image'],$user_id,$cer_id,'faceplusplus');
                         if($rotate){
                             $content['front_image'] 	= $rotate['url'];
                             $ffront_count				= $rotate['count'];
+                            $front_token                = $ffront_count;
                         }
                     }
                     if($fperson_count ==2 && $ffront_count == 1 ){
@@ -422,7 +424,7 @@ class Certification_lib{
 		return false;
 	}
 
-    public function face_rotate($url='',$user_id=0,$system='azure'){
+    public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
 		if($image){
 			for($i=1;$i<=3;$i++){
@@ -466,7 +468,7 @@ class Certification_lib{
 				else{
                     $base64 = base64_encode($image_data);
                     $this->CI->load->library('faceplusplus_lib');
-                    $count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,1);
+                    $count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
                 }
                 if($count){
                     $this->CI->load->library('s3_upload');
