@@ -290,8 +290,7 @@ class Target_lib{
                         $loan_amount 		= $target->amount > $credit['amount']&&$subloan_status==false?$credit['amount']:$target->amount;
 
                         if($loan_amount >= $product_info['loan_range_s']||$subloan_status) {
-
-                            if($product_info['type']==1){
+                            if($product_info['type']==1||$subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
                                 if($contract_id){
@@ -303,6 +302,7 @@ class Target_lib{
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 1,
                                     ];
+                                    $subloan_status?$param=['status'=>1]:'';
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
                                     if($rs){
