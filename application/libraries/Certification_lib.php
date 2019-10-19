@@ -290,6 +290,21 @@ class Certification_lib{
                     $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id,$cer_id);
                     $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
                     $ffront_count 	= $front_token&&is_array($front_token)?count($front_token):0;
+                    //嘗試轉向找人臉
+                    if($fperson_count==0){
+                        $rotate = $this->face_rotate($content['person_image'],$user_id,'faceplusplus');
+                        if($rotate){
+                            $content['person_image'] 	= $rotate['url'];
+                            $fperson_count				= $rotate['count'];
+                        }
+                    }
+                    if($ffront_count==0){
+                        $rotate = $this->face_rotate($content['front_image'],$user_id,'faceplusplus');
+                        if($rotate){
+                            $content['front_image'] 	= $rotate['url'];
+                            $ffront_count				= $rotate['count'];
+                        }
+                    }
                     if($fperson_count ==2 && $ffront_count == 1 ){
                         foreach($person_token as $token){
                             $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id,$cer_id);
@@ -407,9 +422,7 @@ class Certification_lib{
 		return false;
 	}
 
-    public function face_rotate($url='',$user_id=0){
-        $this->CI->load->library('Azure_lib');
-		$this->CI->load->library('s3_upload');
+    public function face_rotate($url='',$user_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
 		if($image){
 			for($i=1;$i<=3;$i++){
@@ -445,16 +458,26 @@ class Certification_lib{
 				imagejpeg($output, NULL, 90);
 				$image_data = ob_get_contents();
 				ob_end_clean();
-				$base64 = base64_encode($image_data);
-                $url = $this->CI->s3_upload->image_by_data($image_data,basename($url),$user_id,'id_card','rotate');
-                $count  = count($this->CI->azure_lib->detect($url,$user_id));
-				if($count){
-					return array('count' => $count,'url' => $url);
-				}
-			}
+
+				if($system=='azure'){
+				    $this->CI->load->library('Azure_lib');
+                    $count  = count($this->CI->azure_lib->detect($url,$user_id));
+                }
+				else{
+                    $base64 = base64_encode($image_data);
+                    $this->CI->load->library('faceplusplus_lib');
+                    $count = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,1);
+                }
+                if($count){
+                    $this->CI->load->library('s3_upload');
+                    $url = $this->CI->s3_upload->image_by_data($image_data, basename($url), $user_id, 'id_card', 'rotate');
+                    return array('count' => $count,'url' => $url);
+                }
+            }
 		}
 		return false;
 	}
+
 
     private function idcard_success($info){
 		if($info){
