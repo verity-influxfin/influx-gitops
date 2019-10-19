@@ -187,6 +187,7 @@
                                         <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])) {
                                             echo '<h4>【其他輔助證明】</h4>';
                                             if (isset($content['business_image'])) {
+                                                !is_array($content['business_image'])?$content['business_image']=[$content['business_image']]:'';
                                                 echo '<div class="form-group"><label for="disabledSelect">名片正反面</label><br>';
                                                 foreach($content['business_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
@@ -199,6 +200,7 @@
                                                 }
                                             }
                                             if (isset($content['license_image'])) {
+                                                !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
                                                 echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
                                                 foreach($content['license_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
