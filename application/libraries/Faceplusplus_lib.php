@@ -76,7 +76,7 @@ class Faceplusplus_lib{
 		return FALSE;
 	}
 	
-	public function get_face_token_by_base64($image="",$user_id=0){
+	public function get_face_token_by_base64($image="",$user_id=0,$cer_id=0){
 		if(!empty($image)){
 			$url 			= $this->api_url."detect";
 			$data			= array(
@@ -90,6 +90,7 @@ class Faceplusplus_lib{
 			$log_data	= array(
 				"type"		=> "detect",
 				"user_id"	=> $user_id,
+                "cer_id"	=> $cer_id,
 				"response"	=> $rs,
 				"request"	=> $image,
 			);
