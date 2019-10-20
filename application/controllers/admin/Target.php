@@ -144,7 +144,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
-                    $html .= '<td>'.(isset($value->company)?$value->company.' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
+                    $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
