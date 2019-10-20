@@ -95,7 +95,7 @@
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信評</th>
-                                            <th>學校</th>
+                                            <th>公司/學校</th>
                                             <th>科系</th>
                                             <th>申請金額</th>
                                             <th>核准金額</th>
@@ -128,7 +128,7 @@
                                             <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
-                                            <td><?=isset($value->school_name)?$value->school_name:'' ?></td>
+                                            <td><?=isset($value->company)?$value->company.' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
                                             <td><?=isset($value->school_department)?$value->school_department:'' ?></td>
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>
                                             <td><?=isset($value->credit->amount)?$value->credit->amount:'' ?></td>

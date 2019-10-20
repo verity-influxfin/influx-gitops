@@ -90,15 +90,17 @@ class Target extends MY_Admin_Controller {
 						$list[$key]->bank_account_verify = $tmp[$value->user_id]['bank_account_verify'];
                     }
 
-                    if(!isset($tmp[$value->user_id]['school'])) {
+                    if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
                         $this->load->model('user/user_meta_model');
-                        $users_school = $this->user_meta_model->get_many_by([
-                            'meta_key' => ['school_name', 'school_department'],
+                        $get_meta = $this->user_meta_model->get_many_by([
+                            'meta_key' => ['school_name', 'school_department','job_company'],
                             'user_id' => $value->user_id,
                         ]);
-                        if ($users_school) {
-                            foreach ($users_school as $skey => $svalue) {
-                                $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value;
+                        if ($get_meta) {
+                            foreach ($get_meta as $skey => $svalue) {
+                                $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
+                                $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
+                                $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
                             }
                         }
                     }
@@ -106,6 +108,8 @@ class Target extends MY_Admin_Controller {
                         $list[$key]->school_name       = $tmp[$value->user_id]['school']['school_name'];
                         $list[$key]->school_department = $tmp[$value->user_id]['school']['school_department'];
                     }
+
+                    isset($tmp[$value->user_id]['company'])?$list[$key]->company=$tmp[$value->user_id]['company']:'';
 
                     $amortization_table = $this->target_lib->get_amortization_table($value);
                     $list[$key]->remaining_principal = $amortization_table['remaining_principal'];
@@ -130,7 +134,7 @@ class Target extends MY_Admin_Controller {
 		if(isset($input['export'])&&$input['export']==1){
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
-            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
+            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>信評</th><th>公司/學校</th><th>科系</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
 
             if(isset($list) && !empty($list)){
                 $subloan_list = $this->config->item('subloan_list');
@@ -140,7 +144,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
-                    $html .= '<td>'.(isset($value->school_name)?$value->school_name:'').'</td>';
+                    $html .= '<td>'.(isset($value->company)?$value->company.' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
