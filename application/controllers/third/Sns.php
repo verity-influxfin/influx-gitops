@@ -16,15 +16,12 @@ class Sns extends REST_Controller {
 	public function certification_post()
     {
 		$rawData = file_get_contents('php://input');
-		$rawData_test = json_decode($rawData);
-		$this->load->model('log/log_request_model');
-				$this->log_request_model->insert(array(
-					'method' 	=> $rawData,
-					'url'	 	=> $rawData_test,
-					'investor'	=> $rawData_test,
-					'user_id'	=>$rawData,
-					'agent'		=> $rawData_test,
-				));
+		$_POST = json_decode($rawData);
+		$ch = curl_init($_POST->SubscribeURL) ;
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+		curl_exec($ch) ;
+		curl_close($ch);
     }
 
 }
