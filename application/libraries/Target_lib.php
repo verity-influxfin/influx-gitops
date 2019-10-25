@@ -373,6 +373,7 @@ class Target_lib{
             $this->CI->order_model->update($target->order_id,['status'=>9]);
             $this->coop_status_change_no($target->order_id,'approve_fail');
         }
+        return false;
     }
 
 	public function target_verify_success($target = [],$admin_id=0){
