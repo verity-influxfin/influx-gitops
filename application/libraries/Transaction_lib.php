@@ -710,12 +710,10 @@ class Transaction_lib{
                     $unlock = false;
                 }
                 $transfer_info[] = $infos;
-                $invest_list[$infos['targets']->product_id][] = $infos['investment']->id;
-                $invest_target[$infos['investment']->id]    = $infos['targets']->target_no;
             }
-            $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
-            $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
-            if($mrs && $rs && $unlock){
+            //$mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
+            //$rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
+            if(true){
                 $transfer_account = '';
                 $virtual_account  = '';
                 foreach($transfers as $t => $transfer) {
@@ -754,6 +752,8 @@ class Transaction_lib{
 
                             $new_investment = $this->CI->investment_model->insert($investment_data);
                             if ($new_investment) {
+                                $invest_list[$target->product_id][] = $new_investment;
+                                $invest_target[$new_investment]    = $target->target_no;
                                 $platform_fee = 0;
                                 $transfer_fee = 0;
                                 $transfer_account==''?$transfer_account=$this->CI->virtual_account_model->get_by(['user_id' => $investment->user_id, 'investor' => 1]):null;
@@ -1166,7 +1166,7 @@ class Transaction_lib{
                     $get_investment = $this->CI->investment_model->order_by('target_id','ASC')->get_many($investment);
                     $investment_amortization[$investment] = $this->get_investment_amortization($get_investment);
                 }
-                $no_sum = [];
+                $no_sum = [4];
                 $sum    = [];
             }
 
