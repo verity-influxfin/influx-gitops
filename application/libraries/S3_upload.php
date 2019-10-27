@@ -269,7 +269,7 @@ class S3_upload {
 
 			if(isset($result['ObjectURL'])){
 				$data = array(
-						'type'		=> 'estatement',
+						'type'		=> $type,
 						'user_id'	=> $user_id,
 						'file_name'	=> $name,
 						'url'		=> $result['ObjectURL'],
@@ -285,6 +285,35 @@ class S3_upload {
 			$this->error = 'No file.';
 		}
 		
+		return false;
+	}
+
+	public function excel($files='',$name='test.xlsx',$user_id='',$type='test'){
+		if (isset($files) && $files) {
+			$result = $this->client->putObject(array(
+				'Bucket' 		=> S3_BUCKET,
+				'Key'    		=> $type.'/'.$name,
+				'Body'   		=> $files
+			));
+
+			if(isset($result['ObjectURL'])){
+				$data = array(
+					'type'		=> $type,
+					'user_id'	=> $user_id,
+					'file_name'	=> $name,
+					'url'		=> $result['ObjectURL'],
+					'exif'		=> '',
+				);
+
+				$this->CI->log_image_model->insert($data);
+				return $result['ObjectURL'];
+			}else{
+				$this->error = 'upload error.';
+			}
+		}else{
+			$this->error = 'No file.';
+		}
+
 		return false;
 	}
 

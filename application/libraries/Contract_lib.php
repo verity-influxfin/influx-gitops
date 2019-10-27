@@ -11,12 +11,14 @@ class Contract_lib{
 		$this->CI->load->model('admin/contract_format_model');
     }
 
-	public function get_contract($contract_id){
+    //一掰合約
+	public function get_contract($contract_id,$user_info=[],$nodate=true){
 		if($contract_id){
 			$contract = $this->CI->contract_model->get($contract_id);
 			if($contract){
 				$format = $this->CI->contract_format_model->get($contract->format_id);
 				if($format){
+                    $contents   = false;
 					$content 	= json_decode($contract->content,TRUE);
                     if($contract->format_id == 4){
                         $contract_part = '';
@@ -36,11 +38,14 @@ class Contract_lib{
                             ];
                             $part_text = $value[8]==0 ? mb_ereg_replace('已／|不併同／', '', $part->content) : mb_ereg_replace('／未|／併同', '', $part->content);
                             $contract_part .= vsprintf($part_text, $addpart);
+                            if(isset($user_info[$value[1]])){
+                                $contract_part = preg_replace('/與借款人即/u', '與借款人 '.get_hidden_name($user_info[$value[1]]->name).'，身分證字號 '.get_hidden_id($user_info[$value[1]]->id_number).' ，', $contract_part);
+                            }
                         }
-                        $content = [
+                        $contents = [
                             $content[0],
                             $content[1],
-                            $content[2],
+                            '',//甲方
                             $content[3],
                             $contract_part,
                             $content[5],
@@ -49,11 +54,17 @@ class Contract_lib{
                             $content[8]
                         ];
                     }
-                    $content 	= vsprintf($format->content,$content);
-                    $content 	.= "\n 中華民國 ".(date('Y',$contract->created_at)-1911).' '.date('年 m 月 d 日',$contract->created_at);
+                    $contents 	= vsprintf($format->content,($contents?$contents:$content));
+                               if(isset($user_info[$content[0]])){
+                        $contents = preg_replace('/讓與人，/u', '讓與人 '.get_hidden_name($user_info[$content[0]]->name).'，身分證字號 '.get_hidden_id($user_info[$content[0]]->id_number).' ，', $contents);
+                    }
+                    if(isset($user_info[$content[1]])){
+                        $contents = preg_replace('/受讓人，/u', '受讓人 '.get_hidden_name($user_info[$content[1]]->name).'，身分證字號 '.get_hidden_id($user_info[$content[1]]->id_number).' ，', $contents);
+                    }
+                    $nodate?$contents 	.= "\n 中華民國 ".(date('Y',$contract->created_at)-1911).' '.date('年 m 月 d 日',$contract->created_at):'';
 					$data = array(
 						'title'		=> $format->title,
-						'content' 	=> $content,
+						'content' 	=> $contents,
 						'created_at'=> $contract->created_at,
 					);
 					return $data;
@@ -88,9 +99,10 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function pretransfer_contract($type='' , $content = [] ){
+	public function pretransfer_contract($type='' , $content = [] ,$user_info=[]){
 		if($content){
 			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>$type]);
+			$type=='trans_multi'?$content[2]='':'';
 			if($format){
 				$contract 	= vsprintf($format->content,$content);
 				$contract 	.= "\n 中華民國 ".(date('Y')-1911).' '.date('年 m 月 d 日');
@@ -100,6 +112,7 @@ class Contract_lib{
 		return false;
 	}
 
+	//債轉合約
     public function build_contract($type,$user_id,$trans_user_id,$data,$data_arr,$count,$amount,$index=0,$view=0){
         if($type=='transfer'){
             $contract_var = [

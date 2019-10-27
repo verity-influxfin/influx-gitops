@@ -697,7 +697,8 @@ class Transaction_lib{
             $transfer_ids  = [];
             $user_info     = [];
             $contract      = false;
-            $products      = [];
+            $invest_list   = [];
+            $invest_target = [];
             foreach($transfers as $tc => $transfer_check) {
                 $infos                  = [];
                 $target_ids[]           = $transfer_check->target_id;
@@ -709,7 +710,8 @@ class Transaction_lib{
                     $unlock = false;
                 }
                 $transfer_info[] = $infos;
-                $products[$infos['targets']->product_id][] = $infos['targets']->id;
+                $invest_list[$infos['targets']->product_id][] = $infos['investment']->id;
+                $invest_target[$infos['investment']->id]    = $infos['targets']->target_no;
             }
             $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
             $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
@@ -911,42 +913,37 @@ class Transaction_lib{
                                                 $this->CI->passbook_lib->enter_account($value);
                                             }
                                             $this->CI->notification_lib->transfer_success($target->user_id, 0, 0, $target->target_no, $transfer->amount, $transfer_investments->user_id, $date);
-                                            //!isset($user_info[$target->user_id])?($user_info[$target->user_id]=$this->CI->user_model->get($target->user_id)):'';
+                                            !isset($user_info[$target->user_id])?($user_info[$target->user_id]=$this->CI->user_model->get($target->user_id)):'';
                                             if($t==(count($transfers)-1)) {
                                                 $amount = $amount + $platform_fee + $transfer_fee;
                                                 $target_no==false?$target_no=$target->target_no:'';
-                                                //!isset($user_info[$investment->user_id])?($user_info[$investment->user_id]=$this->CI->user_model->get($investment->user_id)):'';
-                                                //!isset($user_info[$transfer_investments->user_id])?($user_info[$transfer_investments->user_id]=$this->CI->user_model->get($transfer_investments->user_id)):'';
+                                                !isset($user_info[$investment->user_id])?($user_info[$investment->user_id]=$this->CI->user_model->get($investment->user_id)):'';
+                                                !isset($user_info[$transfer_investments->user_id])?($user_info[$transfer_investments->user_id]=$this->CI->user_model->get($transfer_investments->user_id)):'';
 
-                                                ////crate contract
-                                                //$contract    = $this->CI->contract_lib->get_contract($transfer_investments->contract_id,$user_info,false);
-                                                //$create_date = date("Y-m-d",$contract['created_at']);
-                                                //$file_name   = $target_no."-".$create_date;
-                                                //$attach[$file_name] = $this->CI->parser->parse('email/contract_content', [
-                                                //    "title"   => $contract['title'] ,
-                                                //    "content" => nl2br($contract['content']),
-                                                //    "time" => nl2br("\n 中華民國 ".(date('Y',$contract['created_at'])-1911).' '.date('年 m 月 d 日',$contract['created_at'])),
-                                                //],TRUE);
-                                                //$attach[$file_name] = $this->CI->estatement_lib->upload_pdf(
-                                                //    $target->user_id,
-                                                //    $attach[$file_name],
-                                                //    $user_info[$investment->user_id]->id_number,
-                                                //    $file_name,
-                                                //    "temp_contract.pdf",
-                                                //    "investor"
-                                                //    ,true
-                                                //);
+                                                //create contract
+                                                $contract    = $this->CI->contract_lib->get_contract($transfer_investments->contract_id,$user_info,false);
+                                                $create_date = date("YmdHis",$contract['created_at']);
+                                                $file_name   = $create_date."-".$target_no."_transfer_contract";
+                                                $contract_format = $this->CI->parser->parse('email/contract_content', [
+                                                    "title"   => $contract['title'] ,
+                                                    "content" => nl2br($contract['content']),
+                                                    "time" => nl2br("\n\n中華民國 ".(date('Y',$contract['created_at'])-1911).' '.date('年 m 月 d 日',$contract['created_at'])),
+                                                ],TRUE);
+                                                $attach[$file_name] = $this->CI->estatement_lib->upload_pdf(
+                                                    $target->user_id,
+                                                    $contract_format,
+                                                    $user_info[$investment->user_id]->id_number,
+                                                    "",
+                                                    ($file_name.".pdf"),
+                                                    "temp",
+                                                    true
+                                                );
+                                                //crate amortization
+                                                $xlsxs = $this->transfer_amortization($invest_list,$invest_target,$target->delay,$investment->user_id,$transfer_investments->user_id,$target);
 
-                                                ////crate amortization
-                                                ////$alias = $product_list[$product_id]['alias'];
-                                                //foreach ($products  as $k => $v){
-                                                //    $this->transfer_amortization($v);
-                                                //}
-
-                                                //$this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
-                                                //$this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
-                                                $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date);
-                                                $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date);
+                                                $attach = array_merge($attach,$xlsxs);
+                                                $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
+                                                $this->CI->notification_lib->transfer_success($transfer_investments->user_id, 1, 1, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
                                             }
                                         }
                                     }
@@ -979,7 +976,7 @@ class Transaction_lib{
         }
 		return false;
 	}
-	
+
 	//放款成功
 	function subloan_success($target_id,$admin_id=0){
 		$date 			= get_entering_date();
@@ -1015,7 +1012,7 @@ class Transaction_lib{
 							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 							'status'			=> 2
 						);
-						
+
 						//手續費
 						$transaction[]	= array(
 							'source'			=> SOURCE_FEES,
@@ -1029,7 +1026,7 @@ class Transaction_lib{
 							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 							'status'			=> 2
 						);
-						
+
 
 						$investment_ids = array();
 						$frozen_ids 	= array();
@@ -1046,7 +1043,7 @@ class Transaction_lib{
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
 								$this->CI->sms_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
-								
+
 								//放款
 								$transaction[]		= array(
 									'source'			=> SOURCE_LENDING,
@@ -1062,7 +1059,7 @@ class Transaction_lib{
 									'status'			=> 2
 								);
 
-								
+
 								//攤還表
 								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
 								if($amortization_schedule){
@@ -1080,7 +1077,7 @@ class Transaction_lib{
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
 										);
-										
+
 										$transaction[]	= array(
 											'source'			=> SOURCE_AR_INTEREST,
 											'entering_date'		=> $date,
@@ -1094,7 +1091,7 @@ class Transaction_lib{
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
 										);
-										
+
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
 										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
 										$transaction[]	= array(
@@ -1113,7 +1110,7 @@ class Transaction_lib{
 									}
 								}
 							}
-							
+
 							$rs  = $this->CI->transaction_model->insert_many($transaction);
 							if($rs && is_array($rs)){
 								$target_update_param = array(
@@ -1125,7 +1122,7 @@ class Transaction_lib{
 								$this->CI->target_model->update($target_id,$target_update_param);
 								$this->CI->load->library('target_lib');
 								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
-								
+
 								$this->CI->investment_model->update_many($investment_ids,array('status'=>3));
 								foreach($investment_ids as $k => $investment_id){
 									$this->CI->target_lib->insert_investment_change_log($investment_id,array('status'=>3),0,$admin_id);
@@ -1134,8 +1131,8 @@ class Transaction_lib{
 								foreach($rs as $key => $value){
 									$this->CI->passbook_lib->enter_account($value);
 								}
-								
-								
+
+
 								$this->CI->subloan_model->update($subloan->id,array('status'=>10));
 								$old_target = $this->CI->target_model->get($subloan->target_id);
 								$this->CI->load->library('charge_lib');
@@ -1151,56 +1148,112 @@ class Transaction_lib{
 		return false;
 	}
 
-    private function transfer_amortization($ids=false){
-        $html 			= '';
-        $list 			= array();
-        if($ids && is_array($ids)){
-            $investments 			= $this->CI->investment_model->order_by('target_id','ASC')->get_many($ids);
-            if($investments){
-                $this->CI->load->library('target_lib');
-                foreach($investments as $key => $value){
-                    $target = $this->CI->target_model->get($value->target_id);
-                    $amortization_table = $this->target_lib->get_investment_amortization_table($target,$value);
-                    if($amortization_table && !empty($amortization_table['list'])){
-                        foreach($amortization_table['list'] as $k => $v){
-                            if(!isset($list[$v['repayment_date']])){
-                                $list[$v['repayment_date']] = array(
-                                    'principal'	=> 0,
-                                    'interest'	=> 0,
-                                    'ar_fees'	=> 0,
-                                    'repayment'	=> 0,
-                                );
-                            }
-                            $list[$v['repayment_date']]['principal'] 	+= $v['principal'];
-                            $list[$v['repayment_date']]['interest'] 	+= $v['interest'];
-                            $list[$v['repayment_date']]['ar_fees'] 		+= $v['ar_fees'];
-                            $list[$v['repayment_date']]['repayment'] 	+= $v['repayment'];
-                        }
-                    }
+    private function transfer_amortization($invest_list,$invest_target,$delay_target=0,$investments,$transfer_investments,$target){
+        $xlsxs = false;
+        $this->CI->load->library('target_lib');
+        $product_list = $this->CI->config->item('product_list');
+        foreach ($invest_list as $product_id => $value){
+            $investment_amortization = [];
+            $contents = [];
+            $cell     = [];
+            $no_sum   = [1,2];
+            $sum      = [3,6];
+            $sheetTItle = ['案號','應還日期','逾期天數','本金餘額','應收利息','應收延滯息','違約金'];
+            $normal_title = ['日期','應收本金','應收利息','合計','當期本金餘額'];
+            if($delay_target==0){
+                $sheetTItle=$normal_title;
+                foreach ($value as $key => $investment){
+                    $get_investment = $this->CI->investment_model->order_by('target_id','ASC')->get_many($investment);
+                    $investment_amortization[$investment] = $this->get_investment_amortization($get_investment);
                 }
-                header('Content-type:application/vnd.ms-excel');
-                header('Content-Disposition: attachment; filename=repayment_schedule_'.date('Ymd').'.xls');
-                $html = '<table><thead><tr><th>日期</th><th>應收本金</th><th>應收利息</th><th>合計</th><th>當期本金餘額</th></tr></thead><tbody>';
+                $no_sum = [];
+                $sum    = [];
+            }
 
-                if(isset($list) && !empty($list)){
-                    ksort($list);
-                    foreach($list as $key => $value){
-                        if(substr($key, -2)=='10'){
-                            $profit = $value['principal']+$value['interest']-$value['ar_fees'];
-                            $html .= '<tr>';
-                            $html .= '<td>'.$key.'</td>';
-                            $html .= '<td>'.$value['principal'].'</td>';
-                            $html .= '<td>'.$value['interest'].'</td>';
-                            $html .= '<td>'.$profit.'</td>';
-                            $html .= '<td>'.($value['repayment']-$value['ar_fees']).'</td>';
-                            $html .= '</tr>';
+            $total_investments = $this->CI->investment_model->order_by('target_id','ASC')->get_many($value);
+            $all_investment_amortization = $this->get_investment_amortization($total_investments,$delay_target,$invest_target,$target);
+            foreach ($all_investment_amortization as $sheets => $sheetDatas) {
+                $array = array_values($sheetDatas);
+                array_unshift($array,$sheets);
+                $cell[] = $array;
+            }
+            $contents[] = [
+                'sheet'   => '總表',
+                'title'   => $sheetTItle,
+                'content' => $cell,
+            ];
+            foreach ($investment_amortization as $investment => $investmentData) {
+                $cell  = [];
+                foreach ($investmentData as $sheet => $sheetData) {
+                    $array = array_values($sheetData);
+                    array_unshift($array, $sheet);
+                    $cell[] = $array;
+                }
+                $contents[] = [
+                    'sheet' => $invest_target[$investment],
+                    'title' => $sheetTItle,
+                    'content' => $cell,
+                ];
+            }
+
+            $descri = '普匯inFlux 使用者 [ '.$investments.' 債權轉換 '.$transfer_investments.' ]';
+            $this->CI->load->library('Phpspreadsheet_lib');
+            $file_name = date("YmdHis",time()).'-'.$product_list[$product_id]['alias'].'-'.$investments.'To'.$transfer_investments.'_transfer_targets_amortization.xlsx';
+            $xlsxs[$file_name] = $this->CI->phpspreadsheet_lib->excel($file_name,$contents,'債權轉讓攤還表','總表與各案件攤還表',$descri,$transfer_investments,false,$no_sum,$sum);
+
+        }
+        return $xlsxs;
+    }
+
+    private function get_investment_amortization($investments,$delay_target=0,$target_nos='',$target=''){
+        $list= [];
+        foreach($investments as $key => $value){
+            $i=1;
+            $targets = $this->CI->target_model->get($value->target_id);
+            $amortization_table = $this->CI->target_lib->get_investment_amortization_table($targets,$value);
+            if($amortization_table && !empty($amortization_table['list'])){
+                foreach($amortization_table['list'] as $k => $v){
+                    if(!isset($list[$v['repayment_date']])){
+                        if($delay_target==0){
+                            $list[$v['repayment_date']] = array(
+                                'principal'	=> 0,
+                                'interest'	=> 0,
+                                'total'	=> 0,
+                                'remaining_principal'	=> 0,
+                            );
                         }
                     }
+                    if($delay_target==1){
+                        if(count($amortization_table['list'])==$i){
+                            $target_no = $target_nos[$value->id];
+                            $list[$target_no]['repayment_date']      = $v['repayment_date'];
+                            $list[$target_no]['days']                = $v['days'];
+                            $list[$target_no]['remaining_principal'] = $v['remaining_principal'];
+                            $list[$target_no]['interest']            = $v['interest'];
+                            $list[$target_no]['delay_interest']      = $v['delay_interest'];
+                            $transaction = $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by(array(
+                                'target_id'	=> $target->id,
+                                'user_from'	=> $target->user_id,
+                                'status'	=> 1,
+                                'source'	=> 91,
+                            ));
+                            $list[$target_no]['liquidated_damages']  = 0;
+                            foreach($transaction as $key => $value){
+                                $list[$target_no]['liquidated_damages'] += $value->amount;
+                            }
+                        }
+                    }
+                    else{
+                        $list[$v['repayment_date']]['principal'] 	        += $v['principal'];
+                        $list[$v['repayment_date']]['interest'] 	        += $v['interest'];
+                        $list[$v['repayment_date']]['total'] 	            += $v['principal']+$v['interest'];
+                        $list[$v['repayment_date']]['remaining_principal'] 	+= $v['remaining_principal'];
+                    }
+                    $i++;
                 }
-                return $html .= '</tbody></table>';
             }
         }
-        return false;
+        return $list;
     }
 
     private function reset_credit_expire_time($target=[]){

@@ -803,9 +803,10 @@ class Estatement_lib{
 		return false;
 	}
 	
-	public function upload_pdf($user_id=0,$html="",$password="",$title="",$file_name="",$path=""){
+	public function upload_pdf($user_id=0,$html="",$password="",$title="",$file_name="",$path="",$orientation=false,$loaalTemp=false){
 		if($user_id){
-			$pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $orientation?'P':'L';
+			$pdf = new TCPDF($orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 			$permissions  = array(
 				'print', 
 				'modify', 
@@ -819,16 +820,19 @@ class Estatement_lib{
 			$pdf->SetProtection($permissions , $password , PDF_OWNER_PASSWORD, 0, null);
 			$pdf->SetCreator(GMAIL_SMTP_NAME);
 			$pdf->SetAuthor(GMAIL_SMTP_NAME);
-			$pdf->SetTitle($title);
+			//$pdf->SetTitle($title);
 			$pdf->setPrintHeader(false);
 			$pdf->setPrintFooter(false);
 			$pdf->setFontSubsetting(true);
             $pdf->SetFont('msungstdlight', '', 10);
 			$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-			$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-			$pdf->AddPage('L');
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+			$pdf->AddPage($orientation);
 			$pdf->writeHTML($html, 1, 0, true, true, '');
 			$files 		= $pdf->Output("","S");
+            if($loaalTemp){
+                return $files;
+            }
 			$file_url 	= $this->CI->s3_upload->pdf ($files,$file_name,$user_id,'estatement/'.$path);
 			if($file_url){
 				return $file_url;

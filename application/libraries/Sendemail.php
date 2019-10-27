@@ -111,7 +111,7 @@ class Sendemail
                     $this->CI->email->subject($title);
                     $this->CI->email->message($content);
                     foreach($attach as $key => $value) {
-                        $this->CI->email->attach($value,"",$key.".pdf");
+                        $this->CI->email->attach($value,"",$key);
                     }
                     $rs = $this->CI->email->send();
                 }
