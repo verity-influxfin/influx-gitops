@@ -458,7 +458,26 @@ class Target extends MY_Admin_Controller {
 	{
 		$get 		= $this->input->get(NULL, TRUE);
 
-		$page_data = [];
+		$userId = isset($get["id"]) ? intval($get["id"]) : 0;
+
+		if ($this->input->is_ajax_request()) {
+			$user = $this->user_model->get($userId);
+
+			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
+
+			$this->load->library('output/json_output');
+
+			$user->school = $userMeta;
+			$user->instagram = $userMeta;
+			$user->facebook = $userMeta;
+			$this->load->library('output/user/user_output', ["data" => $user]);
+
+			$response = [
+				"user" => $this->user_output->toOne(true),
+				"school" => $this->school_output->toOne(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title', $this->menu);

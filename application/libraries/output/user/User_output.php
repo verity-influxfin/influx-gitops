@@ -18,12 +18,12 @@ class User_output
         }
     }
 
-    public function toOne()
+    public function toOne($withSensitiveInfo = false)
     {
         if (!$this->user) {
             return [];
         }
-        return $this->map($this->user);
+        return $this->map($this->user, $withSensitiveInfo);
     }
 
     public function toMany()
@@ -38,9 +38,9 @@ class User_output
         return $users;
     }
 
-    public function map($user)
+    public function map($user, $withSensitiveInfo = false)
     {
-        return [
+        $output = [
             "id" => intval($user->id),
             "name" => strval($user->name),
             "phone" => strval($user->phone),
@@ -52,5 +52,36 @@ class User_output
             "promote_code" => strval($user->promote_code),
             "created_at" => intval($user->created_at),
         ];
+
+        if ($withSensitiveInfo) {
+			$output["id_card"] = [
+				"id" => $user->id_number,
+				"issued_at" => $user->id_card_date,
+				"issued_place" => $user->id_card_place,
+			];
+
+			$output["birthday"] = $user->birthday;
+			$output["address"] = $user->address;
+		}
+
+        if ($user->school) {
+			$ci =& get_instance();
+			$ci->load->library('output/user/school_output', ["data" => $user->school]);
+			$output["school"] = $ci->school_output->toOne();
+		}
+
+        if ($user->instagram) {
+			$ci =& get_instance();
+			$ci->load->library('output/user/instagram_output', ["data" => $user->instagram]);
+			$output["instagram"] = $ci->instagram_output->toOne();
+		}
+
+        if ($user->facebook) {
+			$ci =& get_instance();
+			$ci->load->library('output/user/facebook_output', ["data" => $user->facebook]);
+			$output["facebook"] = $ci->instagram_output->toOne();
+		}
+
+        return $output;
     }
 }

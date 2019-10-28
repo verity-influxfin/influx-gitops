@@ -1,3 +1,6 @@
+<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
+
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
@@ -20,73 +23,73 @@
 									<tr>
 										<td><p class="form-control-static">姓名</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="name" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">性別</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="gender" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">學校名稱</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="school" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">借款端銀行/分行</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="bank-for-loan" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">身分證字號</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="id-card" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">婚姻</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="marriage" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">學制/學門</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="school-system" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">借款端帳號</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="load-account" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">生日</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="birthday" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">地址</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="address" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">系所</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="school-department" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">投資端銀行/分行</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="lending-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">發證日期</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="id-card-issued-at" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">E-mail</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="email" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">(預計)畢業日期</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="graduated-at" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">投資端帳號</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="lending-account" class="form-control-static"></p>
 										</td>
 									</tr>
 								</table>
@@ -94,15 +97,15 @@
 									<tr>
 										<td><p class="form-control-static">使用者編號</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="id" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">手機號碼</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="phone" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">註冊日期</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="registered-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -122,11 +125,11 @@
 									<tr>
 										<td><p class="form-control-static">FB照片</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="facebook-profile-picture" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">FB暱稱</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="facebook-username" class="form-control-static"></p>
 										</td>
 										<td><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
 										<td>
@@ -140,7 +143,7 @@
 										</td>
 										<td><p class="form-control-static">IG帳號名稱</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="instagram-username" class="form-control-static"></p>
 										</td>
 									</tr>
 								</table>
@@ -466,3 +469,51 @@
 	<!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+
+<script>
+
+    $(document).ready(function() {
+        var userId = 3475;
+        $.ajax({
+            type: "GET",
+            url: "/admin/Target/final_validations?id=" + userId,
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            success: function (response) {
+                if (response.status.code != 200) {
+                    return;
+                }
+				let userJson = response.response.user;
+                user = new User(userJson);
+                fillUserInfo(user)
+            },
+			error: function(error) {
+                alert('資料載入失敗。請重新整理。');
+			}
+        });
+
+        function fillUserInfo(user) {
+            $("#id").text(user.id);
+            $("#name").text(user.name);
+            $("#gender").text(user.gender);
+            $("#birthday").text(user.birthday);
+            $("#email").text(user.contact.email);
+            $("#phone").text(user.contact.phone);
+            $("#address").text(user.contact.address);
+            $("#registered-at").text(user.getRegisteredAtAsDate());
+            $("#id-card").text(user.idCard.id);
+			$("#id-card-issued-at").text(user.idCard.issuedAt);
+
+			$("#school").text(user.school.name);
+			$("#school-system").text(user.school.system + " / " + user.school.department);
+			$("#school-department").text(user.school.department);
+			$("#graduated-at").text('');
+
+			$("#instagram-username").text(user.instagram.username);
+			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
+			$("#facebook-username").text(user.facebook.username);
+		}
+    });
+</script>
