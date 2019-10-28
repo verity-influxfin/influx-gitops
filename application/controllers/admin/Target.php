@@ -453,6 +453,18 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function final_validations()
+	{
+		$get 		= $this->input->get(NULL, TRUE);
+
+		$page_data = [];
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/target/final_validations');
+		$this->load->view('admin/_footer');
+	}
 	
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');
