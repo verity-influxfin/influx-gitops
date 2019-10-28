@@ -464,17 +464,18 @@ class Target extends MY_Admin_Controller {
 			$user = $this->user_model->get($userId);
 
 			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
-
+			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
 			$this->load->library('output/json_output');
 
 			$user->school = $userMeta;
 			$user->instagram = $userMeta;
 			$user->facebook = $userMeta;
 			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 
 			$response = [
 				"user" => $this->user_output->toOne(true),
-				"school" => $this->school_output->toOne(),
+				"credits" => $this->credit_output->toOne(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}

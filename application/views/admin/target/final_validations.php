@@ -1,5 +1,6 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 
 <div id="page-wrapper">
 	<div class="row">
@@ -286,37 +287,37 @@
 									<tr>
 										<td><p class="form-control-static">產品</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="product-name" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">信用等級</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="credit-level" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">信用評分</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="credit-points" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">信用額度</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="credit-amount" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">有效時間</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="credit-expired-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
 										<td><p class="form-control-static">核准時間</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="credit-created-at" class="form-control-static"></p>
 										</td>
 									</tr>
 								</table>
@@ -488,6 +489,10 @@
 				let userJson = response.response.user;
                 user = new User(userJson);
                 fillUserInfo(user)
+
+                let creditJson = response.response.credits;
+                credit = new Credit(creditJson);
+				fillCreditInfo(credit);
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
@@ -514,6 +519,15 @@
 			$("#instagram-username").text(user.instagram.username);
 			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
 			$("#facebook-username").text(user.facebook.username);
+		}
+
+		function fillCreditInfo(credit) {
+            $("#product-name").text(credit.product.name);
+			$("#credit-level").text(credit.level);
+			$("#credit-amount").text(credit.amount);
+			$("#credit-points").text(credit.points);
+			$("#credit-created-at").text(credit.getCreatedAtAsDate());
+			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
 		}
     });
 </script>
