@@ -473,9 +473,14 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 
+			$this->load->library('certification_lib');
+			$certifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
+			$this->load->library('output/user/verification_output', ['data' => $certifications]);
+
 			$response = [
 				"user" => $this->user_output->toOne(true),
 				"credits" => $this->credit_output->toOne(),
+				"verifications" => $this->verification_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}

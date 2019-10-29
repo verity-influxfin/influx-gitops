@@ -1,5 +1,6 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 
 <div id="page-wrapper">
@@ -165,67 +166,15 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
-									<tr>
-										<td><p class="form-control-static">實名認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">學生身份認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">金融帳號認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">社交認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">緊急聯絡人</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">常用電子信箱</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">財務訊息認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">最高學歷認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">聯合徵信認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">工作認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
+								<table id="borrowing-verifications" class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr class="odd list">
+											<th width="40%">認證名稱</th>
+											<th width="60%">狀態</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -493,6 +442,13 @@
                 let creditJson = response.response.credits;
                 credit = new Credit(creditJson);
 				fillCreditInfo(credit);
+
+				var verifications = [];
+				let verificationsJson = response.response.verifications;
+				for (var i = 0; i < verificationsJson.length; i++) {
+				    verifications.push(new Verification(verificationsJson[i]));
+				}
+				fillBorrowingVerifications(verifications);
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
@@ -528,6 +484,47 @@
 			$("#credit-points").text(credit.points);
 			$("#credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
+		}
+
+		function fillBorrowingVerifications(verifications) {
+
+            for (var i = 0; i < verifications.length; i++) {
+                pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
+                $("<tr>").append(
+                    $('<td>').append(pTag),
+                    '<td>' + getVerificationButton(user, verifications[i]) + '</td>'
+                ).appendTo("#borrowing-verifications");
+			}
+		}
+
+		function getVerificationButton(user, verification) {
+            var button;
+            var url;
+            if (verification.id == 3) {
+                if (verification.isPending() || verification.requireHumanReview()) {
+                    button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>';
+				} else if (verification.success()) {
+					button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>';
+				} else if (verification.failure()) {
+					button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>';
+				} else {
+                    return '<p class="form-control-static">無</p>';
+				}
+                url = '/admin/certification/user_bankaccount_edit?id=';
+            } else {
+                if (verification.isPending() || verification.requireHumanReview()) {
+                    button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button>';
+				} else if (verification.success()) {
+                    button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>';
+				} else if (verification.failure()) {
+                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>';
+				} else {
+                    return '<p class="form-control-static">無</p>';
+				}
+                url = '/admin/certification/user_certification_edit?from=risk&id=';
+            }
+
+            return '<a href="' + url + '">' + button + '</a>';
 		}
     });
 </script>
