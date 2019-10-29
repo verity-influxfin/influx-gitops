@@ -513,7 +513,9 @@
                 var text = bankAccounts.borrower.bankCode + " / " + bankAccounts.borrower.branchCode;
                 $("#borrower-bank").text(text);
 				$("#borrower-account").text(bankAccounts.borrower.account);
-			} else if (bankAccounts.investor) {
+			}
+
+            if (bankAccounts.investor) {
                 var text = bankAccounts.investor.bankCode + " / " + bankAccounts.investor.branchCode;
                 $("#investor-bank").text(text);
                 $("#investor-account").text(bankAccounts.investor.account);
