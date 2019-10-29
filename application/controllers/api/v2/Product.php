@@ -246,6 +246,7 @@ class Product extends REST_Controller {
                         $sub_product_list[$key2]['name'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['name'];
                         $sub_product_list[$key2]['description'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['description'];
                         $sub_product_list[$key2]['status'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['status'];
+                        $sub_product_list[$key2]['banner'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['banner'];
                         foreach ($sub_product_list[$key2]['identity'] as $idekey => $ideval){
                             $sub_product_list[$key2]['identity'][$idekey]['name'] = $visul_id_des[$ideval['visul_id']]['name'];
                             $sub_product_list[$key2]['identity'][$idekey]['description'] = $visul_id_des[$ideval['visul_id']]['description'];
@@ -261,7 +262,7 @@ class Product extends REST_Controller {
                                 $sub_product_list[$key2]['identity'][$idekey]['certifications'] = $certification;
                             }
                         }
-                        $sub_product_info = $sub_product_list[$key2];
+                        $sub_product_info = [$sub_product_list[$key2]];
                     }
                     $type_list['type'.$key][] = [
                         'visul_id'    => $key2,
@@ -277,8 +278,11 @@ class Product extends REST_Controller {
             $total_list            = [];
             foreach ($app_product_totallist as $id){
                 $total_list[] = [
-                    'visul' => $id,
-                    'name'  => $visul_id_des[$id],
+                    'visul'        => $id,
+                    'name'         => $visul_id_des[$id]['name'],
+                    'icon'         => $visul_id_des[$id]['icon'],
+                    'description'  => $visul_id_des[$id]['description'],
+                    'status'       => $visul_id_des[$id]['status'],
                 ];
             }
             $parm2 = array(
