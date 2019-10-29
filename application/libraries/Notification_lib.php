@@ -621,7 +621,7 @@ $name 您好，
 		$rs = $this->CI->user_notification_model->insert($param);
 
 		$etitle 		= "【認證】聯合徵信申請";
-		$econtent 	= "親愛的用戶，
+		$econtent 	= "親愛的用戶( 使用者編號 $user_id )，
 您好！感謝您申請普匯inFlux".$descri."聯合徵信認證，
 請將您申請完之徵信報告；以附件形式回覆此封mail，
 系統收到您的來信後會直接更新驗證內容，
@@ -645,7 +645,7 @@ $name 您好，
         $rs = $this->CI->user_notification_model->insert($param);
 
         $etitle 		= "【認證】工作認證申請";
-        $econtent 	= "親愛的用戶，
+        $econtent 	= "親愛的用戶( 使用者編號 $user_id )，
 您好！感謝您申請普匯inFlux工作認證，
 請將您申請完之徵信報告；以附件形式回覆此封mail，
 系統收到您的來信後會直接更新驗證內容，

@@ -423,7 +423,31 @@ class Certification_lib{
 		}
 		return false;
 	}
-
+	public function investigation_verify($info = array(), $url)
+	{
+		if ($info && $info->status == 0 && $info->certification_id == 9) {
+			$status = 3;
+			$this->CI->user_certification_model->update($info->id, array(
+				'status' => $status, 'sys_check' => 1,
+				'content' => json_encode(array('pdf_file' => $url))
+			));
+			return true;
+		}
+		return false;
+	}
+	public function job_verify($info = array(),$url) {
+		if ($info && $info->status == 0 && $info->certification_id == 10) {
+			$status = 3;
+			$content=json_decode($info->content,true);
+			$content['pdf_file']=$url;
+			$this->CI->user_certification_model->update($info->id, array(
+				'status' => $status, 'sys_check' => 1,
+				'content'=>json_encode($content) 
+			));
+			return true;	
+		}
+		return false;
+	}
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
 		if($image){
