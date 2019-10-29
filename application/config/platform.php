@@ -133,10 +133,7 @@ $config['product_list']= [
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
-		'description'		=> '學生貸
-計畫留學、創業或者實現更多理想嗎？
-需要資金卻無法向銀行聲請借款嗎？
-普匯陪你一起實現夢想'
+		'description'		=> '學生貸XXX'
 	],
 	2 => [
 		'id'				=> 2,
@@ -154,10 +151,7 @@ $config['product_list']= [
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
-		'description'		=> '學生手機貸
-計畫留學、創業或者實現更多理想嗎？
-需要資金卻無法向銀行聲請借款嗎？
-普匯陪你一起實現夢想'
+		'description'		=> '學生手機貸XXX'
 	],
 	3 => [
 		'id'				=> 3,
@@ -175,10 +169,7 @@ $config['product_list']= [
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
-		'description'		=> '上班族貸
-計畫留學、創業或者實現更多理想嗎？
-需要資金卻無法向銀行聲請借款嗎？
-普匯陪你一起實現夢想'
+		'description'		=> '上班族貸XXX'
 	],
     4 => [
         'id'				=> 4,
@@ -196,10 +187,7 @@ $config['product_list']= [
         'instalment'		=> [3,6,12,18,24],
         'repayment'			=> [1],
         'status'			=> 1,
-        'description'		=> '上班族手機貸
-計畫留學、創業或者實現更多理想嗎？
-需要資金卻無法向銀行聲請借款嗎？
-普匯陪你一起實現夢想'
+        'description'		=> '上班族手機貸XXX'
     ],
     /*    5 => [
             'id'				=> 5,
@@ -351,18 +339,12 @@ $config['visul_id_des'] = [
     ],*/
 
     '201'  => [
-        'name' => '學生工程師貸',
-        'description' =>'學生工程師貸XXX',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'status' => 1
     ],
     '202'  => [
-        'name' => '上班族工程師貸',
-        'description' =>'上班族工程師貸XXX',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'status' => 1
     ],
 
 ];
@@ -372,13 +354,31 @@ $config['sub_product_list'] = [
         'identity'          => [
             1 =>[
                 'visul_id'          => 201,
+                'name'				=> '學生工程師貸',
                 'product_id'        => '1:1',
-                'certifications'	=> [1,2,3,4,5,6,7]
+                'loan_range_s'		=> 5000,
+                'loan_range_e'		=> 120000,
+                'interest_rate_s'	=> 5,
+                'interest_rate_e'	=> 20,
+                'certifications'	=> [1,2,3,4,5,6,7],
+                'instalment'		=> [3,6,12,18,24],
+                'repayment'			=> [1],
+                'status'			=> 1,
+                'description'		=> '學生工程師貸XXX'
             ],
             2 =>[
                 'visul_id'          => 202,
+                'name'				=> '上班族工程師貸',
                 'product_id'        => '3:1',
+                'loan_range_s'		=> 10000,
+                'loan_range_e'		=> 200000,
+                'interest_rate_s'	=> 5,
+                'interest_rate_e'	=> 20,
                 'certifications'	=> [1,3,4,5,6,7,8,9,10],
+                'instalment'		=> [3,6,12,18,24],
+                'repayment'			=> [1],
+                'status'			=> 1,
+                'description'		=> '上班族工程師貸XXX'
             ]
         ],
         'status'            => 0

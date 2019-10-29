@@ -201,32 +201,25 @@ class Product extends REST_Controller {
                 }
 
                 $parm = array(
-                    'id' => $value['id'],
-                    'type' => $value['type'],
-                    'identity' => $value['identity'],
-                    'name' => $value['name'],
-                    'description' => $value['description'],
-                    'loan_range_s' => $value['loan_range_s'],
-                    'loan_range_e' => $value['loan_range_e'],
-                    'interest_rate_s' => $value['interest_rate_s'],
-                    'interest_rate_e' => $value['interest_rate_e'],
-                    'charge_platform' => PLATFORM_FEES,
-                    'charge_platform_min' => PLATFORM_FEES_MIN,
-                    'instalment' => $value['instalment'],
-                    'repayment' => $value['repayment'],
+                    'id' 					=> $value['id'],
+                    'type' 					=> $value['type'],
+                    'identity' 				=> $value['identity'],
+                    'name' 					=> $value['name'],
+                    'description' 			=> $value['description'],
+                    'loan_range_s'			=> $value['loan_range_s'],
+                    'loan_range_e'			=> $value['loan_range_e'],
+                    'interest_rate_s'		=> $value['interest_rate_s'],
+                    'interest_rate_e'		=> $value['interest_rate_e'],
+                    'charge_platform'		=> PLATFORM_FEES,
+                    'charge_platform_min'	=> PLATFORM_FEES_MIN,
+                    'instalment'			=> $value['instalment'],
+                    'repayment'				=> $value['repayment'],
                     'target' => $target,
                     'certification' => $certification,
                 );
 
                 //reformat Product for layer2
-                $temp[$value['type']][$value['visul_id']][$value['identity']] = [
-                    'product_id'    => $value['id'],
-                    'name'          => $value['name'],
-                    'description'   => $value['description'],
-                    'status'        => $value['status'],
-                    'certification' => $certification,
-                    'target'        => $target,
-                ];
+                $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
 
                 if ($value['type'] == 2) {
                     $parm['selling_type'] = $this->config->item('selling_type');;
@@ -248,10 +241,6 @@ class Product extends REST_Controller {
                         $sub_product_list[$key2]['status'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['status'];
                         $sub_product_list[$key2]['banner'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['banner'];
                         foreach ($sub_product_list[$key2]['identity'] as $idekey => $ideval){
-                            $sub_product_list[$key2]['identity'][$idekey]['name'] = $visul_id_des[$ideval['visul_id']]['name'];
-                            $sub_product_list[$key2]['identity'][$idekey]['description'] = $visul_id_des[$ideval['visul_id']]['description'];
-                            $sub_product_list[$key2]['identity'][$idekey]['status'] = $visul_id_des[$ideval['visul_id']]['status'];
-                            $sub_product_list[$key2]['identity'][$idekey]['target'] = [];
                             if (!empty($certification_list)) {
                                 $certification = [];
                                 foreach ($certification_list as $k => $v) {
