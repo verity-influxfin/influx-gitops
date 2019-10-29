@@ -6,6 +6,7 @@ class Verification_output
 	const VERIFIED = "verified";
 	const FAILURE = "failure";
 	const HUMAN_REVIEW_REQUIRED = "human_review_required";
+	const NOT_FOUND = "not_found";
 
 	protected $verification;
 	protected $verifications;
@@ -50,10 +51,10 @@ class Verification_output
 	public function map($verification, $withSensitiveInfo = false)
 	{
 		$output = [
-			"id" => $verification["id"],
+			"id" => $verification["certification_id"],
 			"name" => $verification["name"],
 			"description" => $verification["description"],
-			"status" => isset($this->statusMapping[$verification["status"]]) ? $this->statusMapping[$verification["status"]] : 'error',
+			"status" => isset($this->statusMapping[$verification["user_status"]]) ? $this->statusMapping[$verification["user_status"]] : self::NOT_FOUND,
 		];
 
 		return $output;

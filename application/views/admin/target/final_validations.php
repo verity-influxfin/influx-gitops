@@ -1,6 +1,8 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccount.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccounts.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 
 <div id="page-wrapper">
@@ -37,7 +39,7 @@
 										</td>
 										<td><p class="form-control-static">借款端銀行/分行</p></td>
 										<td>
-											<p id="bank-for-loan" class="form-control-static"></p>
+											<p id="borrower-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -55,7 +57,7 @@
 										</td>
 										<td><p class="form-control-static">借款端帳號</p></td>
 										<td>
-											<p id="load-account" class="form-control-static"></p>
+											<p id="borrower-account" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -73,7 +75,7 @@
 										</td>
 										<td><p class="form-control-static">投資端銀行/分行</p></td>
 										<td>
-											<p id="lending-bank" class="form-control-static"></p>
+											<p id="investor-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -91,7 +93,7 @@
 										</td>
 										<td><p class="form-control-static">投資端帳號</p></td>
 										<td>
-											<p id="lending-account" class="form-control-static"></p>
+											<p id="investor-account" class="form-control-static"></p>
 										</td>
 									</tr>
 								</table>
@@ -443,12 +445,16 @@
                 credit = new Credit(creditJson);
 				fillCreditInfo(credit);
 
+				let bankAccountJson = response.response.bank_accounts;
+                bankAccounts = new BankAccounts(bankAccountJson);
+				fillBankAccounts(bankAccounts)
+
 				var verifications = [];
 				let verificationsJson = response.response.verifications;
 				for (var i = 0; i < verificationsJson.length; i++) {
 				    verifications.push(new Verification(verificationsJson[i]));
 				}
-				fillBorrowingVerifications(verifications);
+				fillBorrowingVerifications(bankAccounts, verifications);
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
@@ -486,18 +492,30 @@
 			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
 		}
 
-		function fillBorrowingVerifications(verifications) {
+		function fillBorrowingVerifications(bankAccounts, verifications) {
 
             for (var i = 0; i < verifications.length; i++) {
                 pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
                 $("<tr>").append(
                     $('<td>').append(pTag),
-                    '<td>' + getVerificationButton(user, verifications[i]) + '</td>'
+                    '<td>' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
                 ).appendTo("#borrowing-verifications");
 			}
 		}
 
-		function getVerificationButton(user, verification) {
+		function fillBankAccounts(bankAccounts) {
+            if (bankAccounts.borrower) {
+                var text = bankAccounts.borrower.bankCode + " / " + bankAccounts.borrower.branchCode;
+                $("#borrower-bank").text(text);
+				$("#borrower-account").text(bankAccounts.borrower.account);
+			} else if (bankAccounts.investor) {
+                var text = bankAccounts.investor.bankCode + " / " + bankAccounts.investor.branchCode;
+                $("#investor-bank").text(text);
+                $("#investor-account").text(bankAccounts.investor.account);
+			}
+		}
+
+		function getVerificationButton(bankAccounts, verification) {
             var button;
             var url;
             if (verification.id == 3) {
@@ -510,7 +528,7 @@
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
-                url = '/admin/certification/user_bankaccount_edit?id=';
+                url = '/admin/certification/user_bankaccount_edit?id=' + bankAccounts.borrower.id;
             } else {
                 if (verification.isPending() || verification.requireHumanReview()) {
                     button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button>';
@@ -521,7 +539,7 @@
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
-                url = '/admin/certification/user_certification_edit?from=risk&id=';
+                url = '/admin/certification/user_certification_edit?from=risk&id=' + verification.id;
             }
 
             return '<a href="' + url + '">' + button + '</a>';
