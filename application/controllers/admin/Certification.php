@@ -99,7 +99,7 @@ class Certification extends MY_Admin_Controller {
 						$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
 						$school_data = json_decode($school_data, true);
 						$school = $page_data['content']['school'];
-						$sipURL = $school_data[$school]['sipURL'];
+						$sipURL = isset($school_data[$school]['sipURL'])?$school_data[$school]['sipURL']:'';
 						$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 						//加入SIP網址--
 					}

@@ -76,10 +76,9 @@
 										<label>SIP 網址</label><br>
 										<? if (!empty($content['sipURL'])) { ?>
 											<? foreach ($content['sipURL'] as $key => $value) { ?>
-												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結
-												</a>
+												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結</a>
 											<? } ?>
-										<? } ?>
+										<? }else{echo "無";} ?>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>
@@ -137,12 +136,14 @@
 												<img src="<?= isset($content['back_image']) ? $content['back_image'] : "" ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
+                                        <? if (!empty($content['transcript_image'])) { ?>
 										<div class="form-group">
 											<label>成績單</label><br>
 											<a href="<?= isset($content['transcript_image']) ? $content['transcript_image'] : "" ?>" data-fancybox="images">
 												<img src="<?= isset($content['transcript_image']) ? $content['transcript_image'] : "" ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
+                                        <? } ?>
 									</fieldset>
 								</div>
 							</div>
