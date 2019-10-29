@@ -467,6 +467,20 @@ class Target extends MY_Admin_Controller {
 			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
 			$this->load->library('output/json_output');
 
+			$this->load->model('user/user_certification_model');
+			$schoolCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 2,
+				'status' => 1,
+			]);
+			$schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+			if (isset($schoolCertificationDetailArray["graduate_date"])) {
+				 $graduateDate = new stdClass();
+				 $graduateDate->meta_key = "school_graduate_date";
+				 $graduateDate->meta_value = $schoolCertificationDetailArray["graduate_date"];
+				 $userMeta[] = $graduateDate;
+			}
+
 			$user->school = $userMeta;
 			$user->instagram = $userMeta;
 			$user->facebook = $userMeta;

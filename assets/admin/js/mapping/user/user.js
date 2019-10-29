@@ -26,7 +26,7 @@ class User
 		this.school.name = user.school.name;
 		this.school.system = user.school.system;
 		this.school.department = user.school.department;
-		this.school.graduatedAt = user.school.graduated_at;
+		if (user.school.graduate_at) this.school.graduateAt = user.school.graduate_at;
 	}
 
 	setContact(user) {

@@ -472,7 +472,7 @@
 			$("#school").text(user.school.name);
 			$("#school-system").text(user.school.system + " / " + user.school.department);
 			$("#school-department").text(user.school.department);
-			$("#graduated-at").text('');
+			$("#graduated-at").text(user.school.graduateAt ? user.school.graduateAt : '未提供');
 
 			$("#instagram-username").text(user.instagram.username);
 			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');

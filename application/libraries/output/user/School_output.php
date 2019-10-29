@@ -32,6 +32,10 @@ class School_output
 			"system" => isset($this->systemMapping[$school->system]) ? $this->systemMapping[$school->system] : '',
 		];
 
+		if (isset($school->graduate_date)) {
+			$output["graduate_at"] = $school->graduate_date;
+		}
+
 		return $output;
 	}
 
@@ -51,6 +55,9 @@ class School_output
 					break;
 				case "school_system":
 					$school->system = $schoolInput->meta_value;
+					break;
+				case "school_graduate_date":
+					$school->graduate_date = $schoolInput->meta_value;
 					break;
 			}
 		}
