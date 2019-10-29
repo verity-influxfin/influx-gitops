@@ -483,8 +483,10 @@ class Product extends REST_Controller {
             $param['promote_code'] = $this->user_info->promote_code;
         }
 
-        $product_list 	= $this->config->item('product_list');
-        $product 		= isset($product_list[$input['product_id']])?$product_list[$input['product_id']]:[];
+        $exp_product  = explode(':',$input['product_id']);
+        $product_list = $this->config->item('product_list');
+        $product 		= isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
+        $param['sub_product_id']  = isset($exp_product[1])?$exp_product[1]:0;
         if($product){
 
             if($product['type'] != 1){
