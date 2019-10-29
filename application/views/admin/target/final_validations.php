@@ -23,131 +23,131 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+								<table class="table table-bordered table-hoverd">
 									<tr>
-										<td><p class="form-control-static">姓名</p></td>
+										<td class="table-field"><p class="form-control-static">姓名</p></td>
 										<td>
 											<p id="name" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">性別</p></td>
+										<td  class="table-field"><p class="form-control-static">性別</p></td>
 										<td>
 											<p id="gender" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">學校名稱</p></td>
+										<td class="table-field"><p class="form-control-static">學校名稱</p></td>
 										<td>
 											<p id="school" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">借款端銀行/分行</p></td>
+										<td class="table-field"><p class="form-control-static">借款端銀行/分行</p></td>
 										<td>
 											<p id="borrower-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">身分證字號</p></td>
+										<td class="table-field"><p class="form-control-static">身分證字號</p></td>
 										<td>
 											<p id="id-card" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">婚姻</p></td>
+										<td class="table-field"><p class="form-control-static">婚姻</p></td>
 										<td>
 											<p id="marriage" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">學制/學門</p></td>
+										<td class="table-field"><p class="form-control-static">學制/學門</p></td>
 										<td>
 											<p id="school-system" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">借款端帳號</p></td>
+										<td class="table-field"><p class="form-control-static">借款端帳號</p></td>
 										<td>
 											<p id="borrower-account" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">生日</p></td>
+										<td class="table-field"><p class="form-control-static">生日</p></td>
 										<td>
 											<p id="birthday" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">地址</p></td>
+										<td class="table-field"><p class="form-control-static">地址</p></td>
 										<td>
 											<p id="address" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">系所</p></td>
+										<td class="table-field"><p class="form-control-static">系所</p></td>
 										<td>
 											<p id="school-department" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">投資端銀行/分行</p></td>
+										<td class="table-field"><p class="form-control-static">投資端銀行/分行</p></td>
 										<td>
 											<p id="investor-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">發證日期</p></td>
+										<td class="table-field"><p class="form-control-static">發證日期</p></td>
 										<td>
 											<p id="id-card-issued-at" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">E-mail</p></td>
+										<td class="table-field"><p class="form-control-static">E-mail</p></td>
 										<td>
 											<p id="email" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">(預計)畢業日期</p></td>
+										<td class="table-field"><p class="form-control-static">(預計)畢業日期</p></td>
 										<td>
 											<p id="graduated-at" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">投資端帳號</p></td>
+										<td class="table-field"><p class="form-control-static">投資端帳號</p></td>
 										<td>
 											<p id="investor-account" class="form-control-static"></p>
 										</td>
 									</tr>
 								</table>
-								<table class="table table-bordered table-hover table-striped">
+								<table class="table table-bordered table-hover">
 									<tr>
-										<td><p class="form-control-static">使用者編號</p></td>
+										<td class="table-field"><p class="form-control-static">使用者編號</p></td>
 										<td>
 											<p id="id" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">手機號碼</p></td>
+										<td class="table-field"><p class="form-control-static">手機號碼</p></td>
 										<td>
 											<p id="phone" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">註冊日期</p></td>
+										<td class="table-field"><p class="form-control-static">註冊日期</p></td>
 										<td>
 											<p id="registered-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">持證自拍照</p></td>
+										<td class="table-field"><p class="form-control-static">持證自拍照</p></td>
 										<td>
 											<p class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">簽約照</p></td>
+										<td class="table-field"><p class="form-control-static">簽約照</p></td>
 										<td>
 											<p class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
+										<td class="table-field"><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
 										<td>
 											<p id="borrower-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">FB照片</p></td>
+										<td class="table-field"><p class="form-control-static">FB照片</p></td>
 										<td>
 											<p id="facebook-profile-picture" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">FB暱稱</p></td>
+										<td class="table-field"><p class="form-control-static">FB暱稱</p></td>
 										<td>
 											<p id="facebook-username" class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
+										<td class="table-field"><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
 										<td>
 											<p id="investor-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">IG照片</p></td>
+										<td class="table-field"><p class="form-control-static">IG照片</p></td>
 										<td>
 											<p class="form-control-static"></p>
 										</td>
-										<td><p class="form-control-static">IG帳號名稱</p></td>
+										<td class="table-field"><p class="form-control-static">IG帳號名稱</p></td>
 										<td>
 											<p id="instagram-username" class="form-control-static"></p>
 										</td>
@@ -170,11 +170,11 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="borrowing-verifications" class="table table-bordered table-hover table-striped">
+								<table id="borrowing-verifications" class="table table-bordered table-hover">
 									<thead>
 										<tr class="odd list">
-											<th width="40%">認證名稱</th>
-											<th width="60%">狀態</th>
+											<th class="center-text" width="40%">認證名稱</th>
+											<th class="center-text" width="60%">狀態</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -195,11 +195,11 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="investing-verifications" class="table table-bordered table-hover table-striped">
+								<table id="investing-verifications" class="table table-bordered table-hover">
 									<thead>
 									<tr class="odd list">
-										<th width="40%">認證名稱</th>
-										<th width="60%">狀態</th>
+										<th class="center-text" width="40%">認證名稱</th>
+										<th class="center-text" width="60%">狀態</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -220,40 +220,40 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+								<table class="table table-bordered table-hover">
 									<tr>
-										<td><p class="form-control-static">產品</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">產品</p></td>
+										<td class="center-text">
 											<p id="product-name" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">信用等級</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">信用等級</p></td>
+										<td class="center-text">
 											<p id="credit-level" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">信用評分</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">信用評分</p></td>
+										<td class="center-text">
 											<p id="credit-points" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">信用額度</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">信用額度</p></td>
+										<td class="center-text">
 											<p id="credit-amount" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">有效時間</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">有效時間</p></td>
+										<td class="center-text">
 											<p id="credit-expired-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td><p class="form-control-static">核准時間</p></td>
-										<td>
+										<td class="table-field center-text"><p class="form-control-static">核准時間</p></td>
+										<td class="center-text">
 											<p id="credit-created-at" class="form-control-static"></p>
 										</td>
 									</tr>
@@ -492,8 +492,8 @@
             for (var i = 0; i < verifications.length; i++) {
                 pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
                 $("<tr>").append(
-                    $('<td>').append(pTag),
-                    '<td>' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
+                    $('<td class="table-field center-text">').append(pTag),
+                    '<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
                 ).appendTo("#investing-verifications");
             }
 		}
@@ -502,8 +502,8 @@
             for (var i = 0; i < verifications.length; i++) {
                 pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
                 $("<tr>").append(
-                    $('<td>').append(pTag),
-                    '<td>' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
+                    $('<td  class="table-field center-text">').append(pTag),
+                    '<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
                 ).appendTo("#borrowing-verifications");
 			}
 		}
@@ -565,3 +565,12 @@
 		}
     });
 </script>
+<style>
+	.table-field {
+		background-color: #f5f5f5
+	}
+
+	.center-text {
+		text-align: center;
+	}
+</style>
