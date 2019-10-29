@@ -193,31 +193,15 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
-									<tr>
-										<td><p class="form-control-static">實名認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
+								<table id="investing-verifications" class="table table-bordered table-hover table-striped">
+									<thead>
+									<tr class="odd list">
+										<th width="40%">認證名稱</th>
+										<th width="60%">狀態</th>
 									</tr>
-									<tr>
-										<td><p class="form-control-static">金融帳號認證</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">緊急聯絡人</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td><p class="form-control-static">常用電子信箱</p></td>
-										<td>
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
+									</thead>
+									<tbody>
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -449,12 +433,18 @@
                 bankAccounts = new BankAccounts(bankAccountJson);
 				fillBankAccounts(bankAccounts)
 
-				var verifications = [];
+				var borrowerVerifications = [];
 				let verificationsJson = response.response.verifications;
-				for (var i = 0; i < verificationsJson.length; i++) {
-				    verifications.push(new Verification(verificationsJson[i]));
+				for (var i = 0; i < verificationsJson.borrower.length; i++) {
+                    borrowerVerifications.push(new Verification(verificationsJson.borrower[i]));
 				}
-				fillBorrowingVerifications(bankAccounts, verifications);
+				fillBorrowingVerifications(bankAccounts, borrowerVerifications);
+
+				var investorVerifications = [];
+				for (var i = 0; i < verificationsJson.investor.length; i++) {
+                    investorVerifications.push(new Verification(verificationsJson.investor[i]));
+				}
+				fillInvestingVerifications(bankAccounts, investorVerifications);
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
@@ -492,8 +482,17 @@
 			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
 		}
 
-		function fillBorrowingVerifications(bankAccounts, verifications) {
+		function fillInvestingVerifications(bankAccounts, verifications) {
+            for (var i = 0; i < verifications.length; i++) {
+                pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
+                $("<tr>").append(
+                    $('<td>').append(pTag),
+                    '<td>' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
+                ).appendTo("#investing-verifications");
+            }
+		}
 
+		function fillBorrowingVerifications(bankAccounts, verifications) {
             for (var i = 0; i < verifications.length; i++) {
                 pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
                 $("<tr>").append(

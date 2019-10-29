@@ -474,8 +474,10 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 
 			$this->load->library('certification_lib');
-			$certifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
-			$this->load->library('output/user/verification_output', ['data' => $certifications]);
+			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
+			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);
+			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
+			$this->load->library('output/user/verifications_output', $verificationInput);
 
 			$bankAccount = $this->user_bankaccount_model->get_many_by([
 				'user_id'	=> $userId,
@@ -487,7 +489,7 @@ class Target extends MY_Admin_Controller {
 			$response = [
 				"user" => $this->user_output->toOne(true),
 				"credits" => $this->credit_output->toOne(),
-				"verifications" => $this->verification_output->toMany(),
+				"verifications" => $this->verifications_output->toMany(),
 				"bank_accounts" => $this->bank_account_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
