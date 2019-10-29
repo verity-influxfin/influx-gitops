@@ -149,12 +149,17 @@ class Product extends REST_Controller {
     public function list_get()
     {
         $list			= [];
-        $product_list 	= $this->config->item('product_list');
+        $list2			= [];
+        $cproduct_list 	= $this->config->item('product_list');
+        $app_product_totallist = $this->config->item('app_product_totallist');
+        $visul_id_des          = $this->config->item('visul_id_des');
+        $sub_product_list      = $this->config->item('sub_product_list');
+        $certification = $this->config->item('certifications');
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
             $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
         }else{
             $certification_list = [];
-            $certification = $this->config->item('certifications');
+
             foreach($certification as $key => $value){
                 $value['user_status'] 		= null;
                 $value['certification_id'] 	= null;
@@ -162,64 +167,133 @@ class Product extends REST_Controller {
             }
         }
 
-        if(!empty($product_list)){
-            foreach($product_list as $key => $value){
-                $target 				= [];
-                $certification 			= [];
-                if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
+        if(!empty($cproduct_list)){
+            foreach($cproduct_list as $key => $value) {
+                $target = [];
+                $certification = [];
+                if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_by(array(
-                        'status'		=> [0,1,20,21],
-                        'sub_status'	=> 0,
-                        'user_id'		=> $this->user_info->id,
-                        'product_id'	=> $value['id']
+                        'status' => [0, 1, 20, 21],
+                        'sub_status' => 0,
+                        'user_id' => $this->user_info->id,
+                        'product_id' => $value['id']
                     ));
 
-                   if($targets){
+                    if ($targets) {
                         $target = [
-                            'id'			=> intval($targets->id),
-                            'target_no'		=> $targets->target_no,
-                            'status'		=> intval($targets->status),
-                            'amount'		=> intval($targets->amount),
-                            'loan_amount'	=> intval($targets->loan_amount),
-                            'created_at'	=> intval($targets->created_at),
-                            'instalment'	=> intval($targets->instalment),
+                            'id' => intval($targets->id),
+                            'target_no' => $targets->target_no,
+                            'status' => intval($targets->status),
+                            'amount' => intval($targets->amount),
+                            'loan_amount' => intval($targets->loan_amount),
+                            'created_at' => intval($targets->created_at),
+                            'instalment' => intval($targets->instalment),
                         ];
                     }
                 }
 
-                if(!empty($certification_list)){
-                    foreach($certification_list as $k => $v){
-                        if(in_array($k,$value['certifications'])){
+                if (!empty($certification_list)) {
+                    foreach ($certification_list as $k => $v) {
+                        if (in_array($k, $value['certifications'])) {
                             $certification[] = $v;
                         }
                     }
                 }
 
                 $parm = array(
-                    'id' 					=> $value['id'],
-                    'type' 					=> $value['type'],
-                    'identity' 				=> $value['identity'],
-                    'name' 					=> $value['name'],
-                    'description' 			=> $value['description'],
-                    'loan_range_s'			=> $value['loan_range_s'],
-                    'loan_range_e'			=> $value['loan_range_e'],
-                    'interest_rate_s'		=> $value['interest_rate_s'],
-                    'interest_rate_e'		=> $value['interest_rate_e'],
-                    'charge_platform'		=> PLATFORM_FEES,
-                    'charge_platform_min'	=> PLATFORM_FEES_MIN,
-                    'instalment'			=> $value['instalment'],
-                    'repayment'				=> $value['repayment'],
-                    'target'				=> $target,
-                    'certification'			=> $certification,
+                    'id' => $value['id'],
+                    'type' => $value['type'],
+                    'identity' => $value['identity'],
+                    'name' => $value['name'],
+                    'description' => $value['description'],
+                    'loan_range_s' => $value['loan_range_s'],
+                    'loan_range_e' => $value['loan_range_e'],
+                    'interest_rate_s' => $value['interest_rate_s'],
+                    'interest_rate_e' => $value['interest_rate_e'],
+                    'charge_platform' => PLATFORM_FEES,
+                    'charge_platform_min' => PLATFORM_FEES_MIN,
+                    'instalment' => $value['instalment'],
+                    'repayment' => $value['repayment'],
+                    'target' => $target,
+                    'certification' => $certification,
                 );
-                if($value['type'] == 2){
+
+                //reformat Product for layer2
+                $temp[$value['type']][$value['visul_id']][$value['identity']] = [
+                    'product_id'    => $value['id'],
+                    'name'          => $value['name'],
+                    'description'   => $value['description'],
+                    'status'        => $value['status'],
+                    'certification' => $certification,
+                    'target'        => $target,
+                ];
+
+                if ($value['type'] == 2) {
                     $parm['selling_type'] = $this->config->item('selling_type');;
                 }
                 $list[] = $parm;
+
+
             }
+
+            //list2
+            //layer1
+            $type_list        = [];
+            foreach ($temp as $key => $t){
+                foreach ($t as $key2 => $t2) {
+                    $sub_product_info = [];
+                    if(isset($sub_product_list[$key2])){
+                        $sub_product_list[$key2]['name'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['name'];
+                        $sub_product_list[$key2]['description'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['description'];
+                        $sub_product_list[$key2]['status'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['status'];
+                        foreach ($sub_product_list[$key2]['identity'] as $idekey => $ideval){
+                            $sub_product_list[$key2]['identity'][$idekey]['name'] = $visul_id_des[$ideval['visul_id']]['name'];
+                            $sub_product_list[$key2]['identity'][$idekey]['description'] = $visul_id_des[$ideval['visul_id']]['description'];
+                            $sub_product_list[$key2]['identity'][$idekey]['status'] = $visul_id_des[$ideval['visul_id']]['status'];
+                            $sub_product_list[$key2]['identity'][$idekey]['target'] = [];
+                            if (!empty($certification_list)) {
+                                $certification = [];
+                                foreach ($certification_list as $k => $v) {
+                                    if (in_array($k, $sub_product_list[$key2]['identity'][$idekey]['certifications'])) {
+                                        $certification[] = $v;
+                                    }
+                                }
+                                $sub_product_list[$key2]['identity'][$idekey]['certifications'] = $certification;
+                            }
+                        }
+                        $sub_product_info = $sub_product_list[$key2];
+                    }
+                    $type_list['type'.$key][] = [
+                        'visul_id'    => $key2,
+                        'name'        => $visul_id_des[$key2]['name'],
+                        'identity'    => $t2,
+                        'description' => $visul_id_des[$key2]['description'],
+                        'status'	  => $visul_id_des[$key2]['status'],
+                        'banner'	  => $visul_id_des[$key2]['banner'],
+                        'sub_products'=> $sub_product_info,
+                    ];
+                }
+            }
+            $total_list            = [];
+            foreach ($app_product_totallist as $id){
+                $total_list[] = [
+                    'visul' => $id,
+                    'name'  => $visul_id_des[$id],
+                ];
+            }
+            $parm2 = array(
+                'total_list' 					=> $total_list,
+                'product_list' 					=> $type_list,
+            );
+            $list2 = $parm2;
+            //list2 end
+
         }
 
-        $this->response(array('result' => 'SUCCESS','data' => ['list' => $list] ));
+        $this->response(array('result' => 'SUCCESS','data' => [
+            'list'  => $list,
+            'list2' => $list2,
+        ]));
     }
 
     /**
@@ -692,6 +766,7 @@ class Product extends REST_Controller {
                     'id' 				         => intval($value->id),
                     'target_no' 		         => $value->target_no,
                     'product_id' 		         => intval($value->product_id),
+                    'sub_product_id' 		     => intval($value->sub_product_id),
                     'user_id' 			         => intval($value->user_id),
                     'amount' 			         => intval($value->amount),
                     'loan_amount' 		         => intval($value->loan_amount),

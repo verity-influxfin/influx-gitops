@@ -119,6 +119,7 @@ $config['company_type']= [
 $config['product_list']= [
 	1 => [
 		'id'				=> 1,
+        'visul_id'          => 1,
 		'type'				=> 1,
 		'identity'			=> 1,
 		'alias'				=> 'STN',
@@ -127,9 +128,11 @@ $config['product_list']= [
 		'loan_range_e'		=> 120000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
+		'sub_product'       => [1],
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
+        'status'			=> 1,
 		'description'		=> '學生貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
@@ -137,6 +140,7 @@ $config['product_list']= [
 	],
 	2 => [
 		'id'				=> 2,
+        'visul_id'          => 3,
 		'type'				=> 2,
 		'identity'			=> 1,
 		'alias'				=> 'STI',
@@ -145,9 +149,11 @@ $config['product_list']= [
 		'loan_range_e'		=> 120000,
 		'interest_rate_s'	=> 18,
 		'interest_rate_e'	=> 18,
+        'sub_product'       => [],
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
+        'status'			=> 1,
 		'description'		=> '學生手機貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
@@ -155,6 +161,7 @@ $config['product_list']= [
 	],
 	3 => [
 		'id'				=> 3,
+        'visul_id'          => 1,
 		'type'				=> 1,
 		'identity'			=> 2,
 		'alias'				=> 'FGN',
@@ -163,57 +170,229 @@ $config['product_list']= [
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
+        'sub_product'       => [1],
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
+        'status'			=> 1,
 		'description'		=> '上班族貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
 	],
-	4 => [
-		'id'				=> 4,
-		'type'				=> 2,
-		'identity'			=> 2,
-		'alias'				=> 'FGI',
-		'name'				=> '上班族手機貸',
-		'loan_range_s'		=> 10000,
-		'loan_range_e'		=> 200000,
-		'interest_rate_s'	=> 18,
-		'interest_rate_e'	=> 18,
-		'certifications'	=> [1,3,4,5,6,7,8,9,10],
-		'instalment'		=> [3,6,12,18,24],
-		'repayment'			=> [1],
-		'description'		=> '上班族手機貸
+    4 => [
+        'id'				=> 4,
+        'visul_id'          => 3,
+        'type'				=> 2,
+        'identity'			=> 2,
+        'alias'				=> 'FGI',
+        'name'				=> '上班族手機貸',
+        'loan_range_s'		=> 10000,
+        'loan_range_e'		=> 200000,
+        'interest_rate_s'	=> 18,
+        'interest_rate_e'	=> 18,
+        'sub_product'       => [],
+        'certifications'	=> [1,3,4,5,6,7,8,9,10],
+        'instalment'		=> [3,6,12,18,24],
+        'repayment'			=> [1],
+        'status'			=> 1,
+        'description'		=> '上班族手機貸
 計畫留學、創業或者實現更多理想嗎？
 需要資金卻無法向銀行聲請借款嗎？
 普匯陪你一起實現夢想'
-	],
-/*	10 => [
-		'id'				=> 5,
-		'type'				=> 1,
-		'identity'			=> 2,
-		'alias'				=> 'FGD',
-		'name'				=> 'Pay Day Loan',
-		'loan_range_s'		=> 10000,
-		'loan_range_e'		=> 200000,
-		'interest_rate_s'	=> 5,
-		'interest_rate_e'	=> 20,
-		'certifications'	=> [],
-		'instalment'		=> [0],
-		'repayment'			=> [3],
-		'description'		=> '普匯學生貸
-計畫留學、創業或者實現更多理想嗎？
-需要資金卻無法向銀行聲請借款嗎？
-普匯陪你一起實現夢想'
-	],*/
+    ],
+    /*    5 => [
+            'id'				=> 5,
+            'visul_id'          => 2,
+            'type'				=> 1,
+            'identity'			=> 1,
+            'alias'				=> 'XXN',
+            'name'				=> '學生創業貸',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 18,
+            'interest_rate_e'	=> 18,
+            'sub_product'       => [],
+            'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            'instalment'		=> [3,6,12,18,24],
+            'repayment'			=> [1],
+            'status'			=> 1,
+            'description'		=> '學生創業貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],
+        6 => [
+            'id'				=> 6,
+            'visul_id'          => 2,
+            'type'				=> 1,
+            'identity'			=> 2,
+            'alias'				=> 'XXI',
+            'name'				=> '上班族創業貸',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 18,
+            'interest_rate_e'	=> 18,
+            'sub_product'       => [],
+            'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            'instalment'		=> [3,6,12,18,24],
+            'repayment'			=> [1],
+            'status'			=> 1,
+            'description'		=> '上班族創業貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],
+        7 => [
+            'id'				=> 7,
+            'visul_id'          => 4,
+            'type'				=> 2,
+            'identity'			=> 1,
+            'alias'				=> 'OXI',
+            'name'				=> '學生族遊學貸',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 18,
+            'interest_rate_e'	=> 18,
+            'sub_product'       => [],
+            'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            'instalment'		=> [3,6,12,18,24],
+            'repayment'			=> [1],
+            'status'			=> 1,
+            'description'		=> '學生族遊學貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],
+        8 => [
+            'id'				=> 8,
+            'visul_id'          => 4,
+            'type'				=> 2,
+            'identity'			=> 2,
+            'alias'				=> 'OXI',
+            'name'				=> '上班族遊學貸',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 18,
+            'interest_rate_e'	=> 18,
+            'sub_product'       => [],
+            'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            'instalment'		=> [3,6,12,18,24],
+            'repayment'			=> [1],
+            'status'			=> 1,
+            'description'		=> '上班族遊學貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],
+        10 => [
+            'id'				=> 5,
+            'type'				=> 1,
+            'identity'			=> 2,
+            'alias'				=> 'FGD',
+            'name'				=> 'Pay Day Loan',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 5,
+            'interest_rate_e'	=> 20,
+            'certifications'	=> [],
+            'instalment'		=> [0],
+            'repayment'			=> [3],
+            'description'		=> '普匯學生貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],*/
 ];
+
+$config['visul_id_des'] = [
+    '1'	   => [
+        'name'   => '信用貸款',
+        'description' =>'信用貸款XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],
+    /*'2'	   => [
+        'name' => '創業貸款',
+        'description' =>'創業貸款',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],*/
+    '3'	   => [
+        'name' => '消費貸',
+        'description' =>'消費貸XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],
+    /*'4'	   => [
+        'name' => '遊學貸',
+        'description' =>'遊學貸XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],*/
+
+    '101'  => [
+        'name' => '工程師貸',
+        'description' =>'工程師貸XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],
+    /*'102'  => [
+        'name' => '就學貸款',
+        'description' =>'就學貸款XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],*/
+
+    '201'  => [
+        'name' => '學生工程師貸',
+        'description' =>'學生工程師貸XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],
+    '202'  => [
+        'name' => '上班族工程師貸',
+        'description' =>'上班族工程師貸XXX',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],
+
+];
+$config['sub_product_list'] = [
+    1 => [
+        'visul_id'          => 101,
+        'identity'          => [
+            1 =>[
+                'visul_id'          => 201,
+                'product_id'        => '1:1',
+                'certifications'	=> [1,2,3,4,5,6,7]
+            ],
+            2 =>[
+                'visul_id'          => 202,
+                'product_id'        => '3:1',
+                'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            ]
+        ],
+        'status'            => 0
+    ]
+];
+
+$config['app_product_totallist'] = [1,3,101];
+
 
 //產品轉換代碼
 $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 
 //產品型態
-$config['product_type']= [
+$config['product_type'] = [
 	1=> '信用貸款',
 	2=> '分期付款',
 //	3=> '抵押貸款',
