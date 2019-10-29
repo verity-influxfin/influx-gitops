@@ -471,8 +471,8 @@ class Certification extends REST_Controller {
 				'student_id',
 				'email',
 				'major',
-				//'sip_account',
-				//'sip_password'
+				'sip_account',
+				'sip_password'
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
@@ -482,9 +482,8 @@ class Certification extends REST_Controller {
 				}
 			}
 
-			$content['system'] 	= isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            $content['sip_account'] 	= isset($input['sip_account'])?$input['sip_account']:"";
-            $content['sip_password'] 	= isset($input['sip_password'])?$input['sip_password']:"";
+			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
+            $content['language'] = isset($input['language'])?$input['language']:"";
 
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
@@ -1598,6 +1597,7 @@ class Certification extends REST_Controller {
 				}
 			}
             $content['company'] 	  = isset($input['company'])?$input['company']:"";
+            $content['language'] 	  = isset($input['language'])?$input['language']:"";
 
             $employee_range 		  = $this->config->item('employee_range');
 			$position_name 			  = $this->config->item('position_name');

@@ -4551,6 +4551,13 @@ define({
                             "optional": true,
                             "field": "income_prove_image",
                             "description": "<p>公司申請的薪資證明 ( 圖片IDs 以逗號隔開，最多3個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "language",
+                            "description": "<p>專業語言 Json input</p>"
                         }
                     ]
                 }
@@ -5080,14 +5087,14 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "sip_account",
                             "description": "<p>SIP帳號</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": true,
+                            "optional": false,
                             "field": "sip_password",
                             "description": "<p>SIP密碼</p>"
                         },
@@ -5104,6 +5111,13 @@ define({
                             "optional": true,
                             "field": "graduate_date",
                             "description": "<p>預計畢業時間</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "language",
+                            "description": "<p>專業語言 Json input</p>"
                         }
                     ]
                 }
