@@ -108,6 +108,15 @@
 											}
 										?>
 									</div>
+									<div class="form-group">
+										<label>工作認證PDF連結</label><br>
+										<? if (!empty($content['pdf_file'])) { ?>
+											<a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載
+											</a>
+										<? }else{?>
+											<p>無上傳檔案</p>
+										<?} ?>
+									</div>
 									<h4>審核</h4>
                                         <form role="form" method="post">
                                         <fieldset>
