@@ -3,6 +3,8 @@
 <script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccount.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccounts.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccount.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccounts.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 
 <div id="page-wrapper">
@@ -123,7 +125,7 @@
 										</td>
 										<td><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="borrower-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -137,7 +139,7 @@
 										</td>
 										<td><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
 										<td>
-											<p class="form-control-static"></p>
+											<p id="investor-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
@@ -433,6 +435,10 @@
                 bankAccounts = new BankAccounts(bankAccountJson);
 				fillBankAccounts(bankAccounts)
 
+                let virtualAccountJson = response.response.virtual_accounts;
+				virtualAccounts = new VirtualAccounts(virtualAccountJson);
+				fillVirtualAccounts(virtualAccounts);
+
 				var borrowerVerifications = [];
 				let verificationsJson = response.response.verifications;
 				for (var i = 0; i < verificationsJson.borrower.length; i++) {
@@ -511,6 +517,18 @@
                 var text = bankAccounts.investor.bankCode + " / " + bankAccounts.investor.branchCode;
                 $("#investor-bank").text(text);
                 $("#investor-account").text(bankAccounts.investor.account);
+			}
+		}
+
+		function fillVirtualAccounts(virtualAccounts) {
+            if (virtualAccounts.borrower) {
+                var total = virtualAccounts.borrower.funds.total - virtualAccounts.borrower.funds.frozen;
+                $("#borrower-virtual-account-total").text(total + "元");
+			}
+
+            if (virtualAccounts.investor) {
+                var total = virtualAccounts.investor.funds.total - virtualAccounts.investor.funds.frozen;
+                $("#investor-virtual-account-total").text(total + "元");
 			}
 		}
 

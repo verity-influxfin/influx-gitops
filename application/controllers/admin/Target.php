@@ -486,11 +486,24 @@ class Target extends MY_Admin_Controller {
 
 			$this->load->library('output/user/Bank_account_output', ['data' => $bankAccount]);
 
+			$virtualAccounts = $this->virtual_account_model->get_many_by([
+				'user_id' => $userId,
+				'status' => 1,
+			]);
+
+			$this->load->library('Transaction_lib');
+			foreach ($virtualAccounts as $virtualAccount) {
+				$virtualAccount->funds = $this->transaction_lib->get_virtual_funds($virtualAccount->virtual_account);
+			}
+
+			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
+
 			$response = [
 				"user" => $this->user_output->toOne(true),
 				"credits" => $this->credit_output->toOne(),
 				"verifications" => $this->verifications_output->toMany(),
 				"bank_accounts" => $this->bank_account_output->toMany(),
+				"virtual_accounts" => $this->virtual_account_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
