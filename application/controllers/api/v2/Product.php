@@ -474,8 +474,9 @@ class Product extends REST_Controller {
 
         $exp_product  = explode(':',$input['product_id']);
         $product_list = $this->config->item('product_list');
-        $product 		= isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
-        $param['sub_product_id']  = isset($exp_product[1])?$exp_product[1]:0;
+        $product 	  = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
+        $sub_proddcut = isset($exp_product[1])?$exp_product[1]:0;
+        $param['sub_product_id']  = $sub_proddcut;
         if($product){
 
             if($product['type'] != 1){
@@ -491,9 +492,10 @@ class Product extends REST_Controller {
             }
 
             $exist = $this->target_model->get_by([
-                'status <='		=> 1,
-                'user_id'		=> $user_id,
-                'product_id'	=> $product['id']
+                'status <='		    => 1,
+                'user_id'		    => $user_id,
+                'product_id'	    => $product['id'],
+                'sub_product_id'	=> $sub_proddcut,
             ]);
             if($exist){
                 $this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
