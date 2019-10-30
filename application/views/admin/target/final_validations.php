@@ -6,6 +6,7 @@
 <script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccount.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccounts.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/loan/target.js"></script>
 
 <div id="page-wrapper">
 	<div class="row">
@@ -322,7 +323,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+								<table id="targets" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
 										<th width="10%">案號</th>
@@ -336,6 +337,9 @@
 										<th width="14%">借款原因</th>
 									</tr>
 									</thead>
+									<tbody>
+
+									</tbody>
 								</table>
 							</div>
 						</div>
@@ -451,6 +455,13 @@
                     investorVerifications.push(new Verification(verificationsJson.investor[i]));
 				}
 				fillInvestingVerifications(bankAccounts, investorVerifications);
+
+				var targets = [];
+				let targetsJson = response.response.targets;
+				for (var i = 0; i < targetsJson.length; i++) {
+					targets.push(new Target(targetsJson[i]));
+				}
+                fillTargets(targets);
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
@@ -563,11 +574,34 @@
 
             return '<a href="' + url + '">' + button + '</a>';
 		}
+
+		function fillTargets(targets) {
+            for (var i = 0; i < targets.length; i++) {
+                let target = targets[i];
+                $("<tr>").append(
+                    getCenterTextCell(target.number),
+                    getCenterTextCell(target.product.name),
+                    getCenterTextCell(target.amount.approved),
+                    getCenterTextCell(target.amount.remaining),
+                    getCenterTextCell(target.amount.principal),
+                    getCenterTextCell(target.status),
+                    getCenterTextCell(target.expireAt),
+                    getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
+                    getCenterTextCell(target.reason)
+                ).appendTo("#targets");
+            }
+		}
+
+		function getCenterTextCell(value) {
+            return '<td class="center-text">' + value + '</td>';
+		}
     });
 </script>
 <style>
 	.table-field {
-		background-color: #f5f5f5
+		background-color: #f5f5f5;
+		table-layout: fixed;
+		width: 200px;
 	}
 
 	.center-text {

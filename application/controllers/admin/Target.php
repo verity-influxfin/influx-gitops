@@ -512,12 +512,33 @@ class Target extends MY_Admin_Controller {
 
 			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
 
+			$targets = $this->target_model->get_many_by([
+				"user_id" => $userId,
+				"status NOT" => [8,9]
+			]);
+
+			foreach ($targets as $target) {
+				$amortization = $this->target_lib->get_amortization_table($target);
+				$target->amortization = $amortization;
+
+				$limitDate  = $target->created_at + (TARGET_APPROVE_LIMIT*86400);
+				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
+					'product_id' 	=> $target->product_id,
+					'user_id' 		=> $userId,
+					'created_at <=' => $limitDate,
+				]);
+				$target->credit = $credit;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+
 			$response = [
 				"user" => $this->user_output->toOne(true),
 				"credits" => $this->credit_output->toOne(),
 				"verifications" => $this->verifications_output->toMany(),
 				"bank_accounts" => $this->bank_account_output->toMany(),
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
+				"targets" => $this->target_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
