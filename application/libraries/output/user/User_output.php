@@ -79,7 +79,7 @@ class User_output
         if ($user->facebook) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/facebook_output', ["data" => $user->facebook]);
-			$output["facebook"] = $ci->instagram_output->toOne();
+			$output["facebook"] = $ci->facebook_output->toOne();
 		}
 
         return $output;

@@ -36,10 +36,10 @@ class facebook_output
 		$facebook = new stdClass();
 		foreach ($userMetaInputs as $userMetaInput) {
 			switch ($userMetaInput->meta_key) {
-				case "ig_id":
+				case "fb_id":
 					$facebook->id = $userMetaInput->meta_value;
 					break;
-				case "ig_username":
+				case "fb_name":
 					$facebook->username = $userMetaInput->meta_value;
 					break;
 			}
