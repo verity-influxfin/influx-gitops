@@ -103,11 +103,11 @@
 								<table class="table table-bordered">
 									<tr>
 										<td class="table-field"><p class="form-control-static">使用者編號</p></td>
-										<td class="table-thirty">
+										<td class="table-twenty">
 											<p id="id" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">手機號碼</p></td>
-										<td class="table-thirty">
+										<td class="table-twenty">
 											<p id="phone" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">註冊日期</p></td>
@@ -117,11 +117,11 @@
 									</tr>
 									<tr>
 										<td class="table-field"><p class="form-control-static">持證自拍照</p></td>
-										<td class="table-thirty">
-											<p class="form-control-static"></p>
+										<td class="table-twenty table-picture">
+											<p id="profile-image" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">簽約照</p></td>
-										<td class="table-thirty">
+										<td class="table-twenty table-picture">
 											<p class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
@@ -131,11 +131,11 @@
 									</tr>
 									<tr>
 										<td class="table-field"><p class="form-control-static">FB照片</p></td>
-										<td class="table-thirty">
+										<td class="table-twenty table-picture">
 											<p id="facebook-profile-picture" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">FB暱稱</p></td>
-										<td class="table-thirty">
+										<td class="table-ten">
 											<p id="facebook-username" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
@@ -145,11 +145,11 @@
 									</tr>
 									<tr>
 										<td class="table-field"><p class="form-control-static">IG照片</p></td>
-										<td class="table-thirty">
+										<td class="table-twenty table-picture">
 											<p class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">IG帳號名稱</p></td>
-										<td class="table-thirty">
+										<td class="table-ten">
 											<p id="instagram-username" class="form-control-static"></p>
 										</td>
 									</tr>
@@ -473,7 +473,6 @@
         function hideLoadingAnimation() {
             $(".table-ten p").css('background', 'white');
             $(".table-twenty p").css('background', 'white');
-            $(".table-thirty p").css('background', 'white');
 		}
 
         function fillUserInfo(user) {
@@ -485,6 +484,7 @@
             $("#phone").text(user.contact.phone);
             $("#address").text(user.contact.address);
             $("#registered-at").text(user.getRegisteredAtAsDate());
+            $("#profile-image").prepend('<img id="profile-image-content" src="' + user.profileImage + '" style="width:30%;" />');
             $("#id-card").text(user.idCard.id);
 			$("#id-card-issued-at").text(user.idCard.issuedAt);
 
@@ -620,8 +620,9 @@
 		width: 20%;
 	}
 
-	.table-thirty {
-		width: 30%;
+	.table-picture {
+		text-align: center;
+		height: 200px;
 	}
 
 	.center-text {
@@ -650,7 +651,7 @@
 		position: relative;
 	}
 
-	.table-thirty p {
+	.table-picture p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;
 		animation-iteration-count: infinite;
@@ -659,7 +660,7 @@
 		background: darkgray;
 		background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
 		background-size: 800px 104px;
-		height: 100px;
+		height: 200px;
 		position: relative;
 	}
 </style>

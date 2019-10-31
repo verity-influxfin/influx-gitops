@@ -62,6 +62,9 @@ class User_output
 
 			$output["birthday"] = $user->birthday;
 			$output["address"] = $user->address;
+			if ($user->profile) {
+				$output["profile_image"] = $user->profile->id_card_person;
+			}
 		}
 
         if ($user->school) {

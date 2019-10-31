@@ -481,6 +481,8 @@ class Target extends MY_Admin_Controller {
 				 $userMeta[] = $graduateDate;
 			}
 
+			$this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
+			$user->profile = $this->usermeta->values();
 			$user->school = $userMeta;
 			$user->instagram = $userMeta;
 			$user->facebook = $userMeta;

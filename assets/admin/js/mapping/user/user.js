@@ -3,6 +3,7 @@ class User
 	constructor(user) {
 		this.id = user.id;
 		this.name = user.name;
+		this.profileImage = user.profile_image;
 		this.gender = user.sex;
 		this.birthday = user.birthday;
 		this.registeredAt = user.created_at;
