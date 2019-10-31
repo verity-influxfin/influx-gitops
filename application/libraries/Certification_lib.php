@@ -423,7 +423,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function investigation_verify($info = array(), $url)
+	public function investigation_verify($info = array(), $url=null)
 	{
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
 			$status = 3;
@@ -435,7 +435,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function job_verify($info = array(),$url) {
+	public function job_verify($info = array(),$url=null) {
 		if ($info && $info->status == 0 && $info->certification_id == 10) {
 			$status = 3;
 			$content=json_decode($info->content,true);

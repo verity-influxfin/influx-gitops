@@ -17,7 +17,7 @@ class Credit_lib{
     }
 	
 	//信用評比
-	public function approve_credit($user_id,$product_id){
+	public function approve_credit($user_id,$product_id,$sub_product_id=0){
 		if($user_id && $product_id){
 
             //信用低落
@@ -31,6 +31,7 @@ class Credit_lib{
             if($low){
                 return $this->CI->credit_model->insert([
                     'product_id' 	=> $product_id,
+                    'sub_product_id'=> $sub_product_id,
                     'user_id'		=> $user_id,
                     'points'		=> $low->points,
                     'level'			=> $low->level,
@@ -52,24 +53,39 @@ class Credit_lib{
 
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id,$expire_time);
+				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id,$product_id,$expire_time){
+	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$data 		= [];
 		$total 		= 0;
-		$param		= ['product_id'=>$product_id,'user_id'=> $user_id,'amount'=>0];
+		$param		= [
+		    'product_id'    => $product_id,
+		    'sub_product_id'=> $sub_product_id,
+            'user_id'       => $user_id,
+            'amount'        => 0
+        ];
 		foreach($info as $key => $value){
 			$data[$value->meta_key] = $value->meta_value;
 		}
-		
+
+        if($sub_product_id){
+            $sub_product = $this->get_sub_product_data($sub_product_id);
+            //techie
+            if($sub_product_id == 1){
+                //系所加分
+                $total +=  in_array($data['school_department'],$sub_product->majorList)?200:0;
+            }
+
+        }
+
 		//學校
 		if(isset($data['school_name']) && !empty($data['school_name'])){
 			$total += $this->get_school_point($data['school_name'],$data['school_system'],$data['school_major']);
@@ -123,11 +139,11 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_2($user_id,$product_id,$expire_time){
-		return $this->approve_1($user_id,$product_id,$expire_time);
+	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time){
+		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time);
 	}
 
-	private function approve_3($user_id,$product_id,$expire_time){
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -213,8 +229,8 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id,$expire_time){
-		return $this->approve_3($user_id,$product_id,$expire_time);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time);
 	}
 	
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
@@ -382,7 +398,7 @@ class Credit_lib{
 	}
 	
 	//取得信用評分
-	public function get_credit($user_id,$product_id){
+	public function get_credit($user_id,$product_id,$sub_product_id=0){
 		if($user_id && $product_id){
 			$param = array(
 				'user_id'			=> $user_id,
@@ -496,5 +512,11 @@ class Credit_lib{
             }
         }
         return false;
+    }
+
+    private function get_sub_product_data($sub_product_id){
+        $sub_product_mapping = $this->CI->config->item('sub_product_mapping')[$sub_product_id];
+        $this->CI->config->load('sub_product',TRUE);
+        return $this->CI->config->item('sub_product')[$sub_product_mapping];
     }
 }

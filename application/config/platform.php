@@ -348,6 +348,10 @@ $config['visul_id_des'] = [
     ],
 
 ];
+$config['sub_product_mapping'] = [
+    1 => 'config_techi',
+];
+
 $config['sub_product_list'] = [
     1 => [
         'visul_id'          => 101,

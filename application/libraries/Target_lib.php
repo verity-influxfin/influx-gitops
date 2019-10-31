@@ -228,12 +228,13 @@ class Target_lib{
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
+			$sub_product_id	= $target->sub_product_id;
 			$product_info 	= $product_list[$product_id];
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
+			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id);
 			if(!$credit){
-				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
+				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id);
 				if($rs){
-					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
+					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id);
 				}
 			}
 			
