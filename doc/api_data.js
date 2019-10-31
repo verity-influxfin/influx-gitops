@@ -4558,6 +4558,20 @@ define({
                             "optional": true,
                             "field": "language",
                             "description": "<p>專業語言 Json input</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate",
+                            "description": "<p>專業證書說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate_image",
+                            "description": "<p>專業證書照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
                         }
                     ]
                 }
@@ -5118,6 +5132,34 @@ define({
                             "optional": true,
                             "field": "language",
                             "description": "<p>專業語言 Json input</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate",
+                            "description": "<p>專業證書說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate_image",
+                            "description": "<p>專業證書照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "game_work",
+                            "description": "<p>競賽作品說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "game_work_image",
+                            "description": "<p>競賽作品照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
                         }
                     ]
                 }
