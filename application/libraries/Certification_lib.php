@@ -314,11 +314,11 @@ class Certification_lib{
                         sort($answer);
                         $remark['faceplus'] = $answer;
                         if($answer[0]<65 || $answer[1]<80){
-                            $msg .= '系統判定人臉比對分數不足';
+                            $msg .= 'Sys2人臉比對分數不足';
                         }
                     }
                     else{
-                        $msg .= '系統判定人臉比對分數不足';
+                        $msg .= 'Sys2人臉數量不足';
                     }
                 }
                 $done = true;
