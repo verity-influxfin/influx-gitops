@@ -87,7 +87,7 @@
                                             <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                         </div>
                                         <button type="submit" class="btn btn-primary">修改月薪</button>
-                                    </form><br /><br />
+                                    </form><br />
 									<?
 										if (isset($content['incomeDate'])) {
 											echo '
@@ -98,7 +98,33 @@
 											';
 										}
 									?>
-									<div class="form-group">
+                                    <? if($data->status==1){?>
+                                        <div class="form-group">
+                                            <label>專業加分</label>
+                                            <p><?=isset($content['license_status'])&&$content['license_status']==1?"專業證書加分":"專業證書不加分"?></p>
+                                        </div>
+                                    <?}else{?>
+                                        <div class="form-group">
+                                            <label>專業加分</label>
+                                            <select id="license_status" name="license_status" class="form-control">
+                                                <option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>專業證書不加分</option>
+                                                <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>專業證書加分</option>
+                                            </select>
+                                        </div>
+                                    <?}?>
+                                    <? if(isset($content['labor_type'])){?>
+                                        <div class="form-group">
+                                            <label>勞保卡</label><br>
+                                            <p><?= isset($content['labor_type']) && $content['labor_type'] ? '電子郵件交件' : '紙本交件' ?></p>
+                                            <? if($content['labor_type']==1){?>
+                                                    <? if (!empty($content['pdf_file'])) { ?>
+                                                        <a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載</a>
+                                                    <? }else{?>
+                                                        <p>尚未收到回信PDF</p>
+                                            <?}?>
+                                        </div>
+                                        <?}} ?><br />
+                                    <div class="form-group">
 										<label>備註</label>
 										<?
 											if($remark){
@@ -108,33 +134,10 @@
 											}
 										?>
 									</div>
-									<div class="form-group">
-										<label>工作認證PDF連結</label><br>
-										<? if (!empty($content['pdf_file'])) { ?>
-											<a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載
-											</a>
-										<? }else{?>
-											<p>無上傳檔案</p>
-										<?} ?>
-									</div>
 									<h4>審核</h4>
                                         <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
-												<? if($data->status==1){?>
-												<div class="form-group">
-												<label>專業加分</label>
-													<p><?=isset($content['license_status'])&&$content['license_status']==1?"專業證書加分":"專業證書不加分"?></p>
-												</div>
-												<?}else{?>
-												<div class="form-group">
-												<label>專業加分</label>
-													<select id="license_status" name="license_status" class="form-control">
-														<option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>專業證書不加分</option>
-														<option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>專業證書加分</option>
-													</select>
-												</div>
-												<?}?>
 												<select id="status" name="status" class="form-control" onchange="check_fail();" >
 													<? foreach($status_list as $key => $value){ ?>
 													<option value="<?=$key?>" <?=$data->status==$key?"selected":""?>><?=$value?></option>
@@ -167,7 +170,7 @@
                                             foreach($content['labor_image'] as $key => $value){
                                                 echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                             }
-                                            echo '<br /><br /><br />';
+                                            echo '</div><br /><br /><br />';
                                         }?>
 
                                         <? if (isset($content['income_prove_image'])||isset($content['passbook_image'])||isset($content['passbook_cover_image'])) {
@@ -177,36 +180,46 @@
                                                 foreach($content['income_prove_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             if (isset($content['passbook_image'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">存摺內頁照</label><br>';
                                                 foreach($content['passbook_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             if (isset($content['passbook_cover_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">專業證照</label><br>';
+                                                echo '<div class="form-group"><label for="disabledSelect">存摺封面照</label><br>';
                                                 foreach($content['passbook_cover_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             echo '<br /><br /><br />';
                                         }?>
 
                                         <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])) {
                                             echo '<h4>【其他輔助證明】</h4>';
+                                            if (isset($content['language'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
+                                                echo $content['language'];
+                                                echo '</div>';
+                                            }
                                             if (isset($content['business_image'])) {
                                                 !is_array($content['business_image'])?$content['business_image']=[$content['business_image']]:'';
                                                 echo '<div class="form-group"><label for="disabledSelect">名片正反面</label><br>';
                                                 foreach($content['business_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             if (isset($content['auxiliary_image'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">最近年度報稅扣繳憑證</label><br>';
                                                 foreach($content['auxiliary_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             if (isset($content['license_image'])) {
                                                 !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
@@ -214,6 +227,7 @@
                                                 foreach($content['license_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
                                                 }
+                                                echo '</div>';
                                             }
                                             echo '<br /><br /><br />';
                                         }?>

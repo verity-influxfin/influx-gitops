@@ -37,61 +37,62 @@
 										</a>
 									</div>
 									<div class="form-group">
-										<label>回寄方式</label>
-										<p class="form-control-static"><?= isset($content['return_type']) && $content['return_type'] ? '電子郵件寄回' : '不需寄回' ?></p>
+										<label>交件方式</label>
+										<p class="form-control-static"><?= isset($content['return_type']) && $content['return_type'] ? '電子郵件' : '紙本' ?></p>
 									</div>
-									<div class="form-group">
-										<label>備註</label>
-										<?
-										if ($remark) {
-											if (isset($remark["fail"]) && $remark["fail"]) {
-												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
-											}
-										}
-										?>
-									</div>
-									<div class="form-group">
-										<label>聯徵PDF連結</label><br>
-										<? if (!empty($content['pdf_file'])) { ?>
-											<a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載
-											</a>
-										<? }else{?>
-											<p>無上傳檔案</p>
-										<?} ?>
-									</div>
+                                        <? if(in_array($content['return_type'],[1,2])){?>
+                                            <div class="form-group">
+                                                <label>聯徵資料</label><br>
+                                            <? if (!empty($content['pdf_file'])) { ?>
+                                                <a href="<?= isset($content['pdf_file']) ? $content['pdf_file'] : ""?>" target="_blank">下載</a>
+                                            <? }else{?>
+                                                <p>尚未收到回信PDF</p>
+                                            <?} ?>
+                                            </div>
+                                        <?}?>
+                                    <? if ($data->status == 1) { ?>
+                                        <div class="form-group">
+                                            <label>查詢次數</label>
+                                            <p><?= isset($content['times']) ? $content['times'] : 0 ?></p>
+                                            <input type="hidden" name="times" value="<?= isset($content['times']) ? $content['times'] : 0 ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>信用卡使用率%</label>
+                                            <p><?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?></p>
+                                            <input type="hidden" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>信用記錄幾個月</label>
+                                            <p><?= isset($content['months']) ? $content['months'] : 0 ?></p>
+                                            <input type="hidden" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
+                                        </div>
+                                    <? } else { ?>
+                                        <div class="form-group">
+                                            <label>查詢次數</label>
+                                            <input type="number" class="form-control" name="times" value="<?= isset($content['times']) ? $content['times'] : 0 ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>信用卡使用率%</label>
+                                            <input type="number" class="form-control" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>信用記錄幾個月</label>
+                                            <input type="number" class="form-control" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
+                                        </div>
+                                    <? } ?>
+                                    <div class="form-group">
+                                        <label>備註</label>
+                                        <?
+                                        if ($remark) {
+                                            if (isset($remark["fail"]) && $remark["fail"]) {
+                                                echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                            }
+                                        }
+                                        ?>
+                                    </div>
 									<h4>審核</h4>
 									<form role="form" method="post">
 										<fieldset>
-											<? if ($data->status == 1) { ?>
-												<div class="form-group">
-													<label>查詢次數</label>
-													<p><?= isset($content['times']) ? $content['times'] : 0 ?></p>
-													<input type="hidden" name="times" value="<?= isset($content['times']) ? $content['times'] : 0 ?>">
-												</div>
-												<div class="form-group">
-													<label>信用卡使用率%</label>
-													<p><?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?></p>
-													<input type="hidden" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
-												</div>
-												<div class="form-group">
-													<label>信用記錄幾個月</label>
-													<p><?= isset($content['months']) ? $content['months'] : 0 ?></p>
-													<input type="hidden" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
-												</div>
-											<? } else { ?>
-												<div class="form-group">
-													<label>查詢次數</label>
-													<input type="number" class="form-control" name="times" value="<?= isset($content['times']) ? $content['times'] : 0 ?>">
-												</div>
-												<div class="form-group">
-													<label>信用卡使用率%</label>
-													<input type="number" class="form-control" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
-												</div>
-												<div class="form-group">
-													<label>信用記錄幾個月</label>
-													<input type="number" class="form-control" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
-												</div>
-											<? } ?>
 											<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();">
 													<? foreach ($status_list as $key => $value) { ?>
@@ -116,6 +117,7 @@
 										</fieldset>
 									</form>
 								</div>
+                                <? if($content['return_type']==0){?>
 								<div class="col-lg-6">
 									<h1>圖片</h1>
 									<fieldset disabled>
@@ -127,7 +129,8 @@
 										</div>
 									</fieldset>
 								</div>
-							</div>
+                                <? } ?>
+                            </div>
 							<!-- /.row (nested) -->
 						</div>
 						<!-- /.panel-body -->

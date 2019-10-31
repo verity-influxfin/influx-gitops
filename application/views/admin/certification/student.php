@@ -42,7 +42,7 @@
 									</div>
 									<div class="form-group">
 										<label>學制</label>
-										<p class="form-control-static"><?= isset($content['system']) ? $school_system[$content['system']] : "" ?></p>
+										<p class="form-control-static"><?= isset($school_system[$content['system']]) ? $school_system[$content['system']] : $content['system'] ?></p>
 									</div>
 									<div class="form-group">
 										<label>學門</label>
@@ -120,11 +120,12 @@
 											<button type="submit" class="btn btn-primary">送出</button>
 										</fieldset>
 									</form>
-								</div>
+
+                                </div>
 								<div class="col-lg-6">
 									<h1>圖片</h1>
 									<fieldset disabled>
-										<div class="form-group">
+                                        <div class="form-group">
 											<label>學生證正面照</label><br>
 											<a href="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>" data-fancybox="images">
 												<img src="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>" style='width:30%;max-width:400px'>
@@ -136,14 +137,40 @@
 												<img src="<?= isset($content['back_image']) ? $content['back_image'] : "" ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
-                                        <? if (!empty($content['transcript_image'])) { ?>
-										<div class="form-group">
-											<label>成績單</label><br>
-											<a href="<?= isset($content['transcript_image']) ? $content['transcript_image'] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['transcript_image']) ? $content['transcript_image'] : "" ?>" style='width:30%;max-width:400px'>
-											</a>
-										</div>
-                                        <? } ?>
+                                        <?
+                                            if (isset($content['transcript_image'])) {
+                                                !is_array($content['transcript_image'])?$content['transcript_image']=[$content['transcript_image']]:'';
+                                                echo '<div class="form-group"><label for="disabledSelect">成績單</label><br>';
+                                                foreach($content['transcript_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                                echo '</div>';
+                                            }
+                                        ?>
+                                        <? if (isset($content['language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
+                                            echo '<br /><br /><br /><h4>【其他輔助證明】</h4>';
+                                            if (isset($content['language'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
+                                                echo $content['language'];
+                                                echo '</div>';
+                                            }
+                                            if (isset($content['pro_certificate_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">專業證書</label><br>';
+                                                foreach($content['pro_certificate_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                }
+                                                echo '</div>';
+                                            }
+                                            if (isset($content['game_work_image'])) {
+                                                echo '<div class="form-group"><label for="disabledSelect">競賽作品</label><br>';
+                                                foreach($content['game_work_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                }
+                                                echo '</div>';
+                                            }
+                                            echo '<br /><br /><br />';
+                                        }?>
+
 									</fieldset>
 								</div>
 							</div>
