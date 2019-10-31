@@ -426,6 +426,7 @@ class Certification_lib{
 	public function investigation_verify($info = array(), $url=null)
 	{
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
+			//進到ＯＣＲ
 			$status = 3;
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status, 'sys_check' => 1,
