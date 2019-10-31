@@ -458,9 +458,13 @@ class Target extends MY_Admin_Controller {
 	{
 		$get 		= $this->input->get(NULL, TRUE);
 
-		$userId = isset($get["id"]) ? intval($get["id"]) : 0;
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 
 		if ($this->input->is_ajax_request()) {
+			$target = $this->target_model->get($targetId);
+			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
+
+			$userId = $target->user_id;
 			$user = $this->user_model->get($userId);
 
 			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
@@ -535,6 +539,7 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/loan/target_output', ['data' => $targets]);
 
 			$response = [
+				"target" => $this->current_target_output->toOne(),
 				"user" => $this->user_output->toOne(true),
 				"credits" => $this->credit_output->toOne(),
 				"verifications" => $this->verifications_output->toMany(),

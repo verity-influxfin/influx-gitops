@@ -122,7 +122,7 @@
 										</td>
 										<td class="table-field"><p class="form-control-static">簽約照</p></td>
 										<td class="table-twenty table-picture">
-											<p class="form-control-static"></p>
+											<p id="applicant-signing-target-image" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
 										<td class="table-ten">
@@ -415,10 +415,10 @@
 <script>
 
     $(document).ready(function() {
-        var userId = 3475;
+        var caseId = 6543;
         $.ajax({
             type: "GET",
-            url: "/admin/Target/final_validations?id=" + userId,
+            url: "/admin/Target/final_validations?id=" + caseId,
             beforeSend: function () {
             },
             complete: function () {
@@ -429,6 +429,11 @@
                 if (response.status.code != 200) {
                     return;
                 }
+
+                let currentTargetJson = response.response.target;
+                target = new Target(currentTargetJson);
+                fillCurrentTargetInfo(target)
+
 				let userJson = response.response.user;
                 user = new User(userJson);
                 fillUserInfo(user)
@@ -473,6 +478,10 @@
         function hideLoadingAnimation() {
             $(".table-ten p").css('background', 'white');
             $(".table-twenty p").css('background', 'white');
+		}
+
+		function fillCurrentTargetInfo(target) {
+            $("#applicant-signing-target-image").prepend('<img src="' + target.image + '" style="width: 30%;"></img>');
 		}
 
         function fillUserInfo(user) {

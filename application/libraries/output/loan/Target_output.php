@@ -56,10 +56,11 @@ class Target_output
 				'name' => isset($this->productMapping[$target->product_id]["name"]) ? $this->productMapping[$target->product_id]["name"] : '',
 			],
 			'requested_amount' => $target->amount,
-			'approved_amount' => $target->credit->amount,
+			'approved_amount' => isset($target->credit) ? $target->credit->amount : null,
 			'available_amount' => $target->loan_amount,
 			'status' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
 			'reason' => $target->reason,
+			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
 		];
 

@@ -5,6 +5,7 @@ class Target
 		this.number = target.number;
 		this.status = target.status;
 		this.reason = target.reason;
+		this.image = target.image;
 		this.expireAt = parseInt(target.expire_at);
 		this.setAmount(target);
 		this.setProduct(target);
