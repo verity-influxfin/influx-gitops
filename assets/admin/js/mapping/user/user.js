@@ -43,6 +43,7 @@ class User
 		this.instagram = {}
 		this.instagram.id = user.instagram.id;
 		this.instagram.username = user.instagram.username;
+		this.instagram.profileImage = user.instagram.profile_image;
 	}
 
 	setFacebook(user) {

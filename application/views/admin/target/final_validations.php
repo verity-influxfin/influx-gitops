@@ -146,7 +146,7 @@
 									<tr>
 										<td class="table-field"><p class="form-control-static">IG照片</p></td>
 										<td class="table-twenty table-picture">
-											<p class="form-control-static"></p>
+											<p id="instagram-profile-picture" class="form-control-static"></p>
 										</td>
 										<td class="table-field"><p class="form-control-static">IG帳號名稱</p></td>
 										<td class="table-ten">
@@ -435,6 +435,7 @@
                 fillCurrentTargetInfo(target)
 
 				let userJson = response.response.user;
+                console.log(userJson);
                 user = new User(userJson);
                 fillUserInfo(user)
 
@@ -503,6 +504,7 @@
 			$("#graduated-at").text(user.school.graduateAt ? user.school.graduateAt : '未提供');
 
 			$("#instagram-username").text(user.instagram.username);
+			$("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
 			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
 			$("#facebook-username").text(user.facebook.username);
 		}

@@ -39,28 +39,18 @@ class School_output
 		return $output;
 	}
 
-	public function convertToSchoolObject($schoolInputs)
+	public function convertToSchoolObject($userMeta)
 	{
 		$school = new stdClass();
-		foreach ($schoolInputs as $schoolInput) {
-			switch ($schoolInput->meta_key) {
-				case "school_name":
-					$school->name = $schoolInput->meta_value;
-					break;
-				case "school_department":
-					$school->department = $schoolInput->meta_value;
-					break;
-				case "school_major":
-					$school->major = $schoolInput->meta_value;
-					break;
-				case "school_system":
-					$school->system = $schoolInput->meta_value;
-					break;
-				case "school_graduate_date":
-					$school->graduate_date = $schoolInput->meta_value;
-					break;
-			}
-		}
+		if (isset($userMeta->school_name))
+			$school->name = $userMeta->school_name;
+		if (isset($userMeta->school_department))
+			$school->department = $userMeta->school_department;
+		if (isset($userMeta->school_major))
+			$school->major = $userMeta->school_major;
+		if (isset($userMeta->school_system))
+			$school->system = $userMeta->school_system;
+
 		return $school;
 	}
 

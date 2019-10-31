@@ -28,21 +28,20 @@ class Instagram_output
 			"username" => $instagram->username,
 		];
 
+		if ($instagram->image) {
+			$output["profile_image"] = $instagram->image;
+		}
+
 		return $output;
 	}
 
 	public function convertToInstagramObject($userMetaInputs)
 	{
 		$instagram = new stdClass();
-		foreach ($userMetaInputs as $userMetaInput) {
-			switch ($userMetaInput->meta_key) {
-				case "ig_id":
-					$instagram->id = $userMetaInput->meta_value;
-					break;
-				case "ig_username":
-					$instagram->username = $userMetaInput->meta_value;
-					break;
-			}
+		$instagram->id = $userMetaInputs->ig_id;
+		$instagram->username = $userMetaInputs->ig_username;
+		if (isset($userMetaInputs->ig_image)) {
+			$instagram->image = $userMetaInputs->ig_image;
 		}
 		return $instagram;
 	}

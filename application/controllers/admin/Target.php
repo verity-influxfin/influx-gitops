@@ -486,13 +486,24 @@ class Target extends MY_Admin_Controller {
 			}
 
 			$this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
+
+			$instagramCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 4,
+				'status' => 1,
+			]);
+			$instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+			if ($instagramCertificationDetailArray["type"] == "instagram") {
+				$picture = $instagramCertificationDetailArray["info"]["picture"];
+				$this->usermeta->setInstagramPicture($picture);
+			}
+
 			$user->profile = $this->usermeta->values();
-			$user->school = $userMeta;
-			$user->instagram = $userMeta;
-			$user->facebook = $userMeta;
+			$user->school = $this->usermeta->values();
+			$user->instagram = $this->usermeta->values();
+			$user->facebook = $this->usermeta->values();
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
-
 			$this->load->library('certification_lib');
 			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
 			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);

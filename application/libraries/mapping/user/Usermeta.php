@@ -16,6 +16,11 @@ class Usermeta
 		$this->data = $data;
 	}
 
+	public function setInstagramPicture($picture)
+	{
+		$this->data->ig_image = $picture;
+	}
+
 	public function values()
 	{
 		return $this->data;
