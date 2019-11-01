@@ -5,6 +5,7 @@
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccounts.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccount.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/virtualaccounts.js"></script>
+<script src="<?=base_url()?>assets/admin/js/mapping/user/relateduser.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/target.js"></script>
 
@@ -297,17 +298,19 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+							<div class="table-responsive center-text">
+								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="20%">類型</th>
-										<th width="25%">關聯原因</th>
-										<th width="25%">借款/投資端</th>
+										<th width="40%">關聯原因</th>
+										<th width="30%">借款/投資端</th>
 										<th width="30%">使用者編號</th>
 									</tr>
 									</thead>
+									<tbody>
+									</tbody>
 								</table>
+								<button id="load-more">載入更多</button>
 							</div>
 						</div>
 					</div>
@@ -415,7 +418,14 @@
 <script>
 
     $(document).ready(function() {
-        var caseId = 6543;
+        var urlString = window.location.href;
+        var url = new URL(urlString);
+        var caseId = url.searchParams.get("id");
+        var userId = url.searchParams.get("user_id");
+        // var caseId = 6543;
+        // var userId = 3475;
+
+        $("#load-more").hide();
         $.ajax({
             type: "GET",
             url: "/admin/Target/final_validations?id=" + caseId,
@@ -476,9 +486,79 @@
 			}
         });
 
+        var relatedUsersIndex = 1;
+        var relatedUsers = [];
+        $.ajax({
+            type: "GET",
+            url: "/admin/User/related_users" + "?id=" + userId,
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            success: function (response) {
+                if (response.status.code != 200) {
+                    return;
+                }
+
+                let relatedUsersJson = response.response.related_users;
+                for (var i = 0; i < relatedUsersJson.length; i++) {
+                    var relatedUser = new RelatedUser(relatedUsersJson[i]);
+                    relatedUsers.push(relatedUser);
+				}
+                fillRelatedUsers();
+            }
+        });
+
+        $('#load-more').on('click', function() {
+            fillRelatedUsers();
+        });
+
         function hideLoadingAnimation() {
             $(".table-ten p").css('background', 'white');
             $(".table-twenty p").css('background', 'white');
+		}
+
+		function fillRelatedUsers() {
+            var maxNumInPage = 20;
+            var start = (relatedUsersIndex-1) * maxNumInPage;
+            var end = relatedUsersIndex * maxNumInPage;
+            if (end > relatedUsers.length) end = relatedUsers.length;
+            if (start > end || (end - start < maxNumInPage)) {
+                $("#load-more").hide();
+			} else {
+                $("#load-more").show();
+			}
+
+            for (var i = start; i < end; i++) {
+                var reasonText = mapRelatedUsersReasons(relatedUsers[i].reason);
+                var reason = '<p class="form-control-static">' + reasonText + '</p>';
+                var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
+				var userLink = '<a href="' + '/admin/user/edit?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
+                $("<tr>").append(
+                    $('<td class="center-text">').append(reason),
+                    $('<td class="center-text">').append(statuses),
+                    $('<td class="center-text">').append(userLink),
+                ).appendTo("#related-users");
+            }
+            relatedUsersIndex+=1;
+		}
+
+		function mapRelatedUsersReasons(reason) {
+            var mapping = {
+                "same_device_id" : "相同裝置",
+                "same_ip": "相同ip",
+                "same_contact": "相同緊急聯絡人",
+                "emergency_contact": "為此人的緊急聯絡人",
+                "same_bank_account": "嘗試輸入相同銀行帳號",
+                "same_id_number": "嘗試輸入相同身分證字號",
+                "same_phone_number": "嘗試輸入相同電話號碼",
+                "same_address": "相同住址",
+                "introducer": "推薦人",
+            };
+            if (reason in mapping) {
+                return mapping[reason];
+			}
+            return "未定義";
 		}
 
 		function fillCurrentTargetInfo(target) {
