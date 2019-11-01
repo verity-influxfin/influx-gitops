@@ -454,9 +454,98 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+	public function credits()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		if (!$this->input->is_ajax_request()) {
+			alert('ERROR, 只接受Ajax', admin_url('user/blocked_users'));
+		}
+
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
+		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+
+		$this->load->library('output/json_output');
+		$target = $this->target_model->get($targetId);
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+
+		$this->load->library('credit_lib');
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+		$credit->amount = $newCredits["amount"];
+		$credit->points = $newCredits["points"];
+		$credit->level = $newCredits["level"];
+		$credit->expire_time = $newCredits["expire_time"];
+		$this->load->library('output/loan/credit_output', ["data" => $credit]);
+
+		$response = [
+			"credits" => $this->credit_output->toOne(),
+		];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+	public function evaluation_approval()
+	{
+		$post = $this->input->get(NULL, TRUE);
+
+		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
+		$points = isset($post["points"]) ? intval($post["points"]) : 0;
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
+
+		$this->load->library('output/json_output');
+
+		$target = $this->target_model->get($targetId);
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		if ($target->status !=0 || $target->sub_status != 9) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$this->load->library('credit_lib');
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+
+		if (
+			$newCredits["amount"] != $credit->amount
+			|| $newCredits["points"] != $credit->points
+			|| $newCredits["level"] != $credit->level
+		) {
+			$this->credit_model->update($credit->id, ["status" => 0]);
+			$this->credit_model->insert($newCredits);
+		}
+
+		$update = [
+			"status" => 1,
+			"sub_status" => 0,
+		];
+		if ($remark) {
+			if ($target->remark) {
+				$update["remark"] = $target->remark . "," . $remark;
+			} else {
+				$update["remark"] = $remark;
+			}
+		}
+		$this->target_model->update($targetId, $update);
+
+		$this->json_output->setStatusCode(200)->send();
+	}
+
 	public function final_validations()
 	{
-		$get 		= $this->input->get(NULL, TRUE);
+		$get = $this->input->get(NULL, TRUE);
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 

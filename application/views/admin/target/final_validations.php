@@ -358,46 +358,46 @@
 				<div class="panel-body">
 					<div class="col-sm-4">
 						<h5>分數調整部分</h5>
-						<form>
+						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
 							<p>分數調整：(-400 ~ 400)</p>
 							<input type="text" name="score"/>
 							<p>審批內容：</p>
 							<input type="text" name="description"/></br></br>
-							<button>額度試算</button>
+							<button type="submit">額度試算</button>
 						</form>
 					</div>
 					<div class="col-sm-8">
 						<h5>調整後額度試算部分</h5>
 						<div class="table-responsive">
-							<table class="table table-bordered table-hover table-striped">
+							<table class="table table-bordered">
 								<tr>
-									<td><p class="form-control-static">產品</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>產品</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-product-name"></p>
 									</td>
-									<td><p class="form-control-static">信用等級</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用等級</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-level"></p>
 									</td>
 								</tr>
 								<tr>
-									<td><p class="form-control-static">信用評分</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用評分</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-points"></p>
 									</td>
-									<td><p class="form-control-static">信用額度</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用額度</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-amount"></p>
 									</td>
 								</tr>
 								<tr>
-									<td><p class="form-control-static">有效時間</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>有效時間</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-created-at"></p>
 									</td>
-									<td><p class="form-control-static">核准時間</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>核准時間</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-expired-at"></p>
 									</td>
 								</tr>
 							</table>
@@ -425,6 +425,7 @@
         // var caseId = 6543;
         // var userId = 3475;
 
+        changeReevaluationLoading(false);
         $("#load-more").hide();
         $.ajax({
             type: "GET",
@@ -518,6 +519,18 @@
             $(".table-twenty p").css('background', 'white');
 		}
 
+		function changeReevaluationLoading(display = true) {
+			if (!display) {
+				$(".table-reevaluation p").css('background', 'white');
+ 				$(".table-reevaluation p").css('animation-play-state', 'paused');
+			} else {
+				$(".table-reevaluation p").css('animation-play-state', 'running');
+				$(".table-reevaluation p").css('background', 'linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%)');
+				$(".table-reevaluation p").css('animation-duration', '1.25s');
+				$(".table-reevaluation p").css('background-size', '800px 104px');
+			}
+		}
+
 		function fillRelatedUsers() {
             var maxNumInPage = 20;
             var start = (relatedUsersIndex-1) * maxNumInPage;
@@ -589,14 +602,27 @@
 			$("#facebook-username").text(user.facebook.username);
 		}
 
-		function fillCreditInfo(credit) {
-            $("#product-name").text(credit.product.name);
-			$("#credit-level").text(credit.level);
-			$("#credit-amount").text(credit.amount);
-			$("#credit-points").text(credit.points);
-			$("#credit-created-at").text(credit.getCreatedAtAsDate());
-			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
+		function clearCreditInfo(isReEvaluated = false) {
+			var prefix = '';
+			if (isReEvaluated) prefix = "new-";
+				$("#" + prefix + "product-name").text('');
+				$("#" + prefix + "credit-level").text('');
+				$("#" + prefix + "credit-amount").text('');
+				$("#" + prefix + "credit-points").text('');
+				$("#" + prefix + "credit-created-at").text('');
+				$("#" + prefix + "credit-expired-at").text('');
 		}
+
+		function fillCreditInfo(credit, isReEvaluated = false) {
+			var prefix = '';
+			if (isReEvaluated) prefix = "new-";
+			$("#" + prefix + "product-name").text(credit.product.name);
+			$("#" + prefix + "credit-level").text(credit.level);
+			$("#" + prefix + "credit-amount").text(credit.amount);
+			$("#" + prefix + "credit-points").text(credit.points);
+			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
+			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+        }
 
 		function fillInvestingVerifications(bankAccounts, verifications) {
             for (var i = 0; i < verifications.length; i++) {
@@ -694,6 +720,35 @@
 		function getCenterTextCell(value) {
             return '<td class="center-text">' + value + '</td>';
 		}
+
+        $("#credit-evaluation").submit(function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            var url = form.attr('action');
+            var points = form.find('input[name="score"]').val();
+            var remark = form.find('input[name="description"]').val();
+            $.ajax({
+                type: "GET",
+                url: url + "?id=6543" + "&points=" + points,
+                beforeSend: function () {
+                    changeReevaluationLoading(true);
+                    clearCreditInfo(true);
+                },
+                complete: function () {
+                    changeReevaluationLoading(false);
+                },
+                success: function (response) {
+                    if (response.status.code != 200) {
+                        return;
+                    }
+
+                    let creditJson = response.response.credits;
+                    credit = new Credit(creditJson);
+                    fillCreditInfo(credit, true);
+                }
+            });
+        });
     });
 </script>
 <style>
@@ -716,6 +771,10 @@
 		height: 200px;
 	}
 
+	.table-reevaluation {
+		width: 10%;
+	}
+
 	.center-text {
 		text-align: center;
 	}
@@ -729,7 +788,7 @@
 		}
 	}
 
-	.table-ten p, .table-twenty p {
+	.table-ten p, .table-twenty p, .table-reevaluation p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;
 		animation-iteration-count: infinite;

@@ -17,7 +17,7 @@ class Credit_lib{
     }
 	
 	//信用評比
-	public function approve_credit($user_id,$product_id,$sub_product_id=0){
+	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null){
 		if($user_id && $product_id){
 
             //信用低落
@@ -29,15 +29,19 @@ class Credit_lib{
             $expire_time     = $max_expire_time = strtotime("+6 months", time());
 
             if($low){
-                return $this->CI->credit_model->insert([
-                    'product_id' 	=> $product_id,
-                    'sub_product_id'=> $sub_product_id,
-                    'user_id'		=> $user_id,
-                    'points'		=> $low->points,
-                    'level'			=> $low->level,
-                    'amount'		=> $low->amount,
-                    'expire_time'   => $expire_time,
-                ]);
+				$param = [
+					'product_id' 	=> $product_id,
+					'sub_product_id'=> $sub_product_id,
+					'user_id'		=> $user_id,
+					'points'		=> $low->points,
+					'level'			=> $low->level,
+					'amount'		=> $low->amount,
+					'expire_time'   => $expire_time,
+				];
+				if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
+					return $param;
+				}
+                return $this->CI->credit_model->insert($param);
             }
 
 
@@ -53,14 +57,14 @@ class Credit_lib{
 
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time);
+				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time){
+	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -121,6 +125,10 @@ class Credit_lib{
 		if(isset($data['emergency_relationship']) && $data['emergency_relationship']=='監護人'){
 			$total = $total - 400;//mantis 0000003
 		}
+
+		if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+			$total += $approvalExtra->getExtraPoints();
+		}
 		
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= intval($total);
@@ -135,15 +143,19 @@ class Credit_lib{
         }
         $param['expire_time'] = $expire_time;
 
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
+			return $param;
+		}
+
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
 	
-	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time){
-		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time);
+	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
+		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
 	}
 
-	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time){
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -206,6 +218,10 @@ class Credit_lib{
 			}
 		}
 
+		if ($approvalExtra && $approvalExtra->extraPoints) {
+			$total += $approvalExtra->extraPoints;
+		}
+
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= intval($total);
 		$param['level'] 	= $this->get_credit_level($total,$product_id);
@@ -223,6 +239,10 @@ class Credit_lib{
 		if(intval($data['job_salary'])<=35000){
 			$job_salary = intval($data['job_salary'])*2;
 			$param['amount'] = $param['amount']>$job_salary?$job_salary:$param['amount'];
+		}
+
+		if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
+			return $param;
 		}
 
 		$rs 		= $this->CI->credit_model->insert($param);
