@@ -282,6 +282,8 @@ class Subloan extends REST_Controller {
 				$param[$field] = intval($input[$field]);
 			}
 		}
+
+		isset($input['product_id'])?$param['product_id']=$input['product_id']:'';
 		
 		$target = $this->target_model->get($input['target_id']);
 		if(!empty($target) && $target->status == 5 ){
@@ -307,11 +309,13 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_REPAYMENT_ERROR ));
 			}
 			
-			$rs = $this->subloan_lib->apply_subloan($target,$param);
-			if($rs){
+			$target_id = $this->subloan_lib->apply_subloan($target,$param);
+			if($target_id){
                 $this->load->library('Certification_lib');
                 $this->certification_lib->expire_certification($user_id);
-				$this->response(array('result' => 'SUCCESS'));
+				$this->response(array('result' => 'SUCCESS','data' => [
+                    'target_id' => intval($target_id),
+                ]));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
@@ -639,7 +643,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
-			$subloan = $this->subloan_lib->get_subloan($target);
+			$subloan = $this->subloan_lib->get_subloan(false,$target);
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
@@ -719,7 +723,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-			$subloan = $this->subloan_lib->get_subloan($target);
+			$subloan = $this->subloan_lib->get_subloan(false,$target);
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}

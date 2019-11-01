@@ -95,16 +95,18 @@ class Subloan_lib{
 					'platform_fee'		=> $info['platform_fees'],
 					'subloan_fee'		=> $info['sub_loan_fees'],
 					'instalment'		=> $data['instalment'],
-					'repayment'			=> $data['repayment']
+					'repayment'			=> $data['repayment'],
+                    'product_id'		=> $data['product_id']
 				);
-				$new_target_id = $this->add_subloan_target($target,$param);
-				if($new_target_id){
-					$param['new_target_id'] = $new_target_id;
+                unset($param['product_id']);
+                $new_target_id = $this->add_subloan_target($target,$param);
+                if($new_target_id){
+                    $param['new_target_id'] = $new_target_id;
 					$rs = $this->CI->subloan_model->insert($param);
 					if($rs){
 						$this->CI->target_lib->insert_change_log($target->id,array('sub_status'=>1),$target->user_id);
 						$this->CI->target_model->update($target->id,array('sub_status'=>1));
-						return $rs;
+						return $new_target_id;
 					}
 				}
 			}
@@ -115,6 +117,7 @@ class Subloan_lib{
 	public function add_subloan_target($target,$subloan){
 		$user_id 		= $target->user_id;
 		$product_id 	= $target->product_id;
+		isset($subloan['product_id'])?$product_id=$subloan['product_id']:'';
 		$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
 		if(!$credit){
 			$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
@@ -337,12 +340,12 @@ class Subloan_lib{
         return false;
     }
 
-	public function get_subloan($target){
-		if($target){
+	public function get_subloan($target,$new_target=false){
+		if($target||$new_target){
 			$where 		= array(
 				'status not' => array(8,9),
-				'target_id'	 => $target->id
 			);
+			$new_target?$where['new_target_id']=$new_target->id:$where['target_id']=$target->id;
 			$subloan	= $this->CI->subloan_model->order_by('created_at','desc')->get_by($where);
 			if($subloan){
 				return $subloan;
