@@ -79,15 +79,23 @@
 										<label>此公司工作期間</label>
 										<p class="form-control-static"><?=isset($content['job_seniority'])?$seniority_range[$content['job_seniority']]:""?></p>
 									</div>
-                                    <form role="form" method="post">
-                                        <div class="form-group">
-                                            <label>月薪</label><br />
-                                            <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
-                                            <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-                                            <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">修改月薪</button>
-                                    </form><br />
+                                    <? if($data->status==1){?>
+                                    <div class="form-group">
+                                        <label>月薪</label><br />
+                                        <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
+                                    </div>
+                                    <?}else{?>
+                                        <form role="form" method="post">
+                                            <div class="form-group">
+                                                <label>月薪</label><br />
+                                                <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
+                                                <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
+                                                <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">修改月薪</button>
+                                        </form>
+                                    <? } ?>
+                                    <br />
 									<?
 										if (isset($content['incomeDate'])) {
 											echo '

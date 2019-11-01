@@ -159,13 +159,15 @@
                                                 foreach($content['pro_certificate_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
                                                 }
-                                                echo '</div>';
+                                                echo '圖片說明：'.$content['pro_certificate'];
+                                                echo '</div><br />';
                                             }
                                             if (isset($content['game_work_image'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">競賽作品</label><br>';
                                                 foreach($content['game_work_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
                                                 }
+                                                echo '圖片說明：'.$content['game_work'];
                                                 echo '</div>';
                                             }
                                             echo '<br /><br /><br />';
