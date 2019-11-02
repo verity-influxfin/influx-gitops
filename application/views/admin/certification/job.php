@@ -82,7 +82,7 @@
                                     <? if($data->status==1){?>
                                     <div class="form-group">
                                         <label>月薪</label><br />
-                                        <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
+                                        <p class="form-control-static"><?=isset($content['salary'])?$content['salary']:""?></p>
                                     </div>
                                     <?}else{?>
                                         <form role="form" method="post">
@@ -93,9 +93,8 @@
                                                 <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                             </div>
                                             <button type="submit" class="btn btn-primary">修改月薪</button>
-                                        </form>
+                                        </form><br />
                                     <? } ?>
-                                    <br />
 									<?
 										if (isset($content['incomeDate'])) {
 											echo '
@@ -106,20 +105,6 @@
 											';
 										}
 									?>
-                                    <? if($data->status==1){?>
-                                        <div class="form-group">
-                                            <label>專業加分</label>
-                                            <p><?=isset($content['license_status'])&&$content['license_status']==1?"專業證書加分":"專業證書不加分"?></p>
-                                        </div>
-                                    <?}else{?>
-                                        <div class="form-group">
-                                            <label>專業加分</label>
-                                            <select id="license_status" name="license_status" class="form-control">
-                                                <option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>專業證書不加分</option>
-                                                <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>專業證書加分</option>
-                                            </select>
-                                        </div>
-                                    <?}?>
                                     <? if(isset($content['labor_type'])){?>
                                         <div class="form-group">
                                             <label>勞保卡</label><br>
@@ -131,7 +116,36 @@
                                                         <p>尚未收到回信PDF</p>
                                             <?}?>
                                         </div>
-                                        <?}} ?><br />
+                                        <?}} ?>
+                                    <form role="form" method="post">
+                                        <div class="form-group">
+                                            <label>專業證書加分 (最高3級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['license_status'])&&$content['license_status']>0?$content['license_status']."級":"專業證書不加分"?></p>
+                                            <?}else{?>
+                                                <select name="license_status" class="form-control">
+                                                    <option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['license_status'])&&$content['license_status']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['license_status'])&&$content['license_status']==3?"selected":""?>>3級</option>
+                                                </select>
+                                            <?}?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>專家調整 (最高5級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
+                                            <?}else{?>
+                                                <select name="pro_level" class="form-control">
+                                                    <option value="0" <?=isset($content['pro_level'])&&$content['pro_level']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['pro_level'])&&$content['pro_level']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['pro_level'])&&$content['pro_level']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['pro_level'])&&$content['pro_level']==3?"selected":""?>>3級</option>
+                                                    <option value="4" <?=isset($content['pro_level'])&&$content['pro_level']==4?"selected":""?>>4級</option>
+                                                    <option value="5" <?=isset($content['pro_level'])&&$content['pro_level']==5?"selected":""?>>5級</option>
+                                                </select>
+                                            <?}?>
+                                        </div><br />
                                     <div class="form-group">
 										<label>備註</label>
 										<?
@@ -143,7 +157,6 @@
 										?>
 									</div>
 									<h4>審核</h4>
-                                        <form role="form" method="post">
                                         <fieldset>
        										<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();" >

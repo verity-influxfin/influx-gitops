@@ -84,6 +84,44 @@
 										<label>預計畢業時間</label>
 										<p class="form-control-static"><?= isset($content['graduate_date']) ? $content['graduate_date'] : "未填寫" ?></p>
 									</div>
+                                    <form role="form" method="post">
+                                        <div class="form-group">
+                                            <label>專業證書加分 (最高2級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['license_level'])&&$content['license_level']>0?$content['license_level']."級":"專業證書不加分"?></p>
+                                            <?}else{?>
+                                                <select name="license_level" class="form-control">
+                                                    <option value="0" <?=isset($content['license_level'])&&$content['license_level']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['license_level'])&&$content['license_level']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['license_level'])&&$content['license_level']==2?"selected":""?>>2級</option>
+                                                </select>
+                                            <?}?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>競賽作品加分 (最高2級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
+                                            <?}else{?>
+                                                <select name="game_work_level" class="form-control">
+                                                    <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
+                                                </select>
+                                            <?}?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>專家調整 (最高3級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
+                                            <?}else{?>
+                                                <select name="pro_level" class="form-control">
+                                                    <option value="0" <?=isset($content['pro_level'])&&$content['pro_level']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['pro_level'])&&$content['pro_level']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['pro_level'])&&$content['pro_level']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['pro_level'])&&$content['pro_level']==3?"selected":""?>>3級</option>
+                                                </select>
+                                            <?}?>
+                                        </div><br />
 									<div class="form-group">
 										<label>備註</label>
 										<?
