@@ -212,17 +212,44 @@ class Certification extends MY_Admin_Controller {
 						alert('金融帳號認證請至 金融帳號驗證區 操作',$back_url);
 					}else{
 						if($info->certification_id==10){
+							$license_status = 0;
+							$pro_level = 0;
 							$content 					= json_decode($info->content,TRUE);
-							$content['license_status'] 	= isset($post['license_status'])?$post['license_status']:0;
+							if(isset($post['license_status'])){
+								$license_status = is_numeric($post['license_status'])&&$post['license_status']<=3?$post['license_status']:0;
+							}
+							if(isset($post['pro_level'])){
+								$pro_level = is_numeric($post['pro_level'])&&$post['pro_level']<=5?$post['pro_level']:0;
+							}
+							$content['license_status'] 	= $license_status;
+							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						}
-						if($info->certification_id==9){
+						elseif($info->certification_id==9){
 							$content 					= json_decode($info->content,TRUE);
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 
+						}elseif($info->certification_id==2){
+							$license_level = 0;
+							$game_work_level = 0;
+							$pro_level = 0;
+							$content 					= json_decode($info->content,TRUE);
+							if(isset($post['license_level'])){
+								$license_level = is_numeric($post['license_level'])&&$post['license_level']<=2?$post['license_level']:0;
+							}
+							if(isset($post['game_work_level'])){
+								$game_work_level = is_numeric($post['game_work_level'])&&$post['game_work_level']<=2?$post['game_work_level']:0;
+							}
+							if(isset($post['pro_level'])){
+								$pro_level = is_numeric($post['pro_level'])&&$post['pro_level']<=3?$post['pro_level']:0;
+							}
+							$content['license_level'] 	= $license_level;
+							$content['game_work_level'] = $game_work_level;
+							$content['pro_level'] 		= $pro_level;
+							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
