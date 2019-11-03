@@ -434,7 +434,7 @@ class Credit_lib{
 					'expire_time'=> intval($rs->expire_time),
 				];
                 if($target){
-                    $data['rate'] = $this->CI->credit_lib->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id);
+                    $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id);
                 }
                 return $data;
 			}
