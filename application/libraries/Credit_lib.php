@@ -151,7 +151,12 @@ class Credit_lib{
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$data 		= [];
 		$total 		= 0;
-		$param		= ['product_id'=>$product_id,'user_id'=> $user_id,'amount'=>0];
+		$param		= [
+            'user_id'=> $user_id,
+            'product_id'=>$product_id,
+            'sub_product_id'=>$sub_product_id,
+            'amount'=>0,
+        ];
 		foreach($info as $key => $value){
 			$data[$value->meta_key] = $value->meta_value;
 		}
@@ -409,18 +414,18 @@ class Credit_lib{
 	}
 	
 	//取得信用評分
-	public function get_credit($user_id,$product_id,$sub_product_id=0){
+	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
 		if($user_id && $product_id){
 			$param = array(
 				'user_id'			=> $user_id,
 				'product_id'		=> $product_id,
+				'sub_product_id'	=> $sub_product_id,
 				'status'			=> 1,
 				'expire_time >='	=> time(),
 			);
-			$data 	= array();
 			$rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
 			if($rs){
-				$data = [
+                $data = [
 				    'id'         => intval($rs->id),
 					'level'		 => intval($rs->level),
 					'points'	 => intval($rs->points),
@@ -428,7 +433,10 @@ class Credit_lib{
 					'created_at' => intval($rs->created_at),
 					'expire_time'=> intval($rs->expire_time),
 				];
-				return $data;
+                if($target){
+                    $data['rate'] = $this->CI->credit_lib->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id);
+                }
+                return $data;
 			}
 		}
 		return false;
@@ -449,7 +457,7 @@ class Credit_lib{
 		return false;
 	}
 	
-	public function get_rate($level,$instalment,$product_id){
+	public function get_rate($level,$instalment,$product_id,$sub_product_id){
 		$credit = $this->CI->config->item('credit');
 		if(isset($this->credit['credit_level_'.$product_id][$level])){
 			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
