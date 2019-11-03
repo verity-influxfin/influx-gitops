@@ -82,8 +82,8 @@ class Credit_lib{
             if($sub_product_id == 1){
                 //系所加分
                 $total += in_array($data['school_department'],$sub_product->majorList)?200:0;
-                $total += isset($data['student_game_work_level'])?$data['student_game_work_level']*100:0;
-                $total += isset($data['student_license_level'])?$data['student_license_level']*100:0;
+                $total += isset($data['student_game_work_level'])?$data['student_game_work_level']*50:0;
+                $total += isset($data['student_license_level'])?$data['student_license_level']*50:0;
                 $total += isset($data['student_pro_level'])?$data['student_pro_level']*100:0;
             }
         }
@@ -165,7 +165,7 @@ class Credit_lib{
             //techie
             if($sub_product_id == 1){
                 //系所加分
-                $total += isset($data['job_license'])?$data['job_license']*100:0;
+                $total += isset($data['job_license'])?$data['job_license']*50:0;
                 $total += isset($data['job_pro_level'])?$data['job_pro_level']*100:0;
             }
         }
@@ -434,7 +434,7 @@ class Credit_lib{
 					'expire_time'=> intval($rs->expire_time),
 				];
                 if($target){
-                    $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id);
+                    $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
                 }
                 return $data;
 			}
@@ -457,11 +457,34 @@ class Credit_lib{
 		return false;
 	}
 	
-	public function get_rate($level,$instalment,$product_id,$sub_product_id){
+	public function get_rate($level,$instalment,$product_id,$sub_product_id,$target){
 		$credit = $this->CI->config->item('credit');
 		if(isset($this->credit['credit_level_'.$product_id][$level])){
 			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
-				return $this->credit['credit_level_'.$product_id][$level]['rate'][$instalment];
+                $rate = $this->credit['credit_level_'.$product_id][$level]['rate'][$instalment];
+                //副產品減免
+                if($sub_product_id){
+                    $info        = $this->CI->user_meta_model->get_many_by(['user_id'=>$target->user_id]);
+                    foreach($info as $key => $value){
+                        $data[$value->meta_key] = $value->meta_value;
+                    }
+                    $sub_product = $this->get_sub_product_data($sub_product_id);
+                    //techie
+                    if ($sub_product_id == 1){
+                        $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
+                        if ($product_id == 1){
+                            $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
+                            $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
+                        }elseif ($product_id == 3){
+                            $rate -= isset($data['job_license'])?$data['job_license']*0.5:0;
+                            //工作認證減免%
+                            $rate -= isset($data['job_title'])?$sub_product->titleList->{$data['job_title']}->level:0;
+                        }
+                    }
+                    $product_info 	= $this->CI->config->item('product_list')[$target->product_id];
+                    $rate<$product_info['interest_rate_s']?$rate=$product_info['interest_rate_s']:'';
+                }
+				return $rate;
 			}
 		}
 		return false;

@@ -116,6 +116,10 @@ class Certification extends MY_Admin_Controller {
 						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
 						$page_data['industry_name'] 		= $this->config->item('industry_name');
 						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
+						if (isset($page_data['content']['job_title'])){
+							$job_title = file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json');
+							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
+						}
 					}
 					$page_data['from'] 					= $from;
 					$this->load->view('admin/_header');
