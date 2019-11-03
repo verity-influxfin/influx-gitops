@@ -4486,6 +4486,13 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
+                            "field": "job_title",
+                            "description": "<p>工作職稱(<a href='https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json'>根據職稱列表no</a>)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "incomeDate",
                             "description": "<p>發薪日 1~31 非範圍數值自動為5</p>"
                         },
@@ -4556,7 +4563,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "language",
+                            "field": "programming_language",
                             "description": "<p>專業語言 Json input</p>"
                         },
                         {
@@ -5130,7 +5137,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "language",
+                            "field": "programming_language",
                             "description": "<p>專業語言 Json input</p>"
                         },
                         {
