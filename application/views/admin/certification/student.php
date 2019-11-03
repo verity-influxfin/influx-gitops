@@ -86,7 +86,7 @@
 									</div>
                                     <form role="form" method="post">
                                         <div class="form-group">
-                                            <label>專業證書加分 (最高2級)</label>
+                                            <label>專業證書加分 (最高4級)</label>
                                             <? if($data->status==1){?>
                                                 <p><?=isset($content['license_level'])&&$content['license_level']>0?$content['license_level']."級":"專業證書不加分"?></p>
                                             <?}else{?>
@@ -94,11 +94,13 @@
                                                     <option value="0" <?=isset($content['license_level'])&&$content['license_level']==0?"selected":""?>>不加分</option>
                                                     <option value="1" <?=isset($content['license_level'])&&$content['license_level']==1?"selected":""?>>1級</option>
                                                     <option value="2" <?=isset($content['license_level'])&&$content['license_level']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['license_level'])&&$content['license_level']==3?"selected":""?>>3級</option>
+                                                    <option value="4" <?=isset($content['license_level'])&&$content['license_level']==4?"selected":""?>>4級</option>
                                                 </select>
                                             <?}?>
                                         </div>
                                         <div class="form-group">
-                                            <label>競賽作品加分 (最高2級)</label>
+                                            <label>競賽作品加分 (最高4級)</label>
                                             <? if($data->status==1){?>
                                                 <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
                                             <?}else{?>
@@ -106,6 +108,8 @@
                                                     <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
                                                     <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
                                                     <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['game_work_level'])&&$content['game_work_level']==3?"selected":""?>>3級</option>
+                                                    <option value="4" <?=isset($content['game_work_level'])&&$content['game_work_level']==4?"selected":""?>>4級</option>
                                                 </select>
                                             <?}?>
                                         </div>
@@ -185,11 +189,11 @@
                                                 echo '</div>';
                                             }
                                         ?>
-                                        <? if (isset($content['language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
+                                        <? if (isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
                                             echo '<br /><br /><br /><h4>【其他輔助證明】</h4>';
-                                            if (isset($content['language'])) {
+                                            if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
-                                                echo $content['language'];
+                                                echo $content['programming_language'];
                                                 echo '</div>';
                                             }
                                             if (isset($content['pro_certificate_image'])) {
