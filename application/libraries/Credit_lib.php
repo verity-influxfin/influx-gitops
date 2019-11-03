@@ -81,9 +81,11 @@ class Credit_lib{
             //techie
             if($sub_product_id == 1){
                 //系所加分
-                $total +=  in_array($data['school_department'],$sub_product->majorList)?200:0;
+                $total += in_array($data['school_department'],$sub_product->majorList)?200:0;
+                $total += isset($data['student_game_work_level'])?$data['student_game_work_level']*100:0;
+                $total += isset($data['student_license_level'])?$data['student_license_level']*100:0;
+                $total += isset($data['student_pro_level'])?$data['student_pro_level']*100:0;
             }
-
         }
 
 		//學校
@@ -153,6 +155,15 @@ class Credit_lib{
 		foreach($info as $key => $value){
 			$data[$value->meta_key] = $value->meta_value;
 		}
+
+        if($sub_product_id){
+            //techie
+            if($sub_product_id == 1){
+                //系所加分
+                $total += isset($data['job_license'])?$data['job_license']*100:0;
+                $total += isset($data['job_pro_level'])?$data['job_pro_level']*100:0;
+            }
+        }
 
 		//畢業學校
 		if(isset($data['diploma_name']) && !empty($data['diploma_name'])){
@@ -517,6 +528,7 @@ class Credit_lib{
     private function get_sub_product_data($sub_product_id){
         $sub_product_mapping = $this->CI->config->item('sub_product_mapping')[$sub_product_id];
         $this->CI->config->load('sub_product',TRUE);
-        return $this->CI->config->item('sub_product')[$sub_product_mapping];
+        $get_list = $this->CI->config->item('sub_product');
+        return $get_list[$sub_product_mapping];
     }
 }
