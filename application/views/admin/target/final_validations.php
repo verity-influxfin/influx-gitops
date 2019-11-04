@@ -310,7 +310,7 @@
 									<tbody>
 									</tbody>
 								</table>
-								<button id="load-more">載入更多</button>
+								<button id="load-more" class="btn btn-default">載入更多</button>
 							</div>
 						</div>
 					</div>
@@ -361,9 +361,7 @@
 						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
 							<p>分數調整：(-400 ~ 400)</p>
 							<input type="text" name="score"/>
-							<p>審批內容：</p>
-							<input type="text" name="description"/></br></br>
-							<button type="submit">額度試算</button>
+							<button class="btn btn-default" type="submit">額度試算</button>
 						</form>
 					</div>
 					<div class="col-sm-8">
@@ -404,8 +402,14 @@
 						</div>
 					</div>
 					<br>
-					<div class="col-lg-12 text-center">
-						<button>送出</button>
+					<div class="center-text">
+						<form id="evaluation-complete" method="POST" action="/admin/Target/evaluation_approval">
+							<div class="col-lg-12 text-center">
+								<p style="display:inline">審批內容：</p>
+								<input type="text" name="description"/>
+								<button class="btn btn-default" type="submit">送出</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -422,8 +426,9 @@
         var url = new URL(urlString);
         var caseId = url.searchParams.get("id");
         var userId = url.searchParams.get("user_id");
-        // var caseId = 6543;
-        // var userId = 3475;
+        var modifiedPoints = null;
+        var targetInfoAjaxLock = false;
+        var relatedUserAjaxLock = false;
 
         changeReevaluationLoading(false);
         $("#load-more").hide();
@@ -431,8 +436,10 @@
             type: "GET",
             url: "/admin/Target/final_validations?id=" + caseId,
             beforeSend: function () {
+                targetInfoAjaxLock = true;
             },
             complete: function () {
+                targetInfoAjaxLock = false;
             },
             success: function (response) {
                 hideLoadingAnimation();
@@ -495,8 +502,10 @@
             type: "GET",
             url: "/admin/User/related_users" + "?id=" + userId,
             beforeSend: function () {
+                relatedUserAjaxLock = true;
             },
             complete: function () {
+                relatedUserAjaxLock = false;
             },
             success: function (response) {
                 if (response.status.code != 200) {
@@ -737,13 +746,18 @@
         $("#credit-evaluation").submit(function(e) {
             e.preventDefault();
 
+            if (relatedUserAjaxLock || targetInfoAjaxLock) {
+                alert("請等待資料載入完成後，再行試算。");
+                return;
+			}
+
             var form = $(this);
             var url = form.attr('action');
             var points = form.find('input[name="score"]').val();
             var remark = form.find('input[name="description"]').val();
             $.ajax({
                 type: "GET",
-                url: url + "?id=6543" + "&points=" + points,
+                url: url + "?id=" + caseId + "&points=" + points,
                 beforeSend: function () {
                     changeReevaluationLoading(true);
                     clearCreditInfo(true);
@@ -759,9 +773,50 @@
                     let creditJson = response.response.credits;
                     credit = new Credit(creditJson);
                     fillCreditInfo(credit, true);
+                    modifiedPoints = points;
                 }
             });
         });
+
+        $("#evaluation-complete").submit(function(e) {
+            e.preventDefault();
+
+            if (modifiedPoints === null) {
+                alert('請先試算過後，再行送出。');
+				return;
+            }
+
+            var isConfirmed = confirm("確認是否要通過審核？");
+            if (!isConfirmed){
+                return false;
+            }
+
+            var form = $(this);
+            var url = form.attr('action');
+            var description = form.find('input[name="description"]').val();
+
+			var data = {
+			    'id' : caseId,
+				'points' : modifiedPoints,
+				'reason' : description
+			}
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data, // serializes the form's elements.
+                success: function(response) {
+                    if (response.status.code != 200) {
+                        alert('審核失敗，請重整頁面後，再試一次。');
+                        return;
+                    }
+
+                    window.close();
+                },
+                error: function() {
+                    alert('審核失敗，請重整頁面後，再試一次。');
+                }
+            });
+		});
     });
 </script>
 <style>

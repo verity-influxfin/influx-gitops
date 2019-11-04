@@ -467,6 +467,10 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
 
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
 		$userId = $target->user_id;
 		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
 
@@ -491,7 +495,7 @@ class Target extends MY_Admin_Controller {
 
 	public function evaluation_approval()
 	{
-		$post = $this->input->get(NULL, TRUE);
+		$post = $this->input->post(NULL, TRUE);
 
 		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
@@ -504,7 +508,7 @@ class Target extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(404)->send();
 		}
 
-		if ($target->status !=0 || $target->sub_status != 9) {
+		if ($target->status !=0 && $target->sub_status != 9) {
 			$this->json_output->setStatusCode(404)->send();
 		}
 
@@ -554,6 +558,9 @@ class Target extends MY_Admin_Controller {
 
 			$target = $this->target_model->get($targetId);
 			if (!$target || $target->id <= 0) {
+				$this->json_output->setStatusCode(404)->send();
+			}
+			if ($target->status != 0 && $target->sub_status != 9) {
 				$this->json_output->setStatusCode(404)->send();
 			}
 			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
