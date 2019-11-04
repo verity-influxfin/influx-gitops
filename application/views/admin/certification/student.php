@@ -169,14 +169,14 @@
 									<fieldset disabled>
                                         <div class="form-group">
 											<label>學生證正面照</label><br>
-											<a href="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>" style='width:30%;max-width:400px'>
+											<a href="<?= isset($content['front_image']) ? $content['front_image'][0] : "" ?>" data-fancybox="images">
+												<img src="<?= isset($content['front_image']) ? $content['front_image'][0] : "" ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
 										<div class="form-group">
 											<label>學生證背面照</label><br>
-											<a href="<?= isset($content['back_image']) ? $content['back_image'] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['back_image']) ? $content['back_image'] : "" ?>" style='width:30%;max-width:400px'>
+											<a href="<?= isset($content['back_image']) ? $content['back_image'][0] : "" ?>" data-fancybox="images">
+												<img src="<?= isset($content['back_image']) ? $content['back_image'][0] : "" ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
                                         <?
@@ -194,22 +194,24 @@
                                             if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
                                                 echo $content['programming_language'];
-                                                echo '</div>';
+                                                echo '</div><br><br>';
                                             }
                                             if (isset($content['pro_certificate_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">專業證書</label><br>';
+                                                echo '<div class="form-group"><label for="disabledSelect"><h4>專業證書</h4></label><br>';
+                                                $arr_pro_certificate = explode(',',$content['pro_certificate']);
                                                 foreach($content['pro_certificate_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                    echo '圖片說明：'.(isset($arr_pro_certificate[$key])&&!empty($arr_pro_certificate[$key])?$arr_pro_certificate[$key]:'未填寫說明')."<br><br>";
                                                 }
-                                                echo '圖片說明：'.$content['pro_certificate'];
                                                 echo '</div><br />';
                                             }
                                             if (isset($content['game_work_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">競賽作品</label><br>';
+                                                echo '<div class="form-group"><label for="disabledSelect"><h4>競賽作品</h4></label><br>';
+                                                $arr_game_work = explode(',',$content['game_work']);
                                                 foreach($content['game_work_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                    echo '圖片說明：'.(isset($arr_game_work[$key])&&!empty($arr_game_work[$key])?$arr_game_work[$key]:'未填寫說明')."<br><br>";
                                                 }
-                                                echo '圖片說明：'.$content['game_work'];
                                                 echo '</div>';
                                             }
                                             echo '<br /><br /><br />';
