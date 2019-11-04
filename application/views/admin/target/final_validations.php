@@ -437,9 +437,12 @@
             success: function (response) {
                 hideLoadingAnimation();
 
-                if (response.status.code != 200) {
+                if (response.status.code != 200 && response.status.code != 404) {
                     return;
-                }
+                } else if (response.status.code == 404) {
+                    alert('資料不存在');
+                    return;
+				}
 
                 let currentTargetJson = response.response.target;
                 target = new Target(currentTargetJson);

@@ -550,7 +550,12 @@ class Target extends MY_Admin_Controller {
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 
 		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
 			$target = $this->target_model->get($targetId);
+			if (!$target || $target->id <= 0) {
+				$this->json_output->setStatusCode(404)->send();
+			}
 			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
 
 			$userId = $target->user_id;
@@ -558,7 +563,6 @@ class Target extends MY_Admin_Controller {
 
 			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
 			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
-			$this->load->library('output/json_output');
 
 			$this->load->model('user/user_certification_model');
 			$schoolCertificationDetail = $this->user_certification_model->get_by([
