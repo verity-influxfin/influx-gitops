@@ -211,7 +211,7 @@ class Product extends REST_Controller {
                 }
 
                 $parm = array(
-                    'product_id'			=> $value['id'],
+                    'id'        			=> $value['id'],
                     'type' 					=> $value['type'],
                     'identity' 				=> $value['identity'],
                     'name' 					=> $value['name'],
