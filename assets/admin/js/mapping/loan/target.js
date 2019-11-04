@@ -3,12 +3,20 @@ class Target
 	constructor(target) {
 		this.id = parseInt(target.id);
 		this.number = target.number;
-		this.status = target.status;
 		this.reason = target.reason;
 		this.image = target.image;
 		this.expireAt = parseInt(target.expire_at);
+		this.setStatus(target)
 		this.setAmount(target);
 		this.setProduct(target);
+	}
+
+	setStatus(target) {
+		console.log(target)
+		if (!target.status) return;
+		this.status = {}
+		this.status.id = target.status.id;
+		this.status.text = target.status.text;
 	}
 
 	setAmount(target) {

@@ -58,7 +58,10 @@ class Target_output
 			'requested_amount' => $target->amount,
 			'approved_amount' => isset($target->credit) ? $target->credit->amount : null,
 			'available_amount' => $target->loan_amount,
-			'status' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
+			'status' => [
+				'id' => $target->status,
+				'text' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
+			],
 			'reason' => $target->reason,
 			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
@@ -77,18 +80,10 @@ class Target_output
 
 	public function loadTargetStatusMapping()
 	{
-		$this->statusMapping = [
-			0 => 'waiting_approval',
-			1 => 'waiting_signing',
-			2 => 'waiting_verify',
-			3 => 'waiting_loan',
-			4 => 'waiting_release',
-			5 => 'returning',
-			8 => 'cancelled',
-			9 => 'failure',
-			10 => 'finished',
-			21 => 'waiting_quotes',
-		];
+		$ci =& get_instance();
+		$ci->load->model('loan/target_model');
+
+		$this->statusMapping = $ci->target_model->status_list;
 	}
 
 	public function loadProductMapping()

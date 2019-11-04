@@ -722,7 +722,7 @@
                     getCenterTextCell(target.amount.approved),
                     getCenterTextCell(target.amount.remaining),
                     getCenterTextCell(target.amount.principal),
-                    getCenterTextCell(target.status),
+                    getCenterTextCell(target.status.text),
                     getCenterTextCell(target.expireAt),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
                     getCenterTextCell(target.reason)
