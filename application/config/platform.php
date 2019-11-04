@@ -296,9 +296,9 @@ $config['product_list']= [
 $config['visul_id_des'] = [
     '1'	   => [
         'name'   => '信用貸款',
-        'description' =>'信用貸款XXX',
+        'description' =>'<span style=\'font-size:16px;color:white;font-weight: 900;\'>學生/上班族全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_loan_01.jpg',
         'status' => 1
     ],
     /*'2'	   => [
@@ -324,10 +324,10 @@ $config['visul_id_des'] = [
     ],*/
 
     '101'  => [
-        'name' => '工程師貸',
-        'description' =>'工程師貸XXX',
+        'name' => 'Techi貸',
+        'description' =>'<span style=\'font-size:16px;color:white;font-weight: 900;\'>資訊相關科系學生或職場專業人員均可申請</span><br><span style=\'font-size:14px;color:white\'>認可您的專業，減降利率並提升額度</span>',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_techi.jpg',
         'status' => 1
     ],
     /*'102'  => [
