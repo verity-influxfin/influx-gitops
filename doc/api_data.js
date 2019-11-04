@@ -4514,6 +4514,13 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
+                            "field": "license_des",
+                            "description": "<p>專業認證說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "labor_type",
                             "description": "<p>0：紙本，1：自然人憑證(若為1送出系統要寄信) <br />勞保卡上傳類型</p>"
                         },
@@ -4565,20 +4572,6 @@ define({
                             "optional": true,
                             "field": "programming_language",
                             "description": "<p>專業語言 Json input</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "pro_certificate",
-                            "description": "<p>專業證書說明 ( 對應圖片順序以逗號隔開 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "pro_certificate_image",
-                            "description": "<p>專業證書照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
                         }
                     ]
                 }

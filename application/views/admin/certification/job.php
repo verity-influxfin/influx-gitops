@@ -252,8 +252,10 @@
                                             if (isset($content['license_image'])) {
                                                 !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
                                                 echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
+                                                $arr_license_desc = explode(',',$content['license_des']);
                                                 foreach($content['license_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                     echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
                                                 }
                                                 echo '</div>';
                                             }

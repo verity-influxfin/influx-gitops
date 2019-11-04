@@ -483,7 +483,7 @@ class Certification extends REST_Controller {
 			}
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            isset($input['language'])?$content['language']=$input['language']:"";
+            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
 
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
@@ -1612,7 +1612,8 @@ class Certification extends REST_Controller {
 				}
 			}
             $content['company'] 	  = isset($input['company'])?$input['company']:"";
-            isset($input['language'])?$content['language']=$input['language']:"";
+            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
+            isset($input['license_des'])?$content['license_des']=$input['license_des']:"";
 
             $employee_range 		  = $this->config->item('employee_range');
 			$position_name 			  = $this->config->item('position_name');
