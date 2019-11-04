@@ -197,7 +197,7 @@ class Product extends REST_Controller {
                                 'created_at' => intval($tar->created_at),
                                 'instalment' => intval($tar->instalment),
                             ];
-                            $target[$tar->product_id][$tar->sub_product_id][] = $add_target;
+                            $target[$tar->product_id][$tar->sub_product_id] = $add_target;
                         }
                     }
                 }
@@ -211,7 +211,7 @@ class Product extends REST_Controller {
                 }
 
                 $parm = array(
-                    'id' 					=> $value['id'],
+                    'product_id'			=> $value['id'],
                     'type' 					=> $value['type'],
                     'identity' 				=> $value['identity'],
                     'name' 					=> $value['name'],
