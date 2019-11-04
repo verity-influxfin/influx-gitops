@@ -308,6 +308,17 @@
 									</tr>
 									</thead>
 									<tbody>
+										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 								<button id="load-more" class="btn btn-default">載入更多</button>
@@ -431,6 +442,10 @@
         var relatedUserAjaxLock = false;
 
         changeReevaluationLoading(false);
+        fillFakeVerifications("borrowing");
+        fillFakeVerifications("investing");
+        fillFakeRelatedUsers();
+        fillFakeTargets();
         $("#load-more").hide();
         $.ajax({
             type: "GET",
@@ -443,7 +458,9 @@
             },
             success: function (response) {
                 hideLoadingAnimation();
-
+                fillFakeVerifications("borrowing", false);
+                fillFakeVerifications("investing", false);
+                fillFakeTargets(false);
                 if (response.status.code != 200 && response.status.code != 404) {
                     return;
                 } else if (response.status.code == 404) {
@@ -508,6 +525,7 @@
                 relatedUserAjaxLock = false;
             },
             success: function (response) {
+                fillFakeRelatedUsers(false);
                 if (response.status.code != 200) {
                     return;
                 }
@@ -542,8 +560,24 @@
 			}
 		}
 
+		function fillFakeRelatedUsers(show = true) {
+            if (!show) {
+                $("#related-users tr:gt(0)").remove();
+                return;
+			}
+            pTag = '<p class="form-control-static"></p>'
+
+            for (var i = 0; i < 3; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                ).appendTo("#related-users");
+			}
+		}
+
 		function fillRelatedUsers() {
-            var maxNumInPage = 20;
+            var maxNumInPage = 10;
             var start = (relatedUsersIndex-1) * maxNumInPage;
             var end = relatedUsersIndex * maxNumInPage;
             if (end > relatedUsers.length) end = relatedUsers.length;
@@ -635,6 +669,24 @@
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
         }
 
+        function fillFakeVerifications(type, show = true) {
+            var tableId = "#" + type + "-verifications";
+            for (var i = 0; i < 3; i++) {
+                if (!show) {
+                    $(tableId + " tr:gt(0)").remove();
+                    return;
+                }
+                pTag = '<p class="form-control-static"></p>';
+
+                for (var i = 0; i < 3; i++) {
+                    $("<tr>").append(
+                        $('<td class="table-field center-text">').append(pTag),
+                        $('<td class="fake-fields center-text">').append(pTag),
+                    ).appendTo(tableId);
+                }
+			}
+		}
+
 		function fillInvestingVerifications(bankAccounts, verifications) {
             for (var i = 0; i < verifications.length; i++) {
                 pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
@@ -720,6 +772,28 @@
                 return '(' + verification.getExpiredAtHumanReadable() + ')';
 			}
             return '';
+		}
+
+		function fillFakeTargets(show = true) {
+            if (!show) {
+                $("#targets tr:gt(0)").remove();
+                return;
+            }
+
+            pTag = '<p class="form-control-static"></p>';
+            for (var i = 0; i < 3; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag)
+                ).appendTo("#targets");
+			}
 		}
 
 		function fillTargets(targets) {
@@ -879,6 +953,19 @@
 		background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
 		background-size: 800px 104px;
 		height: 200px;
+		position: relative;
+	}
+
+	.fake-fields p {
+		animation-duration: 1.25s;
+		animation-fill-mode: forwards;
+		animation-iteration-count: infinite;
+		animation-name: placeHolderShimmer;
+		animation-timing-function: linear;
+		background: darkgray;
+		background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+		background-size: 800px 104px;
+		height: 30px;
 		position: relative;
 	}
 </style>
