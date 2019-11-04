@@ -449,7 +449,6 @@
                 fillCurrentTargetInfo(target)
 
 				let userJson = response.response.user;
-                console.log(userJson);
                 user = new User(userJson);
                 fillUserInfo(user)
 
@@ -679,10 +678,12 @@
             if (verification.id == 3) {
                 if (verification.isPending() || verification.requireHumanReview()) {
                     button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>';
-				} else if (verification.success()) {
+				} else if (verification.success() && !verification.expired) {
 					button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>';
-				} else if (verification.failure()) {
-					button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>';
+				} else if (verification.success() && verification.expired) {
+                    button = '<button type="button" class="btn btn-danger circle"><i class="fa fa-check"></i></button>' + getVerificationExpiredTimeText(verification);
+                } else if (verification.failure()) {
+					button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>' + getVerificationExpiredTimeText(verification);
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
@@ -690,10 +691,12 @@
             } else {
                 if (verification.isPending() || verification.requireHumanReview()) {
                     button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button>';
-				} else if (verification.success()) {
+				} else if (verification.success() && !verification.expired) {
                     button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>';
-				} else if (verification.failure()) {
-                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>';
+				} else if (verification.success() && verification.expired) {
+                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-check"></i></button>' + getVerificationExpiredTimeText(verification);
+                } else if (verification.failure()) {
+                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>' + getVerificationExpiredTimeText(verification);
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
@@ -701,6 +704,13 @@
             }
 
             return '<a href="' + url + '">' + button + '</a>';
+		}
+
+		function getVerificationExpiredTimeText(verification) {
+            if (verification.expiredAt > 0) {
+                return '(' + verification.getExpiredAtHumanReadable() + ')';
+			}
+            return '';
 		}
 
 		function fillTargets(targets) {

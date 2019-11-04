@@ -42,7 +42,9 @@ class Verification_output
 		}
 
 		$verifications = [];
-		foreach ($this->verifications as $verification) {
+		foreach ($this->verifications as $key => $verification) {
+			$verification["id"] = $verification["certification_id"];
+			$verification["certification_id"] = $key;
 			$verifications[] = $this->map($verification);
 		}
 		return $verifications;
@@ -51,10 +53,16 @@ class Verification_output
 	public function map($verification, $withSensitiveInfo = false)
 	{
 		$output = [
-			"id" => $verification["certification_id"],
+			"id" => $verification["id"],
 			"name" => $verification["name"],
 			"description" => $verification["description"],
 			"status" => isset($this->statusMapping[$verification["user_status"]]) ? $this->statusMapping[$verification["user_status"]] : self::NOT_FOUND,
+			"expired_at" => $verification["expire_time"],
+			"expired" => $verification["expire_time"] < time()
+						 && !in_array(
+						 	$verification["certification_id"],
+							[IDCARD,DEBITCARD,EMERGENCY,EMAIL]
+						 )
 		];
 
 		return $output;
