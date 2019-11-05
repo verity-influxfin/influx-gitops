@@ -666,6 +666,50 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/final_validations');
 		$this->load->view('admin/_footer');
 	}
+
+	public function waiting_evaluation()
+	{
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
+			$where = ["status" => 0, "sub_status" => 9];
+			$targets = $this->target_model->get_many_by($where);
+			if (!$targets) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$userIds = [];
+			$userIndexes = [];
+			$index = 0;
+			foreach ($targets as $target) {
+				$userIds[] = $target->user_id;
+				$userIndexes[$target->user_id] = $index++;
+			}
+
+			$users = $this->user_model->get_many_by(['id' => $userIds]);
+
+			$numTargets = count($targets);
+			$userList = array_fill(0, $numTargets, null);
+			foreach ($users as $user) {
+				$index = $userIndexes[$user->id];
+				$userList[$index] = $user;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+			$this->load->library('output/user/user_output', ["data" => $userList]);
+
+			$response = [
+				"users" => $this->user_output->toMany(false),
+				"targets" => $this->target_output->toMany(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/target/waiting_evaluation');
+		$this->load->view('admin/_footer');
+	}
 	
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');

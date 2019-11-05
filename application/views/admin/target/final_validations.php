@@ -465,6 +465,7 @@
                     return;
                 } else if (response.status.code == 404) {
                     alert('資料不存在');
+                    window.close();
                     return;
 				}
 
@@ -886,7 +887,7 @@
                         alert('審核失敗，請重整頁面後，再試一次。');
                         return;
                     }
-
+					alert("審核成功，點選OK關閉頁面。");
                     window.close();
                 },
                 error: function() {
