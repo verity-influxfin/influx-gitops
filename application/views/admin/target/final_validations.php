@@ -337,7 +337,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="targets" class="table table-bordered table-hover table-striped">
+								<table id="targets" class="table table-bordered">
 									<thead>
 									<tr class="odd list">
 										<th width="10%">案號</th>
@@ -799,22 +799,23 @@
 		function fillTargets(targets) {
             for (var i = 0; i < targets.length; i++) {
                 let target = targets[i];
+                var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
                 $("<tr>").append(
-                    getCenterTextCell(target.number),
-                    getCenterTextCell(target.product.name),
-                    getCenterTextCell(target.amount.approved),
-                    getCenterTextCell(target.amount.remaining),
-                    getCenterTextCell(target.amount.principal),
-                    getCenterTextCell(target.status.text),
-                    getCenterTextCell(target.expireAt),
+                    getCenterTextCell(target.number, backgroundColor),
+                    getCenterTextCell(target.product.name, backgroundColor),
+                    getCenterTextCell(target.amount.approved, backgroundColor),
+                    getCenterTextCell(target.amount.remaining, backgroundColor),
+                    getCenterTextCell(target.amount.principal, backgroundColor),
+                    getCenterTextCell(target.status.text, backgroundColor),
+                    getCenterTextCell(target.expireAt, backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
-                    getCenterTextCell(target.reason)
+                    getCenterTextCell(target.reason, backgroundColor)
                 ).appendTo("#targets");
             }
 		}
 
-		function getCenterTextCell(value) {
-            return '<td class="center-text">' + value + '</td>';
+		function getCenterTextCell(value, additionalCssClass = "") {
+            return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
 		}
 
         $("#credit-evaluation").submit(function(e) {
