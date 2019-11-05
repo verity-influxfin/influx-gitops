@@ -9221,7 +9221,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_product_id",
-                            "description": "<p>子產品</p>"
+                            "description": "<p>子產品ID</p>"
                         },
                         {
                             "group": "Success 200",
@@ -13858,6 +13858,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.user_id",
                             "description": "<p>User ID</p>"
                         },
@@ -14006,7 +14013,48 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"income\": {\n\t\t\t\t\t\"principal\": 0,\n\t\t\t\t\t\"interest\": 0,\n\t\t\t\t\t\"delay_interest\": 0,\n\t\t\t\t\t\"other\": 0,\n\t\t\t\t\t\"transfer\": \"5003\"\n\t\t\t\t},\n\t\t\t\t\"invest\": {\n\t\t\t\t\t\"start_date\": \"2019-01-05\",\n\t\t\t\t\t\"end_date\": \"2019-01-17\",\n\t\t\t\t\t\"amount\": \"5000\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "content": "{\n" +
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"list\": [\n" +
+                            "      {\n" +
+                            "        \"id\": 2478,\n" +
+                            "        \"loan_amount\": 20391,\n" +
+                            "        \"status\": 10,\n" +
+                            "        \"transfer_status\": 2,\n" +
+                            "        \"target\": {\n" +
+                            "          \"id\": 4552,\n" +
+                            "          \"target_no\": \"STS2018122767131\",\n" +
+                            "          \"product_id\": 1,\n" +
+                            "          \"sub_product_id\": 0,\n" +
+                            "          \"user_id\": 606,\n" +
+                            "          \"loan_amount\": 23564,\n" +
+                            "          \"credit_level\": 12,\n" +
+                            "          \"interest_rate\": 20,\n" +
+                            "          \"instalment\": 24,\n" +
+                            "          \"repayment\": 1,\n" +
+                            "          \"delay\": 1,\n" +
+                            "          \"delay_days\": 118,\n" +
+                            "          \"loan_date\": \"2018-12-29\",\n" +
+                            "          \"status\": 5,\n" +
+                            "          \"sub_status\": 8\n" +
+                            "        },\n" +
+                            "        \"income\": {\n" +
+                            "          \"principal\": 855,\n" +
+                            "          \"interest\": 345,\n" +
+                            "          \"delay_interest\": 0,\n" +
+                            "          \"other\": 0,\n" +
+                            "          \"transfer\": 0\n" +
+                            "        },\n" +
+                            "        \"invest\": {\n" +
+                            "          \"start_date\": \"2019-05-30\",\n" +
+                            "          \"end_date\": \"2019-06-10\",\n" +
+                            "          \"amount\": 20625\n" +
+                            "        }\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -14261,6 +14309,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "target.sub_product_id",
+                            "description": "<p>子產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.user_id",
                             "description": "<p>User ID</p>"
                         },
@@ -14500,7 +14555,68 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n   \t\"data\": {\n   \t\t\"id\": 10,\n   \t\t\"loan_amount\": 5000,\n   \t\t\"status\": 3,\n   \t\t\"transfer_status\": 0,\n   \t\t\"created_at\": 1547446446,\n   \t\t\"contract\": \"借貸契約\",\n   \t\t\"transfer\": {\n   \t\t\t\"amount\": 5120,\n   \t\t\t\"transfer_fee\": 25,\n   \t\t\t\"principal\": 5000,\n   \t\t\t\"interest\": 10,\n   \t\t\t\"delay_interest\": 0,\n   \t\t\t\"bargain_rate\": 2.2,\n   \t\t\t\"instalment\": 18,\n   \t\t\t\"accounts_receivable\": 5398,\n   \t\t\t\"transfer_at\": \"2019-01-21\",\n   \t\t\t\"contract\": \"應收帳款債權買賣\"\n   \t\t},\n   \t\t\"target\": {\n   \t\t\t\"id\": 15,\n   \t\t\t\"target_no\": \"STN2019011452727\",\n   \t\t\t\"product_id\": 1,\n   \t\t\t\"user_id\": 19,\n   \t\t\t\"user\": {\n   \t\t\t\t\"name\": \"你**\",\n   \t\t\t\t\"id_number\": \"A1085*****\",\n   \t\t\t\t\"sex\": \"M\",\n   \t\t\t\t\"age\": 30,\n   \t\t\t\t\"company_name\": \"國立政治大學\"\n   \t\t\t},\n   \t\t\t\"loan_amount\": 5000,\n   \t\t\t\"credit_level\": 3,\n   \t\t\t\"interest_rate\": 8,\n   \t\t\t\"reason\": \"\",\n   \t\t\t\"remark\": \"\",\n   \t\t\t\"instalment\": 12,\n   \t\t\t\"repayment\": 1,\n   \t\t\t\"delay\": 0,\n   \t\t\t\"delay_days\": 0,\n   \t\t\t\"loan_date\": \"2019-01-14\",\n   \t\t\t\"status\": 5,\n   \t\t\t\"sub_status\": 0,\n   \t\t\t\"created_at\": 1547445312\n   \t\t},\n   \t\t\"amortization_schedule\": {\n   \t\t\t\"amount\": 5000,\n   \t\t\t\"instalment\": 12,\n   \t\t\t\"rate\": 8,\n   \t\t\t\"total_payment\": 5249,\n   \t\t\t\"XIRR\": 8.28,\n   \t\t\t\"date\": \"2019-01-14\",\n   \t\t\t\"remaining_principal\": 5000,\n   \t\t\t\"list\": {\n   \t\t\t\t\"1\": {\n   \t\t\t\t\t\"instalment\": \"1\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 60,\n   \t\t\t\t\t\"principal\": 375,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 55,\n   \t\t\t\t\t\"remaining_principal\": \"5000\",\n   \t\t\t\t\t\"repayment_date\": \"2019-03-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t},\n   \t\t\t\t\"2\": {\n   \t\t\t\t\t\"instalment\": \"2\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 31,\n   \t\t\t\t\t\"principal\": 404,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 31,\n   \t\t\t\t\t\"remaining_principal\": 4625,\n   \t\t\t\t\t\"repayment_date\": \"2019-04-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t},\n   \t\t\t\t\"3\": {\n   \t\t\t\t\t\"instalment\": \"3\",\n   \t\t\t\t\t\"total_payment\": 435,\n   \t\t\t\t\t\"repayment\": 0,\n   \t\t\t\t\t\"interest\": 28,\n   \t\t\t\t\t\"principal\": 407,\n   \t\t\t\t\t\"delay_interest\": 0,\n   \t\t\t\t\t\"days\": 30,\n   \t\t\t\t\t\"remaining_principal\": 4221,\n   \t\t\t\t\t\"repayment_date\": \"2019-05-10\",\n   \t\t\t\t\t\"ar_fees\": 4\n   \t\t\t\t}\n   \t\t\t}\n   \t\t}\n   \t}\n   }",
+                        "content": "{\n" +
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"id\": 2493,\n" +
+                            "    \"loan_amount\": 12226,\n" +
+                            "    \"status\": 3,\n" +
+                            "    \"transfer_status\": 0,\n" +
+                            "    \"created_at\": 1559111277,\n" +
+                            "    \"contract\": \"使用者編號：3385（讓與人，以下簡稱「甲方」） \\r\\n使用者編號：21194（受讓人，以下簡稱「乙方」） \\r\\n茲因應收帳款債權買賣及讓與事宜，甲方同意將下列債權、已發生但未收取之利息債權、違約金債權、該債權之擔保及其他從屬權利等應收帳款債權（以下合稱「本債權」），於本條款同意日以現狀轉讓予乙方，雙方同意遵守普匯金融科技股份有限公司之一般使用者服務條款、貸款人服務條款、借款人服務條款、受讓人服務條款、隱私權政策等本公司所有條款，並同意遵守本債權讓與契約如下： \\r\\n1. 本次轉讓之債權(下稱「轉讓標的」)：\\r\\n(1) 轉讓標的：為使用者編號 6493 於 STN2019020360976 編號借貸案件 \\r\\n(2) 如轉讓標的未經本公司標示為逾期警示債權，則轉讓標的包含未清償本金債權新台幣(以下同) 12226 元整暨其利息(含已發生未清償之當期利息元及未發生之利息) \\r\\n(3) 如轉讓標的已經本公司標示為逾期警示債權，則轉讓標的包含未清償本金債權新台幣(以下同) 12226 元整暨同意日（含）後之延滯息;已發生利息及同意日前已發生之延滯息非屬轉讓標的，仍為甲方所有。 \\r\\n(4) 轉讓標的概不拆分轉讓。 \\r\\n2. 甲方同意自同意日起，如有就轉讓標的債權為收益(包括但不限於債務人自行還款及強制執行分配款項等)，均歸屬予乙方。 \\r\\n3. 雙方同意轉讓標的之價金計算以本契約第1條第1項所載之未清償本金債權金額為準。 \\r\\n4. 價金支付方式 乙方應給付甲方受讓轉讓標的之價金計 12352 元整 ，乙方應於本契約簽訂當日給付全部價金予甲方，並同意由本公司按服務條款代為收受並給付予甲方。 \\r\\n5. 自本契約同意日起，甲方與使用者編號 6493 間就轉讓標的之債權、債務關係消滅，乙方與使用者編號 6493 間就轉讓標的之債權、債務關係發生。 \\r\\n6. 甲方與使用者編號 6493 所訂之借貸契約及其相關權利證明文件，即日起交由乙方保管，甲方應清除上列資訊。 \\r\\n7. 雙方同意就轉讓標的之權利義務，本契約未約定者，悉按照原始借貸契約及普匯金融科技股份有限公司之服務條款約定。\\r\\n\\n 中華民國 108 年 05 月 29 日\",\n" +
+                            "    \"transfer\": [],\n" +
+                            "    \"target\": {\n" +
+                            "      \"id\": 5425,\n" +
+                            "      \"target_no\": \"STN2019020360976\",\n" +
+                            "      \"product_id\": 1,\n" +
+                            "      \"sub_product_id\": 0,\n" +
+                            "      \"user_id\": 6493,\n" +
+                            "      \"user\": {\n" +
+                            "        \"name\": \"X**\",\n" +
+                            "        \"id_number\": \"T1246*****\",\n" +
+                            "        \"sex\": \"M\",\n" +
+                            "        \"age\": 23,\n" +
+                            "        \"company_name\": \"大仁科技大學\"\n" +
+                            "      },\n" +
+                            "      \"loan_amount\": 13000,\n" +
+                            "      \"credit_level\": 12,\n" +
+                            "      \"interest_rate\": 18,\n" +
+                            "      \"reason\": \"\",\n" +
+                            "      \"remark\": \"\",\n" +
+                            "      \"instalment\": 24,\n" +
+                            "      \"repayment\": 1,\n" +
+                            "      \"delay\": 1,\n" +
+                            "      \"delay_days\": 118,\n" +
+                            "      \"loan_date\": \"2019-02-16\",\n" +
+                            "      \"status\": 5,\n" +
+                            "      \"sub_status\": 0,\n" +
+                            "      \"created_at\": 1549136660\n" +
+                            "    },\n" +
+                            "    \"amortization_schedule\": {\n" +
+                            "      \"amount\": 12226,\n" +
+                            "      \"instalment\": 24,\n" +
+                            "      \"rate\": 18,\n" +
+                            "      \"total_payment\": 650,\n" +
+                            "      \"XIRR\": -1.571465320791475e+42,\n" +
+                            "      \"date\": \"2019-02-16\",\n" +
+                            "      \"remaining_principal\": 11762,\n" +
+                            "      \"list\": {\n" +
+                            "        \"3\": {\n" +
+                            "          \"instalment\": 3,\n" +
+                            "          \"total_payment\": 650,\n" +
+                            "          \"repayment\": 650,\n" +
+                            "          \"interest\": 186,\n" +
+                            "          \"principal\": 464,\n" +
+                            "          \"delay_interest\": 0,\n" +
+                            "          \"days\": 114,\n" +
+                            "          \"remaining_principal\": 12226,\n" +
+                            "          \"repayment_date\": \"2019-06-10\",\n" +
+                            "          \"ar_fees\": 7\n" +
+                            "        }\n" +
+                            "      }\n" +
+                            "    }\n" +
+                            "  }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -15042,6 +15158,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "target.sub_product_id",
+                            "description": "<p>子產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.user_id",
                             "description": "<p>User ID</p>"
                         },
@@ -15176,7 +15299,38 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\":\"1\",\n\t\t\t\t\"amount\":\"50000\",\n\t\t\t\t\"loan_amount\":\"\",\n\t\t\t\t\"status\":\"3\",\n\t\t\t\t\"transfer_status\":\"0\",\n\t\t\t\t\"target\": {\n\t\t\t\t\t\"id\": 9,\n\t\t\t\t\t\"target_no\": \"STN2019011414213\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"user_id\": 19,\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"credit_level\": 3,\n\t\t\t\t\t\"interest_rate\": 7,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"delay\": 0,\n\t\t\t\t\t\"delay_days\": 0,\n\t\t\t\t\t\"loan_date\": \"2019-01-14\",\n\t\t\t\t\t\"status\": 5,\n\t\t\t\t\t\"sub_status\": 0\n\t\t\t\t},\n\t\t\t\t\"next_repayment\": {\n\t\t\t\t\t\"date\": \"2019-03-10\",\n\t\t\t\t\t\"instalment\": 1,\n\t\t\t\t\t\"amount\": 1687\n\t\t\t\t},\n\t\t\t\t\"accounts_receivable\": {\n\t\t\t\t\t\"principal\": 5000,\n\t\t\t\t\t\"interest\": 83,\n\t\t\t\t\t\"delay_interest\": 0\n\t\t\t\t}\n\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "content": "{\n" +
+                            "  \"result\": \"SUCCESS\",\n" +
+                            "  \"data\": {\n" +
+                            "    \"list\": [\n" +
+                            "      {\n" +
+                            "        \"id\": 2493,\n" +
+                            "        \"loan_amount\": 12226,\n" +
+                            "        \"status\": 3,\n" +
+                            "        \"transfer_status\": 0,\n" +
+                            "        \"target\": {\n" +
+                            "          \"id\": 5425,\n" +
+                            "          \"target_no\": \"STN2019020360976\",\n" +
+                            "          \"product_id\": 1,\n" +
+                            "          \"sub_product_id\": 0,\n" +
+                            "          \"user_id\": 6493,\n" +
+                            "          \"loan_amount\": 13000,\n" +
+                            "          \"credit_level\": 12,\n" +
+                            "          \"interest_rate\": 18,\n" +
+                            "          \"instalment\": 24,\n" +
+                            "          \"repayment\": 1,\n" +
+                            "          \"delay\": 1,\n" +
+                            "          \"delay_days\": 118,\n" +
+                            "          \"loan_date\": \"2019-02-16\",\n" +
+                            "          \"status\": 5,\n" +
+                            "          \"sub_status\": 0\n" +
+                            "        },\n" +
+                            "        \"next_repayment\": [],\n" +
+                            "        \"accounts_receivable\": []\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -19290,7 +19444,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_product_id",
-                            "description": "<p>子產品</p>"
+                            "description": "<p>子產品ID</p>"
                         },
                         {
                             "group": "Success 200",

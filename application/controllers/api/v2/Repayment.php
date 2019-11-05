@@ -591,7 +591,8 @@ class Repayment extends REST_Controller {
 					}
 				}
 			}
-			if($target->sub_status){
+            $subloan_target_id ='';
+			if($target->sub_status==1){
                 $this->load->library('Subloan_lib');
                 $subloan = $this->subloan_lib->get_subloan($target);
                 $subloan_target_id = $subloan?intval($subloan->new_target_id):'';
