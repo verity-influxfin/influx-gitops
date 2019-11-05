@@ -65,6 +65,12 @@ class User_output
 			if ($user->profile) {
 				$output["profile_image"] = $user->profile->id_card_person;
 			}
+			if ($user->profile && $user->profile->emergency_relationship && $user->profile->emergency_relationship == "配偶") {
+				$output["marriage"] = [
+					'name' => $user->profile->emergency_name,
+					'phone' => $user->profile->emergency_phone,
+				];
+			}
 		}
 
         if ($user->school) {

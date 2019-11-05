@@ -636,6 +636,8 @@
             $("#id-card").text(user.idCard.id);
 			$("#id-card-issued-at").text(user.idCard.issuedAt);
 
+			$("#marriage").text(user.isMarried() ? "已婚" : "");
+
 			$("#school").text(user.school.name);
 			$("#school-system").text(user.school.system + " / " + user.school.department);
 			$("#school-department").text(user.school.department);
