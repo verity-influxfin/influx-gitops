@@ -426,7 +426,7 @@ class Certification_lib{
 	public function investigation_verify($info = array(), $url=null)
 	{
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
-			//進到ＯＣＲ
+			//進到OCR
 			$status = 3;
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status, 'sys_check' => 1,
@@ -913,7 +913,77 @@ class Certification_lib{
         ], ['status'=> 2]);
         return $rs;
     }
+	public function unlock_contents_pdf()
+	{
+		$a = file_get_contents('https://dev-influxp2p-personal.s3-ap-northeast-1.amazonaws.com/user_upload/14369/JC_20191029130842391.pdf');
+		$fp = fopen("hsiang.pdf", "w+");
+		fwrite($fp, $a); //寫入資料到 $fp 所開啟的檔案內
+		fclose($fp); //關閉開啟的檔案
+	    shell_exec('/usr/local/bin/gs  -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=/Users/hsiang/Sites/influx_atm/hsiangsss.pdf -c  3000000 setvmthreshold -f /Users/hsiang/Sites/influx_atm/hsiang.pdf  2>&1');
 
+
+		$parser = new \Smalot\PdfParser\Parser();
+		$url='/Users/hsiang/Sites/influx_atm/hsiangsss.pdf';
+		//$url='/Users/hsiang/Sites/influx_atm/hsiangsss.pdf';
+		$pdf    = $parser->parseFile($url);
+		$text = $pdf->getText();
+		//echo $text;
+		$this->investigation_press($text);
+
+
+	}
+
+	private function investigation_press($text){
+		//echo $text;
+		$keyword='查資料庫中無';
+		$keyword_line='--------------------------------------------------------------------------------';
+		$keyword_1=strpos($text, '【銀行借款資訊】');
+		$keyword_2=strpos($text, '【逾期、催收或呆帳資訊】');
+		$keyword_3=strpos($text, '【主債務債權再轉讓及清償資訊】');
+		$keyword_4=strpos($text, '【共同債務/從債務/其他債務資訊】');
+		$keyword_5=strpos($text, '【共同債務/從債務/其他債務轉讓資訊】');
+		$keyword_6=strpos($text, '【退票資訊】');
+		$keyword_7=strpos($text, '【拒絕往來資訊】');
+		$keyword_8=strpos($text, '【信用卡資訊】');
+		$keyword_9=strpos($text, '【信用卡戶帳款資訊】');
+		$keyword_10=strpos($text, '【信用卡債權再轉讓及清償資訊】');
+		$keyword_11=strpos($text, '【被查詢紀錄】');
+		$keyword_12=strpos($text, '【被電子支付機構及電子票證發行機構查詢紀錄】');
+		$keyword_13=strpos($text, '【當事人查詢紀錄】');
+		$keyword_14=strpos($text, '【附加訊息】');
+		$keyword_15=strpos($text, '【信用評分】');
+		if (
+			strpos(substr($text, $keyword_2, $keyword_3 - $keyword_2), $keyword) === false
+			&& strpos(substr($text, $keyword_3, $keyword_4 - $keyword_3), $keyword) === false
+			&& strpos(substr($text, $keyword_5, $keyword_6 - $keyword_5), $keyword) === false
+			&& strpos(substr($text, $keyword_6, $keyword_7 - $keyword_6), $keyword) === false
+			&& strpos(substr($text, $keyword_7, $keyword_8 - $keyword_7), $keyword) === false
+			&& strpos(substr($text, $keyword_10, $keyword_11 - $keyword_10), $keyword) === false
+			&& strpos(substr($text, $keyword_14, $keyword_15 - $keyword_14), $keyword) === false
+		) {
+			echo '需退認證';//需要加原因
+		} else {
+			echo 'pass';
+			$g=strpos(substr(substr($text, $keyword_1, $keyword_2 - $keyword_1), strpos(substr($text, $keyword_1, $keyword_2 - $keyword_1), '有無延遲還款')+strlen('有無延遲還款')), '有');
+			if($g===false){
+				//echo $f;
+				$df=substr(substr(substr($text, $keyword_1, $keyword_2 - $keyword_1), strpos(substr($text, $keyword_1, $keyword_2 - $keyword_1), '有無延遲還款')+strlen('有無延遲還款')), strrpos(substr(substr($text, $keyword_1, $keyword_2 - $keyword_1), strpos(substr($text, $keyword_1, $keyword_2 - $keyword_1), '有無延遲還款')+strlen('有無延遲還款')), '助學貸款             無')+strlen('助學貸款             無'));
+				$dc=substr_count($df,'分行');
+				$borrow_array = explode("\n\n", $df);
+				$borrow_size=count($borrow_array);
+				for($j=1 ; $j<$borrow_size ; $j++){
+
+					}
+				// $arrayd = preg_split("/\r\n|\n|\r/", $df);
+				// print_r($arrayd);
+			}else{
+				echo '退';
+			}
+ 
+	 
+
+		}
+	}
     public function expire_certification($user_id,$investor=0){
         if($user_id) {
             $certification = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
