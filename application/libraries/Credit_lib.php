@@ -457,7 +457,7 @@ class Credit_lib{
 		return false;
 	}
 	
-	public function get_rate($level,$instalment,$product_id,$sub_product_id,$target){
+	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
 		$credit = $this->CI->config->item('credit');
 		if(isset($this->credit['credit_level_'.$product_id][$level])){
 			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){

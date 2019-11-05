@@ -355,11 +355,12 @@ class Repayment extends REST_Controller {
 						}
 					}
 				}
-				
+
 				$list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
 					'product_id' 		=> intval($value->product_id),
+					'sub_product_id' 	=> intval($value->sub_product_id),
 					'user_id' 			=> intval($value->user_id),
 					'amount' 			=> intval($value->amount),
 					'loan_amount' 		=> intval($value->loan_amount),
@@ -590,11 +591,17 @@ class Repayment extends REST_Controller {
 					}
 				}
 			}
-
+            $subloan_target_id ='';
+			if($target->sub_status==1){
+                $this->load->library('Subloan_lib');
+                $subloan = $this->subloan_lib->get_subloan($target);
+                $subloan_target_id = $subloan?intval($subloan->new_target_id):'';
+            }
 			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
 				'product_id' 		=> intval($target->product_id),
+				'sub_product_id' 	=> intval($target->sub_product_id),
 				'user_id' 			=> intval($target->user_id),
 				'amount' 			=> intval($target->amount),
 				'loan_amount' 		=> intval($target->loan_amount),
@@ -610,6 +617,7 @@ class Repayment extends REST_Controller {
 				'delay_days' 		=> intval($target->delay_days),
 				'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
+				'subloan_target_id' => $subloan_target_id,
 				'created_at' 		=> intval($target->created_at),
 				'next_repayment' 	=> $next_repayment,
 				'amortization_schedule' => $this->target_lib->get_amortization_table($target),
