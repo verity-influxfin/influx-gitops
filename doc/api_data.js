@@ -9221,7 +9221,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_product_id",
-                            "description": "<p>Sub Product ID</p>"
+                            "description": "<p>子產品</p>"
                         },
                         {
                             "group": "Success 200",
@@ -18926,6 +18926,13 @@ define({
                             "optional": false,
                             "field": "product_id",
                             "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品</p>"
                         },
                         {
                             "group": "Success 200",
