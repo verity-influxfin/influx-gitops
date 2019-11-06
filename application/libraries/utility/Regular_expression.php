@@ -8,7 +8,7 @@ class Regular_expression
 	public function findPatternInBetween(string $text, string $start, string $end)
 	{
 		$lineBreaks = self::LINE_BREAK;
-		preg_match("/(?<={$start})({$lineBreaks}.*{$lineBreaks})(?={$end})/s", $text, $match);
+		preg_match("/(?<={$start}){$lineBreaks}.*{$lineBreaks}(?={$end})/s", $text, $match);
 		return $match;
 	}
 
