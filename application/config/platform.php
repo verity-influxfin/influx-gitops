@@ -324,8 +324,8 @@ $config['visul_id_des'] = [
     ],*/
 
     '101'  => [
-        'name' => 'Techi貸 - 為您的金錢問題debug',
-        'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>資訊相關科系學生或職場專業人員均可申請</span><br><span style=\'font-size:14px;color:#4a4a4a\'>認可您的專業，減降利率並提升額度</span>',
+        'name' => 'Techi貸',
+        'description' =>'為您的金錢問題debug<br>資訊相關科系學生或職場專業人員均可申請',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_techi.jpg',
         'status' => 1
@@ -382,7 +382,7 @@ $config['sub_product_list'] = [
                 'instalment'		=> [3,6,12,18,24],
                 'repayment'			=> [1],
                 'status'			=> 1,
-                'description'		=> '須提供工作証明<br>可申請額度<br>10,000-200,000'
+                'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
             ]
         ],
         'status'            => 0
