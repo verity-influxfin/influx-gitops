@@ -325,7 +325,7 @@ $config['visul_id_des'] = [
 
     '101'  => [
         'name' => 'Techi貸',
-        'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關科系學生或職場專業人員均可申請</span>',
+        'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_techi.jpg',
         'status' => 1
