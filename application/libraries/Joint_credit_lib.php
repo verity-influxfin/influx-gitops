@@ -3,6 +3,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Joint_credit_lib{
+	const BREAKER = "--------------------------------------------------------------------------------";
+
+	public function __construct(){
+		$this->CI = &get_instance();
+		$this->CI->load->library('utility/joint_credit_regex', [], 'regex');
+	}
+
 	public function check_join_credits($text, &$result){
 		$this->check_bank_loan($text, $result);
 		$this->check_overdue_and_bad_debts($text, $result);
@@ -22,7 +29,6 @@ class Joint_credit_lib{
 	}
 
 	private function check_bank_loan($text, &$result){
-
 	}
 
 	private function check_overdue_and_bad_debts($text, &$result){
@@ -50,7 +56,7 @@ class Joint_credit_lib{
 	}
 
 	private function check_credit_card_accounts($text, &$result){
-		preg_match();
+
 	}
 
 	private function check_credit_card_debts($text, &$result){
