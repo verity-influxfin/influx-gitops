@@ -50,7 +50,7 @@ class Joint_credit_lib{
 	}
 
 	private function check_credit_card_accounts($text, &$result){
-
+		preg_match();
 	}
 
 	private function check_credit_card_debts($text, &$result){

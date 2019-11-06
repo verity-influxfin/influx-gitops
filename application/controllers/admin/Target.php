@@ -453,6 +453,11 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function check() {
+		$this->load->library('certification_lib');
+		$this->certification_lib->investigation_progress("go");
+	}
 	
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');
