@@ -169,7 +169,7 @@ $config['product_list']= [
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
-		'description'		=> '須提供工作証明<br>可申請額度<br>10,000-200,000'
+		'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
 	],
     4 => [
         'id'				=> 4,
@@ -187,7 +187,7 @@ $config['product_list']= [
         'instalment'		=> [3,6,12,18,24],
         'repayment'			=> [1],
         'status'			=> 1,
-        'description'		=> '須提供工作証明<br>可申請額度<br>10,000-200,000'
+        'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
     ],
     /*    5 => [
             'id'				=> 5,
