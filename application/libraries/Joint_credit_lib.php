@@ -247,10 +247,13 @@ class Joint_credit_lib{
 		$message = [
 			"stage" => "browsed_hits",
 			"status" => "failure",
-			"message" => self::BROWSED_HITS . $record["rows"]
+			"message" => self::BROWSED_HITS . $record["patterns"]
 		];
 		if ($record["patterns"] <= 3) {
 			$message["status"] = "success";
+		}
+		if ($record["patterns"] > 3 && $record["patterns"] <= 10) {
+			$message["status"] = "pending";
 		}
 		$result["messages"][] = $message;
 	}
