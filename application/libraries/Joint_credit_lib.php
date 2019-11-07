@@ -258,8 +258,69 @@ class Joint_credit_lib{
 		$result["messages"][] = $message;
 	}
 
-	private function check_browsed_hits_by_electrical_pay($text, &$result){
+	private function readBrowsedByElectricalHitsRow($content, $record){
+		if (count($content) != 2) {
+			return $record;
+		}
 
+		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
+			return $record;
+		}
+
+		$record["rows"] += 1;
+
+		return $record;
+	}
+
+	private function check_browsed_hits_by_electrical_pay($text, &$result){
+		$matches = $this->CI->regex->findPatternInBetween($text, '【被電子支付機構及電子票證發行機構查詢紀錄】', '【當事人查詢紀錄】');
+		$content = $matches[0];
+		if ($this->CI->regex->isNoDataFound($content)) {
+			$result["messages"] [] = [
+				"stage" => "browsed_hits_by_electrical_pay",
+				"status" => "success",
+				"message" => self::BROWSED_HITS . '0'
+			];
+			return;
+		}
+
+		$contents = explode(self::BREAKER, $content);
+		$iters = count($contents);
+		$record = ["rows" => 0];
+		for ($i = 1; $i < $iters; $i++) {
+			$row = $contents[$i];
+			$row = $this->CI->regex->replaceEqualBreaker($row);
+			$row = $this->CI->regex->replaceSpacesToSpace($row);
+
+			$rowElements = explode(" ", $row);
+			$currentElements = [];
+			$numElements = count($rowElements);
+			for ($i = 2; $i < $numElements; $i++) {
+				$rowElement = $rowElements[$i];
+				if (
+					$currentElements
+					&& $rowElement
+					&& $this->CI->regex->isDateTimeFormat($rowElement)
+				) {
+					$record = $this->readBrowsedByElectricalHitsRow($currentElements, $record);
+					$currentElements = [];
+				}
+				$currentElements[] = $rowElement;
+			}
+			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
+				$record = $this->readBrowsedByElectricalHitsRow($currentElements, $record);
+			}
+		}
+		$message = [
+			"stage" => "browsed_hits_by_electrical_pay",
+			"status" => "pending",
+			"message" => self::BROWSED_HITS . $record["rows"]
+		];
+		if ($record["rows"] <= 2) {
+			$message["status"] = "success";
+		}
+
+		$result["messages"][] = $message;
 	}
 
 	private function check_browsed_hits_by_itself($text, &$result){
