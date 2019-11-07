@@ -129,7 +129,7 @@ class Joint_credit_lib{
 	}
 	private function get_credit_cards_info($content,&$result)
 	{
-		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'need_pending';
+		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'check_in_used';
 		switch ($case) {
 			case 'deactivated':
 				$result["messages"][] = [
@@ -138,7 +138,7 @@ class Joint_credit_lib{
 					"message" => "信用卡資訊：強制停用或強制停卡"
 				];
 				break;
-			case 'need_pending':
+			case 'check_in_used':
 				$count_credit_cards = substr_count($content[0], "使用中");
 				if ($count_credit_cards > 0) {
 					$used = explode("使用中", $content[0]);
@@ -147,9 +147,10 @@ class Joint_credit_lib{
 						$amount[] = substr($used[$i], -26, 5);
 					}
 					$allowedAmount = (int)array_sum($amount);
+					(!(preg_match("/其他/", $content['0'])||preg_match("/側錄/", $content['0'])||preg_match("/掛失/", $content['0'])||preg_match("/不明/", $content['0'])||preg_match("/偽冒/", $content['0'])))?$status='success':$status='pending';
 					$result["messages"][] = [
 						"stage" => "credit_card_debts",
-						"status" => "pending",
+						"status" => $status,
 						"message"  => [
 							"信用卡使用中張數" => $count_credit_cards,
 							"信用卡總額度（元）" => $allowedAmount
