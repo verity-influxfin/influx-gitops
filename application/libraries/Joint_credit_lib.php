@@ -4,27 +4,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Joint_credit_lib{
 	const BREAKER = "--------------------------------------------------------------------------------";
+	const BROWSED_HITS = "被查詢次數：";
+
 	public function __construct(){
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/joint_credit_regex', [], 'regex');
 	}
 
 	public function check_join_credits($text, &$result){
-		$this->check_bank_loan($text, $result);
-		$this->check_overdue_and_bad_debts($text, $result);
-		$this->check_main_debts($text, $result);
-		$this->check_extra_debts($text, $result);
-		$this->check_extra_transfer_debts($text,$result);
-		$this->check_bounced_checks($text, $result);
-		$this->check_lost_contacts($text, $result);
-		$this->check_credit_cards($text, $result);
-		$this->check_credit_card_accounts($text, $result);
-		$this->check_credit_card_debts($text, $result);
+//		$this->check_bank_loan($text, $result);
+//		$this->check_overdue_and_bad_debts($text, $result);
+//		$this->check_main_debts($text, $result);
+//		$this->check_extra_debts($text, $result);
+//		$this->check_extra_transfer_debts($text,$result);
+//		$this->check_bounced_checks($text, $result);
+//		$this->check_lost_contacts($text, $result);
+//		$this->check_credit_cards($text, $result);
+//		$this->check_credit_card_accounts($text, $result);
+//		$this->check_credit_card_debts($text, $result);
 		$this->check_browsed_hits($text, $result);
-		$this->check_browsed_hits_by_electrical_pay($text, $result);
-		$this->check_browsed_hits_by_itself($text, $result);
-		$this->check_extra_messages($text, $result);
-		$this->check_credit_scores($text, $result);
+//		$this->check_browsed_hits_by_electrical_pay($text, $result);
+//		$this->check_browsed_hits_by_itself($text, $result);
+//		$this->check_extra_messages($text, $result);
+//		$this->check_credit_scores($text, $result);
 		return $result;
 	}
 
@@ -175,8 +177,70 @@ class Joint_credit_lib{
 
 	}
 
-	private function check_browsed_hits($text, &$result){
+	private function readBrowsedRow($content, $record){
+		if (count($content) != 3) {
+			return $record;
+		}
 
+		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
+			return $record;
+		}
+
+		$record["rows"] += 1;
+		if ($content[2] == "新業務") {
+			$record["patterns"] += 1;
+		}
+
+		return $record;
+	}
+
+	private function check_browsed_hits($text, &$result){
+		$matches = $this->CI->regex->findPatternInBetween($text, '【被查詢紀錄】', '【被電子支付機構及電子票證發行機構查詢紀錄】');
+		$content = $matches[0];
+		if ($this->CI->regex->isNoDataFound($content)) {
+			$result["messages"] [] = [
+				"stage" => "browsed_hits",
+				"status" => "success",
+				"message" => self::BROWSED_HITS . '0'
+			];
+			return;
+		}
+
+		$contents = explode(self::BREAKER, $content);
+		$iters = count($contents);
+		$record = ["rows" => 0, "patterns" => 0];
+		for ($i = 1; $i < $iters; $i++) {
+			$row = $contents[$i];
+			$row = $this->CI->regex->replaceEqualBreaker($row);
+			$row = $this->CI->regex->replaceSpacesToSpace($row);
+			$rowElements = explode(" ", $row);
+			$currentElements = [];
+			$numElements = count($rowElements);
+			for ($i = 3; $i < $numElements; $i++) {
+				$rowElement = $rowElements[$i];
+				if (
+					$currentElements
+					&& $rowElement
+					&& $this->CI->regex->isDateTimeFormat($rowElement)
+				) {
+					$record = $this->readBrowsedRow($currentElements, $record);
+					$currentElements = [];
+				}
+				$currentElements[] = $rowElement;
+			}
+			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
+				$record = $this->readBrowsedRow($currentElements, $record);
+			}
+		}
+		$message = [
+			"stage" => "browsed_hits",
+			"status" => "failure",
+			"message" => self::BROWSED_HITS . $record["rows"]
+		];
+		if ($record["patterns"] <= 3) {
+			$message["status"] = "success";
+		}
+		$result["messages"][] = $message;
 	}
 
 	private function check_browsed_hits_by_electrical_pay($text, &$result){
