@@ -147,11 +147,6 @@ class Joint_credit_lib{
 							"信用卡總額度（元）" => $allowedAmount
 						]
 					];
-					$cards_info[]=[
-						"allowedAmount" => $allowedAmount,
-						"appliedTime"=>$credit_date
-					];
-					return $cards_info;
 				} else {
 					$result["messages"][] = [
 						"stage" => "credit_card_debts",
