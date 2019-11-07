@@ -109,11 +109,16 @@ class Joint_credit_lib{
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
 		$credit_date=substr($credit_date[0], 0, 10);
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡資訊】', '【信用卡戶帳款資訊】');
+		$cards_info[]=[
+			"allowedAmount" => 0,
+			"appliedTime"=>0
+		];
 		$this->CI->regex->isNoDataFound($content[0]) ?	$result["messages"][] = [
 			"stage" => "credit_card_debts",
 			"status" => "success",
 			"message" => "信用卡資訊：無"
-		] : $this->get_credit_cards_info($content,$credit_date);	
+		] : $cards_info=$this->get_credit_cards_info($content,$credit_date);
+		return 	 $cards_info;
 	}
 	private function get_credit_date($content)
 	{
@@ -147,6 +152,11 @@ class Joint_credit_lib{
 							"信用卡總額度（元）" => $allowedAmount
 						]
 					];
+					$cards_info[]=[
+						"allowedAmount" => $allowedAmount,
+						"appliedTime"=>$credit_date
+					];
+					return $cards_info;
 				} else {
 					$result["messages"][] = [
 						"stage" => "credit_card_debts",
