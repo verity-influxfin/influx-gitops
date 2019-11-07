@@ -27,6 +27,7 @@ class Joint_credit_lib{
 		$this->check_browsed_hits_by_itself($text, $result);
 		$this->check_extra_messages($text, $result);
 		$this->check_credit_scores($text, $result);
+		print_r($result);
 		return $result;
 	}
 
@@ -36,7 +37,7 @@ class Joint_credit_lib{
 	private function check_overdue_and_bad_debts($text, &$result)
 	{
 		$content=$this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bad_debts",
 			"status" => "success",
 			"message" => "逾期、催收或呆帳資訊：無"
@@ -49,7 +50,7 @@ class Joint_credit_lib{
 
 	private function check_main_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【主債務債權再轉讓及清償資訊】', '【共同債務\/從債務\/其他債務資訊】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "main_debts",
 			"status" => "success",
 			"message" => "主債務債權再轉讓及清償資訊：無"
@@ -65,7 +66,7 @@ class Joint_credit_lib{
 	}
 	private function check_extra_transfer_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務轉讓資訊】', '【退票資訊】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "transfer_debts",
 			"status" => "success",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：無"
@@ -79,7 +80,7 @@ class Joint_credit_lib{
 
 	private function check_bounced_checks($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【退票資訊】', '【拒絕往來資訊】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bounced_checks",
 			"status" => "success",
 			"message" => "退票資訊：無"
@@ -92,7 +93,7 @@ class Joint_credit_lib{
 
 	private function check_lost_contacts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【拒絕往來資訊】', '【信用卡資訊】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "lost_contacts",
 			"status" => "success",
 			"message" => "拒絕往來資訊：無"
@@ -108,7 +109,7 @@ class Joint_credit_lib{
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
 		$credit_date=substr($credit_date[0], 0, 10);
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡資訊】', '【信用卡戶帳款資訊】');
-		(preg_match("/查資料庫中無/", $content['0'])) ?	$result["messages"][] = [
+		$this->CI->regex->isNoDataFound($content[0]) ?	$result["messages"][] = [
 			"stage" => "credit_card_debts",
 			"status" => "success",
 			"message" => "信用卡資訊：無"
@@ -165,7 +166,7 @@ class Joint_credit_lib{
 
 	private function check_credit_card_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡債權再轉讓及清償資訊】', '【被查詢紀錄】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "credit_card_debts",
 			"status" => "success",
 			"message" => "信用卡債權再轉讓及清償資訊：無"
@@ -253,7 +254,7 @@ class Joint_credit_lib{
 
 	private function check_extra_messages($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【附加訊息】', '【信用評分】');
-		$result["messages"][] = preg_match("/查資料庫中無/", $content['0']) ? [
+		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
 			"stage" => "extra_messages",
 			"status" => "success",
 			"message" => "附加訊息：無"
@@ -262,7 +263,6 @@ class Joint_credit_lib{
 			"status" => "failure",
 			"message"=> "附加訊息：有"
 		];
-
 	}
 
 	private function check_credit_scores($text, &$result){
