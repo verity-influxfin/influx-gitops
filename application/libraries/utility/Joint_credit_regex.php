@@ -25,8 +25,11 @@ class Joint_credit_regex extends Regular_expression
 
 	public function isNoDataFound($text)
 	{
-		return preg_match("/[查資料庫中無|無電子支付
-機構及電子票證發行機構依法令規定向本中心查詢]/", $text) == 1;
+		return preg_match("/查資料庫中無/", $text, $matches) == 1
+			   || preg_match("/無電子支付
+機構及電子票證發行機構依法令規定向本中心查詢/", $text) == 1;
+
+
 	}
 
 	public function replaceEqualBreaker($text)

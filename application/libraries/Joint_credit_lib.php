@@ -6,6 +6,7 @@ class Joint_credit_lib{
 	const BREAKER = "--------------------------------------------------------------------------------";
 	const BROWSED_HITS = "被查詢次數：";
 	const BROWSED_HITS_BY_ELECTRICAL_PAY = "被電子支付或電子票證發行機構查詢紀錄：";
+	const BROWSED_HITS_BY_ITSELF = "當事人查詢紀錄：";
 
 	public function __construct(){
 		$this->CI = &get_instance();
@@ -325,8 +326,69 @@ class Joint_credit_lib{
 		$result["messages"][] = $message;
 	}
 
-	private function check_browsed_hits_by_itself($text, &$result){
+	private function readBrowsedByItselfRow($content, $record){
+		if (count($content) != 3 && count($content) != 4) {
+			return $record;
+		}
 
+		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
+			return $record;
+		}
+
+		$record["rows"] += 1;
+
+		return $record;
+	}
+
+	private function check_browsed_hits_by_itself($text, &$result){
+		$matches = $this->CI->regex->findPatternInBetween($text, '【當事人查詢紀錄】', '【附加訊息】');
+		$content = $matches[0];
+		if ($this->CI->regex->isNoDataFound($content)) {
+			print_r($content);
+			$result["messages"] [] = [
+				"stage" => "browsed_hits",
+				"status" => "success",
+				"message" => self::BROWSED_HITS_BY_ITSELF . '0'
+			];
+			return;
+		}
+
+		$contents = explode(self::BREAKER, $content);
+		$iters = count($contents);
+		$record = ["rows" => 0];
+		for ($i = 1; $i < $iters; $i++) {
+			$row = $contents[$i];
+			$row = $this->CI->regex->replaceEqualBreaker($row);
+			$row = $this->CI->regex->replaceSpacesToSpace($row);
+			$rowElements = explode(" ", $row);
+			$currentElements = [];
+			$numElements = count($rowElements);
+			for ($i = 3; $i < $numElements; $i++) {
+				$rowElement = $rowElements[$i];
+				if (
+					$currentElements
+					&& $rowElement
+					&& $this->CI->regex->isDateTimeFormat($rowElement)
+				) {
+					$record = $this->readBrowsedByItselfRow($currentElements, $record);
+					$currentElements = [];
+				}
+				$currentElements[] = $rowElement;
+			}
+			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
+				$record = $this->readBrowsedByItselfRow($currentElements, $record);
+			}
+		}
+		$message = [
+			"stage" => "browsed_hits",
+			"status" => "pending",
+			"message" => self::BROWSED_HITS_BY_ITSELF . $record["rows"]
+		];
+		if ($record["rows"] <= 2) {
+			$message["status"] = "success";
+		}
+
+		$result["messages"][] = $message;
 	}
 
 	private function check_extra_messages($text, &$result){
