@@ -111,20 +111,22 @@ class Joint_credit_lib{
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡資訊】', '【信用卡戶帳款資訊】');
 		$cards_info[]=[
 			"allowedAmount" => 0,
-			"appliedTime"=>0
 		];
 		$this->CI->regex->isNoDataFound($content[0]) ?	$result["messages"][] = [
 			"stage" => "credit_card_debts",
 			"status" => "success",
 			"message" => "信用卡資訊：無"
-		] : $cards_info=$this->get_credit_cards_info($content,$credit_date);
+		] : $cards_info=$this->get_credit_cards_info($content,$result);
 		return 	 $cards_info;
 	}
-	private function get_credit_date($content)
+	private function get_credit_date($text)
 	{
-
+		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
+		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
+		$credit_date=substr($credit_date[0], 0, 10);
+		return 	 $credit_date;
 	}
-	private function get_credit_cards_info($content,$credit_date)
+	private function get_credit_cards_info($content,&$result)
 	{
 		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'need_pending';
 		switch ($case) {
@@ -154,7 +156,6 @@ class Joint_credit_lib{
 					];
 					$cards_info[]=[
 						"allowedAmount" => $allowedAmount,
-						"appliedTime"=>$credit_date
 					];
 					return $cards_info;
 				} else {
@@ -276,6 +277,21 @@ class Joint_credit_lib{
 	}
 
 	private function check_credit_scores($text, &$result){
+		(preg_match("/信用評分\:/", $text))?$this->get_scores($text,$result): $result["messages"][] = [
+				"stage" => "credit_scores",
+				"status" => "pending",
+				"message" => "信用評分 : 無"
+			];
+	}
 
+	private function get_scores($text,&$result){
+		$content = $this->CI->regex->findPatternInBetween($text, '信用評分:', '此次所有受評者中，有');
+		$content = $this->CI->regex->replaceSpacesToSpace($content[0]);
+		$scores = substr($content, 0, 3);
+		$result["messages"][] = [
+			"stage" => "get_scores",
+			"status" => "pending",
+			"message" => "信用評分 : ".$scores
+		];
 	}
 }
