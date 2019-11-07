@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Joint_credit_lib{
 	const BREAKER = "--------------------------------------------------------------------------------";
 	const BROWSED_HITS = "被查詢次數：";
+	const BROWSED_HITS_BY_ELECTRICAL_PAY = "被電子支付或電子票證發行機構查詢紀錄：";
 
 	public function __construct(){
 		$this->CI = &get_instance();
@@ -279,7 +280,7 @@ class Joint_credit_lib{
 			$result["messages"] [] = [
 				"stage" => "browsed_hits_by_electrical_pay",
 				"status" => "success",
-				"message" => self::BROWSED_HITS . '0'
+				"message" => self::BROWSED_HITS_BY_ELECTRICAL_PAY . '0'
 			];
 			return;
 		}
@@ -314,7 +315,7 @@ class Joint_credit_lib{
 		$message = [
 			"stage" => "browsed_hits_by_electrical_pay",
 			"status" => "pending",
-			"message" => self::BROWSED_HITS . $record["rows"]
+			"message" => self::BROWSED_HITS_BY_ELECTRICAL_PAY . $record["rows"]
 		];
 		if ($record["rows"] <= 2) {
 			$message["status"] = "success";
