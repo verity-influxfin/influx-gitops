@@ -453,6 +453,119 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function final_validations()
+	{
+		$get 		= $this->input->get(NULL, TRUE);
+
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
+
+		if ($this->input->is_ajax_request()) {
+			$target = $this->target_model->get($targetId);
+			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
+
+			$userId = $target->user_id;
+			$user = $this->user_model->get($userId);
+
+			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
+			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+			$this->load->library('output/json_output');
+
+			$this->load->model('user/user_certification_model');
+			$schoolCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 2,
+				'status' => 1,
+			]);
+			$schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+			if (isset($schoolCertificationDetailArray["graduate_date"])) {
+				 $graduateDate = new stdClass();
+				 $graduateDate->meta_key = "school_graduate_date";
+				 $graduateDate->meta_value = $schoolCertificationDetailArray["graduate_date"];
+				 $userMeta[] = $graduateDate;
+			}
+
+			$this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
+
+			$instagramCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 4,
+				'status' => 1,
+			]);
+			$instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+			if ($instagramCertificationDetailArray["type"] == "instagram") {
+				$picture = $instagramCertificationDetailArray["info"]["picture"];
+				$this->usermeta->setInstagramPicture($picture);
+			}
+
+			$user->profile = $this->usermeta->values();
+			$user->school = $this->usermeta->values();
+			$user->instagram = $this->usermeta->values();
+			$user->facebook = $this->usermeta->values();
+			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->library('output/loan/credit_output', ["data" => $credits]);
+			$this->load->library('certification_lib');
+			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
+			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);
+			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
+			$this->load->library('output/user/verifications_output', $verificationInput);
+
+			$bankAccount = $this->user_bankaccount_model->get_many_by([
+				'user_id'	=> $userId,
+				'status'	=> 1,
+			]);
+
+			$this->load->library('output/user/Bank_account_output', ['data' => $bankAccount]);
+
+			$virtualAccounts = $this->virtual_account_model->get_many_by([
+				'user_id' => $userId,
+				'status' => 1,
+			]);
+
+			$this->load->library('Transaction_lib');
+			foreach ($virtualAccounts as $virtualAccount) {
+				$virtualAccount->funds = $this->transaction_lib->get_virtual_funds($virtualAccount->virtual_account);
+			}
+
+			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
+
+			$targets = $this->target_model->get_many_by([
+				"user_id" => $userId,
+				"status NOT" => [8,9]
+			]);
+
+			foreach ($targets as $target) {
+				$amortization = $this->target_lib->get_amortization_table($target);
+				$target->amortization = $amortization;
+
+				$limitDate  = $target->created_at + (TARGET_APPROVE_LIMIT*86400);
+				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
+					'product_id' 	=> $target->product_id,
+					'user_id' 		=> $userId,
+					'created_at <=' => $limitDate,
+				]);
+				$target->credit = $credit;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+
+			$response = [
+				"target" => $this->current_target_output->toOne(),
+				"user" => $this->user_output->toOne(true),
+				"credits" => $this->credit_output->toOne(),
+				"verifications" => $this->verifications_output->toMany(),
+				"bank_accounts" => $this->bank_account_output->toMany(),
+				"virtual_accounts" => $this->virtual_account_output->toMany(),
+				"targets" => $this->target_output->toMany(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/target/final_validations');
+		$this->load->view('admin/_footer');
+	}
 	
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');

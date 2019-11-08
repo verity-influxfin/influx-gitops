@@ -25,4 +25,34 @@ class User_meta_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+    public function get_users_with_same_emergency_contact($userId)
+	{
+		$this->db->select('meta_value')
+			     ->from('p2p_user.user_meta')
+			     ->where('user_id', $userId)
+			     ->where('meta_key', 'emergency_phone');
+
+		$subQuery = $this->db->get_compiled_select();
+
+		$this->db->select('users.*')
+			     ->from('p2p_user.user_meta as meta')
+				 ->join('p2p_user.users as users', 'meta.user_id = users.id')
+				 ->where('meta.user_id !=', $userId)
+				 ->where("meta.meta_value IN ($subQuery)");
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_emergency_contact_who_is_member($userId)
+	{
+		$this->db->select('users.*')
+				 ->from('p2p_user.user_meta as meta')
+				 ->join('p2p_user.users as users', 'users.phone = meta.meta_value')
+			     ->where('meta.user_id', $userId)
+				 ->where('meta.meta_key', 'emergency_phone');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
