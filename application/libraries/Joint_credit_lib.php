@@ -597,18 +597,33 @@ class Joint_credit_lib{
 
 	private function get_scores($text, &$result)
 	{
-		$content = $this->CI->regex->findPatternInBetween($text, '信用評分:', '此次所有受評者中，有');
-		$content = $this->CI->regex->replaceSpacesToSpace($content[0]);
-		$scores = substr($content, 0, 3);
-		((int) $scores > 540) ?
+		if (preg_match("/台端為給予固定評分/", $text)) {
 			$result["messages"][] = [
 				"stage" => "get_scores",
-				"status" => "success",
-				"message" => "信用評分 : " . $scores
-			] : $result["messages"][] = [
+				"status" => "pending",
+				"message" => "信用評分 : 200"
+			];
+		} else if(preg_match("/此次所有受評者中\，有/", $text)){
+			$content = $this->CI->regex->findPatternInBetween($text, '信用評分:', '此次所有受評者中，有');
+			$content = $this->CI->regex->replaceSpacesToSpace($content[0]);
+			$scores = substr($content, 0, 3);
+			((int) $scores > 540) ?
+				$result["messages"][] = [
+					"stage" => "get_scores",
+					"status" => "success",
+					"message" => "信用評分 : " . $scores
+				] : $result["messages"][] = [
+					"stage" => "get_scores",
+					"status" => "pending",
+					"message" => "信用評分 : " . $scores
+				];
+				
+		}else{
+			$result["messages"][] = [
 				"stage" => "get_scores",
 				"status" => "pending",
-				"message" => "信用評分 : " . $scores
+				"message" => "信用評分 : 此次暫時無法評分" 
 			];
+		}
 	}
 }
