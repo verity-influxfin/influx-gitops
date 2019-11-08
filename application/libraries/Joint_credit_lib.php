@@ -76,6 +76,7 @@ class Joint_credit_lib{
 	private function check_extra_debts($text, &$result){
 
 	}
+
 	private function check_extra_transfer_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務轉讓資訊】', '【退票資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
@@ -192,10 +193,10 @@ class Joint_credit_lib{
 		$template["發卡機構"] = $row[1];
 		$index = 2;
 		if (
-			strpos($row[$index], "VISA")
-			|| strpos($row[$index], "MASTER")
-			|| strpos($row[$index], "JCB")
-			|| strpos($row[$index], "AE")
+			strpos($row[$index], "VISA") !== false
+			|| strpos($row[$index], "MASTER") !== false
+			|| strpos($row[$index], "JCB") !== false
+			|| strpos($row[$index], "AE") !== false
 		) {
 			$template["卡名"] = $row[$index++];
 		}
@@ -216,6 +217,13 @@ class Joint_credit_lib{
 			}
 		}
 
+		if (
+			!is_numeric($row[$index])
+			|| !is_numeric($row[$index+1])
+			|| !is_numeric($template["額度(千元)"])
+		) {
+			return;
+		}
 		$template["本期應付帳款(元)"] = $row[$index++];
 		$template["未到期待付款(元)"] = $row[$index++];
 
@@ -223,13 +231,6 @@ class Joint_credit_lib{
 			$template["債權狀態"] = $row[$index];
 		}
 
-		if (
-			!is_numeric($template["本期應付帳款(元)"])
-			|| !is_numeric($template["未到期待付款(元)"])
-			|| !is_numeric($template["額度(千元)"])
-		) {
-			return;
-		}
 		return $template;
 	}
 
