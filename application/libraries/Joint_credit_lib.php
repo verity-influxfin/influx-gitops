@@ -8,6 +8,11 @@ class Joint_credit_lib{
 	const BROWSED_HITS_BY_ELECTRICAL_PAY = "被電子支付或電子票證發行機構查詢紀錄：";
 	const BROWSED_HITS_BY_ITSELF = "當事人查詢紀錄：";
 
+	const NO_DATA = "查無資料";
+	const DOES_OBTAIN_CASH_ADVANCE = "是否有預借現金 : ";
+	const DELAY_PAYMENT_MORE_THAN_ONE_MONTH = "超過一個月延遲繳款 : ";
+	const DELAY_PAYMENT_IN_A_MONTH_EXCEEDED = "延遲未滿一個月次數：";
+
 	public function __construct(){
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/joint_credit_regex', [], 'regex');
@@ -21,8 +26,13 @@ class Joint_credit_lib{
 		$this->check_extra_transfer_debts($text,$result);
 		$this->check_bounced_checks($text, $result);
 		$this->check_lost_contacts($text, $result);
-		$this->check_credit_cards($text, $result);
-		$this->check_credit_card_accounts($text, $result);
+		$creditCardInfo = $this->check_credit_cards($text, $result);
+
+		$input = [
+			'appliedTime' => $this->get_credit_date($text),
+			'allowedAmount' => $creditCardInfo["allowedAmount"]
+		];
+		$this->check_credit_card_accounts($text, $input, $result);
 		$this->check_credit_card_debts($text, $result);
 		$this->check_browsed_hits($text, $result);
 		$this->check_browsed_hits_by_electrical_pay($text, $result);
@@ -111,7 +121,7 @@ class Joint_credit_lib{
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
 		$credit_date=substr($credit_date[0], 0, 10);
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡資訊】', '【信用卡戶帳款資訊】');
-		$cards_info[]=[
+		$cards_info =[
 			"allowedAmount" => 0,
 		];
 		$this->CI->regex->isNoDataFound($content[0]) ?	$result["messages"][] = [
@@ -157,7 +167,7 @@ class Joint_credit_lib{
 							"信用卡總額度（元）" => $allowedAmount
 						]
 					];
-					$cards_info[]=[
+					$cards_info = [
 						"allowedAmount" => $allowedAmount,
 					];
 					return $cards_info;
@@ -175,7 +185,180 @@ class Joint_credit_lib{
 		}
 	}
 
-	private function check_credit_card_accounts($text, &$result){
+	private function readRow($template, $row){
+		if (!$row) return;
+
+		$template["結帳日"] = $row[0];
+		$template["發卡機構"] = $row[1];
+		$index = 2;
+		if (
+			strpos($row[$index], "VISA")
+			|| strpos($row[$index], "MASTER")
+			|| strpos($row[$index], "JCB")
+			|| strpos($row[$index], "AE")
+		) {
+			$template["卡名"] = $row[$index++];
+		}
+
+		$template["額度(千元)"] = $row[$index++];
+		$template["預借現金"] = $row[$index++];
+
+		if (!is_numeric($row[$index])) {
+			if (!is_numeric($row[$index+2])) {
+				$template["結案"] = $row[$index++];
+			}
+
+			if (!is_numeric($row[$index+1])) {
+				$template["上期繳款狀況"] = $row[$index] . " " . $row[$index+1];
+				$index+=2;
+			} else {
+				$template["上期繳款狀況"] = $row[$index++];
+			}
+		}
+
+		$template["本期應付帳款(元)"] = $row[$index++];
+		$template["未到期待付款(元)"] = $row[$index++];
+
+		if (isset($row[$index])) {
+			$template["債權狀態"] = $row[$index];
+		}
+
+		if (
+			!is_numeric($template["本期應付帳款(元)"])
+			|| !is_numeric($template["未到期待付款(元)"])
+			|| !is_numeric($template["額度(千元)"])
+		) {
+			return;
+		}
+		return $template;
+	}
+
+	private function format_credit_card_account_input($creditCardAccounts){
+		$template = [];
+		$rows = [];
+		$rowIndex = 0;
+		$length = count($creditCardAccounts);
+		for ($i = 1; $i < $length; $i++) {
+			$creditCardPayByMonth = $creditCardAccounts[$i];
+			$each = $this->CI->regex->replaceSpacesToSpace($creditCardPayByMonth);
+			$result = explode(" ", $each);
+
+			if ($i == 1) {
+				foreach ($result as $keyName) {
+					$template[$keyName] = null;
+				}
+				continue;
+			}
+
+			$currentRow = [];
+			foreach ($result as $value) {
+				if ($currentRow && $this->CI->regex->isDateTimeFormat($value)) {
+					$filledTemplate = $this->readRow($template, $currentRow);
+					if ($filledTemplate) {
+						$rows[] = $filledTemplate;
+						$rowIndex++;
+					}
+					$currentRow = [];
+				}
+				$currentRow[] = $value;
+			}
+			if ($currentRow && $this->CI->regex->isDateTimeFormat($currentRow[0])) {
+				$filledTemplate = $this->readRow($template, $currentRow);
+				if ($filledTemplate) {
+					$rows[] = $filledTemplate;
+					$rowIndex++;
+				}
+			}
+		}
+
+		return $rows;
+	}
+
+	private function check_credit_card_accounts($text, $input, &$result){
+		$message = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
+
+		$matches = $this->CI->regex->findPatternInBetween($text, "【信用卡戶帳款資訊】", "【信用卡債權再轉讓及清償資訊】");
+		$content = $matches[0];
+		if ($this->CI->regex->isNoDataFound($content)) {
+			$message["status"] = "success";
+			$message["message"] = self::NO_DATA;
+			$result["messages"] [] = $message;
+			return;
+		}
+
+		$creditCardAccounts = explode(self::BREAKER, $content);
+		$length = count($creditCardAccounts);
+		if ($length <= 2) {
+			$message["status"] = "pending";
+			$message["message"] = self::NO_DATA;
+			$result["messages"][] = $message;
+			return;
+		}
+
+		$rows = $this->format_credit_card_account_input($creditCardAccounts);
+
+		$scores = array_fill(0, 12, 0);
+		$numbersOfDelayInAMonth = 0;
+		$numbersOfDelayMoreThanAMonth = 0;
+		$doesObtainCashAdvance = false;
+		$isDelayPayAndCashAdvance = false;
+		$isOverdueOrBadDebits = false;
+		$needFurtherInvestigationForFinishedCase = false;
+		$allowedAmount = $input["allowedAmount"] * 1000;
+		$appliedTimes = explode("/", $input["appliedTime"]);
+
+		foreach ($rows as $row) {
+			$amountDue = $row["結帳日"];
+			$amountDue = explode("/", $amountDue);
+
+			$timeDiffFromAppliedAt = (intval($appliedTimes[0]) - intval($amountDue[0])) * 12 + intval($appliedTimes[1]) - intval($amountDue[1]);
+
+			$score = $allowedAmount > 0
+				? (intval($row["本期應付帳款(元)"]) + intval($row["未到期待付款(元)"])) / intval($allowedAmount)
+				: 0;
+
+			$scores[$timeDiffFromAppliedAt] += $score;
+			$delay = $this->CI->regex->getDelayByMonth($row["上期繳款狀況"]);
+			if ($delay > 1) {
+				$numbersOfDelayMoreThanAMonth++;
+			} elseif ($delay == 1) {
+				$numbersOfDelayInAMonth++;
+			}
+
+			$doesObtainCashAdvance = $doesObtainCashAdvance || $row["預借現金"] != "無";
+			$isDelayPayAndCashAdvance = $isDelayPayAndCashAdvance || $row["預借現金"] != "無" && $delay == 1;
+			$isOverdueOrBadDebits = $isOverdueOrBadDebits || $this->CI->regex->isOverdueOrBadDebits($row["債權狀態"]);
+			$needFurtherInvestigationForFinishedCase = $needFurtherInvestigationForFinishedCase
+				  									   || $this->CI->regex->needFurtherInvestigationForFinishedCase($row["結案"]);
+		}
+
+		$messages[] = "當月信用卡使用率：" . ($scores[1] * 100) . "%";
+		$messages[] = "近一月信用卡使用率：" . ($scores[2] * 100) . "%";
+		$messages[] = "近二月信用卡使用率：" . ($scores[3] * 100) . "%";
+		if (!$doesObtainCashAdvance) {
+			$message["status"] = "success";
+		}
+		if ($needFurtherInvestigationForFinishedCase) {
+			$message["status"] = "pending";
+		}
+		if ($numbersOfDelayInAMonth == 2) {
+			$message["status"] = "pending";
+		} elseif ($numbersOfDelayInAMonth > 2) {
+			$message["status"] = "failure";
+		}
+
+		if ($numbersOfDelayMoreThanAMonth > 0) {
+			$message["status"] = "failure";
+			$message["message"][] = self::DELAY_PAYMENT_MORE_THAN_ONE_MONTH . $numbersOfDelayMoreThanAMonth;
+		}
+
+		if ($isOverdueOrBadDebits) {
+			$message["status"] = "failure";
+		}
+
+		$message["message"][] = self::DOES_OBTAIN_CASH_ADVANCE . ($doesObtainCashAdvance ? "有" : "無");
+		$message["message"][] = self::DELAY_PAYMENT_IN_A_MONTH_EXCEEDED . $numbersOfDelayInAMonth;
+		$result["messages"][] = $message;
 	}
 
 	private function check_credit_card_debts($text, &$result){
@@ -344,7 +527,6 @@ class Joint_credit_lib{
 		$matches = $this->CI->regex->findPatternInBetween($text, '【當事人查詢紀錄】', '【附加訊息】');
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
-			print_r($content);
 			$result["messages"] [] = [
 				"stage" => "browsed_hits",
 				"status" => "success",
