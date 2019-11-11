@@ -36,4 +36,22 @@ class Joint_credit_lib_file1 extends TestCase
 		$expected = ["stage" => "report_expirations", "status" => "success", "message" => ''];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_overdue_and_bad_debts()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_overdue_and_bad_debts($this->text, $result);
+
+		$expected = ["stage" => "bad_debts", "status" => "success", "message" => '逾期、催收或呆帳資訊：無'];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function test_check_main_debts()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_main_debts($this->text, $result);
+
+		$expected = ["stage" => "main_debts", "status" => "success", "message" => "主債務債權再轉讓及清償資訊：無"];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
