@@ -26,4 +26,14 @@ class Joint_credit_lib_file1 extends TestCase
 		$result = $method($this->text);
 		$this->assertEquals($expected, $result);
 	}
+
+	public function test_check_report_expirations(){
+		$currentTime = 1573462800; // 2019/11/11
+		$this->joint_credit->setCurrentTime($currentTime);
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_report_expirations($this->text, $result);
+
+		$expected = ["stage" => "report_expirations", "status" => "success", "message" => ''];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }

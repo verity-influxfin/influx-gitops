@@ -47,7 +47,7 @@ class Joint_credit_lib{
 		return $result;
 	}
 
-	private function check_bank_loan($text, &$result){
+	public function check_bank_loan($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【銀行借款資訊】', '【逾期、催收或呆帳資訊】');
 		if ($this->CI->regex->isNoDataFound($content[0])) {
 			$result["messages"][] = [
@@ -158,7 +158,8 @@ class Joint_credit_lib{
 			return $proportion;
 		}
 	}
-	private function check_overdue_and_bad_debts($text, &$result)
+
+	public function check_overdue_and_bad_debts($text, &$result)
 	{
 		$content=$this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
@@ -172,7 +173,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function check_main_debts($text, &$result){
+	public function check_main_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【主債務債權再轉讓及清償資訊】', '【共同債務\/從債務\/其他債務資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "main_debts",
@@ -185,7 +186,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function initializeEmptyExtraDebtRows(){
+	public function initializeEmptyExtraDebtRows(){
 		return [
 			'台端' => '',
 			"科目" => '',
@@ -195,7 +196,7 @@ class Joint_credit_lib{
 		];
 	}
 
-	private function readExtraDebtRow($content){
+	public function readExtraDebtRow($content){
 		$row = [];
 		$rows = [];
 		$content = $this->CI->regex->replaceSpacesToSpace($content);
@@ -241,7 +242,7 @@ class Joint_credit_lib{
 		return $rows;
 	}
 
-	private function check_extra_debts($text, &$result){
+	public function check_extra_debts($text, &$result){
 		//3 15 29
 		$message = ["stage" => "extra_debts", "status" => "success", "message" => []];
 		$matches = $this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務資訊】', '【共同債務\/從債務\/其他債務轉讓資訊】');
@@ -303,7 +304,7 @@ class Joint_credit_lib{
 		$result["messages"][] = $message;
 	}
 
-	private function check_extra_transfer_debts($text, &$result){
+	public function check_extra_transfer_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務轉讓資訊】', '【退票資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "transfer_debts",
@@ -316,7 +317,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function check_bounced_checks($text, &$result){
+	public function check_bounced_checks($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【退票資訊】', '【拒絕往來資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bounced_checks",
@@ -329,7 +330,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function check_lost_contacts($text, &$result){
+	public function check_lost_contacts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【拒絕往來資訊】', '【信用卡資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "lost_contacts",
@@ -342,7 +343,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function check_credit_cards($text, &$result){
+	public function check_credit_cards($text, &$result){
 		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
 		$credit_date=substr($credit_date[0], 0, 10);
@@ -357,6 +358,7 @@ class Joint_credit_lib{
 		] : $cards_info=$this->get_credit_cards_info($content,$result);
 		return 	 $cards_info;
 	}
+
 	private function get_credit_date($text)
 	{
 		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
@@ -364,7 +366,8 @@ class Joint_credit_lib{
 		$credit_date=substr($credit_date[0], 0, 10);
 		return trim($credit_date);
 	}
-	private function get_credit_cards_info($content,&$result)
+
+	public function get_credit_cards_info($content,&$result)
 	{
 		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'check_in_used';
 		switch ($case) {
@@ -411,7 +414,7 @@ class Joint_credit_lib{
 		}
 	}
 
-	private function readRow($template, $row){
+	public function readRow($template, $row){
 		if (!$row) return;
 
 		$template["結帳日"] = $row[0];
@@ -459,7 +462,7 @@ class Joint_credit_lib{
 		return $template;
 	}
 
-	private function format_credit_card_account_input($creditCardAccounts){
+	public function format_credit_card_account_input($creditCardAccounts){
 		$template = [];
 		$rows = [];
 		$rowIndex = 0;
@@ -500,7 +503,7 @@ class Joint_credit_lib{
 		return $rows;
 	}
 
-	private function check_credit_card_accounts($text, $input, &$result){
+	public function check_credit_card_accounts($text, $input, &$result){
 		$message = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
 
 		$matches = $this->CI->regex->findPatternInBetween($text, "【信用卡戶帳款資訊】", "【信用卡債權再轉讓及清償資訊】");
@@ -587,7 +590,7 @@ class Joint_credit_lib{
 		$result["messages"][] = $message;
 	}
 
-	private function check_credit_card_debts($text, &$result){
+	public function check_credit_card_debts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡債權再轉讓及清償資訊】', '【被查詢紀錄】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "credit_card_debts",
@@ -618,7 +621,7 @@ class Joint_credit_lib{
 		return $record;
 	}
 
-	private function check_browsed_hits($text, &$result){
+	public function check_browsed_hits($text, &$result){
 		$matches = $this->CI->regex->findPatternInBetween($text, '【被查詢紀錄】', '【被電子支付機構及電子票證發行機構查詢紀錄】');
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
@@ -684,7 +687,7 @@ class Joint_credit_lib{
 		return $record;
 	}
 
-	private function check_browsed_hits_by_electrical_pay($text, &$result){
+	public function check_browsed_hits_by_electrical_pay($text, &$result){
 		$matches = $this->CI->regex->findPatternInBetween($text, '【被電子支付機構及電子票證發行機構查詢紀錄】', '【當事人查詢紀錄】');
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
@@ -749,7 +752,7 @@ class Joint_credit_lib{
 		return $record;
 	}
 
-	private function check_browsed_hits_by_itself($text, &$result){
+	public function check_browsed_hits_by_itself($text, &$result){
 		$matches = $this->CI->regex->findPatternInBetween($text, '【當事人查詢紀錄】', '【附加訊息】');
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
@@ -799,7 +802,7 @@ class Joint_credit_lib{
 		$result["messages"][] = $message;
 	}
 
-	private function check_extra_messages($text, &$result){
+	public function check_extra_messages($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【附加訊息】', '【信用評分】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
 			"stage" => "extra_messages",
@@ -812,7 +815,7 @@ class Joint_credit_lib{
 		];
 	}
 
-	private function check_credit_scores($text, &$result){
+	public function check_credit_scores($text, &$result){
 		(preg_match("/信用評分\:/", $text))?$this->get_scores($text,$result): $result["messages"][] = [
 				"stage" => "credit_scores",
 				"status" => "pending",
@@ -820,7 +823,7 @@ class Joint_credit_lib{
 			];
 	}
 
-	private function get_scores($text, &$result)
+	public function get_scores($text, &$result)
 	{
 		if (preg_match("/台端為給予固定評分/", $text)) {
 			$result["messages"][] = [
@@ -852,17 +855,18 @@ class Joint_credit_lib{
 		}
 	}
 
-	private function check_report_expirations($text, &$result){
+	public function check_report_expirations($text, &$result){
 		$message = ["stage" => "report_expirations", "status" => "failure", "message" => ""];
 		$date = $this->get_credit_date($text);
 		$dateArray = explode("/", $date);
 		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
 		$thirtyOneDays = 86400 * 31;
+
 		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
 			$message["status"] = "success";
 		}
 
-		$result["message"][] = $message;
+		$result["messages"][] = $message;
 	}
 
 	public function setCurrentTime($currentTime){
