@@ -7,6 +7,8 @@ include_once (APPPATH . 'libraries/utility/Regular_expression.php');
 class Joint_credit_regex extends Regular_expression
 {
 	const EQUAL_BREAKER = "================================================================================";
+	const BREAKER = "--------------------------------------------------------------------------------";
+
 	public function isDateTimeFormat($text)
 	{
 		preg_match('/\d+\/\d+\/\d+/', $text, $matches);
@@ -59,5 +61,26 @@ class Joint_credit_regex extends Regular_expression
 	public function replaceEqualBreaker($text)
 	{
 		return preg_replace("/" . self::EQUAL_BREAKER . "/", "", $text);
+	}
+
+	public function removeBreaker($text)
+	{
+		return preg_replace("/" . self::BREAKER . "/", "", $text);
+	}
+
+	public function removeExtraDebtsStopWords($text)
+	{
+		$text = preg_replace("/^：*\s*/", "", $text);
+		return $this->removeBreaker($text);
+	}
+
+	public function getZeroOverdueAmount($text)
+	{
+		return preg_match("/\*\*\*\*\*\*\*0千元/", $text) == 1;
+	}
+
+	public function isGuarantor($text)
+	{
+		return preg_match('/(?<=台端擔任).*(?=之保證人)/', $text) == 1;
 	}
 }

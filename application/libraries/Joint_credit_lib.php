@@ -8,6 +8,8 @@ class Joint_credit_lib{
 	const BROWSED_HITS_BY_ELECTRICAL_PAY = "被電子支付或電子票證發行機構查詢紀錄：";
 	const BROWSED_HITS_BY_ITSELF = "當事人查詢紀錄：";
 
+	const EXTRA_DEBITS_DATA = "共同債務/從債務/其他債務資訊 : ";
+
 	const NO_DATA = "查無資料";
 	const DOES_OBTAIN_CASH_ADVANCE = "是否有預借現金 : ";
 	const DELAY_PAYMENT_MORE_THAN_ONE_MONTH = "超過一個月延遲繳款 : ";
@@ -73,8 +75,122 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	private function check_extra_debts($text, &$result){
+	private function initializeEmptyExtraDebtRows(){
+		return [
+			'台端' => '',
+			"科目" => '',
+			'承貸行' => '',
+			'未逾期' => '',
+			'逾期未還金額' => '',
+		];
+	}
 
+	private function readExtraDebtRow($content){
+		$row = [];
+		$rows = [];
+		$content = $this->CI->regex->replaceSpacesToSpace($content);
+		$content = $this->CI->regex->removeExtraDebtsStopWords($content);
+		$elements = explode(" ", $content);
+
+		$iters = count($elements);
+		$isIrrelevant = false;
+		$prevKey = null;
+		for ($i = 0; $i < $iters; $i++) {
+			$element = $elements[$i];
+			if ($this->CI->regex->isDateTimeFormat($element)) {
+				$isIrrelevant = true;
+			}
+			if (strpos($element, "台端") !== false) {
+				$isIrrelevant = false;
+				if ($row) {
+					$rows[] = $row;
+				}
+				$row = $this->initializeEmptyExtraDebtRows();
+			}
+			if ($isIrrelevant) {
+				continue;
+			}
+			if ($prevKey) {
+				$row[$prevKey] = $element;
+				$prevKey = null;
+			}
+			$keys = ["台端", "承貸行", "台端", "未逾期", "逾期未還金額"];
+			foreach ($keys as $key) {
+				if (strpos($element, $key) !== false) {
+					$row[$key] = $element;
+				}
+			}
+			if (strpos($element, "科目") !== false) {
+				$prevKey = "科目";
+			}
+		}
+
+		if ($row) {
+			$rows[] = $row;
+		}
+		return $rows;
+	}
+
+	private function check_extra_debts($text, &$result){
+		//3 15 29
+		$message = ["stage" => "extra_debts", "status" => "success", "message" => []];
+		$matches = $this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務資訊】', '【共同債務\/從債務\/其他債務轉讓資訊】');
+		$content = $matches[0];
+		if ($this->CI->regex->isNoDataFound($content)) {
+			$message["status"] = "success";
+			$message["message"] = self::EXTRA_DEBITS_DATA . "無";
+			$result["messages"][] = $message;
+			return;
+		}
+
+		$rows = [];
+		$commonDebt1 = $this->CI->regex->findPatternInBetween($content, '共同債務', '從債務');
+		$commonDebt2 = $this->CI->regex->findPatternInBetween($content, '共同債務', '擔保品提供人');
+		$commonDebt3 = $this->CI->regex->findPatternInBetween($content, '共同債務', '');
+
+		$commonDebt = $commonDebt1 ? $commonDebt1 : $commonDebt2 ? $commonDebt2 : $commonDebt3;
+		if ($commonDebt) {
+			$currentRows = $this->readExtraDebtRow($commonDebt[0]);
+			$rows = array_merge($rows, $currentRows);
+		}
+
+		$secondaryLiability1 = $this->CI->regex->findPatternInBetween($content, '從債務', '擔保品提供人');
+		$secondaryLiability2 = $this->CI->regex->findPatternInBetween($content, '從債務', '');
+		$secondaryLiability = $secondaryLiability1 ? $secondaryLiability1 : $secondaryLiability2;
+		if ($secondaryLiability) {
+			$currentRows = $this->readExtraDebtRow($secondaryLiability[0]);
+			$rows = array_merge($rows, $currentRows);
+		}
+
+		$collateralProvider = $this->CI->regex->findPatternInBetween($content, '擔保品提供人', '');
+		if ($collateralProvider) {
+			$currentRows = $this->readExtraDebtRow($secondaryLiability[0]);
+			$rows = array_merge($rows, $currentRows);
+		}
+
+		if ($rows) {
+			foreach ($rows as $row) {
+				if (strpos($row["科目"], '助學貸款') !== false) {
+					if (!$this->CI->regex->getZeroOverdueAmount($row["逾期未還金額"])) {
+						$message["status"] = "failure";
+					}
+				}
+				if (
+					strpos($row["科目"], '長期擔保') !== false
+					|| strpos($row["科目"], '房貸') !== false
+					|| strpos($row["科目"], '不動產擔保') !== false
+				) {
+					$message["status"] = "pending";
+				}
+
+				if ($this->CI->regex->isGuarantor($row["台端"])) {
+					$message["message"][] = $row["台端"];
+				}
+				$message["message"][] = "科目：" . $row["科目"];
+				$message["message"][] = $row["逾期未還金額"];
+			}
+		}
+		$result["messages"][] = $message;
 	}
 
 	private function check_extra_transfer_debts($text, &$result){
