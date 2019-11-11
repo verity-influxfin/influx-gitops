@@ -230,17 +230,17 @@ class Target_lib{
 			$product_id 	= $target->product_id;
 			$sub_product_id	= $target->sub_product_id;
 			$product_info 	= $product_list[$product_id];
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id);
+			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 			if(!$credit){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id);
 				if($rs){
-					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id);
+					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 				}
 			}
 			
 			if($credit){
-				$interest_rate	= $this->CI->credit_lib->get_rate($credit['level'],$target->instalment,$product_id);
-				if($interest_rate){//'product_id'=> $product_id,
+				$interest_rate	= $credit['rate'];
+				if($interest_rate){
 					$used_amount	   = 0;
                     $other_used_amount = 0;
                     $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($user_id);
@@ -248,7 +248,7 @@ class Target_lib{
 					$target_list 	= $this->CI->target_model->get_many_by([
 						'id !='		=> $target->id,
 						'user_id'	=> $user_id,
-						'status'	=> [0,1,2,3,4,5,20,21,22,23,24]
+						'status NOT'=> [8,9,10]
 					]);
                     if($target_list){
                         foreach($target_list as $key =>$value){

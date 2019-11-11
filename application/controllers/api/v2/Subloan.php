@@ -491,7 +491,7 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 			
-			$subloan = $this->subloan_lib->get_subloan($target);
+			$subloan = $this->subloan_lib->get_subloan(false,$target);
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}

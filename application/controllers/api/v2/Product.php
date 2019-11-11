@@ -168,11 +168,16 @@ class Product extends REST_Controller {
         }
 
         if(!empty($cproduct_list)){
+            $target = [
+                1 =>[],
+                2 =>[],
+                3 =>[],
+                4 =>[],
+            ];
             foreach($cproduct_list as $key => $value) {
-                $target = [];
                 $certification = [];
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
-                    $targets = $this->target_model->get_by(array(
+                    $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21],
                         'sub_status' => 0,
                         'user_id' => $this->user_info->id,
@@ -180,15 +185,20 @@ class Product extends REST_Controller {
                     ));
 
                     if ($targets) {
-                        $target = [
-                            'id' => intval($targets->id),
-                            'target_no' => $targets->target_no,
-                            'status' => intval($targets->status),
-                            'amount' => intval($targets->amount),
-                            'loan_amount' => intval($targets->loan_amount),
-                            'created_at' => intval($targets->created_at),
-                            'instalment' => intval($targets->instalment),
-                        ];
+                        foreach($targets as $tar_list => $tar) {
+                            $add_target = [
+                                'id' => intval($tar->id),
+                                'product_id' => intval($tar->product_id),
+                                'sub_product_id' => intval($tar->sub_product_id),
+                                'target_no' => $tar->target_no,
+                                'status' => intval($tar->status),
+                                'amount' => intval($tar->amount),
+                                'loan_amount' => intval($tar->loan_amount),
+                                'created_at' => intval($tar->created_at),
+                                'instalment' => intval($tar->instalment),
+                            ];
+                            $target[$tar->product_id][$tar->sub_product_id] = $add_target;
+                        }
                     }
                 }
 
@@ -201,7 +211,7 @@ class Product extends REST_Controller {
                 }
 
                 $parm = array(
-                    'id' 					=> $value['id'],
+                    'id'        			=> $value['id'],
                     'type' 					=> $value['type'],
                     'identity' 				=> $value['identity'],
                     'name' 					=> $value['name'],
@@ -214,8 +224,8 @@ class Product extends REST_Controller {
                     'charge_platform_min'	=> PLATFORM_FEES_MIN,
                     'instalment'			=> $value['instalment'],
                     'repayment'				=> $value['repayment'],
-                    'target' => $target,
-                    'certification' => $certification,
+                    'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
+                    'certification'         => $certification,
                 );
 
                 //reformat Product for layer2
@@ -236,11 +246,12 @@ class Product extends REST_Controller {
                 foreach ($t as $key2 => $t2) {
                     $sub_product_info = [];
                     if(isset($sub_product_list[$key2])){
-                        $sub_product_list[$key2]['name'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['name'];
+                        $sub_product_list[$key2]['name']        = $visul_id_des[$sub_product_list[$key2]['visul_id']]['name'];
                         $sub_product_list[$key2]['description'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['description'];
-                        $sub_product_list[$key2]['status'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['status'];
-                        $sub_product_list[$key2]['banner'] = $visul_id_des[$sub_product_list[$key2]['visul_id']]['banner'];
+                        $sub_product_list[$key2]['status']      = $visul_id_des[$sub_product_list[$key2]['visul_id']]['status'];
+                        $sub_product_list[$key2]['banner']      = $visul_id_des[$sub_product_list[$key2]['visul_id']]['banner'];
                         foreach ($sub_product_list[$key2]['identity'] as $idekey => $ideval){
+                            $exp_product  = explode(':',$ideval['product_id']);
                             if (!empty($certification_list)) {
                                 $certification = [];
                                 foreach ($certification_list as $k => $v) {
@@ -250,6 +261,7 @@ class Product extends REST_Controller {
                                 }
                                 $sub_product_list[$key2]['identity'][$idekey]['certifications'] = $certification;
                             }
+                            $sub_product_list[$key2]['identity'][$idekey]['target']=isset($target[$exp_product[0]][$exp_product[1]])?$target[$exp_product[0]][$exp_product[1]]:[];
                         }
                         $sub_product_info = [$sub_product_list[$key2]];
                     }
@@ -504,6 +516,17 @@ class Product extends REST_Controller {
             $insert = $this->target_lib->add_target($param);
             if($insert){
                 $this->load->library('Certification_lib');
+                if($sub_proddcut!=0){
+                    $certification = $this->user_certification_model->order_by('created_at', 'desc')->get_by([
+                        'user_id'          => $user_id,
+                        'certification_id' => ($product['identity']==1?2:10),
+                        'investor'         => 0,
+                        'status'           => 1,
+                    ]);
+                    if($certification && $sub_proddcut==1) {
+                        $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
+                    }
+                }
                 $this->certification_lib->expire_certification($user_id);
                 $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
             }else{

@@ -116,6 +116,31 @@ class Certification extends MY_Admin_Controller {
 						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
 						$page_data['industry_name'] 		= $this->config->item('industry_name');
 						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
+						if (isset($page_data['content']['job_title'])){
+							$job_title = file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json');
+							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
+							if(isset($page_data['content']['programming_language'])){
+								$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+								$set_lang_level =['入門','參與開發','獨立執行'];
+								foreach($page_data['content']['programming_language'] as $lang_list => $lang){
+									$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
+									$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+								}
+								$page_data['techie_lang'] = isset($techie_lang)?$techie_lang:'';
+								$page_data['other_lang']  = isset($other_lang)?$other_lang:'';
+							}
+						}
+					}elseif ($info->certification_id==2){
+						if(isset($page_data['content']['programming_language'])){
+							$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+							$set_lang_level =['入門','參與開發','獨立執行'];
+							foreach($page_data['content']['programming_language'] as $lang_list => $lang){
+								$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
+								$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+							}
+							$page_data['techie_lang'] = isset($techie_lang)?$techie_lang:'';
+							$page_data['other_lang']  = isset($other_lang)?$other_lang:'';
+						}
 					}
 					$page_data['from'] 					= $from;
 					$this->load->view('admin/_header');

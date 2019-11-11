@@ -98,8 +98,8 @@ class Subloan_lib{
 					'repayment'			=> $data['repayment'],
                     'product_id'		=> $data['product_id']
 				);
-                unset($param['product_id']);
                 $new_target_id = $this->add_subloan_target($target,$param);
+                unset($param['product_id']);
                 if($new_target_id){
                     $param['new_target_id'] = $new_target_id;
 					$rs = $this->CI->subloan_model->insert($param);

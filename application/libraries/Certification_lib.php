@@ -587,7 +587,7 @@ class Certification_lib{
                 'student_pro_level'      => $content['pro_level'],
             );
             isset($content['graduate_date'])?$data['graduate_date']=$content['graduate_date']:'';
-            isset($content['language'])?$data['student_programming_language']=$content['language']:'';
+            isset($content['programming_language'])?$data['student_programming_language']=$content['programming_language']:'';
 
             $rs = $this->user_meta_progress($data,$info);
             if($rs){
@@ -745,7 +745,8 @@ class Certification_lib{
 				'job_license'			=> $content['license_status'],
 				'job_pro_level'			=> $content['pro_level'],
 			];
-            isset($content['language'])?$data['job_programming_language']=$content['language']:'';
+            isset($content['programming_language'])?$data['job_programming_language']=$content['programming_language']:'';
+            isset($content['job_title'])?$data['job_title']=$content['job_title']:'';
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){

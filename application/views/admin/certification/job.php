@@ -60,6 +60,10 @@
 										<p class="form-control-static"><?=isset($content['industry'])?$industry_name[$content['industry']]:""?></p>
 									</div>
 									<div class="form-group">
+										<label>工作職稱</label>
+										<p class="form-control-static"><? echo isset($job_title)?$job_title:"無資料"; ?></p>
+									</div>
+									<div class="form-group">
 										<label>企業規模</label>
 										<p class="form-control-static"><?=isset($content['employee'])?$employee_range[$content['employee']]:""?></p>
 									</div>
@@ -119,7 +123,7 @@
                                         <?}} ?>
                                     <form role="form" method="post">
                                         <div class="form-group">
-                                            <label>專業證書加分 (最高3級)</label>
+                                            <label>專業證書加分 (最高6級)</label>
                                             <? if($data->status==1){?>
                                                 <p><?=isset($content['license_status'])&&$content['license_status']>0?$content['license_status']."級":"專業證書不加分"?></p>
                                             <?}else{?>
@@ -128,6 +132,9 @@
                                                     <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>1級</option>
                                                     <option value="2" <?=isset($content['license_status'])&&$content['license_status']==2?"selected":""?>>2級</option>
                                                     <option value="3" <?=isset($content['license_status'])&&$content['license_status']==3?"selected":""?>>3級</option>
+                                                    <option value="4" <?=isset($content['license_status'])&&$content['license_status']==4?"selected":""?>>4級</option>
+                                                    <option value="5" <?=isset($content['license_status'])&&$content['license_status']==5?"selected":""?>>5級</option>
+                                                    <option value="6" <?=isset($content['license_status'])&&$content['license_status']==6?"selected":""?>>6級</option>
                                                 </select>
                                             <?}?>
                                         </div>
@@ -220,11 +227,12 @@
                                             echo '<br /><br /><br />';
                                         }?>
 
-                                        <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])) {
+                                        <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])) {
                                             echo '<h4>【其他輔助證明】</h4>';
-                                            if (isset($content['language'])) {
+                                            if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
-                                                echo $content['language'];
+                                                echo '程式語言：'.implode('、',$techie_lang).'<br/>';
+                                                echo '程式語言(自填)：'.implode('、',$other_lang);
                                                 echo '</div>';
                                             }
                                             if (isset($content['business_image'])) {
@@ -245,8 +253,10 @@
                                             if (isset($content['license_image'])) {
                                                 !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
                                                 echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
+                                                $arr_license_desc = explode(',',$content['license_des']);
                                                 foreach($content['license_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                     echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
                                                 }
                                                 echo '</div>';
                                             }
