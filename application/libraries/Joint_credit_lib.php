@@ -41,6 +41,7 @@ class Joint_credit_lib{
 		$this->check_browsed_hits_by_itself($text, $result);
 		$this->check_extra_messages($text, $result);
 		$this->check_credit_scores($text, $result);
+		$this->check_report_expirations($text, $result);
 		print_r($result);
 		return $result;
 	}
@@ -741,5 +742,18 @@ class Joint_credit_lib{
 				"message" => "信用評分 : 此次暫時無法評分" 
 			];
 		}
+	}
+
+	private function check_report_expirations($text, &$result){
+		$message = ["stage" => "report_expirations", "status" => "failure", "message" => ""];
+		$date = $this->get_credit_date($text);
+		$dateArray = explode("/", $date);
+		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
+		$thirtyOneDays = 86400 * 31;
+		if (time() - $appliedTime < $thirtyOneDays) {
+			$message["status"] = "success";
+		}
+
+		$result["message"][] = $message;
 	}
 }
