@@ -21,6 +21,7 @@ class Joint_credit_lib{
 	}
 
 	public function check_join_credits($text, &$result){
+		$this->setCurrentTime(time());
 		$this->check_bank_loan($text, $result);
 		$this->check_overdue_and_bad_debts($text, $result);
 		$this->check_main_debts($text, $result);
@@ -361,7 +362,7 @@ class Joint_credit_lib{
 		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
 		$credit_date=substr($credit_date[0], 0, 10);
-		return 	 $credit_date;
+		return trim($credit_date);
 	}
 	private function get_credit_cards_info($content,&$result)
 	{
@@ -857,10 +858,14 @@ class Joint_credit_lib{
 		$dateArray = explode("/", $date);
 		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
 		$thirtyOneDays = 86400 * 31;
-		if (time() - $appliedTime < $thirtyOneDays) {
+		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
 			$message["status"] = "success";
 		}
 
 		$result["message"][] = $message;
+	}
+
+	public function setCurrentTime($currentTime){
+		$this->currentTime = $currentTime;
 	}
 }
