@@ -44,8 +44,116 @@ class Joint_credit_lib{
 	}
 
 	private function check_bank_loan($text, &$result){
+		$content=$this->CI->regex->findPatternInBetween($text, '【銀行借款資訊】', '【逾期、催收或呆帳資訊】');
+		if ($this->CI->regex->isNoDataFound($content[0])) {
+			$result["messages"][] = [
+				"stage" => "bank_loan",
+				"status" => "success",
+				"message" => "銀行借款家數：無"
+			];
+			return ;
+		}elseif(preg_match("/有無延遲還款/", $content['0'])){
+			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
+			$content_data= explode(" ", $content_data);
+			foreach($content_data as $key => $value){
+				if (preg_match("/分行/", $value)) {
+					$getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
+					$getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
+					if(!empty($getProportion)){
+						$get_proportion[]=$getProportion;
+					}
+					if(!empty($getBankname)){
+						$get_bankname[]=$getBankname;
+					}
+				}
+			}
+			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
+			$getAllProportion=(isset($get_proportion))?$get_proportion:Null;
+			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
+			$keyword=$this->CI->regex->findPatternInBetween($text, '有無延遲還款', '【逾期、催收或呆帳資訊】');
+			(preg_match("/有/", $keyword[0]))?$result["messages"][] = [
+				"stage" => "bank_loan",
+				"status" => "failure",
+				"message" => [
+					"最近十二個月有無延遲還款" => '有',
+					"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+				]
+			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion);
+		}
 	}
-
+	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion)
+	{
+		switch ($getCountAllBanknameWithoutSchoolLoan) {
+			case ($getCountAllBanknameWithoutSchoolLoan > 3):
+				$result["messages"][] = [
+					"stage" => "bank_loan",
+					"status" => "failure",
+					"message" => [
+						"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+					]
+				];
+				break;
+			case ($getCountAllBanknameWithoutSchoolLoan = 3):
+				$result["messages"][] = [
+					"stage" => "bank_loan",
+					"status" => "failure",
+					"message" => [
+						"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+					]
+				];
+				break;
+			case (($getCountAllBanknameWithoutSchoolLoan < 3)&&($getCountAllBanknameWithoutSchoolLoan >=0)):
+				if (in_array(1, $getAllProportion)) {
+					$result["messages"][] = [
+						"stage" => "bank_loan",
+						"status" => "failure",
+						"message" => [
+							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
+							"長期放款借款餘額比例" => 1
+						]
+					];
+					return;
+				} else {
+					foreach ($getAllProportion as $key => $value) {
+						$is_InStandard[] = ($value < 0.7) ? true : false;
+					}
+					((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) ? $result["messages"][] = [
+						"stage" => "bank_loan",
+						"status" => "success",
+						"message" => [
+							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
+							"長期放款借款餘額比例" => $getAllProportion
+						]
+					] : $result["messages"][] = [
+						"stage" => "bank_loan",
+						"status" => "pending",
+						"message" => [
+							"長期放款家數" => $getCountAllBanknameWithoutSchoolLoan,
+							"長期放款借款餘額比例" => $getAllProportion
+						]
+					];
+				}
+				break;
+		}
+		return $result;
+	}
+	private function get_loan_bankname($value,$subject)
+	{ 
+		if ($subject !== '助學貸款') {
+			$bankname = $value;
+			return	$bankname;
+		}
+	}
+	
+	private function get_loan_proportion($contract_money,$balance_of_loans,$subject)
+	{
+		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
+			preg_match('!\d+!', $contract_money, $ContractMoney);
+			preg_match('!\d+!', $balance_of_loans, $BalanceOfLoan);
+			$proportion = round($BalanceOfLoan[0] / $ContractMoney[0],2);
+			return $proportion;
+		}
+	}
 	private function check_overdue_and_bad_debts($text, &$result)
 	{
 		$content=$this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
@@ -88,7 +196,6 @@ class Joint_credit_lib{
 			"status" => "failure",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：有"
 		]; 
-
 	}
 
 	private function check_bounced_checks($text, &$result){
