@@ -131,7 +131,7 @@ class Joint_credit_lib{
 						"stage" => "bank_loan",
 						"status" => "pending",
 						"message" => [
-							"長期放款家數" => $getCountAllBanknameWithoutSchoolLoan,
+							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
 							"長期放款借款餘額比例" => $getAllProportion
 						]
 					];
