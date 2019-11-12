@@ -91,4 +91,12 @@ class Joint_credit_lib_file1 extends TestCase
 		$expected = ["stage" => "transfer_debts", "status" => "success", "message" => "共同債務/從債務/其他債務轉讓資訊：無"];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_bounced_checks(){
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_bounced_checks($this->text, $result);
+
+		$expected = ["stage" => "bounced_checks", "status" => "success", "message" => "退票資訊：無"];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
