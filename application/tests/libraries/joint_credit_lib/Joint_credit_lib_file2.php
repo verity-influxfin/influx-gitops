@@ -92,4 +92,13 @@ class Joint_credit_lib_file2 extends TestCase
 
 		$this->assertEquals($expected, $rows[0]);
 	}
+
+	public function test_check_extra_transfer_debts()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_extra_transfer_debts($this->text, $result);
+
+		$expected = ["stage" => "transfer_debts", "status" => "success", "message" => "共同債務/從債務/其他債務轉讓資訊：無"];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
