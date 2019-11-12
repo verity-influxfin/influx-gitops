@@ -402,10 +402,13 @@ class Joint_credit_lib{
 		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'check_in_used';
 		switch ($case) {
 			case 'deactivated':
+				$count_credit_cards = substr_count($content[0], "使用中");
 				$result["messages"][] = [
 					"stage" => "credit_card_debts",
 					"status" => "failure",
-					"message" => "信用卡資訊：強制停用或強制停卡"
+					"message" => [
+						"信用卡資訊：強制停用或強制停卡", 
+						"信用卡使用中張數：{$count_credit_cards}"]
 				];
 				break;
 			case 'check_in_used':
