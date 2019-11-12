@@ -79,8 +79,8 @@ class Joint_credit_lib{
 				"stage" => "bank_loan",
 				"status" => "failure",
 				"message" => [
-					"最近十二個月有無延遲還款" => '有',
-					"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+					"最近十二個月有無延遲還款 : 有",
+					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
 				]
 			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion);
 		}
@@ -93,7 +93,7 @@ class Joint_credit_lib{
 					"stage" => "bank_loan",
 					"status" => "failure",
 					"message" => [
-						"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
 					]
 				];
 				break;
@@ -102,7 +102,7 @@ class Joint_credit_lib{
 					"stage" => "bank_loan",
 					"status" => "failure",
 					"message" => [
-						"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
 					]
 				];
 				break;
@@ -112,8 +112,8 @@ class Joint_credit_lib{
 						"stage" => "bank_loan",
 						"status" => "failure",
 						"message" => [
-							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
-							"長期放款借款餘額比例" => 1
+							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+							"長期放款借款餘額比例 : 1"
 						]
 					];
 					return;
@@ -125,15 +125,15 @@ class Joint_credit_lib{
 						"stage" => "bank_loan",
 						"status" => "success",
 						"message" => [
-							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
-							"長期放款借款餘額比例" => $getAllProportion
+							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+							"長期放款借款餘額比例 : $getAllProportion"
 						]
 					] : $result["messages"][] = [
 						"stage" => "bank_loan",
 						"status" => "pending",
 						"message" => [
-							"銀行借款家數" => $getCountAllBanknameWithoutSchoolLoan,
-							"長期放款借款餘額比例" => $getAllProportion
+							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+							"長期放款借款餘額比例 : $getAllProportion"
 						]
 					];
 				}
