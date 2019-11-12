@@ -117,4 +117,20 @@ class Joint_credit_lib_file3 extends TestCase
 		$expected = ["stage" => "lost_contacts", "status" => "success", "message" => "拒絕往來資訊：無"];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_credit_cards(){
+		$result = ["status" => "status", "messages" => []];
+		$this->joint_credit->check_credit_cards($this->text, $result);
+
+		$expected = [
+			"stage" => "credit_card_debts",
+			"status" => "success",
+			"message" => [
+				"信用卡資訊：有",
+				"信用卡使用中張數：2",
+				"信用卡總額度（元）：50"
+			]
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }

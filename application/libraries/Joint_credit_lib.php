@@ -395,8 +395,9 @@ class Joint_credit_lib{
 						"stage" => "credit_card_debts",
 						"status" => $status,
 						"message"  => [
-							"信用卡使用中張數" => $count_credit_cards,
-							"信用卡總額度（元）" => $allowedAmount
+							"信用卡資訊：有",
+							"信用卡使用中張數：{$count_credit_cards}",
+							"信用卡總額度（元）：{$allowedAmount}"
 						]
 					];
 					$cards_info = [
@@ -408,8 +409,9 @@ class Joint_credit_lib{
 						"stage" => "credit_card_debts",
 						"status" => "pending",
 						"message"  => [
-							"信用卡使用中張數" => 0,
-							"信用卡總額度（元）" => 0
+							"信用卡資訊：有",
+							"信用卡使用中張數：0",
+							"信用卡總額度（元）：0"
 						]
 					];
 				}
