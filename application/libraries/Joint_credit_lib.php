@@ -170,7 +170,7 @@ class Joint_credit_lib{
 			"stage" => "bad_debts",
 			"status" => "failure",
 			"message" => "逾期、催收或呆帳資訊：有"
-		]; 
+		];
 	}
 
 	public function check_main_debts($text, &$result){
@@ -183,7 +183,7 @@ class Joint_credit_lib{
 			"stage" => "main_debts",
 			"status" => "failure",
 			"message" => "主債務債權再轉讓及清償資訊：有"
-		]; 
+		];
 	}
 
 	private function initializeEmptyExtraDebtRows(){
@@ -225,7 +225,7 @@ class Joint_credit_lib{
 				$row[$prevKey] = $element;
 				$prevKey = null;
 			}
-			$keys = ["台端", "承貸行", "台端", "未逾期", "逾期未還金額"];
+			$keys = ["台端", "承貸行", "台端", "未逾期", "逾期未還金額", "未逾期餘額"];
 			foreach ($keys as $key) {
 				if (strpos($element, $key) !== false) {
 					$row[$key] = $element;
@@ -301,7 +301,7 @@ class Joint_credit_lib{
 					$message["message"][] = $row["台端"];
 				}
 				$message["message"][] = "科目：" . $row["科目"];
-				$message["message"][] = $row["逾期未還金額"];
+				$message["message"][] = $row["未逾期餘額"];
 			}
 		}
 		$result["messages"][] = $message;
@@ -317,7 +317,7 @@ class Joint_credit_lib{
 			"stage" => "transfer_debts",
 			"status" => "failure",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：有"
-		]; 
+		];
 	}
 
 	public function check_bounced_checks($text, &$result){
@@ -330,7 +330,7 @@ class Joint_credit_lib{
 			"stage" => "bounced_checks",
 			"status" => "failure",
 			"message" => "退票資訊：有"
-		]; 
+		];
 	}
 
 	public function check_lost_contacts($text, &$result){
@@ -343,7 +343,7 @@ class Joint_credit_lib{
 			"stage" => "lost_contacts",
 			"status" => "failure",
 			"message" => "拒絕往來資訊：有"
-		]; 
+		];
 	}
 
 	public function check_credit_cards($text, &$result){
@@ -848,12 +848,12 @@ class Joint_credit_lib{
 					"status" => "pending",
 					"message" => "信用評分 : " . $scores
 				];
-				
+
 		}else{
 			$result["messages"][] = [
 				"stage" => "get_scores",
 				"status" => "pending",
-				"message" => "信用評分 : 此次暫時無法評分" 
+				"message" => "信用評分 : 此次暫時無法評分"
 			];
 		}
 	}
