@@ -186,7 +186,7 @@ class Joint_credit_lib{
 		]; 
 	}
 
-	public function initializeEmptyExtraDebtRows(){
+	private function initializeEmptyExtraDebtRows(){
 		return [
 			'台端' => '',
 			"科目" => '',
@@ -196,7 +196,7 @@ class Joint_credit_lib{
 		];
 	}
 
-	public function readExtraDebtRow($content){
+	private function readExtraDebtRow($content){
 		$row = [];
 		$rows = [];
 		$content = $this->CI->regex->replaceSpacesToSpace($content);
@@ -281,6 +281,9 @@ class Joint_credit_lib{
 
 		if ($rows) {
 			foreach ($rows as $row) {
+				if (!$row["科目"]) {
+					continue;
+				}
 				if (strpos($row["科目"], '助學貸款') !== false) {
 					if (!$this->CI->regex->getZeroOverdueAmount($row["逾期未還金額"])) {
 						$message["status"] = "failure";

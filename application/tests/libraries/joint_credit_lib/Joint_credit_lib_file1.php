@@ -11,10 +11,9 @@ class Joint_credit_lib_file1 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outputFile = "joint-credits/38-decoded.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/joint_credit_lib/38-decoded.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
-		$url = "http://127.0.0.1/{$outputFile}";
-		$pdf = $parser->parseFile($url);
+		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
 	}
 
@@ -53,5 +52,34 @@ class Joint_credit_lib_file1 extends TestCase
 
 		$expected = ["stage" => "main_debts", "status" => "success", "message" => "主債務債權再轉讓及清償資訊：無"];
 		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function test_check_extra_debts()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_extra_debts($this->text, $result);
+
+		$expected = ["stage" => "extra_debts", "status" => "success", "message" => "共同債務/從債務/其他債務資訊 : 無"];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function testReadExtraDebtRow()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$matches = $this->CI->regex->findPatternInBetween($this->text, '【共同債務\/從債務\/其他債務資訊】', '【共同債務\/從債務\/其他債務轉讓資訊】');
+
+		$method = ReflectionHelper::getPrivateMethodInvoker($this->joint_credit, "readExtraDebtRow");
+		$rows = $method($matches[0]);
+
+		//empty result but the data contains keyword "台端", thus the array may contain some data
+		$expected = [
+			"台端" => "台端108年09月底在國內各金融機構",
+			"科目" => "",
+			"承貸行" => "",
+			"未逾期" => "",
+			"逾期未還金額" => "",
+		];
+
+		$this->assertEquals($expected, $rows[0]);
 	}
 }
