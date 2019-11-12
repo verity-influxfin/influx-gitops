@@ -63,14 +63,22 @@ class Joint_credit_lib{
 				if (preg_match("/分行/", $value)) {
 					$getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
 					$getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
+					$getLongTermLoanBankname= $this->get_long_term_loan_bankname($value,$content_data[$key + 3]);
 					if(!empty($getProportion)){
 						$get_proportion[]=$getProportion;
 					}
 					if(!empty($getBankname)){
 						$get_bankname[]=$getBankname;
 					}
+					if(!empty($getLongTermLoanBankname)){
+						$get_long_term_loan_bankname[]=$getLongTermLoanBankname;
+					}
 				}
 			}
+			$getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
+			$getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
+
+			
 			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
 			$getAllProportion=(isset($get_proportion))?$get_proportion:Null;
 			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
@@ -82,10 +90,10 @@ class Joint_credit_lib{
 					"最近十二個月有無延遲還款 : 有",
 					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
 				]
-			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion);
+			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank);
 		}
 	}
-	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion)
+	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank)
 	{
 		switch ($getCountAllBanknameWithoutSchoolLoan) {
 			case ($getCountAllBanknameWithoutSchoolLoan > 3):
@@ -97,16 +105,16 @@ class Joint_credit_lib{
 					]
 				];
 				break;
-			case ($getCountAllBanknameWithoutSchoolLoan = 3):
+			case ($getCountAllBanknameWithoutSchoolLoan == 3):
 				$result["messages"][] = [
 					"stage" => "bank_loan",
-					"status" => "failure",
+					"status" => "pending",
 					"message" => [
 						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
 					]
 				];
 				break;
-			case (($getCountAllBanknameWithoutSchoolLoan < 3)&&($getCountAllBanknameWithoutSchoolLoan >=0)):
+			case (($getCountAllBanknameWithoutSchoolLoan < 3) && ($getCountAllBanknameWithoutSchoolLoan >= 0)):
 				if (in_array(1, $getAllProportion)) {
 					$result["messages"][] = [
 						"stage" => "bank_loan",
@@ -121,21 +129,32 @@ class Joint_credit_lib{
 					foreach ($getAllProportion as $key => $value) {
 						$is_InStandard[] = ($value < 0.7) ? true : false;
 					}
-					((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) ? $result["messages"][] = [
-						"stage" => "bank_loan",
-						"status" => "success",
-						"message" => [
-							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款借款餘額比例 : $getAllProportion"
-						]
-					] : $result["messages"][] = [
-						"stage" => "bank_loan",
-						"status" => "pending",
-						"message" => [
-							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款借款餘額比例 : $getAllProportion"
-						]
-					];
+					if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
+						$result["messages"][] = [
+							"stage" => "bank_loan",
+							"status" => "success",
+							"message" => [
+								"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+								"長期放款家數 : $getCountALLLongTermLoanBank"
+							]
+						];
+
+						foreach ($getAllProportion as $key => $value) {
+							$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
+						}
+					} else {
+						$result["messages"][] = [
+							"stage" => "bank_loan",
+							"status" => "pending",
+							"message" => [
+								"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+								"長期放款家數 : $getCountALLLongTermLoanBank",
+							]
+						];
+						foreach ($getAllProportion as $key => $value) {
+							$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
+						}
+					}
 				}
 				break;
 		}
@@ -149,12 +168,20 @@ class Joint_credit_lib{
 		}
 	}
 	
+	private function get_long_term_loan_bankname($value,$subject)
+	{
+		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
+			$bankname = $value;
+			return	$bankname;
+		}
+	}
+
 	private function get_loan_proportion($contract_money,$balance_of_loans,$subject)
 	{
 		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
 			preg_match('!\d+!', $contract_money, $ContractMoney);
 			preg_match('!\d+!', $balance_of_loans, $BalanceOfLoan);
-			$proportion = round($BalanceOfLoan[0] / $ContractMoney[0],2);
+			$proportion = round($BalanceOfLoan[0] / $ContractMoney[0],3);
 			return $proportion;
 		}
 	}
