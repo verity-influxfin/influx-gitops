@@ -403,13 +403,33 @@ class Joint_credit_lib{
 		switch ($case) {
 			case 'deactivated':
 				$count_credit_cards = substr_count($content[0], "使用中");
-				$result["messages"][] = [
-					"stage" => "credit_card_debts",
-					"status" => "failure",
-					"message" => [
-						"信用卡資訊：強制停用或強制停卡", 
-						"信用卡使用中張數：{$count_credit_cards}"]
-				];
+				if ($count_credit_cards > 0) {
+					$used = explode("使用中", $content[0]);
+					$size = count($used);
+					for ($i = 0; $i < $size - 1; $i++) {
+						$amount[] = substr($used[$i], -26, 5);
+					}
+					$allowedAmount = (int) array_sum($amount);
+					$result["messages"][] = [
+						"stage" => "credit_card_debts",
+						"status" => "failure",
+						"message"  => [
+							"信用卡資訊：有",
+							"信用卡使用中張數：{$count_credit_cards}",
+							"信用卡總額度（元）：{$allowedAmount}"
+						]
+					];
+				} else {
+					$result["messages"][] = [
+						"stage" => "credit_card_debts",
+						"status" => "failure",
+						"message" => [
+							"信用卡資訊：強制停用或強制停卡",
+							"信用卡使用中張數：0",
+							"信用卡總額度（元）：0"
+						]
+					];
+				}
 				break;
 			case 'check_in_used':
 				$count_credit_cards = substr_count($content[0], "使用中");
