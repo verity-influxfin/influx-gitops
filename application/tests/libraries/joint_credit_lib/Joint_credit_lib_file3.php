@@ -109,4 +109,12 @@ class Joint_credit_lib_file3 extends TestCase
 		$expected = ["stage" => "bounced_checks", "status" => "success", "message" => "退票資訊：無"];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_lost_contacts(){
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_lost_contacts($this->text, $result);
+
+		$expected = ["stage" => "lost_contacts", "status" => "success", "message" => "拒絕往來資訊：無"];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
