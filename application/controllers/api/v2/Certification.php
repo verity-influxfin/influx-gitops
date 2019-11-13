@@ -1706,7 +1706,7 @@ class Certification extends REST_Controller {
 
 	private function mail_check($user_id,$investor){
         $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
-        if($user_certification->status!=1){
+        if(!$user_certification||$user_certification->status!=1){
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
         }
     }
