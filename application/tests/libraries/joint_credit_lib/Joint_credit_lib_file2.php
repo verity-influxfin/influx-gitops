@@ -218,4 +218,17 @@ class Joint_credit_lib_file2 extends TestCase
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_extra_messages()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_extra_messages($this->text, $result);
+
+		$expected = [
+			"stage" => "extra_messages",
+			"status" => "failure",
+			"message" => "附加訊息：有"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
