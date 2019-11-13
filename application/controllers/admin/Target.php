@@ -463,6 +463,8 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+		if($points>400){$points=400;}
+		if($points<-400){$points=-400;}
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -501,6 +503,9 @@ class Target extends MY_Admin_Controller {
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
 		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
 
+        if ($points > 400) $points = 400;
+        if ($points < -400) $points = -400;
+
 		$this->load->library('output/json_output');
 
 		$target = $this->target_model->get($targetId);
@@ -513,7 +518,12 @@ class Target extends MY_Admin_Controller {
 		}
 
 		$userId = $target->user_id;
-		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+		$credit = $this->credit_model->get_by([
+            'user_id' => $userId,
+            'product_id' => $target->product_id,
+            'sub_product_id'=> $target->sub_product_id,
+            'status' => 1
+        ]);
 
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
@@ -527,7 +537,15 @@ class Target extends MY_Admin_Controller {
 			|| $newCredits["points"] != $credit->points
 			|| $newCredits["level"] != $credit->level
 		) {
-			$this->credit_model->update($credit->id, ["status" => 0]);
+            $this->credit_model->update_by(
+                [
+                    'user_id' => $userId,
+                    'product_id' => $target->product_id,
+                    'sub_product_id'=> $target->sub_product_id,
+                    'status' => 1
+                ],
+                ['status'=> 0]
+            );
 			$this->credit_model->insert($newCredits);
 		}
 
@@ -542,9 +560,15 @@ class Target extends MY_Admin_Controller {
 				$update["remark"] = $remark;
 			}
 		}
-		$this->target_model->update($targetId, $update);
+        $rs = $this->target_model->update($targetId, $update);
+        if($rs){
+            $subloan_list   = $this->config->item('subloan_list');
+            $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
+            $this->load->library('Notification_lib');
+            $this->notification_lib->approve_target($userId,'1',$target->loan_amount,$subloan_status);
+        }
 
-		$this->json_output->setStatusCode(200)->send();
+        $this->json_output->setStatusCode(200)->send();
 	}
 
 	public function final_validations()

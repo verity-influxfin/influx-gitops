@@ -371,7 +371,7 @@
 						<h5>分數調整部分</h5>
 						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
 							<p>分數調整：(-400 ~ 400)</p>
-							<input type="text" name="score"/>
+							<input type="text" name="score" value="0"/>
 							<button class="btn btn-default" type="submit">額度試算</button>
 						</form>
 					</div>
@@ -578,7 +578,7 @@
 		}
 
 		function fillRelatedUsers() {
-            var maxNumInPage = 10;
+            var maxNumInPage = 5;
             var start = (relatedUsersIndex-1) * maxNumInPage;
             var end = relatedUsersIndex * maxNumInPage;
             if (end > relatedUsers.length) end = relatedUsers.length;
@@ -644,8 +644,10 @@
 			$("#school-department").text(user.school.department);
 			$("#graduated-at").text(user.school.graduateAt ? user.school.graduateAt : '未提供');
 
-			$("#instagram-username").text(user.instagram.username);
-			$("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
+			if(user.instagram){
+			    $("#instagram-username").text(user.instagram.username);
+			    $("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
+            }
 			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
 			$("#facebook-username").text(user.facebook.username);
 		}

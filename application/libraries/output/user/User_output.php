@@ -80,7 +80,7 @@ class User_output
 			$output["school"] = $ci->school_output->toOne();
 		}
 
-        if (isset($user->instagram)) {
+        if (isset($user->instagram->ig_id)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/instagram_output', ["data" => $user->instagram]);
 			$output["instagram"] = $ci->instagram_output->toOne();
