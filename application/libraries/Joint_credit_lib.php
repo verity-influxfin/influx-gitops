@@ -24,7 +24,7 @@ class Joint_credit_lib{
 	public function check_join_credits($text, &$result){
 		$userId = 42775;
 		$this->setCurrentTime(time());
-		if (!$this->is_id_match($userId, $text, $result)) {
+		if (!$this->is_id_match($userId, $text)) {
 			return ["status" => "pending", "messages" => ["身分證與用戶資料不符"]];
 		}
 		$this->check_bank_loan($text, $result);
@@ -61,7 +61,7 @@ class Joint_credit_lib{
 		return trim($id);
 	}
 
-	public function is_id_match($userId, $text, &$result){
+	public function is_id_match($userId, $text){
 		$user = $this->CI->user_model->get($userId);
 		$idCardNumber = $this->getIdCardNumber($text);
 		return $user && $user->id_number == $idCardNumber && strlen($idCardNumber) > 0;

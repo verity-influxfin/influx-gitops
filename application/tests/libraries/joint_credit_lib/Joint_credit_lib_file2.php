@@ -244,4 +244,24 @@ class Joint_credit_lib_file2 extends TestCase
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_is_id_match()
+	{
+		$userModel = $this->getMockBuilder('user_model')
+						  ->disableOriginalConstructor()
+						  ->getMock();
+		$user = new stdClass();
+		$user->id_number = 'R124015295';
+		$userModel->expects($this->any())
+				  ->method('get')
+				  ->will($this->returnValue($user));
+		$this->joint_credit->CI->user_model = $userModel;
+		$result = $this->joint_credit->is_id_match(1, $this->text);
+		$this->assertTrue($result);
+
+		$user->id_number = 'A225871571';
+
+		$result = $this->joint_credit->is_id_match(1, $this->text);
+		$this->assertFalse($result);
+	}
 }
