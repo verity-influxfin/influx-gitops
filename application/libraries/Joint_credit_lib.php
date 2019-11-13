@@ -956,9 +956,6 @@ class Joint_credit_lib{
 			"stage" => "extra_messages",
 			"status" => "failure",
 			"message" => "附加訊息：有",
-			"rejected_message" => [
-				"附加訊息：有"
-			]
 		];
 	}
 
@@ -974,7 +971,7 @@ class Joint_credit_lib{
 	{
 		if (preg_match("/台端為給予固定評分/", $text)) {
 			$result["messages"][] = [
-				"stage" => "get_scores",
+				"stage" => "credit_scores",
 				"status" => "pending",
 				"message" => "信用評分 : 200"
 			];
@@ -984,18 +981,18 @@ class Joint_credit_lib{
 			$scores = substr($content, 0, 3);
 			((int) $scores > 540) ?
 				$result["messages"][] = [
-					"stage" => "get_scores",
+					"stage" => "credit_scores",
 					"status" => "success",
 					"message" => "信用評分 : " . $scores
 				] : $result["messages"][] = [
-					"stage" => "get_scores",
+					"stage" => "credit_scores",
 					"status" => "pending",
 					"message" => "信用評分 : " . $scores
 				];
 
 		}else{
 			$result["messages"][] = [
-				"stage" => "get_scores",
+				"stage" => "credit_scores",
 				"status" => "pending",
 				"message" => "信用評分 : 此次暫時無法評分"
 			];
