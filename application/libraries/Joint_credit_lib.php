@@ -18,10 +18,15 @@ class Joint_credit_lib{
 	public function __construct(){
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/joint_credit_regex', [], 'regex');
+		$this->CI->load->model('user/user_model');
 	}
 
 	public function check_join_credits($text, &$result){
+		$userId = 42775;
 		$this->setCurrentTime(time());
+		if (!$this->is_id_match($userId, $text, $result)) {
+			return ["status" => "pending", "messages" => ["身分證與用戶資料不符"]];
+		}
 		$this->check_bank_loan($text, $result);
 		$this->check_overdue_and_bad_debts($text, $result);
 		$this->check_main_debts($text, $result);
@@ -45,6 +50,21 @@ class Joint_credit_lib{
 		$this->check_report_expirations($text, $result);
 		print_r($result);
 		return $result;
+	}
+
+	private function getIdCardNumber($text){
+		$matches = $this->CI->regex->findPatternInBetween($text, "身分證號：", "【銀行借款資訊】");
+		if (!$matches) {
+			return;
+		}
+		$id = $this->CI->regex->replaceEqualBreaker($matches[0]);
+		return trim($id);
+	}
+
+	public function is_id_match($userId, $text, &$result){
+		$user = $this->CI->user_model->get($userId);
+		$idCardNumber = $this->getIdCardNumber($text);
+		return $user && $user->id_number == $idCardNumber && strlen($idCardNumber) > 0;
 	}
 
 	public function check_bank_loan($text, &$result){
