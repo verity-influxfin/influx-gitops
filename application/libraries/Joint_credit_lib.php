@@ -12,7 +12,7 @@ class Joint_credit_lib{
 
 	const NO_DATA = "查無資料";
 	const DOES_OBTAIN_CASH_ADVANCE = "是否有預借現金 : ";
-	const DELAY_PAYMENT_MORE_THAN_ONE_MONTH = "超過一個月延遲繳款 : ";
+	const DELAY_PAYMENT_MORE_THAN_ONE_MONTH = "超過一個月延遲繳款：";
 	const DELAY_PAYMENT_IN_A_MONTH_EXCEEDED = "延遲未滿一個月次數：";
 
 	public function __construct(){
@@ -349,7 +349,7 @@ class Joint_credit_lib{
 				if (strpos($row["科目"], '助學貸款') !== false) {
 					if (!$this->CI->regex->getZeroOverdueAmount($row["逾期未還金額"])) {
 						$message["status"] = "failure";
-						$message["rejected_message"] = "助學貸款，逾期未還金額>0";
+						$message["rejected_message"][] = "助學貸款，逾期未還金額>0";
 					}
 				}
 				if (
@@ -686,9 +686,9 @@ class Joint_credit_lib{
 				  									   || $this->CI->regex->needFurtherInvestigationForFinishedCase($row["結案"]);
 		}
 
-		$message["message"][] = "當月信用卡使用率：" . ($scores[1] * 100) . "%";
-		$message["message"][] = "近一月信用卡使用率：" . ($scores[2] * 100) . "%";
-		$message["message"][] = "近二月信用卡使用率：" . ($scores[3] * 100) . "%";
+		$message["message"][] = "當月信用卡使用率：" . round($scores[0] * 100, 2) . "%";
+		$message["message"][] = "近一月信用卡使用率：" . round($scores[1] * 100, 2) . "%";
+		$message["message"][] = "近二月信用卡使用率：" . round($scores[2] * 100, 2) . "%";
 		$message["status"] = "success";
 		if ($needFurtherInvestigationForFinishedCase) {
 			$message["status"] = "pending";
@@ -723,7 +723,7 @@ class Joint_credit_lib{
 
 		if ($isOverdueOrBadDebits) {
 			$message["status"] = "failure";
-			$message["rejected_message"] = "債權狀態：呆帳或催收";
+			$message["rejected_message"][] = "債權狀態：呆帳或催收";
 		}
 
 		$message["message"][] = self::DOES_OBTAIN_CASH_ADVANCE . ($doesObtainCashAdvance ? "有" : "無");
@@ -812,7 +812,7 @@ class Joint_credit_lib{
 			$message["status"] = "pending";
 		}
 		if ($message["status"] == "failure") {
-			$message["rejected_message"] = "新業務之次數>10";
+			$message["rejected_message"][] = "新業務之次數>10";
 		}
 		$result["messages"][] = $message;
 	}

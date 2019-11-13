@@ -41,7 +41,14 @@ class Joint_credit_lib_file2 extends TestCase
 		$result = ["status" => "failure", "messages" => []];
 		$this->joint_credit->check_overdue_and_bad_debts($this->text, $result);
 
-		$expected = ["stage" => "bad_debts", "status" => "failure", "message" => '逾期、催收或呆帳資訊：有'];
+		$expected = [
+			"stage" => "bad_debts",
+			"status" => "failure",
+			"message" => '逾期、催收或呆帳資訊：有',
+			"rejected_message" => [
+				"逾期、催收或呆帳"
+			]
+		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
 
@@ -129,8 +136,34 @@ class Joint_credit_lib_file2 extends TestCase
 				"信用卡資訊：有",
 				"信用卡使用中張數：2",
 				"信用卡總額度（元）：40"
+			],
+			"rejected_message" => [
+				"有強制停用或強制停卡"
 			]
 		];
+
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function test_check_credit_card_accounts()
+	{
+		$result = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
+		$input = ["appliedTime" => '108/05/07', "allowedAmount" => 40];
+		$this->joint_credit->check_credit_card_accounts($this->text, $input, $result);
+
+		$expected = [
+			"stage" => "credit_card_accounts",
+			"status" => "failure",
+			"message" => [
+				"當月信用卡使用率：0%",
+				"近一月信用卡使用率：339.5%",
+				"近二月信用卡使用率：340.5%",
+				"超過一個月延遲繳款：2",
+				"是否有預借現金 : 無",
+				"延遲未滿一個月次數：0"
+			],
+		];
+
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
 }

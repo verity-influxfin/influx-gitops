@@ -133,4 +133,24 @@ class Joint_credit_lib_file3 extends TestCase
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_credit_card_accounts()
+	{
+		$result = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
+		$input = ["appliedTime" => '108/08/19', "allowedAmount" => 50];
+		$this->joint_credit->check_credit_card_accounts($this->text, $input, $result);
+
+		$expected = [
+			"stage" => "credit_card_accounts",
+			"status" => "success",
+			"message" => [
+				"當月信用卡使用率：0%",
+				"近一月信用卡使用率：-35.81%",
+				"近二月信用卡使用率：13.36%",
+				"是否有預借現金 : 無",
+				"延遲未滿一個月次數：0"
+			],
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
