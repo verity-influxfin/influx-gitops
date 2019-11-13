@@ -81,7 +81,7 @@ class S3_lib {
 	{   
 		$data_list = array();
 		$url_list = array();
-		$bucket = 'influx-mailbox';
+		$bucket = S3_BUCKET_MAILBOX;
 		try {
 			$list = $this->client_us2->listObjects(array('Bucket' => $bucket));
 		} catch (S3Exception $e) {
@@ -111,14 +111,14 @@ class S3_lib {
 		
 	}
 
-	public function public_get_filename($s3_url,$bucket=AZURE_S3_BUCKET)
+	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
 	{  
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		return $key;
 		
 	}
 
-	public function unknown_mail($s3_url,$bucket=AZURE_S3_BUCKET)
+	public function unknown_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
 	{  
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		$result= $this->client_us2->putObject(array(

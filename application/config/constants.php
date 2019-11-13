@@ -336,6 +336,8 @@ defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('FRONT_S3_BUCKET')     		OR define('FRONT_S3_BUCKET'			, getenv('ENV_FRONT_S3_BUCKET'));
 defined('S3_SELLER_PUBLIC_BUCKET')    OR define('S3_SELLER_PUBLIC_BUCKET' , getenv('ENV_S3_SELLER_PUBLIC_BUCKET'));
 defined('AZURE_S3_BUCKET')          OR define('AZURE_S3_BUCKET'         , getenv('ENV_AZURE_S3_BUCKET'));
+defined('S3_BUCKET_MAILBOX')          OR define('S3_BUCKET_MAILBOX'         , getenv('ENV_S3_BUCKET_MAILBOX'));
+
 defined('FRONT_CDN_URL')     		OR define('FRONT_CDN_URL'			, 'https://d3imllwf4as09k.cloudfront.net/');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
