@@ -109,6 +109,9 @@ class Joint_credit_lib{
 				"message" => [
 					"最近十二個月有無延遲還款 : 有",
 					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+				],
+				"rejected_message" => [
+					"最近十二個月有無延遲還款 : 有"
 				]
 			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank);
 		}
@@ -122,6 +125,9 @@ class Joint_credit_lib{
 					"status" => "failure",
 					"message" => [
 						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+					],
+					"rejected_message" => [
+						"銀行借款家數超過3家"
 					]
 				];
 				break;
@@ -142,6 +148,9 @@ class Joint_credit_lib{
 						"message" => [
 							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
 							"長期放款借款餘額比例 : 1"
+						],
+						"rejected_message" => [
+							"長期放款的借款餘額等於訂約金額"
 						]
 					];
 					return;
@@ -208,7 +217,7 @@ class Joint_credit_lib{
 
 	public function check_overdue_and_bad_debts($text, &$result)
 	{
-		$content=$this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
+		$content = $this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
 		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bad_debts",
 			"status" => "success",
@@ -216,7 +225,10 @@ class Joint_credit_lib{
 		] : [
 			"stage" => "bad_debts",
 			"status" => "failure",
-			"message" => "逾期、催收或呆帳資訊：有"
+			"message" => "逾期、催收或呆帳資訊：有",
+			"rejected_message" => [
+				"逾期、催收或呆帳"
+			]
 		];
 	}
 
@@ -229,7 +241,10 @@ class Joint_credit_lib{
 		] : [
 			"stage" => "main_debts",
 			"status" => "failure",
-			"message" => "主債務債權再轉讓及清償資訊：有"
+			"message" => "主債務債權再轉讓及清償資訊：有",
+			"rejected_message" => [
+				"逾期、催收或呆帳"
+			]
 		];
 	}
 
@@ -363,7 +378,7 @@ class Joint_credit_lib{
 			"message" => "共同債務/從債務/其他債務轉讓資訊：無"
 		] : [
 			"stage" => "transfer_debts",
-			"status" => "failure",
+			"status" => "pending",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：有"
 		];
 	}
@@ -376,7 +391,7 @@ class Joint_credit_lib{
 			"message" => "退票資訊：無"
 		] : [
 			"stage" => "bounced_checks",
-			"status" => "failure",
+			"status" => "pending",
 			"message" => "退票資訊：有"
 		];
 	}
@@ -389,7 +404,7 @@ class Joint_credit_lib{
 			"message" => "拒絕往來資訊：無"
 		] : [
 			"stage" => "lost_contacts",
-			"status" => "failure",
+			"status" => "pending",
 			"message" => "拒絕往來資訊：有"
 		];
 	}
@@ -438,6 +453,9 @@ class Joint_credit_lib{
 							"信用卡資訊：有",
 							"信用卡使用中張數：{$count_credit_cards}",
 							"信用卡總額度（元）：{$allowedAmount}"
+						],
+						"rejected_message" => [
+							"有強制停用或強制停卡"
 						]
 					];
 				} else {
@@ -721,7 +739,7 @@ class Joint_credit_lib{
 			"message" => "信用卡債權再轉讓及清償資訊：無"
 		] : [
 			"stage" => "credit_card_debts",
-			"status" => "failure",
+			"status" => "pending",
 			"message"=> "信用卡債權再轉讓及清償資訊：有"
 		];
 
@@ -937,7 +955,10 @@ class Joint_credit_lib{
 		] : [
 			"stage" => "extra_messages",
 			"status" => "failure",
-			"message"=> "附加訊息：有"
+			"message" => "附加訊息：有",
+			"rejected_message" => [
+				"附加訊息：有"
+			]
 		];
 	}
 
