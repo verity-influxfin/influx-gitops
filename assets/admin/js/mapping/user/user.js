@@ -12,6 +12,7 @@ class User
 		this.setContact(user)
 		this.setInstagram(user)
 		this.setFacebook(user)
+		this.setMarriage(user)
 	}
 
 	setIdCard(user) {
@@ -53,6 +54,13 @@ class User
 		this.facebook.username = user.facebook.username;
 	}
 
+	setMarriage(user) {
+		if (!user.marriage) return;
+		this.marriage = {};
+		this.marriage.name = user.marriage.name;
+		this.marriage.phone = user.marriage.phone;
+	}
+
 	getFbProfilePicture() {
 		if (!this.facebook) return;
 		return 'https://graph.facebook.com/' + this.facebook.id + '/picture?type=large';
@@ -60,5 +68,9 @@ class User
 
 	getRegisteredAtAsDate() {
 		return new DateTime(this.registeredAt).values();
+	}
+
+	isMarried() {
+		return this.marriage && this.marriage.name;
 	}
 }

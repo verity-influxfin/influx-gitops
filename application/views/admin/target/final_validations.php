@@ -308,9 +308,20 @@
 									</tr>
 									</thead>
 									<tbody>
+										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+										</tr>
 									</tbody>
 								</table>
-								<button id="load-more">載入更多</button>
+								<button id="load-more" class="btn btn-default">載入更多</button>
 							</div>
 						</div>
 					</div>
@@ -326,7 +337,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="targets" class="table table-bordered table-hover table-striped">
+								<table id="targets" class="table table-bordered">
 									<thead>
 									<tr class="odd list">
 										<th width="10%">案號</th>
@@ -358,54 +369,58 @@
 				<div class="panel-body">
 					<div class="col-sm-4">
 						<h5>分數調整部分</h5>
-						<form>
+						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
 							<p>分數調整：(-400 ~ 400)</p>
 							<input type="text" name="score"/>
-							<p>審批內容：</p>
-							<input type="text" name="description"/></br></br>
-							<button>額度試算</button>
+							<button class="btn btn-default" type="submit">額度試算</button>
 						</form>
 					</div>
 					<div class="col-sm-8">
 						<h5>調整後額度試算部分</h5>
 						<div class="table-responsive">
-							<table class="table table-bordered table-hover table-striped">
+							<table class="table table-bordered">
 								<tr>
-									<td><p class="form-control-static">產品</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>產品</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-product-name"></p>
 									</td>
-									<td><p class="form-control-static">信用等級</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用等級</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-level"></p>
 									</td>
 								</tr>
 								<tr>
-									<td><p class="form-control-static">信用評分</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用評分</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-points"></p>
 									</td>
-									<td><p class="form-control-static">信用額度</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>信用額度</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-amount"></p>
 									</td>
 								</tr>
 								<tr>
-									<td><p class="form-control-static">有效時間</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>有效時間</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-created-at"></p>
 									</td>
-									<td><p class="form-control-static">核准時間</p></td>
-									<td>
-										<p class="form-control-static"></p>
+									<td class="table-field center-text"><p>核准時間</p></td>
+									<td class="center-text table-reevaluation">
+										<p id="new-credit-expired-at"></p>
 									</td>
 								</tr>
 							</table>
 						</div>
 					</div>
 					<br>
-					<div class="col-lg-12 text-center">
-						<button>送出</button>
+					<div class="center-text">
+						<form id="evaluation-complete" method="POST" action="/admin/Target/evaluation_approval">
+							<div class="col-lg-12 text-center">
+								<p style="display:inline">審批內容：</p>
+								<input type="text" name="description"/>
+								<button class="btn btn-default" type="submit">送出</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -422,30 +437,43 @@
         var url = new URL(urlString);
         var caseId = url.searchParams.get("id");
         var userId = url.searchParams.get("user_id");
-        // var caseId = 6543;
-        // var userId = 3475;
+        var modifiedPoints = null;
+        var targetInfoAjaxLock = false;
+        var relatedUserAjaxLock = false;
 
+        changeReevaluationLoading(false);
+        fillFakeVerifications("borrowing");
+        fillFakeVerifications("investing");
+        fillFakeRelatedUsers();
+        fillFakeTargets();
         $("#load-more").hide();
         $.ajax({
             type: "GET",
             url: "/admin/Target/final_validations?id=" + caseId,
             beforeSend: function () {
+                targetInfoAjaxLock = true;
             },
             complete: function () {
+                targetInfoAjaxLock = false;
             },
             success: function (response) {
                 hideLoadingAnimation();
-
-                if (response.status.code != 200) {
+                fillFakeVerifications("borrowing", false);
+                fillFakeVerifications("investing", false);
+                fillFakeTargets(false);
+                if (response.status.code != 200 && response.status.code != 404) {
                     return;
-                }
+                } else if (response.status.code == 404) {
+                    alert('資料不存在');
+                    window.close();
+                    return;
+				}
 
                 let currentTargetJson = response.response.target;
                 target = new Target(currentTargetJson);
                 fillCurrentTargetInfo(target)
 
 				let userJson = response.response.user;
-                console.log(userJson);
                 user = new User(userJson);
                 fillUserInfo(user)
 
@@ -492,10 +520,13 @@
             type: "GET",
             url: "/admin/User/related_users" + "?id=" + userId,
             beforeSend: function () {
+                relatedUserAjaxLock = true;
             },
             complete: function () {
+                relatedUserAjaxLock = false;
             },
             success: function (response) {
+                fillFakeRelatedUsers(false);
                 if (response.status.code != 200) {
                     return;
                 }
@@ -518,8 +549,36 @@
             $(".table-twenty p").css('background', 'white');
 		}
 
+		function changeReevaluationLoading(display = true) {
+			if (!display) {
+				$(".table-reevaluation p").css('background', 'white');
+ 				$(".table-reevaluation p").css('animation-play-state', 'paused');
+			} else {
+				$(".table-reevaluation p").css('animation-play-state', 'running');
+				$(".table-reevaluation p").css('background', 'linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%)');
+				$(".table-reevaluation p").css('animation-duration', '1.25s');
+				$(".table-reevaluation p").css('background-size', '800px 104px');
+			}
+		}
+
+		function fillFakeRelatedUsers(show = true) {
+            if (!show) {
+                $("#related-users tr:gt(0)").remove();
+                return;
+			}
+            pTag = '<p class="form-control-static"></p>'
+
+            for (var i = 0; i < 3; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                ).appendTo("#related-users");
+			}
+		}
+
 		function fillRelatedUsers() {
-            var maxNumInPage = 20;
+            var maxNumInPage = 10;
             var start = (relatedUsersIndex-1) * maxNumInPage;
             var end = relatedUsersIndex * maxNumInPage;
             if (end > relatedUsers.length) end = relatedUsers.length;
@@ -578,6 +637,8 @@
             $("#id-card").text(user.idCard.id);
 			$("#id-card-issued-at").text(user.idCard.issuedAt);
 
+			$("#marriage").text(user.isMarried() ? "已婚" : "");
+
 			$("#school").text(user.school.name);
 			$("#school-system").text(user.school.system + " / " + user.school.department);
 			$("#school-department").text(user.school.department);
@@ -589,13 +650,44 @@
 			$("#facebook-username").text(user.facebook.username);
 		}
 
-		function fillCreditInfo(credit) {
-            $("#product-name").text(credit.product.name);
-			$("#credit-level").text(credit.level);
-			$("#credit-amount").text(credit.amount);
-			$("#credit-points").text(credit.points);
-			$("#credit-created-at").text(credit.getCreatedAtAsDate());
-			$("#credit-expired-at").text(credit.getExpiredAtAsDate());
+		function clearCreditInfo(isReEvaluated = false) {
+			var prefix = '';
+			if (isReEvaluated) prefix = "new-";
+				$("#" + prefix + "product-name").text('');
+				$("#" + prefix + "credit-level").text('');
+				$("#" + prefix + "credit-amount").text('');
+				$("#" + prefix + "credit-points").text('');
+				$("#" + prefix + "credit-created-at").text('');
+				$("#" + prefix + "credit-expired-at").text('');
+		}
+
+		function fillCreditInfo(credit, isReEvaluated = false) {
+			var prefix = '';
+			if (isReEvaluated) prefix = "new-";
+			$("#" + prefix + "product-name").text(credit.product.name);
+			$("#" + prefix + "credit-level").text(credit.level);
+			$("#" + prefix + "credit-amount").text(credit.amount);
+			$("#" + prefix + "credit-points").text(credit.points);
+			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
+			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+        }
+
+        function fillFakeVerifications(type, show = true) {
+            var tableId = "#" + type + "-verifications";
+            for (var i = 0; i < 3; i++) {
+                if (!show) {
+                    $(tableId + " tr:gt(0)").remove();
+                    return;
+                }
+                pTag = '<p class="form-control-static"></p>';
+
+                for (var i = 0; i < 3; i++) {
+                    $("<tr>").append(
+                        $('<td class="table-field center-text">').append(pTag),
+                        $('<td class="fake-fields center-text">').append(pTag),
+                    ).appendTo(tableId);
+                }
+			}
 		}
 
 		function fillInvestingVerifications(bankAccounts, verifications) {
@@ -650,10 +742,12 @@
             if (verification.id == 3) {
                 if (verification.isPending() || verification.requireHumanReview()) {
                     button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>';
-				} else if (verification.success()) {
+				} else if (verification.success() && !verification.expired) {
 					button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>';
-				} else if (verification.failure()) {
-					button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>';
+				} else if (verification.success() && verification.expired) {
+                    button = '<button type="button" class="btn btn-danger circle"><i class="fa fa-check"></i></button>' + getVerificationExpiredTimeText(verification);
+                } else if (verification.failure()) {
+					button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>' + getVerificationExpiredTimeText(verification);
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
@@ -661,10 +755,12 @@
             } else {
                 if (verification.isPending() || verification.requireHumanReview()) {
                     button = '<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button>';
-				} else if (verification.success()) {
+				} else if (verification.success() && !verification.expired) {
                     button = '<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>';
-				} else if (verification.failure()) {
-                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>';
+				} else if (verification.success() && verification.expired) {
+                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-check"></i></button>' + getVerificationExpiredTimeText(verification);
+                } else if (verification.failure()) {
+                    button = '<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>' + getVerificationExpiredTimeText(verification);
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
@@ -674,26 +770,131 @@
             return '<a href="' + url + '">' + button + '</a>';
 		}
 
+		function getVerificationExpiredTimeText(verification) {
+            if (verification.expiredAt > 0) {
+                return '(' + verification.getExpiredAtHumanReadable() + ')';
+			}
+            return '';
+		}
+
+		function fillFakeTargets(show = true) {
+            if (!show) {
+                $("#targets tr:gt(0)").remove();
+                return;
+            }
+
+            pTag = '<p class="form-control-static"></p>';
+            for (var i = 0; i < 3; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag)
+                ).appendTo("#targets");
+			}
+		}
+
 		function fillTargets(targets) {
             for (var i = 0; i < targets.length; i++) {
                 let target = targets[i];
+                var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
                 $("<tr>").append(
-                    getCenterTextCell(target.number),
-                    getCenterTextCell(target.product.name),
-                    getCenterTextCell(target.amount.approved),
-                    getCenterTextCell(target.amount.remaining),
-                    getCenterTextCell(target.amount.principal),
-                    getCenterTextCell(target.status),
-                    getCenterTextCell(target.expireAt),
+                    getCenterTextCell(target.number, backgroundColor),
+                    getCenterTextCell(target.product.name, backgroundColor),
+                    getCenterTextCell(target.amount.approved, backgroundColor),
+                    getCenterTextCell(target.amount.remaining, backgroundColor),
+                    getCenterTextCell(target.amount.principal, backgroundColor),
+                    getCenterTextCell(target.status.text, backgroundColor),
+                    getCenterTextCell(target.expireAt, backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
-                    getCenterTextCell(target.reason)
+                    getCenterTextCell(target.reason, backgroundColor)
                 ).appendTo("#targets");
             }
 		}
 
-		function getCenterTextCell(value) {
-            return '<td class="center-text">' + value + '</td>';
+		function getCenterTextCell(value, additionalCssClass = "") {
+            return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
 		}
+
+        $("#credit-evaluation").submit(function(e) {
+            e.preventDefault();
+
+            if (relatedUserAjaxLock || targetInfoAjaxLock) {
+                alert("請等待資料載入完成後，再行試算。");
+                return;
+			}
+
+            var form = $(this);
+            var url = form.attr('action');
+            var points = form.find('input[name="score"]').val();
+            var remark = form.find('input[name="description"]').val();
+            $.ajax({
+                type: "GET",
+                url: url + "?id=" + caseId + "&points=" + points,
+                beforeSend: function () {
+                    changeReevaluationLoading(true);
+                    clearCreditInfo(true);
+                },
+                complete: function () {
+                    changeReevaluationLoading(false);
+                },
+                success: function (response) {
+                    if (response.status.code != 200) {
+                        return;
+                    }
+
+                    let creditJson = response.response.credits;
+                    credit = new Credit(creditJson);
+                    fillCreditInfo(credit, true);
+                    modifiedPoints = points;
+                }
+            });
+        });
+
+        $("#evaluation-complete").submit(function(e) {
+            e.preventDefault();
+
+            if (modifiedPoints === null) {
+                alert('請先試算過後，再行送出。');
+				return;
+            }
+
+            var isConfirmed = confirm("確認是否要通過審核？");
+            if (!isConfirmed){
+                return false;
+            }
+
+            var form = $(this);
+            var url = form.attr('action');
+            var description = form.find('input[name="description"]').val();
+
+			var data = {
+			    'id' : caseId,
+				'points' : modifiedPoints,
+				'reason' : description
+			}
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data, // serializes the form's elements.
+                success: function(response) {
+                    if (response.status.code != 200) {
+                        alert('審核失敗，請重整頁面後，再試一次。');
+                        return;
+                    }
+					alert("審核成功，點選OK關閉頁面。");
+                    window.close();
+                },
+                error: function() {
+                    alert('審核失敗，請重整頁面後，再試一次。');
+                }
+            });
+		});
     });
 </script>
 <style>
@@ -716,6 +917,10 @@
 		height: 200px;
 	}
 
+	.table-reevaluation {
+		width: 10%;
+	}
+
 	.center-text {
 		text-align: center;
 	}
@@ -729,7 +934,7 @@
 		}
 	}
 
-	.table-ten p, .table-twenty p {
+	.table-ten p, .table-twenty p, .table-reevaluation p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;
 		animation-iteration-count: infinite;
@@ -752,6 +957,19 @@
 		background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
 		background-size: 800px 104px;
 		height: 200px;
+		position: relative;
+	}
+
+	.fake-fields p {
+		animation-duration: 1.25s;
+		animation-fill-mode: forwards;
+		animation-iteration-count: infinite;
+		animation-name: placeHolderShimmer;
+		animation-timing-function: linear;
+		background: darkgray;
+		background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+		background-size: 800px 104px;
+		height: 30px;
 		position: relative;
 	}
 </style>

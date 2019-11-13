@@ -4,7 +4,7 @@ class DateTime
 	constructor(timestamp) {
 		this.date = new Date(timestamp * 1000);
 		this.years = this.date.getFullYear();
-		this.months = this.date.getMonth();
+		this.months = this.date.getMonth() + 1;
 		this.days = this.date.getDate();
 		this.hours = this.date.getHours();
 		this.minutes = this.date.getMinutes();

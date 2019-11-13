@@ -6,6 +6,7 @@ $config['admin_menu'] = [
 	'Target' 			=> [
 		'parent_name'				      => '借款管理',
 		'index'						      => '全部列表',
+		'waiting_evaluation'		      => '待二審',
 		'waiting_signing'			      => '待簽約',
 		'waiting_verify'			      => '待審批',
 		'waiting_bidding'			      => '已上架',

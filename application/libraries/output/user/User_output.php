@@ -23,6 +23,7 @@ class User_output
         if (!$this->user) {
             return [];
         }
+
         return $this->map($this->user, $withSensitiveInfo);
     }
 
@@ -65,21 +66,27 @@ class User_output
 			if ($user->profile) {
 				$output["profile_image"] = $user->profile->id_card_person;
 			}
+			if ($user->profile && $user->profile->emergency_relationship && $user->profile->emergency_relationship == "配偶") {
+				$output["marriage"] = [
+					'name' => $user->profile->emergency_name,
+					'phone' => $user->profile->emergency_phone,
+				];
+			}
 		}
 
-        if ($user->school) {
+        if (isset($user->school)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/school_output', ["data" => $user->school]);
 			$output["school"] = $ci->school_output->toOne();
 		}
 
-        if ($user->instagram) {
+        if (isset($user->instagram)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/instagram_output', ["data" => $user->instagram]);
 			$output["instagram"] = $ci->instagram_output->toOne();
 		}
 
-        if ($user->facebook) {
+        if (isset($user->facebook)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/facebook_output', ["data" => $user->facebook]);
 			$output["facebook"] = $ci->facebook_output->toOne();

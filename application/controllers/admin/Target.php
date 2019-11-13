@@ -454,14 +454,115 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+	public function credits()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		if (!$this->input->is_ajax_request()) {
+			alert('ERROR, 只接受Ajax', admin_url('user/blocked_users'));
+		}
+
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
+		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+
+		$this->load->library('output/json_output');
+		$target = $this->target_model->get($targetId);
+
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+
+		$this->load->library('credit_lib');
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+		$credit->amount = $newCredits["amount"];
+		$credit->points = $newCredits["points"];
+		$credit->level = $newCredits["level"];
+		$credit->expire_time = $newCredits["expire_time"];
+		$this->load->library('output/loan/credit_output', ["data" => $credit]);
+
+		$response = [
+			"credits" => $this->credit_output->toOne(),
+		];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+	public function evaluation_approval()
+	{
+		$post = $this->input->post(NULL, TRUE);
+
+		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
+		$points = isset($post["points"]) ? intval($post["points"]) : 0;
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
+
+		$this->load->library('output/json_output');
+
+		$target = $this->target_model->get($targetId);
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		if ($target->status !=0 && $target->sub_status != 9) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$this->load->library('credit_lib');
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+
+		if (
+			$newCredits["amount"] != $credit->amount
+			|| $newCredits["points"] != $credit->points
+			|| $newCredits["level"] != $credit->level
+		) {
+			$this->credit_model->update($credit->id, ["status" => 0]);
+			$this->credit_model->insert($newCredits);
+		}
+
+		$update = [
+			"status" => 1,
+			"sub_status" => 0,
+		];
+		if ($remark) {
+			if ($target->remark) {
+				$update["remark"] = $target->remark . "," . $remark;
+			} else {
+				$update["remark"] = $remark;
+			}
+		}
+		$this->target_model->update($targetId, $update);
+
+		$this->json_output->setStatusCode(200)->send();
+	}
+
 	public function final_validations()
 	{
-		$get 		= $this->input->get(NULL, TRUE);
+		$get = $this->input->get(NULL, TRUE);
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 
 		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
 			$target = $this->target_model->get($targetId);
+			if (!$target || $target->id <= 0) {
+				$this->json_output->setStatusCode(404)->send();
+			}
+			if ($target->status != 0 && $target->sub_status != 9) {
+				$this->json_output->setStatusCode(404)->send();
+			}
 			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
 
 			$userId = $target->user_id;
@@ -469,7 +570,6 @@ class Target extends MY_Admin_Controller {
 
 			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
 			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
-			$this->load->library('output/json_output');
 
 			$this->load->model('user/user_certification_model');
 			$schoolCertificationDetail = $this->user_certification_model->get_by([
@@ -564,6 +664,50 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title', $this->menu);
 		$this->load->view('admin/target/final_validations');
+		$this->load->view('admin/_footer');
+	}
+
+	public function waiting_evaluation()
+	{
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
+			$where = ["status" => 0, "sub_status" => 9];
+			$targets = $this->target_model->get_many_by($where);
+			if (!$targets) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$userIds = [];
+			$userIndexes = [];
+			$index = 0;
+			foreach ($targets as $target) {
+				$userIds[] = $target->user_id;
+				$userIndexes[$target->user_id] = $index++;
+			}
+
+			$users = $this->user_model->get_many_by(['id' => $userIds]);
+
+			$numTargets = count($targets);
+			$userList = array_fill(0, $numTargets, null);
+			foreach ($users as $user) {
+				$index = $userIndexes[$user->id];
+				$userList[$index] = $user;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+			$this->load->library('output/user/user_output', ["data" => $userList]);
+
+			$response = [
+				"users" => $this->user_output->toMany(false),
+				"targets" => $this->target_output->toMany(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/target/waiting_evaluation');
 		$this->load->view('admin/_footer');
 	}
 	

@@ -5,6 +5,7 @@ class Target_output
 	protected $target;
 	protected $targets;
 
+	protected $repaymentMapping;
 	protected $productMapping;
 	protected $statusMapping;
 
@@ -22,6 +23,7 @@ class Target_output
 
 		$this->loadProductMapping();
 		$this->loadTargetStatusMapping();
+		$this->loadRepaymentMapping();
 	}
 
 	public function toOne()
@@ -58,10 +60,22 @@ class Target_output
 			'requested_amount' => $target->amount,
 			'approved_amount' => isset($target->credit) ? $target->credit->amount : null,
 			'available_amount' => $target->loan_amount,
-			'status' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
+			'credit' => $target->credit_level,
+			'interests' => $target->interest_rate,
+			'instalment' => $target->instalment,
+			'repayment' => [
+				'id' => $target->repayment,
+				'text' => isset($this->repaymentMapping[$target->repayment]) ? $this->repaymentMapping[$target->repayment] : '',
+			],
+			'status' => [
+				'id' => $target->status,
+				'text' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
+			],
+			'is_delay' => $target->delay == 1,
 			'reason' => $target->reason,
 			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
+			'loan_at' => $target->loan_date,
 		];
 
 		if (isset($target->amortization)) {
@@ -77,23 +91,21 @@ class Target_output
 
 	public function loadTargetStatusMapping()
 	{
-		$this->statusMapping = [
-			0 => 'waiting_approval',
-			1 => 'waiting_signing',
-			2 => 'waiting_verify',
-			3 => 'waiting_loan',
-			4 => 'waiting_release',
-			5 => 'returning',
-			8 => 'cancelled',
-			9 => 'failure',
-			10 => 'finished',
-			21 => 'waiting_quotes',
-		];
+		$ci =& get_instance();
+		$ci->load->model('loan/target_model');
+
+		$this->statusMapping = $ci->target_model->status_list;
 	}
 
 	public function loadProductMapping()
 	{
 		$ci =& get_instance();
 		$this->productMapping = $ci->config->item('product_list');
+	}
+
+	public function loadRepaymentMapping()
+	{
+		$ci =& get_instance();
+		$this->repaymentMapping = $ci->config->item('repayment_type');
 	}
 }
