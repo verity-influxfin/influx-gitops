@@ -95,7 +95,7 @@ class Notification extends REST_Controller {
 		$user_id			= $this->user_info->id;
 		$investor			= $this->user_info->investor;
 		$data				= [];
-		$notification_list 	= $this->user_notification_model->order_by('created_at','desc')->get_many_by([
+		$notification_list 	= $this->user_notification_model->limit(150)->order_by('created_at','desc')->get_many_by([
 			'user_id'		=> $user_id,
 			'status <>'		=> 0,
 			'investor'		=> [$investor,2]

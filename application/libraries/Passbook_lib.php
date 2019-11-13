@@ -87,7 +87,7 @@ class Passbook_lib{
 	public function get_passbook_list($virtual_account=''){
 		$list = [];
 		if($virtual_account){
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->limit(150)->order_by('tx_datetime,created_at','asc')->get_many_by([
 				'virtual_account' => $virtual_account
 			]);
 			if($virtual_passbook){
