@@ -314,6 +314,7 @@ class Joint_credit_lib{
 				if (strpos($row["科目"], '助學貸款') !== false) {
 					if (!$this->CI->regex->getZeroOverdueAmount($row["逾期未還金額"])) {
 						$message["status"] = "failure";
+						$message["rejected_message"] = "助學貸款，逾期未還金額>0";
 					}
 				}
 				if (
@@ -558,6 +559,33 @@ class Joint_credit_lib{
 		return $rows;
 	}
 
+	private function aggregateScores($scores){
+		if (!$scores) {
+			return 0;
+		}
+
+		$sum = 0;
+		foreach ($scores as $timeDiff => $score) {
+			if ($timeDiff > 6) {
+				continue;
+			}
+			$sum += $score;
+		}
+
+		$numScores = count($scores);
+		return floatval($sum/$numScores);
+	}
+
+	private function cashAdvanceWithDelayInThreshold($cashAdvances, $delays){
+		$cashAdvanceWithDelayInThreshold = true;
+		for ($i = 0; $i < 12; $i++) {
+			if ($cashAdvances[$i] && $delays[$i] > 1) {
+				$cashAdvanceWithDelayInThreshold = false;
+			}
+		}
+		return $cashAdvanceWithDelayInThreshold;
+	}
+
 	public function check_credit_card_accounts($text, $input, &$result){
 		$message = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
 
@@ -582,6 +610,8 @@ class Joint_credit_lib{
 		$rows = $this->format_credit_card_account_input($creditCardAccounts);
 
 		$scores = array_fill(0, 12, 0);
+		$delays = array_fill(0, 12, 0);
+		$cashAdvances = array_fill(0, 12, false);
 		$numbersOfDelayInAMonth = 0;
 		$numbersOfDelayMoreThanAMonth = 0;
 		$doesObtainCashAdvance = false;
@@ -607,8 +637,10 @@ class Joint_credit_lib{
 				$numbersOfDelayMoreThanAMonth++;
 			} elseif ($delay == 1) {
 				$numbersOfDelayInAMonth++;
+				$delays[$timeDiffFromAppliedAt]++;
 			}
 
+			$cashAdvances[$timeDiffFromAppliedAt] = $row["預借現金"] != "無";
 			$doesObtainCashAdvance = $doesObtainCashAdvance || $row["預借現金"] != "無";
 			$isDelayPayAndCashAdvance = $isDelayPayAndCashAdvance || $row["預借現金"] != "無" && $delay == 1;
 			$isOverdueOrBadDebits = $isOverdueOrBadDebits || $this->CI->regex->isOverdueOrBadDebits($row["債權狀態"]);
@@ -619,9 +651,7 @@ class Joint_credit_lib{
 		$messages[] = "當月信用卡使用率：" . ($scores[1] * 100) . "%";
 		$messages[] = "近一月信用卡使用率：" . ($scores[2] * 100) . "%";
 		$messages[] = "近二月信用卡使用率：" . ($scores[3] * 100) . "%";
-		if (!$doesObtainCashAdvance) {
-			$message["status"] = "success";
-		}
+		$message["status"] = "success";
 		if ($needFurtherInvestigationForFinishedCase) {
 			$message["status"] = "pending";
 		}
@@ -629,6 +659,23 @@ class Joint_credit_lib{
 			$message["status"] = "pending";
 		} elseif ($numbersOfDelayInAMonth > 2) {
 			$message["status"] = "failure";
+			$message["rejected_message"][] = "延遲紀錄超過3次";
+		}
+
+		if ($doesObtainCashAdvance) {
+			$averageScores = $this->aggregateScores($scores);
+			$cashAdvanceWithDelayInThreshold = $this->cashAdvanceWithDelayInThreshold($cashAdvances, $delays);
+			if ($averageScores < 70 && $cashAdvanceWithDelayInThreshold) {
+				$message["status"] = "pending";
+			} else {
+				$message["status"] = "failure";
+				if ($averageScores > 70) {
+					$message["rejected_message"][] = "有預借現金且半年信用卡使用率超過70%";
+				}
+				if (!$cashAdvanceWithDelayInThreshold) {
+					$message["rejected_message"][] = "預借現金該月有延遲紀錄";
+				}
+			}
 		}
 
 		if ($numbersOfDelayMoreThanAMonth > 0) {
@@ -638,6 +685,7 @@ class Joint_credit_lib{
 
 		if ($isOverdueOrBadDebits) {
 			$message["status"] = "failure";
+			$message["rejected_message"] = "債權狀態：呆帳或催收";
 		}
 
 		$message["message"][] = self::DOES_OBTAIN_CASH_ADVANCE . ($doesObtainCashAdvance ? "有" : "無");
@@ -724,6 +772,9 @@ class Joint_credit_lib{
 		}
 		if ($record["patterns"] > 3 && $record["patterns"] <= 10) {
 			$message["status"] = "pending";
+		}
+		if ($message["status"] == "failure") {
+			$message["rejected_message"] = "新業務之次數>10";
 		}
 		$result["messages"][] = $message;
 	}
