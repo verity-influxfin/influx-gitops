@@ -901,7 +901,7 @@ class Joint_credit_lib{
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
 			$result["messages"] [] = [
-				"stage" => "browsed_hits",
+				"stage" => "browsed_hits_by_itself",
 				"status" => "success",
 				"message" => self::BROWSED_HITS_BY_ITSELF . '0'
 			];
@@ -935,7 +935,7 @@ class Joint_credit_lib{
 			}
 		}
 		$message = [
-			"stage" => "browsed_hits",
+			"stage" => "browsed_hits_by_itself",
 			"status" => "pending",
 			"message" => self::BROWSED_HITS_BY_ITSELF . $record["rows"]
 		];

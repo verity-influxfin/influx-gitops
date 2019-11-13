@@ -166,4 +166,43 @@ class Joint_credit_lib_file3 extends TestCase
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_browsed_hits()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_browsed_hits($this->text, $result);
+
+		$expected = [
+			"stage" => "browsed_hits",
+			"status" => "pending",
+			"message" => "被查詢次數：6"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function test_check_browsed_hits_by_electrical_pay()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_browsed_hits_by_electrical_pay($this->text, $result);
+
+		$expected = [
+			"stage" => "browsed_hits_by_electrical_pay",
+			"status" => "success",
+			"message" => "被電子支付或電子票證發行機構查詢紀錄：0"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
+	public function test_check_browsed_hits_by_itself()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_browsed_hits_by_itself($this->text, $result);
+
+		$expected = [
+			"stage" => "browsed_hits_by_itself",
+			"status" => "success",
+			"message" => "當事人查詢紀錄：0"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
