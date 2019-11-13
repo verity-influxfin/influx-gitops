@@ -648,9 +648,9 @@ class Joint_credit_lib{
 				  									   || $this->CI->regex->needFurtherInvestigationForFinishedCase($row["結案"]);
 		}
 
-		$messages[] = "當月信用卡使用率：" . ($scores[1] * 100) . "%";
-		$messages[] = "近一月信用卡使用率：" . ($scores[2] * 100) . "%";
-		$messages[] = "近二月信用卡使用率：" . ($scores[3] * 100) . "%";
+		$message["message"][] = "當月信用卡使用率：" . ($scores[1] * 100) . "%";
+		$message["message"][] = "近一月信用卡使用率：" . ($scores[2] * 100) . "%";
+		$message["message"][] = "近二月信用卡使用率：" . ($scores[3] * 100) . "%";
 		$message["status"] = "success";
 		if ($needFurtherInvestigationForFinishedCase) {
 			$message["status"] = "pending";
