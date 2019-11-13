@@ -166,4 +166,17 @@ class Joint_credit_lib_file2 extends TestCase
 
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_credit_card_debts()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_credit_card_debts($this->text, $result);
+
+		$expected = [
+			"stage" => "credit_card_debts",
+			"status" => "success",
+			"message" => "信用卡債權再轉讓及清償資訊：無"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
