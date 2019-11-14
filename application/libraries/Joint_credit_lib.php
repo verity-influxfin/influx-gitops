@@ -100,7 +100,7 @@ class Joint_credit_lib{
 
 			
 			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
-			$getAllProportion=(isset($get_proportion))?$get_proportion:Null;
+			$getAllProportion=(isset($get_proportion))?$get_proportion:0;
 			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
 			$keyword=$this->CI->regex->findPatternInBetween($text, '有無延遲還款', '【逾期、催收或呆帳資訊】');
 			(preg_match("/有/", $keyword[0]))?$result["messages"][] = [
