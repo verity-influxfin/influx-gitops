@@ -473,20 +473,21 @@ class Target extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(404)->send();
 		}
 
-		$userId = $target->user_id;
-		$credit = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
-
 		$this->load->library('credit_lib');
+
+		$userId = $target->user_id;
+		$credit = $this->credit_lib->get_credit($target->user_id, $target->product_id, $target->sub_product_id);
+		$credit["product_id"] = $target->product_id;
 
 		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
 
 		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
-		$credit->amount = $newCredits["amount"];
-		$credit->points = $newCredits["points"];
-		$credit->level = $newCredits["level"];
-		$credit->expire_time = $newCredits["expire_time"];
+		$credit["amount"] = $newCredits["amount"];
+		$credit["points"] = $newCredits["points"];
+		$credit["level"] = $newCredits["level"];
+		$credit["expire_time"] = $newCredits["expire_time"];
 		$this->load->library('output/loan/credit_output', ["data" => $credit]);
 
 		$response = [
@@ -593,7 +594,9 @@ class Target extends MY_Admin_Controller {
 			$user = $this->user_model->get($userId);
 
 			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
-			$credits = $this->credit_model->get_by(['user_id' => $userId, 'status' => 1]);
+			$this->load->library('credit_lib');
+			$credits = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+			$credits["product_id"] = $target->product_id;
 
 			$this->load->model('user/user_certification_model');
 			$schoolCertificationDetail = $this->user_certification_model->get_by([
@@ -658,17 +661,12 @@ class Target extends MY_Admin_Controller {
 				"status NOT" => [8,9]
 			]);
 
-			foreach ($targets as $target) {
+			foreach ($targets as $otherTarget) {
 				$amortization = $this->target_lib->get_amortization_table($target);
-				$target->amortization = $amortization;
+				$otherTarget->amortization = $amortization;
 
-				$limitDate  = $target->created_at + (TARGET_APPROVE_LIMIT*86400);
-				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
-					'product_id' 	=> $target->product_id,
-					'user_id' 		=> $userId,
-					'created_at <=' => $limitDate,
-				]);
-				$target->credit = $credit;
+				$credit = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+				$otherTarget->credit = $credit;
 			}
 
 			$this->load->library('output/loan/target_output', ['data' => $targets]);

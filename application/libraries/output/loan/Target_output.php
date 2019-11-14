@@ -58,7 +58,7 @@ class Target_output
 				'name' => isset($this->productMapping[$target->product_id]["name"]) ? $this->productMapping[$target->product_id]["name"] : '',
 			],
 			'requested_amount' => $target->amount,
-			'approved_amount' => isset($target->credit) ? $target->credit->amount : null,
+			'approved_amount' => isset($target->credit) ? isset($target->credit->amount) ? $target->credit->amount : $target->credit["amount"] : null,
 			'available_amount' => $target->loan_amount,
 			'credit' => $target->credit_level,
 			'interests' => $target->interest_rate,

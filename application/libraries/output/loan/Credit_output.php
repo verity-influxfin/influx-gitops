@@ -11,7 +11,12 @@ class Credit_output
 			throw new OutOfBoundsException("Data to construct credit output is not found");
 		}
 
-		$this->credit = $params["data"];
+		if (is_array($params["data"])) {
+			$this->credit = $this->mapToObject($params["data"]);
+		} else {
+			$this->credit = $params["data"];
+		}
+
 		$this->loadProductMapping();
 	}
 
@@ -39,6 +44,19 @@ class Credit_output
 		];
 
 		return $output;
+	}
+
+	public function mapToObject($creditInput)
+	{
+		$credit = new stdClass();
+		$credit->id = $creditInput["id"];
+		$credit->product_id = $creditInput["product_id"];
+		$credit->level = $creditInput["level"];
+		$credit->points = $creditInput["points"];
+		$credit->amount = $creditInput["amount"];
+		$credit->expire_time = $creditInput["expire_time"];
+		$credit->created_at = $creditInput["created_at"];
+		return $credit;
 	}
 
 	public function loadProductMapping()
