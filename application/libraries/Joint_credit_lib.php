@@ -48,6 +48,7 @@ class Joint_credit_lib{
 		$this->check_extra_messages($text, $result);
 		$this->check_credit_scores($text, $result);
 		$this->check_report_expirations($text, $result);
+		$this->aggregate($result);
 		print_r($result);
 		return $result;
 	}
@@ -1029,6 +1030,24 @@ class Joint_credit_lib{
 		}
 
 		$result["messages"][] = $message;
+	}
+
+	public function aggregate(&$result){
+		if (!$result) {
+			$result = ["status" => "pending", "messages" => []];
+		}
+		foreach ($result["messages"] as $stage) {
+			if (!$result["status"]) {
+				$result["status"] = "success";
+			}
+			if ($stage["status"] == "failure") {
+				$result["status"] = "failure";
+			}
+			if ($stage["status"] == "pending" && $result["status"] == "success") {
+				$result["status"] = "pending";
+			}
+		}
+		return $result;
 	}
 
 	public function setCurrentTime($currentTime){
