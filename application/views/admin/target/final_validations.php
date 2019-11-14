@@ -419,6 +419,7 @@
 								<p style="display:inline">審批內容：</p>
 								<input type="text" name="description"/>
 								<button class="btn btn-default" type="submit">送出</button>
+                                <button class="btn btn-danger" data-url="/admin/Target/verify_failed" id="verify_failed">不通過</button>
 							</div>
 						</form>
 					</div>
@@ -897,6 +898,35 @@
                 }
             });
 		});
+
+        $("#verify_failed").click(function(e) {
+            e.preventDefault();
+
+            var isConfirmed = confirm("確認是否要退件？");
+            if (!isConfirmed){
+                return false;
+            }
+
+            var url = $(this).attr('data-url');
+            var description = $('input[name="description"]').val();
+
+            var data = {
+                'id' : caseId,
+                'remark' : description
+            }
+            $.ajax({
+                type: "get",
+                url: url,
+                data: data, // serializes the form's elements.
+                success: function(response) {
+                    alert("審核成功，點選OK關閉頁面。");
+                    window.close();
+                },
+                error: function() {
+                    alert('審核失敗，請重整頁面後，再試一次。');
+                }
+            });
+        });
     });
 </script>
 <style>

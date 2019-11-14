@@ -302,9 +302,8 @@ class Target_lib{
                                         'interest_rate'		=> $interest_rate,
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 0,
-                                        'sub_status'	    => 9,
                                     ];
-                                    $subloan_status?$param=['status'=>1]:'';
+                                    $subloan_status?$param['status']=1:$param['sub_status'] = 9;
                                     $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
                                 }
@@ -396,6 +395,7 @@ class Target_lib{
 			$param = [
 				'loan_amount'		=> 0,
 				'status'			=> 9,
+				'sub_status'			=> 0,
 				'remark'			=> $remark,
 			];
 			$this->CI->target_model->update($target->id,$param);
