@@ -154,35 +154,35 @@ class Joint_credit_lib{
 						]
 					];
 					return;
-				} else {
-					foreach ($getAllProportion as $key => $value) {
-						$is_InStandard[] = ($value < 0.7) ? true : false;
-					}
-					if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
-						$result["messages"][] = [
-							"stage" => "bank_loan",
-							"status" => "success",
-							"message" => [
-								"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-								"長期放款家數 : $getCountALLLongTermLoanBank"
-							]
-						];
+				}
 
-						foreach ($getAllProportion as $key => $value) {
-							$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
-						}
-					} else {
-						$result["messages"][] = [
-							"stage" => "bank_loan",
-							"status" => "pending",
-							"message" => [
-								"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-								"長期放款家數 : $getCountALLLongTermLoanBank",
-							]
-						];
-						foreach ($getAllProportion as $key => $value) {
-							$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
-						}
+				foreach ($getAllProportion as $key => $value) {
+					$is_InStandard[] = ($value < 0.7) ? true : false;
+				}
+				$is_InStandard=(isset($is_InStandard))?$is_InStandard:0;
+				if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
+					$result["messages"][] = [
+						"stage" => "bank_loan",
+						"status" => "success",
+						"message" => [
+							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+							"長期放款家數 : $getCountALLLongTermLoanBank"
+						]
+					];
+					foreach ($getAllProportion as $key => $value) {
+						$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
+					}
+				} else {
+					$result["messages"][] = [
+						"stage" => "bank_loan",
+						"status" => "pending",
+						"message" => [
+							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+							"長期放款家數 : $getCountALLLongTermLoanBank",
+						]
+					];
+					foreach ($getAllProportion as $key => $value) {
+						$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
 					}
 				}
 				break;
