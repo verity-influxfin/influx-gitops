@@ -425,13 +425,23 @@ class Certification_lib{
 	}
 	public function investigation_verify($info = array(), $url=null)
 	{
+		$this->CI->load->library('Joint_credit_lib');
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
-			//進到OCR
-			$status = 3;
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status, 'sys_check' => 1,
-				'content' => json_encode(array('pdf_file' => $url))
-			));
+
+			$result = [
+				"status" => "failure",
+				"messages" => []
+			];
+			$parser = new \Smalot\PdfParser\Parser();
+			$pdf    = $parser->parseFile($url);
+			$text = $pdf->getText();
+			$res=$this->CI->joint_credit_lib->check_join_credits($info->id,$text, $result);
+		    //進到OCR
+			// $status = 3;
+			// $this->CI->user_certification_model->update($info->id, array(
+			// 	'status' => $status, 'sys_check' => 1,
+			// 	'content' => json_encode(array('pdf_file' => $url))
+			// ));
 			return true;
 		}
 		return false;
@@ -913,35 +923,6 @@ class Certification_lib{
         ], ['status'=> 2]);
         return $rs;
     }
-	public function unlock_contents_pdf()
-	{
-		$a = file_get_contents('https://dev-influxp2p-personal.s3-ap-northeast-1.amazonaws.com/user_upload/14369/JC_20191029130842391.pdf');
-		$fp = fopen("hsiang.pdf", "w+");
-		fwrite($fp, $a); //寫入資料到 $fp 所開啟的檔案內
-		fclose($fp); //關閉開啟的檔案
-	    shell_exec('/usr/local/bin/gs  -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=/Users/hsiang/Sites/influx_atm/hsiangsss.pdf -c  3000000 setvmthreshold -f /Users/hsiang/Sites/influx_atm/hsiang.pdf  2>&1');
-
-
-		$parser = new \Smalot\PdfParser\Parser();
-		$url='/Users/hsiang/Sites/influx_atm/hsiangsss.pdf';
-		//$url='/Users/hsiang/Sites/influx_atm/hsiangsss.pdf';
-		$pdf    = $parser->parseFile($url);
-		$text = $pdf->getText();
-		//echo $text;
-		$this->investigation_progress($text);
-
-
-	}
-
-	public function investigation_progress($text){
-		$this->CI->load->library('Joint_credit_lib');
-		$result = [
-			"status" => "failure",
-			"messages" => []
-		];
-		$this->CI->joint_credit_lib->check_join_credits($text, $result);
- 		return $result;
-	}
 
     public function expire_certification($user_id,$investor=0){
         if($user_id) {
