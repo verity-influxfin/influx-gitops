@@ -36,6 +36,25 @@ class Joint_credit_lib_file3 extends TestCase
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
 
+	public function test_check_bank_loan()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_bank_loan($this->text, $result);
+		$expected = [
+			"stage" => "bank_loan",
+			"status" => "success",
+			"message" => [
+				"有無延遲還款 : 無",
+				"銀行借款家數 : 1",
+				"長期放款家數 : 0",
+				"長期放款借款餘額比例 : 0%",
+				"長期放款借款餘額比例 : 0%",
+				"長期放款借款餘額比例 : 0%",
+			],
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
 	public function test_check_overdue_and_bad_debts()
 	{
 		$result = ["status" => "failure", "messages" => []];

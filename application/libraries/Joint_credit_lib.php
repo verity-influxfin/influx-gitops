@@ -76,7 +76,9 @@ class Joint_credit_lib{
 				"message" => "銀行借款家數：無"
 			];
 			return ;
-		}elseif(preg_match("/有無延遲還款/", $content['0'])){
+		}
+
+		if(preg_match("/有無延遲還款/", $content['0'])){
 			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
 			$content_data= explode(" ", $content_data);
 			foreach($content_data as $key => $value){
@@ -100,31 +102,39 @@ class Joint_credit_lib{
 
 			
 			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
-			$getAllProportion=(isset($get_proportion))?$get_proportion:0;
+			$getAllProportion=(isset($get_proportion))?$get_proportion:[0];
 			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
 			$keyword=$this->CI->regex->findPatternInBetween($text, '有無延遲還款', '【逾期、催收或呆帳資訊】');
-			(preg_match("/有/", $keyword[0]))?$result["messages"][] = [
-				"stage" => "bank_loan",
-				"status" => "failure",
-				"message" => [
-					"最近十二個月有無延遲還款 : 有",
-					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
-				],
-				"rejected_message" => [
-					"最近十二個月有無延遲還款 : 有"
-				]
-			]:$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank);
+			if (preg_match("/有/", $keyword[0])) {
+				$result["messages"][] = [
+					"stage" => "bank_loan",
+					"status" => "failure",
+					"message" => [
+						"有無延遲還款 : 有",
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+					],
+					"rejected_message" => [
+						"最近十二個月有無延遲還款 : 有"
+					]
+				];
+			} else {
+				$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank);
+			}
 		}
 	}
 	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank)
 	{
+		$getAllProportion = array_pad($getAllProportion, 3, 0);
+		$longTermLoan = "長期放款借款餘額比例 : 0%";
 		switch ($getCountAllBanknameWithoutSchoolLoan) {
 			case ($getCountAllBanknameWithoutSchoolLoan > 3):
 				$result["messages"][] = [
 					"stage" => "bank_loan",
 					"status" => "failure",
 					"message" => [
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+						"有無延遲還款 : 無",
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+						$longTermLoan
 					],
 					"rejected_message" => [
 						"銀行借款家數超過3家"
@@ -136,7 +146,9 @@ class Joint_credit_lib{
 					"stage" => "bank_loan",
 					"status" => "pending",
 					"message" => [
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+						"有無延遲還款 : 無",
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+						$longTermLoan
 					]
 				];
 				break;
@@ -146,8 +158,9 @@ class Joint_credit_lib{
 						"stage" => "bank_loan",
 						"status" => "failure",
 						"message" => [
+							"有無延遲還款 : 無",
 							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款借款餘額比例 : 1"
+							$longTermLoan
 						],
 						"rejected_message" => [
 							"長期放款的借款餘額等於訂約金額"
@@ -165,28 +178,33 @@ class Joint_credit_lib{
 						"stage" => "bank_loan",
 						"status" => "success",
 						"message" => [
+							"有無延遲還款 : 無",
 							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款家數 : $getCountALLLongTermLoanBank"
+							"長期放款家數 : $getCountALLLongTermLoanBank",
 						]
 					];
-					foreach ($getAllProportion as $key => $value) {
-						$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
+
+					foreach ($getAllProportion as $value) {
+						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 					}
 				} else {
 					$result["messages"][] = [
 						"stage" => "bank_loan",
 						"status" => "pending",
 						"message" => [
+							"有無延遲還款 : 無",
 							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
 							"長期放款家數 : $getCountALLLongTermLoanBank",
 						]
 					];
-					foreach ($getAllProportion as $key => $value) {
-						$result["messages"][0]["message"]["長期放款借款餘額比例"][$key] = ($getAllProportion[$key] * 100) . '%';
+
+					foreach ($getAllProportion as $value) {
+						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 					}
 				}
 				break;
 		}
+
 		return $result;
 	}
 	private function get_loan_bankname($value,$subject)
