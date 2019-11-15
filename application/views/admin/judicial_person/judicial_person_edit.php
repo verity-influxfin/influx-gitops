@@ -83,8 +83,9 @@
 							</form>
 						</div>
 						<div class="col-lg-6">
+                            <h1>商業司資料</h1>
 							<? if ($company_data && $search_type == 0) { ?>
-								<h1>商業司資料(公司登記)</h1>
+								<h3>公司登記</h3>
 								<div class="form-group">
 									<table class="table table-bordered table-hover table-striped">
 										<tbody>
@@ -218,8 +219,8 @@
 											</tr>
 										</tbody>
 									</table>
-								<? } else { ?>
-									<h1>商業司資料(商業登記)</h1>
+								<? } elseif ($company_data) { ?>
+									<h3>商業登記</h3>
 									<div class="form-group">
 										<table class="table table-bordered table-hover table-striped">
 											<tbody>
@@ -330,7 +331,9 @@
 
 											</tbody>
 										</table>
-									<? } ?>
+									<? }else{?>
+                                        <div class="form-group">系統查無登記資料，線上商業司<a href="https://findbiz.nat.gov.tw/fts/query/QueryBar/queryInit.do">查詢</a>如有資料警請回報IT工程師</div>
+                                    <?} ?>
 									</div>
 									<div class="form-group">
 										<? if ($shareholders) {
