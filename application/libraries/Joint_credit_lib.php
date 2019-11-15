@@ -21,8 +21,7 @@ class Joint_credit_lib{
 		$this->CI->load->model('user/user_model');
 	}
 
-	public function check_join_credits($text, &$result){
-		$userId = 42775;
+	public function check_join_credits($userId, $text, &$result){
 		$this->setCurrentTime(time());
 		if (!$this->is_id_match($userId, $text)) {
 			return ["status" => "pending", "messages" => ["身分證與用戶資料不符"]];
