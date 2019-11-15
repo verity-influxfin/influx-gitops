@@ -95,21 +95,27 @@ class User extends MY_Admin_Controller {
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
 					//新增設備ID ++
-					$device_id_invest 	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+					$login_log_invest 	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
 						'user_id' 		=> $info->id,
 						'investor' 		=> 1
-					])->client;
-					$device_id_invest 	= json_decode($device_id_invest);
+					]);
+					$device_id_invest   = null;
+					if (isset($login_log_invest->client)) {
+						$device_id_invest = json_decode($login_log_invest->client);
+					}
 
 					if ($device_id_invest) {
 						$page_data['device_id_invest'] = $device_id_invest->device_id;
 					}
-					$device_id_borrow	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+					$login_log_borrow	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
 						'user_id' 		=> $info->id,
 						'investor' 		=> 0
-					])->client;
+					]);
+					$device_id_borrow = null;
+					if (isset($login_log_borrow->client)) {
+						$device_id_borrow = json_decode($login_log_borrow->client);
+					}
 
-					$device_id_borrow	 	= json_decode($device_id_borrow);
 					if ($device_id_borrow) {
 					$page_data['device_id_borrow'] = $device_id_borrow->device_id;
 					}

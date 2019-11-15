@@ -110,6 +110,9 @@ class Certification extends MY_Admin_Controller {
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 					$page_data['school_system'] 		= $this->config->item('school_system');
 					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
+					if (isset($page_data['content']['programming_language']) && is_string($page_data["content"]["programming_language"])) {
+						$page_data['content']['programming_language'] = json_decode($page_data["content"]["programming_language"], true);
+					}
 					if($info->certification_id==10){
 						$page_data['employee_range'] 		= $this->config->item('employee_range');
 						$page_data['position_name']			= $this->config->item('position_name');

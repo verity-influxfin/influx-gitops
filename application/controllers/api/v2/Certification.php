@@ -537,7 +537,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $file_fields 	= [];
+			$file_fields = [];
             isset($input['transcript_image'])?$file_fields[]='transcript_image':'';
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
