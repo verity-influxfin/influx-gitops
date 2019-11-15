@@ -11,7 +11,7 @@ class Joint_credit_lib_partial_file6 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/joint_credit_lib/21-decoded.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/joint_credit_lib/19-decoded.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
