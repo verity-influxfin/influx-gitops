@@ -429,8 +429,8 @@ class Certification_lib{
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
 
 			$result = [
-				"status" => 'failure',
-				"messages" => []
+				'status' => 'failure',
+				'messages' => []
 			];
 			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
@@ -440,25 +440,27 @@ class Certification_lib{
 				case 'pending': //轉人工
 					$status = 3;
 					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status, 'sys_check' => 1,
+						'status' => $status, 
+						'sys_check' => 1,
 						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
 					));
 					break;
 				case 'success':
+					$this->set_success($info->id);
 					$status = 1;
 					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status, 'sys_check' => 1,
+						'status' => $status,
+						'sys_check' => 1,
 						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
 					));
-					$this->certification_lib->set_success($info->id);
 					break;
 				case 'failure':
+					$this->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
 					$status = 2;
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status, 'sys_check' => 1,
 						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
 					));
-					$this->certification_lib->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
 					break;
 			}
 			return true;
