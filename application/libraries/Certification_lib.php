@@ -423,25 +423,44 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function investigation_verify($info = array(), $url=null)
+	public function investigation_readable_verify($info = array(), $url=null)
 	{
 		$this->CI->load->library('Joint_credit_lib');
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
 
 			$result = [
-				"status" => "failure",
+				"status" => 'failure',
 				"messages" => []
 			];
 			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
-			$res=$this->CI->joint_credit_lib->check_join_credits($info->id,$text, $result);
-		    //進到OCR
-			// $status = 3;
-			// $this->CI->user_certification_model->update($info->id, array(
-			// 	'status' => $status, 'sys_check' => 1,
-			// 	'content' => json_encode(array('pdf_file' => $url))
-			// ));
+			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
+			switch ($res['status']) {
+				case 'pending': //轉人工
+					$status = 3;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 'sys_check' => 1,
+						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+					));
+					break;
+				case 'success':
+					$status = 1;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 'sys_check' => 1,
+						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+					));
+					$this->certification_lib->set_success($info->id);
+					break;
+				case 'failure':
+					$status = 2;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 'sys_check' => 1,
+						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+					));
+					$this->certification_lib->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
+					break;
+			}
 			return true;
 		}
 		return false;
