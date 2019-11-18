@@ -1,6 +1,6 @@
 <?php
 
-class Joint_credit_lib_partial_file6 extends TestCase
+class Joint_credit_lib_partial_file7 extends TestCase
 {
 	public function setUp()
 	{
