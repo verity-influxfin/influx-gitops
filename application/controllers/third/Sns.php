@@ -74,7 +74,7 @@ class Sns extends REST_Controller {
 	private function process_mail($info, $file_content, $user_info, $s3_url,$certification_id)
 	{
 		$url = $this->attachment_pdf($file_content, $user_info, $s3_url,$certification_id);
-		($certification_id==9)? $this->certification_lib->investigation_verify($info['0'],$url):$this->certification_lib->job_verify($info['0'],$url);
+		($certification_id==9)? $this->certification_lib->investigation_readable_verify($info['0'],$url):$this->certification_lib->job_verify($info['0'],$url);
 	}
 
 	private function attachment_pdf($file_content,$user_info,$s3_url,$certification_id)
