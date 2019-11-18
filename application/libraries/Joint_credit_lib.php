@@ -135,6 +135,7 @@ class Joint_credit_lib{
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
 		switch ($getCountAllBanknameWithoutSchoolLoan) {
 			case ($getCountAllBanknameWithoutSchoolLoan > 3):
+				$result["status"]= "failure";
 				$result["messages"][] = [
 					"stage" => "bank_loan",
 					"status" => "failure",
@@ -149,6 +150,7 @@ class Joint_credit_lib{
 				];
 				break;
 			case ($getCountAllBanknameWithoutSchoolLoan == 3):
+				$result["status"]= "pending";
 				$result["messages"][] = [
 					"stage" => "bank_loan",
 					"status" => "pending",
@@ -161,6 +163,7 @@ class Joint_credit_lib{
 				break;
 			case (($getCountAllBanknameWithoutSchoolLoan < 3) && ($getCountAllBanknameWithoutSchoolLoan >= 0)):
 				if (in_array(1, $getAllProportion)) {
+					$result["status"]= "failure";
 					$result["messages"][] = [
 						"stage" => "bank_loan",
 						"status" => "failure",
@@ -190,7 +193,7 @@ class Joint_credit_lib{
 							"長期放款家數 : $getCountALLLongTermLoanBank",
 						]
 					];
-
+					$result["status"]= "success";
 					foreach ($getAllProportion as $value) {
 						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 					}
@@ -204,7 +207,7 @@ class Joint_credit_lib{
 							"長期放款家數 : $getCountALLLongTermLoanBank",
 						]
 					];
-
+					$result["status"]= "pending";
 					foreach ($getAllProportion as $value) {
 						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 					}
