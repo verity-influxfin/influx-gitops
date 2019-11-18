@@ -472,7 +472,7 @@ class Joint_credit_lib{
 					}
 					$allowedAmount = (int) array_sum($amount);
 					$result["messages"][] = [
-						"stage" => "credit_card_debts",
+						"stage" => "credit_card_info",
 						"status" => "failure",
 						"message"  => [
 							"信用卡資訊：有",
@@ -485,7 +485,7 @@ class Joint_credit_lib{
 					];
 				} else {
 					$result["messages"][] = [
-						"stage" => "credit_card_debts",
+						"stage" => "credit_card_info",
 						"status" => "failure",
 						"message" => [
 							"信用卡資訊：強制停用或強制停卡",
@@ -506,7 +506,7 @@ class Joint_credit_lib{
 					$allowedAmount = (int)array_sum($amount);
 					(!(preg_match("/其他/", $content['0'])||preg_match("/側錄/", $content['0'])||preg_match("/掛失/", $content['0'])||preg_match("/不明/", $content['0'])||preg_match("/偽冒/", $content['0'])))?$status='success':$status='pending';
 					$result["messages"][] = [
-						"stage" => "credit_card_debts",
+						"stage" => "credit_card_info",
 						"status" => $status,
 						"message"  => [
 							"信用卡資訊：有",
@@ -520,7 +520,7 @@ class Joint_credit_lib{
 					return $cards_info;
 				} else {
 					$result["messages"][] = [
-						"stage" => "credit_card_debts",
+						"stage" => "credit_card_info",
 						"status" => "pending",
 						"message"  => [
 							"信用卡資訊：有",
