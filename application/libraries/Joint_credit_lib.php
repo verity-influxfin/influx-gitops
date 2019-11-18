@@ -24,7 +24,14 @@ class Joint_credit_lib{
 	public function check_join_credits($userId, $text, &$result){
 		$this->setCurrentTime(time());
 		if (!$this->is_id_match($userId, $text)) {
-			return ["status" => "pending", "messages" => ["身分證與用戶資料不符"]];
+			return [
+				"status" => "pending",
+				"messages" => [
+					"stage" => "id_card",
+					"status" => "failure",
+					"message" => "身分證與用戶資料不符"
+				]
+			];
 		}
 		$this->check_bank_loan($text, $result);
 		$this->check_overdue_and_bad_debts($text, $result);
@@ -100,7 +107,7 @@ class Joint_credit_lib{
 			$getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
 			$getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
 
-			
+
 			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
 			$getAllProportion=(isset($get_proportion))?$get_proportion:[0];
 			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
@@ -208,13 +215,13 @@ class Joint_credit_lib{
 		return $result;
 	}
 	private function get_loan_bankname($value,$subject)
-	{ 
+	{
 		if ($subject !== '助學貸款') {
 			$bankname = $value;
 			return	$bankname;
 		}
 	}
-	
+
 	private function get_long_term_loan_bankname($value,$subject)
 	{
 		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
