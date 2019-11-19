@@ -25,7 +25,7 @@
 								</div>
 								<div>
 									<p>主要狀態:</p>
-									<p id="overal-status"></p>
+									<p id="overal-status"  style="color:red;"></p>
 								</div>
 							</div>
 							</br>
