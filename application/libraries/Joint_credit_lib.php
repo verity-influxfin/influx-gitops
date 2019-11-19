@@ -27,9 +27,11 @@ class Joint_credit_lib{
 			return [
 				"status" => "pending",
 				"messages" => [
-					"stage" => "id_card",
-					"status" => "failure",
-					"message" => "身分證與用戶資料不符"
+					[
+						"stage" => "id_card",
+						"status" => "failure",
+						"message" => "身分證與用戶資料不符"
+					]
 				]
 			];
 		}
