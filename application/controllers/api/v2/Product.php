@@ -176,6 +176,7 @@ class Product extends REST_Controller {
             ];
             foreach($cproduct_list as $key => $value) {
                 $certification = [];
+                $designate     = [];
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21],
@@ -225,18 +226,18 @@ class Product extends REST_Controller {
                     'instalment'			=> $value['instalment'],
                     'repayment'				=> $value['repayment'],
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
+                    'designate'             => $designate,
                     'certification'         => $certification,
                 );
-
                 //reformat Product for layer2
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
 
-                if ($value['type'] == 2) {
-                    $parm['selling_type'] = $this->config->item('selling_type');;
+                if(in_array($key,[1,2,3,4])){
+                    if ($value['type'] == 2) {
+                        $parm['selling_type'] = $this->config->item('selling_type');;
+                    }
+                    $list[] = $parm;
                 }
-                $list[] = $parm;
-
-
             }
 
             //list2
@@ -1419,7 +1420,7 @@ class Product extends REST_Controller {
     {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
-        $fields 	= ['product_id','instalment','store_id','item_id','item_count','delivery'];//,'nickname'
+        $fields 	= ['product_id','instalment','store_id','item_id'];//,'item_count','nickname'
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1431,9 +1432,10 @@ class Product extends REST_Controller {
         $instalment     = $content['instalment'];//分期數
         $store_id       = $content['store_id'];  //店家ID
         $item_id		= $content['item_id'];   //商品ID
-        $item_count		= $content['item_count'];//商品數量
-        $delivery       = $content['delivery'];  //0:線下 1:線上
         $nickname       = isset($content['nickname'])?$content['nickname']:'';  //暱稱
+
+        $item_count		= isset($content['item_count'])&&$content['item_count']<2?$content['item_count']:1;//商品數量
+        $delivery       = isset($content['delivery'])&&$content['delivery']<2?$content['delivery']:0;  //0:線下 1:線上
 
         //檢驗產品規格
         $product_list 	= $this->config->item('product_list');

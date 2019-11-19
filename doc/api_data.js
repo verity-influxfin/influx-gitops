@@ -10480,6 +10480,13 @@ define({
                             "group": "Success 200",
                             "type": "Object",
                             "optional": false,
+                            "field": "designate",
+                            "description": "<p>受委派或可申請的案件</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
                             "field": "selling_type",
                             "description": "<p>0:手機 1:遊學 2:外匯車 999:其它</p>"
                         }
@@ -12914,6 +12921,8 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
+                            "optional": true,
+                            "defaultValue": "0",
                             "field": "delivery",
                             "description": "<p>交易方式 0:線下 1:線上</p>"
                         },
