@@ -88,70 +88,72 @@ class Certification extends MY_Admin_Controller {
 			}
 			if($id){
 				$info = $this->user_certification_model->get($id);
-				if($info){
+				if ($info&&(($info->sys_check)!=='1')) {
 					$certification 						= $this->certification[$info->certification_id];
 					$page_data['certification_list'] 	= $this->certification_name_list;
 					$page_data['data'] 					= $info;
-					$page_data['content'] 				= json_decode($info->content,true);
+					$page_data['content'] 				= json_decode($info->content, true);
 
-					if($info->certification_id==2) {
+					if ($info->certification_id == 2) {
 						//加入SIP網址++
 						$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
 						$school_data = json_decode($school_data, true);
 						$school = $page_data['content']['school'];
-						$sipURL = isset($school_data[$school]['sipURL'])?$school_data[$school]['sipURL']:'';
+						$sipURL = isset($school_data[$school]['sipURL']) ? $school_data[$school]['sipURL'] : '';
 						$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 						//加入SIP網址--
 					}
 
 					$page_data['id'] 					= $id;
-					$page_data['remark'] 				= json_decode($info->remark,true);
+					$page_data['remark'] 				= json_decode($info->remark, true);
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
 					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
 					$page_data['school_system'] 		= $this->config->item('school_system');
 					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
-					if($info->certification_id==10){
+					if ($info->certification_id == 10) {
 						$page_data['employee_range'] 		= $this->config->item('employee_range');
 						$page_data['position_name']			= $this->config->item('position_name');
 						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
 						$page_data['industry_name'] 		= $this->config->item('industry_name');
 						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
-						if (isset($page_data['content']['job_title'])){
+						if (isset($page_data['content']['job_title'])) {
 							$job_title = file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json');
-							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
-							if(isset($page_data['content']['programming_language'])){
+							$page_data['job_title'] = preg_split('/"},{/', preg_split('/' . $page_data['content']['job_title'] . '","des":"/', $job_title)[1])[0];
+							if (isset($page_data['content']['programming_language'])) {
 								$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
-								$set_lang_level =['入門','參與開發','獨立執行'];
-								foreach($page_data['content']['programming_language'] as $lang_list => $lang){
-									$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
-									$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+								$set_lang_level = ['入門', '參與開發', '獨立執行'];
+								foreach ($page_data['content']['programming_language'] as $lang_list => $lang) {
+									$lang_level = ' (' . $set_lang_level[$lang['level'] - 1] . ')';
+									$lang['id'] != '' ? $techie_lang[] = $languageList->{$lang['id']} . $lang_level : $other_lang[] = $lang['des'] . $lang_level;
 								}
-								$page_data['techie_lang'] = isset($techie_lang)?$techie_lang:'';
-								$page_data['other_lang']  = isset($other_lang)?$other_lang:'';
+								$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
+								$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
 							}
 						}
-					}elseif ($info->certification_id==2){
-						if(isset($page_data['content']['programming_language'])){
+					} elseif ($info->certification_id == 2) {
+						if (isset($page_data['content']['programming_language'])) {
 							$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
-							$set_lang_level =['入門','參與開發','獨立執行'];
-							foreach($page_data['content']['programming_language'] as $lang_list => $lang){
-								$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
-								$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+							$set_lang_level = ['入門', '參與開發', '獨立執行'];
+							foreach ($page_data['content']['programming_language'] as $lang_list => $lang) {
+								$lang_level = ' (' . $set_lang_level[$lang['level'] - 1] . ')';
+								$lang['id'] != '' ? $techie_lang[] = $languageList->{$lang['id']} . $lang_level : $other_lang[] = $lang['des'] . $lang_level;
 							}
-							$page_data['techie_lang'] = isset($techie_lang)?$techie_lang:'';
-							$page_data['other_lang']  = isset($other_lang)?$other_lang:'';
+							$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
+							$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
 						}
 					}
 					$page_data['from'] 					= $from;
 					$this->load->view('admin/_header');
-					$this->load->view('admin/_title',$this->menu);
-					$this->load->view('admin/certification/'.$certification['alias'],$page_data);
+					$this->load->view('admin/_title', $this->menu);
+					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
 					$this->load->view('admin/_footer');
-				}else{
-					alert('ERROR , id is not exist',$back_url);
+				} elseif ($info && $info->sys_check==1) { 
+					$this->joint_credits();
+				} else {
+					alert('ERROR , id is not exist', $back_url);
 				}
-			}else{
-				alert('ERROR , id is not exist',$back_url);
+			} else {
+				alert('ERROR , id is not exist', $back_url);
 			}
 		}else{
             if(!empty($post['salary'])){
