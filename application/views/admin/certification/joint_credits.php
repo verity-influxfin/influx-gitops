@@ -23,7 +23,7 @@
 									<p>會員:</p>
 									<a id="user-id-link"><p id="user-id"></p></a>
 								</div>
-								<div>
+								<div class="col-lg-6">
 									<p>主要狀態:</p>
 									<p id="overal-status"  style="color:red;"></p>
 								</div>
@@ -37,6 +37,14 @@
 									<th class="center-text table-field" width="30%">退件訊息</th>
 								</tr>
 							</table>
+							<div class="center-text">
+								<form id="verification-change" class="align-form container" action="/admin/Certification/user_certification_edit">
+									<span>審核: </span>
+									<select id="verification"></select>
+									<input type="hidden" name="fail" placeholder="失敗原因"/>
+									<button type="submit" class="btn btn-primary">送出</button>
+								</form>
+							</div>
 						</div>
 					</div>
 					<!-- /.row (nested) -->
@@ -75,6 +83,8 @@
                     return;
 				}
 
+                fillDropDownMenu(response.response.statuses);
+
 				var jointCredits = new JointCredit(response.response.joint_credits);
 				fillJointCredits(jointCredits);
 
@@ -86,14 +96,62 @@
 			}
         });
 
+        $("#verification-change").submit(function(e) {
+            e.preventDefault();
+
+            var isConfirmed = confirm("確認是否要通過審核？");
+            if (!isConfirmed){
+                return false;
+            }
+
+            var form = $(this);
+            var url = form.attr('action');
+            var status = $( "#verification" ).val();
+            var failureReason = form.find('input[name="fail"]').val();
+
+            var data = {
+                'id' : certificationId,
+				'status' : status
+            }
+            if (failureReason) {
+                data.fail = failureReason;
+			}
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function(response) {
+                    window.close();
+                },
+                error: function() {
+                    alert('審核失敗，請重整頁面後，再試一次。');
+                }
+            });
+        });
+
 		function fillUser(user) {
 			$("#user-id").text(user.id);
 			$("#user-id-link").attr("href", "/admin/user/edit?id=" + user.id);
 			$("#user-id-link").attr("target", "_blank");
 		}
 
+		function fillDropDownMenu(statuses) {
+			for (var i = 0; i < statuses.length; i++) {
+                var option = new Option(statuses[i], i);
+                $("#verification").append(option);
+			}
+		}
+
 		function fillJointCredits(jointCredits) {
 			$("#overal-status").text(jointCredits.status);
+			if (jointCredits.status == "驗證成功") {
+                $("#verification").val(1).change();
+			} else if (jointCredits.status == "退件") {
+                $("#verification").val(2).change();
+			} else if (jointCredits.status == "待人工驗證") {
+			    $("#verification").val(3).change();
+			}
 			for (var i = 0; i < jointCredits.messages.length; i++) {
 				var message = jointCredits.messages[i];
 
@@ -110,6 +168,16 @@
 				).appendTo("#joint-credits");
 			}
 		}
+
+        $("#verification").change(function(){
+            var status = $(this).val();
+            if (status == 2) {
+                $('input[name="fail"]').prop('type', 'text');
+			} else {
+                $('input[name="fail"]').prop('type', 'hidden');
+                $('input[name="fail"]').val('');
+			}
+        });
     });
 
 </script>
@@ -119,6 +187,10 @@
 	.table-field {
 		background-color: #f5f5f5;
 		table-layout: fixed;
+	}
+
+	.align-form {
+		display: inline;
 	}
 
 	.center-text {
