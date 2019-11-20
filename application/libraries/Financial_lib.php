@@ -179,30 +179,12 @@ class Financial_lib{
 		$finalYear = date('Y-m-d', strtotime($date . "+ {$instalment} month"));
 		$currentTimeStamp = strtotime($date);
 		$finalTimeStamp = strtotime($finalYear);
-		if (date('L', $currentTimeStamp) == '1') {
-			$extraDate = date('Y', $currentTimeStamp).'-02-29';
-			$extraDateTimeStamp = strtotime($extraDate);
-			if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
-				return true;
-			}
-		}
 
-		if (date('L',strtotime($finalYear)) == '1') {
-			$extraDate = date('Y', $finalTimeStamp).'-02-29';
-			$extraDateTimeStamp = strtotime($extraDate);
-			if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
-				return true;
-			}
-		}
-
-		$start = date("Y", strtotime($date));
-		$end = date("Y", strtotime($finalYear));
+		$start = date("Y", $currentTimeStamp);
+		$end = date("Y", $finalTimeStamp);
 		$diff = $end - $start;
-		if ($diff <= 1) {
-			return false;
-		}
 
-		for ($i = 1; $i <= $diff; $i++) {
+		for ($i = 0; $i <= $diff; $i++) {
 			$year = $start + $i;
 			$currentYear = "{$year}-01-01";
 			if (date('L',strtotime($currentYear)) == '1') {
