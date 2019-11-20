@@ -74,6 +74,11 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+				if (in_array($id, [9, 10])) { 
+					$this->CI->user_certification_model->update($info->id,array(
+						'expire_time'	=> strtotime("+1 months", time()),
+					));
+				}
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
