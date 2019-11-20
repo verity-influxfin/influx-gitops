@@ -88,7 +88,7 @@ class Certification extends MY_Admin_Controller {
 			}
 			if($id){
 				$info = $this->user_certification_model->get($id);
-				if ($info&&(($info->sys_check)!=='1')) {
+				if ($info) {
 					$certification 						= $this->certification[$info->certification_id];
 					$page_data['certification_list'] 	= $this->certification_name_list;
 					$page_data['data'] 					= $info;
@@ -103,7 +103,12 @@ class Certification extends MY_Admin_Controller {
 						$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 						//加入SIP網址--
 					}
-
+                    if ($info->certification_id == 9) {
+                        if($page_data['content']['return_type']!==0){
+                            $this->joint_credits();
+                            exit();
+                        }
+                    }
 					$page_data['id'] 					= $id;
 					$page_data['remark'] 				= json_decode($info->remark, true);
 					$page_data['status_list'] 			= $this->user_certification_model->status_list;
@@ -147,8 +152,6 @@ class Certification extends MY_Admin_Controller {
 					$this->load->view('admin/_title', $this->menu);
 					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
 					$this->load->view('admin/_footer');
-				} elseif ($info && $info->sys_check==1) { 
-					$this->joint_credits();
 				} else {
 					alert('ERROR , id is not exist', $back_url);
 				}

@@ -427,7 +427,7 @@ class Certification_lib{
 	{
 		$this->CI->load->library('Joint_credit_lib');
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
-
+			$return_type=json_decode($info->content)->return_type;
 			$result = [
 				'status' => 'failure',
 				'messages' => []
@@ -442,7 +442,7 @@ class Certification_lib{
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status, 
 						'sys_check' => 1,
-						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
 					break;
 				case 'success':
@@ -451,7 +451,7 @@ class Certification_lib{
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status,
 						'sys_check' => 1,
-						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
 					break;
 				case 'failure':
@@ -459,7 +459,7 @@ class Certification_lib{
 					$status = 2;
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status, 'sys_check' => 1,
-						'content' => json_encode(array('pdf_file' => $url, 'result' => $res))
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
 					break;
 			}
