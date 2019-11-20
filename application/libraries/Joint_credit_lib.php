@@ -57,7 +57,7 @@ class Joint_credit_lib{
 		$this->check_credit_scores($text, $result);
 		$this->check_report_expirations($text, $result);
 		$this->aggregate($result);
-		print_r($result);
+
 		return $result;
 	}
 
