@@ -172,21 +172,48 @@ class Financial_lib{
 	}
 	
 	public function leap_year($date='',$instalment=0){
-		if($date && $instalment){
-			//驗證閏年
-			$leap_year	= FALSE;
-			for($i=1;$i<=$instalment;$i++){
-				$sdate 	= date('Y-m-d',strtotime($date));
-				$date 	= date('Y-m-d',strtotime($date.' + 1 month'));
-				if(date('L',strtotime($sdate))=='1' || date('L',strtotime($date))=='1'){
-					$cdate = date('Y',strtotime($date)).'-02-29';
-					if( $sdate <= $cdate && $date >= $cdate ){
-						$leap_year = TRUE;
-					}
+		if (!$date || !$instalment) {
+			return false;
+		}
+
+		$finalYear = date('Y-m-d', strtotime($date . "+ {$instalment} month"));
+		$currentTimeStamp = strtotime($date);
+		$finalTimeStamp = strtotime($finalYear);
+		if (date('L', $currentTimeStamp) == '1') {
+			$extraDate = date('Y', $currentTimeStamp).'-02-29';
+			$extraDateTimeStamp = strtotime($extraDate);
+			if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
+				return true;
+			}
+		}
+
+		if (date('L',strtotime($finalYear)) == '1') {
+			$extraDate = date('Y', $finalTimeStamp).'-02-29';
+			$extraDateTimeStamp = strtotime($extraDate);
+			if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
+				return true;
+			}
+		}
+
+		$start = date("Y", strtotime($date));
+		$end = date("Y", strtotime($finalYear));
+		$diff = $end - $start;
+		if ($diff <= 1) {
+			return false;
+		}
+
+		for ($i = 1; $i <= $diff; $i++) {
+			$year = $start + $i;
+			$currentYear = "{$year}-01-01";
+			if (date('L',strtotime($currentYear)) == '1') {
+				$extraDate = date('Y', strtotime($currentYear)) . '-02-29';
+				$extraDateTimeStamp = strtotime($extraDate);
+				if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
+					return true;
 				}
 			}
-			return $leap_year;
 		}
+
 		return false;
 	}
 
