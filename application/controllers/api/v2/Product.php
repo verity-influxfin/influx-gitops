@@ -516,6 +516,17 @@ class Product extends REST_Controller {
             $insert = $this->target_lib->add_target($param);
             if($insert){
                 $this->load->library('Certification_lib');
+                if($sub_proddcut!=0){
+                    $certification = $this->user_certification_model->order_by('created_at', 'desc')->get_by([
+                        'user_id'          => $user_id,
+                        'certification_id' => ($product['identity']==1?2:10),
+                        'investor'         => 0,
+                        'status'           => 1,
+                    ]);
+                    if($certification && $sub_proddcut==1) {
+                        $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
+                    }
+                }
                 $this->certification_lib->expire_certification($user_id);
                 $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
             }else{

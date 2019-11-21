@@ -453,6 +453,285 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function credits()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		if (!$this->input->is_ajax_request()) {
+			alert('ERROR, 只接受Ajax', admin_url('user/blocked_users'));
+		}
+
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
+		$points = isset($get["points"]) ? intval($get["points"]) : 0;
+		if($points>400){$points=400;}
+		if($points<-400){$points=-400;}
+
+		$this->load->library('output/json_output');
+		$target = $this->target_model->get($targetId);
+
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$this->load->library('credit_lib');
+
+		$userId = $target->user_id;
+		$credit = $this->credit_lib->get_credit($target->user_id, $target->product_id, $target->sub_product_id);
+		$credit["product_id"] = $target->product_id;
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+		$credit["amount"] = $newCredits["amount"];
+		$credit["points"] = $newCredits["points"];
+		$credit["level"] = $newCredits["level"];
+		$credit["expire_time"] = $newCredits["expire_time"];
+		$this->load->library('output/loan/credit_output', ["data" => $credit]);
+
+		$response = [
+			"credits" => $this->credit_output->toOne(),
+		];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+	public function evaluation_approval()
+	{
+		$post = $this->input->post(NULL, TRUE);
+
+		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
+		$points = isset($post["points"]) ? intval($post["points"]) : 0;
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
+
+        if ($points > 400) $points = 400;
+        if ($points < -400) $points = -400;
+
+		$this->load->library('output/json_output');
+
+		$target = $this->target_model->get($targetId);
+		if (!$target) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		if ($target->status !=0 && $target->sub_status != 9) {
+			$this->json_output->setStatusCode(404)->send();
+		}
+
+		$userId = $target->user_id;
+		$credit = $this->credit_model->get_by([
+            'user_id' => $userId,
+            'product_id' => $target->product_id,
+            'sub_product_id'=> $target->sub_product_id,
+            'status' => 1
+        ]);
+
+		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+		$this->approvalextra->setSkipInsertion(true);
+		$this->approvalextra->setExtraPoints($points);
+
+		$this->load->library('credit_lib');
+		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+
+		if (
+			$newCredits["amount"] != $credit->amount
+			|| $newCredits["points"] != $credit->points
+			|| $newCredits["level"] != $credit->level
+		) {
+            $this->credit_model->update_by(
+                [
+                    'user_id' => $userId,
+                    'product_id' => $target->product_id,
+                    'sub_product_id'=> $target->sub_product_id,
+                    'status' => 1
+                ],
+                ['status'=> 0]
+            );
+			$this->credit_model->insert($newCredits);
+		}
+
+		$update = [
+			"status" => 1,
+			"sub_status" => 0,
+		];
+		if ($remark) {
+			if ($target->remark) {
+				$update["remark"] = $target->remark . "," . $remark;
+			} else {
+				$update["remark"] = $remark;
+			}
+		}
+        $rs = $this->target_model->update($targetId, $update);
+        if($rs){
+            $subloan_list   = $this->config->item('subloan_list');
+            $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
+            $this->load->library('Notification_lib');
+            $this->notification_lib->approve_target($userId,'1',$target->loan_amount,$subloan_status);
+        }
+
+        $this->json_output->setStatusCode(200)->send();
+	}
+
+	public function final_validations()
+	{
+		$get = $this->input->get(NULL, TRUE);
+
+		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
+
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
+			$target = $this->target_model->get($targetId);
+			if (!$target || $target->id <= 0) {
+				$this->json_output->setStatusCode(404)->send();
+			}
+			if ($target->status != 0 && $target->sub_status != 9) {
+				$this->json_output->setStatusCode(404)->send();
+			}
+			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
+
+			$userId = $target->user_id;
+			$user = $this->user_model->get($userId);
+
+			$userMeta = $this->user_meta_model->get_many_by(['user_id' 	=> $userId,]);
+			$this->load->library('credit_lib');
+			$credits = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+			$credits["product_id"] = $target->product_id;
+
+			$this->load->model('user/user_certification_model');
+			$schoolCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 2,
+				'status' => 1,
+			]);
+			$schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+			if (isset($schoolCertificationDetailArray["graduate_date"])) {
+				 $graduateDate = new stdClass();
+				 $graduateDate->meta_key = "school_graduate_date";
+				 $graduateDate->meta_value = $schoolCertificationDetailArray["graduate_date"];
+				 $userMeta[] = $graduateDate;
+			}
+
+			$this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
+
+			$instagramCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 4,
+				'status' => 1,
+			]);
+			$instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+			if ($instagramCertificationDetailArray["type"] == "instagram") {
+				$picture = $instagramCertificationDetailArray["info"]["picture"];
+				$this->usermeta->setInstagramPicture($picture);
+			}
+
+			$user->profile = $this->usermeta->values();
+			$user->school = $this->usermeta->values();
+			$user->instagram = $this->usermeta->values();
+			$user->facebook = $this->usermeta->values();
+			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->library('output/loan/credit_output', ["data" => $credits]);
+			$this->load->library('certification_lib');
+			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
+			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);
+			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
+			$this->load->library('output/user/verifications_output', $verificationInput);
+
+			$bankAccount = $this->user_bankaccount_model->get_many_by([
+				'user_id'	=> $userId,
+				'status'	=> 1,
+			]);
+
+			$this->load->library('output/user/Bank_account_output', ['data' => $bankAccount]);
+
+			$virtualAccounts = $this->virtual_account_model->get_many_by([
+				'user_id' => $userId,
+				'status' => 1,
+			]);
+
+			$this->load->library('Transaction_lib');
+			foreach ($virtualAccounts as $virtualAccount) {
+				$virtualAccount->funds = $this->transaction_lib->get_virtual_funds($virtualAccount->virtual_account);
+			}
+
+			$this->load->library('output/user/Virtual_account_output', ['data' => $virtualAccounts]);
+
+			$targets = $this->target_model->get_many_by([
+				"user_id" => $userId,
+				"status NOT" => [8,9]
+			]);
+
+			foreach ($targets as $otherTarget) {
+				$amortization = $this->target_lib->get_amortization_table($target);
+				$otherTarget->amortization = $amortization;
+
+				$credit = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+				$otherTarget->credit = $credit;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+
+			$response = [
+				"target" => $this->current_target_output->toOne(),
+				"user" => $this->user_output->toOne(true),
+				"credits" => $this->credit_output->toOne(),
+				"verifications" => $this->verifications_output->toMany(),
+				"bank_accounts" => $this->bank_account_output->toMany(),
+				"virtual_accounts" => $this->virtual_account_output->toMany(),
+				"targets" => $this->target_output->toMany(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/target/final_validations');
+		$this->load->view('admin/_footer');
+	}
+
+	public function waiting_evaluation()
+	{
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+
+			$where = ["status" => 0, "sub_status" => 9];
+			$targets = $this->target_model->get_many_by($where);
+			if (!$targets) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$userIds = [];
+			$userIndexes = [];
+			$index = 0;
+			foreach ($targets as $target) {
+				$userIds[] = $target->user_id;
+				$userIndexes[$target->user_id] = $index++;
+			}
+
+			$users = $this->user_model->get_many_by(['id' => $userIds]);
+
+			$numTargets = count($targets);
+			$userList = array_fill(0, $numTargets, null);
+			foreach ($users as $user) {
+				$index = $userIndexes[$user->id];
+				$userList[$index] = $user;
+			}
+
+			$this->load->library('output/loan/target_output', ['data' => $targets]);
+			$this->load->library('output/user/user_output', ["data" => $userList]);
+
+			$response = [
+				"users" => $this->user_output->toMany(false),
+				"targets" => $this->target_output->toMany(),
+			];
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/target/waiting_evaluation');
+		$this->load->view('admin/_footer');
+	}
 	
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');

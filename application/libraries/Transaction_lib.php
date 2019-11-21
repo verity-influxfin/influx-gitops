@@ -711,9 +711,9 @@ class Transaction_lib{
                 }
                 $transfer_info[] = $infos;
             }
-            //$mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
-            //$rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
-            if(true){
+            $mrs = $this->CI->transfer_model->update_many($transfer_ids, array('script_status' => 14));
+            $rs  = $this->CI->target_model->update_many($target_ids, array('script_status' => 10));
+            if($mrs && $rs && $unlock){
                 $transfer_account = '';
                 $virtual_account  = '';
                 foreach($transfers as $t => $transfer) {

@@ -38,4 +38,30 @@ class User_certification_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+	public function get_users_with_same_value($userId, $key, $values)
+	{
+		if (!$values) return [];
+
+		$this->db->select('users.*')
+			->from('p2p_user.user_certification as cert')
+			->join('p2p_user.users as users', 'users.id = cert.user_id')
+			->where('user_id !=', $userId);
+
+		$numbersLike = count($values);
+		$valueQuery = [];
+		$this->db->group_start();
+		for ($i = 0; $i < $numbersLike; $i++) {
+			$value = $values[$i];
+			$value = "\"{$key}\":\"{$value}";
+			if ($i == 0) $this->db->like("content", $value);
+			else $this->db->or_like("content", $value);
+		}
+		$this->db->group_end();
+
+		$this->db->group_by('cert.user_id');
+
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

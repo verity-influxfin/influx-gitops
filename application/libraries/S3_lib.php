@@ -130,6 +130,11 @@ class S3_lib {
 	public function credit_mail_pdf($content, $user_id = 0, $name = 'credit', $type = 'test')
 	{
 		try {
+			$fp = fopen("org.pdf", "w+");
+			fwrite($fp, $content); //寫入資料到 $fp 所開啟的檔案內
+			fclose($fp); //關閉開啟的檔案
+			shell_exec('gs  -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=un_org.pdf -c  3000000 setvmthreshold -f org.pdf  2>&1');
+			$content = file_get_contents('un_org.pdf');
 			$result = $this->client->putObject(array(
 				'Bucket' 		=> S3_BUCKET,
 				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . '.pdf',
@@ -140,6 +145,8 @@ class S3_lib {
 			exit();
 		}
 		if (isset($result['ObjectURL'])) {
+			unlink("org.pdf");
+			unlink("un_org.pdf");
 			return $result['ObjectURL'];
 		} else {
 			return false;

@@ -301,14 +301,11 @@ class Target_lib{
                                         'platform_fee'		=> $platform_fee,
                                         'interest_rate'		=> $interest_rate,
                                         'contract_id'		=> $contract_id,
-                                        'status'			=> 1,
+                                        'status'			=> 0,
                                     ];
-                                    $subloan_status?$param=['status'=>1]:'';
-                                    $rs = $this->CI->target_model->update($target->id,$param);
+                                    $subloan_status?$param['status']=1:$param['sub_status'] = 9;
+                                    $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
-                                    if($rs){
-                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
-                                    }
                                 }
                             }else if($product_info['type'] == 2){
                                 $allow      = true;
@@ -398,6 +395,7 @@ class Target_lib{
 			$param = [
 				'loan_amount'		=> 0,
 				'status'			=> 9,
+				'sub_status'			=> 0,
 				'remark'			=> $remark,
 			];
 			$this->CI->target_model->update($target->id,$param);

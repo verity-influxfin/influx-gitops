@@ -537,7 +537,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-
+			$file_fields = [];
             isset($input['transcript_image'])?$file_fields[]='transcript_image':'';
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
@@ -1456,7 +1456,8 @@ class Certification extends REST_Controller {
                     }
                 }
             }else{
-			    $target = [];
+                $this->mail_check($user_id,$investor);
+                $target = [];
                 $targets = $this->target_model->get_many_by(array(
                     'user_id'       => $user_id,
                     'status'		=> [20,21,22,23],
@@ -1502,7 +1503,6 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 			    if($send_mail){
-                    $this->mail_check($user_id,$investor);
                     $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
                 }
 				$this->response(array('result' => 'SUCCESS'));
@@ -1641,6 +1641,7 @@ class Certification extends REST_Controller {
                     $file_fields[] = 'labor_image';
                 }
                 elseif($input['labor_type']==1){
+                    $this->mail_check($user_id,$investor);
                     $send_mail =true;
                 }
             }
@@ -1686,7 +1687,6 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 			    if($send_mail){
-                    $this->mail_check($user_id,$investor);
                     $this->notification_lib->notice_cer_job($user_id);
                 }
 				$this->response(['result' => 'SUCCESS']);
@@ -1706,7 +1706,7 @@ class Certification extends REST_Controller {
 
 	private function mail_check($user_id,$investor){
         $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);
-        if($user_certification->status!=1){
+        if(!$user_certification||$user_certification->status!=1){
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
         }
     }

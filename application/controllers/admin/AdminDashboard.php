@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class AdminDashboard extends MY_Admin_Controller {
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
@@ -11,11 +11,12 @@ class AdminDashboard extends MY_Admin_Controller {
 		$this->load->model('user/user_bankaccount_model');
 		$this->load->model('transaction/withdraw_model');
 	}
-	
+
 	public function index()
 	{
 		$data 			= array();
 		$target_count 	= array(
+			"evaluation"					 => 0,
 			"approve"						 => 0,
 			"bidding"						 => 0,
 			"success"						 => 0,
@@ -26,7 +27,7 @@ class AdminDashboard extends MY_Admin_Controller {
 			"withdraw"						 => 0,
 			"waiting_approve_order_transfer" => 0,
 		);
-		$target_list 	= $this->target_model->get_many_by(array("status" => array(2,3,4,5,23,24)));
+		$target_list 	= $this->target_model->get_many_by(array("status" => array(0,2,3,4,5,23,24)));
 		$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
 		if($transfer_list){
@@ -39,7 +40,7 @@ class AdminDashboard extends MY_Admin_Controller {
 				}
 			}
 		}
-		
+
 		if($target_list){
 			foreach($target_list as $key => $value){
 				$bank_account 	= $this->user_bankaccount_model->get_by(array(
@@ -49,21 +50,24 @@ class AdminDashboard extends MY_Admin_Controller {
 					"verify"	=> 1,
 				));
 				if($bank_account){
+					if($value->status==0 && $value->sub_status==9){
+						$target_count["evaluation"] += 1;
+					}
 					if($value->delay==1 && $value->status==5){
 						$target_count["delay"] += 1;
 					}
 					if($value->status==2 || $value->status==23 && ($value->sub_status==0 || $value->sub_status==5 || $value->sub_status==9)){
-						$target_count["approve"] += 1;	
+						$target_count["approve"] += 1;
 					}
-					
+
 					if($value->status==3){
 						$target_count["bidding"] += 1;
 					}
-					
+
 					if($value->status==4){
 						$target_count["success"] += 1;
 					}
-					
+
 					if($value->sub_status==3 && $value->status==5){
 						$target_count["prepayment"] += 1;
 					}
@@ -82,34 +86,34 @@ class AdminDashboard extends MY_Admin_Controller {
 		sort($chart_date);
 		$sdatetime = current($chart_date).' 00:00:00';
 		$edatetime = end($chart_date).' 23:59:59';
-		
+
 
 		foreach($chart_date as $key => $date){
 			$chart_list[$date] = array("register"=>0,"loan"=>0);
-			
+
 		}
-		
+
 		$user_list	= $this->user_model->get_many_by(array(
 			"status"		=>1,
 			"created_at <=" =>strtotime($edatetime),
 			"created_at >="	=>strtotime($sdatetime),
 		));
-		
+
 		foreach($user_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['register']++;
 		}
-		
+
 		$this->load->model('log/Log_targetschange_model');
 		$target_list	= $this->Log_targetschange_model->get_many_by(array(
 			"status"		=> 3,
 			"created_at <=" => strtotime($edatetime),
 			"created_at >="	=> strtotime($sdatetime),
 		));
-		
+
 		foreach($target_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['loan']++;
 		}
-		
+
 		$list = $this->withdraw_model->get_many_by(array(
 			"status" 		=> array(0,2),
 			"frozen_id >" 	=> 0
@@ -117,7 +121,7 @@ class AdminDashboard extends MY_Admin_Controller {
 		if(!empty($list)){
 			$target_count["withdraw"] = count($list);
 		}
-		
+
 		$data["chart_list"] 	= $chart_list;
 		$data["target_count"] 	= $target_count;
 		$data["contact_list"] 	= $contact_list;
@@ -157,7 +161,7 @@ class AdminDashboard extends MY_Admin_Controller {
 				if(isset($data['password']) && empty($data['password'])){
 					unset($data['password']);
 				}
-				
+
 				$rs = $this->admin_model->update($id,$data);
 				if($rs===true){
 					alert("更新成功",admin_url('AdminDashboard'));
