@@ -3,8 +3,14 @@ class JointCredit
     constructor(jointCredit) {
         this.setStageMapping();
         this.setStatus(jointCredit);
+		this.setFile(jointCredit);
         this.setMessages(jointCredit);
     }
+
+    setFile(jointCredit) {
+		if (!jointCredit.file) this.file= "";
+		this.file = jointCredit.file;
+	}
 
     setStatus(jointCredit) {
         this.status = this.mapStatus(jointCredit.status);

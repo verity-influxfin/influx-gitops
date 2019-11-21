@@ -19,13 +19,16 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div id="container">
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<p>會員:</p>
 									<a id="user-id-link"><p id="user-id"></p></a>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<p>主要狀態:</p>
 									<p id="overal-status"  style="color:red;"></p>
+								</div>
+								<div class="col-lg-4">
+									<a id="joint-credit-file">聯徵檔案</a>
 								</div>
 							</div>
 							</br>
@@ -87,6 +90,7 @@
 
 				var jointCredits = new JointCredit(response.response.joint_credits);
 				fillJointCredits(jointCredits);
+                fillJointCreditFile(jointCredits)
 
 				var user = new User(response.response.user);
 				fillUser(user);
@@ -129,6 +133,12 @@
                 }
             });
         });
+
+        function fillJointCreditFile(jointCredit) {
+            if (!jointCredit.file) return;
+            $("#joint-credit-file").attr("href", jointCredit.file);
+            $("#joint-credit-file").attr("target", "_blank");
+		}
 
 		function fillUser(user) {
 			$("#user-id").text(user.id);

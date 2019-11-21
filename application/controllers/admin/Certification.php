@@ -617,6 +617,7 @@ class Certification extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $user]);
 
 	        $joint_credits = json_decode($certification->content);
+			$certification->content = $joint_credits;
 			$this->load->library('output/user/joint_credit_output', ["data" => $joint_credits->result, "certification" => $certification]);
 	        $response = [
 				"user" => $this->user_output->toOne(),

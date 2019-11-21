@@ -42,6 +42,10 @@ class Joint_credit_output
 			}
 		}
 
+		if (isset($this->certification->content->pdf_file)) {
+			$output["file"] = $this->certification->content->pdf_file;
+		}
+
         return $output;
     }
 
