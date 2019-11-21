@@ -554,7 +554,7 @@ $name 您好，
         $title 		= "【接收到新的訂單】";
         $content 	= "親愛的用戶，您好！
 您在普匯合作夥伴APP中已經接收到一筆新的訂單，
-「".$item."分期付款 $instalment 期、".$delivery."交易，
+「".$item."」分期付款 $instalment 期、".$delivery."交易，
 請儘速至APP中完成報價。";
         $param = array(
             "user_id"	=> $user_id,

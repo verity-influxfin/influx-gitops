@@ -13040,6 +13040,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "401",
+                            "description": "<p>產品不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "408",
                             "description": "<p>同產品重複申請</p>"
                         }
