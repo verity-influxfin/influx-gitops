@@ -7042,6 +7042,121 @@ define({
                     "url": "/api/v2/judicialperson/cooperation"
                 }
             ]
+        },{
+            "type": "post",
+            "url": "/v2/judicialperson/cooperationrepwstatus",
+            "title": "法人經銷 重設經銷商密碼",
+            "version": "0.2.0",
+            "name": "PostJudicialpersonCooperationrepwstatus",
+            "group": "Judicialperson",
+            "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_id",
+                            "description": "<p>cooperation_id(申請經銷商用,status=1才出現)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_key",
+                            "description": "<p>cooperation_key(申請經銷商用,status=1才出現)</p>"
+                        },    {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "new_password",
+                            "description": "<p>強制寫入新密碼，沒此key時為解鎖</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "315",
+                            "description": "<p>非法人負責人</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "422",
+                            "description": "<p>限法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "315",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"315\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "422",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"422\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Judicialperson.php",
+            "groupTitle": "Judicialperson",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/judicialperson/cooperationrepwstatus"
+                }
+            ]
         },
         {
             "type": "post",
@@ -10480,6 +10595,13 @@ define({
                             "group": "Success 200",
                             "type": "Object",
                             "optional": false,
+                            "field": "designate",
+                            "description": "<p>受委派或可申請的案件</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
                             "field": "selling_type",
                             "description": "<p>0:手機 1:遊學 2:外匯車 999:其它</p>"
                         }
@@ -12914,6 +13036,8 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
+                            "optional": true,
+                            "defaultValue": "0",
                             "field": "delivery",
                             "description": "<p>交易方式 0:線下 1:線上</p>"
                         },
@@ -13027,6 +13151,12 @@ define({
                             "optional": false,
                             "field": "362",
                             "description": "<p>子系統-訂單建立失敗</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>產品不存在</p>"
                         },
                         {
                             "group": "Error 4xx",
