@@ -302,13 +302,17 @@
 								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="40%">關聯原因</th>
-										<th width="30%">借款/投資端</th>
+										<th width="20%">關聯原因</th>
+										<th width="30%">關聯值</th>
+										<th width="20%">借款/投資端</th>
 										<th width="30%">使用者編號</th>
 									</tr>
 									</thead>
 									<tbody>
 										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
 											<td class="center-text fake-fields">
 												<p class="form-control-static"></p>
 											</td>
@@ -574,6 +578,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                 ).appendTo("#related-users");
 			}
 		}
@@ -592,10 +597,12 @@
             for (var i = start; i < end; i++) {
                 var reasonText = mapRelatedUsersReasons(relatedUsers[i].reason);
                 var reason = '<p class="form-control-static">' + reasonText + '</p>';
+                var value = '<p class="form-control-static">' + relatedUsers[i].relatedValue + '</p>';
                 var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
 				var userLink = '<a href="' + '/admin/user/edit?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
                 $("<tr>").append(
                     $('<td class="center-text">').append(reason),
+                    $('<td class="center-text">').append(value),
                     $('<td class="center-text">').append(statuses),
                     $('<td class="center-text">').append(userLink),
                 ).appendTo("#related-users");

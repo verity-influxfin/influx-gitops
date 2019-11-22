@@ -52,7 +52,7 @@ class Log_userlogin_model extends MY_Model
 
 		$subQuery = $this->db->get_compiled_select();
 
-		$this->db->select('users.*')
+		$this->db->select('users.*, login.created_ip as login_ip')
 			     ->from('p2p_log.user_login_log as login')
 				 ->join('p2p_user.users as users', 'users.id = login.user_id')
 		         ->where('login.user_id !=', $user_id)
