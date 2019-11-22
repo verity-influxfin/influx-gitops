@@ -44,8 +44,12 @@ class Sns extends REST_Controller {
 				$file_content  =  file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
 				$mailfrom = substr($file_content, strpos($file_content, 'X-Original-Sender: ') + 19, strpos($file_content, 'X-Original-Authentication-Results: mx.google.com') - strpos($file_content, 'X-Original-Sender: ') - 21);
 				$user_info = $this->user_model->get_by('email', $mailfrom);
-				$re_investigation_mail=strpos($file_content, 'UmU6IOOAkOiqjeitieOAkeiBr+WQiOW+teS/oeeUs+iriw');
-				$re_job_mail=strpos($file_content, 'UmU6IOOAkOiqjeitieOAkeW3peS9nOiqjeitieeUs+iriw==');
+				$subject=substr($file_content, (strpos($file_content, 'Subject: ')+19) ,100);
+				$subject=explode( "\n" , $subject);
+				$get_subject=substr($subject[0],0,-3);
+				$mail_title= base64_decode($get_subject);
+				$re_investigation_mail=strpos($mail_title, '聯合徵信申請');
+				$re_job_mail=strpos($mail_title, '工作認證申請');
 				if (empty($user_info)||(($re_investigation_mail === false)&&($re_job_mail === false))) {
 					$this->s3_lib->unknown_mail($s3_url,S3_BUCKET_MAILBOX);
 					$this->s3_lib->public_delete_s3object($s3_url,S3_BUCKET_MAILBOX);
