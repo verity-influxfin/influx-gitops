@@ -25,11 +25,6 @@ class Related_user_output
 				$output[] = $this->map("same_device_id", $user, $withSensitiveInfo);
 			}
 		}
-		if (isset($this->records->same_ip)) {
-			foreach ($this->records->same_ip as $user) {
-				$output[] = $this->map("same_ip", $user, $withSensitiveInfo);
-			}
-		}
 		if (isset($this->records->same_contact)) {
 			foreach ($this->records->same_contact as $user) {
 				$output[] = $this->map("same_contact", $user, $withSensitiveInfo);
@@ -63,7 +58,11 @@ class Related_user_output
 		if (isset($this->records->introducer)) {
 			$output[] = $this->map("same_phone_number", $this->records->introducer, $withSensitiveInfo);
 		}
-
+		if (isset($this->records->same_ip)) {
+			foreach ($this->records->same_ip as $user) {
+				$output[] = $this->map("same_ip", $user, $withSensitiveInfo);
+			}
+		}
 		return $output;
 	}
 
