@@ -880,7 +880,7 @@ class Judicialperson extends REST_Controller {
 			);
 			$rs = $this->judicial_person_model->update($judicial_person->id,$param);
 		}
-		
+
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
@@ -956,7 +956,7 @@ class Judicialperson extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
-    public function cooperationrepw_post()
+    public function cooperationrepwstatus_post()
     {
         $input 		= $this->input->post(NULL, TRUE);
         $fields 	= ['cooperation_id','cooperation_key','new_password'];
@@ -975,19 +975,24 @@ class Judicialperson extends REST_Controller {
             'cooperation_key' 	=> $content['cooperation_key'],
         ));
         if($judicial_person){
-            $this->load->library('coop_lib');
-            $result = $this->coop_lib->coop_request('user/repw',[
+            $parm = [
                 'cooperation_id' 	=> $content['cooperation_id'],
                 'cooperation_key' 	=> $content['cooperation_key'],
-                'new_passowrd' 	    => $content['new_passowrd'],
-            ],$company_user_id);
+            ];
+            isset($content['new_password'])&&!empty($content['new_password'])?$parm['new_password'] = sha1($content['new_password']) :'';
+            $this->load->library('coop_lib');
+            $result = $this->coop_lib->coop_request('user/repwstatus',$parm,$company_user_id);
+            if($result->result == 'SUCCESS'){
+                $this->response(['result' => 'SUCCESS']);
+            }
+            $this->response(['result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ]);
         }else{
             $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
         }
 
         $this->response(array('result' => 'SUCCESS' ));
     }
-	
+
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');

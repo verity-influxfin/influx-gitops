@@ -48,7 +48,7 @@ define({
     "GetJudicialpersonList",
     "PostJudicialpersonCooperation",
     "GetJudicialpersonCooperation",
-    "PostJudicialpersonCooperationrepw",
+    "PostJudicialpersonCooperationrepwstatus",
     "PostJudicialpersonAgent",
     "GetJudicialpersonAgent",
     "DeleteJudicialpersonAgent",

@@ -7044,10 +7044,10 @@ define({
             ]
         },{
             "type": "post",
-            "url": "/v2/judicialperson/cooperationrepw",
+            "url": "/v2/judicialperson/cooperationrepwstatus",
             "title": "法人經銷 重設經銷商密碼",
             "version": "0.2.0",
-            "name": "PostJudicialpersonCooperationrepw",
+            "name": "PostJudicialpersonCooperationrepwstatus",
             "group": "Judicialperson",
             "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
             "header": {
@@ -7082,9 +7082,9 @@ define({
                         },    {
                             "group": "Success 200",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "new_password",
-                            "description": "<p>寫入新密碼</p>"
+                            "description": "<p>強制寫入新密碼，沒此key時為解鎖</p>"
                         }
                     ]
                 }
@@ -7121,69 +7121,31 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "201",
-                            "description": "<p>新增時發生錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "213",
+                            "field": "315",
                             "description": "<p>非法人負責人</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "217",
+                            "field": "422",
                             "description": "<p>限法人帳號使用</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
-                        "title": "314",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"314\"\n}",
-                        "type": "Object"
-                    },
-                    {
                         "title": "200",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "201",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "title": "315",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"315\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "213",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "217",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"217\"\n}",
+                        "title": "422",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"422\"\n}",
                         "type": "Object"
                     }
                 ]
@@ -7192,7 +7154,7 @@ define({
             "groupTitle": "Judicialperson",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/judicialperson/cooperationrepw"
+                    "url": "/api/v2/judicialperson/cooperationrepwstatus"
                 }
             ]
         },
