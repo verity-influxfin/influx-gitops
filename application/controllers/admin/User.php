@@ -311,7 +311,8 @@ class User extends MY_Admin_Controller {
 		}
 		$usersWithSameDeviceId = $this->log_userlogin_model->get_same_device_id_users($userId, $deviceIds);
 
-		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId);
+		$timeBefore = 1564102800;
+		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId, $timeBefore);
 
 		$usersWithSameEmergencyContact = $this->user_meta_model->get_users_with_same_emergency_contact($userId);
 
