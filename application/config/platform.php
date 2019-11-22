@@ -138,7 +138,7 @@ $config['product_list']= [
 	],
 	2 => [
 		'id'				=> 2,
-        'visul_id'          => 2,
+        'visul_id'          => 3,
 		'type'				=> 2,
 		'identity'			=> 1,
 		'alias'				=> 'STI',
@@ -174,7 +174,7 @@ $config['product_list']= [
 	],
     4 => [
         'id'				=> 4,
-        'visul_id'          => 2,
+        'visul_id'          => 3,
         'type'				=> 2,
         'identity'			=> 2,
         'alias'				=> 'FGI',
@@ -190,26 +190,28 @@ $config['product_list']= [
         'status'			=> 1,
         'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
     ],
-    5 => [
-        'id'				=> 5,
-        'visul_id'          => 3,
-        'type'				=> 2,
-        'identity'			=> 2,
-        'alias'				=> 'CML',
-        'name'				=> '外匯車貸',
-        'loan_range_s'		=> 10000,
-        'loan_range_e'		=> 2000000,
-        'interest_rate_s'	=> 18,
-        'interest_rate_e'	=> 18,
-        'sub_product'       => [],
-        'certifications'	=> [1,3,4,5,6,7,8,9,10],
-        'instalment'		=> [3,6,12,18,24],
-        'repayment'			=> [1],
-        'status'			=> 1,
-        'description'		=> ''
-    ],
-    /*
-     *    6 => [
+    /*    5 => [
+            'id'				=> 5,
+            'visul_id'          => 2,
+            'type'				=> 1,
+            'identity'			=> 1,
+            'alias'				=> 'XXN',
+            'name'				=> '學生創業貸',
+            'loan_range_s'		=> 10000,
+            'loan_range_e'		=> 200000,
+            'interest_rate_s'	=> 18,
+            'interest_rate_e'	=> 18,
+            'sub_product'       => [],
+            'certifications'	=> [1,3,4,5,6,7,8,9,10],
+            'instalment'		=> [3,6,12,18,24],
+            'repayment'			=> [1],
+            'status'			=> 1,
+            'description'		=> '學生創業貸
+    計畫留學、創業或者實現更多理想嗎？
+    需要資金卻無法向銀行聲請借款嗎？
+    普匯陪你一起實現夢想'
+        ],
+        6 => [
             'id'				=> 6,
             'visul_id'          => 2,
             'type'				=> 1,
@@ -300,27 +302,20 @@ $config['visul_id_des'] = [
         'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    '2'	   => [
+    /*'2'	   => [
+        'name' => '創業貸款',
+        'description' =>'創業貸款',
+        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'status' => 1
+    ],*/
+    '3'	   => [
         'name' => '手機無卡分期專案',
         'description' =>'最新熱門手機選擇最多元',
         'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
         'status' => 1
     ],
-    '3'	   => [
-        'name' => '外匯車專案',
-        'description' =>'買進口車好方便',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'status' => 1
-    ],
-    /*'2'	   => [
-    'name' => '創業貸款',
-    'description' =>'創業貸款',
-    'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    'status' => 1
-],*/
     /*'4'	   => [
         'name' => '遊學貸',
         'description' =>'遊學貸XXX',
@@ -395,7 +390,7 @@ $config['sub_product_list'] = [
     ]
 ];
 
-$config['app_product_totallist'] = [1,2,3,101];
+$config['app_product_totallist'] = [1,3,101];
 
 
 //產品轉換代碼
