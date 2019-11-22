@@ -955,6 +955,38 @@ class Judicialperson extends REST_Controller {
 		
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
+
+    public function cooperationrepw_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $fields 	= ['cooperation_id','cooperation_key','new_password'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $company_user_id = $this->user_info->id;
+        $this->load->model('user/cooperation_model');
+        $judicial_person = $this->cooperation_model->get_by(array(
+            'company_user_id' 	=> $company_user_id,
+            'cooperation_id' 	=> $content['cooperation_id'],
+            'cooperation_key' 	=> $content['cooperation_key'],
+        ));
+        if($judicial_person){
+            $this->load->library('coop_lib');
+            $result = $this->coop_lib->coop_request('user/repw',[
+                'cooperation_id' 	=> $content['cooperation_id'],
+                'cooperation_key' 	=> $content['cooperation_key'],
+                'new_passowrd' 	    => $content['new_passowrd'],
+            ],$company_user_id);
+        }else{
+            $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
+        }
+
+        $this->response(array('result' => 'SUCCESS' ));
+    }
 	
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');

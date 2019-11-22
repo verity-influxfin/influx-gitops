@@ -7042,6 +7042,159 @@ define({
                     "url": "/api/v2/judicialperson/cooperation"
                 }
             ]
+        },{
+            "type": "post",
+            "url": "/v2/judicialperson/cooperationrepw",
+            "title": "法人經銷 重設經銷商密碼",
+            "version": "0.2.0",
+            "name": "PostJudicialpersonCooperationrepw",
+            "group": "Judicialperson",
+            "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_id",
+                            "description": "<p>cooperation_id(申請經銷商用,status=1才出現)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_key",
+                            "description": "<p>cooperation_key(申請經銷商用,status=1才出現)</p>"
+                        },    {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "new_password",
+                            "description": "<p>寫入新密碼</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "213",
+                            "description": "<p>非法人負責人</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "217",
+                            "description": "<p>限法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "314",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"314\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "213",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "217",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"217\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Judicialperson.php",
+            "groupTitle": "Judicialperson",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/judicialperson/cooperationrepw"
+                }
+            ]
         },
         {
             "type": "post",
