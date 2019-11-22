@@ -819,7 +819,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 			
 			//必填欄位
-			$fields 	= ['phone','relationship'];//'name',
+			$fields 	= ['name','phone','relationship'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -829,9 +829,8 @@ class Certification extends REST_Controller {
 			}
 
             $content['name'] 	= isset($input['name'])?$input['name']:"";
-			
-			$content['household_image'] = '';
-			if (isset($input['household_image']) && $input['household_image']) {
+
+			if (isset($input['household_image']) && is_numeric($input['household_image'])) {
 				$rs = $this->log_image_model->get_by([
 					'id'		=> intval($input['household_image']),
 					'user_id'	=> $user_id,
@@ -841,12 +840,12 @@ class Certification extends REST_Controller {
 				}
 			}
 
-            //if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
-            //    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            //}
-            //if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
-            //    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            //}
+            if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+            if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
 
             if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $content['phone'])){
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
