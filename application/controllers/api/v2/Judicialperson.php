@@ -979,7 +979,7 @@ class Judicialperson extends REST_Controller {
                 'cooperation_id' 	=> $content['cooperation_id'],
                 'cooperation_key' 	=> $content['cooperation_key'],
             ];
-            isset($content['new_password'])&&!empty($content['new_password'])?$parm['new_password'] = sha1($content['new_password']) :'';
+            isset($input['new_password'])&&!empty($input['new_password'])?$parm['new_password'] = sha1($input['new_password']) :'';
             $this->load->library('coop_lib');
             $result = $this->coop_lib->coop_request('user/repwstatus',$parm,$company_user_id);
             if($result->result == 'SUCCESS'){
