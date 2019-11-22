@@ -169,14 +169,14 @@
 									<fieldset disabled>
                                         <div class="form-group">
 											<label>學生證正面照</label><br>
-											<a href="<?= isset($content['front_image']) ? $content['front_image'][0] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['front_image']) ? $content['front_image'][0] : "" ?>" style='width:30%;max-width:400px'>
+											<a href="<?=$content['front_image'] ?>" data-fancybox="images">
+												<img src="<?=$content['front_image'] ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
 										<div class="form-group">
 											<label>學生證背面照</label><br>
-											<a href="<?= isset($content['back_image']) ? $content['back_image'][0] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['back_image']) ? $content['back_image'][0] : "" ?>" style='width:30%;max-width:400px'>
+											<a href="<?=$content['back_image'] ?>" data-fancybox="images">
+												<img src="<?=$content['back_image'] ?>" style='width:30%;max-width:400px'>
 											</a>
 										</div>
                                         <?
