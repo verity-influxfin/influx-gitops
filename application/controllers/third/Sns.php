@@ -57,7 +57,7 @@ class Sns extends REST_Controller {
 				}
 				$certification_id=($re_job_mail===false)? 9:10;
 				$have_pdf_file  = strpos($file_content, 'application/pdf');
-				$have_attachment = strpos($file_content, 'X-Attachment-Id');
+				$have_attachment = strpos($file_content, 'ttachment');
 				$info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $user_info->id, 'investor' => 0, 'certification_id' =>$certification_id]);
 				if (($have_pdf_file !== false) && ($have_attachment !== false)) {
 					$this->process_mail($info,$file_content, $user_info,$s3_url,$certification_id);
