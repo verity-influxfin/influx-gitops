@@ -959,7 +959,7 @@ class Judicialperson extends REST_Controller {
     public function cooperationrepwstatus_post()
     {
         $input 		= $this->input->post(NULL, TRUE);
-        $fields 	= ['cooperation_id','cooperation_key','new_password'];
+        $fields 	= ['cooperation_id','cooperation_key'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
