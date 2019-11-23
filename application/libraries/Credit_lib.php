@@ -234,9 +234,9 @@ class Credit_lib{
 			}
 		}
 
-		if ($approvalExtra && $approvalExtra->extraPoints) {
-			$total += $approvalExtra->extraPoints;
-		}
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $total += $approvalExtra->getExtraPoints();
+        }
 
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= intval($total);
