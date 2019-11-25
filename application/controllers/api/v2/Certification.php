@@ -538,11 +538,11 @@ class Certification extends REST_Controller {
             }
 
 			$file_fields = [];
-            isset($input['transcript_image'])?$file_fields[]='transcript_image':'';
+            isset($input['transcript_image']) && is_numeric($input['transcript_image'])?$file_fields[]='transcript_image':'';
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
-            isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
+            isset($input['pro_certificate_image']) && is_numeric($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
             isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
-            isset($input['game_work_image'])?$file_fields[]='game_work_image':'';
+            isset($input['game_work_image']) && is_numeric($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$input[$field]);
@@ -1630,9 +1630,9 @@ class Certification extends REST_Controller {
 
             isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
 
-            isset($input['business_image'])?$file_fields[]='business_image':'';
-            isset($input['license_image'])?$file_fields[]='license_image':'';
-            isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
+            isset($input['business_image']) && is_numeric($input['business_image'])?$file_fields[]='business_image':'';
+            isset($input['license_image']) && is_numeric($input['license_image'])?$file_fields[]='license_image':'';
+            isset($input['auxiliary_image']) && is_numeric($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
 
             $send_mail = false;
             if(isset($input['labor_type'])){
