@@ -88,10 +88,6 @@ class Related_user_output
 			$output["related_value"] = $user->id_number;
 		}
 
-		if ($reason == "same_address") {
-			$output["related_value"] = $user->address;
-		}
-
 		return $output;
 	}
 }

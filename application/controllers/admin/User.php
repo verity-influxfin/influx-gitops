@@ -330,12 +330,13 @@ class User extends MY_Admin_Controller {
 		$emails = [];
 		foreach ($certificationRequests as $certificationRequest) {
 			$content = json_decode($certificationRequest->content);
-			if ($certificationRequest->id == 1) {
+			$certificationId = $certificationRequest->certification_id;
+			if ($certificationId == 1) {
 				$idCardNumbers[] = $content->id_number;
 				$addresses[] = $content->address;
-			} elseif ($certificationRequest->id == 3) {
+			} elseif ($certificationId == 3) {
 				$bankAccounts[] = $content->bank_account;
-			} elseif ($certificationRequest->id == 6) {
+			} elseif ($certificationId == 6) {
 				$emails[] = $content->email;
 			}
 		}
