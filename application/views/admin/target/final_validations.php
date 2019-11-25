@@ -348,13 +348,14 @@
 									<tr class="odd list">
 										<th width="10%">案號</th>
 										<th width="10%">產品</th>
-										<th width="12%">核准金額</th>
-										<th width="12%">本金餘額</th>
-										<th width="12%">可動用餘額</th>
-										<th width="10%">狀態</th>
+										<th width="10%">申請金額</th>
+										<th width="10%">核准金額</th>
+										<th width="10%">本金餘額</th>
+										<th width="10%">可動用餘額</th>
+										<th width="6%">狀態</th>
 										<th width="10%">有效時間</th>
-										<th width="10%">Detail</th>
-										<th width="14%">借款原因</th>
+										<th width="6%">Detail</th>
+										<th width="18%">借款原因</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -808,6 +809,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag)
                 ).appendTo("#targets");
 			}
@@ -818,16 +820,18 @@
                 let target = targets[i];
                 var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
 
+                var amountRequested = convertNumberSplitedByThousands(target.amount.requested);
                 var amountApproved = convertNumberSplitedByThousands(target.amount.approved);
                 var amountRemaining = convertNumberSplitedByThousands(target.amount.remaining);
-                var available = convertNumberSplitedByThousands(target.amount.available);
+                var principal = convertNumberSplitedByThousands(target.amount.principal);
 
                 $("<tr>").append(
                     getCenterTextCell(target.number, backgroundColor),
                     getCenterTextCell(target.product.name, backgroundColor),
+                    getCenterTextCell(amountRequested, backgroundColor),
                     getCenterTextCell(amountApproved, backgroundColor),
                     getCenterTextCell(amountRemaining, backgroundColor),
-                    getCenterTextCell(available, backgroundColor),
+                    getCenterTextCell(principal, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
                     getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
