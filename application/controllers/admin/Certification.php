@@ -104,7 +104,7 @@ class Certification extends MY_Admin_Controller {
 						//加入SIP網址--
 					}
                     if ($info->certification_id == 9) {
-                        if(json_decode($info->content)->return_type!==0){
+                        if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
 							$this->joint_credits();
 							return;
                         }
