@@ -7071,20 +7071,27 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "cooperation_id",
-                            "description": "<p>cooperation_id(申請經銷商用,status=1才出現)</p>"
+                            "description": "<p>cooperation_id</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "cooperation_key",
-                            "description": "<p>cooperation_key(申請經銷商用,status=1才出現)</p>"
+                            "description": "<p>cooperation_key</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_account",
+                            "description": "<p>經銷商使用者帳號</p>"
                         },    {
                             "group": "Success 200",
                             "type": "String",
                             "optional": true,
                             "field": "new_password",
-                            "description": "<p>強制寫入新密碼，沒此key時為解鎖</p>"
+                            "description": "<p>強制寫入新密碼，沒帶key(new_password)時為解鎖</p>"
                         }
                     ]
                 }
@@ -7122,13 +7129,13 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "315",
-                            "description": "<p>非法人負責人</p>"
+                            "description": "<p>經銷商不存在</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "422",
-                            "description": "<p>限法人帳號使用</p>"
+                            "field": "363",
+                            "description": "<p>經銷商帳號不存在</p>"
                         }
                     ]
                 },
@@ -7145,7 +7152,7 @@ define({
                     },
                     {
                         "title": "422",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"422\"\n}",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"363\"\n}",
                         "type": "Object"
                     }
                 ]
