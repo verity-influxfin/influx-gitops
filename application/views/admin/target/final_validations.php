@@ -337,7 +337,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總攬（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
 				</div>
 				<div class="panel-body">
 					<div class="row">
