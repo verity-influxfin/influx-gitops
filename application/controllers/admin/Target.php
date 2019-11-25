@@ -712,7 +712,10 @@ class Target extends MY_Admin_Controller {
 			$index = 0;
 			foreach ($targets as $target) {
 				$userIds[] = $target->user_id;
-				$userIndexes[$target->user_id] = $index++;
+				if (!isset($userIndexes[$target->user_id])) {
+					$userIndexes[$target->user_id] = [];
+				}
+				$userIndexes[$target->user_id][] = $index++;
 			}
 
 			$users = $this->user_model->get_many_by(['id' => $userIds]);
@@ -720,8 +723,10 @@ class Target extends MY_Admin_Controller {
 			$numTargets = count($targets);
 			$userList = array_fill(0, $numTargets, null);
 			foreach ($users as $user) {
-				$index = $userIndexes[$user->id];
-				$userList[$index] = $user;
+				$indexes = $userIndexes[$user->id];
+				foreach ($indexes as $index) {
+					$userList[$index] = $user;
+				}
 			}
 
 			$this->load->library('output/loan/target_output', ['data' => $targets]);
