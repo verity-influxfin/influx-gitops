@@ -365,6 +365,7 @@ defined('OrderExists')  	                OR define('OrderExists'		            , 
 defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360);//API ERROR
 defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
 defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
+defined('CooperationAccountNotFound') OR define('CooperationAccountNotFound' , 363);//法人帳號不存在
 
 defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));
