@@ -71,7 +71,9 @@
 										</td>
 										<td class="table-field"><p class="form-control-static">地址</p></td>
 										<td class="table-ten">
-											<p id="address" class="form-control-static"></p>
+											<div class="scrollable">
+												<p id="address" class="form-control-static"></p>
+											</div>
 										</td>
 										<td class="table-field"><p class="form-control-static">系所</p></td>
 										<td class="table-twenty">
@@ -302,13 +304,17 @@
 								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="40%">關聯原因</th>
-										<th width="30%">借款/投資端</th>
+										<th width="20%">關聯原因</th>
+										<th width="30%">關聯值</th>
+										<th width="20%">借款/投資端</th>
 										<th width="30%">使用者編號</th>
 									</tr>
 									</thead>
 									<tbody>
 										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
 											<td class="center-text fake-fields">
 												<p class="form-control-static"></p>
 											</td>
@@ -331,7 +337,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總攬（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -342,13 +348,14 @@
 									<tr class="odd list">
 										<th width="10%">案號</th>
 										<th width="10%">產品</th>
-										<th width="12%">核准金額</th>
-										<th width="12%">本金餘額</th>
-										<th width="12%">可動用餘額</th>
-										<th width="10%">狀態</th>
+										<th width="10%">申請金額</th>
+										<th width="10%">核准金額</th>
+										<th width="10%">本金餘額</th>
+										<th width="10%">可動用餘額</th>
+										<th width="6%">狀態</th>
 										<th width="10%">有效時間</th>
-										<th width="10%">Detail</th>
-										<th width="14%">借款原因</th>
+										<th width="6%">Detail</th>
+										<th width="18%">借款原因</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -574,6 +581,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                 ).appendTo("#related-users");
 			}
 		}
@@ -592,10 +600,12 @@
             for (var i = start; i < end; i++) {
                 var reasonText = mapRelatedUsersReasons(relatedUsers[i].reason);
                 var reason = '<p class="form-control-static">' + reasonText + '</p>';
+                var value = '<p class="form-control-static">' + relatedUsers[i].relatedValue + '</p>';
                 var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
 				var userLink = '<a href="' + '/admin/user/edit?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
                 $("<tr>").append(
                     $('<td class="center-text">').append(reason),
+                    $('<td class="center-text">').append(value),
                     $('<td class="center-text">').append(statuses),
                     $('<td class="center-text">').append(userLink),
                 ).appendTo("#related-users");
@@ -669,7 +679,7 @@
 			if (isReEvaluated) prefix = "new-";
 			$("#" + prefix + "product-name").text(credit.product.name);
 			$("#" + prefix + "credit-level").text(credit.level);
-			$("#" + prefix + "credit-amount").text(credit.amount);
+			$("#" + prefix + "credit-amount").text(convertNumberSplitedByThousands(credit.amount));
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
@@ -730,11 +740,13 @@
 		function fillVirtualAccounts(virtualAccounts) {
             if (virtualAccounts.borrower) {
                 var total = virtualAccounts.borrower.funds.total - virtualAccounts.borrower.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $("#borrower-virtual-account-total").text(total + "元");
 			}
 
             if (virtualAccounts.investor) {
                 var total = virtualAccounts.investor.funds.total - virtualAccounts.investor.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $("#investor-virtual-account-total").text(total + "元");
 			}
 		}
@@ -797,6 +809,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag)
                 ).appendTo("#targets");
 			}
@@ -806,14 +819,21 @@
             for (var i = 0; i < targets.length; i++) {
                 let target = targets[i];
                 var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
+
+                var amountRequested = convertNumberSplitedByThousands(target.amount.requested);
+                var amountApproved = convertNumberSplitedByThousands(target.amount.approved);
+                var amountRemaining = convertNumberSplitedByThousands(target.amount.remaining);
+                var principal = convertNumberSplitedByThousands(target.amount.principal);
+
                 $("<tr>").append(
                     getCenterTextCell(target.number, backgroundColor),
                     getCenterTextCell(target.product.name, backgroundColor),
-                    getCenterTextCell(target.amount.approved, backgroundColor),
-                    getCenterTextCell(target.amount.remaining, backgroundColor),
-                    getCenterTextCell(target.amount.principal, backgroundColor),
+                    getCenterTextCell(amountRequested, backgroundColor),
+                    getCenterTextCell(amountApproved, backgroundColor),
+                    getCenterTextCell(amountRemaining, backgroundColor),
+                    getCenterTextCell(principal, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
-                    getCenterTextCell(target.expireAt, backgroundColor),
+                    getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
                     getCenterTextCell(target.reason, backgroundColor)
                 ).appendTo("#targets");
@@ -822,6 +842,10 @@
 
 		function getCenterTextCell(value, additionalCssClass = "") {
             return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
+		}
+
+		function convertNumberSplitedByThousands(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
 
         $("#credit-evaluation").submit(function(e) {
@@ -1003,5 +1027,9 @@
 		background-size: 800px 104px;
 		height: 30px;
 		position: relative;
+	}
+
+	.scrollable {
+		overflow: auto;
 	}
 </style>

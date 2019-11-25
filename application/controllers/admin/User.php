@@ -311,7 +311,8 @@ class User extends MY_Admin_Controller {
 		}
 		$usersWithSameDeviceId = $this->log_userlogin_model->get_same_device_id_users($userId, $deviceIds);
 
-		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId);
+		$timeBefore = 1564102800;
+		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId, $timeBefore);
 
 		$usersWithSameEmergencyContact = $this->user_meta_model->get_users_with_same_emergency_contact($userId);
 
@@ -329,12 +330,13 @@ class User extends MY_Admin_Controller {
 		$emails = [];
 		foreach ($certificationRequests as $certificationRequest) {
 			$content = json_decode($certificationRequest->content);
-			if ($certificationRequest->id == 1) {
+			$certificationId = $certificationRequest->certification_id;
+			if ($certificationId == 1) {
 				$idCardNumbers[] = $content->id_number;
 				$addresses[] = $content->address;
-			} elseif ($certificationRequest->id == 3) {
+			} elseif ($certificationId == 3) {
 				$bankAccounts[] = $content->bank_account;
-			} elseif ($certificationRequest->id == 6) {
+			} elseif ($certificationId == 6) {
 				$emails[] = $content->email;
 			}
 		}
