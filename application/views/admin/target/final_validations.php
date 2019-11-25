@@ -822,7 +822,7 @@
                     getCenterTextCell(target.amount.remaining, backgroundColor),
                     getCenterTextCell(target.amount.principal, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
-                    getCenterTextCell(target.expireAt, backgroundColor),
+                    getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
                     getCenterTextCell(target.reason, backgroundColor)
                 ).appendTo("#targets");

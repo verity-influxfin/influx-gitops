@@ -43,4 +43,9 @@ class Target
 		this.repayment.id = target.repayment.id;
 		this.repayment.text = target.repayment.text;
 	}
+
+	getExpireAtHumanReadable() {
+		var date = new DateTime(this.expireAt)
+		return date.years + "/" + date.months + "/" + date.days;
+	}
 }
