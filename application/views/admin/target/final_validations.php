@@ -71,7 +71,9 @@
 										</td>
 										<td class="table-field"><p class="form-control-static">地址</p></td>
 										<td class="table-ten">
-											<p id="address" class="form-control-static"></p>
+											<div class="scrollable">
+												<p id="address" class="form-control-static"></p>
+											</div>
 										</td>
 										<td class="table-field"><p class="form-control-static">系所</p></td>
 										<td class="table-twenty">
@@ -1010,5 +1012,9 @@
 		background-size: 800px 104px;
 		height: 30px;
 		position: relative;
+	}
+
+	.scrollable {
+		overflow: auto;
 	}
 </style>
