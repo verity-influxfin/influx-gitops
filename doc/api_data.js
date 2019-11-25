@@ -7135,7 +7135,7 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "363",
-                            "description": "<p>法人帳號不存在</p>"
+                            "description": "<p>經銷商帳號不存在</p>"
                         }
                     ]
                 },
