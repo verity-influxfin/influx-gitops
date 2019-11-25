@@ -629,6 +629,7 @@ class Target extends MY_Admin_Controller {
 			$user->school = $this->usermeta->values();
 			$user->instagram = $this->usermeta->values();
 			$user->facebook = $this->usermeta->values();
+
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
@@ -662,10 +663,15 @@ class Target extends MY_Admin_Controller {
 			]);
 
 			foreach ($targets as $otherTarget) {
-				$amortization = $this->target_lib->get_amortization_table($target);
+				$amortization = $this->target_lib->get_amortization_table($otherTarget);
 				$otherTarget->amortization = $amortization;
 
-				$credit = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+				$validBefore  = $otherTarget->created_at + (TARGET_APPROVE_LIMIT*86400);
+				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
+					'product_id' => $otherTarget->product_id,
+					'user_id' => $userId,
+					'created_at <=' => $validBefore,
+				]);
 				$otherTarget->credit = $credit;
 			}
 
@@ -680,6 +686,7 @@ class Target extends MY_Admin_Controller {
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
 			];
+
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
 

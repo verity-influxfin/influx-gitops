@@ -820,14 +820,14 @@
 
                 var amountApproved = convertNumberSplitedByThousands(target.amount.approved);
                 var amountRemaining = convertNumberSplitedByThousands(target.amount.remaining);
-                var principal = convertNumberSplitedByThousands(target.amount.principal);
+                var available = convertNumberSplitedByThousands(target.amount.available);
 
                 $("<tr>").append(
                     getCenterTextCell(target.number, backgroundColor),
                     getCenterTextCell(target.product.name, backgroundColor),
                     getCenterTextCell(amountApproved, backgroundColor),
                     getCenterTextCell(amountRemaining, backgroundColor),
-                    getCenterTextCell(principal, backgroundColor),
+                    getCenterTextCell(available, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
                     getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
