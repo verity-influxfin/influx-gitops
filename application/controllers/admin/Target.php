@@ -127,6 +127,7 @@ class Target extends MY_Admin_Controller {
 			}
 		}
         $product_list    = $this->config->item('product_list');
+        $sub_product_list = $this->config->item('sub_product_list');
         $instalment_list = $this->config->item('instalment');
         $repayment_type  = $this->config->item('repayment_type');
         $status_list     = $this->target_model->status_list;

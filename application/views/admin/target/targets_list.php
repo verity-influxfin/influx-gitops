@@ -120,8 +120,8 @@
 										if(isset($list) && !empty($list)){
                                             $subloan_list = $this->config->item('subloan_list');
 											$count = 0;
-											foreach($list as $key => $value){
-												$count++;
+                                    foreach($list as $key => $value){
+                                        $count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
@@ -154,7 +154,7 @@
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
-										}}
+									}}
 									?>
                                     </tbody>
                                 </table>
