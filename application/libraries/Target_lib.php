@@ -224,7 +224,7 @@ class Target_lib{
 	public function approve_target($target = []){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
-		if(!empty($target) && ($target->status==0 || $target->status==22)){
+		if(!empty($target) && ($target->status == 0 && $target->sub_status == 0 || $target->status==22)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -872,6 +872,7 @@ class Target_lib{
 								$count++;
 								$param = [
 									'status' => 9,
+									'sub_status' => 0,
 									'remark' => $value->remark.'系統自動取消'
 								];
 								$this->CI->target_model->update($value->id,$param);
