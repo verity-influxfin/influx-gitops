@@ -434,7 +434,7 @@ class Certification_lib{
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
 			$return_type=json_decode($info->content)->return_type;
 			$result = [
-				'status' => 'failure',
+				'status' => null,
 				'messages' => []
 			];
 			$parser = new \Smalot\PdfParser\Parser();
