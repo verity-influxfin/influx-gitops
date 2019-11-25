@@ -28,7 +28,6 @@ class Target
 		this.amount = {};
 		this.amount.requested = parseInt(target.requested_amount);
 		this.amount.approved = parseInt(target.approved_amount);
-		this.amount.available = parseInt(target.available_amount)
 		this.amount.remaining = parseInt(target.remaining);
 		this.amount.principal = parseInt(target.principal);
 	}
@@ -46,6 +45,7 @@ class Target
 	}
 
 	getExpireAtHumanReadable() {
+		if (this.expireAt == 0) return '';
 		var date = new DateTime(this.expireAt)
 		return date.years + "/" + date.months + "/" + date.days;
 	}
