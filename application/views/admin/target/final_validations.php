@@ -678,7 +678,7 @@
 			if (isReEvaluated) prefix = "new-";
 			$("#" + prefix + "product-name").text(credit.product.name);
 			$("#" + prefix + "credit-level").text(credit.level);
-			$("#" + prefix + "credit-amount").text(credit.amount);
+			$("#" + prefix + "credit-amount").text(convertNumberSplitedByThousands(credit.amount));
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
@@ -739,11 +739,13 @@
 		function fillVirtualAccounts(virtualAccounts) {
             if (virtualAccounts.borrower) {
                 var total = virtualAccounts.borrower.funds.total - virtualAccounts.borrower.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $("#borrower-virtual-account-total").text(total + "元");
 			}
 
             if (virtualAccounts.investor) {
                 var total = virtualAccounts.investor.funds.total - virtualAccounts.investor.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $("#investor-virtual-account-total").text(total + "元");
 			}
 		}
@@ -815,12 +817,17 @@
             for (var i = 0; i < targets.length; i++) {
                 let target = targets[i];
                 var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
+
+                var amountApproved = convertNumberSplitedByThousands(target.amount.approved);
+                var amountRemaining = convertNumberSplitedByThousands(target.amount.remaining);
+                var principal = convertNumberSplitedByThousands(target.amount.principal);
+
                 $("<tr>").append(
                     getCenterTextCell(target.number, backgroundColor),
                     getCenterTextCell(target.product.name, backgroundColor),
-                    getCenterTextCell(target.amount.approved, backgroundColor),
-                    getCenterTextCell(target.amount.remaining, backgroundColor),
-                    getCenterTextCell(target.amount.principal, backgroundColor),
+                    getCenterTextCell(amountApproved, backgroundColor),
+                    getCenterTextCell(amountRemaining, backgroundColor),
+                    getCenterTextCell(principal, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
                     getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button>Detail</button></a>'),
@@ -831,6 +838,10 @@
 
 		function getCenterTextCell(value, additionalCssClass = "") {
             return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
+		}
+
+		function convertNumberSplitedByThousands(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		}
 
         $("#credit-evaluation").submit(function(e) {
