@@ -102,8 +102,8 @@ class Sns extends REST_Controller {
 		$mailrole=array_search("\r",$file);
 		if($mailrole){//hotmail
 			$get_file=array_slice($file,0,$mailrole);
-			$file_content=implode("\n" , $get_file);
-			$url = $this->s3_lib->credit_mail_pdf($file_content, $user_info->id, $name, 'user_upload/' . $user_info->id);
+			$fileContent=implode("\n" , $get_file);
+			$url = $this->s3_lib->credit_mail_pdf(base64_decode($fileContent), $user_info->id, $name, 'user_upload/' . $user_info->id);
 			if (!empty($url) && ($url !== false)) { //刪S3資料
 				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
 			}
