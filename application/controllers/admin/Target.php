@@ -279,6 +279,7 @@ class Target extends MY_Admin_Controller {
                     $page_data['investments_amortization_schedule'] = $investments_amortization_schedule;
                     $page_data['credit_list'] = $credit_list;
                     $page_data['product_list'] = $this->config->item('product_list');
+                    $page_data['sub_product_list'] = $this->config->item('sub_product_list');
                     $page_data['bank_account_verify'] = $bank_account_verify;
                     $page_data['virtual_account'] = $virtual_account;
                     $page_data['instalment_list'] = $this->config->item('instalment');
@@ -447,6 +448,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['list'] 				= $waiting_list;
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['sub_list'] 		    = $this->target_model->sub_list;;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
@@ -770,7 +772,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['list'] 				= $waiting_list;
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['loan_list'] 		= $this->target_model->loan_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
 		$page_data['sub_status_list'] 		= $this->target_model->sub_list;
@@ -955,7 +958,7 @@ class Target extends MY_Admin_Controller {
 				}
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				$list[$key]->amortization_table = [
-					'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
+					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
@@ -979,8 +982,9 @@ class Target extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['school_list'] 		= $school_list;
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/target/targets_repayment',$page_data);
 		$this->load->view('admin/_footer');
@@ -1251,7 +1255,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['list'] 				= $list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['list'] 				= $list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['school_list'] 		= $school_list;
 
@@ -1304,7 +1309,7 @@ class Target extends MY_Admin_Controller {
 				}
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				$list[$key]->amortization_table = [
-					'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
+					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
@@ -1324,7 +1329,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['list'] 				= $list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['sub_list'] 			= $this->target_model->sub_list;
@@ -1377,6 +1383,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;

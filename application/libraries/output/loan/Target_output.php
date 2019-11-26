@@ -22,6 +22,7 @@ class Target_output
 		}
 
 		$this->loadProductMapping();
+		$this->loadSubProductMapping();
 		$this->loadTargetStatusMapping();
 		$this->loadRepaymentMapping();
 	}
@@ -55,7 +56,7 @@ class Target_output
 			'number' => $target->target_no,
 			'product' => [
 				'id' => $target->product_id,
-				'name' => isset($this->productMapping[$target->product_id]["name"]) ? $this->productMapping[$target->product_id]["name"] : '',
+				'name' => isset($this->productMapping[$target->product_id]["name"]) ? $this->productMapping[$target->product_id]["name"].($target->sub_product_id!=0?' / '.$this->subProductMapping[$target->sub_product_id]['identity'][$this->productMapping[$target->product_id]['identity']]['name']:'') : '',
 			],
 			'requested_amount' => $target->amount,
 			'approved_amount' => isset($target->credit) ? isset($target->credit->amount) ? $target->credit->amount : $target->credit["amount"] : null,
@@ -101,6 +102,12 @@ class Target_output
 	{
 		$ci =& get_instance();
 		$this->productMapping = $ci->config->item('product_list');
+	}
+
+	public function loadSubProductMapping()
+	{
+		$ci =& get_instance();
+		$this->subProductMapping = $ci->config->item('sub_product_list');
 	}
 
 	public function loadRepaymentMapping()

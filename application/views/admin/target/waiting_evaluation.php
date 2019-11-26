@@ -105,7 +105,7 @@
 		}
 
         function getCenterTextCell(value) {
-            console.log('<td class="center-text">' + value + '</td>');
+            //console.log('<td class="center-text">' + value + '</td>');
             return '<td class="center-text">' + value + '</td>';
         }
     });
