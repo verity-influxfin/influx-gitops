@@ -77,7 +77,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></td>
                                             <td>
 												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
 													<?=isset($value->user_id)?$value->user_id:'' ?>

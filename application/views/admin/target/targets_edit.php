@@ -42,7 +42,7 @@
 											<tr>
 												<td><p class="form-control-static">產品</p></td>
 												<td>
-													<p class="form-control-static"><?=isset($data->product_id)?$product_list[$data->product_id]['name']:"";?></p>
+													<p class="form-control-static"><?=isset($data->product_id)?$product_list[$data->product_id]['name']:"";?><?=$data->sub_product_id!=0?' / '.$sub_product_list[$data->sub_product_id]['identity'][$product_list[$data->product_id]['identity']]['name']:'' ?></p>
 												</td>
 												<td><p class="form-control-static">申請金額</p></td>
 												<td>
