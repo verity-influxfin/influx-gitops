@@ -125,7 +125,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>

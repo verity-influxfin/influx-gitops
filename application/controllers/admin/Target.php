@@ -142,7 +142,7 @@ class Target extends MY_Admin_Controller {
                 foreach($list as $key => $value){
                     $html .= '<tr>';
                     $html .= '<td>'.$value->target_no.'</td>';
-                    $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
+                    $html .= '<td>'.$product_list[$value->product_id]['name'].($value->sub_product_id!=0?'/'.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'').(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
@@ -170,6 +170,7 @@ class Target extends MY_Admin_Controller {
         }
 		else{
             $page_data['product_list']		= $product_list;
+            $page_data['sub_product_list'] = $sub_product_list;
             $page_data['instalment_list']	= $instalment_list;
             $page_data['repayment_type']	= $repayment_type;
             $page_data['list'] 				= $list;
@@ -189,6 +190,8 @@ class Target extends MY_Admin_Controller {
 		$page_data 	= array('type'=>'edit');
 		$get 		= $this->input->get(NULL, TRUE);
         $post 		= $this->input->post(NULL, TRUE);
+        $sub_product_list = $this->config->item('sub_product_list');
+
 
 		$id 		= isset($get['id'])?intval($get['id']):0;
 		$display 	= isset($get['display'])?intval($get['display']):0;
@@ -264,6 +267,7 @@ class Target extends MY_Admin_Controller {
                     $bank_account_verify = $bank_account ? 1 : 0;
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
+                    $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;
                     $page_data['order'] = $order;
                     $page_data['user_info'] = $user_info;
@@ -377,7 +381,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function verify_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -399,7 +403,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	public function waiting_verify(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
@@ -424,7 +428,7 @@ class Target extends MY_Admin_Controller {
 						'verify'	=> 1,
 					));
 
-					
+
 					$value -> subloan_count = count($this->target_model->get_many_by(
 						array(
 							'user_id'     => $value->user_id,
@@ -630,7 +634,6 @@ class Target extends MY_Admin_Controller {
 			$user->school = $this->usermeta->values();
 			$user->instagram = $this->usermeta->values();
 			$user->facebook = $this->usermeta->values();
-
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
@@ -664,15 +667,10 @@ class Target extends MY_Admin_Controller {
 			]);
 
 			foreach ($targets as $otherTarget) {
-				$amortization = $this->target_lib->get_amortization_table($otherTarget);
+				$amortization = $this->target_lib->get_amortization_table($target);
 				$otherTarget->amortization = $amortization;
 
-				$validBefore  = $otherTarget->created_at + (TARGET_APPROVE_LIMIT*86400);
-				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
-					'product_id' => $otherTarget->product_id,
-					'user_id' => $userId,
-					'created_at <=' => $validBefore,
-				]);
+				$credit = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
 				$otherTarget->credit = $credit;
 			}
 
@@ -687,7 +685,6 @@ class Target extends MY_Admin_Controller {
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
 			];
-
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
 
@@ -713,10 +710,7 @@ class Target extends MY_Admin_Controller {
 			$index = 0;
 			foreach ($targets as $target) {
 				$userIds[] = $target->user_id;
-				if (!isset($userIndexes[$target->user_id])) {
-					$userIndexes[$target->user_id] = [];
-				}
-				$userIndexes[$target->user_id][] = $index++;
+				$userIndexes[$target->user_id] = $index++;
 			}
 
 			$users = $this->user_model->get_many_by(['id' => $userIds]);
@@ -724,10 +718,8 @@ class Target extends MY_Admin_Controller {
 			$numTargets = count($targets);
 			$userList = array_fill(0, $numTargets, null);
 			foreach ($users as $user) {
-				$indexes = $userIndexes[$user->id];
-				foreach ($indexes as $index) {
-					$userList[$index] = $user;
-				}
+				$index = $userIndexes[$user->id];
+				$userList[$index] = $user;
 			}
 
 			$this->load->library('output/loan/target_output', ['data' => $targets]);
