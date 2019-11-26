@@ -170,34 +170,109 @@ class Financial_lib{
 		);
 		return $schedule;
 	}
-	
-	public function leap_year($date='',$instalment=0){
-		if (!$date || !$instalment) {
-			return false;
-		}
 
-		$finalYear = date('Y-m-d', strtotime($date . "+ {$instalment} month"));
-		$currentTimeStamp = strtotime($date);
-		$finalTimeStamp = strtotime($finalYear);
+    public function leap_year($date='',$instalment=0){
+        if (!$date || !$instalment) {
+                return false;
+        }
 
-		$start = date("Y", $currentTimeStamp);
-		$end = date("Y", $finalTimeStamp);
-		$diff = $end - $start;
+            if($instalment > 96)return true;
 
-		for ($i = 0; $i <= $diff; $i++) {
-			$year = $start + $i;
-			$currentYear = "{$year}-01-01";
-			if (date('L',strtotime($currentYear)) == '1') {
-				$extraDate = date('Y', strtotime($currentYear)) . '-02-29';
-				$extraDateTimeStamp = strtotime($extraDate);
-				if ($finalTimeStamp >= $extraDateTimeStamp && $currentTimeStamp <= $extraDateTimeStamp) {
-					return true;
-				}
-			}
-		}
+            $current = explode("-",$date);
 
-		return false;
-	}
+            $cy = $current[0];
+            $cm = $current[1];
+            $cd = $current[2];
+
+            $isLeapDay = $cm == 2 && $cd >= 29;
+            $thisY = $cy;
+
+            if($thisY%4 == 0){
+                    if($thisY%100 == 0){
+                            if($thisY%400 == 0){
+                                    if(checkCurrentLeap($instalment,$cm,$cd))return true;
+                            }
+                    }else{
+                            if(checkCurrentLeap($instalment, $cm, $cd))return true;
+                    }
+            }
+
+            $nextLeapInc = $thisY%4 == 0 ? 4 : (4-$thisY%4);
+            $_nextLeaY = $nextLeapInc + $cy;
+            if($_nextLeaY%400 != 0 && $_nextLeaY%100 == 0)$nextLeapInc = $nextLeapInc*1 + 4;
+            $checkMLess = $cm%12;
+            $nextLMs = ($checkMLess == 0 ? 0 : (12-$checkMLess)) + ($nextLeapInc == 0 ? 0 : $nextLeapInc - 1)*12 + 2;
+            if($nextLMs > $instalment)return false;
+            if($nextLMs < $instalment)return true;
+            if($instalment>48){
+                    if($nextLeapInc>4 || ($cy%400 != 0 && $cy%100 == 0)){
+                            $_nextLeaY = $nextLeapInc + $cy;
+                            $_y = $cy + floor(($cm+$instalment)/12);
+                            $_m = ($cm+$instalment)%12 == 0 ? 1 : ($cm+$instalment)%12;
+                            if($_y>$_nextLeaY)return true;
+                            if($_y<$_nextLeaY)return false;
+                            if($_m==1)return false;
+                            if($_m>2)return true;
+                            return $cd >= 29;
+                    }else{
+                            return true;
+                    }
+            }
+
+            $nextLeapY = $thisY + $nextLeapInc;
+            if($nextLeapY%4 == 0){
+                    if($nextLeapY%100 == 0){
+                            if($nextLeapY%400 == 0){
+                                    return checkNextMD($thisY, $instalment,$nextLeapY,$cm, $cd);
+                            }else{
+                                    if($isLeapDay)return false;
+                            }
+                    }else{
+                            return checkNextMD($thisY, $instalment,$nextLeapY, $cm, $cd);
+                    }
+            }else if($isLeapDay){
+                    return false;
+            }
+            return false;
+    }
+
+    function checkNextMD($thisY, $instalment,$nextLeapY, $m , $d ){
+            $nextY = $thisY;
+            if($m+$instalment>12){
+                    $_m = $instalment-($m == 12 ? 0 : (12-$m%12));
+                    $nextY = $thisY + floor($_m/12) + ($_m%12 > 0 ? 1 : 0);
+            }
+
+            if($nextY>$nextLeapY){
+                    return true;
+            }else if($nextY<$nextLeapY){
+                    return false;
+            }else{
+                    $_m2 = ($m+$instalment)%12;
+                    if($_m2==1){
+                            return false;
+                    }else if($_m2>2){
+                            return true;
+                    }else{
+                            return $d>=29;
+                    }
+            }
+    }
+
+    function checkCurrentLeap($instalment , $m , $d ){
+            if($m>2){
+                    return false;
+            }else{
+                    $_m = $m+$instalment;
+                    if($_m>2){
+                            return true;
+                    }else if($_m==2){
+                            return $d>=29;
+                    }else{
+                            return false;
+                    }
+            }
+    }
 
 	public function get_liquidated_damages($remaining_principal=0,$damage_rate=0){
 		if($remaining_principal){
