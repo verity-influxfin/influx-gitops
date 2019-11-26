@@ -454,16 +454,18 @@ class Certification_lib{
 					$status = 1;
 					$get_time=$res['messages'][10]['message'];
 					$get_months=$res['messages'][8]['message'][0];
-					$get_credit_rate=$res['messages'][8]['message'][0];
-					$time=preg_replace('/[^\d]/','',$get_time);
-					$credit_rate=preg_replace('/[^\d]/','',$get_credit_rate);
+					$get_credit_rate=$res['messages'][8]['message'][2];
+					$times=preg_replace('/[^\d]/','',$get_time);
+					$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
 					$months=preg_replace('/[^\d]/','',$get_months);
 					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status,
 						'sys_check' => 1,
-						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'time'=>$time,'credit_rate'=>$credit_rate,'months'=>$months))
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
 					));					
 					$this->set_success($info->id,1);
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status
+					));	
 					break;
 				case 'failure':
 					$status = 2;
