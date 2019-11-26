@@ -148,7 +148,7 @@ class Joint_credit_lib_file2 extends TestCase
 		$this->joint_credit->check_credit_cards($this->text, $result);
 
 		$expected = [
-			"stage" => "credit_card_debts",
+			"stage" => "credit_card_info",
 			"status" => "failure",
 			"message" => [
 				"信用卡資訊：有",
