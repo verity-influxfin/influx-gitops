@@ -363,9 +363,8 @@
 													<td><?=$investments_amortization_schedule[$value->id]["amount"]?></td>
 													<td>本息合計</td>
 													<td><?=$investments_amortization_schedule[$value->id]["total"]["total_payment"]?></td>
-													<td>XIRR</td>
-													<td><?=$investments_amortization_schedule[$value->id]["XIRR"]?>%</td>
-													<td><?=$investments_amortization_schedule[$value->id]["date"]?></td>
+													<td>放款日</td>
+													<td colspan="3"><?=$investments_amortization_schedule[$value->id]["date"]?></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
@@ -399,9 +398,8 @@
 													<td><?=$investments_amortization_table[$value->id]["amount"]?></td>
 													<td>本息合計</td>
 													<td><?=$investments_amortization_table[$value->id]["total_payment"]?></td>
-													<td>XIRR</td>
-													<td><?=$investments_amortization_table[$value->id]["XIRR"]?>%</td>
-													<td colspan="2"><?=$investments_amortization_table[$value->id]["date"]?></td>
+													<td>放款日</td>
+													<td colspan="3"><?=$investments_amortization_table[$value->id]["date"]?></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
