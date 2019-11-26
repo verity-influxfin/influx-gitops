@@ -682,6 +682,13 @@ class Joint_credit_lib{
 		$cashAdvances = array_fill(0, 12, false);
 		$numbersOfDelayInAMonth = 0;
 		$numbersOfDelayMoreThanAMonth = 0;
+		$numbersOfGreatCredit = 0;
+		$creditRange = [
+			"range" => 0,
+			"isGreat" => true,
+		];
+		$maxTimeDiffFromAppliedAt = null;
+		$hasBadCredit = false;
 		$doesObtainCashAdvance = false;
 		$isDelayPayAndCashAdvance = false;
 		$isOverdueOrBadDebits = false;
@@ -690,6 +697,7 @@ class Joint_credit_lib{
 		$appliedTimes = explode("/", $input["appliedTime"]);
 
 		foreach ($rows as $row) {
+			$isCurrentBadCredit = false;
 			$amountDue = $row["結帳日"];
 			$amountDue = explode("/", $amountDue);
 
@@ -708,6 +716,34 @@ class Joint_credit_lib{
 				$delays[$timeDiffFromAppliedAt]++;
 			}
 
+			if ($maxTimeDiffFromAppliedAt === null) {
+				$maxTimeDiffFromAppliedAt = $timeDiffFromAppliedAt;
+			}
+
+			if ($maxTimeDiffFromAppliedAt < $timeDiffFromAppliedAt) {
+				$maxTimeDiffFromAppliedAt = $timeDiffFromAppliedAt;
+				if ($creditRange["isGreat"]) {
+					$numbersOfGreatCredit += $creditRange["range"];
+					$creditRange["range"] = 0;
+					$creditRange["isGreat"] = false;
+				}
+			}
+
+			if ($maxTimeDiffFromAppliedAt == $timeDiffFromAppliedAt) {
+				if ($this->CI->regex->isGreatCredit($row["上期繳款狀況"]) && !$hasBadCredit) {
+					$creditRange["range"] = 1;
+					$creditRange["isGreat"] = true;
+				}
+			}
+
+			if (
+				$this->CI->regex->onlyPayMinimumOrUnder($row["上期繳款狀況"])
+				|| $numbersOfDelayMoreThanAMonth > 0
+				|| $numbersOfDelayInAMonth > 0
+			) {
+				$hasBadCredit = true;
+			}
+
 			$cashAdvances[$timeDiffFromAppliedAt] = $row["預借現金"] != "無";
 			$doesObtainCashAdvance = $doesObtainCashAdvance || $row["預借現金"] != "無";
 			$isDelayPayAndCashAdvance = $isDelayPayAndCashAdvance || $row["預借現金"] != "無" && $delay == 1;
@@ -716,6 +752,11 @@ class Joint_credit_lib{
 				  									   || $this->CI->regex->needFurtherInvestigationForFinishedCase($row["結案"]);
 		}
 
+		if ($creditRange["isGreat"]) {
+			$numbersOfGreatCredit += $creditRange["range"];
+		}
+
+		$message["message"][] = "信用紀錄幾個月：{$numbersOfGreatCredit}";
 		$message["message"][] = "當月信用卡使用率：" . round($scores[0] * 100, 2) . "%";
 		$message["message"][] = "近一月信用卡使用率：" . round($scores[1] * 100, 2) . "%";
 		$message["message"][] = "近二月信用卡使用率：" . round($scores[2] * 100, 2) . "%";

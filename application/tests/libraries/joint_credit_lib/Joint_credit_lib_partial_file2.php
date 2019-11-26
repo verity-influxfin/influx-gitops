@@ -27,6 +27,7 @@ class Joint_credit_lib_partial_file2 extends TestCase
 			"stage" => "credit_card_accounts",
 			"status" => "success",
 			"message" => [
+				'信用紀錄幾個月：7',
 				"當月信用卡使用率：65.83%",
 				"近一月信用卡使用率：75.29%",
 				"近二月信用卡使用率：46.85%",

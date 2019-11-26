@@ -83,4 +83,16 @@ class Joint_credit_regex extends Regular_expression
 	{
 		return preg_match('/(?<=台端擔任).*(?=之保證人)/', $text) == 1;
 	}
+
+	public function isGreatCredit($text)
+	{
+		return preg_match('/全額繳清/', $text) == 1
+			   || preg_match('/不須繳款/', $text) == 1;
+	}
+
+	public function onlyPayMinimumOrUnder($text)
+	{
+		return preg_match('/繳足最低/', $text) == 1
+			   || preg_match('/未繳足最低/', $text) == 1;
+	}
 }
