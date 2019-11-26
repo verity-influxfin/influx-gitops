@@ -84,17 +84,6 @@ class Sns extends REST_Controller {
 	private function attachment_pdf($file_content,$user_info,$s3_url,$certification_id)
 	{
 		$name=($certification_id===9)? 'investigation':'job';
-		if (strpos($file_content, 'Content-ID')) { //gmail
-			$content_ID = substr(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), strpos(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), '<') + 1, strpos(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), '>') - strpos(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), '<') - 1);
-			$remove_attachmentID = strpos(substr(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), strpos(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), 'X-Attachment-Id')), $content_ID);
-			$remove_attachmentID_size = strlen($content_ID);
-			$pdf_content = base64_decode(str_replace(array("\r", "\n", "\r\n", "\n\r"), '', substr(substr(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), strpos(substr(substr($file_content, strpos($file_content, 'Content-ID')), 0, strpos(substr($file_content, strpos($file_content, 'Content-ID')), '--0000')), 'X-Attachment-Id')), $remove_attachmentID + $remove_attachmentID_size)));
-			$url = $this->s3_lib->credit_mail_pdf($pdf_content, $user_info->id, $name, 'user_upload/' . $user_info->id);
-			if (!empty($url) && ($url !== false)) { //刪S3資料
-				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
-			}
-			return $url;
-		}
 		$get_pdf_file  = strpos($file_content, 'JVBERi0xLjQKJ');//pdf keyword
 		$file_len=strlen($file_content);
 		$file =substr($file_content,$get_pdf_file ,$file_len-$get_pdf_file);
@@ -103,6 +92,13 @@ class Sns extends REST_Controller {
 		if($mailrole){//hotmail
 			$get_file=array_slice($file,0,$mailrole);
 			$fileContent=implode("\n" , $get_file);
+			$url = $this->s3_lib->credit_mail_pdf(base64_decode($fileContent), $user_info->id, $name, 'user_upload/' . $user_info->id);
+			if (!empty($url) && ($url !== false)) { //刪S3資料
+				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+			}
+			return $url;
+		}else{ //gmail yahoo
+			$fileContent=implode("\n" , $file);
 			$url = $this->s3_lib->credit_mail_pdf(base64_decode($fileContent), $user_info->id, $name, 'user_upload/' . $user_info->id);
 			if (!empty($url) && ($url !== false)) { //刪S3資料
 				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
