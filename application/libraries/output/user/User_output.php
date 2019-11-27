@@ -86,7 +86,7 @@ class User_output
 			$output["instagram"] = $ci->instagram_output->toOne();
 		}
 
-        if (isset($user->facebook)) {
+        if (isset($user->facebook->fb_id)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/facebook_output', ["data" => $user->facebook]);
 			$output["facebook"] = $ci->facebook_output->toOne();

@@ -659,8 +659,10 @@
 			    $("#instagram-username").text(user.instagram.username);
 			    $("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
             }
-			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
-			$("#facebook-username").text(user.facebook.username);
+			if (user.facebook) {
+                $("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
+                $("#facebook-username").text(user.facebook.username);
+			}
 		}
 
 		function clearCreditInfo(isReEvaluated = false) {
