@@ -74,6 +74,11 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+				if (in_array($id, [9, 10])) { 
+					$this->CI->user_certification_model->update($info->id,array(
+						'expire_time'	=> strtotime("+1 months", time()),
+					));
+				}
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -423,15 +428,54 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function investigation_verify($info = array(), $url=null)
+	public function investigation_readable_verify($info = array(), $url=null)
 	{
+		$this->CI->load->library('Joint_credit_lib');
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
-			//進到ＯＣＲ
-			$status = 3;
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status, 'sys_check' => 1,
-				'content' => json_encode(array('pdf_file' => $url))
-			));
+			$return_type=json_decode($info->content)->return_type;
+			$result = [
+				'status' => null,
+				'messages' => []
+			];
+			$parser = new \Smalot\PdfParser\Parser();
+			$pdf    = $parser->parseFile($url);
+			$text = $pdf->getText();
+			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
+			switch ($res['status']) {
+				case 'pending': //轉人工
+					$status = 3;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 
+						'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
+					));
+					break;
+				case 'success':
+					$status = 1;
+					$get_time=$res['messages'][10]['message'];
+					$get_months=$res['messages'][8]['message'][0];
+					$get_credit_rate=$res['messages'][8]['message'][2];
+					$times=preg_replace('/[^\d]/','',$get_time);
+					$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
+					$months=preg_replace('/[^\d]/','',$get_months);
+					$this->CI->user_certification_model->update($info->id, array(
+						'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
+					));					
+					$this->set_success($info->id,1);
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status
+					));	
+					break;
+				case 'failure':
+					$status = 2;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
+					));					
+					$this->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
+					break;
+			}
 			return true;
 		}
 		return false;
@@ -717,7 +761,7 @@ class Certification_lib{
 				'investigation_status'		=> 1,
 				'investigation_times'		=> $content['times'],
 				'investigation_credit_rate'	=> $content['credit_rate'],
-				'investigation_months'		=> $content['months'],
+				'investigation_months'		=> $content['months']
 			];
 
             $rs = $this->user_meta_progress($data,$info);
