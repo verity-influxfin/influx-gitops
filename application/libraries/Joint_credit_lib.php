@@ -1050,7 +1050,7 @@ class Joint_credit_lib{
 			$content = $this->CI->regex->findPatternInBetween($text, '信用評分:', '此次所有受評者中，有');
 			$content = $this->CI->regex->replaceSpacesToSpace($content[0]);
 			$scores = substr($content, 0, 3);
-			((int) $scores > 540) ?
+			((int) $scores >= 460) ?
 				$result["messages"][] = [
 					"stage" => "credit_scores",
 					"status" => "success",

@@ -240,7 +240,7 @@ class Joint_credit_lib_file1 extends TestCase
 
 		$expected = [
 			"stage" => "credit_scores",
-			"status" => "pending",
+			"status" => "success",
 			"message" => "信用評分 : 460"
 		];
 		$this->assertEquals($expected, $result["messages"][0]);

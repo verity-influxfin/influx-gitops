@@ -37,4 +37,17 @@ class Joint_credit_lib_partial_file2 extends TestCase
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
 	}
+
+	public function test_check_credit_scores()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_credit_scores($this->text, $result);
+
+		$expected = [
+			"stage" => "credit_scores",
+			"status" => "success",
+			"message" => "信用評分 : 539"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
 }
