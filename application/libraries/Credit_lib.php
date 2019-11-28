@@ -265,8 +265,8 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra);
 	}
 	
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
