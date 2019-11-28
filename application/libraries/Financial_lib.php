@@ -190,10 +190,10 @@ class Financial_lib{
             if($thisY%4 == 0){
                     if($thisY%100 == 0){
                             if($thisY%400 == 0){
-                                    if(checkCurrentLeap($instalment,$cm,$cd))return true;
+                                    if($this->checkCurrentLeap($instalment,$cm,$cd))return true;
                             }
                     }else{
-                            if(checkCurrentLeap($instalment, $cm, $cd))return true;
+                            if($this->checkCurrentLeap($instalment, $cm, $cd))return true;
                     }
             }
 
@@ -223,12 +223,12 @@ class Financial_lib{
             if($nextLeapY%4 == 0){
                     if($nextLeapY%100 == 0){
                             if($nextLeapY%400 == 0){
-                                    return checkNextMD($thisY, $instalment,$nextLeapY,$cm, $cd);
+                                    return $this->checkNextMD($thisY, $instalment,$nextLeapY,$cm, $cd);
                             }else{
                                     if($isLeapDay)return false;
                             }
                     }else{
-                            return checkNextMD($thisY, $instalment,$nextLeapY, $cm, $cd);
+                            return $this->checkNextMD($thisY, $instalment,$nextLeapY, $cm, $cd);
                     }
             }else if($isLeapDay){
                     return false;
@@ -236,7 +236,7 @@ class Financial_lib{
             return false;
     }
 
-    function checkNextMD($thisY, $instalment,$nextLeapY, $m , $d ){
+    public function checkNextMD($thisY, $instalment,$nextLeapY, $m , $d ){
             $nextY = $thisY;
             if($m+$instalment>12){
                     $_m = $instalment-($m == 12 ? 0 : (12-$m%12));
@@ -259,7 +259,7 @@ class Financial_lib{
             }
     }
 
-    function checkCurrentLeap($instalment , $m , $d ){
+    public function checkCurrentLeap($instalment , $m , $d ){
             if($m>2){
                     return false;
             }else{
