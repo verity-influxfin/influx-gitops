@@ -232,7 +232,7 @@ class Product extends REST_Controller {
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
 
                 if ($value['type'] == 2) {
-                    $parm['selling_type'] = $this->config->item('selling_type');;
+                    $parm['selling_type'] = $this->config->item('selling_type');
                 }
                 $list[] = $parm;
 

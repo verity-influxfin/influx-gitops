@@ -343,8 +343,10 @@ class Certification extends MY_Admin_Controller {
 		if($list){
 			foreach($list as $key => $value){
 				$user = $this->user_model->get($value->user_id);
-				$list[$key]->user_name 		= $user->name;
-				$list[$key]->user_name_list = $user->name?mb_str_split($user->name):'';
+				if($user){
+					$list[$key]->user_name 		= $user->name;
+					$list[$key]->user_name_list = $user->name?mb_str_split($user->name):'';
+				}
 			}
 		}
 
