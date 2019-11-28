@@ -55,7 +55,7 @@ class Related_user_output
 				$output[] = $this->map("same_address", $user, $withSensitiveInfo);
 			}
 		}
-		if (isset($this->records->introducer)) {
+		if (isset($this->records->introducer) && $this->records->introducer) {
 			$output[] = $this->map("introducer", $this->records->introducer, $withSensitiveInfo);
 		}
 		if (isset($this->records->same_ip)) {
