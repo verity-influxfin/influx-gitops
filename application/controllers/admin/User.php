@@ -309,7 +309,10 @@ class User extends MY_Admin_Controller {
 				$deviceIds[] = $content->device_id;
 			}
 		}
-		$usersWithSameDeviceId = $this->log_userlogin_model->get_same_device_id_users($userId, $deviceIds);
+		$usersWithSameDeviceId = [];
+		if ($deviceIds) {
+			$usersWithSameDeviceId = $this->log_userlogin_model->get_same_device_id_users($userId, $deviceIds);
+		}
 
 		$timeBefore = 1564102800;
 		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId, $timeBefore);
@@ -359,7 +362,10 @@ class User extends MY_Admin_Controller {
 		$usersWithSameAddress = $this->user_certification_model->get_users_with_same_value($userId, 'address', $addresses);
 
 		$currentUser = $this->user_model->get($userId);
-		$introducer =$this->user_model->get_by(['promote_code' => $currentUser->promote_code]);
+		$introducer = [];
+		if (!$currentUser->promote_code) {
+			$introducer =$this->user_model->get_by(['promote_code' => $currentUser->promote_code]);
+		}
 
 		$data = new stdClass();
 		$data->same_device_id = $usersWithSameDeviceId;
