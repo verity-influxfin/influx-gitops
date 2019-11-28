@@ -84,7 +84,7 @@ class Log_userlogin_model extends MY_Model
 		$length = count($deviceIds);
 		for ($i = 0; $i < $length; $i++) {
 			$deviceId = $deviceIds[$i];
-			$value = "\"device_id\":\"{$deviceId}";
+			$value = "\"device_id\":\"{$deviceId}\"";
 			if ($i == 0) $this->db->like("client", $value);
 			else $this->db->or_like("client", $value);
 		}
