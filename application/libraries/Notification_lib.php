@@ -465,7 +465,7 @@ $name 您好，
 	public function prepay_success($user_id,$investor=0,$target_no,$amount=0){
 		if($investor==1){
 			$title 		= "【標的還款成功】 您投資的標的 $target_no 已提前回款";
-			$content 	= " 親愛的用戶，您好！
+			$content 	= "親愛的用戶，您好！
 您投資的標的 $target_no ，
 由於借款人提前結清債務，已全額結清，
 回款金額為 $amount 元，感謝您。";
