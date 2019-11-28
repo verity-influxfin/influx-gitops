@@ -1132,8 +1132,26 @@ class User extends REST_Controller {
 		}else{
 			$param['content'] = $input['content'];
 		}
-		
-		$image		= array();
+
+        $image = array();
+		if($input['image']){
+            $image_ids = explode(',', $input['image']);
+            if (count($image_ids) > 5) {
+                $image_ids = array_slice($image_ids, 0, 5);
+            }
+            $list = $this->log_image_model->get_many_by([
+                'id' => $image_ids,
+                'user_id' => $user_id,
+            ]);
+
+            if ($list && count($list) == count($image_ids)) {
+                $image['image'] = [];
+                foreach ($list as $k => $v) {
+                    $image['image'][] = $v->url;
+                }
+            }
+        }
+
 		$fields 	= ['image1','image2','image3'];
 		foreach ($fields as $field) {
             if(isset($_FILES[$field]) && !empty($_FILES[$field])){

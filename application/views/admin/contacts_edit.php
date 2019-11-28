@@ -38,15 +38,19 @@
 											<p><?=isset($data->content)?$data->content:"" ?></p>
                                         </div>
 										<div class="form-group">
-                                            <label>附圖</label>
+                                            <label>附圖</label><br />
 											<? 
 												if(isset($data->image) && !empty($data->image)){
 													$image = json_decode($data->image,TRUE);
 													foreach($image as $key => $value){
-														if(!empty($value)){
-												?>
-													<img src='<?=$value ?>' style='width:30%'>
-												<? }}} ?>
+														if(!empty($value)&&!is_array($value)){ ?>
+													        <img src='<?=$value ?>' style='width:30%'>
+												        <? }elseif(is_array($value)){
+                                                            foreach($value as $key_arr => $value_arr){ ?>
+                                                                <img src='<?=$value_arr ?>' style='width:30%'>
+                                                            <?}
+                                                        }}
+												} ?>
                                         </div>
 										<div class="form-group">
                                             <label>回報時間</label> 
