@@ -211,7 +211,6 @@
 
 		$("#verification").change(function() {
 			var status = $(this).val();
-			console.log(status);
 			if (status == 2) {
 				$('input[name="fail"]').prop('type', 'text');
 				$('input[name="times"]').prop('type', 'hidden');
