@@ -434,7 +434,7 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}
-	}
+	} 
 
 	function user_bankaccount_success(){
 		$get 	= $this->input->get(NULL, TRUE);
@@ -601,9 +601,16 @@ class Certification extends MY_Admin_Controller {
 
 	public function joint_credits(){
 	    $get = $this->input->get(NULL, TRUE);
-
-	    $id = isset($get["id"]) ? intval($get["id"]) : 0;
-
+		isset($get['id'])?intval($get['id']):0;
+		$id = isset($get["id"]) ? intval($get["id"]) : 0;
+		$info = $this->user_certification_model->get($id);
+		if ($info) {
+			$page_data['times'] 				= isset((json_decode($info->content, true))['times'])?(json_decode($info->content, true))['times']:0;
+			$page_data['credit_rate'] 				= isset((json_decode($info->content, true))['credit_rate'])?(json_decode($info->content, true))['credit_rate']:0;
+			$page_data['months'] 				= isset((json_decode($info->content, true))['months'])?(json_decode($info->content, true))['months']:0;
+			$page_data['status'] 				= ($info->status);
+		}
+		
 	    if ($this->input->is_ajax_request()) {
 	        $this->load->library('output/json_output');
 	        if ($id <= 0) {
@@ -611,6 +618,9 @@ class Certification extends MY_Admin_Controller {
 	        }
 
 	        $certification = $this->user_certification_model->get($id);
+			if (!$certification) {
+				$this->json_output->setStatusCode(204)->send();
+			}
 			if (!$certification) {
 				$this->json_output->setStatusCode(204)->send();
 			}
@@ -631,7 +641,7 @@ class Certification extends MY_Admin_Controller {
 	    }
 	    $this->load->view('admin/_header');
 	    $this->load->view('admin/_title',$this->menu);
-	    $this->load->view('admin/certification/joint_credits');
+	    $this->load->view('admin/certification/joint_credits',$page_data);
 	    $this->load->view('admin/_footer');
 	}
 }
