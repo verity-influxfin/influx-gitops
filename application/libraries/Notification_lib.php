@@ -28,16 +28,19 @@ class Notification_lib{
 	}
 	
 	public function certification($user_id,$investor,$name,$status,$fail=""){
+	    $type = false;
 		if($status==1){
 			$title = "【認證成功】您的".$name."已通過";
 			$content = "您好！您的".$name."已通過。";
-		}
+            $type = 'b02';
+        }
 		
 		if($status==2){
 			$title = "【認證失敗】您的".$name."未通過";
 			$content = "您好！您的 ".$name."未通過，請重新認證。".($fail?"
 退件原因：".$fail:'');
-		}
+            $type = 'b03';
+        }
 		
 		$param = array(
 			"user_id"	=> $user_id,
@@ -47,7 +50,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 
 		return $rs;
 	}
@@ -75,6 +78,7 @@ class Notification_lib{
 審核額度為 $amount 元，
 您已經可以預約申請簽約了，
 請登錄普匯APP並在您申請的產品進入簽約頁面。";
+            $type = 'b02';
 		}
 		
 		if($status==9){
@@ -84,6 +88,7 @@ class Notification_lib{
 非常感謝您的申請，
 我們將會對您的申請信息進行嚴格保密，
 感謝您對普匯的信任。";
+            $type = 'b03';
 		}
 		
 		$param = array(
@@ -94,7 +99,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
 
@@ -133,7 +138,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 
@@ -153,7 +158,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 
@@ -175,7 +180,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
         return $rs;
     }
 
@@ -216,7 +221,7 @@ class Notification_lib{
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 
@@ -239,7 +244,7 @@ $name 您好，
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
         return $rs;
     }
 
@@ -272,6 +277,7 @@ $name 您好，
 			$content 	= "親愛的用戶，您好！
 您申請的標的 $target_no ，核可金額 $amount 元，
 已成功放款。";
+            $type = 'i04';
 		}else{
 			$bankaccount = substr($bankaccount, -4, 4);
 			$title 		= "【借款放款成功】 您的借款 $target_no 已發放成功";
@@ -281,7 +287,8 @@ $name 您好，
 請您妥善安排用款。
 
 敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號。";
-		}
+            $type = 'b04';
+        }
 		
 		$param = array(
 			"user_id"	=> $user_id,
@@ -291,7 +298,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
 	
@@ -313,7 +320,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b04');
 		return $rs;
 	}
 	
@@ -348,12 +355,14 @@ $name 您好，
 親愛的用戶，您於 $date 受讓標的 $target_no ，
 金額 $amount 元，已成功受讓，
 還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
+                $type = 'i06';
 			}else{
 				$title 		= "【債權出讓成功】";
 				$content 	= "親愛的用戶，您好！
 親愛的用戶，您於 $date 出讓標的 $target_no ，
 金額 $amount 元，已成功出讓，
 還有更多精選標的等著您挑選，詳情請進入投資端閱覽";
+                $type = 'i05';
 			}
 		}else{
 			$title 		= "【債權轉讓通知】";
@@ -362,6 +371,7 @@ $name 您好，
 (使用者編號 $user_id ，借款案號 $target_no )，
 債權已轉讓與新債權人(使用者編號 $new_user_id )，
 您的還款方式仍按原有約定辦理，僅此通知。";
+            $type = 'b03';
 		}
 
 		$param = array(
@@ -372,7 +382,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$attach);
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type,$attach);
 		return $rs;
 	}
 
@@ -389,7 +399,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
 		return $rs;
 	}
 
@@ -401,7 +411,7 @@ $name 您好，
 金額 $amount 元
 已發放至您的綁定金融卡賬戶尾號 $bankaccount 內，
 請確認核實。";
-
+        $type = $investor?'i04':'b04';
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
@@ -410,7 +420,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
 
@@ -433,7 +443,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 	
@@ -469,6 +479,7 @@ $name 您好，
 您投資的標的 $target_no ，
 由於借款人提前結清債務，已全額結清，
 回款金額為 $amount 元，感謝您。";
+			$type = 'i04';
 		}else{
 			$title 		= "【借款還款成功】 您的還款已成功，還款金額 $amount 元";
 			$content 	= "親愛的用戶，
@@ -476,6 +487,7 @@ $name 您好，
 您的借款 $target_no ，還款金額 $amount 元已全額還清，
 感謝您對普匯inFlux的信任，
 在您有資金需求的時候，我們總會及時出現。";
+            $type = 'b04';
 		}
 		
 		$param = array(
@@ -487,7 +499,7 @@ $name 您好，
 		
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
 	
@@ -507,7 +519,7 @@ $name 您好，
 		
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 		
@@ -525,7 +537,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
 
@@ -544,7 +556,7 @@ $name 您好，
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
         return $rs;
     }
 
@@ -564,7 +576,7 @@ $name 您好，
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
         return $rs;
     }
 
@@ -583,7 +595,7 @@ $name 您好，
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b02');
         return $rs;
     }
 
@@ -602,7 +614,7 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content));
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'i08');
 		return $rs;
 	}
 
@@ -627,7 +639,7 @@ $name 您好，
 系統收到您的來信後會直接更新驗證內容，
 請進入普匯inFlux確認您的認證狀態。";
 		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),false,CREDIT_EMAIL,'普匯驗證中心');
+		$this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),'b08',false,CREDIT_EMAIL,'普匯驗證中心');
 		return $rs;
 	}
 
@@ -651,7 +663,7 @@ $name 您好，
 系統收到您的來信後會直接更新驗證內容，
 請進入普匯inFlux確認您的認證狀態。";
         $this->CI->load->library('Sendemail');
-        $this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),false,CREDIT_EMAIL,'普匯驗證中心');
+        $this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),'b08',false,CREDIT_EMAIL,'普匯驗證中心');
         return $rs;
     }
 }
