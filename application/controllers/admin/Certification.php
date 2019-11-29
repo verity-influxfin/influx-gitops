@@ -621,9 +621,7 @@ class Certification extends MY_Admin_Controller {
 			if (!$certification) {
 				$this->json_output->setStatusCode(204)->send();
 			}
-			if (!$certification) {
-				$this->json_output->setStatusCode(204)->send();
-			}
+
 
 			$user = $this->user_model->get($certification->user_id);
 			$this->load->library('output/user/user_output', ["data" => $user]);
