@@ -99,7 +99,7 @@
 							<td data-bgcolor="bg-module" bgcolor="#eaeced">
 								<table class="flexible" width="600" align="center" style="margin:0 auto;margin-top:32px;" cellpadding="0" cellspacing="0">
 									<tr>
-										<td class="img-flex"><img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/banner.jpg" style="vertical-align:top;" width="600" height="290" alt="" /></td>
+										<td class="img-flex"><img src="https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/mail_assets/{mail_event}/{type}.jpg" style="vertical-align:top;" width="600" height="290" alt="" /></td>
 									</tr>
 									<tr>
 										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bgcolor="#f9f9f9">

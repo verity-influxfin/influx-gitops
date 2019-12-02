@@ -655,3 +655,5 @@ $config['certifications_msg'] = [
         '光線不足無法判讀，煩請您重新拍攝',
     ]
 ];
+
+$config['mail_event'] = '19christmas';//current_event
