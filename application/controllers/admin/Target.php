@@ -353,7 +353,6 @@ class Target extends MY_Admin_Controller {
                     'remark'      => '核可消費額度',
                 ];
                 $this->target_model->update($id,$param);
-                $this->load->library('Target_lib');
                 $this->target_lib->insert_change_log($id,$param);
                 alert('額度已提升',admin_url('Target/waiting_verify'));
             }
@@ -509,7 +508,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
-		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : false;
 
         if ($points > 400) $points = 400;
         if ($points < -400) $points = -400;
@@ -540,6 +539,14 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('credit_lib');
 		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
 
+        if ($remark) {
+            if ($target->remark) {
+                $update["remark"] = $target->remark . "," . $remark;
+            } else {
+                $update["remark"] = $remark;
+            }
+        }
+
 		if (
 			$newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
@@ -556,28 +563,9 @@ class Target extends MY_Admin_Controller {
             );
 			$this->credit_model->insert($newCredits);
 		}
-
-		$update = [
-			"status" => 1,
-			"sub_status" => 0,
-		];
-		if ($remark) {
-			if ($target->remark) {
-				$update["remark"] = $target->remark . "," . $remark;
-			} else {
-				$update["remark"] = $remark;
-			}
-		}
-        $rs = $this->target_model->update($targetId, $update);
-        if($rs){
-            $subloan_list   = $this->config->item('subloan_list');
-            $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
-            $this->load->library('Notification_lib');
-            $this->notification_lib->approve_target($userId,'1',$target->loan_amount,$subloan_status);
-        }
-
+        $this->target_lib->approve_target($target,$remark,true);
         $this->json_output->setStatusCode(200)->send();
-	}
+    }
 
 	public function final_validations()
 	{
