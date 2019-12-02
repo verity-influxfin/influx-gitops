@@ -33404,6 +33404,13 @@ define({
                             "group": "Parameter",
                             "type": "file",
                             "optional": true,
+                            "field": "image",
+                            "description": "<p>附圖(最多5張)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "optional": true,
                             "field": "image1",
                             "description": "<p>附圖1</p>"
                         },
