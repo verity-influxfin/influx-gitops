@@ -221,10 +221,10 @@ class Target_lib{
     }
 
     //核可額度利率
-	public function approve_target($target = []){
+	public function approve_target($target = [],$remark=false,$renew=false){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
-		if(!empty($target) && ($target->status == 0 && $target->sub_status == 0 || $target->status==22)){
+		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -303,9 +303,18 @@ class Target_lib{
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 0,
                                     ];
-                                    $subloan_status?$param['status']=1:$param['sub_status'] = 9;
+                                    if($subloan_status || $renew){
+                                        $param['status'] = 1;
+                                        $renew ? $param['sub_status'] = 0 : '';
+                                    }else{
+                                        $param['sub_status'] = 9;
+                                    }
+                                    $remark ? $param['remark'] = $remark : '';
                                     $this->CI->target_model->update($target->id,$param);
                                     $this->insert_change_log($target->id,$param);
+                                    $this->CI->load->library('Notification_lib');
+                                    $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
+                                    return true;
                                 }
                             }else if($product_info['type'] == 2){
                                 $allow      = true;
@@ -828,6 +837,7 @@ class Target_lib{
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> [0,22],
+			'sub_status not'=> [9],
 			'script_status'	=> 0
 		]);
 		$list 		= [];
