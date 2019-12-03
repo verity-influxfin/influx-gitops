@@ -55,13 +55,13 @@ class Sendemail
 			$code	 = md5($email.time());
 			if($investor){
 				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
-				$type = 'i01';
+				$show_type = 'i01';
 			}else{
 				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
-                $type = 'b01';
+                $show_type = 'b01';
 			}
 			
-			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link, "type"=> $type , "mail_event"=> $mail_event),TRUE);
+			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link, "type"=> $show_type , "mail_event"=> $mail_event),TRUE);
 			$subject = '普匯inFlux - 電子郵件認證';
 			$param = array(
 				'certification_id'	=> $certification_id,
