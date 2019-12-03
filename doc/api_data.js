@@ -12726,7 +12726,7 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "field": "type",
-                            "description": "<p>類別 0:手機商</p>"
+                            "description": "<p>類別 0:手機商 1:遊學商 2:外匯車商 999:其它</p>"
                         }
                     ]
                 }
