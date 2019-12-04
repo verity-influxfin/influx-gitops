@@ -99,14 +99,14 @@
 							<td data-bgcolor="bg-module" bgcolor="#eaeced">
 								<table class="flexible" width="600" align="center" style="margin:0 auto;margin-top:32px;" cellpadding="0" cellspacing="0">
 									<tr>
-										<td class="img-flex"><img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/banner.jpg" style="vertical-align:top;" width="600" height="290" alt="" /></td>
+										<td class="img-flex"><img src="<?=FRONT_CDN_URL ?>public/banner.jpg" style="vertical-align:top;" width="600" height="290" alt="" /></td>
 									</tr>
 									<tr>
 										<td data-bgcolor="bg-block" class="holder" style="padding:35px 30px 45px;" bgcolor="#f9f9f9">
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td colspan="2" align="center">
-													<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/logo.png" border="0" style="font:bold 30px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
+													<img src="<?=FRONT_CDN_URL ?>public/estatement/logo.png" border="0" style="font:bold 30px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
 													</td>
 												</tr>
 												<tr>
@@ -123,18 +123,18 @@
                                                     <td align="center" style="margin-left: 30px;">
                                                         <?php if(isset($investor_status)){?>
                                                         <?php if($investor_status==1){?>
-                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW"/></a>
+                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.invest&hl=zh_TW"/></a>
                                                     </td><td align="center" style="margin-right: 30px;">
-                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" /></a>
+                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AF%E6%8A%95%E8%B3%87/id1459231620" /></a>
                                                         <?php } else{ ?>
-                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a>
+                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a>
                                                     </td><td align="center" style="margin-right: 30px;">
-                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
                                                         <?php }?>
                                                         <?php } else{ ?>
-                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a>
+                                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/google.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW"/></a>
                                                     </td><td align="center" style="margin-right: 30px;">
-                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="https://influxp2p.s3-ap-northeast-1.amazonaws.com/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+                                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank" ><img src="<?=FRONT_CDN_URL ?>public/apple.png" border="0" style="font:bold   Arial, Helvetica, sans-serif; color:#606060;"  width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
                                                         <?php }?>
                                                     </td>
                                                 </tr>

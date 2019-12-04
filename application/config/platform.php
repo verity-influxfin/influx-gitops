@@ -195,8 +195,8 @@ $config['product_list']= [
         'visul_id'          => 3,
         'type'				=> 2,
         'identity'			=> 1,
-        'alias'				=> 'CML',
-        'name'				=> '外匯車貸',
+        'alias'				=> 'SFV',
+        'name'				=> '學生外匯車貸',
         'loan_range_s'		=> 10000,
         'loan_range_e'		=> 2000000,
         'interest_rate_s'	=> 15,
@@ -213,6 +213,24 @@ $config['product_list']= [
         'visul_id'          => 3,
         'type'				=> 2,
         'identity'			=> 2,
+        'alias'				=> 'FFV',
+        'name'				=> '上班族外匯車貸',
+        'loan_range_s'		=> 10000,
+        'loan_range_e'		=> 2000000,
+        'interest_rate_s'	=> 15,
+        'interest_rate_e'	=> 15,
+        'sub_product'       => [],
+        'certifications'	=> [1,3,4,5,6,7,8,9,10],
+        'instalment'		=> [180],
+        'repayment'			=> [3],
+        'status'			=> 1,
+        'description'		=> ''
+    ],
+    7 => [
+        'id'				=> 5,
+        'visul_id'          => 4,
+        'type'				=> 1,
+        'identity'			=> 3,
         'alias'				=> 'CML',
         'name'				=> '外匯車貸',
         'loan_range_s'		=> 10000,
@@ -226,8 +244,7 @@ $config['product_list']= [
         'status'			=> 1,
         'description'		=> ''
     ],
-    /*
-     *    6 => [
+    /* 6 => [
             'id'				=> 6,
             'visul_id'          => 2,
             'type'				=> 1,
@@ -314,77 +331,75 @@ $config['visul_id_des'] = [
     '1'	   => [
         'name'   => '信用貸款',
         'description' =>'<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_loan_03.jpg',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
     '2'	   => [
         'name' => '手機無卡分期專案',
         'description' =>'最新熱門手機選擇最多元',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
     '3'	   => [
         'name' => '外匯車專案',
         'description' =>'買進口車好方便',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    '4'	   => [
+        'name' => '外匯車專案',
+        'description' =>'幫您貸車進來',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
     /*'2'	   => [
     'name' => '創業貸款',
     'description' =>'創業貸款',
-    'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+    'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+    'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
     'status' => 1
 ],*/
     /*'4'	   => [
         'name' => '遊學貸',
         'description' =>'遊學貸XXX',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],*/
 
     '101'  => [
         'name' => 'Techi貸',
         'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/app_asset/image_techi.jpg',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],/*
     '102'  => [
         'name' => '就學貸款',
         'description' =>'就學貸款XXX',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],*/
     '103'  => [
         'name' => '就學貸款',
         'description' =>'就學貸款XXX',
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
     '201'  => [
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
     ],
     '202'  => [
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    ],
-    '203'  => [
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    ],
-    '204'  => [
-        'icon'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-        'banner'   => 'https://influxp2p.s3-ap-northeast-1.amazonaws.com/logo.png',
-    ],
-
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+    ]
 ];
 $config['sub_product_mapping'] = [
     1 => 'config_techi',
@@ -410,39 +425,6 @@ $config['sub_product_list'] = [
             ],
             2 =>[
                 'visul_id'          => 202,
-                'name'				=> '上班族工程師貸',
-                'product_id'        => '3:1',
-                'loan_range_s'		=> 10000,
-                'loan_range_e'		=> 200000,
-                'interest_rate_s'	=> 5,
-                'interest_rate_e'	=> 20,
-                'certifications'	=> [1,3,4,5,6,7,8,9,10],
-                'instalment'		=> [3,6,12,18,24],
-                'repayment'			=> [1],
-                'status'			=> 1,
-                'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
-            ]
-        ],
-        'status'            => 0
-    ],3 => [
-        'visul_id'          => 103,
-        'identity'          => [
-            3 =>[
-                'visul_id'          => 203,
-                'name'				=> '學生工程師貸',
-                'product_id'        => '1:1',
-                'loan_range_s'		=> 5000,
-                'loan_range_e'		=> 120000,
-                'interest_rate_s'	=> 5,
-                'interest_rate_e'	=> 20,
-                'certifications'	=> [1,2,3,4,5,6,7],
-                'instalment'		=> [3,6,12,18,24],
-                'repayment'			=> [1],
-                'status'			=> 1,
-                'description'		=> '須提供有效學生證<br>可申請額度<br>5,000-120,000'
-            ],
-            2 =>[
-                'visul_id'          => 204,
                 'name'				=> '上班族工程師貸',
                 'product_id'        => '3:1',
                 'loan_range_s'		=> 10000,

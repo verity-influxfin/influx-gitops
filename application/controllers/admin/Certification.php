@@ -96,7 +96,7 @@ class Certification extends MY_Admin_Controller {
 
 					if($info->certification_id==2) {
 						//加入SIP網址++
-						$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
+						$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
 						$school_data = json_decode($school_data, true);
 						$school = $page_data['content']['school'];
 						$sipURL = isset($school_data[$school]['sipURL'])?$school_data[$school]['sipURL']:'';
@@ -120,10 +120,10 @@ class Certification extends MY_Admin_Controller {
 						$page_data['industry_name'] 		= $this->config->item('industry_name');
 						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
 						if (isset($page_data['content']['job_title'])){
-							$job_title = file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json');
+							$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
 							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
 							if(isset($page_data['content']['programming_language'])){
-								$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+								$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
 								$set_lang_level =['入門','參與開發','獨立執行'];
 								foreach($page_data['content']['programming_language'] as $lang_list => $lang){
 									$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
@@ -135,7 +135,7 @@ class Certification extends MY_Admin_Controller {
 						}
 					}elseif ($info->certification_id==2){
 						if(isset($page_data['content']['programming_language'])){
-							$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+							$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
 							$set_lang_level =['入門','參與開發','獨立執行'];
 							foreach($page_data['content']['programming_language'] as $lang_list => $lang){
 								$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';

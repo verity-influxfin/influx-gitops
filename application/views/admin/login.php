@@ -34,7 +34,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading" style="text-align:center;">
-                        <img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/logo.png" alt="" width="200px" />
+                        <img src="<?=FRONT_CDN_URL ?>public/logo.png" alt="" width="200px" />
                     </div>
                     <div class="panel-body">
                         <form role="form" method="post" onsubmit="return form_onsubmit();" >
