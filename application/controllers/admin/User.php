@@ -363,7 +363,7 @@ class User extends MY_Admin_Controller {
 
 		$currentUser = $this->user_model->get($userId);
 		$introducer = [];
-		if (!$currentUser->promote_code) {
+		if ($currentUser->promote_code) {
 			$introducer =$this->user_model->get_by(['promote_code' => $currentUser->promote_code]);
 		}
 
