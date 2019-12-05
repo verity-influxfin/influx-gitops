@@ -88,6 +88,10 @@ class Related_user_output
 			$output["related_value"] = $user->id_number;
 		}
 
+		if ($reason == "introducer") {
+			$output["related_value"] = $user->promote_code;
+		}
+
 		return $output;
 	}
 }
