@@ -851,7 +851,13 @@
 		}
 
 		function convertNumberSplitedByThousands(value) {
-            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			var convertedNumbers = value;
+			try {
+				convertedNumbers = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			} catch(err) {
+
+			}
+            return convertedNumbers;
 		}
 
         $("#credit-evaluation").submit(function(e) {
