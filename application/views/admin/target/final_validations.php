@@ -463,6 +463,7 @@
             },
             complete: function () {
                 targetInfoAjaxLock = false;
+				fetchRelatedUsers(userId);
             },
             success: function (response) {
                 hideLoadingAnimation();
@@ -524,29 +525,32 @@
 
         var relatedUsersIndex = 1;
         var relatedUsers = [];
-        $.ajax({
-            type: "GET",
-            url: "/admin/User/related_users" + "?id=" + userId,
-            beforeSend: function () {
-                relatedUserAjaxLock = true;
-            },
-            complete: function () {
-                relatedUserAjaxLock = false;
-            },
-            success: function (response) {
-                fillFakeRelatedUsers(false);
-                if (response.status.code != 200) {
-                    return;
-                }
+		function fetchRelatedUsers(userId) {
+			$.ajax({
+				type: "GET",
+				url: "/admin/User/related_users" + "?id=" + userId,
+				beforeSend: function () {
+					relatedUserAjaxLock = true;
+				},
+				complete: function () {
+					relatedUserAjaxLock = false;
+				},
+				success: function (response) {
+					fillFakeRelatedUsers(false);
+					if (response.status.code != 200) {
+						return;
+					}
 
-                let relatedUsersJson = response.response.related_users;
-                for (var i = 0; i < relatedUsersJson.length; i++) {
-                    var relatedUser = new RelatedUser(relatedUsersJson[i]);
-                    relatedUsers.push(relatedUser);
+					let relatedUsersJson = response.response.related_users;
+					for (var i = 0; i < relatedUsersJson.length; i++) {
+						var relatedUser = new RelatedUser(relatedUsersJson[i]);
+						relatedUsers.push(relatedUser);
+					}
+					fillRelatedUsers();
 				}
-                fillRelatedUsers();
-            }
-        });
+			});
+		}
+
 
         $('#load-more').on('click', function() {
             fillRelatedUsers();
