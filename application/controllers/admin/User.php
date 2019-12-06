@@ -356,7 +356,10 @@ class User extends MY_Admin_Controller {
 		}
 		$usersWithSamePhoneNumber = [];
 		if ($potentialPhoneNumbers) {
-			$usersWithSamePhoneNumber = $this->user_model->get_many_by(['phone' => $potentialPhoneNumbers]);
+			$usersWithSamePhoneNumber = $this->user_model->get_many_by([
+				'phone' => $potentialPhoneNumbers,
+				'id !=' => $userId
+			]);
 		}
 
 		$usersWithSameAddress = $this->user_certification_model->get_users_with_same_value($userId, 'address', $addresses);
