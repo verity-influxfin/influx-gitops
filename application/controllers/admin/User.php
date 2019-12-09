@@ -311,9 +311,9 @@ class User extends MY_Admin_Controller {
 
 		$usersWithSameIp = [];
 		$timeBefore = 1564102800;
-		$userWithIps = $this->user_login_log_model->findUserLoginIps($userId);
+		$userWithIps = $this->user_login_log_model->findUserLoginIps($userId, $timeBefore);
 		if ($userWithIps) {
-			$user = $this->user_login_log_model->findUserIdsByIps($userWithIps->created_ips);
+			$user = $this->user_login_log_model->findUserIdsByIps($userWithIps->created_ips, $timeBefore);
 			$userIdsWithSameIp = $this->user_model->get_many_by(["id" => $user->users]);
 		}
 

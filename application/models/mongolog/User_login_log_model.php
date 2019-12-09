@@ -79,10 +79,14 @@ class User_login_log_model extends CI_model {
         return $result->toArray();
     }
 
-    public function findUserLoginIps($userId)
+    public function findUserLoginIps($userId, $timeBefore = 0)
     {
+		$matchStage = ['$match' => ['user_id' => $userId]];
+		if ($timeBefore > 0) {
+			$matchStage['$match']['created_at'] = ['$gt' => $timeBefore];
+		}
         $pipeline = [
-            ['$match' => ['user_id' => $userId]],
+            $matchStage,
             [
                 '$group' => [
                     '_id' => '$user_id',
@@ -112,14 +116,19 @@ class User_login_log_model extends CI_model {
         return [];
     }
 
-    public function findUserIdsByIps($ips)
+    public function findUserIdsByIps($ips, $timeBefore = 0)
     {
         if (!$ips) {
             return [];
         }
 
+		$matchStage = ['$match' => ['created_ip' => ['$in' => $ips]]];
+		if ($timeBefore > 0) {
+			$matchStage['$match']['created_at'] = ['$gt' => $timeBefore];
+		}
+
         $pipeline = [
-            ['$match' => ['created_ip' => ['$in' => $ips]]],
+            $matchStage,
             [
                 '$group' => [
                     '_id' => null,
