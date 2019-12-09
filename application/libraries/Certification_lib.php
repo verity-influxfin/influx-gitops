@@ -428,7 +428,7 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function investigation_verify($info = array(), $url=null)
+	public function investigation_readable_verify($info = array(), $url=null)
 	{
 		$this->CI->load->library('Joint_credit_lib');
 		if ($info && $info->status == 0 && $info->certification_id == 9) {
