@@ -389,5 +389,32 @@ class User extends MY_Admin_Controller {
 		}
 		$this->json_output->setStatusCode(200)->setResponse(["related_users" => $relatedUsers])->send();
 	}
+
+	public function migrateData()
+	{
+	    $host = getenv('ENV_MONGO_HOST');
+	    $port = getenv('ENV_MONGO_PORT');
+	    $username = getenv('ENV_MONGO_USERNAME');
+	    $password = getenv('ENV_MONGO_PASSWORD');
+	    $db = new MongoDB\Driver\Manager("mongodb://{$username}:{$password}@{$host}:{$port}");
+	    $i = 0;
+	    while ($loginLogs = $this->log_userlogin_model->limit(1000, $i*1000)->get_many_by([])) {
+	        $bulk = new MongoDB\Driver\BulkWrite();
+	        foreach ($loginLogs as $loginLog) {
+	                $log = json_decode(json_encode($loginLog), true);
+	                $log["client"] = json_decode($log["client"]);
+	                $log["id"] = intval($log["id"]);
+	                $log["investor"] = intval($log["investor"]);
+	                $log["user_id"] = intval($log["user_id"]);
+	                $log["status"] = intval($log["status"]);
+	                $log["created_at"] = intval($log["created_at"]);
+	                $bulk->insert($log);
+
+	        }
+	        $writeConcern = new MongoDB\Driver\WriteConcern(0, 300);
+	        $db->executeBulkWrite('influx_logs.user-login-logs', $bulk, $writeConcern);
+	        $i++;
+	    }
+	}
 }
 ?>
