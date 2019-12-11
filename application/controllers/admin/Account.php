@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Account extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array();
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/virtual_account_model');
@@ -16,7 +16,7 @@ class Account extends MY_Admin_Controller {
 		$this->load->model('user/user_estatement_model');
         $this->load->library('Transfer_lib');
 	}
-	
+
 	public function index(){
 		$get 		= $this->input->get(NULL, TRUE);
 		$date		= get_entering_date();
@@ -53,7 +53,7 @@ class Account extends MY_Admin_Controller {
 				"status <>"			=> 0
 			);
 		}
-		
+
 		$page_data 	= array(
 			"type" 	=> "list",
 			"sdate"	=> $sdate,
@@ -63,6 +63,7 @@ class Account extends MY_Admin_Controller {
 		$return     = [SOURCE_VERIFY_FEE_R,SOURCE_REMITTANCE_FEE_R];
 		if(!empty($data)){
 			foreach($data as $key =>$value){
+				$value->bank_account_to = trim($value->bank_account_to);
 				if(!isset($list[$value->source])){
 					$list[$value->source] = array("debit"=>0,"credit"=>0);
 				}
@@ -89,7 +90,7 @@ class Account extends MY_Admin_Controller {
 		$this->load->view('admin/account_report',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	function daily_report(){
 		$get 		= $this->input->get(NULL, TRUE);
 		$display 	= isset($get['display'])&&$get['display']?$get['display']:"";
@@ -121,7 +122,7 @@ class Account extends MY_Admin_Controller {
 				"status <>"			=> 0
 			);
 		}
-		
+
 		$page_data 	= array(
 			"type" 	=> "list",
 			"sdate"	=> $sdate,
@@ -139,7 +140,7 @@ class Account extends MY_Admin_Controller {
 				if($value->target_id){
 					$target_id[] = $value->target_id;
 				}
-				
+
 				if(is_virtual_account($value->bank_account_from)){
 					$data[$key]->v_bank_account_from = $value->bank_account_from;
 					$data[$key]->v_amount_from 		= $value->amount;
@@ -151,7 +152,7 @@ class Account extends MY_Admin_Controller {
 					$data[$key]->v_bank_account_from = "";
 					$data[$key]->v_amount_from 		= "";
 				}
-				
+
 				if(is_virtual_account($value->bank_account_to)){
 					$data[$key]->v_bank_account_to 	= $value->bank_account_to;
 					$data[$key]->v_amount_to 		= $value->amount;
@@ -164,14 +165,14 @@ class Account extends MY_Admin_Controller {
 					$data[$key]->v_amount_to 		= "";
 				}
 			}
-			
+
 			$user_id 	= array_unique($user_id);
 			$user_list = $this->user_model->get_many($user_id);
 			$user_name = array();
 			foreach($user_list as $key => $value){
 				$user_name[$value->id] = $value->name;
 			}
-			
+
 			$target_no 		= array();
 			if($target_id){
 				$target_id 		= array_unique($target_id);
@@ -187,8 +188,8 @@ class Account extends MY_Admin_Controller {
 				}else{
 					$value->target_no = "";
 				}
-				
-				
+
+
 				if($value->source == SOURCE_RECHARGE || $value->source == SOURCE_WITHDRAW){
 					$switch  		= array(SOURCE_RECHARGE=>'recharge',SOURCE_WITHDRAW=>'withdraw');
 					$source_type 	= $switch[$value->source];
@@ -287,7 +288,7 @@ class Account extends MY_Admin_Controller {
                             }
 						}
 					}
-					
+
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $item_no,
@@ -319,23 +320,23 @@ class Account extends MY_Admin_Controller {
 								);
 							}
 							switch($v->source){
-								case SOURCE_PRINCIPAL: 
+								case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
 									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
-								case SOURCE_INTEREST: 
+								case SOURCE_INTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["interest"]	+= $v->amount;
 									break;
-								case SOURCE_PREPAYMENT_DAMAGE: 
+								case SOURCE_PREPAYMENT_DAMAGE:
 									$damages	+= $v->amount;
 									break;
-								case SOURCE_FEES: 
+								case SOURCE_FEES:
 									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
 									break;
-								case SOURCE_PREPAYMENT_ALLOWANCE: 
+								case SOURCE_PREPAYMENT_ALLOWANCE:
 									$user_to_info[$v->investment_id]["allowance"]	+= $v->amount;
 									break;
 								default:
@@ -369,7 +370,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-				
+
 				if($value->source == SOURCE_DAMAGE){
 					$damage_target[] 	= $value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date;
 					$sub_list 			= array();
@@ -388,23 +389,23 @@ class Account extends MY_Admin_Controller {
 								);
 							}
 							switch($v->source){
-								case SOURCE_PRINCIPAL: 
+								case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
 									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
-								case SOURCE_INTEREST: 
+								case SOURCE_INTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["interest"]	+= $v->amount;
 									break;
-								case SOURCE_DAMAGE: 
+								case SOURCE_DAMAGE:
 									$damages	+= $v->amount;
 									break;
-								case SOURCE_FEES: 
+								case SOURCE_FEES:
 									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
 									break;
-								case SOURCE_DELAYINTEREST: 
+								case SOURCE_DELAYINTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["delay_interest"]	+= $v->amount;
 									break;
@@ -439,7 +440,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-				
+
 				if($value->source == SOURCE_LENDING && !in_array($value->target_id,$lending_target)){
 					$lending_target[] = $value->target_id;
 					$sub_list 		= array();
@@ -449,7 +450,7 @@ class Account extends MY_Admin_Controller {
 					foreach($data as $k =>$v){
 						if($v->entering_date==$value->entering_date && $v->target_id==$value->target_id && $v->instalment_no==$value->instalment_no){
 							switch($v->source){
-								case SOURCE_LENDING: 
+								case SOURCE_LENDING:
 									$sub_list[] = array(
 										"user_from"				=> $user_name[$v->user_from],
 										"v_bank_account_from"	=> $v->v_bank_account_from,
@@ -457,7 +458,7 @@ class Account extends MY_Admin_Controller {
 									);
 									$amount += $v->amount;
 									break;
-								case SOURCE_FEES: 
+								case SOURCE_FEES:
 									$platform_fee = $v->amount;
 									break;
 								default:
@@ -480,7 +481,7 @@ class Account extends MY_Admin_Controller {
 					);
 				}
 			}
-			
+
 			foreach($data as $key => $value){
 				if($value->source == SOURCE_PRINCIPAL && !in_array($value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date,$damage_target)){
 					$damage_target[] 	= $value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date;
@@ -499,17 +500,17 @@ class Account extends MY_Admin_Controller {
 								);
 							}
 							switch($v->source){
-								case SOURCE_PRINCIPAL: 
+								case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
 									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
-								case SOURCE_INTEREST: 
+								case SOURCE_INTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["interest"]	+= $v->amount;
 									break;
-								case SOURCE_FEES: 
+								case SOURCE_FEES:
 									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
 									break;
 								default:
@@ -542,7 +543,7 @@ class Account extends MY_Admin_Controller {
 					);
 				}
 			}
-			
+
 			$num = count($list);
 			for($i = 0 ; $i < $num ; $i++){
 				for ($j=$i+1;$j<$num;$j++) {
@@ -555,7 +556,7 @@ class Account extends MY_Admin_Controller {
 					}
 				}
 			}
-			
+
 			$num = count($list);
 			for($i = 0 ; $i < $num ; $i++){
 				for ($j=$i+1;$j<$num;$j++) {
@@ -569,7 +570,7 @@ class Account extends MY_Admin_Controller {
 				}
 			}
 		}
-		
+
 		$page_data['list'] 					= $list;
 		$page_data['transaction_source'] 	= $this->config->item('transaction_source');
 		$page_data['transaction_type_name'] = $this->config->item('transaction_type_name');
@@ -577,13 +578,13 @@ class Account extends MY_Admin_Controller {
 			$html = $this->load->view('estatement/daily_report',$page_data,TRUE);
 			$pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 			$permissions  = array(
-				'print', 
-				'modify', 
-				'copy', 
-				'annot-forms', 
-				'fill-forms', 
-				'extract', 
-				'assemble', 
+				'print',
+				'modify',
+				'copy',
+				'annot-forms',
+				'fill-forms',
+				'extract',
+				'assemble',
 				'print-high'
 			);
 			//$pdf->SetProtection($permissions , $password , PDF_OWNER_PASSWORD, 0, null);
@@ -606,13 +607,13 @@ class Account extends MY_Admin_Controller {
 			$this->load->view('admin/_footer');
 		}
 	}
-	
+
 	function passbook_report(){
 		$page_data 	= array("type"=>"list");
 		$where		= array(
 			"status" 		=> array(4,5),
 		);
-		
+
 		$get 		= $this->input->get(NULL, TRUE);
 		$date 		= isset($get['date'])&&$get['date']?$get['date']:get_entering_date();
 		$page_data 	= array("type"=>"list","date"=>$date);
@@ -636,7 +637,7 @@ class Account extends MY_Admin_Controller {
 					}
 					$list[$value->virtual_account] += $value->amount;
 				}
-				
+
 				foreach($list as $key => $value){
 					if($value==0){
 						unset($list[$key]);
@@ -644,7 +645,7 @@ class Account extends MY_Admin_Controller {
 				}
 			}
 		}
-		
+
 		$page_data['investor_list'] = $this->virtual_account_model->investor_list;
 		$page_data['list'] 			= $list;
 		$page_data['info'] 			= $info;
@@ -653,7 +654,7 @@ class Account extends MY_Admin_Controller {
 		$this->load->view('admin/account_passbook_report',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	function estatement(){
 		$page_data 	= array("type"=>"list","list"=>array());
 		$input 		= $this->input->get(NULL, TRUE);
@@ -670,7 +671,7 @@ class Account extends MY_Admin_Controller {
 				"edate <="	=> $edate,
 			);
 		}
-		
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!="") {
 				$where[$field] = $input[$field];
