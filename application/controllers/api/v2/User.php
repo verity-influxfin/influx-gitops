@@ -5,7 +5,7 @@ require(APPPATH.'libraries/REST_Controller.php');
 class User extends REST_Controller {
 
 	public $user_info;
-	
+
     public function __construct()
     {
         parent::__construct();
@@ -17,16 +17,16 @@ class User extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-			
+
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
-			
+
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
 				$this->log_request_model->insert([
@@ -37,7 +37,7 @@ class User extends REST_Controller {
 					'agent'		=> $tokenData->agent,
 				]);
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
@@ -45,11 +45,11 @@ class User extends REST_Controller {
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
-	
+
 	/**
      * @apiDefine TokenRequired
      * @apiHeader {String} request_token (required) Token for api authorization.
-     */ 
+     */
     /**
      * @apiDefine TokenError
      * @apiError 100 Token錯誤
@@ -131,7 +131,7 @@ class User extends REST_Controller {
      *       "error": "217"
      *     }
      */
-	 
+
 	/**
      * @api {post} /v2/user/registerphone 會員 註冊簡訊
 	 * @apiVersion 0.2.0
@@ -161,7 +161,7 @@ class User extends REST_Controller {
      *     }
      *
      */
-	 
+
 	public function registerphone_post()
     {
         $input = $this->input->post(NULL, TRUE);
@@ -170,13 +170,13 @@ class User extends REST_Controller {
 		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
-		$this->load->library('sms_lib'); 
+
+		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at']) <= SMS_LIMIT_TIME){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
-		
+
 		$result = $this->user_model->get_by('phone', $phone);
         if ($result) {
 			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
@@ -208,7 +208,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time": 1		
+	 * 			"first_time": 1
      *      }
      *    }
 	 * @apiUse InputError
@@ -252,10 +252,10 @@ class User extends REST_Controller {
      */
 	public function register_post()
     {
-		$this->load->library('notification_lib'); 
-		$this->load->library('facebook_lib'); 
-		$this->load->library('sms_lib'); 
-		
+		$this->load->library('notification_lib');
+		$this->load->library('facebook_lib');
+		$this->load->library('sms_lib');
+
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= [];
         $fields 	= ['phone','password','code'];
@@ -274,7 +274,7 @@ class User extends REST_Controller {
 		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
-		
+
 		$user_exist = $this->user_model->get_by('phone',$input['phone']);
 		if ($user_exist) {
 			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
@@ -307,7 +307,7 @@ class User extends REST_Controller {
 				$this->notification_lib->first_login($insert,$input['investor']);
 				$this->response(array(
 					'result' => 'SUCCESS',
-					'data' 	 => array( 
+					'data' 	 => array(
 						'token' 		=> $request_token,
 						'expiry_time'	=> $token->expiry_time,
 						'first_time'	=> 1
@@ -340,7 +340,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time": 1		
+	 * 			"first_time": 1
      *      }
      *    }
 	 * @apiUse InputError
@@ -379,13 +379,13 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-		
+
 		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
-		
+
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
 		if($user_info){
             //判斷鎖定狀態並解除
             $this->load->library('user_lib');
@@ -432,7 +432,7 @@ class User extends REST_Controller {
 				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location);
 
 				if($first_time){
-					$this->load->library('notification_lib'); 
+					$this->load->library('notification_lib');
 					$this->notification_lib->first_login($user_info->id,$investor);
 				}
 				$this->response([
@@ -441,7 +441,7 @@ class User extends REST_Controller {
 						'token' 		=> $request_token,
 						'expiry_time'	=> $token->expiry_time,
 						'first_time'	=> $first_time,
-					] 
+					]
 				]);
 			}else{
                 $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location);
@@ -458,7 +458,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
-	
+
 	/**
      * @api {post} /v2/user/sociallogin 會員 第三方登入
 	 * @apiVersion 0.2.0
@@ -477,7 +477,7 @@ class User extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time": 1		
+	 * 			"first_time": 1
      *      }
      *    }
      *
@@ -499,7 +499,7 @@ class User extends REST_Controller {
      *     }
      *
      */
-	 
+
 	public function sociallogin_post(){
         $input 		= $this->input->post(NULL, TRUE);
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
@@ -511,15 +511,15 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-		
-		$this->load->library('facebook_lib'); 
+
+		$this->load->library('facebook_lib');
 		$info	 	= $this->facebook_lib->get_info($input['access_token']);
 		$user_id  	= $this->facebook_lib->login($info);
 		$account  	= isset($info['id'])?$info['id']:'';
 		if($user_id && $account){
-			$user_info = $this->user_model->get($user_id);	
+			$user_info = $this->user_model->get($user_id);
 			if($user_info){
-				
+
 				if($user_info->block_status != 0){
 					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
@@ -532,7 +532,7 @@ class User extends REST_Controller {
 					$first_time = $user_info->status = 1;
 					$this->user_model->update($user_info->id,array('status'=>1));
 				}
-				
+
 				$token = (object) [
 					'id'			=> $user_info->id,
 					'phone'			=> $user_info->phone,
@@ -547,7 +547,7 @@ class User extends REST_Controller {
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
 				$this->insert_login_log($account,$investor,1,$user_id,$device_id,$location);
 				if($first_time){
-					$this->load->library('notification_lib'); 
+					$this->load->library('notification_lib');
 					$this->notification_lib->first_login($user_info->id,$investor);
 				}
 				$this->response(array(
@@ -567,7 +567,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
-	
+
 	/**
      * @api {post} /v2/user/smsloginphone 會員 忘記密碼簡訊
 	 * @apiVersion 0.2.0
@@ -598,7 +598,7 @@ class User extends REST_Controller {
      *     }
      *
      */
-	 
+
 	public function smsloginphone_post()
     {
 
@@ -611,13 +611,13 @@ class User extends REST_Controller {
 		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
+
 		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at'])<=SMS_LIMIT_TIME){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
-		
+
 		$result = $this->user_model->get_by('phone', $phone);
         if ($result) {
 			$this->sms_lib->send_verify_code($result->id,$phone);
@@ -626,7 +626,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
         }
     }
-	
+
 	 /**
      * @api {post} /v2/user/forgotpw 會員 忘記密碼
 	 * @apiVersion 0.2.0
@@ -674,18 +674,18 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-		
+
 		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $input['phone'])){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
+
 		if(strlen($input['new_password']) < PASSWORD_LENGTH || strlen($input['new_password'])> PASSWORD_LENGTH_MAX ){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
-		
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);	
+
+		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
 		if($user_info){
-			$this->load->library('sms_lib'); 
+			$this->load->library('sms_lib');
 			$rs = $this->sms_lib->verify_code($user_info->phone,$input['code']);
 			if($rs){
 				$res = $this->user_model->update($user_info->id,array('password'=>$input['new_password']));
@@ -701,7 +701,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
-	
+
 	 /**
      * @api {get} /v2/user/info 會員 個人資訊
 	 * @apiVersion 0.2.0
@@ -737,12 +737,12 @@ class User extends REST_Controller {
      *      	"my_promote_code": "9JJ12CQ5",
      *      	"id_number": null,
      *      	"transaction_password": true,
-     *      	"investor": 1,  
-     *      	"company": 0,  
-     *      	"incharge": 0,  
-     *      	"created_at": "1522651818",     
-     *      	"updated_at": "1522653939",     
-     *      	"expiry_time": "1522675539"     
+     *      	"investor": 1,
+     *      	"company": 0,
+     *      	"incharge": 0,
+     *      	"created_at": "1522651818",
+     *      	"updated_at": "1522653939",
+     *      	"expiry_time": "1522675539"
 	 *      }
      *    }
 	 * @apiUse TokenError
@@ -756,7 +756,7 @@ class User extends REST_Controller {
 		foreach($fields as $key => $field){
 			$data[$field] = $this->user_info->$field?$this->user_info->$field:'';
 		}
-		
+
 		$data['transaction_password'] 	= empty($this->user_info->transaction_password)?false:true;
 		$data['investor'] 				= intval($this->user_info->investor);
 		$data['company'] 				= intval($this->user_info->company);
@@ -765,7 +765,7 @@ class User extends REST_Controller {
 		$data['expiry_time'] 			= intval($this->user_info->expiry_time);
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
-	
+
 	/**
      * @api {post} /v2/user/bind 會員 綁定第三方帳號
 	 * @apiVersion 0.2.0
@@ -817,13 +817,13 @@ class User extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-		
-		$this->load->library('facebook_lib'); 
+
+		$this->load->library('facebook_lib');
 		$meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
 		if($meta){
 			$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
 		}
-		
+
 		$debug_token = $this->facebook_lib->debug_token($input['access_token']);
 		if($debug_token){
 			$info 		= $this->facebook_lib->get_info($input['access_token']);
@@ -844,18 +844,18 @@ class User extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
     }
-	
+
 	private function set_nickname($info){
 		if($this->user_info->nickname=='' && $info['name']){
 			$this->user_model->update($this->user_info->id,array('nickname'=>$info['name']));
 		}
-		
+
 		if($this->user_info->picture=='' && $info['picture']){
 			$this->user_model->update($this->user_info->id,array('picture'=>$info['picture']));
 		}
 		return true;
 	}
-	
+
 	/**
      * @api {get} /v2/user/editpwphone 會員 交易、修改密碼簡訊
 	 * @apiVersion 0.2.0
@@ -881,24 +881,24 @@ class User extends REST_Controller {
      *     }
      *
     */
-	 
+
 	public function editpwphone_get()
     {
 		$this->not_support_company();
         $input 		= $this->input->get(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$phone 		= $this->user_info->phone;
-		
-		$this->load->library('sms_lib'); 
+
+		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
 		if($code && (time()-$code['created_at']) <= SMS_LIMIT_TIME){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
-		
+
 		$this->sms_lib->send_verify_code($user_id,$phone);
 		$this->response(array('result' => 'SUCCESS'));
     }
-	
+
 	/**
      * @api {post} /v2/user/editpw 會員 修改密碼
 	 * @apiVersion 0.2.0
@@ -956,22 +956,22 @@ class User extends REST_Controller {
 				$data[$field] = $input[$field];
 			}
         }
-		
+
 		if(strlen($input['new_password']) < PASSWORD_LENGTH || strlen($input['new_password'])> PASSWORD_LENGTH_MAX ){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
-		
+
 		$user_info = $this->user_info;
 		if(sha1($data['password'])!=$user_info->password){
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_ERROR ));
 		}
-		
-		$this->load->library('sms_lib'); 
+
+		$this->load->library('sms_lib');
 		$rs = $this->sms_lib->verify_code($user_info->phone,$data['code']);
 		if(!$rs){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
 		}
-		
+
 		$res = $this->user_model->update($user_info->id,array('password'=>$data['new_password']));
 		if($res){
 			$this->response(array('result' => 'SUCCESS'));
@@ -979,7 +979,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 		}
     }
-	
+
 	/**
      * @api {post} /v2/user/edittpw 會員 設置交易密碼
 	 * @apiVersion 0.2.0
@@ -1022,7 +1022,7 @@ class User extends REST_Controller {
 		$data		= array();
 		$user_info 	= $this->user_info;
 		$investor 	= $this->user_info->investor;
-		
+
 		$fields 	= ['new_password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
@@ -1031,12 +1031,12 @@ class User extends REST_Controller {
 				$data[$field] = $input[$field];
 			}
         }
-		
+
 		if(strlen($input['new_password']) < TRANSACTION_PASSWORD_LENGTH || strlen($input['new_password']) > TRANSACTION_PASSWORD_LENGTH_MAX){
 			$this->response(array('result' => 'ERROR','error' => TRANSACTIONPW_LEN_ERROR ));
 		}
 
-		$this->load->library('sms_lib'); 
+		$this->load->library('sms_lib');
 		$rs = $this->sms_lib->verify_code($user_info->phone,$data['code']);
 		if(!$rs){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
@@ -1050,14 +1050,14 @@ class User extends REST_Controller {
         }
 		$res = $this->user_model->update($user_info->id,array('transaction_password'=>$data['new_password']));
 		if($res){
-			$this->load->library('notification_lib'); 
+			$this->load->library('notification_lib');
 			$this->notification_lib->transaction_password($user_info->id,$investor);
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 		}
     }
-	
+
 	/**
      * @api {get} /v2/user/chagetoken 會員 交換Token
 	 * @apiVersion 0.2.0
@@ -1079,7 +1079,7 @@ class User extends REST_Controller {
 	 * @apiUse BlockUser
      *
      */
-	 
+
 	public function chagetoken_get()
     {
 		$token = (object) [
@@ -1095,7 +1095,7 @@ class User extends REST_Controller {
 		$request_token 		= AUTHORIZATION::generateUserToken($token);
 		$this->response(array('result' => 'SUCCESS','data' => array('token'=>$request_token,'expiry_time'=>$token->expiry_time) ));
     }
-	
+
 	/**
      * @api {post} /v2/user/contact 會員 投訴與建議
 	 * @apiVersion 0.2.0
@@ -1117,7 +1117,7 @@ class User extends REST_Controller {
 	 * @apiUse InsertError
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
-     * 
+     *
      */
 	public function contact_post()
     {
@@ -1168,7 +1168,7 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 		}
     }
-	
+
 	/**
      * @api {get} /v2/user/promote 會員 推薦有獎 Line Point 活動
 	 * @apiVersion 0.2.0
@@ -1193,10 +1193,10 @@ class User extends REST_Controller {
 	 * @apiUse TokenError
 	 * @apiUse BlockUser
 	 * @apiUse IsCompany
-     * 
+     *
      */
-    /** 
-     * 
+    /**
+     *
     */
 	public function promote_get()
     { 	$this->load->model('log/log_game_model');
@@ -1247,8 +1247,8 @@ class User extends REST_Controller {
         //$check_50send =count( $check_50send );
         //$promotecount=count($promote_count);
         //$collect_count= $promotecount/3;
-     
-    
+
+
         //$this->game_lib->start_line_pionts_game($user_id,$promote_code,$promotecount);
 		$data = array(
             'promote_name'	           => '推薦有獎',
@@ -1265,17 +1265,17 @@ class User extends REST_Controller {
 
 		$this->response(array('result' => 'SUCCESS','data'=>$data));
     }
-    
-    
+
+
 	/**
      * @api {post} /v2/user/promote 會員   Line Point 活動
 	 * @apiVersion 0.2.0
-     * 
+     *
     */
 	public function promote_post()
     {
         $this->not_support_company();
-	 
+
         $user_id 	= $this->user_info->id;
         $promote_code	  = $this->user_info->my_promote_code;
         $this->load->library('game_lib');
@@ -1293,18 +1293,18 @@ class User extends REST_Controller {
         if( $check=='error'){
             $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
         }
-      $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr  
+      $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr
       $promotecount=count($promote_count);
-      
+
       $collect_count= $promotecount/3;
       $my_line_id  = $this->user_meta_model->get_by([
         'user_id'  => $user_id,
         'meta_key'  => 'line_access_token'
          ]);
 
-        $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr  
+        $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr
             if((!empty($my_line_id))){
-                $my_line_id  = $my_line_id['meta_value'];   
+                $my_line_id  = $my_line_id['meta_value'];
                 if($my_line_id!==0&&(!empty($my_line_id))){
                 //需用linebot 發50 points
                 $this->game_lib->check_fifty_points($user_id,$my_line_id,$collect_count);
@@ -1313,7 +1313,7 @@ class User extends REST_Controller {
             $this->response(array('result' => 'SUCCESS'));
     }
 
-    
+
 	/**
      * @api {post} /v2/user/upload 會員 上傳圖片
 	 * @apiVersion 0.2.0
@@ -1355,10 +1355,10 @@ class User extends REST_Controller {
 		}else{
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
+
 		$this->response(['result' => 'SUCCESS','data' => $data]);
     }
-	
+
 	private function get_promote_code(){
 		$code = make_promote_code();
 		$result = $this->user_model->get_by('my_promote_code',$code);
@@ -1368,7 +1368,7 @@ class User extends REST_Controller {
 			return $code;
 		}
 	}
-	
+
 	private function not_support_company(){
 		if($this->user_info->company != 0 ){
 			$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
@@ -1546,18 +1546,23 @@ class User extends REST_Controller {
             'data' 	 => []
         ));
     }
-	
+
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->library('user_agent');
         $this->agent->device_id=$device_id;
         $this->load->model('log/log_userlogin_model');
-		$this->log_userlogin_model->insert(array(
+		$loginLog = [
 			'account'	=> $account,
 			'investor'	=> $investor,
 			'user_id'	=> $user_id,
 			'location'	=> $location,
 			'status'	=> $status
-		));
+		];
+		$this->log_userlogin_model->insert($loginLog);
+
+		$this->load->model('mongolog/user_login_log_model');
+		$fullLoginLog = $this->log_userlogin_model->getCurrentInstance($loginLog);
+		$this->user_login_log_model->save($fullLoginLog);
 
         $this->load->library('user_lib');
         $remind_count = $this->user_lib->auto_block_user($account,$investor,$user_id,$device_id);
