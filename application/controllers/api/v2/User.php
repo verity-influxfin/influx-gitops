@@ -1553,10 +1553,10 @@ class User extends REST_Controller {
         $this->load->model('log/log_userlogin_model');
 		$loginLog = [
 			'account'	=> $account,
-			'investor'	=> $investor,
-			'user_id'	=> $user_id,
+			'investor'	=> intval($investor),
+			'user_id'	=> intval($user_id),
 			'location'	=> $location,
-			'status'	=> $status
+			'status'	=> intval($status)
 		];
 		$this->log_userlogin_model->insert($loginLog);
 
