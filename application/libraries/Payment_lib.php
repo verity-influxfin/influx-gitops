@@ -11,7 +11,38 @@ class Payment_lib{
 		$this->CI->load->model('user/user_bankaccount_model');
 		$this->CI->load->library('Transaction_lib');
     }
-	
+	public function script_get_taishin_info($data){
+		$insert_param = array();
+		$check_data=$this->CI->payment_model->get_by(["tx_seq_no"=>$data['TransactionNo']]);
+		if(empty($check_data)){
+			$tx_datetime = date("Y-m-d H:i:s",strtotime($data['SDATE'].' '.$data['TIME']));
+			$virtual_account = "";
+			if (is_virtual_account($data['TRNACTNO'],TAISHIN_VIRTUAL_CODE)) {
+				$virtual_account = $data['TRNACTNO'];
+				$amount 	 = intval($data['SIGN'].$data['AMT']);
+				$bank_acc	 = intval($data['OUTBANK'].$data['OUTACTNO']);
+				$this->CI->payment_model->insert([
+                    "bankaccount_no"  => "", //普惠專戶
+                    "tx_datetime"       => $tx_datetime,
+                    "tx_seq_no"         => $data['TransactionNo'],
+                    "tx_id_no"          => "", //交易代號
+                    "amount"            => $amount,
+                    "memo"              => $virtual_account,
+                    "bank_amount"       => "", //帳戶餘額
+                    "bank_id"           => $data['OUTBANK'],
+                    "acc_name"            => "", //戶名
+                    "bank_acc"          => $bank_acc,
+                    "tx_mach"         => TAISHIN_VIRTUAL_CODE,//TX need check 0999 //0xxx台新
+                    "tx_spec"           => $data['TXNCODE'],
+                    "virtual_account"   => $virtual_account,
+                ]);
+				$res=$this->script_handle_payment();
+				$res==false ? 'ERROR' : 'SUCCESS';
+			}
+		}
+		return OrderExists;
+
+	}
 	public function script_get_cathay_info($date=""){
 		if(empty($date)){
 			$date = date("Ymd");
