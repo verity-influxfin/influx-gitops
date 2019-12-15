@@ -38,6 +38,7 @@ class Payment_lib{
                 ]);
 				$res=$this->script_handle_payment();
 				$res==false ? 'ERROR' : 'SUCCESS';
+				return $res;
 			}
 		}
 		return OrderExists;
