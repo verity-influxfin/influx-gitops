@@ -22,7 +22,7 @@ class Taishinbank extends REST_Controller {
 		}else if($res==OrderExists){
 			$this->response(array('result' => 'ERROR','error' => OrderExists));
 		}else{
-			$this->response(array('result' => 'ERROR','error' => ''));
+			$this->response(array('result' => 'ERROR','error' => UnknownMethod));
 		}	
 	}
 
