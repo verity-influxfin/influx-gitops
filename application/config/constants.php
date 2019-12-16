@@ -292,6 +292,7 @@ defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PP
 
 //台新
 defined('TAISHIN_VIRTUAL_CODE')     OR define('TAISHIN_VIRTUAL_CODE'	, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
+defined('TAISHIN_CUST_ACCNO')     OR define('TAISHIN_CUST_ACCNO'	, getenv('ENV_TAISHIN_CUST_ACCNO'));
 
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
