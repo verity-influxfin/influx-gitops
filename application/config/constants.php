@@ -108,6 +108,7 @@ defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司�
 defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
 defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司帳號
 defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
+defined('NOT_DEALER') OR define('NOT_DEALER' , 218); //未有該商品類型的經銷商資格
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -139,6 +140,7 @@ defined('PRODUCT_TYPE_ERROR')  			OR define('PRODUCT_TYPE_ERROR'			, 410);
 defined('ORDER_NOT_EXIST')  			    OR define('ORDER_NOT_EXIST'				, 411);
 defined('ORDER_STATUS_ERROR')  			OR define('ORDER_STATUS_ERROR'			, 412);
 defined('ORDER_NO_PERMISSION')  			OR define('ORDER_NO_PERMISSION'			, 413);
+defined('PRODUCT_CLOSE') OR define('PRODUCT_CLOSE' , 414);
 defined('M_ORDER_NOT_EXIST')  			OR define('M_ORDER_NOT_EXIST'			, 420);
 defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
@@ -218,6 +220,7 @@ defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續�
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('ORDER_INTEREST_RATE') 		OR define('ORDER_INTEREST_RATE'		, 18); //分期利率
+defined('FEV_INTEREST_RATE') 		OR define('FEV_INTEREST_RATE'		, 15); //分期利率
 defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%
 defined('GRACE_PERIOD') 					OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 		OR define('TRANSACTION_PASSWORD_LENGTH'		, 6); //交易密碼長度

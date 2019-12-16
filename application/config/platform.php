@@ -120,7 +120,7 @@ $config['company_type']= [
 $config['product_list']= [
 	1 => [
 		'id'				=> 1,
-        'visul_id'          => 1,
+        'visul_id'          => 'N1',
 		'type'				=> 1,
 		'identity'			=> 1,
 		'alias'				=> 'STN',
@@ -129,34 +129,44 @@ $config['product_list']= [
 		'loan_range_e'		=> 120000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => PLATFORM_FEES_MIN,
 		'sub_product'       => [1],
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
+        'dealer'			=> 0,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
 		'description'		=> '須提供有效學生證<br>可申請額度<br>5,000-120,000'
 	],
 	2 => [
 		'id'				=> 2,
-        'visul_id'          => 2,
+        'visul_id'          => 'N2',
 		'type'				=> 2,
 		'identity'			=> 1,
 		'alias'				=> 'STI',
 		'name'				=> '學生手機貸',
 		'loan_range_s'		=> 5000,
 		'loan_range_e'		=> 120000,
-		'interest_rate_s'	=> 18,
-		'interest_rate_e'	=> 18,
+		'interest_rate_s'	=> ORDER_INTEREST_RATE,
+		'interest_rate_e'	=> ORDER_INTEREST_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product'       => [],
 		'certifications'	=> [1,2,3,4,5,6,7],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
+        'dealer'			=> 0,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
 		'description'		=> '須提供有效學生證<br>可申請額度<br>5,000-120,000'
 	],
 	3 => [
 		'id'				=> 3,
-        'visul_id'          => 1,
+        'visul_id'          => 'N1',
 		'type'				=> 1,
 		'identity'			=> 2,
 		'alias'				=> 'FGN',
@@ -165,238 +175,167 @@ $config['product_list']= [
 		'loan_range_e'		=> 200000,
 		'interest_rate_s'	=> 5,
 		'interest_rate_e'	=> 20,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product'       => [1],
 		'certifications'	=> [1,3,4,5,6,7,8,9,10],
 		'instalment'		=> [3,6,12,18,24],
 		'repayment'			=> [1],
         'status'			=> 1,
+        'dealer'			=> 0,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
 		'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
 	],
     4 => [
         'id'				=> 4,
-        'visul_id'          => 2,
+        'visul_id'          => 'N2',
         'type'				=> 2,
         'identity'			=> 2,
         'alias'				=> 'FGI',
         'name'				=> '上班族手機貸',
         'loan_range_s'		=> 10000,
         'loan_range_e'		=> 200000,
-        'interest_rate_s'	=> 18,
-        'interest_rate_e'	=> 18,
+        'interest_rate_s'	=> ORDER_INTEREST_RATE,
+        'interest_rate_e'	=> ORDER_INTEREST_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product'       => [],
         'certifications'	=> [1,3,4,5,6,7,8,9,10],
         'instalment'		=> [3,6,12,18,24],
         'repayment'			=> [1],
         'status'			=> 1,
+        'dealer'			=> 0,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
         'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
     ],
     5 => [
         'id'				=> 5,
-        'visul_id'          => 3,
+        'visul_id'          => 'N3',
         'type'				=> 2,
         'identity'			=> 1,
         'alias'				=> 'SFV',
         'name'				=> '學生外匯車貸',
         'loan_range_s'		=> 10000,
         'loan_range_e'		=> 2000000,
-        'interest_rate_s'	=> 15,
-        'interest_rate_e'	=> 15,
+        'interest_rate_s'	=> FEV_INTEREST_RATE,
+        'interest_rate_e'	=> FEV_INTEREST_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => 10000,
         'sub_product'       => [],
         'certifications'	=> [1,2,3,4,5,6,7],
         'instalment'		=> [180],
         'repayment'			=> [3],
         'status'			=> 1,
+        'dealer'			=> 2,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
         'description'		=> ''
     ],
     6 => [
-        'id'				=> 5,
-        'visul_id'          => 3,
+        'id'				=> 6,
+        'visul_id'          => 'N3',
         'type'				=> 2,
         'identity'			=> 2,
         'alias'				=> 'FFV',
         'name'				=> '上班族外匯車貸',
         'loan_range_s'		=> 10000,
         'loan_range_e'		=> 2000000,
-        'interest_rate_s'	=> 15,
-        'interest_rate_e'	=> 15,
+        'interest_rate_s'	=> FEV_INTEREST_RATE,
+        'interest_rate_e'	=> FEV_INTEREST_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => 10000,
         'sub_product'       => [],
         'certifications'	=> [1,3,4,5,6,7,8,9,10],
         'instalment'		=> [180],
         'repayment'			=> [3],
         'status'			=> 1,
+        'dealer'			=> 2,
+        'multi_target' => 0,
+        'hidenMainProduct'	=> false,
         'description'		=> ''
     ],
-    7 => [
-        'id'				=> 5,
-        'visul_id'          => 4,
+    1000 => [
+        'id'				=> 1000,
+        'visul_id'          => 'D1',
         'type'				=> 1,
         'identity'			=> 3,
-        'alias'				=> 'CML',
+        'alias'				=> 'FEV',
         'name'				=> '外匯車貸',
         'loan_range_s'		=> 10000,
         'loan_range_e'		=> 2000000,
-        'interest_rate_s'	=> 15,
-        'interest_rate_e'	=> 15,
-        'sub_product'       => [],
+        'interest_rate_s'	=> FEV_INTEREST_RATE,
+        'interest_rate_e'	=> FEV_INTEREST_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => 10000,
+        'sub_product'       => [2,3],
         'certifications'	=> [1,3,4,5,6,7,8,9,10],
         'instalment'		=> [180],
         'repayment'			=> [3],
         'status'			=> 1,
-        'description'		=> ''
-    ],
-    /* 6 => [
-            'id'				=> 6,
-            'visul_id'          => 2,
-            'type'				=> 1,
-            'identity'			=> 2,
-            'alias'				=> 'XXI',
-            'name'				=> '上班族創業貸',
-            'loan_range_s'		=> 10000,
-            'loan_range_e'		=> 200000,
-            'interest_rate_s'	=> 18,
-            'interest_rate_e'	=> 18,
-            'sub_product'       => [],
-            'certifications'	=> [1,3,4,5,6,7,8,9,10],
-            'instalment'		=> [3,6,12,18,24],
-            'repayment'			=> [1],
-            'status'			=> 1,
-            'description'		=> '上班族創業貸
-    計畫留學、創業或者實現更多理想嗎？
-    需要資金卻無法向銀行聲請借款嗎？
-    普匯陪你一起實現夢想'
-        ],
-        7 => [
-            'id'				=> 7,
-            'visul_id'          => 4,
-            'type'				=> 2,
-            'identity'			=> 1,
-            'alias'				=> 'OXI',
-            'name'				=> '學生族遊學貸',
-            'loan_range_s'		=> 10000,
-            'loan_range_e'		=> 200000,
-            'interest_rate_s'	=> 18,
-            'interest_rate_e'	=> 18,
-            'sub_product'       => [],
-            'certifications'	=> [1,3,4,5,6,7,8,9,10],
-            'instalment'		=> [3,6,12,18,24],
-            'repayment'			=> [1],
-            'status'			=> 1,
-            'description'		=> '學生族遊學貸
-    計畫留學、創業或者實現更多理想嗎？
-    需要資金卻無法向銀行聲請借款嗎？
-    普匯陪你一起實現夢想'
-        ],
-        8 => [
-            'id'				=> 8,
-            'visul_id'          => 4,
-            'type'				=> 2,
-            'identity'			=> 2,
-            'alias'				=> 'OXI',
-            'name'				=> '上班族遊學貸',
-            'loan_range_s'		=> 10000,
-            'loan_range_e'		=> 200000,
-            'interest_rate_s'	=> 18,
-            'interest_rate_e'	=> 18,
-            'sub_product'       => [],
-            'certifications'	=> [1,3,4,5,6,7,8,9,10],
-            'instalment'		=> [3,6,12,18,24],
-            'repayment'			=> [1],
-            'status'			=> 1,
-            'description'		=> '上班族遊學貸
-    計畫留學、創業或者實現更多理想嗎？
-    需要資金卻無法向銀行聲請借款嗎？
-    普匯陪你一起實現夢想'
-        ],
-        10 => [
-            'id'				=> 5,
-            'type'				=> 1,
-            'identity'			=> 2,
-            'alias'				=> 'FGD',
-            'name'				=> 'Pay Day Loan',
-            'loan_range_s'		=> 10000,
-            'loan_range_e'		=> 200000,
-            'interest_rate_s'	=> 5,
-            'interest_rate_e'	=> 20,
-            'certifications'	=> [],
-            'instalment'		=> [0],
-            'repayment'			=> [3],
-            'description'		=> '普匯學生貸
-    計畫留學、創業或者實現更多理想嗎？
-    需要資金卻無法向銀行聲請借款嗎？
-    普匯陪你一起實現夢想'
-        ],*/
+        'dealer'			=> 2,
+        'multi_target' => 1,
+        'hidenMainProduct'	=> true,
+        'description'		=> '',
+    ]
 ];
 
 $config['visul_id_des'] = [
-    '1'	   => [
+    'N1'	   => [
         'name'   => '信用貸款',
         'description' =>'<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    '2'	   => [
+    'N2'	   => [
         'name' => '手機無卡分期專案',
         'description' =>'最新熱門手機選擇最多元',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    '3'	   => [
-        'name' => '外匯車專案',
+    'N3'	   => [
+        'name' => '外匯車貸',
         'description' =>'買進口車好方便',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    '4'	   => [
+    'D1'	   => [
         'name' => '外匯車專案',
         'description' =>'幫您貸車進來',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    /*'2'	   => [
-    'name' => '創業貸款',
-    'description' =>'創業貸款',
-    'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-    'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-    'status' => 1
-],*/
-    /*'4'	   => [
-        'name' => '遊學貸',
-        'description' =>'遊學貸XXX',
-        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-        'status' => 1
-    ],*/
-
-    '101'  => [
+    'NS1'  => [
         'name' => 'Techi貸',
         'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
-    ],/*
-    '102'  => [
-        'name' => '就學貸款',
-        'description' =>'就學貸款XXX',
-        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-        'status' => 1
-    ],*/
-    '103'  => [
-        'name' => '就學貸款',
-        'description' =>'就學貸款XXX',
+    ],
+    'DS1'  => [
+        'name' => '代購代付融資',
+        'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>幫您貸車進來</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    '201'  => [
+    'DS2'  => [
+        'name' => '在庫車融資',
+        'description' =>'<span style=\'font-size:16px;color:black;font-weight: 900;\'>解決您的庫存車問題</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    'NS1P1'  => [
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
     ],
-    '202'  => [
+    'NS1P2'  => [
         'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
         'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
     ]
@@ -405,44 +344,106 @@ $config['sub_product_mapping'] = [
     1 => 'config_techi',
 ];
 
+$config['map_sub_product'] = [
+    '1:1' => '[1]->'
+];
 $config['sub_product_list'] = [
-    1 => [
-        'visul_id'          => 101,
+    '1' => [
+        'visul_id'          => 'NS1',
         'identity'          => [
             1 =>[
-                'visul_id'          => 201,
+                'visul_id'          => 'NS1P1',
                 'name'				=> '學生工程師貸',
                 'product_id'        => '1:1',
                 'loan_range_s'		=> 5000,
                 'loan_range_e'		=> 120000,
                 'interest_rate_s'	=> 5,
                 'interest_rate_e'	=> 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications'	=> [1,2,3,4,5,6,7],
                 'instalment'		=> [3,6,12,18,24],
                 'repayment'			=> [1],
                 'status'			=> 1,
+                'dealer'			=> 0,
+                'multi_target' => 0,
                 'description'		=> '須提供有效學生證<br>可申請額度<br>5,000-120,000'
             ],
             2 =>[
-                'visul_id'          => 202,
+                'visul_id'          => 'NS1P2',
                 'name'				=> '上班族工程師貸',
                 'product_id'        => '3:1',
                 'loan_range_s'		=> 10000,
                 'loan_range_e'		=> 200000,
                 'interest_rate_s'	=> 5,
                 'interest_rate_e'	=> 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications'	=> [1,3,4,5,6,7,8,9,10],
                 'instalment'		=> [3,6,12,18,24],
                 'repayment'			=> [1],
                 'status'			=> 1,
+                'dealer'			=> 0,
+                'multi_target' => 0,
                 'description'		=> '須提供工作證明<br>可申請額度<br>10,000-200,000'
             ]
         ],
-        'status'            => 0
+        'status'            => 1
+    ],
+    '2' => [
+        'visul_id'          => 'DS1',
+        'identity'          => [
+            3 =>[
+                'visul_id'          => 'DS1P1',
+                'name'				=> '代購代付融資',
+                'product_id'        => '1000:2',
+                'loan_range_s'		=> 10000,
+                'loan_range_e'		=> 2000000,
+                'interest_rate_s'	=> FEV_INTEREST_RATE,
+                'interest_rate_e'	=> FEV_INTEREST_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 10000,
+                'certifications'	=> [1,3,4,5,6,7,8,9,10],
+                'instalment'		=> [180],
+                'repayment'			=> [3],
+                'status'			=> 1,
+                'dealer'			=> 2,
+                'multi_target' => 1,
+                'description'		=> '可申請額度<br>10,000-2,000,000'
+            ]
+        ],
+        'status'            => 1
+    ],
+    '3' => [
+        'visul_id'          => 'DS2',
+        'identity'          => [
+            3 =>[
+                'visul_id'          => 'DS2P1',
+                'name'				=> '在庫車融資',
+                'product_id'        => '1000:3',
+                'loan_range_s'		=> 10000,
+                'loan_range_e'		=> 2000000,
+                'interest_rate_s'	=> FEV_INTEREST_RATE,
+                'interest_rate_e'	=> FEV_INTEREST_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 10000,
+                'certifications'	=> [1,3,4,5,6,7,8,9,10],
+                'instalment'		=> [180],
+                'repayment'			=> [3],
+                'status'			=> 1,
+                'dealer'			=> 2,
+                'multi_target' => 1,
+                'description'		=> '可申請額度<br>10,000-2,000,000'
+            ]
+        ],
+        'status'            => 1
     ]
 ];
 
-$config['app_product_totallist'] = [1,2,3,101];
+$config['app_product_totallist'] = [
+    'nature' =>['N1','N2','N3','NS1'],
+    'company' =>['D1','DS1'],
+];
 
 
 //產品轉換代碼
