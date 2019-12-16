@@ -495,7 +495,7 @@ class Joint_credit_lib{
 						"message" => [
 							"信用卡資訊：強制停用或強制停卡",
 							"信用卡使用中張數：0",
-							"信用卡總額度（元）：0"
+							"信用卡總額度（仟元）：0"
 						]
 					];
 				}
@@ -516,7 +516,7 @@ class Joint_credit_lib{
 						"message"  => [
 							"信用卡資訊：有",
 							"信用卡使用中張數：{$count_credit_cards}",
-							"信用卡總額度（元）：{$allowedAmount}"
+							"信用卡總額度（仟元）：{$allowedAmount}"
 						]
 					];
 					$cards_info = [
@@ -530,7 +530,7 @@ class Joint_credit_lib{
 						"message"  => [
 							"信用卡資訊：有",
 							"信用卡使用中張數：0",
-							"信用卡總額度（元）：0"
+							"信用卡總額度（仟元）：0"
 						]
 					];
 				}

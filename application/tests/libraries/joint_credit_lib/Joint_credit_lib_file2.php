@@ -153,7 +153,7 @@ class Joint_credit_lib_file2 extends TestCase
 			"message" => [
 				"信用卡資訊：有",
 				"信用卡使用中張數：2",
-				"信用卡總額度（元）：40"
+				"信用卡總額度（仟元）：40"
 			],
 			"rejected_message" => [
 				"有強制停用或強制停卡"
