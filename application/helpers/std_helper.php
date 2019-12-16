@@ -214,9 +214,9 @@
 		return false;
 	}
 	
-	function investor_virtual_account($account,$bank=CATHAY_VIRTUAL_CODE){
+	function investor_virtual_account($account,$bank_type=CATHAY_VIRTUAL_CODE){
 		if($account){
-			if(strlen($account)==14 && (substr($account,0,4)==$bank && substr($account,4,1)==INVESTOR_VIRTUAL_CODE) || substr($account,0,5)==$bank){
+			if(strlen($account)==14 && (substr($account,0,4)==$bank_type && substr($account,4,1)==INVESTOR_VIRTUAL_CODE) || substr($account,0,5)==$bank_type){
 				return true;
 			}
 		}

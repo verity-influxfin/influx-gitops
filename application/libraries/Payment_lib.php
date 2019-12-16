@@ -177,7 +177,9 @@ class Payment_lib{
             $this->CI->load->model('user/virtual_account_model');
             $virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
             if($virtual_account){
-                $investor			= investor_virtual_account($value->virtual_account)?1:0;
+				$bank_type = substr($virtual_account->virtual_account, 0, 5);
+				$bank_type==TAISHIN_VIRTUAL_CODE ? TAISHIN_VIRTUAL_CODE : CATHAY_VIRTUAL_CODE;
+                $investor			= investor_virtual_account($value->virtual_account,$bank_type)?1:0;
                 $where				= array(
                     "user_id"			=> $virtual_account->user_id,
                     "investor"			=> $investor,
@@ -186,12 +188,13 @@ class Payment_lib{
                     "status"			=> 1,
                     "verify"			=> 1
                 );
-                $user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+			
                 if($virtual_account->user_id == $user_bankaccount->user_id){
                     $this->CI->transaction_lib->recharge($value->id);
                     return true;
                 }else{
-                    if(!investor_virtual_account($value->virtual_account)){
+                    if(!investor_virtual_account($value->virtual_account,$bank_type)){
                         $this->CI->transaction_lib->recharge($value->id);
                         return true;
                     }
