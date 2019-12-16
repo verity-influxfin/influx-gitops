@@ -11855,7 +11855,7 @@ define({
                         {
                             "group": "Parameter",
                             "type": "Number",
-                            "optional": false,
+                            "optional": true,
                             "field": "instalment",
                             "description": "<p>申請期數</p>"
                         },
@@ -11941,6 +11941,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "414",
+                            "description": "<p>產品關閉</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "200",
                             "description": "<p>參數錯誤</p>"
                         },
@@ -11972,7 +11978,19 @@ define({
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
+                            "description": "<p>僅自然人身分可申請</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "217",
+                            "description": "<p>僅法人身分可申請</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "218",
+                            "description": "<p>未有該商品類型的經銷商資格</p>"
                         }
                     ]
                 },
