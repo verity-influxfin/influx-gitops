@@ -37,11 +37,11 @@ class Payment_lib{
                     "virtual_account"   => $virtual_account,
                 ]);
 				$res=$this->script_handle_payment();
-				$res==false ? 'ERROR' : 'SUCCESS';
+				($res==false) ? $res='ERROR' : $res='SUCCESS';
 				return $res;
 			}
 		}
-		return OrderExists;
+		return $res=OrderExists;
 
 	}
 	public function script_get_cathay_info($date=""){
