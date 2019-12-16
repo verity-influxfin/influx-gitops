@@ -18,11 +18,12 @@ class Payment_lib{
 			$tx_datetime = date("Y-m-d H:i:s",strtotime($data['SDATE'].' '.$data['TIME']));
 			$virtual_account = "";
 			if (is_virtual_account($data['TRNACTNO'],TAISHIN_VIRTUAL_CODE)) {
+				(strlen($data['OUTACTNO'])==16)?$data['OUTACTNO']=substr($data['OUTACTNO'],2,14):$data['OUTACTNO']=$data['OUTACTNO'];
 				$virtual_account = $data['TRNACTNO'];
 				$amount 	 = intval($data['SIGN'].$data['AMT']);
 				$bank_acc	 = intval($data['OUTBANK'].$data['OUTACTNO']);
 				$this->CI->payment_model->insert([
-                    "bankaccount_no"  => "", //普惠專戶
+                    "bankaccount_no"    => "", //普惠專戶
                     "tx_datetime"       => $tx_datetime,
                     "tx_seq_no"         => $data['TransactionNo'],
                     "tx_id_no"          => "", //交易代號
@@ -30,9 +31,9 @@ class Payment_lib{
                     "memo"              => $virtual_account,
                     "bank_amount"       => "", //帳戶餘額
                     "bank_id"           => $data['OUTBANK'],
-                    "acc_name"            => "", //戶名
+                    "acc_name"          => "", //戶名
                     "bank_acc"          => $bank_acc,
-                    "tx_mach"         => TAISHIN_VIRTUAL_CODE,//TX need check 0999 //0xxx台新
+                    "tx_mach"         	=> TAISHIN_VIRTUAL_CODE,//TX need check 0999 //0xxx台新
                     "tx_spec"           => $data['TXNCODE'],
                     "virtual_account"   => $virtual_account,
                 ]);
