@@ -482,7 +482,7 @@ class Joint_credit_lib{
 						"message"  => [
 							"信用卡資訊：有",
 							"信用卡使用中張數：{$count_credit_cards}",
-							"信用卡總額度（元）：{$allowedAmount}"
+							"信用卡總額度（仟元）：{$allowedAmount}"
 						],
 						"rejected_message" => [
 							"有強制停用或強制停卡"
