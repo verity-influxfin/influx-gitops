@@ -17,8 +17,6 @@ class Taishinbank extends REST_Controller {
 	{
 		$data =json_decode(file_get_contents('php://input'),true);
 		$res=$this->payment_lib->script_get_taishin_info($data);
-		echo $res;
-		return $res;
 		($res=='SUCCESS')?$this->response(array('result' => 'SUCCESS')):$this->response(array('result' => 'ERROR','error' => OrderExists));
 	
 	}
