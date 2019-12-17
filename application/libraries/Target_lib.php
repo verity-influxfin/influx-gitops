@@ -28,6 +28,18 @@ class Target_lib{
 		return false;
 	}
 
+    //新增target
+    public function add_target_group($param,$code){
+        if(!empty($param)){
+            foreach ($param as $key => $val) {
+                $val['target_no'] = $this->get_target_no($val['product_id']).$code[$key];
+                $targets[] 			= $this->CI->target_model->insert($val);
+            }
+            return $targets;
+        }
+        return false;
+    }
+
     //簽約
     public function signing_target( $target_id, $data, $user_id=0 ){
         if($target_id){

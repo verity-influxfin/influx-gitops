@@ -46,4 +46,11 @@ class Coop_lib {
         ));
         return $cooperation;
     }
+
+    public function get_store_id($company_user_id){
+        $store_id = $this->CI->cooperation_model->get_by(array(
+            'company_user_id' 	=> $company_user_id,
+        ));
+        return $store_id->id;
+    }
 }

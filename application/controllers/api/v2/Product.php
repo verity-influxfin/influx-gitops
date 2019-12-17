@@ -478,126 +478,74 @@ class Product extends REST_Controller {
      */
     public function apply_post()
     {
-       $this->orderApply_post([
-           'product_id' => '',
-           'instalment' => '',
-           'store_id' => '',
-           'item_id' => '',
-           'interest_rate' => FEV_INTEREST_RATE,
-       ]);
         $input 		= $this->input->post(NULL, TRUE);
-        $user_id 	= $this->user_info->id;
-        $param		= [
-            'user_id' => $user_id,
-            'damage_rate' => LIQUIDATED_DAMAGES
+        $amount = $input['amount'];
+        $user_info = [
+            'user_id' => $this->user_info->id,
         ];
-
-        //必填欄位
-        $fields 	= ['product_id','amount'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }else{
-                $param[$field] = intval($input[$field]);
-            }
-        }
 
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $exp_product  = explode(':',$input['product_id']);
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
         $sub_product = isset($exp_product[1])?$exp_product[1]:0;
+        if ($product) {
+            //檢核身分
+            if($product['identity'] ==3 && $this->user_info->company !=1){
+                $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
+            }elseif($product['identity'] !=3 && $this->user_info->company ==1){
+                $this->response(array('result' => 'ERROR', 'error' => IS_COMPANY));
+            }
 
-        if($product['identity'] ==3 && $this->user_info->company !=1){
-            $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
-        }elseif($product['identity'] !=3 && $this->user_info->company ==1){
-            $this->response(array('result' => 'ERROR', 'error' => IS_COMPANY));
-        }
-
-        if($this->user_info->company == 1){
-            if($product['dealer']!=0){
-                $this->load->model('user/judicial_person_model');
-                $judicial_person = $this->judicial_person_model->get_by(array(
-                    'selling_type' => $product['dealer'],
-                    'company_user_id' => $user_id,
-                    'cooperation' => 1,
-                    'status' => 1,
-                ));
-                if(!$judicial_person){
-                    $this->response(array('result' => 'ERROR', 'error' => NOT_DEALER));
+            //檢核經銷商狀態
+            if($this->user_info->company == 1){
+                if($product['dealer']!=0){
+                    $this->load->model('user/judicial_person_model');
+                    $judicial_person = $this->judicial_person_model->get_by(array(
+                        'selling_type' => $product['dealer'],
+                        'company_user_id' => $user_info['user_id'],
+                        'cooperation' => 1,
+                        'status' => 1,
+                    ));
+                    if(!$judicial_person){
+                        $this->response(array('result' => 'ERROR', 'error' => NOT_DEALER));
+                    }
                 }
             }
-        }
 
-        if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product])
-            || $product['hidenMainProduct']
-            || $sub_product && !in_array($sub_product, $product['sub_product'])) {
-            if (isset($sub_product_list[$sub_product]['identity'][$product['identity']]) && in_array($sub_product, $product['sub_product'])) {
-                $sub_product_data = $sub_product_list[$sub_product]['identity'][$product['identity']];
-                $product = $this->sub_product_profile($product, $sub_product_data);
-                $param['status'] = 30;
-            } else {
-                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST));
-            }
-        }
-
-        if($product['status'] == 0){
-            $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
-        }
-
-        if ($product) {
-            if ($product['type'] != 1) {
-                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_TYPE_ERROR));
+            //使用副產品資料
+            if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product])
+                || $product['hidenMainProduct']
+                || $sub_product && !in_array($sub_product, $product['sub_product'])) {
+                if (isset($sub_product_list[$sub_product]['identity'][$product['identity']]) && in_array($sub_product, $product['sub_product'])) {
+                    $sub_product_data = $sub_product_list[$sub_product]['identity'][$product['identity']];
+                    $product = $this->sub_product_profile($product, $sub_product_data);
+                } else {
+                    $this->response(array('result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST));
+                }
             }
 
-            if (!in_array($input['instalment'], $product['instalment']) && !in_array(3, $product['repayment'])) {
+            //若產品關閉不給申請
+            if($product['status'] == 0){
+                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
+            }
+
+            if($product['type'] == 3){
+                $input['instalment'] = 180;
+                $amount = $input['purchase_cost'] + $input['fee_cost'];
+            }
+
+            if (!in_array($input['instalment'], $product['instalment'])) {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
             }
 
-            if ($input['amount'] < $product['loan_range_s'] || $input['amount'] > $product['loan_range_e']) {
+            if ($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
             }
 
-            if($product['multi_target'] == 0){
-                $exist = $this->target_model->get_by([
-                    'status <=' => 1,
-                    'user_id' => $user_id,
-                    'product_id' => $product['id'],
-                    'sub_product_id' => $sub_product,
-                ]);
-                if ($exist) {
-                    $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
-                }
-            }
-
-            $param['sub_product_id']  = $sub_product;
-            isset($input['instalment'])?$param['instalment'] = $input['instalment']:'';
-            isset($input['reason'])?$param['reason'] = $input['reason']:'';
-            isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
-
-            //邀請碼保留月
-            if(!isset($param['promote_code']) && strtotime(' -'.TARGET_PROMOTE_LIMIT.' month',time()) <= $this->user_info->created_at && $this->user_info->promote_code != ''){
-                $param['promote_code'] = $this->user_info->promote_code;
-            }
-            $param['repayment'] = $product['repayment'][0];
-            $insert = $this->target_lib->add_target($param);
-            if ($insert) {
-                $this->load->library('Certification_lib');
-                if ($sub_product != 0) {
-                    $certification = $this->user_certification_model->order_by('created_at', 'desc')->get_by([
-                        'user_id' => $user_id,
-                        'certification_id' => ($product['identity'] == 1 ? 2 : 10),
-                        'investor' => 0,
-                        'status' => 1,
-                    ]);
-                    if ($certification && $sub_product == 1) {
-                        $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
-                    }
-                }
-                $this->certification_lib->expire_certification($user_id);
-                $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
-            } else {
-                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+            $method = 'type'.$product['type'].'_apply';
+            if(method_exists($this, $method)){
+                $this->$method($user_info,$product,$sub_product,$input);
             }
         }
         $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
@@ -1485,7 +1433,11 @@ class Product extends REST_Controller {
     public function orderApply_post($designate=false)
     {
         $input = $designate?$designate:$this->input->post(NULL, TRUE);
-        $user_id 	= $this->user_info->id;
+        $user_id = $this->user_info->id;
+        $name = '';
+        $phone = '';
+        $id_number = '';
+
         $fields 	= ['product_id','instalment','store_id','item_id'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
@@ -1498,7 +1450,7 @@ class Product extends REST_Controller {
         $instalment     = $content['instalment'];//分期數
         $store_id       = $content['store_id'];  //店家ID
         $item_id		= $content['item_id'];   //商品ID
-        isset($content['nickname'])?$nickname = $content['nickname']:'';  //暱稱
+        $nickname =  isset($content['nickname'])?$content['nickname']:'';  //暱稱
 
         $item_count		= isset($content['item_count'])&&$content['item_count']<2?$content['item_count']:1;//商品數量
         $delivery       = isset($content['delivery'])&&$content['delivery']<2?$content['delivery']:0;  //0:線下 1:線上
@@ -1508,9 +1460,9 @@ class Product extends REST_Controller {
         $product 		= $product = isset($product_list[$product_id])?$product_list[$product_id]:[];;
         if($product){
             if(!$designate){
-                if($product['type'] != 2){
-                    $this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
-                }
+                $name = $this->user_info->name;
+                $phone = $this->user_info->phone;
+                $id_number = $this->user_info->id_number;
 
                 if(!in_array($input['instalment'],$product['instalment'])){
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
@@ -1537,15 +1489,14 @@ class Product extends REST_Controller {
                 }
             }
 
-            $interest_rate = $product->interest_rate_s;
+            $interest_rate = $product['interest_rate_s'];
 
             $cooperation = $this->get_cooperation_info($store_id);
             $cooperation_id  = $cooperation -> cooperation_id;
             $company_user_id = $cooperation -> company_user_id;
 
             //對經銷商系統建立訂單
-            $phone        = $this->user_info->phone;
-            $user_name    = mb_substr($this->user_info->name,0,1,"utf-8").(substr($this->user_info->id_number,1,1)==1?'先生':(substr($this->user_info->id_number,1,1)==2?'小姐':'先生/小姐'));
+            $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
 
             $result = $this->coop_lib->coop_request('order/screate',[
                 'cooperation_id' => $cooperation_id,
@@ -1577,6 +1528,8 @@ class Product extends REST_Controller {
                     $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
                     $total        = $amount + $platform_fee + $transfer_fee;
                 }
+
+                $designate?$amount=$designate->amount:'';
                 $order_parm = [
                     'company_user_id'   => $company_user_id,
                     'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
@@ -1598,6 +1551,10 @@ class Product extends REST_Controller {
                 $this->load->model('transaction/order_model');
                 $order_insert = $this->order_model->insert($order_parm);
                 if($order_insert){
+                    if($designate){
+                        return true;
+                    }
+
                     $param = [
                         'product_id'	=> $product_id,
                         'user_id'		=> $user_id,
@@ -1608,20 +1565,6 @@ class Product extends REST_Controller {
                         'reason'		=> '分期:'.$item_name,
                         'status'        => 20,
                     ];
-                    if($designate){
-                        $param = [
-                            'product_id'	=> $product_id,
-                            'user_id'		=> $user_id,
-                            'amount'		=> $total,
-                            'instalment'	=> $instalment,
-                            'platform_fee'  => $platform_fee,
-                            'order_id'		=> $order_insert,
-                            'reason'		=> '外匯車產品',
-                            'status'        => 30,
-                        ];
-                        $insert = $this->target_lib->add_target($param);
-                        $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
-                    }
                     //建立產品單號
                     $insert = $this->target_lib->add_target($param);
                 }
@@ -1776,5 +1719,265 @@ class Product extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => COMPANY_NOT_EXIST]);
         }
         return $cooperation;
+    }
+
+    private function get_store_id($company_user_id){
+        //檢核經銷商是否存在
+        $this->load->library('coop_lib');
+        $store_id = $this->coop_lib->get_store_id($company_user_id);
+        if(!$store_id){
+            $this->response(['result' => 'ERROR','error' => COMPANY_NOT_EXIST]);
+        }
+        return $store_id;
+    }
+
+    private function type1_apply($user_info,$product,$sub_product,$input){
+        $user_id = $user_info['user_id'];
+        $param		= [
+            'user_id' => $user_id,
+            'damage_rate' => LIQUIDATED_DAMAGES
+        ];
+
+        //必填欄位
+        $fields 	= ['amount','instalment'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $param[$field] = intval($input[$field]);
+            }
+        }
+
+        if($product['multi_target'] == 0){
+            $exist = $this->target_model->get_by([
+                'status <=' => 1,
+                'user_id' => $user_id,
+                'product_id' => $product['id'],
+                'sub_product_id' => $sub_product,
+            ]);
+            if ($exist) {
+                $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
+            }
+        }
+
+        $param['sub_product_id']  = $sub_product;
+        isset($input['reason'])?$param['reason'] = $input['reason']:'';
+        isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
+
+        //邀請碼保留月
+        if(!isset($param['promote_code']) && strtotime(' -'.TARGET_PROMOTE_LIMIT.' month',time()) <= $this->user_info->created_at && $this->user_info->promote_code != ''){
+            $param['promote_code'] = $this->user_info->promote_code;
+        }
+        $param['repayment'] = $product['repayment'][0];
+        $insert = $this->target_lib->add_target($param);
+        if ($insert) {
+            $this->load->library('Certification_lib');
+            if ($sub_product != 0) {
+                $certification = $this->user_certification_model->order_by('created_at', 'desc')->get_by([
+                    'user_id' => $user_id,
+                    'certification_id' => ($product['identity'] == 1 ? 2 : 10),
+                    'investor' => 0,
+                    'status' => 1,
+                ]);
+                if ($certification && $sub_product == 1) {
+                    $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
+                }
+            }
+            $this->certification_lib->expire_certification($user_id);
+            $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
+        } else {
+            $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+        }
+    }
+
+    private function type2_apply($user_info,$product,$sub_product,$input,$designate=false)
+    {
+        $designate?$input = $designate:'';
+        $user_id = $user_info['user_id'];
+        $name = '';
+        $phone = '';
+        $id_number = '';
+        $address = '';
+
+        $fields 	= ['instalment','store_id','item_id'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $product_id		= $product['id'];//產品ID
+        $instalment     = $content['instalment'];//分期數
+        $store_id       = $content['store_id'];  //店家ID
+        $item_id		= $content['item_id'];   //商品ID
+        $nickname =  isset($content['nickname'])?$content['nickname']:'';  //暱稱
+
+        $item_count		= isset($content['item_count'])&&$content['item_count']<2?$content['item_count']:1;//商品數量
+        $delivery       = isset($content['delivery'])&&$content['delivery']<2?$content['delivery']:0;  //0:線下 1:線上
+
+        if(!$designate){
+            $name = $this->user_info->name;
+            $phone = $this->user_info->phone;
+            $id_number = $this->user_info->id_number;
+
+            if(!in_array($input['instalment'],$product['instalment'])){
+                $this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
+            }
+
+            //檢驗消費貸重複申請
+            $exist = $this->target_model->get_by([
+                'status'		=> [20,21],
+                'user_id'		=> $user_id,
+                'product_id'	=> $product_id
+            ]);
+            if($exist){
+                $this->response(['result' => 'ERROR','error' => APPLY_EXIST]);
+            }
+
+            //交易方式
+            $address    = '';
+            if($delivery == 1){
+                if (!isset($input['address'])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $address = $input['address'];
+                }
+            }
+        }
+
+        $interest_rate = $product['interest_rate_s'];
+
+        $cooperation = $this->get_cooperation_info($store_id);
+        $cooperation_id  = $cooperation -> cooperation_id;
+        $company_user_id = $cooperation -> company_user_id;
+
+        //對經銷商系統建立訂單
+        $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
+
+        $result = $this->coop_lib->coop_request('order/screate',[
+            'cooperation_id' => $cooperation_id,
+            'item_id'        => $item_id,
+            'item_count'     => $item_count,
+            'instalment'     => $instalment,
+            'interest_rate'  => $interest_rate,
+            'delivery'       => $delivery,
+            'name'           => $user_name,
+            'nickname'       => $nickname,
+            'phone'          => $phone,
+            'address'        => $address,
+        ],$user_id);
+        if(isset($result->result) && $result->result == 'SUCCESS'){
+            $item_name = $result->data->product_name.
+                ($result->data->product_spec!='-'
+                    ?$result->data->product_spec
+                    :''
+                );
+            $merchant_order_no = $result->data->merchant_order_no;
+            $product_price     = $result->data->product_price;
+            $amount            = $product_price;
+            $platform_fee      = 0;
+            $transfer_fee      = 0;
+            $total             = 0;
+            //建立主系統訂單
+            if($product_price > 0){
+                $platform_fee = $this->financial_lib->get_platform_fee2($product_price);
+                $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
+                $total        = $amount + $platform_fee + $transfer_fee;
+            }
+
+            $designate?$amount=$designate['amount']:'';
+            $order_parm = [
+                'company_user_id'   => $company_user_id,
+                'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
+                'merchant_order_no' => $merchant_order_no,
+                'phone'             => $phone,
+                'product_id'	    => $product_id,
+                'sub_product_id'	=> $sub_product,
+                'instalment'	    => $instalment,
+                'item_price'        => $product_price,
+                'item_name'         => $item_name,
+                'item_count'        => $item_count,
+                'amount'            => $amount,
+                'platform_fee'	    => $platform_fee,
+                'transfer_fee'      => $transfer_fee,
+                'total'             => $total,
+                'delivery'          => $delivery,
+                'nickname'          => $nickname,
+                'status'            => 0
+            ];
+            $this->load->model('transaction/order_model');
+            $order_insert = $this->order_model->insert($order_parm);
+            if($order_insert){
+                if($designate){
+                    return $order_insert;
+                }
+
+                $param = [
+                    'product_id'	=> $product_id,
+                    'user_id'		=> $user_id,
+                    'amount'		=> $total,
+                    'instalment'	=> $instalment,
+                    'platform_fee'  => $platform_fee,
+                    'order_id'		=> $order_insert,
+                    'reason'		=> '分期:'.$item_name,
+                    'status'        => 20,
+                ];
+                //建立產品單號
+                $insert = $this->target_lib->add_target($param);
+            }
+            if($order_insert && $insert){
+                $this->notification_lib->notice_order_apply($company_user_id,$item_name,$instalment,$delivery);
+                $this->load->library('Certification_lib');
+                $this->certification_lib->expire_certification($user_id);
+                $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
+            }
+            $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
+        }
+        $this->response(['result' => 'ERROR','error' => $result->error ]);
+    }
+
+    private function type3_apply($user_info,$product,$sub_product,$input)
+    {
+        $fields 	= ['purchase_cost','fee_cost','item_id'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $product_id = $product['id'];
+        $instalment = $input['instalment'];
+        $amount = $content['purchase_cost'] + $content['fee_cost'];
+
+        $store_id = $this->get_store_id($this->user_info->id);
+        $order_insert = $this->type2_apply($user_info,$product,$sub_product,$input,[
+            'product_id' => $product_id,
+            'instalment' => $instalment,
+            'store_id' => $store_id,
+            'item_id' => $input['item_id'],
+            'amount' => $amount,
+            'interest_rate' => FEV_INTEREST_RATE,
+        ]);
+        if($order_insert){
+            $param = [
+                'product_id'	=> $product_id,
+                'user_id'		=> $user_info['user_id'],
+                'amount'		=> $content['purchase_cost'],
+                'instalment'	=> $instalment,
+                'order_id'		=> $order_insert,
+                'status'        => 30,
+            ];
+            $param2 = $param;
+            $param2['amount'] = $content['fee_cost'];
+            $insert = $this->target_lib->add_target_group(
+                [$param,$param2],
+                ['A','B']
+            );
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }
+        }
     }
 }
