@@ -246,8 +246,8 @@ class Product extends REST_Controller {
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) || $company == 0 && !isset($t2[3])) {
-                        $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
+                            $sub_product_info = [];
                             $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
