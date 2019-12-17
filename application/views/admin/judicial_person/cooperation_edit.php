@@ -162,7 +162,7 @@
                                             <? } ?>
                                         </div>
                                     <? } ?>
-                                   <? if($content['bankbook_image']){ ?>
+                                   <? if(isset($content['bankbook_image'])){ ?>
                                     <div class="form-group">
                                     <label for="disabledSelect">存摺封面</label>
                                             <? foreach($content['bankbook_image'] as $key => $value){ ?>
@@ -172,14 +172,12 @@
                                             <? } ?>
                                     </div>
                                    <? } ?>
-                                    <? if($content['form_401_image']){ ?>
+                                    <? if(isset($content['form_401_image'])){ ?>
                                         <div class="form-group">
                                             <label for="disabledSelect">401表格</label>
-                                            <? foreach($content['form_401_image'] as $key => $value){ ?>
-                                                <a href="<?=$value ?>" data-fancybox="images">
-                                                    <img src="<?=$value ?>" style='width:100%;max-width:300px'>
-                                                </a>
-                                            <? } ?>
+                                            <a href="<?=$content['form_401_image']?>" data-fancybox="images">
+                                                <img src="<?=$content['form_401_image']?>" style='width:100%;max-width:300px'>
+                                            </a>
                                         </div>
                                     <? } ?>
                                 </div>
