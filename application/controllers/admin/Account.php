@@ -139,8 +139,11 @@ class Account extends MY_Admin_Controller {
 				if($value->target_id){
 					$target_id[] = $value->target_id;
 				}
-				
-				if(is_virtual_account($value->bank_account_from)){
+				$bank_type = substr($value->bank_account_to, 0, 5);
+				$bank_type == TAISHIN_VIRTUAL_CODE
+					? TAISHIN_VIRTUAL_CODE
+					: CATHAY_VIRTUAL_CODE;
+				if(is_virtual_account($value->bank_account_from,$bank_type)){
 					$data[$key]->v_bank_account_from = $value->bank_account_from;
 					$data[$key]->v_amount_from 		= $value->amount;
 					$data[$key]->bank_account_from 	= "";
@@ -152,7 +155,7 @@ class Account extends MY_Admin_Controller {
 					$data[$key]->v_amount_from 		= "";
 				}
 				
-				if(is_virtual_account($value->bank_account_to)){
+				if(is_virtual_account($value->bank_account_to,$bank_type)){
 					$data[$key]->v_bank_account_to 	= $value->bank_account_to;
 					$data[$key]->v_amount_to 		= $value->amount;
 					$data[$key]->bank_account_to 	= "";
