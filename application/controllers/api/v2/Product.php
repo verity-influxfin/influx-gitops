@@ -1971,6 +1971,7 @@ class Product extends REST_Controller {
         if($order_insert){
             $param = [
                 'product_id'	=> $product_id,
+                'sub_product_id' => $sub_product,
                 'user_id'		=> $user_info['user_id'],
                 'amount'		=> $content['purchase_cost'],
                 'instalment'	=> $instalment,
