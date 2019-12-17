@@ -10,7 +10,7 @@
         }
 
 	</script>
-	
+
 	<div id="page-wrapper">
 		<div class="row">
 			<div class="col-lg-12">
@@ -52,7 +52,7 @@
 								<div class="form-group">
 									<label>備註</label>
 									<p class="form-control-static"><?=isset($data->remark)?$data->remark:"" ?></p>
-								</div>	
+								</div>
 								<h4>審核</h4>
 								<form role="form" method="post">
 									<fieldset>
@@ -141,7 +141,7 @@
 													<img src="<?=$value ?>" style='width:100%;max-width:300px'>
 												</a>
 											<? } ?>
-									<? } ?>	
+									<? } ?>
                                     </div>
                                     <? if(isset($content['front_image'])){ ?>
                                         <div class="form-group">
@@ -172,6 +172,16 @@
                                             <? } ?>
                                     </div>
                                    <? } ?>
+                                    <? if($content['form_401_image']){ ?>
+                                        <div class="form-group">
+                                            <label for="disabledSelect">401表格</label>
+                                            <? foreach($content['form_401_image'] as $key => $value){ ?>
+                                                <a href="<?=$value ?>" data-fancybox="images">
+                                                    <img src="<?=$value ?>" style='width:100%;max-width:300px'>
+                                                </a>
+                                            <? } ?>
+                                        </div>
+                                    <? } ?>
                                 </div>
 							</div>
 						</div>
