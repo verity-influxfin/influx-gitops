@@ -154,8 +154,11 @@ class Product extends REST_Controller {
         $visul_id_des          = $this->config->item('visul_id_des');
         $sub_product_list      = $this->config->item('sub_product_list');
         $certification = $this->config->item('certifications');
+        $login = false;
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
             $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
+            $company = isset($this->user_info->company)?$this->user_info->company:false;
+            $login = true;
         }else{
             $certification_list = [];
 
@@ -223,9 +226,11 @@ class Product extends REST_Controller {
                     'certification'         => $certification,
                 );
 
-                if($this->user_info->investor == 0 && $this->user_info->designate==$value['dealer']){
-                    $designate = [123,456];
-                    $designate?$parm['designate']=$designate:'';
+                if($login){
+                    if($this->user_info->investor == 0 && $this->user_info->designate==$value['dealer']){
+                        $designate = [123,456];
+                        $designate?$parm['designate']=$designate:'';
+                    }
                 }
 
                 //reformat Product for layer2
@@ -237,9 +242,10 @@ class Product extends REST_Controller {
             $hidenMainProduct = [];
             $type_list = [];
             $designate = [];
+            $company = isset($this->user_info->company)?$this->user_info->company:false;
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
-                    if ($this->user_info->company == 1 && isset($t2[3]) || $this->user_info->company == 0 && !isset($t2[3])) {
+                    if ($company == 1 && isset($t2[3]) || $company == 0 && !isset($t2[3])) {
                         $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
                             $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
@@ -281,7 +287,7 @@ class Product extends REST_Controller {
                 }
             }
             $total_list = [];
-            $identity = $this->user_info->company?'company':'nature';
+            $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id){
                 $total_list[] = [
                     'visul'        => $id,
