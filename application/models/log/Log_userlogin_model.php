@@ -8,18 +8,18 @@ class Log_userlogin_model extends MY_Model
 		0 =>	"失敗",
 		1 =>	"成功"
 	);
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->_database = $this->load->database('log',TRUE);
  	}
-	
+
 	protected function before_data_c($data)
     {
         $data['created_at'] = time();
         $data['created_ip'] = get_ip();
-		
+
 		$this->load->library('user_agent');
 		if ($this->agent->is_browser()){
 			$agent = $this->agent->browser().' '.$this->agent->version();
@@ -36,9 +36,16 @@ class Log_userlogin_model extends MY_Model
 			'platform'	=> $this->agent->platform(),
             'device_id'	=> $device_id
 		]);
-		
+
 		return $data;
-    } 	
+    }
+
+	public function getCurrentInstance($data)
+	{
+		$convertedData = $this->before_data_c($data);
+		$convertedData["client"] = json_decode($convertedData["client"]);
+		return $convertedData;
+	}
 
     public function get_same_ip_users($user_id, $time = 0)
 	{

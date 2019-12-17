@@ -147,7 +147,7 @@ class Joint_credit_lib_file3 extends TestCase
 			"message" => [
 				"信用卡資訊：有",
 				"信用卡使用中張數：2",
-				"信用卡總額度（元）：50"
+				"信用卡總額度（仟元）：50"
 			]
 		];
 		$this->assertEquals($expected, $result["messages"][0]);
