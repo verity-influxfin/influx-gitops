@@ -175,9 +175,11 @@
                                     <? if(isset($content['form_401_image'])){ ?>
                                         <div class="form-group">
                                             <label for="disabledSelect">401表格</label>
-                                            <a href="<?=$content['form_401_image']?>" data-fancybox="images">
-                                                <img src="<?=$content['form_401_image']?>" style='width:100%;max-width:300px'>
-                                            </a>
+                                            <? foreach($content['form_401_image'] as $key => $value){ ?>
+                                                <a href="<?=$value ?>" data-fancybox="images">
+                                                    <img src="<?=$value ?>" style='width:100%;max-width:300px'>
+                                                </a>
+                                            <? } ?>
                                         </div>
                                     <? } ?>
                                 </div>
