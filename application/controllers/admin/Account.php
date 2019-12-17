@@ -143,6 +143,7 @@ class Account extends MY_Admin_Controller {
 				$bank_type_from == TAISHIN_VIRTUAL_CODE
 					? TAISHIN_VIRTUAL_CODE
 					: CATHAY_VIRTUAL_CODE;
+
 				if(is_virtual_account($value->bank_account_from,$bank_type_from)){
 					$data[$key]->v_bank_account_from = $value->bank_account_from;
 					$data[$key]->v_amount_from 		= $value->amount;
@@ -158,6 +159,7 @@ class Account extends MY_Admin_Controller {
 				$bank_type_to == TAISHIN_VIRTUAL_CODE
 					? TAISHIN_VIRTUAL_CODE
 					: CATHAY_VIRTUAL_CODE;
+					
 				if(is_virtual_account($value->bank_account_to,$bank_type_to)){
 					$data[$key]->v_bank_account_to 	= $value->bank_account_to;
 					$data[$key]->v_amount_to 		= $value->amount;
