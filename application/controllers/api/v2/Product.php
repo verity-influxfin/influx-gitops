@@ -536,7 +536,7 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
             }
 
-            if($product['type'] == 3){
+            if($product['id'] == '1000'){
                 $input['instalment'] = 180;
                 $amount = $input['purchase_cost'] + $input['fee_cost'];
             }
@@ -1699,6 +1699,7 @@ class Product extends REST_Controller {
     private function sub_product_profile($product,$sub_product){
         return array(
             'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
             'type' => $product['type'],
             'identity' => $product['identity'],
             'name' => $sub_product['name'],
@@ -1738,6 +1739,10 @@ class Product extends REST_Controller {
     }
 
     private function type1_apply($user_info,$product,$sub_product,$input){
+        $method = $product['visul_id'];
+        if(method_exists($this, $method)){
+            $this->$method($user_info,$product,$sub_product,$input);
+        }
         $user_id = $user_info['user_id'];
         $param		= [
             'user_id' => $user_id,
@@ -1945,9 +1950,9 @@ class Product extends REST_Controller {
         $this->response(['result' => 'ERROR','error' => $result->error ]);
     }
 
-    private function type3_apply($user_info,$product,$sub_product,$input)
+    private function DS1P1($user_info,$product,$sub_product,$input)
     {
-        $fields 	= ['purchase_cost','fee_cost','item_id'];
+        $fields 	= ['item_id','purchase_time','vin','factory_time','product_description','purchase_cost','fee_cost','sell_price'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1957,7 +1962,6 @@ class Product extends REST_Controller {
         }
         $product_id = $product['id'];
         $instalment = $input['instalment'];
-        $amount = $content['purchase_cost'] + $content['fee_cost'];
 
         $store_id = $this->get_store_id($this->user_info->id);
         $order_insert = $this->type2_apply($user_info,$product,$sub_product,$input,[
@@ -1965,10 +1969,16 @@ class Product extends REST_Controller {
             'instalment' => $instalment,
             'store_id' => $store_id,
             'item_id' => $input['item_id'],
-            'amount' => $amount,
+            'amount' => $content['sell_price'],
             'interest_rate' => FEV_INTEREST_RATE,
         ]);
         if($order_insert){
+            $target_data = [
+                'purchase_time' => $content['purchase_time'],
+                'vin' => $content['vin'],
+                'factory_time' => $content['factory_time'],
+                'product_description' => $content['product_description'],
+            ];
             $param = [
                 'product_id'	=> $product_id,
                 'sub_product_id' => $sub_product,
@@ -1976,10 +1986,13 @@ class Product extends REST_Controller {
                 'amount'		=> $content['purchase_cost'],
                 'instalment'	=> $instalment,
                 'order_id'		=> $order_insert,
+                'target_data' => json_encode($target_data),
+                'reason'		=> '購車',
                 'status'        => 30,
             ];
             $param2 = $param;
             $param2['amount'] = $content['fee_cost'];
+            $param2['reason'] = '規費';
             $insert = $this->target_lib->add_target_group(
                 [$param,$param2],
                 ['A','B']
@@ -1987,6 +2000,40 @@ class Product extends REST_Controller {
             if($insert){
                 $this->response(['result' => 'SUCCESS']);
             }
+        }
+    }
+
+    private function DS2P1($user_info,$product,$sub_product,$input)
+    {
+        $fields 	= ['item_id','purchase_time','vin','factory_time','product_description','amount'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $product_id = $product['id'];
+        $instalment = $input['instalment'];
+        $target_data = [
+            'purchase_time' => $content['purchase_time'],
+            'vin' => $content['vin'],
+            'factory_time' => $content['factory_time'],
+            'product_description' => $content['product_description'],
+        ];
+        $param = [
+            'product_id'	=> $product_id,
+            'sub_product_id' => $sub_product,
+            'user_id'		=> $user_info['user_id'],
+            'amount'		=> $content['amount'],
+            'instalment'	=> $instalment,
+            'target_data' => json_encode($target_data),
+            'reason'		=> '庫存車',
+            'status'        => 0,
+        ];
+        $insert = $this->target_lib->add_target($param);
+        if($insert){
+            $this->response(['result' => 'SUCCESS']);
         }
     }
 }

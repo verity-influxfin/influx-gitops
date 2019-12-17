@@ -10152,6 +10152,270 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/product/applydata",
+            "title": "借款方 取得案件需求資料",
+            "version": "0.2.0",
+            "name": "GetProductData",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "405",
+                            "description": "<p>對此申請無權限</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "405",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/applydata"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/applydata",
+            "title": "借款方 案件需求資料",
+            "version": "0.2.0",
+            "name": "PostProductData",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "purchase_time",
+                            "description": "<p>購車時間</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "vin",
+                            "description": "<p>車身號碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "factory_time",
+                            "description": "<p>出廠時間</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "data_remark",
+                            "description": "<p>產品備註</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "405",
+                            "description": "<p>對此申請無權限</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "405",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/applydata"
+                }
+            ]
+        },
+        {
+            "type": "get",
             "url": "/product/info/:id",
             "title": "借款方 取得產品資訊",
             "version": "0.1.0",
@@ -11887,22 +12151,52 @@ define({
                             "description": "<p>(消費貸)地址</p>"
                         },
                         {
-                            "group": "Parameter0",
+                            "group": "Parameter",
                             "type": "String",
                             "field": "nickname",
                             "description": "<p>(消費貸)暱稱</p>"
                         },
                         {
-                            "group": "Parameter0",
+                            "group": "Parameter",
                             "type": "String",
-                            "field": "purchase_cost",
-                            "description": "<p>(外匯車貸)購車成本</p>"
+                            "field": "purchase_time",
+                            "description": "<p>(外匯車貸II)購車時間</p>"
                         },
                         {
-                            "group": "Parameter0",
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "vin",
+                            "description": "<p>(外匯車貸I II)車身號碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "factory_time",
+                            "description": "<p>(外匯車貸I II)出廠時間</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "product_description",
+                            "description": "<p>(外匯車貸I II)產品說明</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "purchase_cost",
+                            "description": "<p>(外匯車貸I)購車成本</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "String",
                             "field": "fee_cost",
-                            "description": "<p>(外匯車貸)規費成本</p>"
+                            "description": "<p>(外匯車貸I)規費成本</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "field": "sell_price",
+                            "description": "<p>(外匯車貸I II)建議/預計售價</p>"
                         }
                     ]
                 }
@@ -13004,7 +13298,7 @@ define({
                             "description": "<p>地址</p>"
                         },
                         {
-                            "group": "Parameter0",
+                            "group": "Parameter",
                             "type": "String",
                             "field": "nickname",
                             "description": "<p>暱稱</p>"
