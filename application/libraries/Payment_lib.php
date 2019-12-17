@@ -41,7 +41,7 @@ class Payment_lib{
 				]);
 				return $res = 'SUCCESS';
 			}
-			return $res = UnknownMethod;
+			return $res = 'SUCCESS';
 		}
 		return $res = OrderExists;
 	}
