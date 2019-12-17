@@ -19,10 +19,6 @@ class Payment_lib{
 			$virtual_account = "";
 			if (is_virtual_account($data['TRNACTNO'],TAISHIN_VIRTUAL_CODE)) {
 				(strlen($data['OUTACTNO'])==16)?$data['OUTACTNO']=substr($data['OUTACTNO'],2,14):$data['OUTACTNO']=$data['OUTACTNO'];
-				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by(["bank_account like"	=> '%'.$data['OUTACTNO']]);
-				if ($user_bankaccount == null) {
-					return $res='ERROR';	
-				};
 				$virtual_account = $data['TRNACTNO'];
 				$amount 	 = intval($data['SIGN'].$data['AMT']);
 				$bank_acc	 = intval($data['OUTBANK'].$data['OUTACTNO']);
@@ -41,9 +37,7 @@ class Payment_lib{
                     "tx_spec"           => $data['TXNCODE'],
                     "virtual_account"   => $virtual_account,
                 ]);
-				$res=$this->script_handle_payment();
-				($res==false) ? $res='ERROR' : $res='SUCCESS';
-				return $res;
+				return $res='SUCCESS';
 			}
 		}
 		return $res=OrderExists;
