@@ -13,7 +13,7 @@ class Payment_lib{
     }
 	public function script_get_taishin_info($data){
 		$insert_param = array();
-		$check_data=$this->CI->payment_model->get_by(["tx_seq_no"=>$data['TransactionNo']]);
+		$check_data = $this->CI->payment_model->get_by(["tx_seq_no"=>$data['TransactionNo']]);
 		if(empty($check_data)){
 			$tx_datetime = date("Y-m-d H:i:s",strtotime($data['SDATE'].' '.$data['TIME']));
 			$virtual_account = "";
@@ -182,13 +182,13 @@ class Payment_lib{
 				$bank_type = substr($virtual_account->virtual_account, 0, 5);
 				$bank_type == TAISHIN_VIRTUAL_CODE ? TAISHIN_VIRTUAL_CODE : CATHAY_VIRTUAL_CODE;
 				$investor			= investor_virtual_account($value->virtual_account, $bank_type) ? 1 : 0;
-				$where                = array(
-					"user_id"            => $virtual_account->user_id,
-					"investor"            => $investor,
+				$where                	= array(
+					"user_id"              => $virtual_account->user_id,
+					"investor"             => $investor,
 					"bank_code"            => $bank_code,
 					"bank_account like"    => '%' . $bank_account,
-					"status"            => 1,
-					"verify"            => 1
+					"status"               => 1,
+					"verify"               => 1
 				);
 				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 
