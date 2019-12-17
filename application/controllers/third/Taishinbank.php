@@ -15,15 +15,19 @@ class Taishinbank extends REST_Controller {
 
 	public function debit_note_post()
 	{
-		$data =json_decode(file_get_contents('php://input'),true);
-		$res=$this->payment_lib->script_get_taishin_info($data);
-		if($res=='SUCCESS'){
+		$data = json_decode(file_get_contents('php://input'), true);
+		$token 		= isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
+		$tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
+		print_r ($tokenData,true);
+		exit();
+		$res = $this->payment_lib->script_get_taishin_info($data);
+		if ($res == 'SUCCESS') {
 			$this->response(array('result' => 'SUCCESS'));
-		}else if($res==OrderExists){
-			$this->response(array('result' => 'ERROR','error' => OrderExists));
-		}else{
-			$this->response(array('result' => 'ERROR','error' => UnknownMethod));
-		}	
+		} else if ($res == OrderExists) {
+			$this->response(array('result' => 'ERROR', 'error' => OrderExists));
+		} else {
+			$this->response(array('result' => 'ERROR', 'error' => UnknownMethod));
+		}
 	}
 
 }
