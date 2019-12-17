@@ -141,12 +141,8 @@ class Account extends MY_Admin_Controller {
 					$target_id[] = $value->target_id;
 				}
 
-				$bank_type_from = substr($value->bank_account_from, 0, 5);
-				$bank_type_from == TAISHIN_VIRTUAL_CODE
-					? TAISHIN_VIRTUAL_CODE
-					: CATHAY_VIRTUAL_CODE;
 
-				if(is_virtual_account($value->bank_account_from,$bank_type_from)){
+				if(is_virtual_account($value->bank_account_from)){
 
 					$data[$key]->v_bank_account_from = $value->bank_account_from;
 					$data[$key]->v_amount_from 		= $value->amount;
