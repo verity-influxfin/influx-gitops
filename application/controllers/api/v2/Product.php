@@ -1766,6 +1766,7 @@ class Product extends REST_Controller {
             }
         }
 
+        $param['product_id']  = $product['id'];
         $param['sub_product_id']  = $sub_product;
         isset($input['reason'])?$param['reason'] = $input['reason']:'';
         isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
@@ -1921,6 +1922,7 @@ class Product extends REST_Controller {
 
                 $param = [
                     'product_id'	=> $product_id,
+                    'sub_product_id' => $sub_product,
                     'user_id'		=> $user_id,
                     'amount'		=> $total,
                     'instalment'	=> $instalment,
