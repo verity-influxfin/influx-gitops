@@ -161,33 +161,34 @@ class Payment_lib{
 	}
 
 	//入帳處理
-    private function receipt($value){
-        if(!empty($value->virtual_account)){
-            $bank_code 		= $bank_account = "";
-            $bank 			= bankaccount_substr($value->bank_acc);
-            $value->bank_id = substr($value->bank_id,0,3);
+	private function receipt($value)
+	{
+		if (!empty($value->virtual_account)) {
+			$bank_code 		= $bank_account = "";
+			$bank 			= bankaccount_substr($value->bank_acc);
+			$value->bank_id = substr($value->bank_id, 0, 3);
 
-            if($bank['bank_code']==$value->bank_id){
-                $bank_code 		= $bank['bank_code'];
-                $bank_account 	= $bank['bank_account'];
-            }else{
-                $bank_code 		= $value->bank_id;
-                $bank_account 	= $value->bank_acc;
-            }
+			if ($bank['bank_code'] == $value->bank_id) {
+				$bank_code 		= $bank['bank_code'];
+				$bank_account 	= $bank['bank_account'];
+			} else {
+				$bank_code 		= $value->bank_id;
+				$bank_account 	= $value->bank_acc;
+			}
 
-            $this->CI->load->model('user/virtual_account_model');
-            $virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account"=>$value->virtual_account));
+			$this->CI->load->model('user/virtual_account_model');
+			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account" => $value->virtual_account));
 			if ($virtual_account) {
 				$bank_type = substr($virtual_account->virtual_account, 0, 5);
 				$bank_type == TAISHIN_VIRTUAL_CODE ? TAISHIN_VIRTUAL_CODE : CATHAY_VIRTUAL_CODE;
 				$investor			= investor_virtual_account($value->virtual_account, $bank_type) ? 1 : 0;
-				$where				= array(
-					"user_id"			=> $virtual_account->user_id,
-					"investor"			=> $investor,
-					"bank_code"			=> $bank_code,
-					"bank_account like"	=> '%' . $bank_account,
-					"status"			=> 1,
-					"verify"			=> 1
+				$where                = array(
+					"user_id"            => $virtual_account->user_id,
+					"investor"            => $investor,
+					"bank_code"            => $bank_code,
+					"bank_account like"    => '%' . $bank_account,
+					"status"            => 1,
+					"verify"            => 1
 				);
 				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 
@@ -201,21 +202,21 @@ class Payment_lib{
 					}
 				}
 			}
-        }else{
-            if(in_array($value->amount,array(1,30)) && in_array($value->tx_spec,array('匯出退匯','錯誤更正','沖ＦＸＭ'))){
-                $this->CI->transaction_lib->verify_fee($value);
-                return true;
-            }
-        }
+		} else {
+			if (in_array($value->amount, array(1, 30)) && in_array($value->tx_spec, array('匯出退匯', '錯誤更正', '沖ＦＸＭ'))) {
+				$this->CI->transaction_lib->verify_fee($value);
+				return true;
+			}
+		}
 
-        if($virtual_account){
-            $this->CI->load->library('Notification_lib');
-            $this->CI->notification_lib->unknown_refund($virtual_account->user_id);
-        }
+		if ($virtual_account) {
+			$this->CI->load->library('Notification_lib');
+			$this->CI->notification_lib->unknown_refund($virtual_account->user_id);
+		}
 
-        $this->CI->payment_model->update($value->id,array("status"=>5));
-        return false;
-    }
+		$this->CI->payment_model->update($value->id, array("status" => 5));
+		return false;
+	}
 	
 	//出帳處理
 	private function expense($value){
