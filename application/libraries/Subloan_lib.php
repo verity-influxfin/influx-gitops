@@ -149,6 +149,7 @@ class Subloan_lib{
 						'sub_status'		=> '8',
 						'remark'			=> $subloan_remark,
 						'expire_time'		=> strtotime($subloan['settlement_date']),
+						'order_id'		=> $target->order_id,
 					);
 
 					$rs = $this->CI->target_model->insert($param);
