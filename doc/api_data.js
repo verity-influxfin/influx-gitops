@@ -7258,7 +7258,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "cooperation_address",
-                            "description": "<p>地址</p>"
+                            "description": "<p>地址/網址</p>"
                         },
                         {
                             "group": "Success 200",
@@ -7628,7 +7628,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "cooperation_address",
-                            "description": "<p>地址</p>"
+                            "description": "<p>地址/網址</p>"
                         },
                         {
                             "group": "Parameter",
@@ -7663,14 +7663,28 @@ define({
                             "type": "Number",
                             "optional": true,
                             "field": "front_image",
-                            "description": "<p>銀行流水帳正面(經銷商必填)( 圖片ID )</p>"
+                            "description": "<p>銀行流水帳正面( 圖片ID )</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                            "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "store_lease_image",
+                            "description": "<p>租約照片(外匯車經銷商必填)( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "store_sign_image",
+                            "description": "<p>招牌照片(外匯車經銷商必填)( 圖片ID )</p>"
                         }
                     ]
                 }
@@ -7889,7 +7903,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "cooperation_address",
-                            "description": "<p>地址</p>"
+                            "description": "<p>地址/網址</p>"
                         },{
                             "group": "Parameter",
                             "type": "Number",
@@ -7931,6 +7945,20 @@ define({
                             "optional": true,
                             "field": "passbook_image",
                             "description": "<p>銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "store_lease_image",
+                            "description": "<p>租約照片(外匯車經銷商必填)( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "store_sign_image",
+                            "description": "<p>招牌照片(外匯車經銷商必填)( 圖片ID )</p>"
                         }
                     ]
                 }
