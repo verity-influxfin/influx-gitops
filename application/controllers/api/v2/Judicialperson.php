@@ -312,68 +312,7 @@ class Judicialperson extends REST_Controller {
             }
 
 			if($param['cooperation']==2){
-                $param['cooperation_contact'] = isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'';
-                $param['cooperation_phone']   = isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'';
-                $param['cooperation_address'] = isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'';
-                $param['business_model']      = isset($input['business_model'])&&$input['business_model']?$input['business_model']:'';
-                $param['selling_type']        = isset($input['selling_type'])&&$input['selling_type']?$input['selling_type']:'';
-
-                $content		= [];
-                $file_fields 	= [];
-                $mfile_fields 	= [];
-                if($param['business_model'] == 0){
-                    array_push($file_fields,"facade_image");
-                    array_push($mfile_fields,"store_image");
-                }
-
-				//if (empty($input['server_ip'])) {
-					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-				//}
-				//上傳檔案欄位
-				foreach ($file_fields as $field) {
-					$image_id = intval($input[$field]);
-					if (!$image_id) {
-						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-					}else{
-						$rs = $this->log_image_model->get_by([
-							'id'		=> $image_id,
-							'user_id'	=> $user_id,
-						]);
-
-						if($rs){
-							$content[$field] = $rs->url;
-						}else{
-							$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-						}
-					}
-				}
-
-				//多個檔案欄位
-
-				foreach ($mfile_fields as $field) {
-                    if(isset($input[$field])) {
-                        $image_ids = explode(',', $input[$field]);
-                        if (count($image_ids) > 4) {
-                            $image_ids = array_slice($image_ids, 0, 4);
-                        }
-                        $list = $this->log_image_model->get_many_by([
-                            'id' => $image_ids,
-                            'user_id' => $user_id,
-                        ]);
-
-                        if ($list && count($list) == count($image_ids)) {
-                            $content[$field] = [];
-                            foreach ($list as $k => $v) {
-                                $content[$field][] = $v->url;
-                            }
-                        }
-                    }else {
-                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
-                    }
-				}
-
-				$param['cooperation_content'] 	  = json_encode($content);
-				//$param['cooperation_server_ip'] = trim($input['server_ip']);
+			    $param = $this->cooperation_post($param);
 			}
 
             $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
@@ -790,12 +729,20 @@ class Judicialperson extends REST_Controller {
      *     }
 	 *
      */
-	public function cooperation_post()
+	public function cooperation_post($from_judicialApply = false)
     {
-		$this->not_incharge();
 		$input 	= $this->input->post(NULL, TRUE);
-		$this->load->library('S3_upload');
-        $company_user_id = $this->user_info->id;
+        $user_id = $from_judicialApply?$from_judicialApply['user_id']:$this->user_info->id;
+        if(!$from_judicialApply){
+            $this->not_incharge();
+
+            $judicial_person = $this->judicial_person_model->get_by(array(
+                'company_user_id' 	=> $user_id,
+            ));
+            if($judicial_person && $judicial_person->cooperation != 0){
+                $this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
+            }
+        }
 
         $fields 	= ['business_model','selling_type'];
         foreach ($fields as $field) {
@@ -805,17 +752,6 @@ class Judicialperson extends REST_Controller {
                 $business[$field] = intval($input[$field]);
             }
         }
-
-		$judicial_person = $this->judicial_person_model->get_by(array(
-			'company_user_id' 	=> $company_user_id,
-		));
-		if($judicial_person && $judicial_person->cooperation != 0){
-			$this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
-		}
-
-		//if (empty($input['server_ip'])) {
-			//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		//}
 
 
         $file_fields 	= [];
@@ -836,7 +772,7 @@ class Judicialperson extends REST_Controller {
 			}else{
 				$rs = $this->log_image_model->get_by([
 					'id'		=> $image_id,
-					'user_id'	=> $company_user_id,
+					'user_id'	=> $user_id,
 				]);
 
 				if($rs){
@@ -854,7 +790,7 @@ class Judicialperson extends REST_Controller {
 			}
 			$list = $this->log_image_model->get_many_by([
 				'id'		=> $image_ids,
-				'user_id'	=> $company_user_id,
+				'user_id'	=> $user_id,
 			]);
 
 			if($list && count($list)==count($image_ids)){
@@ -867,7 +803,7 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 
-		if($judicial_person){
+		if($judicial_person && $from_judicialApply){
 			$param	= array(
                 'business_model'        => $business['business_model'],
                 'selling_type'          => $business['selling_type'],
@@ -876,8 +812,10 @@ class Judicialperson extends REST_Controller {
 				'cooperation_address'   => isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'',
                 'cooperation_phone'	    => isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'',
 				'cooperation_content'	=> json_encode($content),
-				//'cooperation_server_ip'	=> trim($input['server_ip']),
 			);
+			if($from_judicialApply){
+			    return array_merge($from_judicialApply,$param);
+            }
 			$rs = $this->judicial_person_model->update($judicial_person->id,$param);
 		}
 		
@@ -934,7 +872,6 @@ class Judicialperson extends REST_Controller {
 		
 		if($judicial_person){
             $data = array(
-                //'server_ip'	=> $judicial_person->cooperation_server_ip,
                 'cooperation_contact'	 => $judicial_person->cooperation_contact,
                 'cooperation_phone'	     => $judicial_person->cooperation_phone,
                 'cooperation_address'	 => $judicial_person->cooperation_address,
