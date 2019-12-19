@@ -13127,21 +13127,21 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "amount",
-                            "description": "<p>(信貸)借款金額</p>"
+                            "description": "<p>(信貸)(外匯車貸I II) 借款金額</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "optional": false,
                             "field": "instalment",
-                            "description": "<p>(信貸)(消費貸)申請期數(API提供)</p>"
+                            "description": "<p>(信貸)(消費貸) 申請期數(API提供)</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
                             "field": "promote_code",
-                            "description": "<p>(信貸)邀請碼</p>"
+                            "description": "<p>(信貸) 邀請碼</p>"
                         },
                         {
                             "group": "Parameter",
@@ -13149,25 +13149,25 @@ define({
                             "size": "0..128",
                             "optional": true,
                             "field": "reason",
-                            "description": "<p>(信貸)借款原因</p>"
+                            "description": "<p>(信貸) 借款原因</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "store_id",
-                            "description": "<p>(消費貸)店家ID</p>"
+                            "description": "<p>(消費貸) 店家ID</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "item_id",
-                            "description": "<p>(消費貸)(外匯車貸)商品ID</p>"
+                            "description": "<p>(消費貸)(外匯車貸I II) 商品ID</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "item_count",
-                            "description": "<p>(消費貸)商品數量</p>"
+                            "description": "<p>(消費貸) 商品數量</p>"
                         },
                         {
                             "group": "Parameter",
@@ -13175,61 +13175,61 @@ define({
                             "optional": true,
                             "defaultValue": "0",
                             "field": "delivery",
-                            "description": "<p>(消費貸)交易方式 0:線下 1:線上</p>"
+                            "description": "<p>(消費貸) 交易方式 0:線下 1:線上</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "address",
-                            "description": "<p>(消費貸)地址</p>"
+                            "description": "<p>(消費貸) 地址</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "nickname",
-                            "description": "<p>(消費貸)暱稱</p>"
+                            "description": "<p>(消費貸) 暱稱</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "purchase_time",
-                            "description": "<p>(外匯車貸II)購車時間</p>"
+                            "description": "<p>(外匯車貸II) 購車時間</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "vin",
-                            "description": "<p>(外匯車貸I II)車身號碼</p>"
+                            "description": "<p>(外匯車貸I II) 車身號碼</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "factory_time",
-                            "description": "<p>(外匯車貸I II)出廠時間</p>"
+                            "description": "<p>(外匯車貸I II) 出廠時間</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "product_description",
-                            "description": "<p>(外匯車貸I II)產品說明</p>"
+                            "description": "<p>(外匯車貸I II) 產品說明</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "purchase_cost",
-                            "description": "<p>(外匯車貸I)購車成本</p>"
+                            "description": "<p>(外匯車貸I) 購車成本</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "fee_cost",
-                            "description": "<p>(外匯車貸I)規費成本</p>"
+                            "description": "<p>(外匯車貸I) 規費成本</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "String",
                             "field": "sell_price",
-                            "description": "<p>(外匯車貸I II)建議/預計售價</p>"
+                            "description": "<p>(外匯車貸I II) 建議/預計售價</p>"
                         }
                     ]
                 }

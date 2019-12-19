@@ -1827,6 +1827,7 @@ class Product extends REST_Controller {
         $id_number = '';
         $address = '';
         $amount = 0;
+        $item_price = 0;
 
         $fields 	= ['instalment','store_id','item_id'];
         foreach ($fields as $field) {
@@ -1886,12 +1887,13 @@ class Product extends REST_Controller {
         $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
         if($designate){
             $amount = $designate['amount'];
+            $item_price = $designate['item_price'];
         }
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
             'item_count'     => $item_count,
-            'item_price'     => $amount,
+            'item_price'     => $item_price,
             'instalment'     => $instalment,
             'interest_rate'  => $interest_rate,
             'delivery'       => $delivery,
@@ -1907,13 +1909,12 @@ class Product extends REST_Controller {
                     :''
                 );
             $merchant_order_no = $result->data->merchant_order_no;
-            $product_price     = $result->data->product_price;
-            $amount            = $product_price;
+            $product_price     = $item_price>0?$item_price:$result->data->product_price;
             $platform_fee      = 0;
             $transfer_fee      = 0;
             $total             = 0;
             //建立主系統訂單
-            if($product_price > 0){
+            if($product_price > 0 && $designate){
                 $platform_fee = $this->financial_lib->get_platform_fee2($product_price);
                 $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
                 $total        = $amount + $platform_fee + $transfer_fee;
@@ -1988,8 +1989,8 @@ class Product extends REST_Controller {
             'instalment' => $instalment,
             'store_id' => $store_id,
             'item_id' => $content['item_id'],
-            'amount' => ($content['purchase_cost'] + $content['fee_cost']),
-            'sell_price' => $content['sell_price'],
+            'item_price' => ($content['purchase_cost'] + $content['fee_cost']),
+            'amount' => $content['sell_price'],
             'interest_rate' => FEV_INTEREST_RATE,
         ]);
         if($order_insert){
