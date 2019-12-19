@@ -17,6 +17,19 @@ class Joint_credit_lib_partial_file4 extends TestCase
 		$this->text = $pdf->getText();
 	}
 
+	public function test_check_bank_loan()
+	{
+		$result = ["status" => "failure", "messages" => []];
+		$this->joint_credit->check_bank_loan($this->text, $result);
+
+		$expected = [
+			"stage" => "bank_loan",
+			"status" => "success",
+			"message" => "銀行借款家數：無"
+		];
+		$this->assertEquals($expected, $result["messages"][0]);
+	}
+
 	public function test_check_credit_scores()
 	{
 		$result = ["status" => "failure", "messages" => []];
