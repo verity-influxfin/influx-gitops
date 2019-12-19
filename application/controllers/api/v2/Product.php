@@ -156,7 +156,7 @@ class Product extends REST_Controller {
         $certification = $this->config->item('certifications');
         $login = false;
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
-            $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor);
+            $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor,$this->user_info->company);
             $company = isset($this->user_info->company)?$this->user_info->company:false;
             $login = true;
         }else{
@@ -257,6 +257,9 @@ class Product extends REST_Controller {
                                         $sub_product_list[$t4]['status'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['status'];
                                         $sub_product_list[$t4]['banner'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['banner'];
                                         foreach ($sub_product_list[$t4]['identity'] as $idekey => $ideval) {
+                                            unset($sub_product_list[$t4]['identity'][$idekey]['targetData'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['dealer'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['multi_target']);
                                             $exp_product = explode(':', $ideval['product_id']);
                                             if (!empty($certification_list)) {
                                                 $certification = [];
@@ -1001,6 +1004,7 @@ class Product extends REST_Controller {
         $input 				= $this->input->get(NULL, TRUE);
         $user_id 			= $this->user_info->id;
         $investor 			= $this->user_info->investor;
+        $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
 
@@ -1010,8 +1014,12 @@ class Product extends REST_Controller {
 
             $product_list 		= $this->config->item('product_list');
             $product 			= $product_list[$target->product_id];
+            $sub_product_list = $this->config->item('sub_product_list');
+            $sub_product_data = $sub_product_list[$target->sub_product_id]['identity'][$product['identity']];
+            $product = $this->sub_product_profile($product, $sub_product_data);
+
             $certification		= [];
-            $certification_list	= $this->certification_lib->get_status($user_id,$investor);
+            $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
                     $diploma = $key==8?$value:null;
@@ -1042,8 +1050,6 @@ class Product extends REST_Controller {
                 $this->load->model('transaction/order_model');
                 $orders 	= $this->order_model->get_by([
                     'id'		=> $target->order_id,
-                    'phone'		=> $this->user_info->phone,
-                    //'status'	=> 0,
                 ]);
 
                 if(!empty($orders)){
@@ -1710,8 +1716,10 @@ class Product extends REST_Controller {
             'interest_rate_e' => $sub_product['interest_rate_e'],
             'charge_platform' => $sub_product['charge_platform'],
             'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'status' => $sub_product['status'],
@@ -1866,11 +1874,12 @@ class Product extends REST_Controller {
 
         //對經銷商系統建立訂單
         $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
-
+        $designate?$amount=$designate['amount']:'';
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
             'item_count'     => $item_count,
+            'item_price'     => $amount,
             'instalment'     => $instalment,
             'interest_rate'  => $interest_rate,
             'delivery'       => $delivery,
