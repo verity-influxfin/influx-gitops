@@ -760,8 +760,43 @@ class Certification_lib{
 		if($user_id){
 			$certification = array();
 			if($company){
-				foreach($this->certification as $key => $value){
-					if($value['alias']=='debitcard'){
+                $allows = ['debitcard','investigation','businesstax'];
+                $company = $this->get_company_type($user_id);
+                //FEV
+                $company->selling_type == 2 ? $allows[] = 'salesdetail' : '';
+
+                $this->CI->load->model('transaction/order_model');
+                $orders = $this->CI->order_model->get_many_by([
+                    'company_user_id' => $user_id,
+                    'status' => 10,
+                ]);
+                if($orders){
+                    $total = 0;
+                    $this->CI->load->library('target_lib');
+                    foreach($orders as $key => $value){
+                        $targets = $this->CI->target_model->get_by([
+                            'status' => 5,
+                            'order_id' => $value->id,
+                        ]);
+                        if($targets) {
+                            $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
+                        }
+                    }
+                }
+                $self_targets = $this->CI->target_model->get_by([
+                    'status' => 5,
+                    'user_id' => $user_id,
+                ]);
+                if($self_targets) {
+                    $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
+                }
+                $total >= 500000?$allows = array_merge($allows,['balancesheet','incomestatement','investigationjudicial','passbookcashflow']):'';
+                if($total >= 1000000 && $company->selling_type != 2){
+                    $allows[] = 'interview';
+                }
+
+                foreach($this->certification as $key => $value){
+					if(in_array($value['alias'],$allows)){
 						$certification[$key] = $value;
 					}
 				}
@@ -778,7 +813,7 @@ class Certification_lib{
 			$certification_list = [];
 			foreach($certification as $key => $value){
 				$user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
-				if($user_certification){
+                if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
                     $value['updated_at'] 		   = intval($user_certification->updated_at);
@@ -811,7 +846,7 @@ class Certification_lib{
 			$certification = [];
 			if($company){
 				foreach($this->certification as $key => $value){
-					if($value['alias']=='debitcard'){
+					if(in_array($value['alias'],['debitcard','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail'])){
 						$certification[$key] = $value;
 					}
 				}
@@ -908,6 +943,7 @@ class Certification_lib{
         $rs = $this->CI->user_certification_model->update_by([
             'id !='             => $info->id,
             'user_id'			=> $info->user_id,
+            'investor'			=> $info->investor,
             'certification_id'	=> $info->certification_id,
             'status'			=> [0,1,2,3]
         ], ['status'=> 2]);
@@ -930,5 +966,13 @@ class Certification_lib{
             }
         }
         return false;
+    }
+
+    private function get_company_type($user_id){
+        $this->CI->load->model('user/judicial_person_model');
+        $company = $this->CI->judicial_person_model->get_by(array(
+            'company_user_id' 	=> $user_id,
+        ));
+        return $company;
     }
 }
