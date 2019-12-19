@@ -2009,7 +2009,9 @@ class Product extends REST_Controller {
                 ['A','B']
             );
             if($insert){
-                $this->response(['result' => 'SUCCESS']);
+                $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
+            } else {
+                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
             }
         }
     }
@@ -2044,7 +2046,12 @@ class Product extends REST_Controller {
         ];
         $insert = $this->target_lib->add_target($param);
         if($insert){
-            $this->response(['result' => 'SUCCESS']);
+            $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
+        } else {
+            $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
         }
+    }
+    private function build_targetData($target_data){
+        return 123;
     }
 }

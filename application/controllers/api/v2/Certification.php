@@ -1752,7 +1752,7 @@ class Certification extends REST_Controller {
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>15){
+                if(count($image_ids)>3){
                     $image_ids = array_slice($image_ids,0,3);
                 }
                 $list = $this->log_image_model->get_many_by([
@@ -1813,7 +1813,7 @@ class Certification extends REST_Controller {
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>15){
+                if(count($image_ids)>6){
                     $image_ids = array_slice($image_ids,0,6);
                 }
                 $list = $this->log_image_model->get_many_by([
@@ -1874,7 +1874,7 @@ class Certification extends REST_Controller {
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>15){
+                if(count($image_ids)>6){
                     $image_ids = array_slice($image_ids,0,6);
                 }
                 $list = $this->log_image_model->get_many_by([

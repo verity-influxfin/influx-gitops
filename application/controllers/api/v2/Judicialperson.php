@@ -258,6 +258,30 @@ class Judicialperson extends REST_Controller {
                 }
 
                 //銀行存簿
+                $file_fields 	 = ['passbook_image'];
+                foreach ($file_fields as $field) {
+                    if(isset($input[$field])){
+                        $image_ids = explode(',',$input[$field]);
+                        if(count($image_ids)>4){
+                            $image_ids = array_slice($image_ids,0,4);
+                        }
+                        $list = $this->log_image_model->get_many_by([
+                            'id'		=> $image_ids,
+                            'user_id'	=> $user_id,
+                        ]);
+                        if($list && count($list)==count($image_ids)){
+                            $param[$field] = [];
+                            foreach($list as $k => $v){
+                                $param[$field][] = $v->url;
+                            }
+                        }
+                    }
+                    else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+
+                //銀行存簿
                 $bankbook_images = [];
                 $file_fields 	 = ['bankbook_image'];
                 foreach ($file_fields as $field) {
@@ -767,7 +791,7 @@ class Judicialperson extends REST_Controller {
         }
 
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
-        isset($input['passbook_image'])&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
+        isset($input['passbook_dealer_image'])&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
 
         //上傳檔案欄位
 		$content = [];
