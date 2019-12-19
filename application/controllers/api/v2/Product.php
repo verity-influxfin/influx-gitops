@@ -233,6 +233,8 @@ class Product extends REST_Controller {
                     }
                 }
 
+                $list[] = $parm;
+
                 //reformat Product for layer2
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
             }
@@ -308,7 +310,7 @@ class Product extends REST_Controller {
         }
 
         $this->response(array('result' => 'SUCCESS','data' => [
-            //'list'  => $list,
+            'list'  => $list,
             'list2' => $list2,
         ]));
     }
