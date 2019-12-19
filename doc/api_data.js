@@ -7591,10 +7591,24 @@ define({
                         },
                         {
                             "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "passbook_image",
+                            "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "Number",
                             "optional": false,
                             "field": "enterprise_registration_image",
                             "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "front_image",
+                            "description": "<p>銀行流水帳正面( 圖片ID )</p>"
                         },
                         {
                             "group": "Parameter",
@@ -7657,20 +7671,6 @@ define({
                             "optional": true,
                             "field": "store_image",
                             "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "front_image",
-                            "description": "<p>銀行流水帳正面( 圖片ID )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
                         },
                         {
                             "group": "Parameter",
@@ -11185,7 +11185,7 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/product/applydata",
+            "url": "/v2/product/targetdata",
             "title": "借款方 取得案件需求資料",
             "version": "0.2.0",
             "name": "GetProductData",
@@ -11297,13 +11297,13 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/product/applydata"
+                    "url": "/api/v2/product/targetdata"
                 }
             ]
         },
         {
             "type": "post",
-            "url": "/v2/product/applydata",
+            "url": "/v2/product/targetdata",
             "title": "借款方 案件需求資料",
             "version": "0.2.0",
             "name": "PostProductData",
@@ -11443,7 +11443,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/product/applydata"
+                    "url": "/api/v2/product/targetdata"
                 }
             ]
         },
