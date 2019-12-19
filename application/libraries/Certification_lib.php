@@ -760,6 +760,7 @@ class Certification_lib{
 		if($user_id){
 			$certification = array();
 			if($company){
+                $total = 0;
                 $allows = ['debitcard','investigation','businesstax'];
                 $company = $this->get_company_type($user_id);
                 //FEV
@@ -771,7 +772,6 @@ class Certification_lib{
                     'status' => 10,
                 ]);
                 if($orders){
-                    $total = 0;
                     $this->CI->load->library('target_lib');
                     foreach($orders as $key => $value){
                         $targets = $this->CI->target_model->get_by([
