@@ -491,15 +491,13 @@ class Product extends REST_Controller {
     {
         $input 		= $this->input->post(NULL, TRUE);
         $amount = $input['amount'];
-        $user_info = [
-            'user_id' => $this->user_info->id,
-        ];
+        $user_id = $this->user_info->id;
 
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $exp_product  = explode(':',$input['product_id']);
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
-        $sub_product = isset($exp_product[1])?$exp_product[1]:0;
+        $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
         if ($product) {
             //檢核身分
             if($product['identity'] ==3 && $this->user_info->company !=1){
@@ -514,7 +512,7 @@ class Product extends REST_Controller {
                     $this->load->model('user/judicial_person_model');
                     $judicial_person = $this->judicial_person_model->get_by(array(
                         'selling_type' => $product['dealer'],
-                        'company_user_id' => $user_info['user_id'],
+                        'company_user_id' => $user_id,
                         'cooperation' => 1,
                         'status' => 1,
                     ));
@@ -525,11 +523,11 @@ class Product extends REST_Controller {
             }
 
             //使用副產品資料
-            if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product])
+            if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product_id])
                 || $product['hidenMainProduct']
-                || $sub_product && !in_array($sub_product, $product['sub_product'])) {
-                if (isset($sub_product_list[$sub_product]['identity'][$product['identity']]) && in_array($sub_product, $product['sub_product'])) {
-                    $sub_product_data = $sub_product_list[$sub_product]['identity'][$product['identity']];
+                || $sub_product_id && !in_array($sub_product_id, $product['sub_product'])) {
+                if (isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product'])) {
+                    $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
                     $product = $this->sub_product_profile($product, $sub_product_data);
                 } else {
                     $this->response(array('result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST));
@@ -554,9 +552,17 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
             }
 
+            $param		= [
+                'product_id' => $product['id'],
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'repayment' => $product['repayment'][0],
+                'damage_rate' => LIQUIDATED_DAMAGES,
+            ];
+
             $method = 'type'.$product['type'].'_apply';
             if(method_exists($this, $method)){
-                $this->$method($user_info,$product,$sub_product,$input);
+                $this->$method($param,$product,$input);
             }
         }
         $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
@@ -1017,8 +1023,10 @@ class Product extends REST_Controller {
             $product_list 		= $this->config->item('product_list');
             $product 			= $product_list[$target->product_id];
             $sub_product_list = $this->config->item('sub_product_list');
-            $sub_product_data = $sub_product_list[$target->sub_product_id]['identity'][$product['identity']];
-            $product = $this->sub_product_profile($product, $sub_product_data);
+            if (isset($sub_product_list[$target->sub_product_id]['identity'][$product['identity']]) && in_array($target->sub_product_id, $product['sub_product'])) {
+                $sub_product_data = $sub_product_list[$target->sub_product_id]['identity'][$product['identity']];
+                $product = $this->sub_product_profile($product, $sub_product_data);
+            }
 
             $certification		= [];
             $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
@@ -1748,41 +1756,20 @@ class Product extends REST_Controller {
         return $store_id;
     }
 
-    private function type1_apply($user_info,$product,$sub_product,$input){
-        $method = $product['visul_id'];
-        if(method_exists($this, $method)){
-            $this->$method($user_info,$product,$sub_product,$input);
-        }
-        $user_id = $user_info['user_id'];
-        $param		= [
-            'user_id' => $user_id,
-            'damage_rate' => LIQUIDATED_DAMAGES
-        ];
+    private function type1_apply($param,$product,$input){
 
-        //必填欄位
-        $fields 	= ['amount','instalment'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }else{
-                $param[$field] = intval($input[$field]);
-            }
-        }
-
+        $sub_product_rule = false;
         if($product['multi_target'] == 0){
             $exist = $this->target_model->get_by([
                 'status <=' => 1,
-                'user_id' => $user_id,
-                'product_id' => $product['id'],
-                'sub_product_id' => $sub_product,
+                'user_id' => $param['user_id'],
+                'product_id' => $param['product_id'],
+                'sub_product_id' => $param['sub_product_id'],
             ]);
             if ($exist) {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
             }
         }
-
-        $param['product_id']  = $product['id'];
-        $param['sub_product_id']  = $sub_product;
         isset($input['reason'])?$param['reason'] = $input['reason']:'';
         isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
 
@@ -1790,36 +1777,56 @@ class Product extends REST_Controller {
         if(!isset($param['promote_code']) && strtotime(' -'.TARGET_PROMOTE_LIMIT.' month',time()) <= $this->user_info->created_at && $this->user_info->promote_code != ''){
             $param['promote_code'] = $this->user_info->promote_code;
         }
-        $param['repayment'] = $product['repayment'][0];
-        $insert = $this->target_lib->add_target($param);
+
+        $method = $product['visul_id'];
+        if(method_exists($this, $method)){
+            $sub_product_rule = $this->$method($param,$product,$input);
+            $insert = $sub_product_rule;
+        }
+
+        if(!$sub_product_rule){
+            //必填欄位
+            $fields 	= ['amount','instalment'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $param[$field] = intval($input[$field]);
+                }
+            }
+
+            $insert = $this->target_lib->add_target($param);
+        }
+
         if ($insert) {
             $this->load->library('Certification_lib');
-            if ($sub_product != 0) {
+            if ($param['sub_product_id'] != 0) {
                 $certification = $this->user_certification_model->order_by('created_at', 'desc')->get_by([
-                    'user_id' => $user_id,
+                    'user_id' => $param['user_id'],
                     'certification_id' => ($product['identity'] == 1 ? 2 : 10),
                     'investor' => 0,
                     'status' => 1,
                 ]);
-                if ($certification && $sub_product == 1) {
+                if ($certification && $param['sub_product_id'] == 1) {
                     $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
                 }
             }
-            $this->certification_lib->expire_certification($user_id);
+            $this->certification_lib->expire_certification($param['user_id']);
             $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
         } else {
             $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
         }
     }
 
-    private function type2_apply($user_info,$product,$sub_product,$input,$designate=false)
+    private function type2_apply($param,$product,$input,$designate=false)
     {
         $designate?$input = $designate:'';
-        $user_id = $user_info['user_id'];
+        $user_id = $param['user_id'];
         $name = '';
         $phone = '';
         $id_number = '';
         $address = '';
+        $amount = 0;
 
         $fields 	= ['instalment','store_id','item_id'];
         foreach ($fields as $field) {
@@ -1829,11 +1836,12 @@ class Product extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-        $product_id		= $product['id'];//產品ID
-        $instalment     = $content['instalment'];//分期數
-        $store_id       = $content['store_id'];  //店家ID
-        $item_id		= $content['item_id'];   //商品ID
-        $nickname =  isset($content['nickname'])?$content['nickname']:'';  //暱稱
+        $product_id		= $param['product_id'];
+        $sub_product_id		= $param['sub_product_id'];
+        $instalment     = $content['instalment'];
+        $store_id       = $content['store_id'];
+        $item_id		= $content['item_id'];
+        $nickname =  isset($content['nickname'])?$content['nickname']:'';
 
         $item_count		= isset($content['item_count'])&&$content['item_count']<2?$content['item_count']:1;//商品數量
         $delivery       = isset($content['delivery'])&&$content['delivery']<2?$content['delivery']:0;  //0:線下 1:線上
@@ -1876,7 +1884,9 @@ class Product extends REST_Controller {
 
         //對經銷商系統建立訂單
         $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
-        $designate?$amount=$designate['amount']:'';
+        if($designate){
+            $amount = $designate['amount'];
+        }
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
             'item_id'        => $item_id,
@@ -1909,14 +1919,13 @@ class Product extends REST_Controller {
                 $total        = $amount + $platform_fee + $transfer_fee;
             }
 
-            $designate?$amount=$designate['amount']:'';
             $order_parm = [
                 'company_user_id'   => $company_user_id,
                 'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
                 'merchant_order_no' => $merchant_order_no,
                 'phone'             => $phone,
                 'product_id'	    => $product_id,
-                'sub_product_id'	=> $sub_product,
+                'sub_product_id'	=> $sub_product_id,
                 'instalment'	    => $instalment,
                 'item_price'        => $product_price,
                 'item_name'         => $item_name,
@@ -1938,7 +1947,7 @@ class Product extends REST_Controller {
 
                 $param = [
                     'product_id'	=> $product_id,
-                    'sub_product_id' => $sub_product,
+                    'sub_product_id' => $sub_product_id,
                     'user_id'		=> $user_id,
                     'amount'		=> $total,
                     'instalment'	=> $instalment,
@@ -1961,7 +1970,7 @@ class Product extends REST_Controller {
         $this->response(['result' => 'ERROR','error' => $result->error ]);
     }
 
-    private function DS1P1($user_info,$product,$sub_product,$input)
+    private function DS1P1($param,$product,$input)
     {
         $fields 	= ['item_id','purchase_time','vin','factory_time','product_description','purchase_cost','fee_cost','sell_price'];
         foreach ($fields as $field) {
@@ -1971,16 +1980,16 @@ class Product extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-        $product_id = $product['id'];
         $instalment = $input['instalment'];
 
         $store_id = $this->get_store_id($this->user_info->id);
-        $order_insert = $this->type2_apply($user_info,$product,$sub_product,$input,[
-            'product_id' => $product_id,
+        $order_insert = $this->type2_apply($param,$product,$input,[
+            'product_id' => $param['product_id'],
             'instalment' => $instalment,
             'store_id' => $store_id,
-            'item_id' => $input['item_id'],
-            'amount' => $content['sell_price'],
+            'item_id' => $content['item_id'],
+            'amount' => ($content['purchase_cost'] + $content['fee_cost']),
+            'sell_price' => $content['sell_price'],
             'interest_rate' => FEV_INTEREST_RATE,
         ]);
         if($order_insert){
@@ -1991,9 +2000,9 @@ class Product extends REST_Controller {
                 'product_description' => $content['product_description'],
             ];
             $param = [
-                'product_id'	=> $product_id,
-                'sub_product_id' => $sub_product,
-                'user_id'		=> $user_info['user_id'],
+                'product_id'	=> $param['product_id'],
+                'sub_product_id' => $param['sub_product_id'],
+                'user_id'		=> $param['user_id'],
                 'amount'		=> $content['purchase_cost'],
                 'instalment'	=> $instalment,
                 'order_id'		=> $order_insert,
@@ -2008,15 +2017,11 @@ class Product extends REST_Controller {
                 [$param,$param2],
                 ['A','B']
             );
-            if($insert){
-                $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
-            } else {
-                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
-            }
+            return $insert;
         }
     }
 
-    private function DS2P1($user_info,$product,$sub_product,$input)
+    private function DS2P1($param,$product,$input)
     {
         $fields 	= ['item_id','purchase_time','vin','factory_time','product_description','amount'];
         foreach ($fields as $field) {
@@ -2026,8 +2031,8 @@ class Product extends REST_Controller {
                 $content[$field] = $input[$field];
             }
         }
-        $product_id = $product['id'];
         $instalment = $input['instalment'];
+
         $target_data = [
             'purchase_time' => $content['purchase_time'],
             'vin' => $content['vin'],
@@ -2035,9 +2040,9 @@ class Product extends REST_Controller {
             'product_description' => $content['product_description'],
         ];
         $param = [
-            'product_id'	=> $product_id,
-            'sub_product_id' => $sub_product,
-            'user_id'		=> $user_info['user_id'],
+            'product_id'	=> $param['product_id'],
+            'sub_product_id' => $param['sub_product_id'],
+            'user_id'		=> $param['user_id'],
             'amount'		=> $content['amount'],
             'instalment'	=> $instalment,
             'target_data' => json_encode($target_data),
@@ -2045,11 +2050,7 @@ class Product extends REST_Controller {
             'status'        => 0,
         ];
         $insert = $this->target_lib->add_target($param);
-        if($insert){
-            $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
-        } else {
-            $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
-        }
+        return $insert;
     }
     private function build_targetData($target_data){
         return 123;
