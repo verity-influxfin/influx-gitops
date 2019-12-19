@@ -127,16 +127,42 @@ class Joint_credit_lib{
 					]
 				];
 			} else {
-				$result=$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank);
+				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank, $result);
 			}
 		}
 	}
-	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank)
+	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, &$result)
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
-		switch ($getCountAllBanknameWithoutSchoolLoan) {
-			case ($getCountAllBanknameWithoutSchoolLoan > 3):
+
+		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
+			$result["status"]= "failure";
+			$result["messages"][] = [
+				"stage" => "bank_loan",
+				"status" => "failure",
+				"message" => [
+					"有無延遲還款 : 無",
+					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+					$longTermLoan
+				],
+				"rejected_message" => [
+					"銀行借款家數超過3家"
+				]
+			];
+		} elseif ($getCountAllBanknameWithoutSchoolLoan == 3) {
+			$result["status"]= "pending";
+			$result["messages"][] = [
+				"stage" => "bank_loan",
+				"status" => "pending",
+				"message" => [
+					"有無延遲還款 : 無",
+					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+					$longTermLoan
+				]
+			];
+		} else {
+			if (in_array(1, $getAllProportion)) {
 				$result["status"]= "failure";
 				$result["messages"][] = [
 					"stage" => "bank_loan",
@@ -147,77 +173,46 @@ class Joint_credit_lib{
 						$longTermLoan
 					],
 					"rejected_message" => [
-						"銀行借款家數超過3家"
+						"長期放款的借款餘額等於訂約金額"
 					]
 				];
-				break;
-			case ($getCountAllBanknameWithoutSchoolLoan == 3):
-				$result["status"]= "pending";
+				return;
+			}
+
+			foreach ($getAllProportion as $key => $value) {
+				$is_InStandard[] = ($value < 0.7) ? true : false;
+			}
+			$is_InStandard=(isset($is_InStandard))?$is_InStandard:0;
+			if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
+				$result["messages"][] = [
+					"stage" => "bank_loan",
+					"status" => "success",
+					"message" => [
+						"有無延遲還款 : 無",
+						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+						"長期放款家數 : $getCountALLLongTermLoanBank",
+					]
+				];
+				$result["status"]= "success";
+				foreach ($getAllProportion as $value) {
+					$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
+				}
+			} else {
 				$result["messages"][] = [
 					"stage" => "bank_loan",
 					"status" => "pending",
 					"message" => [
 						"有無延遲還款 : 無",
 						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-						$longTermLoan
+						"長期放款家數 : $getCountALLLongTermLoanBank",
 					]
 				];
-				break;
-			case (($getCountAllBanknameWithoutSchoolLoan < 3) && ($getCountAllBanknameWithoutSchoolLoan >= 0)):
-				if (in_array(1, $getAllProportion)) {
-					$result["status"]= "failure";
-					$result["messages"][] = [
-						"stage" => "bank_loan",
-						"status" => "failure",
-						"message" => [
-							"有無延遲還款 : 無",
-							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							$longTermLoan
-						],
-						"rejected_message" => [
-							"長期放款的借款餘額等於訂約金額"
-						]
-					];
-					return;
+				$result["status"]= "pending";
+				foreach ($getAllProportion as $value) {
+					$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 				}
-
-				foreach ($getAllProportion as $key => $value) {
-					$is_InStandard[] = ($value < 0.7) ? true : false;
-				}
-				$is_InStandard=(isset($is_InStandard))?$is_InStandard:0;
-				if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
-					$result["messages"][] = [
-						"stage" => "bank_loan",
-						"status" => "success",
-						"message" => [
-							"有無延遲還款 : 無",
-							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款家數 : $getCountALLLongTermLoanBank",
-						]
-					];
-					$result["status"]= "success";
-					foreach ($getAllProportion as $value) {
-						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
-					}
-				} else {
-					$result["messages"][] = [
-						"stage" => "bank_loan",
-						"status" => "pending",
-						"message" => [
-							"有無延遲還款 : 無",
-							"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-							"長期放款家數 : $getCountALLLongTermLoanBank",
-						]
-					];
-					$result["status"]= "pending";
-					foreach ($getAllProportion as $value) {
-						$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
-					}
-				}
-				break;
+			}
 		}
-
-		return $result;
 	}
 	private function get_loan_bankname($value,$subject)
 	{
