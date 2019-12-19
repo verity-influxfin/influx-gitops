@@ -744,7 +744,7 @@ class Judicialperson extends REST_Controller {
             }
         }
 
-        $fields 	= ['business_model','selling_type'];
+        $fields 	= ['business_model','selling_type','cooperation_address','cooperation_contact','cooperation_phone'];
         foreach ($fields as $field) {
             if (!isset($input[$field]) && !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -759,10 +759,16 @@ class Judicialperson extends REST_Controller {
         if($business['business_model'] == 0 ){
             array_push($file_fields,'facade_image');
             array_push($mfile_fields,'store_image');
-            if (!isset($input['cooperation_address'])||empty($input['cooperation_address'])) {
-                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-            }
         }
+
+        if($business['selling_type'] == 2 ) {
+            array_push($file_fields,'store_lease_image');
+            array_push($file_fields,'store_sign_image');
+        }
+
+        isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
+        isset($input['passbook_image'])&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
+
         //上傳檔案欄位
 		$content = [];
         foreach ($file_fields as $field) {
@@ -808,9 +814,9 @@ class Judicialperson extends REST_Controller {
                 'business_model'        => $business['business_model'],
                 'selling_type'          => $business['selling_type'],
 				'cooperation'			=> 2,
-                'cooperation_contact'	=> isset($input['cooperation_contact'])&&$input['cooperation_contact']?$input['cooperation_contact']:'',
-				'cooperation_address'   => isset($input['cooperation_address'])&&$input['cooperation_address']?$input['cooperation_address']:'',
-                'cooperation_phone'	    => isset($input['cooperation_phone'])&&$input['cooperation_phone']?$input['cooperation_phone']:'',
+                'cooperation_contact'	=> $business['cooperation_contact'],
+				'cooperation_address'   => $business['cooperation_address'],
+                'cooperation_phone'	    => $business['cooperation_phone'],
 				'cooperation_content'	=> json_encode($content),
 			);
 			if($from_judicialApply){
