@@ -11186,7 +11186,7 @@ define({
         {
             "type": "get",
             "url": "/v2/product/targetdata",
-            "title": "借款方 取得案件需求資料",
+            "title": "借款方 取得案件資料狀態",
             "version": "0.2.0",
             "name": "GetProductData",
             "group": "Product",
@@ -11219,7 +11219,26 @@ define({
             "success": {
                 "fields": {
                     "Success 200": [
-
+                        {
+                            "result": "SUCCESS",
+                            "data": {
+                                "list": {
+                                    "purchase_time": true,
+                                    "vin": true,
+                                    "factory_time": true,
+                                    "product_description": true,
+                                    "car_title_image": false,
+                                    "car_import_proof_image": false,
+                                    "car_artc_image": true,
+                                    "car_others_image": true,
+                                    "car_photo_front_image": false,
+                                    "car_photo_back_image": false,
+                                    "car_photo_all_image": false,
+                                    "car_photo_date_image": false,
+                                    "car_photo_mileage_image": true
+                                }
+                            }
+                        }
                     ]
                 },
                 "examples": [
@@ -11248,20 +11267,20 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "207",
                             "description": "<p>非借款端登入</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "404",
-                            "description": "<p>此申請不存在</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "405",
-                            "description": "<p>對此申請無權限</p>"
+                            "field": "407",
+                            "description": "<p>目前狀態無法完成此動作</p>"
                         }
                     ]
                 },
@@ -11287,7 +11306,7 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "405",
+                        "title": "407",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
                         "type": "Object"
                     }
@@ -11297,14 +11316,14 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/product/targetdata"
+                    "url": "/api/v2/product/targetdata/:id"
                 }
             ]
         },
         {
             "type": "post",
             "url": "/v2/product/targetdata",
-            "title": "借款方 案件需求資料",
+            "title": "借款方 加入/更新案件需求資料",
             "version": "0.2.0",
             "name": "PostProductData",
             "group": "Product",
@@ -11356,8 +11375,71 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
-                            "field": "data_remark",
+                            "field": "product_description",
                             "description": "<p>產品備註</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_title_image",
+                            "description": "<p>車輛所有權狀(title)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_import_proof_image",
+                            "description": "<p>海關進口證明/進口報單</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_artc_image",
+                            "description": "<p>交通部核發安審合格證明、環保驗車證明</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_others_image",
+                            "description": "<p>協力廠商鑑定報告</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_front_image",
+                            "description": "<p>車輛外觀照片-前側</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_back_image",
+                            "description": "<p>車輛外觀照片-後側</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_all_image",
+                            "description": "<p>車輛外觀照片-全車</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_date_image",
+                            "description": "<p>車輛外觀照片-出廠日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_mileage_image",
+                            "description": "<p>車輛外觀照片-里程</p>"
                         }
                     ]
                 }
@@ -11365,7 +11447,9 @@ define({
             "success": {
                 "fields": {
                     "Success 200": [
-
+                        {
+                            "result": "SUCCESS"
+                        }
                     ]
                 },
                 "examples": [
@@ -11406,8 +11490,8 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "405",
-                            "description": "<p>對此申請無權限</p>"
+                            "field": "407",
+                            "description": "<p>目前狀態無法完成此動作</p>"
                         }
                     ]
                 },
