@@ -50,6 +50,7 @@
                                             <?} ?>
                                             </div>
                                         <?}?>
+                                    <form role="form" method="post">
                                     <? if ($data->status == 1) { ?>
                                         <div class="form-group">
                                             <label>查詢次數</label>
@@ -91,7 +92,6 @@
                                         ?>
                                     </div>
 									<h4>審核</h4>
-									<form role="form" method="post">
 										<fieldset>
 											<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();">
