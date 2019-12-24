@@ -428,10 +428,15 @@ class Certification_lib{
 		}
 		return false;
 	}
-	public function investigation_readable_verify($info = array(), $url=null)
+
+
+	public function investigation_verify($info = array(), $url=null)
 	{
 		$this->CI->load->library('Joint_credit_lib');
-		if ($info && $info->status == 0 && $info->certification_id == 9) {
+		if(empty($url)){
+			$url=isset(json_decode($info->content)->pdf_file)?json_decode($info->content)->pdf_file:null;
+		}
+		if ($info&& $info->certification_id == 9 && !empty($url) && ($info->status == 0 || $info->status == 3 )) {
 			$return_type=json_decode($info->content)->return_type;
 			$result = [
 				'status' => null,
@@ -480,6 +485,7 @@ class Certification_lib{
 		}
 		return false;
 	}
+
 	public function job_verify($info = array(),$url=null) {
 		if ($info && $info->status == 0 && $info->certification_id == 10) {
 			$status = 3;
