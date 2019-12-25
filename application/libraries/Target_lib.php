@@ -249,7 +249,7 @@ class Target_lib{
 					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 				}
 			}
-			
+
 			if($credit){
 				$interest_rate	= $credit['rate'];
 				if($interest_rate){
@@ -860,11 +860,12 @@ class Target_lib{
 					$product_list 			= $this->CI->config->item('product_list');
 					$product_certification 	= $product_list[$product_id]['certifications'];
 					foreach($targets as $target_id => $value){
-						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,0,true);
+                        $company = $value->product_id >= 1000 ?1:0;
+						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
 						$finish		 		= true;
 						foreach($certifications as $key => $certification){
                             $key==8?$diploma=$certification:null;
-							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
+							if($finish && in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
                                 if($certification['id'] == 9){
                                     $finish = $this->CI->certification_lib->option_investigation($product_id, $certification, $diploma);
                                 }
