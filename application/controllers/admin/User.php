@@ -189,6 +189,7 @@ class User extends MY_Admin_Controller {
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
 				$page_data['product_list']			= $this->config->item('product_list');
+				$page_data['sub_product_list'] = $this->config->item('sub_product_list');
 				$page_data['bank_account'] 			= $bank_account;
 				$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 				$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;

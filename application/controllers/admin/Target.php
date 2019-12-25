@@ -127,6 +127,7 @@ class Target extends MY_Admin_Controller {
 			}
 		}
         $product_list    = $this->config->item('product_list');
+        $sub_product_list = $this->config->item('sub_product_list');
         $instalment_list = $this->config->item('instalment');
         $repayment_type  = $this->config->item('repayment_type');
         $status_list     = $this->target_model->status_list;
@@ -141,7 +142,7 @@ class Target extends MY_Admin_Controller {
                 foreach($list as $key => $value){
                     $html .= '<tr>';
                     $html .= '<td>'.$value->target_no.'</td>';
-                    $html .= '<td>'.$product_list[$value->product_id]['name'].(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
+                    $html .= '<td>'.$product_list[$value->product_id]['name'].($value->sub_product_id!=0?'/'.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'').(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':'').'</td>';
                     $html .= '<td>'.$value->user_id.'</td>';
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
@@ -169,6 +170,7 @@ class Target extends MY_Admin_Controller {
         }
 		else{
             $page_data['product_list']		= $product_list;
+            $page_data['sub_product_list'] = $sub_product_list;
             $page_data['instalment_list']	= $instalment_list;
             $page_data['repayment_type']	= $repayment_type;
             $page_data['list'] 				= $list;
@@ -188,6 +190,8 @@ class Target extends MY_Admin_Controller {
 		$page_data 	= array('type'=>'edit');
 		$get 		= $this->input->get(NULL, TRUE);
         $post 		= $this->input->post(NULL, TRUE);
+        $sub_product_list = $this->config->item('sub_product_list');
+
 
 		$id 		= isset($get['id'])?intval($get['id']):0;
 		$display 	= isset($get['display'])?intval($get['display']):0;
@@ -263,6 +267,7 @@ class Target extends MY_Admin_Controller {
                     $bank_account_verify = $bank_account ? 1 : 0;
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
+                    $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;
                     $page_data['order'] = $order;
                     $page_data['user_info'] = $user_info;
@@ -274,6 +279,7 @@ class Target extends MY_Admin_Controller {
                     $page_data['investments_amortization_schedule'] = $investments_amortization_schedule;
                     $page_data['credit_list'] = $credit_list;
                     $page_data['product_list'] = $this->config->item('product_list');
+                    $page_data['sub_product_list'] = $this->config->item('sub_product_list');
                     $page_data['bank_account_verify'] = $bank_account_verify;
                     $page_data['virtual_account'] = $virtual_account;
                     $page_data['instalment_list'] = $this->config->item('instalment');
@@ -376,7 +382,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function verify_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -398,7 +404,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	public function waiting_verify(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
@@ -423,7 +429,7 @@ class Target extends MY_Admin_Controller {
 						'verify'	=> 1,
 					));
 
-					
+
 					$value -> subloan_count = count($this->target_model->get_many_by(
 						array(
 							'user_id'     => $value->user_id,
@@ -442,6 +448,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['list'] 				= $waiting_list;
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['sub_list'] 		    = $this->target_model->sub_list;;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
@@ -502,7 +509,7 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
-		$remark = isset($post["reason"]) ? strval($post["reason"]) : '';
+		$remark = isset($post["reason"]) ? strval($post["reason"]) : false;
 
         if ($points > 400) $points = 400;
         if ($points < -400) $points = -400;
@@ -533,6 +540,14 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('credit_lib');
 		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
 
+        if ($remark) {
+            if ($target->remark) {
+                $update["remark"] = $target->remark . "," . $remark;
+            } else {
+                $update["remark"] = $remark;
+            }
+        }
+
 		if (
 			$newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
@@ -549,28 +564,9 @@ class Target extends MY_Admin_Controller {
             );
 			$this->credit_model->insert($newCredits);
 		}
-
-		$update = [
-			"status" => 1,
-			"sub_status" => 0,
-		];
-		if ($remark) {
-			if ($target->remark) {
-				$update["remark"] = $target->remark . "," . $remark;
-			} else {
-				$update["remark"] = $remark;
-			}
-		}
-        $rs = $this->target_model->update($targetId, $update);
-        if($rs){
-            $subloan_list   = $this->config->item('subloan_list');
-            $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
-            $this->load->library('Notification_lib');
-            $this->notification_lib->approve_target($userId,'1',$target->loan_amount,$subloan_status);
-        }
-
+        $this->target_lib->approve_target($target,$remark,true);
         $this->json_output->setStatusCode(200)->send();
-	}
+    }
 
 	public function final_validations()
 	{
@@ -629,6 +625,7 @@ class Target extends MY_Admin_Controller {
 			$user->school = $this->usermeta->values();
 			$user->instagram = $this->usermeta->values();
 			$user->facebook = $this->usermeta->values();
+
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
@@ -662,10 +659,15 @@ class Target extends MY_Admin_Controller {
 			]);
 
 			foreach ($targets as $otherTarget) {
-				$amortization = $this->target_lib->get_amortization_table($target);
+				$amortization = $this->target_lib->get_amortization_table($otherTarget);
 				$otherTarget->amortization = $amortization;
 
-				$credit = $this->credit_lib->get_credit($userId, $target->product_id, $target->sub_product_id);
+				$validBefore  = $otherTarget->created_at + (TARGET_APPROVE_LIMIT*86400);
+				$credit		 = $this->credit_model->order_by('created_at','desc')->get_by([
+					'product_id' => $otherTarget->product_id,
+					'user_id' => $userId,
+					'created_at <=' => $validBefore,
+				]);
 				$otherTarget->credit = $credit;
 			}
 
@@ -680,6 +682,7 @@ class Target extends MY_Admin_Controller {
 				"virtual_accounts" => $this->virtual_account_output->toMany(),
 				"targets" => $this->target_output->toMany(),
 			];
+
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
 
@@ -705,7 +708,10 @@ class Target extends MY_Admin_Controller {
 			$index = 0;
 			foreach ($targets as $target) {
 				$userIds[] = $target->user_id;
-				$userIndexes[$target->user_id] = $index++;
+				if (!isset($userIndexes[$target->user_id])) {
+					$userIndexes[$target->user_id] = [];
+				}
+				$userIndexes[$target->user_id][] = $index++;
 			}
 
 			$users = $this->user_model->get_many_by(['id' => $userIds]);
@@ -713,8 +719,10 @@ class Target extends MY_Admin_Controller {
 			$numTargets = count($targets);
 			$userList = array_fill(0, $numTargets, null);
 			foreach ($users as $user) {
-				$index = $userIndexes[$user->id];
-				$userList[$index] = $user;
+				$indexes = $userIndexes[$user->id];
+				foreach ($indexes as $index) {
+					$userList[$index] = $user;
+				}
 			}
 
 			$this->load->library('output/loan/target_output', ['data' => $targets]);
@@ -765,7 +773,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['list'] 				= $waiting_list;
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['loan_list'] 		= $this->target_model->loan_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
 		$page_data['sub_status_list'] 		= $this->target_model->sub_list;
@@ -950,7 +959,7 @@ class Target extends MY_Admin_Controller {
 				}
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				$list[$key]->amortization_table = [
-					'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
+					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
@@ -974,8 +983,9 @@ class Target extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['school_list'] 		= $school_list;
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/target/targets_repayment',$page_data);
 		$this->load->view('admin/_footer');
@@ -1246,7 +1256,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['list'] 				= $list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['list'] 				= $list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['school_list'] 		= $school_list;
 
@@ -1299,7 +1310,7 @@ class Target extends MY_Admin_Controller {
 				}
 				$amortization_table = $this->target_lib->get_amortization_table($value);
 				$list[$key]->amortization_table = [
-					'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
+					'total_payment_m'		=> isset($amortization_table['list'][1]['total_payment']),
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
@@ -1319,7 +1330,8 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
-		$page_data['list'] 				= $list;
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['sub_list'] 			= $this->target_model->sub_list;
@@ -1372,6 +1384,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
