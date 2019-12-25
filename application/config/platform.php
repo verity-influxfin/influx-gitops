@@ -25,10 +25,13 @@ $config['admin_menu'] = [
     ],
     'Risk' => [
         'parent_name' => '風控專區',
-        'index' => '風控審核',
+        'index' => '風控審核(全)',
+        'index?investor=0&company=0' => '自然人借款端審核',
+        'index?investor=0&company=1' => '法人借款端審核',
+        'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
-        'loaned_wait_push' => '貸後催收',
-        'loaned_wait_push?slist=1' => '貸後已催收列表',
+        //'loaned_wait_push' => '貸後催收',
+        //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
     'Passbook' => [
         '../Certification/user_bankaccount_list?verify=2' => '金融帳號認證',
@@ -39,9 +42,11 @@ $config['admin_menu'] = [
         'unknown_funds' => '不明來源退款',
     ],
     'Judicialperson' => [
-        'parent_name' => '法人帳號管理',
-        'index?status=0' => '法人管理列表',
-        'cooperation?cooperation=2' => '經銷商管理列表',
+        'parent_name' => '法人管理',
+        'index?status=0' => '法人申請列表',
+        'index?status=1' => '法人管理列表',
+        'cooperation?cooperation=2' => '經銷商申請列表',
+        'cooperation?cooperation=1' => '經銷商管理列表',
     ],
     'Certification' => [
         'parent_name' => '認證管理',
@@ -106,6 +111,7 @@ $config['instalment'] = [
     12 => '12期',
     18 => '18期',
     24 => '24期',
+    180 => '180期',
 ];
 
 //公司型態
@@ -416,10 +422,10 @@ $config['sub_product_list'] = [
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-                    'vin' => '車身號碼',
-                    'factory_time' => '出廠時間',
-                    'product_description' => '產品備註)',
-                    'car_history_image' => '車輛歷史報告(Carfax/Autocheck)',
+                    'vin' => ['String','車身號碼'],
+                    'factory_time' => ['Timestamp','出廠時間'],
+                    'product_description' => ['String','產品備註)'],
+                    'car_history_image' => ['Picture','車輛歷史報告(Carfax/Autocheck)','6'],
                 ],
                 'status' => 1,
                 'dealer' => 2,
@@ -446,19 +452,19 @@ $config['sub_product_list'] = [
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-                    'purchase_time' => '購車時間',
-                    'vin' => '車身號碼',
-                    'factory_time' => '出廠時間',
-                    'product_description' => '產品備註)',
-                    'car_title_image' => '車輛所有權狀(title)',
-                    'car_import_proof_image' => '海關進口證明/進口報單',
-                    'car_artc_image' => '交通部核發安審合格證明、環保驗車證明',
-                    'car_others_image' => '協力廠商鑑定報告',
-                    'car_photo_front_image' => '車輛外觀照片-前側',
-                    'car_photo_back_image' => '車輛外觀照片-後側',
-                    'car_photo_all_image' => '車輛外觀照片-全車',
-                    'car_photo_date_image' => '車輛外觀照片-出廠日期',
-                    'car_photo_mileage_image' => '車輛外觀照片-里程',
+                    'purchase_time' => ['Timestamp','購車時間'],
+                    'vin' => ['String','車身號碼'],
+                    'factory_time' => ['Timestamp','出廠時間'],
+                    'product_description' => ['String','產品備註)'],
+                    'car_title_image' => ['Picture','車輛所有權狀(title)','6'],
+                    'car_import_proof_image' => ['Picture','海關進口證明/進口報單','6'],
+                    'car_artc_image' => ['Picture','交通部核發安審合格證明、環保驗車證明','6'],
+                    'car_others_image' => ['Picture','協力廠商鑑定報告','6'],
+                    'car_photo_front_image' => ['Picture','車輛外觀照片-前側','6'],
+                    'car_photo_back_image' => ['Picture','車輛外觀照片-後側','6'],
+                    'car_photo_all_image' => ['Picture','車輛外觀照片-全車','6'],
+                    'car_photo_date_image' => ['Picture','車輛外觀照片-出廠日期','6'],
+                    'car_photo_mileage_image' => ['Picture','車輛外觀照片-里程','6'],
                 ],
                 'status' => 1,
                 'dealer' => 2,
@@ -585,12 +591,13 @@ $config['certifications'] = [
     9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => 10, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
 
-    1000 => ['id' => 1000, 'alias' => 'businesstax', 'name' => '403/401稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1001 => ['id' => 1001, 'alias' => 'balancesheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1002 => ['id' => 1002, 'alias' => 'incomestatement', 'name' => '損益表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1003 => ['id' => 1003, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1004 => ['id' => 1004, 'alias' => 'passbookcashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1000 => ['id' => 1000, 'alias' => 'businessTax', 'name' => '403/401稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1001 => ['id' => 1001, 'alias' => 'balanceSheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1002 => ['id' => 1002, 'alias' => 'incomeStatement', 'name' => '損益表認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1003 => ['id' => 1003, 'alias' => 'investigationJudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1004 => ['id' => 1004, 'alias' => 'passbookCashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
     1005 => ['id' => 1005, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '', 'optional' => []],
+    1006 => ['id' => 1006, 'alias' => 'cerCreditJudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
 
     2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
@@ -666,6 +673,7 @@ $config['selling_type'] = [
     0 => '手機',
     1 => '遊學',
     2 => '外匯車',
+    127 => 'null',
     999 => '其它',
 ];
 //登記機關,用於商業統編查詢++
@@ -745,5 +753,15 @@ $config['certifications_msg'] = [
     11 => [
         '系統無法判讀為本人，煩請您重新拍攝',
         '光線不足無法判讀，煩請您重新拍攝',
-    ]
+    ],
+
+    1000 => [],
+    1001 => [],
+    1002 => [],
+    1003 => [],
+    1004 => [],
+    1005 => [],
+    1006 => [],
+
+    2000 => []
 ];
