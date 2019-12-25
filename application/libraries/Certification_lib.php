@@ -756,13 +756,129 @@ class Certification_lib{
 		return false;
 	}
 
-    public function get_status($user_id,$investor=0,$company=0,$set_fail=false){
+    private function businesstax_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function balancesheet_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function incomestatement_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function investigationjudicial_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function passbookcashflow_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function interview_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    public function cerCredit_judicial_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+    private function salesdetail_success($info){
+        if($info){
+            $data 		= array(
+                //'debit_card_status'			=> 1,
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
+
+
+    public function get_status($user_id,$investor=0,$company=0,$set_fail=false,$target=false){
 		if($user_id){
 			$certification = array();
+			$company_source_user_id = false;
 			if($company){
                 $total = 0;
-                $allows = ['debitcard','investigation','businesstax'];
+                $allows = ['businesstax'];
                 $company = $this->get_company_type($user_id);
+                $company_source_user_id = $company->user_id;
                 //FEV
                 $company->selling_type == 2 ? $allows[] = 'salesdetail' : '';
 
@@ -790,7 +906,7 @@ class Certification_lib{
                 if($self_targets) {
                     $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
                 }
-                $total >= 500000?$allows = array_merge($allows,['balancesheet','incomestatement','investigationjudicial','passbookcashflow']):'';
+                $total >= 500000?$allows = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow']):'';
                 if($total >= 1000000 && $company->selling_type != 2){
                     $allows[] = 'interview';
                 }
@@ -806,13 +922,23 @@ class Certification_lib{
 						$certification[$key] = $value;
 					}
 				}
-			}else{
-				$certification = $this->certification;
-			}
+			}else if($target){
+                foreach($this->certification as $key => $value) {
+                    if ($target->product_id >= 1000 && ($key > 10 || $key == 9) || $target->product_id < 1000 && $key <= 10) {
+                        $certification[$key] = $value;
+                    }
+                    else{
+                        unset($certification[$key]);
+                    }
+                }
+            }else{
+                $certification = $this->certification;
+            }
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-				$user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
+			    $ruser_id = $key == 9 && $company_source_user_id?$company_source_user_id:$user_id;
+				$user_certification = $this->get_certification_info($ruser_id,$key,$investor,$set_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
@@ -841,9 +967,10 @@ class Certification_lib{
         return false;
     }
 
-    public function get_last_status($user_id,$investor=0,$company=0){
+    public function get_last_status($user_id,$investor=0,$company=0,$target=false){
 		if($user_id){
 			$certification = [];
+            $company_source_user_id = false;
 			if($company){
 				foreach($this->certification as $key => $value){
 					if(in_array($value['alias'],['debitcard','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail'])){
@@ -856,13 +983,27 @@ class Certification_lib{
 						$certification[$key] = $value;
 					}
 				}
-			}else{
+			}else if($target){
+			    if($target->product_id >= 1000){
+                    $company = $this->get_company_type($user_id);
+                    $company_source_user_id = $company->user_id;
+                }
+                foreach($this->certification as $key => $value) {
+                    if ($target->product_id >= 1000 && ($key > 10 || $key == 9) || $target->product_id < 1000 && $key <= 10) {
+                        $certification[$key] = $value;
+                    }
+                    else{
+                        unset($certification[$key]);
+                    }
+                }
+            }else{
 				$certification = $this->certification;
 			}
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-				$user_certification = $this->get_last_certification_info($user_id,$key,$investor);
+                $ruser_id = $key == 9 && $company_source_user_id?$company_source_user_id:$user_id;
+                $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
 				if($user_certification){
 					$value['user_status'] 		= intval($user_certification->status);
                     $value['certification_id'] 	= intval($user_certification->id);
