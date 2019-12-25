@@ -120,12 +120,12 @@
 										if(isset($list) && !empty($list)){
                                             $subloan_list = $this->config->item('subloan_list');
 											$count = 0;
-											foreach($list as $key => $value){
-												$count++;
+                                    foreach($list as $key => $value){
+                                        $count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:'' ?></td>
                                             <td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
@@ -154,7 +154,7 @@
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
-										}}
+									}}
 									?>
                                     </tbody>
                                 </table>
