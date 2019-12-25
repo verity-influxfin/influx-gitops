@@ -13,7 +13,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">經銷商帳號申請</h1>
+            <h1 class="page-header">經銷商申請資料</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -36,12 +36,8 @@
                             </div>
                             <div class="form-group">
                                 <label>統一編號</label>
-                                <p class="form-control-static"><?= isset($user_info->id_number) ? $user_info->id_number : "" ?></p>
+                                <p class="form-control-static"><?= isset($data->tax_id) ? $data->tax_id : "" ?></p>
                             </div>
-                            <!--<div class="form-group">
-									<label>IP列表</label><br>
-									<textarea style="width:100%" class="form-control-static"><?= isset($data->cooperation_server_ip) ? $data->cooperation_server_ip : "" ?></textarea>
-								</div>-->
                             <div class="form-group">
                                 <label>備註</label>
                                 <p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>

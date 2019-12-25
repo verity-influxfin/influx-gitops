@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">法人帳號 - 申請經銷商</h1>
+                    <h1 class="page-header">法人 - 經銷商<? echo $status_list==1?'管理':'申請';?>列表</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -20,7 +20,7 @@
 						}
 					}
 				}
-				
+
 				function failed(id){
 					if(confirm("確認審核失敗？")){
 						if(id){
@@ -34,6 +34,12 @@
 							});
 						}
 					}
+				}
+                function build(id){
+					if(id){
+					    cut = id.split('|');
+                        top.location = '../certification/user_certification_edit?cid=1006&user_id='+cut[0]+'&selltype='+cut[1];
+                    }
 				}
 
 				function showChang(){
@@ -51,8 +57,8 @@
 							<table>
 								<tr>
 									<td>法人會員ID：</td>
-									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
-									<td>統一編號：</td>
+									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>
+									<td style="padding-left: 15px;">統一編號：</td>
 									<td><input type="text" value="<?=isset($_GET['tax_id'])&&$_GET['tax_id']!=""?$_GET['tax_id']:""?>" id="tax_id" /></td>
 									<td></td>
 								</tr>
@@ -79,39 +85,53 @@
                                 <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>統一編號</th>
-											<th>公司名稱</th>
-											<th>負責人</th>
+                                            <th>法人 User ID</th>
                                             <th>申請人 ID</th>
+                                            <th>銷售類別</th>
+                                            <th>統一編號</th>
+                                            <th>公司名稱</th>
+                                            <th>負責人</th>
+                                            <th style="width: 93px;">信用評估表</th>
                                             <th>備註</th>
                                             <th>狀態</th>
-											<th>申請日期</th>
-                                            <th>Detail</th>
+                                            <th>申請日期</th>
+                                            <th>管理</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-									<?php 
+									<?php
 										if(isset($list) && !empty($list)){
 											$count = 0;
 											foreach($list as $key => $value){
 												$count++;
+                                                $sellingType = isset($value->selling_type)?'|'.$value->selling_type:"";
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list">
-											<td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
-											<td><?=isset($value->company)?$value->company:"" ?></td>
-                                            <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
+                                            <td><?=isset($value->company_user_id)&&$value->company_user_id!=0?$value->company_user_id:"" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
-											<td><?=isset($value->remark)?$value->remark:"" ?></td>
+                                            <td><?=isset($value->selling_type)?$selling_type[$value->selling_type]:"" ?></td>
+                                            <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
+                                            <td><?=isset($value->company)?$value->company:"" ?></td>
+                                            <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
+                                            <td><? $company_user_id = isset($value->company_user_id)?$value->company_user_id:"";
+                                                if(!$value->cerCreditJudicial || $value->cerCreditJudicial->status == 0){
+                                                    echo '<button class="btn btn-danger" style="width: 80px;" onclick="build(\''.$company_user_id.$sellingType.'\')">填寫</button>';
+                                                }
+                                                else{
+                                                    echo '<button class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?from=risk&id=').'">檢視</button>';
+                                                }
+                                                ?></td>
+                                            <td><?=isset($value->remark)?$value->remark:"" ?></td>
                                             <td><?=isset($cooperation_list[$value->cooperation])?$cooperation_list[$value->cooperation]:"" ?>
-											<? if($value->cooperation==2){ ?>
-												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
-												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
-											<? } ?>
-											</td>
+                                                <? if($value->cooperation==2){ ?>
+                                                    <button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
+                                                    <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
+                                                <? } ?>
+                                            </td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('judicialperson/cooperation_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
-                                        </tr>                                        
-									<?php 
+                                            <td><a href="<?=admin_url('judicialperson/cooperation_edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+                                        </tr>
+									<?php
 										}}
 									?>
                                     </tbody>
