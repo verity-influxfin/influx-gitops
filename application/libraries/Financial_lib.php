@@ -170,6 +170,29 @@ class Financial_lib{
 		);
 		return $schedule;
 	}
+
+	private function amortization_schedule_3()
+    {
+        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting');
+        $inputSetting = $this->CI->Foreign_exchange_car_amortization_schedule_setting;
+        $inputSetting->setLength(183);
+        $inputSetting->setInterests(0.15);
+        $inputSetting->setPlatformProportion(0.03);
+        $inputSetting->setShareRate(0.02);
+        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_loan', [], "loan1");
+        $loanStage1 = $this->CI->loan1;
+        $loanStage1->setStartAt(1);
+        $loanStage1->setAmount(706353);
+        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_loan', [], "loan2");
+        $loanStage2 = $this->CI->loan2;
+        $loanStage2->setStartAt(45);
+        $loanStage2->setAmount(472204);
+        $inputs = [$loanStage1, $loanStage2];
+        $this->CI->load->library('entity/amortization/foreign_car_lib');
+        $table = $this->CI->foreign_car_lib->amortization_schedule($inputs, $inputSetting);
+        $inputs = [$loanStage1, $loanStage2];
+        $table = $this->CI->foreign_car_lib->amortization_schedule($inputs, $inputSetting, $table);
+    }
 	
 	public function leap_year($date='',$instalment=0){
 		if($date && $instalment){
