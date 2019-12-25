@@ -1760,7 +1760,12 @@ class Product extends REST_Controller {
                 $targetData = json_decode($target->target_data);
                 foreach ($targetData as $key => $value) {
                     if(array_key_exists($key,$product['targetData'])  && !empty($input[$key])){
-                        $targetData->$key = $input[$key];
+                        if($product['targetData'][$key][0] == 'Picture'){
+                            $targetData->$key = $this->get_pic_url($user_id,$key,$input[$key],$product['targetData'][$key][2]);
+                        }
+                        else{
+                            $targetData->$key = $input[$key];
+                        }
                     }
                 }
                 $targetData = json_encode($targetData);
@@ -2138,6 +2143,28 @@ class Product extends REST_Controller {
                 $target_data = array_merge($target_data, [$key => '']);
             }
             return $target_data;
+        }
+    }
+
+    private function get_pic_url($user_id, $key, $image_ids, $limit){
+        $image_ids = explode(',',$image_ids);
+        if(count($image_ids) > $limit){
+            $image_ids = array_slice($image_ids,0,$limit);
+        }
+        $this->load->model('log/log_image_model');
+        $list = $this->log_image_model->get_many_by([
+            'id'		=> $image_ids,
+            'user_id'	=> $user_id,
+        ]);
+
+        if($list && count($list) == count($image_ids)){
+            $content = [];
+            foreach($list as $k => $v){
+                $content[] = $v->url;
+            }
+            return $content;
+        }else{
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
         }
     }
 }
