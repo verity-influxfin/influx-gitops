@@ -199,6 +199,7 @@ class Target extends MY_Admin_Controller {
             if ($id) {
                 $info = $this->target_model->get($id);
                 if ($info) {
+                    $this->load->library('Contract_lib');
                     $amortization_table = [];
                     $investments = [];
                     $investments_amortization_table = [];
@@ -209,6 +210,7 @@ class Target extends MY_Admin_Controller {
                         $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => array(3, 10)));
                         if ($investments) {
                             foreach ($investments as $key => $value) {
+                                $investments[$key]->contract = $this->contract_lib->get_contract($value->contract_id)['content'];
                                 $investments[$key]->user_info = $this->user_model->get($value->user_id);
                                 $investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
                                     'user_id' => $value->user_id,
@@ -222,6 +224,7 @@ class Target extends MY_Admin_Controller {
                         $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => 2));
                         if ($investments) {
                             foreach ($investments as $key => $value) {
+                                $investments[$key]->contract = $this->contract_lib->get_contract($value->contract_id)['content'];
                                 $investments[$key]->user_info = $this->user_model->get($value->user_id);
                                 $investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
                                     'user_id' => $value->user_id,
