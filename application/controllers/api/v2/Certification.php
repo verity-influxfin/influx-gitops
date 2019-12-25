@@ -32,7 +32,6 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
-			//暫不開放法人
 			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
@@ -237,22 +236,22 @@ class Certification extends REST_Controller {
 						$fields 	= ['tax_id','company','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
 					case 1000:
-						$fields 	= ['business_tax_image'];
+						$fields 	= ['businesstax'];
 						break;
 					case 1001:
-						$fields 	= ['balance_sheet_image'];
+						$fields 	= ['balancesheet'];
 						break;
 					case 1002:
-						$fields 	= ['income_statement_image'];
+						$fields 	= ['incomeStatement'];
 						break;
 					case 1003:
-						$fields 	= ['legal_person_mq_image'];
+						$fields 	= ['investigationjudicial'];
 						break;
 					case 1004:
-						$fields 	= ['passbook_image'];
+						$fields 	= ['passbookcashflow'];
 						break;
 					case 2000:
-						$fields 	= ['car_sales_image'];
+						$fields 	= ['salesdetail'];
 						break;
 					default:
 						break;
@@ -574,7 +573,7 @@ class Certification extends REST_Controller {
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$input[$field]);
-                if(count($image_ids)>15){
+                if(count($image_ids)>5){
                     $image_ids = array_slice($image_ids,0,5);
                 }
                 $list = $this->log_image_model->get_many_by([
@@ -2091,8 +2090,58 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
-	private function was_verify($certification_id=0){
-		$user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
+    public function cerjudicial_post()
+    {
+        $certification_id 	= 1006;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input = $this->input->post(NULL, TRUE);
+            $user_id = $input['id'];
+            $selltype = $input['selltype'];
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id,$user_id);
+
+            $this->config->load('credit');
+            $creditJudicial = $this->config->item('creditJudicial');
+            if(isset($creditJudicial[$selltype])){
+                foreach ($creditJudicial[$selltype] as $key => $value) {
+                    if($value['selctType'] == 'select' && isset($input[$key])){
+                        $content[$key] = $input[$key];
+                    }elseif ($value['selctType'] == 'radio'){
+                        foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
+                            if(isset($input[$descrtionValue[0]])){
+                                $content[$descrtionValue[0]] = $input[$descrtionValue[0]];
+                            }
+                            else{
+                                $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                            }
+                        }
+                    }
+                }
+                $param		= [
+                    'user_id'			=> $user_id,
+                    'certification_id'	=> $certification_id,
+                    'investor'			=> 0,
+                    'content'			=> json_encode($content),
+                ];
+                $insert = $this->user_certification_model->insert($param);
+                if($insert){
+                    $this->response(['result' => 'SUCCESS']);
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+                }
+            }
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+	private function was_verify($certification_id=0,$user_id=0){
+        $user_id = $user_id?$user_id:$this->user_info->id;
+        $investor = isset($this->user_info->investor)?$this->user_info->investor:0;
+		$user_certification	= $this->certification_lib->get_certification_info($user_id,$certification_id,$investor);
 		if($user_certification){
 			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
 		}
