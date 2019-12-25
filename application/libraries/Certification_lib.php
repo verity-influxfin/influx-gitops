@@ -438,7 +438,7 @@ class Certification_lib{
 		}
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
-			: null;
+			: $url;
 		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
 			$this->CI->load->library('Joint_credit_lib');
 			$return_type=json_decode($info->content)->return_type;
