@@ -204,12 +204,15 @@ class Judicialperson extends MY_Admin_Controller {
 				foreach($list as $key => $value){
 					$user_info 	= $this->user_model->get($value->user_id);
 					$list[$key]->user_name = $user_info?$user_info->name:"";
+					$list[$key]->cerCreditJudicial = $this->get_cerCreditJudicial($value->company_user_id);
 				}
 			}
 		}
 
+		$page_data['selling_type'] 		= $this->config->item('selling_type');
 		$page_data['list'] 				= $list;
 		$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
+		$page_data['status_list'] 		= isset($input['cooperation'])?$input['cooperation']:2;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -300,6 +303,11 @@ class Judicialperson extends MY_Admin_Controller {
 		}else{
 			echo '查無此ID';die();
 		}
+	}
+
+	private  function get_cerCreditJudicial($user_id){
+		$this->load->library('certification_lib');
+		return $this->certification_lib->get_certification_info($user_id,1006,0);
 	}
 }
 ?>

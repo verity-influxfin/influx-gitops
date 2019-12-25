@@ -69,7 +69,7 @@ class Certification extends MY_Admin_Controller {
 		unset($page_data['certification_list'][3]);
 		$page_data['status_list'] 			= $this->user_certification_model->status_list;
 		$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
-		$this->load->view('admin/_header');
+		$this->load->view('admin/_header') ;
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/user_certification_list',$page_data);
 		$this->load->view('admin/_footer');
@@ -82,6 +82,7 @@ class Certification extends MY_Admin_Controller {
 		$get 		= $this->input->get(NULL, TRUE);
 		if(empty($post)){
 			$id 	= isset($get['id'])?intval($get['id']):0;
+			$cid 	= isset($get['cid'])?intval($get['cid']):0;
 			$from 	= isset($get['from'])?$get['from']:'';
 			if(!empty($from)){
 				$back_url = admin_url($from);
@@ -89,7 +90,7 @@ class Certification extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_certification_model->get($id);
 				if($info){
-					$certification 						= $this->certification[$info->certification_id];
+					$certification = $this->certification[$info->certification_id];
 					$page_data['certification_list'] 	= $this->certification_name_list;
 					$page_data['data'] 					= $info;
 					$page_data['content'] 				= json_decode($info->content,true);
@@ -152,6 +153,25 @@ class Certification extends MY_Admin_Controller {
 					$this->load->view('admin/_footer');
 				}else{
 					alert('ERROR , id is not exist',$back_url);
+				}
+			}else if($cid == 1006){
+				$selltype = $get['selltype'];
+				$this->config->load('credit');
+				$creditJudicial = $this->config->item('creditJudicial');
+				if(isset($creditJudicial[$selltype])){
+					$certification = $this->certification[$cid];
+					$page_data['user_id'] = $get['user_id'];
+					$page_data['selltype'] = $get['selltype'];
+					$page_data['selling_type'] = $this->config->item('selling_type')[$selltype];
+					$page_data['cid'] = $cid;
+					$page_data['creditJudicialConfig'] = $creditJudicial[$selltype];
+					$page_data['certification_list'] = $this->certification_name_list;
+					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
+
+					$this->load->view('admin/_header');
+					$this->load->view('admin/_title',$this->menu);
+					$this->load->view('admin/certification/'.$certification['alias'],$page_data);
+					$this->load->view('admin/_footer');
 				}
 			}else{
 				alert('ERROR , id is not exist',$back_url);
@@ -304,6 +324,10 @@ class Certification extends MY_Admin_Controller {
 				}else{
 					alert('ERROR , id is not exist',$back_url);
 				}
+			}elseif (!empty($post['cid'])){
+				echo 123;
+				//base_url('/api/v2/certification/cerjudicial')
+				return false;
 			}
 			else{
 				alert('ERROR , id is not exist',$back_url);
