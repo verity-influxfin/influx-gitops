@@ -2322,6 +2322,748 @@ define({
             ]
         },
         {
+            "type": "post",
+            "url": "/V2/certification/businesstax",
+            "title": "認證 403/401稅務資料(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationBusinessTax",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "business_tax_image",
+                            "description": "<p>403/401表格照  ( 圖片IDs 以逗號隔開，最多3個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"businesstax\",\n" +
+                            "        \"certification_id\": 1000,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/businesstax"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/V2/certification/balancesheet",
+            "title": "認證 資產負債表(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationBalanceSheet",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "balance_sheet_image",
+                            "description": "<p>財稅簽資料表(資產負債表)  ( 圖片IDs 以逗號隔開，最多6個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"balancesheet\",\n" +
+                            "        \"certification_id\": 1001,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/balancesheet"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/V2/certification/incomestatement",
+            "title": "認證 損益表(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationIncomeStatement",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "income_statement_image",
+                            "description": "<p>財稅簽資料表(損益表)  ( 圖片IDs 以逗號隔開，最多6個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"incomestatement\",\n" +
+                            "        \"certification_id\": 1002,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/incomestatement"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/V2/certification/investigationjudicial",
+            "title": "認證 聯合徵信(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationInvestigationJudicial",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "legal_person_mq_image",
+                            "description": "<p>法人聯徵資料  ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"investigationjudicial\",\n" +
+                            "        \"certification_id\": 1003,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/investigationjudicial"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/post/certification/passbookcashflow",
+            "title": "認證 金流證明(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationPassbookCashFlow",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "passbook_image",
+                            "description": "<p>金流證明 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"passbookcashflow\",\n" +
+                            "        \"certification_id\": 1004,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/passbookcashflow"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/V2/certification/salesdetail",
+            "title": "認證 庫存車銷售檔(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationSalesDetail",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "car_sales_image",
+                            "description": "<p>庫存車銷售檔 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"salesdetail\",\n" +
+                            "        \"certification_id\": 2000,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/salesdetail"
+                }
+            ]
+        },
+        {
             "type": "get",
             "url": "/v2/certification/:alias",
             "title": "認證 取得認證資料",
@@ -11220,31 +11962,114 @@ define({
                 "fields": {
                     "Success 200": [
                         {
-                            "result": "SUCCESS",
-                            "data": {
-                                "list": {
-                                    "purchase_time": true,
-                                    "vin": true,
-                                    "factory_time": true,
-                                    "product_description": true,
-                                    "car_title_image": false,
-                                    "car_import_proof_image": false,
-                                    "car_artc_image": true,
-                                    "car_others_image": true,
-                                    "car_photo_front_image": false,
-                                    "car_photo_back_image": false,
-                                    "car_photo_all_image": false,
-                                    "car_photo_date_image": false,
-                                    "car_photo_mileage_image": true
-                                }
-                            }
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },{
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "purchase_time",
+                            "description": "<p>購車時間</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "vin",
+                            "description": "<p>車身號碼</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "factory_time",
+                            "description": "<p>出廠時間</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "product_description",
+                            "description": "<p>產品備註</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_title_image",
+                            "description": "<p>車輛所有權狀(title)</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_import_proof_image",
+                            "description": "<p>海關進口證明/進口報單</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_artc_image",
+                            "description": "<p>交通部核發安審合格證明、環保驗車證明</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_others_image",
+                            "description": "<p>協力廠商鑑定報告</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_photo_front_image",
+                            "description": "<p>車輛外觀照片-前側</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_photo_back_image",
+                            "description": "<p>車輛外觀照片-後側</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_photo_all_image",
+                            "description": "<p>車輛外觀照片-全車</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_photo_date_image",
+                            "description": "<p>車輛外觀照片-出廠日期</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "car_photo_mileage_image",
+                            "description": "<p>車輛外觀照片-里程</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": {\n" +
+                            "            \"purchase_time\": true,\n" +
+                            "            \"vin\": true,\n" +
+                            "            \"factory_time\": true,\n" +
+                            "            \"product_description\": true,\n" +
+                            "            \"car_title_image\": false,\n" +
+                            "            \"car_import_proof_image\": false,\n" +
+                            "            \"car_artc_image\": true,\n" +
+                            "            \"car_others_image\": true,\n" +
+                            "            \"car_photo_front_image\": false,\n" +
+                            "            \"car_photo_back_image\": false,\n" +
+                            "            \"car_photo_all_image\": false,\n" +
+                            "            \"car_photo_date_image\": false,\n" +
+                            "            \"car_photo_mileage_image\": true\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -11349,93 +12174,92 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>Targets ID</p>"
-                        },
-                        {
-                            "group": "Parameter",
+                        },{
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "purchase_time",
                             "description": "<p>購車時間</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "vin",
                             "description": "<p>車身號碼</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "factory_time",
                             "description": "<p>出廠時間</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "product_description",
                             "description": "<p>產品備註</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_title_image",
                             "description": "<p>車輛所有權狀(title)</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_import_proof_image",
                             "description": "<p>海關進口證明/進口報單</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_artc_image",
                             "description": "<p>交通部核發安審合格證明、環保驗車證明</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_others_image",
                             "description": "<p>協力廠商鑑定報告</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_photo_front_image",
                             "description": "<p>車輛外觀照片-前側</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_photo_back_image",
                             "description": "<p>車輛外觀照片-後側</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_photo_all_image",
                             "description": "<p>車輛外觀照片-全車</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_photo_date_image",
                             "description": "<p>車輛外觀照片-出廠日期</p>"
                         },
                         {
-                            "group": "Parameter",
+                            "group": "",
                             "type": "String",
                             "optional": true,
                             "field": "car_photo_mileage_image",
@@ -11448,14 +12272,20 @@ define({
                 "fields": {
                     "Success 200": [
                         {
-                            "result": "SUCCESS"
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
                         "type": "Object"
                     }
                 ]
@@ -11560,6 +12390,96 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>產品ID</p>"
+                        },{
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "purchase_time",
+                            "description": "<p>購車時間</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "vin",
+                            "description": "<p>車身號碼</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "factory_time",
+                            "description": "<p>出廠時間</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "product_description",
+                            "description": "<p>產品備註</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_title_image",
+                            "description": "<p>車輛所有權狀(title)</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_import_proof_image",
+                            "description": "<p>海關進口證明/進口報單</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_artc_image",
+                            "description": "<p>交通部核發安審合格證明、環保驗車證明</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_others_image",
+                            "description": "<p>協力廠商鑑定報告</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_front_image",
+                            "description": "<p>車輛外觀照片-前側</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_back_image",
+                            "description": "<p>車輛外觀照片-後側</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_all_image",
+                            "description": "<p>車輛外觀照片-全車</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_date_image",
+                            "description": "<p>車輛外觀照片-出廠日期</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_photo_mileage_image",
+                            "description": "<p>車輛外觀照片-里程</p>"
                         }
                     ]
                 }

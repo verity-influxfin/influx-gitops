@@ -21,6 +21,9 @@ class Target_model extends MY_Model
         22 =>	"待驗證 (分期)",
         23 =>	"待審批 (分期)",
         24 =>	"待債轉上架 (分期)",
+
+        30 =>	"待核可 (外匯車)",
+        31 =>	"待簽約 (外匯車)",
 	);
 	public $sub_list   = array(
 		0 =>	"無",
