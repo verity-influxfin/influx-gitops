@@ -7,7 +7,25 @@
             $('#fail_div').hide();
         }
     }
-
+    function build(id){
+        if(id){
+            cut = id.split('|');
+            top.location = '../certification/user_certification_edit?cid=1006&user_id='+cut[0]+'&selltype='+cut[1];
+        }
+    }
+    function create(id){
+        if(id){
+            $.ajax({
+                url: '../judicialperson/cooperation_edit',
+                data: 'id='+id+'&create_taishin=1',
+                type: 'POST',
+                success: function (e) {
+                    var res = JSON.parse(e);
+                    alert(res.msg);
+                }
+            });
+        }
+    }
 </script>
 
 <div id="page-wrapper">
@@ -25,18 +43,49 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
+                                <label>法人 User ID</label>
+                                <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->company_user_id) ?>">
+                                    <p><?= isset($data->company_user_id) ? $data->company_user_id : "" ?></p>
+                                </a>
+                            </div>
+                            <div class="form-group">
                                 <label>申請人 ID</label>
                                 <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>
                             <div class="form-group">
-                                <label>申請人</label>
+                                <label>申請人/負責人</label>
                                 <p class="form-control-static"><?= isset($user_info->name) ? $user_info->name : "" ?></p>
                             </div>
                             <div class="form-group">
+                                <label>銷售類別</label>
+                                <p class="form-control-static"><?=isset($data->selling_type)?$selling_type[$data->selling_type]:"" ?></p>
+                                <?
+                                if(isset($data->no_taishin)){
+                                    echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
+                                }
+                                ?>
+                            </div>
+                            <div class="form-group">
+                                <label>公司名稱</label>
+                                <p class="form-control-static"><?= isset($data->company) ? $data->company : "" ?></p>
+                            </div>
+                             <div class="form-group">
                                 <label>統一編號</label>
                                 <p class="form-control-static"><?= isset($data->tax_id) ? $data->tax_id : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>信用評估表</label><br />
+                                <? $company_user_id = isset($data->company_user_id)?$data->company_user_id:"";
+                                $sellingType = isset($data->selling_type)?'|'.$data->selling_type:"";
+                                if(!$data->cerCreditJudicial || $data->cerCreditJudicial->status == 0){
+                                    echo '<button class="btn btn-danger" style="width: 80px;" onclick="build(\''.$company_user_id.$sellingType.'\')">填寫</button>';
+                                }
+                                else{
+                                    echo '<a class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?from=risk&id=').$data->cerCreditJudicial->id.'">檢閱</a>';
+                                }
+                                ?>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>

@@ -765,3 +765,5 @@ $config['certifications_msg'] = [
 
     2000 => []
 ];
+
+$config['use_taishin_selling_type'] = [2];

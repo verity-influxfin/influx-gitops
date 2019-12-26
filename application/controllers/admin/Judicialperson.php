@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Judicialperson extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','verify_success','verify_failed');
+	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed');
 	
 	public function __construct() {
 		parent::__construct();
@@ -203,6 +203,7 @@ class Judicialperson extends MY_Admin_Controller {
 			if($list){
 				foreach($list as $key => $value){
 					$user_info 	= $this->user_model->get($value->user_id);
+					$list[$key]->no_taishin = $this->get_taishinAccount($value);
 					$list[$key]->user_name = $user_info?$user_info->name:"";
 					$list[$key]->cerCreditJudicial = $this->get_cerCreditJudicial($value->company_user_id);
 				}
@@ -229,12 +230,15 @@ class Judicialperson extends MY_Admin_Controller {
             if($id){
                 $info = $this->judicial_person_model->get($id);
                 if($info){
-                    $user_info 					= $this->user_model->get($info->user_id);
+					$info->no_taishin = $this->get_taishinAccount($info);
+                    $user_info = $this->user_model->get($info->user_id);
+					$info->cerCreditJudicial = $this->get_cerCreditJudicial($info->company_user_id);
                     $this->load->library('Gcis_lib');
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['user_info'] 	= $user_info;
 					$page_data['data'] 			= $info;
+					$page_data['selling_type'] 		= $this->config->item('selling_type');
                     $page_data['content'] 		= json_decode($info->cooperation_content,true);
                     $page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
                     $page_data['company_type'] 		= $this->config->item('company_type');
@@ -252,7 +256,23 @@ class Judicialperson extends MY_Admin_Controller {
             if (!empty($post['id'])) {
                 $info = $this->judicial_person_model->get($post['id']);
                 if ($info) {
-                    if ($post['cooperation'] == '1') {
+					if($post['create_taishin'] == 1){
+						$account = $this->virtual_account_model->get_by(array(
+							'status' => 1,
+							'investor' => 0,
+							'user_id' => $info->company_user_id,
+							'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%',
+						));
+						if(!$account){
+							$data['msg'] = '建立成功';
+							alert('建立成功', 'cooperation_edit?id='.$post['id']);
+						}else{
+							$data['msg'] = '建立失敗';
+							alert('建立失敗，帳號已存在', 'cooperation_edit?id='.$post['id']);
+						}
+						print(json_encode($data));
+						return true;
+					}elseif ($post['cooperation'] == '1') {
                         $rs = $this->judicialperson_lib->cooperation_success($post['id']);
                     } else if ($post['cooperation'] == '0') {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
@@ -266,7 +286,8 @@ class Judicialperson extends MY_Admin_Controller {
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));
                 }
-            } else {
+            }
+            else {
                 alert('查無此ID', admin_url('cooperation?cooperation=2'));
             }
         }
@@ -308,6 +329,18 @@ class Judicialperson extends MY_Admin_Controller {
 	private  function get_cerCreditJudicial($user_id){
 		$this->load->library('certification_lib');
 		return $this->certification_lib->get_certification_info($user_id,1006,0);
+	}
+
+	private  function get_taishinAccount($data){
+		if(in_array($data->selling_type,$this->config->item('use_taishin_selling_type'))){
+			return  $this->virtual_account_model->get_by(array(
+				'status' => 1,
+				'investor' => 0,
+				'user_id' => $data->company_user_id,
+				'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%',
+			));
+		}
+		return false;
 	}
 }
 ?>

@@ -90,6 +90,15 @@ class Judicialperson_lib{
                             'user_id'			=> $user_id,
                             'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
                         ];
+
+                        if(in_array($judicial_person->selling_type,$this->CI->config->item('use_taishin_selling_type'))){
+                            $virtual_data[] = [
+                                'investor'			=> 0,
+                                'user_id'			=> $user_id,
+                                'virtual_account'	=> TAISHIN_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
+                            ];
+                        }
+
 						$this->CI->virtual_account_model->insert_many($virtual_data);
 						$this->CI->judicial_person_model->update($person_id, [
 							'status' 			=> 1,
@@ -129,7 +138,6 @@ class Judicialperson_lib{
 					'company_user_id'	=> $judicial_person->company_user_id,
                     'cooperation_id'	=> 'CO'.$judicial_person->tax_id,
                     'cooperation_key'	=> SHA1(COOPER_KEY.$judicial_person->tax_id.time()),
-					//'server_ip'		=> $judicial_person->cooperation_server_ip,
 					'type'		        => $judicial_person->selling_type,
                     'status'			=> 1,
 				);

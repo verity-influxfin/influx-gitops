@@ -108,7 +108,6 @@ defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司�
 defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
 defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司帳號
 defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
-defined('NOT_DEALER') OR define('NOT_DEALER' , 218); //未有該商品類型的經銷商資格
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -309,6 +308,10 @@ defined('CATHAY_BANK_NAME')     	OR define('CATHAY_BANK_NAME'		, '國泰世華�
 defined('CATHAY_BRANCH_NAME')     	OR define('CATHAY_BRANCH_NAME'		, '信義分行');
 defined('CATHAY_COMPANY_NAME')     	OR define('CATHAY_COMPANY_NAME'		, '普匯金融科技股份有限公司');
 defined('CATHAY_COMPANY_ACCOUNT')   OR define('CATHAY_COMPANY_ACCOUNT'	, '015035006602');
+
+defined('TAISHIN_VIRTUAL_CODE')     	OR define('TAISHIN_VIRTUAL_CODE'		, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
+defined('TAISHIN_CUST_ACCNO')     	OR define('TAISHIN_CUST_ACCNO'		, getenv('ENV_TAISHIN_CUST_ACCNO'));
+
 //Ezpay
 defined('EZPAY_ID')     			OR define('EZPAY_ID'				, getenv('ENV_EZPAY_ID'));
 defined('EZPAY_KEY')     			OR define('EZPAY_KEY'				, getenv('ENV_EZPAY_KEY'));
@@ -339,6 +342,8 @@ defined('S3_BUCKET')     			OR define('S3_BUCKET'				, getenv('ENV_S3_BUCKET'));
 defined('FRONT_S3_BUCKET')     		OR define('FRONT_S3_BUCKET'			, getenv('ENV_FRONT_S3_BUCKET'));
 defined('S3_SELLER_PUBLIC_BUCKET')    OR define('S3_SELLER_PUBLIC_BUCKET' , getenv('ENV_S3_SELLER_PUBLIC_BUCKET'));
 defined('AZURE_S3_BUCKET')          OR define('AZURE_S3_BUCKET'         , getenv('ENV_AZURE_S3_BUCKET'));
+defined('S3_BUCKET_MAILBOX')          OR define('S3_BUCKET_MAILBOX'         , getenv('ENV_S3_BUCKET_MAILBOX'));
+
 defined('FRONT_CDN_URL')     		OR define('FRONT_CDN_URL'			, 'https://d3imllwf4as09k.cloudfront.net/');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
@@ -368,6 +373,7 @@ defined('OrderExists')  	                OR define('OrderExists'		            , 
 defined('UnknownMethod')  	            OR define('UnknownMethod'		        , 360);//API ERROR
 defined('ItemNotFound')  	            OR define('ItemNotFound'		        , 361);//商品不存在
 defined('ApplyFail')  	                OR define('ApplyFail'		            , 362);//訂單建立失敗
+defined('CooperationAccountNotFound') OR define('CooperationAccountNotFound' , 363);//法人帳號不存在
 
 defined('COOPER_ID')   			OR define('COOPER_ID'				, getenv('ENV_COOPER_ID'));
 defined('COOPER_KEY')   			OR define('COOPER_KEY'				, getenv('ENV_COOPER_KEY'));
