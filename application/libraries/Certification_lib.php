@@ -490,6 +490,15 @@ class Certification_lib{
 		return false;
 	}
 
+	public function save_mail_url($info = array(),$url) {
+		$content=json_decode($info->content,true);
+		$content['pdf_file']=$url;
+		$this->CI->user_certification_model->update($info->id, array(
+			'content'=>json_encode($content) 
+		));
+		return true;
+	}
+	
 	public function job_verify($info = array(),$url=null) {
 		if ($info && $info->status == 0 && $info->certification_id == 10) {
 			$status = 3;

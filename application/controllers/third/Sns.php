@@ -44,10 +44,6 @@ class Sns extends REST_Controller {
 				$file_content  =  file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
 				$mailfrom = substr($file_content, strpos($file_content, 'X-Original-Sender: ') + 19, strpos($file_content, 'X-Original-Authentication-Results: mx.google.com') - strpos($file_content, 'X-Original-Sender: ') - 21);
 				$user_info = $this->user_model->order_by('created_at', 'desc')->get_by('email', $mailfrom);
-				$user_certification	= $this->certification_lib->get_certification_info($user_info->id,1,0);
-				if($user_certification==false || $user_certification->status!=1){
-					return null;
-				}
 				$subject=substr($file_content, (strpos($file_content, 'Subject: ')+19) ,100);
 				$subject=explode( "\n" , $subject);
 				$get_subject=substr($subject[0],0,-3);
@@ -82,7 +78,7 @@ class Sns extends REST_Controller {
 	private function process_mail($info, $file_content, $user_info, $s3_url,$certification_id)
 	{
 		$url = $this->attachment_pdf($file_content, $user_info, $s3_url,$certification_id);
-		($certification_id==9)? $this->certification_lib->investigation_verify($info['0'],$url):$this->certification_lib->job_verify($info['0'],$url);
+		$this->certification_lib->save_mail_url($info['0'],$url);
 	}
 
 	private function attachment_pdf($file_content,$user_info,$s3_url,$certification_id)
