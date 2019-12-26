@@ -44,6 +44,8 @@ class Contact extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_contact_model->get_by('id', $id);
 				if($info){
+					$this->load->model('user/user_model');
+					$page_data['user']			= $this->user_model->get($info->user_id);
 					$page_data['data'] 			= $info;
 					$page_data['name_list'] 	= $this->admin_model->get_name_list();
 					$page_data['status_list'] 	= $this->user_contact_model->status_list;
