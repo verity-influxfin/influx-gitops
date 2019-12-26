@@ -268,6 +268,30 @@ $config['product_list'] = [
         'hidenMainProduct' => false,
         'description' => ''
     ],
+    7 => [
+        'id' => 7,
+        'visul_id' => 'N4',
+        'type' => 1,
+        'identity' => 1,
+        'alias' => 'SUL',
+        'name' => '創業貸',
+        'loan_range_s' => 200000,
+        'loan_range_e' => 15000000,
+        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => 500,
+        'sub_product' => [4, 5],
+        'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
+        'instalment' => [3, 6, 12, 18, 24],
+        'repayment' => [1],
+        'targetData' => [],
+        'status' => 1,
+        'dealer' => 0,
+        'multi_target' => 1,
+        'hidenMainProduct' => true,
+        'description' => '可申請額度<br>200,000-1,500,000',
+    ],
     1000 => [
         'id' => 1000,
         'visul_id' => 'D1',
@@ -418,14 +442,11 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => FEV_INTEREST_RATE,
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 10000,
-                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 2000],
+                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 2000],
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-                    'vin' => ['String','車身號碼'],
-                    'factory_time' => ['Timestamp','出廠時間'],
-                    'product_description' => ['String','產品備註)'],
-                    'car_history_image' => ['Picture','車輛歷史報告(Carfax/Autocheck)','6'],
+
                 ],
                 'status' => 1,
                 'dealer' => 2,
@@ -448,23 +469,23 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => FEV_INTEREST_RATE,
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 10000,
-                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 2000],
+                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 2000],
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-                    'purchase_time' => ['Timestamp','購車時間'],
-                    'vin' => ['String','車身號碼'],
-                    'factory_time' => ['Timestamp','出廠時間'],
-                    'product_description' => ['String','產品備註)'],
-                    'car_title_image' => ['Picture','車輛所有權狀(title)','6'],
-                    'car_import_proof_image' => ['Picture','海關進口證明/進口報單','6'],
-                    'car_artc_image' => ['Picture','交通部核發安審合格證明、環保驗車證明','6'],
-                    'car_others_image' => ['Picture','協力廠商鑑定報告','6'],
-                    'car_photo_front_image' => ['Picture','車輛外觀照片-前側','6'],
-                    'car_photo_back_image' => ['Picture','車輛外觀照片-後側','6'],
-                    'car_photo_all_image' => ['Picture','車輛外觀照片-全車','6'],
-                    'car_photo_date_image' => ['Picture','車輛外觀照片-出廠日期','6'],
-                    'car_photo_mileage_image' => ['Picture','車輛外觀照片-里程','6'],
+                    'purchase_time' => ['Timestamp', '購車時間'],
+                    'vin' => ['String', '車身號碼'],
+                    'factory_time' => ['Timestamp', '出廠時間'],
+                    'product_description' => ['String', '產品備註)'],
+                    'car_title_image' => ['Picture', '車輛所有權狀(title)', '6'],
+                    'car_import_proof_image' => ['Picture', '海關進口證明/進口報單', '6'],
+                    'car_artc_image' => ['Picture', '交通部核發安審合格證明、環保驗車證明', '6'],
+                    'car_others_image' => ['Picture', '協力廠商鑑定報告', '6'],
+                    'car_photo_front_image' => ['Picture', '車輛外觀照片-前側', '6'],
+                    'car_photo_back_image' => ['Picture', '車輛外觀照片-後側', '6'],
+                    'car_photo_all_image' => ['Picture', '車輛外觀照片-全車', '6'],
+                    'car_photo_date_image' => ['Picture', '車輛外觀照片-出廠日期', '6'],
+                    'car_photo_mileage_image' => ['Picture', '車輛外觀照片-里程', '6'],
                 ],
                 'status' => 1,
                 'dealer' => 2,
@@ -473,7 +494,97 @@ $config['sub_product_list'] = [
             ]
         ],
         'status' => 1
-    ]
+    ],
+    4 => [
+        'visul_id' => 'NS2',
+        'identity' => [
+            1 => [
+                'visul_id' => 'NST1',
+                'name' => '學生孵化基金',
+                'product_id' => '7:4',
+                'loan_range_s' => 5000,
+                'loan_range_e' => 200000,
+                'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+                'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 500,
+                'certifications' => [1, 2, 3, 4, 5, 6, 7],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>200,000-1,500,000'
+            ],
+            2 => [
+                'visul_id' => 'NST1',
+                'name' => '非學生孵化基金',
+                'product_id' => '7:4',
+                'loan_range_s' => 10000,
+                'loan_range_e' => 500000,
+                'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+                'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 500,
+                'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>200,000-1,500,000'
+            ],
+        ],
+        'status' => 1
+    ],
+    5 => [
+        'visul_id' => 'NS3',
+        'identity' => [
+            1 => [
+                'visul_id' => 'NST1',
+                'name' => '學生驗資基金',
+                'product_id' => '7:5',
+                'loan_range_s' => 5000,
+                'loan_range_e' => 200000,
+                'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+                'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 500,
+                'certifications' => [1, 2, 3, 4, 5, 6, 7],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>200,000-1,500,000'
+            ],
+            2 => [
+                'visul_id' => 'NST1',
+                'name' => '非學生驗資基金',
+                'product_id' => '7:5',
+                'loan_range_s' => 10000,
+                'loan_range_e' => 500000,
+                'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+                'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 500,
+                'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [
+                    'business_plan_photo_image' => ['Picture', '商業企劃書', '1'],
+                ],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>200,000-1,500,000'
+            ],
+        ],
+        'status' => 1
+    ],
 ];
 
 $config['app_product_totallist'] = [
@@ -676,6 +787,12 @@ $config['selling_type'] = [
     127 => 'null',
     999 => '其它',
 ];
+
+$config['character'] = [
+    1 => '負責人',
+    2 => '股東'
+];
+
 //登記機關,用於商業統編查詢++
 $config['Agency'] = array(
     '376410000A', //'新北市政府經濟發展局'

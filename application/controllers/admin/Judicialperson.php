@@ -203,7 +203,7 @@ class Judicialperson extends MY_Admin_Controller {
 			if($list){
 				foreach($list as $key => $value){
 					$user_info 	= $this->user_model->get($value->user_id);
-					$list[$key]->no_taishin = $this->get_taishinAccount($value);
+					$list[$key]->no_taishin = !$this->get_taishinAccount($value);
 					$list[$key]->user_name = $user_info?$user_info->name:"";
 					$list[$key]->cerCreditJudicial = $this->get_cerCreditJudicial($value->company_user_id);
 				}
@@ -230,7 +230,7 @@ class Judicialperson extends MY_Admin_Controller {
             if($id){
                 $info = $this->judicial_person_model->get($id);
                 if($info){
-					$info->no_taishin = $this->get_taishinAccount($info);
+					$info->no_taishin = !$this->get_taishinAccount($info);
                     $user_info = $this->user_model->get($info->user_id);
 					$info->cerCreditJudicial = $this->get_cerCreditJudicial($info->company_user_id);
                     $this->load->library('Gcis_lib');
@@ -257,32 +257,32 @@ class Judicialperson extends MY_Admin_Controller {
                 $info = $this->judicial_person_model->get($post['id']);
                 if ($info) {
 					if($post['create_taishin'] == 1){
-						$account = $this->virtual_account_model->get_by(array(
-							'status' => 1,
-							'investor' => 0,
-							'user_id' => $info->company_user_id,
-							'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%',
-						));
-						if(!$account){
-							$data['msg'] = '建立成功';
-							alert('建立成功', 'cooperation_edit?id='.$post['id']);
-						}else{
-							$data['msg'] = '建立失敗';
-							alert('建立失敗，帳號已存在', 'cooperation_edit?id='.$post['id']);
+						if($info->cooperation!=1){
+							$data['msg'] = '經銷商未開通';
 						}
-						print(json_encode($data));
-						return true;
+						else{
+							$account = $this->get_taishinAccount($info);
+							if(!$account){
+								$rs = $this->virtual_account_model->insert([
+									'investor'			=> 0,
+									'user_id'			=> $info->company_user_id,
+									'virtual_account'	=> TAISHIN_VIRTUAL_CODE.'0'.substr($info->tax_id,0,8),
+								]);
+								$data['msg'] = $rs?'建立成功':'建立失敗';
+							}else{
+								$data['msg'] = '已存在帳號';
+							}
+						}
 					}elseif ($post['cooperation'] == '1') {
                         $rs = $this->judicialperson_lib->cooperation_success($post['id']);
+						$data['msg'] = $rs?'修改成功':'修改失敗';
                     } else if ($post['cooperation'] == '0') {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
-                    }
-
-                    if ($rs === true) {
-                        alert('更新成功', 'cooperation?cooperation=2');
-                    } else {
-                        alert('更新失敗，請洽工程師', 'cooperation?cooperation=2');
-                    }
+						$data['msg'] = $rs?'變更成功':'變更失敗';
+					}
+					$data['redirect'] = base_url('admin/Judicialperson/cooperation_edit?id='.$post['id']);
+					print(json_encode($data));
+					return true;
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));
                 }
@@ -326,18 +326,17 @@ class Judicialperson extends MY_Admin_Controller {
 		}
 	}
 
-	private  function get_cerCreditJudicial($user_id){
+	private function get_cerCreditJudicial($user_id){
 		$this->load->library('certification_lib');
 		return $this->certification_lib->get_certification_info($user_id,1006,0);
 	}
 
-	private  function get_taishinAccount($data){
+	private function get_taishinAccount($data){
 		if(in_array($data->selling_type,$this->config->item('use_taishin_selling_type'))){
 			return  $this->virtual_account_model->get_by(array(
-				'status' => 1,
 				'investor' => 0,
 				'user_id' => $data->company_user_id,
-				'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%',
+				'virtual_account' => TAISHIN_VIRTUAL_CODE.'0'.$data->tax_id,
 			));
 		}
 		return false;

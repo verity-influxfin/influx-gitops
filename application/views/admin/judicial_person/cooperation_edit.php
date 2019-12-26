@@ -14,7 +14,9 @@
         }
     }
     function create(id){
+        var create = $('.create');
         if(id){
+            create.attr('disabled',true);
             $.ajax({
                 url: '../judicialperson/cooperation_edit',
                 data: 'id='+id+'&create_taishin=1',
@@ -22,6 +24,7 @@
                 success: function (e) {
                     var res = JSON.parse(e);
                     alert(res.msg);
+                    window.location.href = res.redirect;
                 }
             });
         }
@@ -62,8 +65,8 @@
                                 <label>銷售類別</label>
                                 <p class="form-control-static"><?=isset($data->selling_type)?$selling_type[$data->selling_type]:"" ?></p>
                                 <?
-                                if(isset($data->no_taishin)){
-                                    echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
+                                if($data->no_taishin){
+                                    echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger create" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
                                 }
                                 ?>
                             </div>
