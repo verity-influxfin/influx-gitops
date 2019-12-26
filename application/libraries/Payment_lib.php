@@ -23,7 +23,7 @@ class Payment_lib{
 					: $data['OUTACTNO'] = $data['OUTACTNO'];
 				$virtual_account = $data['TRNACTNO'];
 				$amount = intval($data['SIGN'].$data['AMT']);
-				$bank_acc = intval($data['OUTBANK'].$data['OUTACTNO']);
+				$bank_acc = strval($data['OUTBANK'].$data['OUTACTNO']);
 				$this->CI->payment_model->insert([
 					"bankaccount_no"    => TAISHIN_CUST_ACCNO, //普惠專戶
 					"tx_datetime"       => $tx_datetime,
