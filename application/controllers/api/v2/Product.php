@@ -1727,10 +1727,9 @@ class Product extends REST_Controller {
                 if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
                 }
-                foreach (json_decode($target->target_data) as $key => $value) {
-                    if(array_key_exists($key,$product['targetData'])){
-                        $list = array_merge($list,[$key => !empty($value)]);
-                    }
+                $targetData = json_decode($target->target_data);
+                foreach ($product['targetData'] as $key => $value) {
+                    $list = array_merge($list,[$key => !empty($targetData->$key)]);
                 }
                 $this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
             }
