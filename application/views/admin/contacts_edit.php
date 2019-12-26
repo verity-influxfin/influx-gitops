@@ -30,6 +30,10 @@
                                            <a href="<?=admin_url('user/edit?id='.$data->user_id) ?>" target="_blank" ><?=isset($data->user_id)?$data->user_id:"" ?></a>
                                         </div>
                                         <div class="form-group">
+                                            <label>Email</label><br>
+                                            <p><?= isset($user->email) ? $user->email : '' ?></p>
+                                        </div>
+                                        <div class="form-group">
                                             <label>借款端/出借端</label>
                                             <p><?=isset($data->investor)?$investor_list[$data->investor]:"" ?></p>
                                         </div>
