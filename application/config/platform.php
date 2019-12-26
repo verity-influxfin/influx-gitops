@@ -58,6 +58,7 @@ $config['admin_menu'] = [
 		'parent_name'		=> '客服管理',
 		'index'				=> '投訴與建議',
 		'send_email'		=> '通知工具',
+		'certifications'    => '會員認證審核列表',
 	],
 	'User' 					=> [
 	    'parent_name'       => '會員管理',
