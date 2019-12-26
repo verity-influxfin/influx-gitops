@@ -1,7 +1,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><?= isset($cid) ? '建立「' . ($selling_type) . '商」' : '' ?><? echo isset($data->certification_id) ? $certification_list[$data->certification_id] : $certification_list[$cid]; ?></h1>
+            <h1 class="page-header"><? echo !isset($content) ? '建立' : '' ;echo '「' . ($selling_type) . '商」'.(isset($data->certification_id) ? $certification_list[$data->certification_id] : $certification_list[$cid]); ?></h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -9,7 +9,7 @@
         function success() {
             if (confirm("確認內容是否正確？")) {
                 if ($('#report select,#report input.case').length == $('#report :checked,#report :selected').length) {
-                    var data = 'id=' + <? echo isset($data->id) ? $data->id : $user_id; ?> +'&selltype=' + <?=isset($selltype) ? $selltype : ''; ?>;
+                    var data = 'cid=1006&id=' + <? echo isset($data->id) ? $data->id : $user_id; ?> +'&selltype=' + <?=isset($selltype) ? $selltype : ''; ?>;
                     $.each($('#report :checked,#report :selected'), function (e) {
                         data += '&' + $(this).data('value') + '=' + $(this).val();
                     });
@@ -18,9 +18,9 @@
                         data: data,
                         type: 'POST',
                         success: function (e) {
-                            console.log(e);
-                            //alert('產生成功');
-                            //history.go(-1)
+                            var res = JSON.parse(e);
+                            alert(res.msg);
+                            window.location.href = res.redirect;
                         }
                     });
                 } else {
@@ -53,13 +53,13 @@
                                             if ($value['selctType'] == 'select') {
                                                 echo '<select class="form-control case">';
                                                 foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
-                                                    echo '<option value="' . $descrtionKey . '"  data-value="' . $key . '">' . $descrtionValue . '</option>';
+                                                    echo '<option value="' . $descrtionKey . '" '.$ddd.' data-value="' . $key . '"'.(isset($content) && $content[$key] == $descrtionKey?' selected disabled':' disabled').'>' . $descrtionValue . '</option>';
                                                 }
                                                 echo '</select>';
                                             } elseif ($value['selctType'] == 'radio') {
                                                 foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
-                                                    echo ' <input class="case" type="radio" name="' . $descrtionValue[0] . '" data-value="' . $descrtionValue[0] . '" value="1"> 是 ';
-                                                    echo ' <input type="radio" name="' . $descrtionValue[0] . '" data-value="' . $descrtionValue[0] . '" value="0"> 否 ';
+                                                    echo ' <input class="case" type="radio" name="' . $descrtionValue[0] . '" data-value="' . $descrtionValue[0] . '" value="1"'.(isset($content) && $content[$descrtionValue[0]] == 1?' checked disabled':' disabled').'> 是 ';
+                                                    echo ' <input type="radio" name="' . $descrtionValue[0] . '" data-value="' . $descrtionValue[0] . '" value="0"'.(isset($content) && $content[$descrtionValue[0]] == 0?' checked disabled':' disabled').'> 否 ';
                                                     echo ' - ' . $descrtionValue[1] . '<br />';
                                                 }
                                             }
@@ -68,9 +68,13 @@
                                     <? } ?>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary"
+                            <?
+                            if(!isset($content)){
+                                echo '<button type="submit" class="btn btn-primary"
                                     onclick="success()">產生報告
-                            </button>
+                                  </button>';
+                            }
+                            ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

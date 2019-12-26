@@ -15,7 +15,7 @@ class Certification extends REST_Controller {
 		$this->load->library('Certification_lib');
         $method 				= $this->router->fetch_method();
 		$this->certification 	= $this->config->item('certifications');
-        $nonAuthMethods 		= ['verifyemail'];
+        $nonAuthMethods 		= ['verifyemail','cerjudicial'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -2090,62 +2090,13 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
-    public function cerjudicial_post()
-    {
-        $certification_id 	= 1006;
-        $certification 		= $this->certification[$certification_id];
-        if($certification){
-            $input = $this->input->post(NULL, TRUE);
-            $user_id = $input['id'];
-            $selltype = $input['selltype'];
-            $content	= [];
-
-            //是否驗證過
-            $this->was_verify($certification_id,$user_id);
-
-            $this->config->load('credit');
-            $creditJudicial = $this->config->item('creditJudicial');
-            if(isset($creditJudicial[$selltype])){
-                foreach ($creditJudicial[$selltype] as $key => $value) {
-                    if($value['selctType'] == 'select' && isset($input[$key])){
-                        $content[$key] = $input[$key];
-                    }elseif ($value['selctType'] == 'radio'){
-                        foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
-                            if(isset($input[$descrtionValue[0]])){
-                                $content[$descrtionValue[0]] = $input[$descrtionValue[0]];
-                            }
-                            else{
-                                $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-                            }
-                        }
-                    }
-                }
-                $param		= [
-                    'user_id'			=> $user_id,
-                    'certification_id'	=> $certification_id,
-                    'investor'			=> 0,
-                    'content'			=> json_encode($content),
-                ];
-                $insert = $this->user_certification_model->insert($param);
-                if($insert){
-                    $this->response(['result' => 'SUCCESS']);
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
-                }
-            }
-            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+    private function was_verify($certification_id=0){
+        $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
+        if($user_certification){
+            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
         }
-        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
-	private function was_verify($certification_id=0,$user_id=0){
-        $user_id = $user_id?$user_id:$this->user_info->id;
-        $investor = isset($this->user_info->investor)?$this->user_info->investor:0;
-		$user_certification	= $this->certification_lib->get_certification_info($user_id,$certification_id,$investor);
-		if($user_certification){
-			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
-		}
-	}
 
 	private function mail_check($user_id,$investor){
         $user_certification	= $this->certification_lib->get_certification_info($user_id,6,$investor);

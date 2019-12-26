@@ -840,10 +840,37 @@ class Certification_lib{
         return false;
     }
 
-    public function cerCredit_judicial_success($info){
+    public function cerCreditJudicial_success($info){
         if($info){
+            $content 	= $info->content;
             $data 		= array(
-                //'debit_card_status'			=> 1,
+                'cerCreditJudicialStatus' => 1,
+                'companyHistoyAndCompanyDevelopment' => $content['companyHistoyAndCompanyDevelopment'],
+                'companyCatureAndRegualations-1' => $content['companyCatureAndRegualations-1'],
+                'companyCatureAndRegualations-2' => $content['companyCatureAndRegualations-2'],
+                'companyCatureAndRegualations-3' => $content['companyCatureAndRegualations-3'],
+                'companyCatureAndRegualations-4' => $content['companyCatureAndRegualations-4'],
+                'companyCatureAndRegualations-5' => $content['companyCatureAndRegualations-5'],
+                'opratorsAndTeamBackgroundMeans_1' => $content['opratorsAndTeamBackgroundMeans_1'],
+                'opratorsAndTeamBackgroundMeans_2' => $content['opratorsAndTeamBackgroundMeans_2'],
+                'opratorsAndTeamBackgroundMeans_3' => $content['opratorsAndTeamBackgroundMeans_3'],
+                'revenue' => $content['revenue'],
+                'policyImpact' => $content['policyImpact'],
+                'internationlEconomicalImpact' => $content['internationlEconomicalImpact'],
+                'industryProspect' => $content['industryProspect'],
+                'companyOperateProspect_1' => $content['companyOperateProspect_1'],
+                'companyOperateProspect_2' => $content['companyOperateProspect_2'],
+                'companyOperateProspect_2-1' => $content['companyOperateProspect_2-1'],
+                'companyOperateProspect_2-2' => $content['companyOperateProspect_2-2'],
+                'companyOperateProspect_3-1' => $content['companyOperateProspect_3-1'],
+                'companyOperateProspect_3-2' => $content['companyOperateProspect_3-2'],
+                'companyOperateProspect_3-3' => $content['companyOperateProspect_3-3'],
+                'companyOperateProspect_3-4' => $content['companyOperateProspect_3-4'],
+                'sameIndustryAndCustomerEvaluation-1' => $content['sameIndustryAndCustomerEvaluation-1'],
+                'sameIndustryAndCustomerEvaluation-2' => $content['sameIndustryAndCustomerEvaluation-2'],
+                'sameIndustryAndCustomerEvaluation-3' => $content['sameIndustryAndCustomerEvaluation-3'],
+                'sameIndustryAndCustomerEvaluation-4' => $content['sameIndustryAndCustomerEvaluation-4'],
+                'sameIndustryAndCustomerEvaluation-5' => $content['sameIndustryAndCustomerEvaluation-5'],
             );
 
             $rs = $this->user_meta_progress($data,$info);
