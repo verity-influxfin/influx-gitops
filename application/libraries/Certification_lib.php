@@ -844,7 +844,7 @@ class Certification_lib{
         if($info){
             $content 	= $info->content;
             $data 		= array(
-                'cerCreditJudicialStatus' => 1,
+                'creditJudicial_status' => 1,
                 'companyHistoyAndCompanyDevelopment' => $content['companyHistoyAndCompanyDevelopment'],
                 'companyCatureAndRegualations-1' => $content['companyCatureAndRegualations-1'],
                 'companyCatureAndRegualations-2' => $content['companyCatureAndRegualations-2'],
@@ -903,7 +903,7 @@ class Certification_lib{
 			$company_source_user_id = false;
 			if($company){
                 $total = 0;
-                $allows = ['businesstax'];
+                $allows = ['businesstax','cerCreditJudicial'];
                 $company = $this->get_company_type($user_id);
                 $company_source_user_id = $company->user_id;
                 //FEV

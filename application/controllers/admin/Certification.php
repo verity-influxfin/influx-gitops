@@ -96,12 +96,14 @@ class Certification extends MY_Admin_Controller {
 					if($cid == 1006 || $info->certification_id==1006){
 						$selltype = isset($get['selltype'])?$get['selltype']:0;
 						$user_id = isset($get['user_id'])?$get['user_id']:0;
+						$new = true;
 						if($info){
 							$user_id = $info->user_id;
 							$cid = $info->certification_id;
 							$this->load->model('user/judicial_person_model');
 							$list = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
 							$list?$selltype=$list->selling_type:'';
+							$new = false;
 						}
 						$this->config->load('credit');
 						$creditJudicial = $this->config->item('creditJudicial');
@@ -111,6 +113,7 @@ class Certification extends MY_Admin_Controller {
 							$page_data['selltype'] = $selltype;
 							$page_data['selling_type'] = $this->config->item('selling_type')[$selltype];
 							$page_data['cid'] = $cid;
+							$page_data['data'] = $info;
 							$page_data['content'] = isset($info->content)?json_decode($info->content,true):false;
 							$page_data['creditJudicialConfig'] = $creditJudicial[$selltype];
 							$page_data['certification_list'] = $this->certification_name_list;
@@ -355,6 +358,8 @@ class Certification extends MY_Admin_Controller {
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
+						}elseif($info->certification_id==1006){
+							$fail = '評估表已失效';
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
