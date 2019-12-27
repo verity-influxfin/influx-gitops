@@ -340,7 +340,14 @@ $config['visul_id_des'] = [
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    'D1' => [
+    'N4' => [
+        'name' => '創業貸',
+        'description' =>'創業資金免煩惱',
+        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    'D1'	   => [
         'name' => '外匯車專案',
         'description' => '幫您貸車進來',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -350,6 +357,20 @@ $config['visul_id_des'] = [
     'NS1' => [
         'name' => 'Techi貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    'NS2' => [
+        'name' => '孵化基金',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    'NS3' => [
+        'name' => '驗資基金',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'status' => 1
@@ -446,7 +467,10 @@ $config['sub_product_list'] = [
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-
+                    'vin' => ['String','車身號碼'],
+                    'factory_time' => ['Timestamp','出廠時間'],
+                    'product_description' => ['String','產品備註)'],
+                    'car_history_image' => ['Picture','車輛歷史報告(Carfax/Autocheck)','6'],
                 ],
                 'status' => 1,
                 'dealer' => 2,
