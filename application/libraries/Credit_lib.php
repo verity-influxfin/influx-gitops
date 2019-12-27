@@ -268,6 +268,66 @@ class Credit_lib{
 	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time){
 		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time);
 	}
+
+    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
+
+        $info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
+        $user_info 	= $this->CI->user_model->get($user_id);
+        $data 		= [];
+        $total 		= 0;
+        $param		= [
+            'product_id'    => $product_id,
+            'sub_product_id'=> $sub_product_id,
+            'user_id'       => $user_id,
+            'amount'        => 0
+        ];
+        foreach($info as $key => $value){
+            $data[$value->meta_key] = $value->meta_value;
+        }
+
+        $judicial_person = $this->CI->judicial_person_model->get_by([
+            'company_user_id' => $user_id
+        ]);
+        $selltype = $judicial_person->selling_type;
+        $this->CI->config->load('credit',TRUE);
+        $creditJudicial = $this->CI->config->item('credit')['creditJudicial'];
+        if(isset($creditJudicial[$selltype])){
+            foreach ($creditJudicial[$selltype] as $key => $value) {
+                $bonus_= 0;
+                $score = 0;
+                if($value['selctType'] == 'select' && isset($data[$key])){
+                    $total += $value['score'][$data[$key]];
+                }elseif ($value['selctType'] == 'radio'){
+                    foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
+                        $score = $data[$descrtionValue[0]] == 1?$value['score'][$descrtionKey]:0;
+                        $total += $score;
+                        $score > 0 ? $bonus++ : '';
+                    }
+                    $value['bonus'] > 0 && $bonus == count($value['score']) ? $total+=$value['bonus'] : '';
+                }
+            }
+        }
+
+
+        $param['points'] 	= intval($total);
+        $param['level'] 	= $this->get_credit_level($total,$product_id);
+        if(isset($this->credit['credit_amount_'.$product_id])){
+            foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+                if($param['points']>=$value['start'] && $param['points']<=$value['end']){
+                    $param['amount'] = $value['amount'];
+                    break;
+                }
+            }
+        }
+        $param['expire_time'] = $expire_time;
+
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
+            return $param;
+        }
+
+        $rs 		= $this->CI->credit_model->insert($param);
+        return $rs;
+    }
 	
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
 		$point = 0;

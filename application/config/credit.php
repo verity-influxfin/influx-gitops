@@ -65,6 +65,17 @@ $config['credit_level_4'] = [
     13 => ['start' => -9999, 'end' => -1501, 'rate' => []]
 ];
 
+$config['credit_level_1000'] = [
+    1 => ['start' => 80, 'end' => 100, 'rate' => ['90' => 15 ,'180' => 15]],
+    2 => ['start' => 60, 'end' => 79, 'rate ' => ['90' => 15 ,'180' => 15]],
+    3 => ['start' => 40, 'end' => 59, 'rate' => ['90' => 15 ,'180' => 15]],
+    4 => ['start' => 0, 'end' => 39, 'rate' => ['90' => 15 ,'180' => 15]],
+
+    11 => ['start' => -500, 'end' => -1, 'rate' => []],
+    12 => ['start' => -1500, 'end' => -501, 'rate' => []],
+    13 => ['start' => -9999, 'end' => -1501, 'rate' => []]
+];
+
 $config['credit_amount_1'] = [
     ['start' => 2481, 'end' => 9999, 'amount' => 120000],
     ['start' => 2461, 'end' => 2480, 'amount' => 120000],
@@ -335,6 +346,13 @@ $config['credit_amount_4'] = [
     ['start' => 0, 'end' => 330, 'rate' => 0],
 ];
 
+$config['credit_amount_1000'] = [
+    ['start' => 80, 'end' => 100, 'amount' => 10000000],
+    ['start' => 60, 'end' => 79, 'amount' => 7000000],
+    ['start' => 40, 'end' => 59, 'amount' => 5000000],
+    ['start' => 0, 'end' => 39, 'amount' => 3000000]
+];
+
 $config['creditJudicial'] = [
     2 => [
         'companyHistoyAndCompanyDevelopment' => [
@@ -348,7 +366,7 @@ $config['creditJudicial'] = [
                 '成立5年以上，發展情況穩定',
                 '成立10年以上，發展情況穩定',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyCatureAndRegualations' => [
             'name' => '公司文化與管理制度',
@@ -361,7 +379,7 @@ $config['creditJudicial'] = [
                 ['companyCatureAndRegualations-4','員工素質或訓練佳'],
                 ['companyCatureAndRegualations-5','服務態度良好'],
             ],
-            'bonus' => [1],
+            'bonus' => 1,
         ],
         'opratorsAndTeamBackgroundMeans_1' => [
             'name' => '背景',
@@ -387,7 +405,7 @@ $config['creditJudicial'] = [
                 '具經營理念，能符合市場變化之計畫明確者',
                 '具良好職業道德，能及時根據市場喜好，調整購車的條件與規劃',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'opratorsAndTeamBackgroundMeans_3' => [
             'name' => '資力',
@@ -400,7 +418,7 @@ $config['creditJudicial'] = [
                 '淨資產 NT$3,0001 ~ $50,000 仟元',
                 '淨資產 NT$50,001 仟元以上',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'revenue' => [
             'name' => '營業額狀態',
@@ -414,7 +432,7 @@ $config['creditJudicial'] = [
                 '依前一年度營業額(1億 ＞ X ≧ 8000萬)',
                 '依前一年度營業額(X ≧ 1億)',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'policyImpact' => [
             'name' => '有關重大法規政策對其影響',
@@ -426,7 +444,7 @@ $config['creditJudicial'] = [
                 '重大法規及政策對公司發展趨於有利影響者',
                 '重大法規及政策對公司發展有利影響者',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'internationlEconomicalImpact' => [
             'name' => '國內外經濟因素演變對其產業展望影響',
@@ -438,7 +456,7 @@ $config['creditJudicial'] = [
                 '國內外經濟景氣變動對公司發展趨於有利',
                 '國內外經濟景氣變動對公司發展有重大利益',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'industryProspect' => [
             'name' => '產業展望',
@@ -451,7 +469,7 @@ $config['creditJudicial'] = [
                 '處於產業景氣循環之成熟期',
                 '處於產業景氣循環之成長期',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyOperateProspect_1' => [
             'name' => '商品或服務',
@@ -463,7 +481,7 @@ $config['creditJudicial'] = [
                 '商譽或服務略具知名度有特色',
                 '商譽或服務具知名度，有其特色',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyOperateProspect_2' => [
             'name' => '銷售',
@@ -475,7 +493,7 @@ $config['creditJudicial'] = [
                 '網評尚可，部分屬固定客戶',
                 '網評佳，有固定分散優良客戶',
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyOperateProspect_2-1' => [
             'name' => '',
@@ -484,7 +502,7 @@ $config['creditJudicial'] = [
             'descrtion' => [
                 ['companyOperateProspect_2-1','銷售 - 公司行銷網健全']
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyOperateProspect_2-2' => [
             'name' => '',
@@ -493,24 +511,24 @@ $config['creditJudicial'] = [
             'descrtion' => [
                 ['companyOperateProspect_2-2','銷售 - 具市場開拓能力']
             ],
-            'bonus' => [],
+            'bonus' => 0,
         ],
         'companyOperateProspect_3' => [
             'name' => '經營團隊',
             'selctType' => 'radio',
-            'score' => ['1.5', '1.5', '1.5', '1.5'],
+            'score' => ['2', '2', '2', '2'],
             'descrtion' => [
                 ['companyOperateProspect_3-1','財務規劃團隊'],
                 ['companyOperateProspect_3-2','有業務開發團隊'],
                 ['companyOperateProspect_3-3','有專業維修團隊'],
                 ['companyOperateProspect_3-4','有專業管理者/CEO'],
             ],
-            'bonus' => [2],
+            'bonus' => 2,
         ],
         'sameIndustryAndCustomerEvaluation' => [
             'name' => '同業及客戶對其評價',
             'selctType' => 'radio',
-            'score' => [1, 2, 2, 2, 2],
+            'score' => [2, 2, 2, 2, 2],
             'descrtion' => [
                 ['sameIndustryAndCustomerEvaluation-1','雖符合上述情形，但經營者曾有退補或拒往紀錄'],
                 ['sameIndustryAndCustomerEvaluation-2','銀行評語正面者'],
@@ -518,7 +536,7 @@ $config['creditJudicial'] = [
                 ['sameIndustryAndCustomerEvaluation-4','網路評語正面者'],
                 ['sameIndustryAndCustomerEvaluation-5','客戶評價正面者'],
             ],
-            'bonus' => [2],
+            'bonus' => 2,
         ]
     ]
 ];
