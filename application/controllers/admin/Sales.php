@@ -119,6 +119,7 @@ class Sales extends MY_Admin_Controller {
 		$list = [
 			'platform'	=>['count'=>0,'name'=>0,'school'=>0,'fb'=>0],
 			'partner' 	=>[],
+			'marketing' =>[],
 			'sales' 	=>[],
 		];
 		$user_list		= $this->user_model->get_many_by([
@@ -175,7 +176,19 @@ class Sales extends MY_Admin_Controller {
 					if(!empty($value->name))
 						$list['sales'][$id]['name'] ++;
 					
-				}else{
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+
+					$list['marketing'][$value->promote_code]['count'] ++;
+					if($value->school)
+						$list['marketing'][$value->promote_code]['school'] ++;
+					if(!empty($value->nickname))
+						$list['marketing'][$value->promote_code]['fb'] ++;
+					if(!empty($value->name))
+						$list['marketing'][$value->promote_code]['name'] ++;
+				} else{
 					$list['platform']['count'] ++;
 					if($value->school)
 						$list['platform']['school'] ++;

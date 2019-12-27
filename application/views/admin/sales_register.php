@@ -69,6 +69,22 @@
 													<td><p class="form-control-static"><?=intval($value["name"]) ?></p></td>
 												</tr>
 											<? }} ?>
+											<?
+											if(!empty($list['marketing'])){
+												foreach($list['marketing'] as $key => $value){
+													$sum['count'] 	+= intval($value['count']);
+													$sum['school'] 	+= intval($value['school']);
+													$sum['fb'] 		+= intval($value['fb']);
+													$sum['name'] 	+= intval($value['name']);
+											?>
+												<tr>
+													<td><p class="form-control-static"><?=$key; ?></p></td>
+													<td><p class="form-control-static"><?=intval($value["count"]) ?></p></td>
+													<td><p class="form-control-static"><?=intval($value["fb"]) ?></p></td>
+													<td><p class="form-control-static"><?=intval($value["school"]) ?></p></td>
+													<td><p class="form-control-static"><?=intval($value["name"]) ?></p></td>
+												</tr>
+											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
 												<td><?=$sum['count']; ?></td>
