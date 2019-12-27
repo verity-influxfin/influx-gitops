@@ -87,6 +87,31 @@
 													<td><p class="form-control-static"><?=number_format($success_amount); ?></p></td>
 													<td><p class="form-control-static"><?=number_format($success_fee); ?></p></td>
 												</tr>
+											<? }}
+											if(!empty($list["marketing"])){
+												$marketing = [
+													"success_amount" => 0,
+													"success_fee" => 0,
+												];
+												foreach($list["marketing"] as $target){
+													$fee = $target['platform_fee'];
+													$amount = $target['loan_amount'];
+													$marketing["success_fee"] += $fee;
+													$marketing["success_amount"] += $amount;
+													$sum["success"]++;
+													$sum["success_fee"] += $fee;
+													$sum["success_amount"] += $amount;
+											?>
+												<tr>
+													<td><p class="form-control-static"><?= $target["promote_code"]; ?></p></td>
+													<td>
+													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=sales&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
+														<p class="form-control-static">1</p>
+													</a>
+													</td>
+													<td><p class="form-control-static"><?=number_format($amount); ?></p></td>
+													<td><p class="form-control-static"><?=number_format($fee); ?></p></td>
+												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>

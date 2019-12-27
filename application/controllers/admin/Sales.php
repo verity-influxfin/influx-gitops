@@ -250,6 +250,19 @@ class Sales extends MY_Admin_Controller {
 						'status'		=> $value->status,
 						'promote_code'	=> $value->promote_code,
 					);
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'])) {
+						$list['marketing'] = [];
+					}
+					$list['marketing'][] = [
+						'id' => $value->id,
+						'amount' => $value->amount,
+						'loan_amount' => $value->loan_amount,
+						'platform_fee' => $value->platform_fee,
+						'loan_date' => $value->loan_date,
+						'status' => $value->status,
+						'promote_code' => $value->promote_code,
+					];
 				}
 				
 				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
