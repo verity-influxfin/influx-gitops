@@ -358,6 +358,9 @@ class Sales extends MY_Admin_Controller {
 		
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
+				if ($type == "platform" && isset($value->promote_code) && $value->promote_code) {
+					continue;
+				}
 				$list[] = $value;
 			}
 		}
