@@ -251,10 +251,10 @@ class Sales extends MY_Admin_Controller {
 						'promote_code'	=> $value->promote_code,
 					);
 				} elseif ($value->promote_code) {
-					if (!isset($list['marketing'])) {
-						$list['marketing'] = [];
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = [];
 					}
-					$list['marketing'][] = [
+					$list['marketing'][$value->promote_code][] = [
 						'id' => $value->id,
 						'amount' => $value->amount,
 						'loan_amount' => $value->loan_amount,
@@ -295,6 +295,7 @@ class Sales extends MY_Admin_Controller {
 		$get 		= $this->input->get(NULL, TRUE);
 		$type 		= isset($get['type'])&&$get['type']?$get['type']:date('Y-m-d');
 		$id 		= isset($get['id'])&&$get['id']?$get['id']:0;
+		$code		= isset($get['code'])&&$get['code']?$get['code'] : '';
 		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
 		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
 		$list		= array();
@@ -327,6 +328,15 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
+		if ($type == 'marketing' && $code) {
+			$target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
+				'status' => array(5,10),
+				'loan_date >=' => $sdate,
+				'loan_date <=' => $edate,
+				'promote_code' => $code,
+			));
+		}
+
 		if($type=='platform'){
 			$name			= '無分類';
 			$admins_qrcode 	= $this->admin_model->get_qrcode_list();

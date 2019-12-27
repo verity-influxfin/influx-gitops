@@ -93,20 +93,24 @@
 													"success_amount" => 0,
 													"success_fee" => 0,
 												];
-												foreach($list["marketing"] as $target){
-													$fee = $target['platform_fee'];
-													$amount = $target['loan_amount'];
-													$marketing["success_fee"] += $fee;
-													$marketing["success_amount"] += $amount;
-													$sum["success"]++;
+												foreach($list["marketing"] as $promote_code => $targets){
+													$fee = 0;
+													$amount = 0;
+													foreach ($targets as $target) {
+														$fee += $target['platform_fee'];
+														$amount += $target['loan_amount'];
+													}
+
+													$numTargets = count($targets);
+													$sum["success"] += $numTargets;
 													$sum["success_fee"] += $fee;
 													$sum["success_amount"] += $amount;
 											?>
 												<tr>
-													<td><p class="form-control-static"><?= $target["promote_code"]; ?></p></td>
+													<td><p class="form-control-static"><?= $promote_code ?></p></td>
 													<td>
-													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=sales&sdate='.$sdate.'&edate='.$edate.'&id='.$key) ?>" >
-														<p class="form-control-static">1</p>
+													<a class="fancyframe" href="<?=admin_url('Sales/bonus_report_detail?type=marketing&sdate='.$sdate.'&edate='.$edate.'&code='.$promote_code) ?>" >
+														<p class="form-control-static"><?= $numTargets ?></p>
 													</a>
 													</td>
 													<td><p class="form-control-static"><?=number_format($amount); ?></p></td>
