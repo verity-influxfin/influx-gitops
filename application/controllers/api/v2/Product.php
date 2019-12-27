@@ -538,8 +538,11 @@ class Product extends REST_Controller {
             }
 
             if($product['id'] == '1000'){
-                $input['instalment'] = 180;
-                $amount = $input['purchase_cost'] + $input['fee_cost'];
+                $input['instalment'] = 90;
+                if($sub_product_id == 2){
+                    $amount = $input['purchase_cost'] + $input['fee_cost'];
+                    $input['instalment'] = 180;
+                }
             }
 
             if (!in_array($input['instalment'], $product['instalment'])) {
