@@ -42,14 +42,20 @@ class AdminDashboard extends MY_Admin_Controller {
 		}
 
 		if($target_list){
+			foreach($target_list as $targekey => $targevalue){
+				$target_user_ids[] = $targevalue->user_id;
+			}
+			$bank_account 	= $this->user_bankaccount_model->get_many_by(array(
+				"user_id"	=> $target_user_ids,
+				"investor"	=> 0,
+				"status"	=> 1,
+				"verify"	=> 1,
+			));
+			foreach($bank_account as $bankkey => $bankvalue){
+				$bank_account_user_ids[] = $bankvalue->user_id;
+			}
 			foreach($target_list as $key => $value){
-				$bank_account 	= $this->user_bankaccount_model->get_by(array(
-					"user_id"	=> $value->user_id,
-					"investor"	=> 0,
-					"status"	=> 1,
-					"verify"	=> 1,
-				));
-				if($bank_account){
+				if(in_array($value->user_id,$bank_account_user_ids)){
 					if($value->status==0 && $value->sub_status==9){
 						$target_count["evaluation"] += 1;
 					}
