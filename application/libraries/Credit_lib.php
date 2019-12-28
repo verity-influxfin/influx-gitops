@@ -83,7 +83,7 @@ class Credit_lib{
         if($sub_product_id){
             $sub_product = $this->get_sub_product_data($sub_product_id);
             //techie
-            if($sub_product_id == 1){
+            if($sub_product && $sub_product_id == 1){
                 //系所加分
                 $total += in_array($data['school_department'],$sub_product->majorList)?200:0;
                 $total += isset($data['student_game_work_level'])?$data['student_game_work_level']*50:0;
@@ -293,7 +293,7 @@ class Credit_lib{
         $creditJudicial = $this->CI->config->item('credit')['creditJudicial'];
         if(isset($creditJudicial[$selltype])){
             foreach ($creditJudicial[$selltype] as $key => $value) {
-                $bonus_= 0;
+                $bonus = 0;
                 $score = 0;
                 if($value['selctType'] == 'select' && isset($data[$key])){
                     $total += $value['score'][$data[$key]];
@@ -307,7 +307,6 @@ class Credit_lib{
                 }
             }
         }
-
 
         $param['points'] 	= intval($total);
         $param['level'] 	= $this->get_credit_level($total,$product_id);
@@ -550,7 +549,7 @@ class Credit_lib{
                     }
                     $sub_product = $this->get_sub_product_data($sub_product_id);
                     //techie
-                    if ($sub_product_id == 1){
+                    if ($sub_product && $sub_product_id == 1){
                         $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
                         if ($product_id == 1){
                             $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
@@ -637,9 +636,12 @@ class Credit_lib{
     }
 
     private function get_sub_product_data($sub_product_id){
-        $sub_product_mapping = $this->CI->config->item('sub_product_mapping')[$sub_product_id];
-        $this->CI->config->load('sub_product',TRUE);
-        $get_list = $this->CI->config->item('sub_product');
-        return $get_list[$sub_product_mapping];
+	    if(isset($this->CI->config->item('sub_product_mapping')[$sub_product_id])){
+            $sub_product_mapping = $this->CI->config->item('sub_product_mapping')[$sub_product_id];
+            $this->CI->config->load('sub_product',TRUE);
+            $get_list = $this->CI->config->item('sub_product');
+            return $get_list[$sub_product_mapping];
+        }
+	    return false;
     }
 }
