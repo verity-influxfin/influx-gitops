@@ -233,10 +233,11 @@ class Target_lib{
     }
 
     //核可額度利率
-	public function approve_target($target = []){
+	public function approve_target($target = [],$remark=false,$renew=false){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
-		if(!empty($target) && ($target->status==0 || $target->status==22)){
+		$msg = false;
+		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
@@ -315,9 +316,21 @@ class Target_lib{
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 0,
                                     ];
-                                    $subloan_status?$param['status']=1:$param['sub_status'] = 9;
-                                    $this->CI->target_model->update($target->id,$param);
+                                    if($subloan_status || $renew){
+                                        $param['status'] = 1;
+                                        $renew ? $param['sub_status'] = 0 : '';
+                                        $remark ? $param['remark'] = $remark : '';
+                                        $msg = true;
+                                    }else{
+                                        $param['sub_status'] = 9;
+                                    }
+                                    $rs = $this->CI->target_model->update($target->id,$param);
+                                    if($rs && $msg){
+                                        $this->CI->load->library('Notification_lib');
+                                        $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
+                                    }
                                     $this->insert_change_log($target->id,$param);
+                                    return true;
                                 }
                             }else if($product_info['type'] == 2){
                                 $allow      = true;
