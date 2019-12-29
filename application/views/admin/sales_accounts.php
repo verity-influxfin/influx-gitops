@@ -78,7 +78,7 @@
         
         function fillFakeUsers(show = true) {
             if (!show) {
-                var lastIndex = (page-1) * limit;
+                var lastIndex = users.length;
                 $("#users tr:gt(" + lastIndex + ")").remove();
                 return;
             }
@@ -128,7 +128,7 @@
                 },
                 success: function (response) {
                     fillFakeUsers(false);
-                    if (response.status.code != 200 && response.status.code != 404) {
+                    if (response.status.code != 200 && response.status.code != 204) {
                         return;
                     } else if (response.status.code == 204) {
                         if (page == 1) {
@@ -148,7 +148,12 @@
                     }
 
                     fillUsers(userObjects);
-                    $("#load-more").show();
+                    if (currentUsers.length < 20) {
+                        $("#load-more").hide();
+                    } else {
+                        $("#load-more").show();
+                    }
+
                     page++;
                 },
     			error: function(error) {
