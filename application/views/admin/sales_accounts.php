@@ -60,8 +60,10 @@
         var users = [];
         var usersIndex = 1;
         var page = 1;
+        var limit = 20;
         var fetchUserAjaxLock = false;
         
+        fillFakeUsers();
         fetchUsers();
 
         function fillUsers(currentUsers) {    
@@ -74,10 +76,30 @@
             }
 		}
         
+        function fillFakeUsers(show = true) {
+            if (!show) {
+                var lastIndex = (page-1) * limit;
+                $("#users tr:gt(" + lastIndex + ")").remove();
+                return;
+            }
+
+            idPTag = '<p class="form-control-static" style="width: 60px;"></p>';
+            createdAtPTag = '<p class="form-control-static" style="width: 150px;"></p>';
+            pTag = '<p class="form-control-static"></p>';
+            for (var i = 0; i < 20; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields short center-text">').append(idPTag),
+                    $('<td class="fake-fields short center-text">').append(createdAtPTag),
+                    $('<td class="fake-fields center-text">').append(pTag)
+                ).appendTo("#users");
+            }
+        }
+
         $('#load-more').on('click', function() {
             if (fetchUserAjaxLock) {
                 return;
             }
+            fillFakeUsers();
             fetchUsers();
         });
         
@@ -105,6 +127,7 @@
                     fetchUserAjaxLock = false;
                 },
                 success: function (response) {
+                    fillFakeUsers(false);
                     if (response.status.code != 200 && response.status.code != 404) {
                         return;
                     } else if (response.status.code == 204) {
@@ -137,7 +160,49 @@
 </script>
 
 <style>
-	.center-text {
-		text-align: center;
-	}
+    .center-text {
+        text-align: center;
+    }
+
+    @keyframes placeHolderShimmer{
+        0% {
+            background: #ececec;
+        }
+
+        30% {
+            background: #F7F7F7;
+        }
+
+        50% {
+            background: #ececec;
+        }
+
+        80% {
+            background: #F7F7F7;
+        }
+
+        100% {
+            background: #ececec;
+        }
+    }
+
+    .fake-fields p {
+        animation-duration: 3.25s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: placeHolderShimmer;
+        animation-timing-function: linear;
+        background: darkgray;
+        background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+        background-size: 800px 104px;
+        height: 30px;
+        position: relative;
+        border-radius: 25px;
+    }
+
+    .short p{
+        margin:0 auto;
+        width:50%;
+    }
+
 </style>
