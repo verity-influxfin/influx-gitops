@@ -390,5 +390,65 @@ class Sales extends MY_Admin_Controller {
 		$this->load->view('admin/sales_bonus_detail',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function accounts()
+	{
+		if (!$this->input->is_ajax_request()) {
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/sales_accounts');
+			$this->load->view('admin/_footer');
+			return;
+		}
+
+		$get = $this->input->get(NULL, TRUE);
+		$type = isset($get["type"]) ? $get["type"] : "";
+		$sdate = isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate = isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$withCode = isset($get["with_code"]) ? $get["with_code"] : "";
+		$offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
+		$limit = 20;
+
+		if ($type == "student") {
+			$filters = [
+				['status', '=', 1],
+				['created_at', '>=', strtotime($sdate.' 00:00:00')],
+				['created_at', '<=', strtotime($edate.' 23:59:59')],
+				['meta_key', '=', 'student_status']
+			];
+			if (!$withCode) {
+				$filters[] = ['promote_code', '!=', ''];
+			}
+			$users = $this->user_model->getStudents($filters, $offset, $limit);
+		} else {
+			$filters = [
+				'status' => 1,
+				'created_at >='	=> strtotime($sdate.' 00:00:00'),
+				'created_at <='	=> strtotime($edate.' 23:59:59'),
+			];
+			if ($type == "fb") {
+				$filters["nickname !="] = "";
+			}
+			if ($type == "name") {
+				$filters["name !="] = "";
+			}
+			if (!$withCode) {
+				$filters["promote_code"] = "";
+			}
+			$users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
+		}
+
+		$this->load->library('output/json_output');
+		if (!$users) {
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$this->load->library('output/user/user_output', ["data" => $users]);
+
+		$userOutputs = $this->user_output->toMany("mapForSales");
+
+		$response = ["users" => $userOutputs];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
 }
 ?>

@@ -110,10 +110,10 @@
 												<td>實名認證</td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
-												<td><?=$list['platform']['count']?$list['platform']['count']:0; ?></td>
-												<td><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></td>
-												<td><?=$list['platform']['school']?$list['platform']['school']:0; ?></td>
-												<td><?=$list['platform']['name']?$list['platform']['name']:0; ?></td>
+												<td><a href="accounts?sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['count']?$list['platform']['count']:0; ?></a></td>
+												<td><a href="accounts?type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></a></td>
+												<td><a href="accounts?type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['school']?$list['platform']['school']:0; ?></a></td>
+												<td><a href="accounts?type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['name']?$list['platform']['name']:0; ?></a></td>
 											</tr>
 											</tbody>
 										</table>

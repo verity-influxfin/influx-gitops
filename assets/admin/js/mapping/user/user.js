@@ -61,6 +61,11 @@ class User
 		this.marriage.phone = user.marriage.phone;
 	}
 
+	setPromoteCode(user) {
+		if (!user.promote_code) return;
+		this.promoteCode = promoteCode
+	}
+
 	getFbProfilePicture() {
 		if (!this.facebook) return;
 		return 'https://graph.facebook.com/' + this.facebook.id + '/picture?type=large';
