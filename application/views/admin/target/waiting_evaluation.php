@@ -16,7 +16,7 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="table-responsive">
-						<table id="targets" class="table table-bordered width="100%">
+						<table id="targets" class="table table-bordered width=100%">
 							<thead>
 							<tr>
 								<th width="30%">案號</th>
@@ -120,7 +120,7 @@
 			background-position: 468px 0
 		}
 	}
-	
+
 	.fake-fields p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;
