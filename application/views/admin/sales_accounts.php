@@ -70,7 +70,7 @@
         function fillUsers(currentUsers) {    
             for (var i = 0; i < currentUsers.length; i++) {
                 $("<tr>").append(
-                    $('<td class="center-text">').append(users.length),
+                    $('<td class="center-text">').append(currentUsers[i].id),
                     $('<td class="center-text">').append(currentUsers[i].getRegisteredAtAsDate()),
                     $('<td class="center-text">').append(currentUsers[i].promoteCode),
                 ).appendTo("#users");
