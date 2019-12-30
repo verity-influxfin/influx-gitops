@@ -33,6 +33,7 @@ class User_output
             return [];
         }
 
+        $users = [];
         foreach ($this->users as $user) {
             if (method_exists($this, $method)) {
                 $users[] = $this->$method($user);
