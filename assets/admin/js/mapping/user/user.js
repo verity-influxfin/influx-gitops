@@ -13,6 +13,7 @@ class User
 		this.setInstagram(user)
 		this.setFacebook(user)
 		this.setMarriage(user)
+		this.setPromoteCode(user)
 	}
 
 	setIdCard(user) {
@@ -63,7 +64,7 @@ class User
 
 	setPromoteCode(user) {
 		if (!user.promote_code) return;
-		this.promoteCode = promoteCode
+		this.promoteCode = user.promote_code
 	}
 
 	getFbProfilePicture() {

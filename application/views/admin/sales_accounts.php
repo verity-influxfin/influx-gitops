@@ -51,7 +51,8 @@
         var urlString = window.location.href;
         var url = new URL(urlString);
         var type = url.searchParams.get("type");
-        var withCode = url.searchParams.get("with_code");
+        var category = url.searchParams.get("category");
+        var partnerId = url.searchParams.get("partner_id");
         var startAt = url.searchParams.get("sdate");
         var endAt = url.searchParams.get("edate");
         
@@ -69,7 +70,7 @@
         function fillUsers(currentUsers) {    
             for (var i = 0; i < currentUsers.length; i++) {
                 $("<tr>").append(
-                    $('<td class="center-text">').append(currentUsers[i].id),
+                    $('<td class="center-text">').append(users.length),
                     $('<td class="center-text">').append(currentUsers[i].getRegisteredAtAsDate()),
                     $('<td class="center-text">').append(currentUsers[i].promoteCode),
                 ).appendTo("#users");
@@ -108,11 +109,12 @@
                 'sdate' : startAt,
                 'edate' : endAt,
                 'type' : type,
+                'category' : category,
                 'offset' : page
             };
             
-            if (withCode) {
-                query["with_code"] = withCode
+            if (category == 'partner' && partnerId) {
+                query['partner_id'] = partnerId;
             }
 
             var queryString = $.param(query);

@@ -110,10 +110,10 @@
 												<td>實名認證</td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
-												<td><a href="accounts?sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['count']?$list['platform']['count']:0; ?></a></td>
-												<td><a href="accounts?type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></a></td>
-												<td><a href="accounts?type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['school']?$list['platform']['school']:0; ?></a></td>
-												<td><a href="accounts?type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['name']?$list['platform']['name']:0; ?></a></td>
+												<td><a href="accounts?category=others&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['count']?$list['platform']['count']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['school']?$list['platform']['school']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['name']?$list['platform']['name']:0; ?></a></td>
 											</tr>
 											</tbody>
 										</table>
@@ -148,20 +148,20 @@
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
-													<td><p class="form-control-static"><?=$value['count']?$value['count']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['fb']?$value['fb']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['school']?$value['school']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['name']?$value['name']:0; ?></p></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['count']?$value['count']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['fb']?$value['fb']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['school']?$value['school']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['name']?$value['name']:0; ?></p></a></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td></td>
 												<td></td>
 												<td>合計</td>
-												<td><?=$sum["count"]; ?></td>
-												<td><?=$sum["fb"]; ?></td>
-												<td><?=$sum["school"]; ?></td>
-												<td><?=$sum["name"]; ?></td>
+												<td><a href="accounts?category=partner&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["count"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["fb"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["school"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["name"]; ?></a></td>
 											</tr>
 											</tbody>
 										</table>

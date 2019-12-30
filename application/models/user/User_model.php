@@ -76,7 +76,13 @@ class User_model extends MY_Model
 				$this->db->where('meta.meta_key ' . $filter[1], $filter[2]);
 			}
 			if ($filter[0] == 'promote_code') {
-				$this->db->where('users.promote_code ' . $filter[1], $filter[2]);
+				if ($filter[1] == "!=") {
+					$this->db->where('users.promote_code ' . $filter[1], $filter[2]);
+				} elseif ($filter[1] == "in") {
+					$this->db->where_in('users.promote_code', $filter[2]);
+				} else {
+					$this->db->where('users.promote_code', $filter[2]);
+				}
 			}
 		}
 

@@ -405,9 +405,28 @@ class Sales extends MY_Admin_Controller {
 		$type = isset($get["type"]) ? $get["type"] : "";
 		$sdate = isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
 		$edate = isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
-		$withCode = isset($get["with_code"]) ? $get["with_code"] : "";
+		$category = isset($get["category"]) ? $get["category"] : "";
+		$partnerId = isset($get["partner_id"]) ? $get["partner_id"] : "";
 		$offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
 		$limit = 20;
+
+		$this->load->library('output/json_output');
+		if ($category == "partner") {
+			$partners 	= $this->partner_model->get_many_by(['status'=>1]);
+			$partnerQrCode = null;
+			$partnerQrCodes = [];
+			if($partners){
+				foreach($partners as $key => $value){
+					if ($partnerId) {
+						if ($partnerId == $value->id) {
+							$partnerQrCode = $value->my_promote_code;
+						}
+					} else {
+						$partnerQrCodes[] = $value->my_promote_code;
+					}
+				}
+			}
+		}
 
 		if ($type == "student") {
 			$filters = [
@@ -416,8 +435,15 @@ class Sales extends MY_Admin_Controller {
 				['created_at', '<=', strtotime($edate.' 23:59:59')],
 				['meta_key', '=', 'student_status']
 			];
-			if (!$withCode) {
+			if ($category == "others") {
 				$filters[] = ['promote_code', '=', ''];
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters[] = ['promote_code', '=', $partnerQrCode];
+				}
+				if ($partnerQrCodes) {
+					$filters[] = ['promote_code', 'in', $partnerQrCodes];
+				}
 			}
 			$users = $this->user_model->getStudents($filters, $offset, $limit);
 		} else {
@@ -432,13 +458,20 @@ class Sales extends MY_Admin_Controller {
 			if ($type == "name") {
 				$filters["name !="] = "";
 			}
-			if (!$withCode) {
+			if ($category == "others") {
 				$filters["promote_code"] = "";
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters['promote_code'] = $partnerQrCode;
+				}
+				if ($partnerQrCodes) {
+					$filters['promote_code'] = $partnerQrCodes;
+				}
 			}
+
 			$users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
 		}
 
-		$this->load->library('output/json_output');
 		if (!$users) {
 			$this->json_output->setStatusCode(204)->send();
 		}
