@@ -731,7 +731,7 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $userList]);
 
 			$response = [
-				"users" => $this->user_output->toMany(false),
+				"users" => $this->user_output->toMany(),
 				"targets" => $this->target_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
