@@ -417,7 +417,7 @@ class Sales extends MY_Admin_Controller {
 				['meta_key', '=', 'student_status']
 			];
 			if (!$withCode) {
-				$filters[] = ['promote_code', '!=', ''];
+				$filters[] = ['promote_code', '=', ''];
 			}
 			$users = $this->user_model->getStudents($filters, $offset, $limit);
 		} else {
