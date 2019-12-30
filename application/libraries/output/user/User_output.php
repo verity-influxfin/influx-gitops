@@ -27,16 +27,29 @@ class User_output
         return $this->map($this->user, $withSensitiveInfo);
     }
 
-    public function toMany()
+    public function toMany($method = "map")
     {
         if (!$this->users || !is_array($this->users)) {
             return [];
         }
 
         foreach ($this->users as $user) {
-            $users[] = $this->map($user);
+            if (method_exists($this, $method)) {
+                $users[] = $this->$method($user);
+            }
         }
         return $users;
+    }
+
+    public function mapForSales($user)
+    {
+        $output = [
+            'id' => intval($user->id),
+            'created_at' => intval($user->created_at),
+            'promote_code' => strval($user->promote_code),
+        ];
+
+        return $output;
     }
 
     public function map($user, $withSensitiveInfo = false)
