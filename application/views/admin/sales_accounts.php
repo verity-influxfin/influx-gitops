@@ -53,6 +53,8 @@
         var type = url.searchParams.get("type");
         var category = url.searchParams.get("category");
         var partnerId = url.searchParams.get("partner_id");
+        var code = url.searchParams.get("code");
+        var adminId = url.searchParams.get("admin_id");
         var startAt = url.searchParams.get("sdate");
         var endAt = url.searchParams.get("edate");
         
@@ -115,6 +117,14 @@
             
             if (category == 'partner' && partnerId) {
                 query['partner_id'] = partnerId;
+            }
+
+            if (category == "marketing" && code) {
+                query["code"] = code;
+            }
+
+            if (category == "sales" && adminId) {
+                query["admin_id"] = adminId;
             }
 
             var queryString = $.param(query);

@@ -80,6 +80,8 @@ class User_model extends MY_Model
 					$this->db->where('users.promote_code ' . $filter[1], $filter[2]);
 				} elseif ($filter[1] == "in") {
 					$this->db->where_in('users.promote_code', $filter[2]);
+				} elseif ($filter[1] == "not in") {
+					$this->db->where_not_in('users.promote_code', $filter[2]);
 				} else {
 					$this->db->where('users.promote_code', $filter[2]);
 				}

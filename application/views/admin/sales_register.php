@@ -63,10 +63,10 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["count"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["fb"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["school"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["name"]) ?></p></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["count"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["fb"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><p class="form-control-static"><?=intval($value["school"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><p class="form-control-static"><?=intval($value["name"]) ?></p></a></td>
 												</tr>
 											<? }} ?>
 											<?
@@ -79,18 +79,18 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$key; ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["count"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["fb"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["school"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["name"]) ?></p></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["count"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["fb"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["school"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["name"]) ?></p></a></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
-												<td><?=$sum['count']; ?></td>
-												<td><?=$sum['fb']; ?></td>
-												<td><?=$sum['school']; ?></td>
-												<td><?=$sum['name']; ?></td>
+												<td><a href="accounts?category=sales-marketing&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['count']; ?></a></td>
+												<td><a href="accounts?category=sales-marketing&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['fb']; ?></a></td>
+												<td><a href="accounts?category=sales-marketing&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['school']; ?></a></td>
+												<td><a href="accounts?category=sales-marketing&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum['name']; ?></a></td>
 											</tr>
 											</tbody>
 										</table>

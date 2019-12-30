@@ -407,11 +407,13 @@ class Sales extends MY_Admin_Controller {
 		$edate = isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
 		$category = isset($get["category"]) ? $get["category"] : "";
 		$partnerId = isset($get["partner_id"]) ? $get["partner_id"] : "";
+		$code = isset($get["code"]) ? $get["code"] : "";
+		$adminId = isset($get["admin_id"]) ? $get["admin_id"] : "";
 		$offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
 		$limit = 20;
 
 		$this->load->library('output/json_output');
-		if ($category == "partner") {
+		if ($category == "partner" || $category == "sales-marketing") {
 			$partners 	= $this->partner_model->get_many_by(['status'=>1]);
 			$partnerQrCode = null;
 			$partnerQrCodes = [];
@@ -423,6 +425,22 @@ class Sales extends MY_Admin_Controller {
 						}
 					} else {
 						$partnerQrCodes[] = $value->my_promote_code;
+					}
+				}
+			}
+		}
+
+		$adminQrCode = "";
+		if ($category == "sales") {
+			if (!$adminId) {
+				$this->json_output->setStatusCode(400)->send();
+			}
+			$adminQrCodes = $this->admin_model->get_qrcode_list();
+			if ($adminQrCodes) {
+				foreach ($adminQrCodes as $qrCode => $id) {
+					if ($id == $adminId) {
+						$adminQrCode = $qrCode;
+						break;
 					}
 				}
 			}
@@ -444,7 +462,15 @@ class Sales extends MY_Admin_Controller {
 				if ($partnerQrCodes) {
 					$filters[] = ['promote_code', 'in', $partnerQrCodes];
 				}
+			} elseif ($category == 'sales-marketing') {
+				$filters[] = ['promote_code', '!=', ''];
+				$filters[] = ['promote_code', "not in" ,$partnerQrCodes];
+			} elseif ($category == "marketing") {
+				$filters[] = ['promote_code', '=', $code];
+			} elseif ($category == "sales") {
+				$filters[] = ['promote_code', '=', $adminQrCode];
 			}
+
 			$users = $this->user_model->getStudents($filters, $offset, $limit);
 		} else {
 			$filters = [
@@ -467,6 +493,13 @@ class Sales extends MY_Admin_Controller {
 				if ($partnerQrCodes) {
 					$filters['promote_code'] = $partnerQrCodes;
 				}
+			} elseif ($category == 'sales-marketing') {
+				$filters['promote_code !='] = '';
+				$filters['promote_code NOT'] = $partnerQrCodes;
+			} elseif ($category == "marketing") {
+				$filters['promote_code'] = $code;
+			} elseif ($category == "sales") {
+				$filters['promote_code'] = $adminQrCode;
 			}
 
 			$users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
