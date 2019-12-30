@@ -1187,7 +1187,8 @@ class Certification extends REST_Controller {
 			$type  		= $input['type'];
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
-
+			print_r($input);
+			exit();
             $fields = ['access_token'];
             foreach ($fields as $field) {
                 if (empty($input[$field])) {
