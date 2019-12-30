@@ -4,6 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Labor_insurance_lib
 {
+    public function __construct()
+    {
+		$this->CI = &get_instance();
+		$this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+	}
+
     public function check_labor_insurance($userId, $text, &$result)
     {
         $this->processApplicantDetail($userId, $text, $result);
@@ -24,7 +30,22 @@ class Labor_insurance_lib
 
     public function processDocumentCorrectness($text, &$result)
     {
+        $message = [
+            "stage" => "correctness",
+            "status" => "failure",
+            "message" => ""
+        ];
 
+        $isApplication = $this->CI->regex->isLaborInsuranceApplication($text);
+        if ($isApplication) {
+            $message["status"] = "success";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $message["status"] = "failure";
+        $message["message"] = "上傳文件錯誤";
+        $result["messages"][] = $message;
     }
 
     public function processDocumentIsValid($text, &$result)
