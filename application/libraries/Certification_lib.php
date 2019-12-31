@@ -998,20 +998,8 @@ class Certification_lib{
 		if($user_id){
 			$certification = [];
             $company_source_user_id = false;
-			if($company){
-				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],['debitcard','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail'])){
-						$certification[$key] = $value;
-					}
-				}
-			}else if($investor){
-				foreach($this->certification as $key => $value){
-					if(in_array($value['alias'],['idcard','debitcard','email','emergency'])){
-						$certification[$key] = $value;
-					}
-				}
-			}else if($target){
-			    if($target->product_id >= 1000){
+            if($target){
+                if($target->product_id >= 1000){
                     $company = $this->get_company_type($user_id);
                     $company_source_user_id = $company->user_id;
                 }
@@ -1021,6 +1009,18 @@ class Certification_lib{
                     }
                     else{
                         unset($certification[$key]);
+                    }
+                }
+            }else if($investor){
+				foreach($this->certification as $key => $value){
+					if(in_array($value['alias'],['idcard','debitcard','email','emergency'])){
+						$certification[$key] = $value;
+					}
+				}
+            }elseif($company){
+                foreach($this->certification as $key => $value){
+                    if(in_array($value['alias'],['investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail'])){
+                        $certification[$key] = $value;
                     }
                 }
             }else{

@@ -853,7 +853,8 @@ class Target_lib{
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> [0,22],
-			'script_status'	=> 0
+			'sub_status !=' => 9,
+			'script_status'	=> 0,
 		]);
 		$list 		= [];
 		$ids		= [];
@@ -869,9 +870,14 @@ class Target_lib{
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
 			if($rs){
                 $diploma = [];
+                $product_list = $this->CI->config->item('product_list');
+                $product = $product_list[$value->product_id];
+                $sub_product_id = $value->sub_product_id;
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                }
 				foreach($list as $product_id => $targets){
-					$product_list 			= $this->CI->config->item('product_list');
-					$product_certification 	= $product_list[$product_id]['certifications'];
+					$product_certification 	= $product['certifications'];
 					foreach($targets as $target_id => $value){
                         $company = $value->product_id >= 1000 ?1:0;
 						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
@@ -884,9 +890,19 @@ class Target_lib{
                                 }
                                 else{
                                     $finish = false;
+                                    break;
                                 }
                             }
 						}
+						if(!empty($value->target_data)){
+                            $targetData = json_decode($value->target_data);
+                            foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
+                                if(empty($targetData->$targetDataKey)){
+                                    $finish = false;
+                                    break;
+                                }
+                            }
+                        }
 						if($finish){
 							$count++;
 							$this->approve_target($value);
@@ -969,5 +985,39 @@ class Target_lib{
 		}
 		return false;
 	}
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
 
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
 }
