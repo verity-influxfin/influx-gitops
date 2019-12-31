@@ -87,6 +87,55 @@ class Labor_insurance_lib
         $message["status"] = self::SUCCESS;
         $message["message"] = "";
         $result["messages"][] = $message;
+        return $downloadTime;
+    }
+
+    public function processDownloadTimeMatchSearchTime($downloadTime, $text, &$result)
+    {
+        $message = [
+            "stage" => "time_matches",
+            "status" => self::PENDING,
+            "message" => "無法辨識日期"
+        ];
+
+        $content = $this->CI->regex->findPatternInBetween($text, "查詢日期起訖：", "【");
+        if (!$content) {
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $searchTimeArray = $this->CI->regex->extractDownloadTime($content[0]);
+
+        if (
+            !is_array($searchTimeArray)
+            || !$searchTimeArray
+            || !$searchTimeArray[0]
+            || !is_array($searchTimeArray[0])
+        ) {
+            $result["messages"][] = $message;
+            return;
+        }
+
+        if (count($searchTimeArray) == 2) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "勞保異動明細非歷年";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $endTime = $searchTimeArray[0][0];
+
+        $searchTime = $this->convertSearchTimeToTimestamp($endTime);
+        if ($downloadTime != $searchTime) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "勞保異動明細非歷年";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $message["status"] = self::SUCCESS;
+        $message["message"] = "";
+        $result["messages"][] = $message;
     }
 
     private function convertDownloadTimeToTimestamp(array $downloadTimeArray)
@@ -95,11 +144,19 @@ class Labor_insurance_lib
         $month = intval($downloadTimeArray[1]);
         $day = intval($downloadTimeArray[2]);
 
-        $hour = intval($downloadTimeArray[3]);
-        $minute = intval($downloadTimeArray[4]);
-        $second = intval($downloadTimeArray[5]);
+        return strtotime("{$year}-{$month}-{$day}");
+    }
 
-        return strtotime("{$year}-{$month}-{$day} {$hour}:{$minute}:{$second}");
+    private function convertSearchTimeToTimestamp(string $searchTime)
+    {
+        $totalLength = strlen($searchTime);
+        $dayStart = $totalLength - 2;
+        $monthStart = $dayStart - 2;
+        $year = mb_substr($searchTime, 0, 3) + 1911;
+        $month = mb_substr($searchTime, $monthStart, 2);
+        $day = mb_substr($searchTime, $dayStart, 2);
+
+        return strtotime("{$year}-{$month}-{$day}");
     }
 
     public function processApplicantDetail($userId, $text, &$result)

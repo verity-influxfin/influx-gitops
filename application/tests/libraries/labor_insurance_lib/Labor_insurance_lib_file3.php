@@ -55,4 +55,24 @@ class Labor_insurance_lib_file3 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessDownloadTimeMatchSearchTime()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "time_matches",
+		            "status" => "success",
+		            "message" => ""
+				]
+			]
+		];
+
+		$downloadTime = 1575331200;
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->processDownloadTimeMatchSearchTime($downloadTime, $this->text, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }
