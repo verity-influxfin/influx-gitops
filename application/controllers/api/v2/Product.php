@@ -391,8 +391,8 @@ class Product extends REST_Controller {
                 if(count($product['sub_product'])>0 && isset($sub_product_list[$sub_product_id])
                     || $product['hidenMainProduct']
                     || $sub_product_id && !in_array($sub_product_id,$product['sub_product'])){
-                    if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
-                        $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
                     }
                     else{
                         $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
@@ -525,8 +525,8 @@ class Product extends REST_Controller {
             if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product_id])
                 || $product['hidenMainProduct']
                 || $sub_product_id && !in_array($sub_product_id, $product['sub_product'])) {
-                if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
-                    $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
                 }else {
                     $this->response(array('result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST));
                 }
@@ -1022,11 +1022,10 @@ class Product extends REST_Controller {
             }
 
             $product_list = $this->config->item('product_list');
-            $sub_product_list = $this->config->item('sub_product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
-            if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
-                $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
             }
 
             $certification		= [];
@@ -1724,11 +1723,10 @@ class Product extends REST_Controller {
             $list = [];
             if($target){
                 $product_list = $this->config->item('product_list');
-                $sub_product_list = $this->config->item('sub_product_list');
                 $product = $product_list[$target->product_id];
                 $sub_product_id = $target->sub_product_id;
-                if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
-                    $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
                 }
                 $targetData = json_decode($target->target_data);
                 foreach ($product['targetData'] as $key => $value) {
@@ -1751,13 +1749,11 @@ class Product extends REST_Controller {
                 'status' => [0,1,30],
             ]);
             if($target){
-                $list = [];
                 $product_list = $this->config->item('product_list');
-                $sub_product_list = $this->config->item('sub_product_list');
                 $product = $product_list[$target->product_id];
                 $sub_product_id = $target->sub_product_id;
-                if($this->is_sub_product($product,$sub_product_list,$sub_product_id)){
-                    $product = $this->trans_sub_product($product,$sub_product_list,$sub_product_id);
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
                 }
                 $targetData = json_decode($target->target_data);
                 foreach ($targetData as $key => $value) {
@@ -2129,11 +2125,13 @@ class Product extends REST_Controller {
         return $insert;
     }
 
-    private function is_sub_product($product,$sub_product_list,$sub_product_id){
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
     }
 
-    private function trans_sub_product($product,$sub_product_list,$sub_product_id){
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
         $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
         $product = $this->sub_product_profile($product,$sub_product_data);
         return $product;

@@ -121,9 +121,11 @@
                                                     echo '<a class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?from=risk&id=').$value->cerCreditJudicial->id.'">檢閱</a>';
                                                 }
                                                 ?></td>
-                                            <td><?=isset($value->remark)?$value->remark:"" ?><?=isset($value->selling_type)
+                                            <td><?=isset($value->remark)?$value->remark:"" ?>
+                                                <?=isset($value->selling_type)
                                                     ?($value->selling_type==2 && $value->no_taishin?'未建立台新帳號':'')
-                                                    :"" ?></td>
+                                                    :"" ?>
+                                            </td>
                                             <td><?=isset($cooperation_list[$value->cooperation])?$cooperation_list[$value->cooperation]:"" ?>
                                                 <? if($value->cooperation==2){ ?>
                                                     <button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>

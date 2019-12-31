@@ -206,6 +206,7 @@ class Judicialperson extends MY_Admin_Controller {
 					$list[$key]->no_taishin = !$this->get_taishinAccount($value);
 					$list[$key]->user_name = $user_info?$user_info->name:"";
 					$list[$key]->cerCreditJudicial = $this->get_cerCreditJudicial($value->company_user_id);
+					$this->checkAndCreat_borrow_bankaccount($value);
 				}
 			}
 		}
@@ -340,6 +341,27 @@ class Judicialperson extends MY_Admin_Controller {
 			));
 		}
 		return false;
+	}
+
+	private function checkAndCreat_borrow_bankaccount($data){
+		if(in_array($data->selling_type,$this->config->item('use_taishin_selling_type'))) {
+			$user_bankaccount = $this->user_bankaccount_model->get_many_by([
+				'user_id' => $data->company_user_id,
+			]);
+			if (count($user_bankaccount) == 1) {
+				$user_bankaccount[0]->investor = 0;
+				$this->user_bankaccount_model->insert([
+					"user_id" => $user_bankaccount[0]->user_id,
+					"investor" => 0,
+					"user_certification_id" => $user_bankaccount[0]->user_certification_id,
+					"bank_code" => $user_bankaccount[0]->bank_code,
+					"branch_code" => $user_bankaccount[0]->branch_code,
+					"bank_account" => $user_bankaccount[0]->bank_account,
+					"front_image" => $user_bankaccount[0]->front_image,
+					"back_image" => $user_bankaccount[0]->back_image,
+				]);
+			}
+		}
 	}
 }
 ?>

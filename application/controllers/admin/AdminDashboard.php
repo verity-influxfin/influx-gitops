@@ -55,10 +55,10 @@ class AdminDashboard extends MY_Admin_Controller {
 				$bank_account_user_ids[] = $bankvalue->user_id;
 			}
 			foreach($target_list as $key => $value){
+				if($value->status==0 && $value->sub_status==9){
+					$target_count["evaluation"] += 1;
+				}
 				if(in_array($value->user_id,$bank_account_user_ids)){
-					if($value->status==0 && $value->sub_status==9){
-						$target_count["evaluation"] += 1;
-					}
 					if($value->delay==1 && $value->status==5){
 						$target_count["delay"] += 1;
 					}
