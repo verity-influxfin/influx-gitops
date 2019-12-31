@@ -11,7 +11,7 @@ class Labor_insurance_lib_file4 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/4.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/4-decoded.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
@@ -34,4 +34,25 @@ class Labor_insurance_lib_file4 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
     }
+
+	public function testProcessDocumentIsValid()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "download_time",
+					"status" => "failure",
+					"message" => "勞保異動明細非一個月內"
+				]
+			]
+		];
+		//2019/12/27
+		$time = 1577427644;
+		$this->labor_insurance_lib->setCurrentTime($time);
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->processDocumentIsValid($this->text, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

@@ -4,6 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Labor_insurance_lib
 {
+    const SUCCESS = "success";
+    const FAILURE = "failure";
+    const PENDING = "pending";
+
     public function __construct()
     {
 		$this->CI = &get_instance();
@@ -50,7 +54,52 @@ class Labor_insurance_lib
 
     public function processDocumentIsValid($text, &$result)
     {
+        $message = [
+            "stage" => "download_time",
+            "status" => self::PENDING,
+            "message" => "無法辨識日期"
+        ];
 
+        $content = $this->CI->regex->findPatternInBetween($text, "網頁下載時間", "秒");
+        if (!$content) {
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $downloadTimeText = $content[0];
+
+        $downloadTimeArray = $this->CI->regex->extractDownloadTime($downloadTimeText);
+        if (!$downloadTimeArray || !is_array($downloadTimeArray[0]) || count($downloadTimeArray[0]) != 6) {
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
+
+        $mustAfter = $this->currentTime - 31 * 86400;
+        if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "勞保異動明細非一個月內";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $message["status"] = self::SUCCESS;
+        $message["message"] = "";
+        $result["messages"][] = $message;
+    }
+
+    private function convertDownloadTimeToTimestamp(array $downloadTimeArray)
+    {
+        $year = intval($downloadTimeArray[0]) + 1911;
+        $month = intval($downloadTimeArray[1]);
+        $day = intval($downloadTimeArray[2]);
+
+        $hour = intval($downloadTimeArray[3]);
+        $minute = intval($downloadTimeArray[4]);
+        $second = intval($downloadTimeArray[5]);
+
+        return strtotime("{$year}-{$month}-{$day} {$hour}:{$minute}:{$second}");
     }
 
     public function processApplicantDetail($userId, $text, &$result)
@@ -102,4 +151,9 @@ class Labor_insurance_lib
     {
 
     }
+
+    public function setCurrentTime($currentTime)
+    {
+		$this->currentTime = $currentTime;
+	}
 }

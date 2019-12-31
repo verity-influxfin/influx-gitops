@@ -12,4 +12,10 @@ class Labor_insurance_regex extends Regular_expression
     {
         return preg_match('/' . self::APPLICATION_TITLE . '/', $text, $match) == 1;
     }
+
+    public function extractDownloadTime($text)
+    {
+        preg_match_all('/[0-9]+/', $text, $matches);
+        return $matches;
+    }
 }
