@@ -78,6 +78,12 @@ class Target_output
 			'loan_at' => $target->loan_date,
 		];
 
+		if(!empty($target->productTargetData)){
+            $output['targetData'] = $target->target_data;
+			$output['productTargetData'] = $target->productTargetData['targetData'];
+			$output['creditTargetData'] = $target->creditTargetData;
+        }
+
 		if (isset($target->amortization)) {
 			$output["remaining"] = $target->amortization["remaining_principal"];
 			$output["principal"] = 0;

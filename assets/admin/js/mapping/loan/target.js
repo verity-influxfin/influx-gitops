@@ -9,6 +9,9 @@ class Target
 		this.isDelay = target.is_delay;
 		this.interests = target.interests;
 		this.instalment = target.instalment;
+		this.targetData = target.targetData;
+		this.productTargetData = target.productTargetData;
+		this.creditTargetData = target.creditTargetData;
 		this.expireAt = parseInt(target.expire_at);
 		this.loanAt = parseInt(target.loan_at);
 		this.setStatus(target);

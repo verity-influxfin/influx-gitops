@@ -49,6 +49,8 @@ class User_output
             "email" => strval($user->email),
             "status" => strval($user->status),
             "investor_status" => strval($user->investor_status),
+            "company" => strval($user->company_status),
+            "judicial_id" => isset($user->judicial_id)?strval($user->judicial_id):false,
             "block_status" => strval($user->block_status),
             "promote_code" => strval($user->promote_code),
             "created_at" => intval($user->created_at),
@@ -63,15 +65,17 @@ class User_output
 
 			$output["birthday"] = $user->birthday;
 			$output["address"] = $user->address;
-			if ($user->profile) {
-				$output["profile_image"] = $user->profile->id_card_person;
-			}
-			if ($user->profile && $user->profile->emergency_relationship && $user->profile->emergency_relationship == "配偶") {
-				$output["marriage"] = [
-					'name' => $user->profile->emergency_name,
-					'phone' => $user->profile->emergency_phone,
-				];
-			}
+            if($user->company_status == 0){
+                if ($user->profile) {
+                    $output["profile_image"] = $user->profile->id_card_person;
+                }
+                if ($user->profile && $user->profile->emergency_relationship && $user->profile->emergency_relationship == "配偶") {
+                    $output["marriage"] = [
+                        'name' => $user->profile->emergency_name,
+                        'phone' => $user->profile->emergency_phone,
+                    ];
+                }
+            }
 		}
 
         if (isset($user->school)) {

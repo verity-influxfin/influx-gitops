@@ -157,7 +157,7 @@ class Credit_lib{
 		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
 	}
 
-	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra){
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
 
 		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
 		$user_info 	= $this->CI->user_model->get($user_id);
@@ -265,8 +265,8 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
 	}
 
     private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
@@ -284,7 +284,7 @@ class Credit_lib{
         foreach($info as $key => $value){
             $data[$value->meta_key] = $value->meta_value;
         }
-
+        $this->CI->load->model('user/judicial_person_model');
         $judicial_person = $this->CI->judicial_person_model->get_by([
             'company_user_id' => $user_id
         ]);
@@ -306,6 +306,10 @@ class Credit_lib{
                     $value['bonus'] > 0 && $bonus == count($value['score']) ? $total+=$value['bonus'] : '';
                 }
             }
+        }
+
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $total += $approvalExtra->getExtraPoints();
         }
 
         $param['points'] 	= intval($total);

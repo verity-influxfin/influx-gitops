@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','verify_success','verify_failed','loan_success','loan_failed');
+	protected $edit_method = array('edit','verify_success','verify_failed','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer');
 	
 	public function __construct() {
 		parent::__construct();
@@ -584,7 +584,20 @@ class Target extends MY_Admin_Controller {
 			if ($target->status != 0 && $target->sub_status != 9) {
 				$this->json_output->setStatusCode(404)->send();
 			}
-			$this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
+
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            $target->productTargetData = $product;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $target->productTargetData = $this->trans_sub_product($product,$sub_product_id);
+            }
+
+            $this->config->load('credit',TRUE);
+            $get_creditTargetData = $this->config->item('credit')['creditTargetData'];
+            $target->creditTargetData = isset($get_creditTargetData[$target->product_id][$sub_product_id])?$get_creditTargetData[$target->product_id][$sub_product_id]:false;
+
+            $this->load->library('output/loan/target_output', ['data' => $target], 'current_target_output');
 
 			$userId = $target->user_id;
 			$user = $this->user_model->get($userId);
@@ -600,36 +613,45 @@ class Target extends MY_Admin_Controller {
 				'certification_id' => 2,
 				'status' => 1,
 			]);
-			$schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
-			if (isset($schoolCertificationDetailArray["graduate_date"])) {
-				 $graduateDate = new stdClass();
-				 $graduateDate->meta_key = "school_graduate_date";
-				 $graduateDate->meta_value = $schoolCertificationDetailArray["graduate_date"];
-				 $userMeta[] = $graduateDate;
-			}
 
-			$this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
+            if($user->company_status == 0){
+                $schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+                if (isset($schoolCertificationDetailArray["graduate_date"])) {
+                    $graduateDate = new stdClass();
+                    $graduateDate->meta_key = "school_graduate_date";
+                    $graduateDate->meta_value = $schoolCertificationDetailArray["graduate_date"];
+                    $userMeta[] = $graduateDate;
+                }
 
-			$instagramCertificationDetail = $this->user_certification_model->get_by([
-				'user_id' => $userId,
-				'certification_id' => 4,
-				'status' => 1,
-			]);
-			$instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
-			if ($instagramCertificationDetailArray["type"] == "instagram") {
-				$picture = $instagramCertificationDetailArray["info"]["picture"];
-				$this->usermeta->setInstagramPicture($picture);
-			}
+                $this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
 
-			$user->profile = $this->usermeta->values();
-			$user->school = $this->usermeta->values();
-			$user->instagram = $this->usermeta->values();
-			$user->facebook = $this->usermeta->values();
+                $instagramCertificationDetail = $this->user_certification_model->get_by([
+                    'user_id' => $userId,
+                    'certification_id' => 4,
+                    'status' => 1,
+                ]);
+                $instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+                if ($instagramCertificationDetailArray["type"] == "instagram") {
+                    $picture = $instagramCertificationDetailArray["info"]["picture"];
+                    $this->usermeta->setInstagramPicture($picture);
+                }
+
+                $user->profile = $this->usermeta->values();
+                $user->school = $this->usermeta->values();
+                $user->instagram = $this->usermeta->values();
+                $user->facebook = $this->usermeta->values();
+            }elseif ($user->company_status == 1){
+                $this->load->model('user/judicial_person_model');
+                $judicial_person = $this->judicial_person_model->get_by([
+                    'company_user_id' => $user->id,
+                ]);
+                $user->judicial_id = $judicial_person?$judicial_person->id:false;
+            }
 
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
-			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status);
+			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status,$target);
 			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);
 			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
 			$this->load->library('output/user/verifications_output', $verificationInput);
@@ -1093,7 +1115,7 @@ class Target extends MY_Admin_Controller {
         $html .= '</tbody></table>';
 		echo $html;
 	}
-	
+
 	public function amortization_export(){
 		$post = $this->input->post(NULL, TRUE);
 		$ids = isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
@@ -1430,7 +1452,7 @@ class Target extends MY_Admin_Controller {
         $this->load->view('admin/_footer');
     }
 
-public function order_target(){
+    public function order_target(){
         $page_data 	  = array('type'=>'list');
         $list 		  = $this->target_model->get_many_by(['status'=>[20,21,22,23,24]]);
 
@@ -1467,6 +1489,42 @@ public function order_target(){
         }else{
             echo '查無此ID';die();
         }
+    }
+
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
     }
 }
 ?>

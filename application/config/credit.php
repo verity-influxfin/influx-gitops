@@ -66,7 +66,7 @@ $config['credit_level_4'] = [
 ];
 
 $config['credit_level_1000'] = [
-    1 => ['start' => 80, 'end' => 100, 'rate' => ['90' => 15 ,'180' => 15]],
+    1 => ['start' => 80, 'end' => 9999, 'rate' => ['90' => 15 ,'180' => 15]],
     2 => ['start' => 60, 'end' => 79, 'rate ' => ['90' => 15 ,'180' => 15]],
     3 => ['start' => 40, 'end' => 59, 'rate' => ['90' => 15 ,'180' => 15]],
     4 => ['start' => 0, 'end' => 39, 'rate' => ['90' => 15 ,'180' => 15]],
@@ -347,10 +347,10 @@ $config['credit_amount_4'] = [
 ];
 
 $config['credit_amount_1000'] = [
-    ['start' => 80, 'end' => 100, 'amount' => 10000000],
-    ['start' => 60, 'end' => 79, 'amount' => 7000000],
-    ['start' => 40, 'end' => 59, 'amount' => 5000000],
-    ['start' => 0, 'end' => 39, 'amount' => 3000000]
+    ['start' => 80, 'end' => 9999, 'amount' => 10000000, 'year_amount' => 100000000, 'limit' => [10, 1000]],
+    ['start' => 60, 'end' => 79, 'amount' => 7000000, 'year_amount' => 70000000, 'limit' => [7, 700]],
+    ['start' => 40, 'end' => 59, 'amount' => 5000000, 'year_amount' => 50000000, 'limit' => [5, 500]],
+    ['start' => 0, 'end' => 39, 'amount' => 300000, 'year_amount' => 30000000, 'limit' => [3, 300]]
 ];
 
 $config['creditJudicial'] = [
@@ -394,6 +394,7 @@ $config['creditJudicial'] = [
                 '擁有該行業7年以上經驗者',
                 '擁有該行業10年以上經驗者',
             ],
+            'bonus' => 0,
         ],
         'opratorsAndTeamBackgroundMeans_2' => [
             'name' => '選購標的車輛理念及能力、職業道德',
@@ -449,7 +450,7 @@ $config['creditJudicial'] = [
         'internationlEconomicalImpact' => [
             'name' => '國內外經濟因素演變對其產業展望影響',
             'selctType' => 'select',
-            'score' => [0, 2, 4, 5],
+            'score' => [0, 2, 3, 4],
             'descrtion' => [
                 '國內外經濟景氣變動對公司發展重大不利影響',
                 '國內外經濟景氣變動對公司發展影響輕微',
@@ -538,5 +539,13 @@ $config['creditJudicial'] = [
             ],
             'bonus' => 2,
         ]
+    ]
+];
+
+$config['creditTargetData'] = [
+    '1000' =>[
+       3 => [
+           'car_others_image' => [2, 3, 30]
+       ]
     ]
 ];
