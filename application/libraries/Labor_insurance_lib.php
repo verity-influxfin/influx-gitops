@@ -36,18 +36,18 @@ class Labor_insurance_lib
     {
         $message = [
             "stage" => "correctness",
-            "status" => "failure",
+            "status" => self::FAILURE,
             "message" => ""
         ];
 
         $isApplication = $this->CI->regex->isLaborInsuranceApplication($text);
         if ($isApplication) {
-            $message["status"] = "success";
+            $message["status"] = self::SUCCESS;
             $result["messages"][] = $message;
             return;
         }
 
-        $message["status"] = "failure";
+        $message["status"] = self::FAILURE;
         $message["message"] = "上傳文件錯誤";
         $result["messages"][] = $message;
     }
