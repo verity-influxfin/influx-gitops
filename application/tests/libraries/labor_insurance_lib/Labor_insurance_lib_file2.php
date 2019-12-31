@@ -1,6 +1,6 @@
 <?php
 
-class Labor_insurance_lib_file1 extends TestCase
+class Labor_insurance_lib_file2 extends TestCase
 {
 	public function setUp()
 	{
@@ -11,7 +11,7 @@ class Labor_insurance_lib_file1 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/1.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/2.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
@@ -24,8 +24,8 @@ class Labor_insurance_lib_file1 extends TestCase
 			"messages" => [
 				[
 					"stage" => "correctness",
-		            "status" => "success",
-		            "message" => ""
+		            "status" => "failure",
+		            "message" => "上傳文件錯誤"
 				]
 			]
 		];

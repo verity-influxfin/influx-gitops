@@ -1,6 +1,6 @@
 <?php
 
-class Labor_insurance_lib_file1 extends TestCase
+class Labor_insurance_lib_file5 extends TestCase
 {
 	public function setUp()
 	{
@@ -11,7 +11,7 @@ class Labor_insurance_lib_file1 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/1.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/4.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
@@ -19,7 +19,7 @@ class Labor_insurance_lib_file1 extends TestCase
 
     public function testProcessDocumentCorrectness()
     {
-		$expectedResult = [
+        $expectedResult = [
 			"status" => "pending",
 			"messages" => [
 				[
