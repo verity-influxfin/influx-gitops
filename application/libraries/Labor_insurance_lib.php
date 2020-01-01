@@ -16,9 +16,11 @@ class Labor_insurance_lib
 
     public function check_labor_insurance($userId, $text, &$result)
     {
+        $this->setCurrentTime(time());
         $this->processApplicantDetail($userId, $text, $result);
         $this->processDocumentCorrectness($text, $result);
-        $this->processDocumentIsValid($text, $result);
+        $downloadTime = $this->processDocumentIsValid($text, $result);
+        $this->processDownloadTimeMatchSearchTime($downloadTime, $text, $result);
         $this->processApplicantHavingLaborInsurance($text, $result);
         $this->processMostRecentCompanyName($text, $result);
         $this->processCurrentJobExperience($text, $result);
