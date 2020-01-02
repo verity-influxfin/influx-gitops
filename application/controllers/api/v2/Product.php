@@ -1035,6 +1035,7 @@ class Product extends REST_Controller {
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
+                        $value['type'] = 'certification';
                         $certification[] = $value;
                     }
                 }
@@ -1042,7 +1043,7 @@ class Product extends REST_Controller {
 
             $amortization_schedule = [];
             if(in_array($target->status,[1])){
-                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
+                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment,false,$product['visul_id']);
             }
 
             $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
@@ -1112,6 +1113,24 @@ class Product extends REST_Controller {
                     $order_info['delivery'] 		 = intval($orders->delivery);
                     $order_info['status'] 		     = intval($orders->status);
                     $order_info['created_at'] 		 = intval($orders->created_at);
+                }
+            }
+
+            $targetData = json_decode($target->target_data);
+            foreach ($product['targetData'] as $key => $value) {
+                if(!in_array($key,['purchase_time','vin','factory_time','product_description'])){
+                    $certification[] = [
+                        "id"=> null,
+                        "alias"=> $key,
+                        "name"=> $value[1],
+                        "status"=> 1,
+                        "description"=> null,
+                        "user_status"=> !empty($targetData->$key)?1:0,
+                        "certification_id"=> null,
+                        "updated_at"=> null,
+                        "type"=> 'targetData',
+                        "struct"=> $value,
+                    ];
                 }
             }
 

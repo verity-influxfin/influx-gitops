@@ -64,4 +64,35 @@ class Foreign_exchange_car_row
 	{
 		$this->shareRate = $shareRate;
 	}
+
+    /**
+     * @return int
+     */
+    public function getYearDays(): int
+    {
+        return $this->yearDays;
+    }
+
+    /**
+     * @param int $yearDays
+     */
+    public function setYearDays(int $yearDays): void
+    {
+        $this->yearDays = $yearDays;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getUseGenerate(): bool
+    {
+        return $this->useGenerate;
+    }
+    /**
+     * @param boolean $useGenerate
+     */
+    public function setUseGenerate(bool $useGenerate): void
+    {
+        $this->useGenerate = $useGenerate;
+    }
 }

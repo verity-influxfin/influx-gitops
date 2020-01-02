@@ -19,11 +19,10 @@ class Foreign_exchange_car_lib
 
         $currentShareRate = 0;
         $numInputs = count($inputs);
-        $daysOfTheYear = 365;
+        $daysOfTheYear = $setting->getYearDays();
         $instalment = $setting->getLength();
         for ($i = 1; $i <= $instalment; $i++) {
             $shareBase = 0;
-
             $this->CI->load->library('entity/amortization/foreign_exchange_car_row', [], "row{$i}");
             $rowObject = "row{$i}";
             $row = $this->CI->$rowObject;
@@ -50,7 +49,7 @@ class Foreign_exchange_car_lib
                 $currentShareRate = $setting->getShareRate();
             }
 
-            $currentShareRate = $shareRateGenerator->generateRate($i, $currentShareRate);
+            $setting->getUseGenerate() ? $currentShareRate = $shareRateGenerator->generateRate($i, $currentShareRate):'';
 
             $share = round($shareBase * $currentShareRate);
             $row->setShareRate($currentShareRate);

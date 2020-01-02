@@ -543,9 +543,9 @@ $config['creditJudicial'] = [
 ];
 
 $config['creditTargetData'] = [
-    '1000' =>[
-       3 => [
-           'car_others_image' => [2, 3, 30]
-       ]
-    ]
+    //'1000' =>[
+    //   3 => [
+    //       'car_others_image' => [2, 3, 30]
+    //   ]
+    //]
 ];

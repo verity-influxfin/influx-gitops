@@ -903,7 +903,7 @@ class Certification_lib{
 			$company_source_user_id = false;
 			if($company){
                 $total = 0;
-                $allows = ['businesstax','cerCreditJudicial'];
+                $allows = ['businesstax'];
                 $company = $this->get_company_type($user_id);
                 $company_source_user_id = $company->user_id;
                 //FEV
@@ -933,7 +933,7 @@ class Certification_lib{
                 if($self_targets) {
                     $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
                 }
-                $total >= 500000?$allows = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow']):'';
+                $total >= 500000?$allows[] = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow']):'';
                 if($total >= 1000000 && $company->selling_type != 2){
                     $allows[] = 'interview';
                 }

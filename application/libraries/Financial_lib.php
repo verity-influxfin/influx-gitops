@@ -7,12 +7,12 @@ define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
 	
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1){
+	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1,$visul_id=false){
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type);
+				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type,$visul_id);
 				return $rs;
 			}
 		}
@@ -20,7 +20,7 @@ class Financial_lib{
 	}
 
 	//取得攤還表 - 等額本息
-	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type){
+	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type = 1,$visul_id = false){
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
 		$rate 		= floatval($rate);
@@ -102,7 +102,7 @@ class Financial_lib{
 	}
 	
 	//取得攤還表 - 先息後本
-	private function amortization_schedule_2($amount,$instalment,$rate,$date){
+	private function amortization_schedule_2($amount,$instalment,$rate,$date,$product_type = false,$visul_id = false){
 
 		$xirr_dates		= array($date);
 		$xirr_value		= array($amount*(-1));
@@ -171,29 +171,99 @@ class Financial_lib{
 		return $schedule;
 	}
 
-	private function amortization_schedule_3()
+	private function amortization_schedule_3($amount,$instalment,$rate,$date,$product_type = false, $visul_id = false)
     {
-        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting');
-        $inputSetting = $this->CI->Foreign_exchange_car_amortization_schedule_setting;
-        $inputSetting->setLength(183);
-        $inputSetting->setInterests(0.15);
-        $inputSetting->setPlatformProportion(0.03);
-        $inputSetting->setShareRate(0.02);
+        //驗證閏年
+        $leap_year	= $this->leap_year($date,$instalment);
+        $year_days = $leap_year?366:365;//今年日數
+        $schedule	= [
+            'amount'		=> $amount,
+            'instalment'	=> $instalment,
+            'rate'			=> $rate,
+            'date'			=> $date,
+            'total_payment'	=> 0,
+            'leap_year'		=> $leap_year,
+            'year_days'		=> $year_days
+        ];
+
+        $list 		= array();
+        $total_payment = 0;
+
+        $shareModeList = ['DS1P1','DS2P1'];
+        $amount 	= intval($amount);
+        $instalment = intval($instalment);
+        $rate 		= floatval($rate);
+        $platform = 0;
+        $shareRate = 0;
+        $startAt = 1;
+
+
+        $this->CI = &get_instance();
+        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting', [], 'amortization_setting');
+        $inputSetting = $this->CI->amortization_setting;
+        if(in_array($visul_id,$shareModeList)){
+            $platformFee = PLATFORM_FEES;
+            $shareRate = FEV_SHARE_RATE;
+            if($visul_id == 'DS2P1'){
+                $inputSetting->setUseGenerate(false);
+            }
+        }
+
+        $inputSetting->setLength($instalment);
+        $inputSetting->setInterests($rate * 0.01);
+        $inputSetting->setPlatformProportion($platformFee * 0.01);
+        $inputSetting->setShareRate($shareRate * 0.01);
+        $inputSetting->setYearDays($year_days);
+
         $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_loan', [], "loan1");
         $loanStage1 = $this->CI->loan1;
-        $loanStage1->setStartAt(1);
-        $loanStage1->setAmount(706353);
-        $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_loan', [], "loan2");
-        $loanStage2 = $this->CI->loan2;
-        $loanStage2->setStartAt(45);
-        $loanStage2->setAmount(472204);
-        $inputs = [$loanStage1, $loanStage2];
-        $this->CI->load->library('entity/amortization/foreign_car_lib');
-        $table = $this->CI->foreign_car_lib->amortization_schedule($inputs, $inputSetting);
-        $inputs = [$loanStage1, $loanStage2];
-        $table = $this->CI->foreign_car_lib->amortization_schedule($inputs, $inputSetting, $table);
+        $loanStage1->setStartAt($startAt);
+        $loanStage1->setAmount($amount);
+
+        $this->CI->load->library('Foreign_exchange_car_lib');
+        $day_amortization_schedule = $this->CI->foreign_exchange_car_lib->amortization_schedule([$loanStage1], $inputSetting);
+
+
+        //$cdate = $date;
+        //for( $coi = 0; $coi <= $instalment; $coi++ ){
+        //    $reoaynent_days = date('Y-m-',strtotime($cdate.' + '.$coi.' days')).REPAYMENT_DAY;
+        //    $reoaynent_range_days = get_range_days($cdate,$reoaynent_days);
+        //    if($reoaynent_range_days<=$instalment){
+        //        $pay_day[$reoaynent_range_days] = $reoaynent_days;
+        //    }
+        //    else{
+        //        $pay_day[$instalment] = date('Y-m-d',strtotime($date.' + '.$instalment.' days'));
+        //    }
+        //    $cdate = $reoaynent_days;
+        //}
+
+        //get_range_days($odate,$date);
+        foreach($day_amortization_schedule->getRows() as $PDkey => $PDvalue){
+            $interest = $PDvalue->getAnnualReturns()[0]->getFee();
+            $platform = $PDvalue->getAnnualReturns()[0]->getPlatform();
+            $share = $PDvalue->getShare();
+            $total_payment = $interest + $platform + $share + $amount;
+
+            $list[$PDkey] = array(
+                'instalment'			=> $PDkey+1,
+                'repayment_date'		=> [],
+                'days'					=> $PDkey+1,
+                'remaining_principal'	=> $amount,
+                'principal'				=> $amount,
+                'interest'				=> $interest,
+                'total_payment'			=> $total_payment,
+            );
+        }
+
+        $schedule['schedule'] 	= $list;
+        $schedule['total'] 		= array(
+            'principal'		=> $amount,
+            'interest'		=> $interest,
+            'total_payment'	=> $total_payment,
+        );
+        return $schedule;
     }
-	
+
 	public function leap_year($date='',$instalment=0){
 		if($date && $instalment){
 			//驗證閏年
@@ -325,12 +395,11 @@ class Financial_lib{
 		}
 		return false;
 	}
-	
+
 	public function get_tax_amount($total=0){
 		if($total > 10){
 			return intval($total - round($total*100/(100+TAX_RATE),0));
 		}
 		return 0;
 	}
-
 }
