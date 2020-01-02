@@ -75,4 +75,37 @@ class Labor_insurance_lib_file2 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessApplicantDetail()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "applicant_detail",
+					"status" => "pending",
+					"message" => "姓名無法判讀"
+				]
+			]
+		];
+
+		$userModel = $this->getMockBuilder('user_model')
+						  ->disableOriginalConstructor()
+						  ->getMock();
+
+		$user = new stdClass();
+		$user->id_number = 'E125941355';
+		$user->name = '陳阿達';
+		$user->birthday = '1992-12-31';
+		$userModel->expects($this->any())
+				  ->method('get')
+				  ->will($this->returnValue($user));
+
+		$this->labor_insurance_lib->CI->user_model = $userModel;
+
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->processApplicantDetail(42775, $this->text, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

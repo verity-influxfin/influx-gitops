@@ -18,4 +18,10 @@ class Labor_insurance_regex extends Regular_expression
         preg_match_all('/[0-9]+/', $text, $matches);
         return $matches;
     }
+
+    public function extractIdNumber($text)
+    {
+        preg_match('/[A-Z][1-2][0-9]{8}/', $text, $match);
+        return $match;
+    }
 }

@@ -127,7 +127,7 @@ class Labor_insurance_lib
 
         $endTime = $searchTimeArray[0][0];
 
-        $searchTime = $this->convertSearchTimeToTimestamp($endTime);
+        $searchTime = $this->convertTaiwanTimeToTime($endTime);
         if ($downloadTime != $searchTime) {
             $message["status"] = self::FAILURE;
             $message["message"] = "勞保異動明細非歷年";
@@ -149,7 +149,7 @@ class Labor_insurance_lib
         return strtotime("{$year}-{$month}-{$day}");
     }
 
-    private function convertSearchTimeToTimestamp(string $searchTime)
+    private function convertTaiwanTimeToTime(string $searchTime)
     {
         $totalLength = strlen($searchTime);
         $dayStart = $totalLength - 2;
@@ -163,7 +163,54 @@ class Labor_insurance_lib
 
     public function processApplicantDetail($userId, $text, &$result)
     {
+        $message = [
+            "stage" => "applicant_detail",
+            "status" => self::PENDING,
+            "message" => ""
+        ];
 
+        $idNumberMatch = $this->CI->regex->extractIdNumber($text);
+        if (!$idNumberMatch) {
+            $message["message"] = "身分證字號無法判讀";
+            $result["messages"][] = $message;
+            return;
+        }
+        $idNumber = $idNumberMatch[0];
+
+        $fullnameText = $this->CI->regex->findNonGreedyPatternInBetween($text, "姓名：", "出生日期");
+        if (!$fullnameText || !trim($fullnameText[0])) {
+            $message["message"] = "姓名無法判讀";
+            $result["messages"][] = $message;
+            return;
+        }
+        $fullname = trim($fullnameText[0]);
+
+        $bornAtText = $this->CI->regex->findNonGreedyPatternInBetween($text, "出生日期：", "查詢日期起訖");
+        if (!$bornAtText || !trim($bornAtText[0])) {
+            $message["message"] = "出生日期無法判讀";
+            $result["messages"][] = $message;
+            return;
+        }
+        $bornAt = trim($bornAtText[0]);
+        $bornAt = $this->convertTaiwanTimeToTime($bornAt);
+
+        $user = $this->CI->user_model->get($userId);
+
+        if (
+            $user->id_number == $idNumber
+            && $user->name == $fullname
+            && strtotime($user->birthday) == $bornAt
+        ) {
+            $message["status"] = self::SUCCESS;
+            $message["message"] = "";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $message["status"] = self::FAILURE;
+        $message["message"] = "勞保異動明細非本人";
+        $message["rejected_message"] = "請您提供本人近一個月內最新的勞工保險異動明細資料";
+        $result["messages"][] = $message;
     }
 
     public function processApplicantHavingLaborInsurance($text, &$result)

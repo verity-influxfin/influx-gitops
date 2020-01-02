@@ -12,6 +12,13 @@ class Regular_expression
 		return $match;
 	}
 
+	public function findNonGreedyPatternInBetween(string $text, string $start, string $end)
+	{
+		$lineBreaks = self::LINE_BREAK;
+		preg_match("/(?<={$start}){$lineBreaks}.*?{$lineBreaks}(?={$end})/s", $text, $match);
+		return $match;
+	}
+
 	public function replaceSpacesToSpace(string $text)
 	{
 		$spaces = self::SPACES;
