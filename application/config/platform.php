@@ -657,4 +657,4 @@ $config['certifications_msg'] = [
     ]
 ];
 
-$config['mail_event'] = '19christmas';//current_event
+$config['mail_event'] = '20_01';//current_event//19christmas
