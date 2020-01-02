@@ -21,7 +21,8 @@ class Labor_insurance_lib
         $this->processDocumentCorrectness($text, $result);
         $downloadTime = $this->processDocumentIsValid($text, $result);
         $this->processDownloadTimeMatchSearchTime($downloadTime, $text, $result);
-        $this->processApplicantHavingLaborInsurance($text, $result);
+        $rows = $this->readRows($text);
+        $this->processApplicantHavingLaborInsurance($rows, $result);
         $this->processMostRecentCompanyName($text, $result);
         $this->processCurrentJobExperience($text, $result);
         $this->processTotalJobExperience($text, $result);
@@ -213,9 +214,143 @@ class Labor_insurance_lib
         $result["messages"][] = $message;
     }
 
-    public function processApplicantHavingLaborInsurance($text, &$result)
+    public function processApplicantHavingLaborInsurance($rows, &$result)
     {
+        $message = [
+            "stage" => "insurance_enrollment",
+            "status" => self::PENDING,
+            "message" => ""
+        ];
+        if (!$rows) {
+            $message['status'] = self::FAILURE;
+            $message["message"] = "未加保勞保";
+            $message["rejected_message"] = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $result["messages"][] = $message;
+            return;
+        }
 
+        foreach ($rows as $company => $records) {
+            if (!$records) {
+                $message["status"] = self::PENDING;
+                $message["message"] = "讀取資料失敗";
+                $result["messages"][] = $message;
+                return;
+            }
+
+            $numRecords = count($records);
+            $lastIndex = $numRecords - 1;
+            $record = $records[$lastIndex];
+
+            if (!isset($record['endAt'])) {
+                $message["status"] = self::SUCCESS;
+                $message["message"] = "";
+                $result["messages"][] = $message;
+                return;
+            }
+        }
+
+        $message['status'] = self::FAILURE;
+        $message["message"] = "未加保勞保";
+        $message["rejected_message"] = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+        $result["messages"][] = $message;
+    }
+
+    public function readRows($text)
+    {
+        $text = $this->CI->regex->replaceSpacesToSpace($text);
+        $data = explode(" ", $text);
+
+        $rows = [];
+        $row = [];
+        $total = count($data);
+        $currentIndex = 0;
+        $numAdded = 0;
+        for ($i = 0; $i < $total; $i++) {
+            $each = $data[$i];
+            $insuranceId = $this->CI->regex->isInsuranceId($each);
+            if ($insuranceId) {
+                if ($row) {
+                    $rows[$row['name']][] = $row;
+                    $currentIndex = 0;
+                    $numAdded++;
+                    $row = [];
+                }
+                $row['index'] = $numAdded;
+                $row['id'] = $each;
+                $currentIndex = 2;
+                continue;
+            }
+
+            if ($currentIndex > 0) {
+                $isNumber = is_numeric($each);
+                $isTimeFormat = strlen($each) == 7 && is_numeric($each);
+                if ($currentIndex == 2) {
+                    $row['name'] = $each;
+                    $currentIndex++;
+                    continue;
+                }
+                if ($currentIndex == 3) {
+                    $isSalary = $this->CI->regex->isSalary($each);
+                    if ($isSalary) {
+                        $row['salary'] = $each;
+                        $currentIndex++;
+                        continue;
+                    } elseif ($isTimeFormat) {
+                        $row['createdAt'] = $each;
+                        $currentIndex++;
+                        continue;
+                    } else {
+                        $row['name'] .= $each;
+                    }
+                    if (!isset($rows[$row['name']])) {
+                        $rows[$row['name']] = [];
+                    }
+                }
+                if ($currentIndex == 4) {
+                    $isSalary = $this->CI->regex->isSalary($each);
+                    if ($isTimeFormat && !isset($row['createdAt'])) {
+                        $row['createdAt'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                    if (!$isSalary && $isTimeFormat && isset($row['createdAt'])) {
+                        $row['endAt'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                    if (!$isNumber && isset($row['createdAt'])) {
+                        $row['comment'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                }
+
+                if ($currentIndex == 5) {
+                    if ($isTimeFormat && isset($row['createdAt'])) {
+                        $row['endAt'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                    if (!$isNumber && isset($row['createdAt']) && !isset($row['comment'])) {
+                        $row['comment'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                }
+
+                if ($currentIndex == 6) {
+                    if (!$isNumber && isset($row['createdAt']) && !isset($row['comment'])) {
+                        $row['comment'] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                }
+            }
+        }
+        if ($row) {
+            $rows[$row['name']][] = $row;
+        }
+        return $rows;
     }
 
     public function processMostRecentCompanyName($text, &$result)

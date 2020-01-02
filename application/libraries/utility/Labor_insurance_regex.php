@@ -24,4 +24,14 @@ class Labor_insurance_regex extends Regular_expression
         preg_match('/[A-Z][1-2][0-9]{8}/', $text, $match);
         return $match;
     }
+
+    public function isInsuranceId($text)
+    {
+        return preg_match('/^[0-9]{3,}[a-zA-Z]{1,3}$/', $text) == 1;
+    }
+
+    public function isSalary($text)
+    {
+        return preg_match('/\d+(,\d+)*(\.\d+)?/', $text) == 1 && !is_numeric($text);
+    }
 }

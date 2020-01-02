@@ -185,4 +185,24 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessApplicantHavingLaborInsurance()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "insurance_enrollment",
+					"status" => "success",
+					"message" => ""
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+		$rows = $this->labor_insurance_lib->readRows($this->text);
+		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($rows, $result);
+		print_r($rows);
+		$this->assertEquals($expectedResult, $result);
+	}
 }

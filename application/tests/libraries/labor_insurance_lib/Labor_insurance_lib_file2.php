@@ -108,4 +108,25 @@ class Labor_insurance_lib_file2 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessApplicantHavingLaborInsurance()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "insurance_enrollment",
+					"status" => "failure",
+					"message" => "未加保勞保",
+					"rejected_message" => "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。",
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+		$rows = $this->labor_insurance_lib->readRows($this->text);
+		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }
