@@ -189,7 +189,8 @@
 														<img src="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>">
 													</a></p>
 												<label>IG 貼文</label>
-												<? foreach ($content['instagram']['meta'] as $key => $value) {
+												<? if(isset($content['instagram']['meta'])) {
+													foreach ($content['instagram']['meta'] as $key => $value) {
 												?>
 													<div>
 														<p>讚數：<?= isset($value['likes']) ? $value['likes'] : "" ?>、發布日期：<?= isset($value['created_time']) ? date("Y-m-d H:i:s", $value['created_time']) : "" ?></p>
@@ -198,7 +199,7 @@
 														</a>
 														<p><?= isset($value['text']) ? $value['text'] : "" ?></p>
 													</div>
-												<? } ?>
+												<? } }?>
 											</div>
 											<div class="form-group">
 												<label>審核狀態</label>
