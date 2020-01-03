@@ -39,9 +39,9 @@ class Repayment extends REST_Controller {
 			}
 			
 			//暫不開放法人
-			if(isset($tokenData->company) && $tokenData->company != 0 ){
-				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
-			}
+			//if(isset($tokenData->company) && $tokenData->company != 0 ){
+			//	$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			//}
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
