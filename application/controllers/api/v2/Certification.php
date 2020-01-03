@@ -1224,7 +1224,6 @@ class Certification extends REST_Controller {
                     }
                     break;
                 case "instagram":
-                    $this->was_verify($certification_id);
                     $this->load->library('instagram_lib');
                     $info         = $this->instagram_lib->get_info($input['access_token']);
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
