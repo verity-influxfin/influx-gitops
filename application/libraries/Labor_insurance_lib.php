@@ -465,7 +465,21 @@ class Labor_insurance_lib
 
     public function aggregate(&$result)
     {
-
+        if (!$result) {
+			$result = ["status" => "pending", "messages" => []];
+		}
+		foreach ($result["messages"] as $stage) {
+			if (!$result["status"]) {
+				$result["status"] = "success";
+			}
+			if ($stage["status"] == "failure") {
+				$result["status"] = "failure";
+			}
+			if ($stage["status"] == "pending" && $result["status"] == "success") {
+				$result["status"] = "pending";
+			}
+		}
+		return $result;
     }
 
     public function setCurrentTime($currentTime)
