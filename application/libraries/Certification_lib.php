@@ -826,6 +826,19 @@ class Certification_lib{
         return false;
     }
 
+    private function governmentauthorities_success($info){
+        if($info){
+            $data 		= array(
+            );
+
+            $rs = $this->user_meta_progress($data,$info);
+            if($rs){
+                return $this->fail_other_cer($info);
+            }
+        }
+        return false;
+    }
+
     private function interview_success($info){
         if($info){
             $data 		= array(
@@ -903,7 +916,7 @@ class Certification_lib{
 			$company_source_user_id = false;
 			if($company){
                 $total = 0;
-                $allows = ['businesstax'];
+                $allows = ['businesstax','governmentauthorities'];
                 $company = $this->get_company_type($user_id);
                 $company_source_user_id = $company->user_id;
                 //FEV
@@ -933,7 +946,7 @@ class Certification_lib{
                 if($self_targets) {
                     $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
                 }
-                $total >= 500000?$allows[] = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow']):'';
+                $total >= 500000 || $company->selling_type == 2?$allows = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow'] ):'';
                 if($total >= 1000000 && $company->selling_type != 2){
                     $allows[] = 'interview';
                 }
@@ -1019,7 +1032,7 @@ class Certification_lib{
 				}
             }elseif($company){
                 foreach($this->certification as $key => $value){
-                    if(in_array($value['alias'],['investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail'])){
+                    if(in_array($value['alias'],['investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','governmentauthorities','salesdetail'])){
                         $certification[$key] = $value;
                     }
                 }

@@ -61,6 +61,7 @@ define({
     "GetCertificationPassbookCashFlow",
     "GetCertificationInterview",
     "GetCertificationSalesDetail",
+    "PostCertificationBusinessTax",
     "Judicialperson",
     "PostJudicialpersonApply",
     "GetJudicialpersonList",

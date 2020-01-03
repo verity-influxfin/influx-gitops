@@ -1028,6 +1028,7 @@ class Product extends REST_Controller {
                 $product = $this->trans_sub_product($product,$sub_product_id);
             }
 
+            $completeness_level = 0;
             $certification		= [];
             $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
             if(!empty($certification_list)){
@@ -1036,6 +1037,7 @@ class Product extends REST_Controller {
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
+                        $value['user_status'] == 1?$completeness_level++:'';
                         $certification[] = $value;
                     }
                 }
@@ -1116,23 +1118,34 @@ class Product extends REST_Controller {
                 }
             }
 
-            $targetData = json_decode($target->target_data);
-            foreach ($product['targetData'] as $key => $value) {
-                if(!in_array($key,['purchase_time','vin','factory_time','product_description'])){
+            if($product['visul_id'] == 'DS2P1'){
+                $targetData = json_decode($target->target_data);
+                $cer_group['car_file'] = [1,'車籍文件'];
+                $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(in_array($key,['car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
+                        empty($targetData->$key)?$cer_group['car_file'][0] = 0:'';
+                    }elseif(in_array($key,['car_title_image','car_import_proof_image','car_artc_image','car_others_image','car_others_image'])){
+                        empty($targetData->$key)?$cer_group['car_pic'][0] = 0:'';
+                    }
+                }
+                foreach ($cer_group as $cer_key => $cervalue){
                     $certification[] = [
                         "id"=> null,
-                        "alias"=> $key,
-                        "name"=> $value[1],
+                        "alias"=> $cer_key,
+                        "name"=> $cervalue[1],
                         "status"=> 1,
                         "description"=> null,
-                        "user_status"=> !empty($targetData->$key)?1:0,
+                        "user_status"=> $cervalue[0],
                         "certification_id"=> null,
                         "updated_at"=> null,
                         "type"=> 'targetData',
-                        "struct"=> $value,
                     ];
+                    $cervalue[0] == 1?$completeness_level++:'';
                 }
             }
+
+            $completeness = 100 / count($certification) * $completeness_level;
 
             $data = [
                 'id' 				    => intval($target->id),
@@ -1157,6 +1170,7 @@ class Product extends REST_Controller {
                 'contract'			    => $contract,
                 'credit'			    => $credit,
                 'certification'		    => $certification,
+                'certification_completeness' => $completeness>100?round($completeness):$completeness,
                 'amortization_schedule'	=> $amortization_schedule,
             ];
 

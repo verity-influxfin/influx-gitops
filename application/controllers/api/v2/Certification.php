@@ -32,7 +32,7 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 			
-			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail']) ){
+			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
 
@@ -120,7 +120,7 @@ class Certification extends REST_Controller {
         }
 		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
-	
+
 	/**
      * @api {get} /v2/certification/:alias 認證 取得認證資料
 	 * @apiVersion 0.2.0
@@ -139,10 +139,10 @@ class Certification extends REST_Controller {
      *      "result": "SUCCESS",
      *      "data": {
      *      	"alias": "debitcard",
-     *      	"certification_id": "3", 
-     *      	"status": "0",     
-     *      	"created_at": "1518598432",     
-     *      	"updated_at": "1518598432",     
+     *      	"certification_id": "3",
+     *      	"status": "0",
+     *      	"created_at": "1518598432",
+     *      	"updated_at": "1518598432",
      *      	"name": "toy",
      *      	"id_number": "G121111111",
      *      	"id_card_date": "1060707",
@@ -236,19 +236,22 @@ class Certification extends REST_Controller {
 						$fields 	= ['tax_id','company','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
 					case 1000:
-						$fields 	= ['businesstax'];
+                        $fields 	= ['businesstax'];
 						break;
 					case 1001:
 						$fields 	= ['balancesheet'];
 						break;
 					case 1002:
-						$fields 	= ['incomeStatement'];
+						$fields 	= ['incomestatement'];
 						break;
 					case 1003:
 						$fields 	= ['investigationjudicial'];
 						break;
 					case 1004:
 						$fields 	= ['passbookcashflow'];
+						break;
+					case 1007:
+						$fields 	= ['governmentauthorities'];
 						break;
 					case 2000:
 						$fields 	= ['salesdetail'];
@@ -1992,6 +1995,67 @@ class Certification extends REST_Controller {
             }
 
             $file_fields = ['passbook_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function governmentauthorities_post()
+    {
+        $certification_id 	= 1007;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['governmentauthorities_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['governmentauthorities_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);

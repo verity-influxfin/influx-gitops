@@ -473,7 +473,7 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => FEV_INTEREST_RATE,
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 10000,
-                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 2000],
+                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 1007, 2000],
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
@@ -504,7 +504,7 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => FEV_INTEREST_RATE,
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 10000,
-                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 2000],
+                'certifications' => [9, 1000, 1001, 1002, 1003, 1004, 1006, 1007, 2000],
                 'instalment' => [90],
                 'repayment' => [3],
                 'targetData' => [
@@ -514,7 +514,7 @@ $config['sub_product_list'] = [
                     'product_description' => ['String', '產品備註'],
                     'car_title_image' => ['Picture', '車輛所有權狀 ( title )', '6'],
                     'car_import_proof_image' => ['Picture', '海關進口證明/進口報單', '6'],
-                    'car_artc_image' => ['Picture', '交通部核發安審合格證明、環保驗車證明 ( ARTC )', '6'],
+                    'car_artc_image' => ['Picture', '交通部核發合格證明、環保驗車證明(ARTC)', '6'],
                     'car_others_image' => ['Picture', '協力廠商鑑定報告', '6'],
                     'car_photo_front_image' => ['Picture', '車輛外觀照片-前側', '6'],
                     'car_photo_back_image' => ['Picture', '車輛外觀照片-後側', '6'],
@@ -742,13 +742,14 @@ $config['certifications'] = [
     9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => 10, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
 
-    1000 => ['id' => 1000, 'alias' => 'businessTax', 'name' => '403/401稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1001 => ['id' => 1001, 'alias' => 'balanceSheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1002 => ['id' => 1002, 'alias' => 'incomeStatement', 'name' => '損益表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1003 => ['id' => 1003, 'alias' => 'investigationJudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1004 => ['id' => 1004, 'alias' => 'passbookCashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1000 => ['id' => 1000, 'alias' => 'businesstax', 'name' => '401/403稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1001 => ['id' => 1001, 'alias' => 'balancesheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1002 => ['id' => 1002, 'alias' => 'incomestatement', 'name' => '損益表認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1003 => ['id' => 1003, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
+    1004 => ['id' => 1004, 'alias' => 'passbookcashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
     1005 => ['id' => 1005, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '', 'optional' => []],
-    1006 => ['id' => 1006, 'alias' => 'cerCreditJudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
+    1006 => ['id' => 1006, 'alias' => 'cerCreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
+    1007 => ['id' => 1007, 'alias' => 'governmentauthorities', 'name' => '事業變更登記表', 'status' => 1, 'description' => '', 'optional' => []],
 
     2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
