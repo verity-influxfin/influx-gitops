@@ -745,14 +745,14 @@ class Certification_lib{
 			$content 	= $info->content;
 			$data 		= array(
 				'social_status'		=> 1,
-				'fb_id'		=> $content['facebook']['id'],
-				'fb_name'		=> $content['facebook']['name'],
-				'fb_email'		=> $content['facebook']['email'],
-				'fb_access_token'		=> $content['facebook']['access_token'],
-				'ig_id'		=> $content['instagram']['id'],
-				'ig_username'		=> $content['instagram']['username'],
-				'ig_name'		=> $content['instagram']['name'],
-				'ig_access_token'		=> $content['instagram']['access_token'],
+				'fb_id'		=> isset($content['facebook']['id'])?$content['facebook']['id']:NULL,
+				'fb_name'		=> isset($content['facebook']['name'])?$content['facebook']['name']:NULL,
+				'fb_email'		=> isset($content['facebook']['email'])?$content['facebook']['email']:NULL,
+				'fb_access_token'		=> isset($content['facebook']['access_token'])?$content['facebook']['access_token']:NULL,
+				'ig_id'		=> isset($content['instagram']['id'])?$content['instagram']['id']:NULL,
+				'ig_username'		=> isset($content['instagram']['username'])?$content['instagram']['username']:NULL,
+				'ig_name'		=> isset($content['instagram']['name'])?$content['instagram']['name']:NULL,
+				'ig_access_token'		=>  isset($content['instagram']['access_token'])?$content['instagram']['access_token']:NULL,
 			);
 
             $rs = $this->user_meta_progress($data,$info);
