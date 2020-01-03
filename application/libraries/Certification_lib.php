@@ -500,17 +500,34 @@ class Certification_lib{
 	}
 	
 	public function job_verify($info = array(),$url=null) {
-		if ($info && $info->status == 0 && $info->certification_id == 10) {
-			$status = 3;
-			$content=json_decode($info->content,true);
-			$content['pdf_file']=$url;
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status, 'sys_check' => 1,
-				'content'=>json_encode($content) 
-			));
-			return true;	
-		}
-		return false;
+		// $user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		// if($user_certification==false || $user_certification->status!=1){
+		// 	return false;
+		// }
+		$url = isset(json_decode($info->content)->pdf_file) ?
+			json_decode($info->content)->pdf_file
+			: $url;
+			if ($info && $info->certification_id == 10 && !empty($url) && $info->status == 0) {
+				$this->CI->load->library('Labor_insurance_lib');
+				$result = [
+					'status' => null,
+					'messages' => []
+				];
+				$parser = new \Smalot\PdfParser\Parser();
+				$pdf    = $parser->parseFile($url);
+				$text = $pdf->getText();
+				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
+				switch ($res['status']) {
+					case 'pending': //轉人工
+						break;
+					case 'success':
+						break;
+					case 'failure':
+						break;
+				}
+				return true;
+			}
+			return false;
 	}
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
