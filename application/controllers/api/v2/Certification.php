@@ -1192,7 +1192,7 @@ class Certification extends REST_Controller {
                 if (empty($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }
-			}
+            }
             switch ($type) {
                 case "facebook":
                     $this->load->library('facebook_lib');
