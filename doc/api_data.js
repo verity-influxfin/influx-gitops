@@ -4717,7 +4717,8 @@ define({
                             "type": "String",
                             "allowedValues": [
                                 "instagram",
-                                "line"
+                                "line",
+                                "facebook"
                             ],
                             "optional": false,
                             "field": "type",

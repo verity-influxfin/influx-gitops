@@ -621,6 +621,9 @@ class Target extends MY_Admin_Controller {
 			if ($instagramCertificationDetailArray["type"] == "instagram") {
 				$picture = $instagramCertificationDetailArray["info"]["picture"];
 				$this->usermeta->setInstagramPicture($picture);
+			}else if(isset($instagramCertificationDetailArray['instagram']['picture'])){
+				$picture =$instagramCertificationDetailArray['instagram']['picture'];
+				$this->usermeta->setInstagramPicture($picture);
 			}
 
 			$user->profile = $this->usermeta->values();
