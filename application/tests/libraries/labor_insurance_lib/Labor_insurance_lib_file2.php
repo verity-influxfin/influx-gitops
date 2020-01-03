@@ -8,6 +8,7 @@ class Labor_insurance_lib_file2 extends TestCase
 		$this->CI->load->library('Labor_insurance_lib');
 		$this->labor_insurance_lib = $this->CI->labor_insurance_lib;
 		$this->readInputFile();
+		$this->rows = $this->labor_insurance_lib->readRows($this->text);
 	}
 
 	private function readInputFile(){
@@ -124,8 +125,27 @@ class Labor_insurance_lib_file2 extends TestCase
 		];
 
 		$result = ["status" => "pending", "messages" => []];
-		$rows = $this->labor_insurance_lib->readRows($this->text);
-		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($rows, $result);
+
+		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testProcessMostRecentCompanyName()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "company",
+					"status" => "failure",
+					"message" => "未發現任何仍在加保中的公司名稱"
+				]
+			]
+		];
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}

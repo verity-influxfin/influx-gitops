@@ -23,7 +23,7 @@ class Labor_insurance_lib
         $this->processDownloadTimeMatchSearchTime($downloadTime, $text, $result);
         $rows = $this->readRows($text);
         $this->processApplicantHavingLaborInsurance($rows, $result);
-        $this->processMostRecentCompanyName($text, $result);
+        $this->processMostRecentCompanyName($rows, $result);
         $this->processCurrentJobExperience($text, $result);
         $this->processTotalJobExperience($text, $result);
         $this->processCurrentSalary($text, $result);
@@ -323,6 +323,9 @@ class Labor_insurance_lib
                         $currentIndex++;
                         continue;
                     }
+                    if ($each == "F" || $each == "D") {
+                        $row["overdue"] = $each;
+                    }
                 }
 
                 if ($currentIndex == 5) {
@@ -336,6 +339,9 @@ class Labor_insurance_lib
                         $currentIndex++;
                         continue;
                     }
+                    if ($each == "F" || $each == "D") {
+                        $row["overdue"] = $each;
+                    }
                 }
 
                 if ($currentIndex == 6) {
@@ -344,6 +350,16 @@ class Labor_insurance_lib
                         $currentIndex++;
                         continue;
                     }
+                    if ($each == "F" || $each == "D") {
+                        $row["overdue"] = $each;
+                        $currentIndex++;
+                        continue;
+                    }
+                }
+                if ($currentIndex == 7 && in_array($each, ["F", "D"])) {
+                    $row["overdue"] = $each;
+                    $currentIndex++;
+                    continue;
                 }
             }
         }
@@ -353,9 +369,68 @@ class Labor_insurance_lib
         return $rows;
     }
 
-    public function processMostRecentCompanyName($text, &$result)
+    public function processMostRecentCompanyName($rows, &$result)
     {
+        $message = [
+            "stage" => "company",
+            "status" => self::PENDING,
+            "message" => ""
+        ];
 
+        $enrolledInsurance = null;
+        foreach ($rows as $company => $records) {
+            $numRecords = count($records);
+            $lastIndex = $numRecords - 1;
+            $record = $records[$lastIndex];
+
+            if (!isset($record['endAt'])) {
+                if (!$enrolledInsurance) {
+                    $enrolledInsurance = $record;
+                } else {
+                    $message['status'] = self::PENDING;
+                    $message["message"] = "多家投保";
+                    $result["messages"][] = $message;
+                    return;
+                }
+            }
+        }
+
+        if (!$enrolledInsurance) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "未發現任何仍在加保中的公司名稱";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        if (isset($enrolledInsurance["comment"]) && strpos($enrolledInsurance['comment'], "不適用就業保險") !== false) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "不符合平台規範";
+            $message["rejected_message"] = "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        if (isset($enrolledInsurance["overdue"])) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "不符合平台規範";
+            $message["rejected_message"] = "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        if (
+            strpos($enrolledInsurance['name'], '工會') !== false
+            || strpos($enrolledInsurance['name'], '漁會') !== false
+        ) {
+            $message["status"] = self::PENDING;
+            $message["message"] = "加保在公會、漁會";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $message["status"] = self::SUCCESS;
+        $message["message"] = "公司 : " . $enrolledInsurance["name"];
+        $result["messages"][] = $message;
     }
 
     public function processCurrentJobExperience($text, &$result)

@@ -9,6 +9,7 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 		$this->labor_insurance_lib = $this->CI->labor_insurance_lib;
 		$this->readInputFile();
 		$this->replaceSensitiveData();
+		$this->rows = $this->labor_insurance_lib->readRows($this->text);
 	}
 
 	private function readInputFile(){
@@ -200,9 +201,29 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 		];
 
 		$result = ["status" => "pending", "messages" => []];
-		$rows = $this->labor_insurance_lib->readRows($this->text);
-		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($rows, $result);
-		print_r($rows);
+
+		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testProcessMostRecentCompanyName()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "company",
+					"status" => "failure",
+					"message" => "不符合平台規範",
+					"rejected_message" => "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。",
+				]
+			]
+		];
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+
 		$this->assertEquals($expectedResult, $result);
 	}
 }

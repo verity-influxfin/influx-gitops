@@ -9,6 +9,7 @@ class Labor_insurance_lib_file1 extends TestCase
 		$this->labor_insurance_lib = $this->CI->labor_insurance_lib;
 		$this->readInputFile();
 		$this->replaceSensitiveData();
+		$this->rows = $this->labor_insurance_lib->readRows($this->text);
 	}
 
 	private function readInputFile(){
@@ -134,8 +135,26 @@ class Labor_insurance_lib_file1 extends TestCase
 		];
 
 		$result = ["status" => "pending", "messages" => []];
-		$rows = $this->labor_insurance_lib->readRows($this->text);
-		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($rows, $result);
+		$this->labor_insurance_lib->processApplicantHavingLaborInsurance($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testProcessMostRecentCompanyName()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "company",
+					"status" => "success",
+					"message" => "公司 : 玉盛國際企業有限公司"
+				]
+			]
+		];
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}
