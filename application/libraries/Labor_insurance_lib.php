@@ -8,6 +8,8 @@ class Labor_insurance_lib
     const FAILURE = "failure";
     const PENDING = "pending";
 
+    const MINIMUM_WAGE = 23800;
+
     public function __construct()
     {
 		$this->CI = &get_instance();
@@ -26,7 +28,7 @@ class Labor_insurance_lib
         $this->processMostRecentCompanyName($rows, $result);
         $this->processCurrentJobExperience($text, $result);
         $this->processTotalJobExperience($text, $result);
-        $this->processCurrentSalary($text, $result);
+        $this->processCurrentSalary($rows, $result);
         $this->processApplicantServingWithTopCompany($text, $result);
         $this->processApplicantHavingGreatJob($text, $result);
         $this->processApplicantHavingGreatSalary($text, $result);
@@ -313,7 +315,7 @@ class Labor_insurance_lib
                         $currentIndex++;
                         continue;
                     }
-                    if (!$isSalary && $isTimeFormat && isset($row['createdAt'])) {
+                    if ($isTimeFormat && isset($row['createdAt'])) {
                         $row['endAt'] = $each;
                         $currentIndex++;
                         continue;
@@ -443,9 +445,48 @@ class Labor_insurance_lib
 
     }
 
-    public function processCurrentSalary($text, &$result)
+    public function processCurrentSalary($rows, &$result)
     {
+        $message = [
+            "stage" => "salary",
+            "status" => self::PENDING,
+            "message" => ""
+        ];
 
+        $enrolledInsurance = null;
+        foreach ($rows as $company => $records) {
+            $numRecords = count($records);
+            $lastIndex = $numRecords - 1;
+            $record = $records[$lastIndex];
+
+            if (!isset($record['endAt'])) {
+                if (!$enrolledInsurance) {
+                    $enrolledInsurance = $record;
+                } else {
+                    $message['status'] = self::PENDING;
+                    $message['message'] = "多家投保";
+                    $result['messages'][] = $message;
+                    return;
+                }
+            }
+        }
+
+        $salary = 0;
+        if (isset($enrolledInsurance['salary'])) {
+            $salary = $this->CI->regex->convertSalary($enrolledInsurance['salary']);
+        }
+
+        if ($salary >= self::MINIMUM_WAGE) {
+            $message['status'] = self::SUCCESS;
+            $roundSalary = round($salary, -3);
+            $roundSalary = $roundSalary >= $salary ? $roundSalary : $roundSalary + 1000;
+            $message['message'] = "投保月薪 : " . $roundSalary;
+            $result['messages'][] = $message;
+            return;
+        }
+
+        $message['status'] = self::PENDING;
+        $result['messages'][] = $message;
     }
 
     public function processApplicantServingWithTopCompany($text, &$result)

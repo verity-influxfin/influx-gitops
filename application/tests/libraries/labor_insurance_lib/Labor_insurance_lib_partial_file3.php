@@ -36,4 +36,24 @@ class Labor_insurance_lib_partial_file3 extends TestCase
 
         $this->assertEquals($expectedResult, $result);
     }
+
+	public function testProcessCurrentSalary()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "salary",
+					"status" => "success",
+					"message" => "投保月薪 : 26000"
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processCurrentSalary($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

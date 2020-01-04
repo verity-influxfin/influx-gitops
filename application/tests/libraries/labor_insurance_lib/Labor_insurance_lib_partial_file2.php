@@ -12,7 +12,7 @@ class Labor_insurance_lib_partial_file2 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/7-decoded.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/7.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();
@@ -25,8 +25,8 @@ class Labor_insurance_lib_partial_file2 extends TestCase
             "messages" => [
                 [
                     "stage" => "company",
-                    "status" => "pending",
-                    "message" => "多家投保",
+                    "status" => "success",
+                    "message" => "公司 : 駿太科技有限公司",
                 ]
             ]
         ];
@@ -36,4 +36,24 @@ class Labor_insurance_lib_partial_file2 extends TestCase
 
         $this->assertEquals($expectedResult, $result);
     }
+
+	public function testProcessCurrentSalary()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "salary",
+					"status" => "success",
+					"message" => "投保月薪 : 29000"
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processCurrentSalary($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

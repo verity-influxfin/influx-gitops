@@ -34,4 +34,9 @@ class Labor_insurance_regex extends Regular_expression
     {
         return preg_match('/\d+(,\d+)*(\.\d+)?/', $text) == 1 && !is_numeric($text);
     }
+
+    public function convertSalary($salaryWithCommas)
+    {
+        return preg_replace('/,/', '', $salaryWithCommas);
+    }
 }
