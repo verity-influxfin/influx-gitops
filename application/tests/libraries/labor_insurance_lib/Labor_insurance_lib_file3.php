@@ -178,4 +178,24 @@ class Labor_insurance_lib_file3 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessApplicantHavingGreatSalary()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "high_salary",
+					"status" => "success",
+					"message" => "是否為高收入族群 : 否"
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+
+		$this->labor_insurance_lib->processApplicantHavingGreatSalary(24000, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

@@ -9,6 +9,7 @@ class Labor_insurance_lib
     const PENDING = "pending";
 
     const MINIMUM_WAGE = 23800;
+    const HIGH_WAGE = 50000;
 
     public function __construct()
     {
@@ -28,10 +29,10 @@ class Labor_insurance_lib
         $this->processMostRecentCompanyName($rows, $result);
         $this->processCurrentJobExperience($text, $result);
         $this->processTotalJobExperience($text, $result);
-        $this->processCurrentSalary($rows, $result);
+        $salary = $this->processCurrentSalary($rows, $result);
         $this->processApplicantServingWithTopCompany($text, $result);
         $this->processApplicantHavingGreatJob($text, $result);
-        $this->processApplicantHavingGreatSalary($text, $result);
+        $this->processApplicantHavingGreatSalary($salary, $result);
         $this->aggregate($result);
 
         return $result;
@@ -453,6 +454,7 @@ class Labor_insurance_lib
             "message" => ""
         ];
 
+        $salary = 0;
         $enrolledInsurance = null;
         foreach ($rows as $company => $records) {
             $numRecords = count($records);
@@ -466,12 +468,11 @@ class Labor_insurance_lib
                     $message['status'] = self::PENDING;
                     $message['message'] = "多家投保";
                     $result['messages'][] = $message;
-                    return;
+                    return $salary;
                 }
             }
         }
 
-        $salary = 0;
         if (isset($enrolledInsurance['salary'])) {
             $salary = $this->CI->regex->convertSalary($enrolledInsurance['salary']);
         }
@@ -482,11 +483,12 @@ class Labor_insurance_lib
             $roundSalary = $roundSalary >= $salary ? $roundSalary : $roundSalary + 1000;
             $message['message'] = "投保月薪 : " . $roundSalary;
             $result['messages'][] = $message;
-            return;
+            return $salary;
         }
 
         $message['status'] = self::PENDING;
         $result['messages'][] = $message;
+        return $salary;
     }
 
     public function processApplicantServingWithTopCompany($text, &$result)
@@ -499,9 +501,21 @@ class Labor_insurance_lib
 
     }
 
-    public function processApplicantHavingGreatSalary($text, &$result)
+    public function processApplicantHavingGreatSalary($salary, &$result)
     {
+        $message = [
+            "stage" => "high_salary",
+            "status" => self::SUCCESS,
+            "message" => "是否為高收入族群 : ",
+        ];
 
+        if ($salary > self::HIGH_WAGE) {
+            $message["message"] .= "是";
+        } else {
+            $message["message"] .= "否";
+        }
+
+        $result["messages"][] = $message;
     }
 
     public function aggregate(&$result)
