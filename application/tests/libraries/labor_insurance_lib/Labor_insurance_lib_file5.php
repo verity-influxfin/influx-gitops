@@ -199,4 +199,25 @@ class Labor_insurance_lib_file5 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessCurrentJobExperience()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "current_job",
+					"status" => "pending",
+					"message" => "多家投保"
+				]
+			]
+		];
+
+		$result = ["status" => "pending", "messages" => []];
+		//2020/1/5
+		$this->labor_insurance_lib->setCurrentTime(1578182400);
+		$this->labor_insurance_lib->processCurrentJobExperience($this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

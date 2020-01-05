@@ -27,7 +27,7 @@ class Labor_insurance_lib
         $rows = $this->readRows($text);
         $this->processApplicantHavingLaborInsurance($rows, $result);
         $this->processMostRecentCompanyName($rows, $result);
-        $this->processCurrentJobExperience($text, $result);
+        $this->processCurrentJobExperience($rows, $result);
         $this->processTotalJobExperience($text, $result);
         $salary = $this->processCurrentSalary($rows, $result);
         $this->processApplicantServingWithTopCompany($text, $result);
@@ -436,9 +436,48 @@ class Labor_insurance_lib
         $result["messages"][] = $message;
     }
 
-    public function processCurrentJobExperience($text, &$result)
+    public function processCurrentJobExperience($rows, &$result)
     {
+        $message = [
+            "stage" => "current_job",
+            "status" => self::SUCCESS,
+            "message" => ""
+        ];
 
+        $currentJobRecords = [];
+        foreach ($rows as $company => $records) {
+            $numRecords = count($records);
+            $lastIndex = $numRecords - 1;
+            $record = $records[$lastIndex];
+
+            if (!isset($record['endAt'])) {
+                if (!$currentJobRecords) {
+                    $currentJobRecords = $records;
+                } else {
+                    $message['status'] = self::PENDING;
+                    $message["message"] = "多家投保";
+                    $result["messages"][] = $message;
+                    return;
+                }
+            }
+        }
+
+        if (!$currentJobRecords) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "無";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $initialEnrollment = $currentJobRecords[0];
+        $activatedAt = $this->convertTaiwanTimeToTime($initialEnrollment['createdAt']);
+        $month = 86400 * 30;
+        $totalDifferenceInMonth = ($this->currentTime - $activatedAt) / $month;
+        $differentInYear = intval($totalDifferenceInMonth / 12);
+        $differenceInMonth = $totalDifferenceInMonth % 12;
+
+        $message['message'] = "現職工作年資 : {$differentInYear}年{$differenceInMonth}月";
+        $result["messages"][] = $message;
     }
 
     public function processTotalJobExperience($text, &$result)
