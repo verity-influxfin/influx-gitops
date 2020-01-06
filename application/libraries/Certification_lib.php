@@ -519,10 +519,26 @@ class Certification_lib{
 				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
 				switch ($res['status']) {
 					case 'pending': //轉人工
+						$status = 3;
+						$this->CI->user_certification_model->update($info->id, array(
+							'status' => $status,
+							'sys_check' => 1,
+						));
 						break;
 					case 'success':
+						$status = 1;
+						$this->set_success($info->id,1);
+						$this->CI->user_certification_model->update($info->id, array(
+							'status' => $status,
+							'sys_check' => 1,
+						));
 						break;
 					case 'failure':
+						$status = 2;
+						$this->CI->user_certification_model->update($info->id, array(
+							'status' => $status, 'sys_check' => 1,
+						));
+						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
 						break;
 				}
 				return true;
