@@ -666,23 +666,10 @@ class Product extends REST_Controller {
         }
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
-        $investor 	= $this->user_info->investor;
         $param		= ['status'=>2];
 
         //必填欄位
         if (empty($input['target_id'])) {
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-        }
-
-        //上傳檔案欄位
-        if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
-            $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
-            if($image){
-                $param['person_image'] = $image;
-            }else{
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-        }else{
             $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
         }
 
@@ -697,42 +684,18 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
             }
 
-            $product_list 	= $this->config->item('product_list');
-            $product 		= $product_list[$target->product_id];
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+
             if($product){
-                if($product['type'] != 1){
-                    $this->response(array('result' => 'ERROR','error' => PRODUCT_TYPE_ERROR ));
+                $method = 'type'.$product['type'].'_signing';
+                if(method_exists($this, $method)){
+                    $this->$method($param,$product,$input,$target);
                 }
-
-                //檢查認證 NOT_VERIFIED
-                $certification_list	= $this->certification_lib->get_status($user_id,$investor);
-                foreach($certification_list as $key => $value){
-                    if(in_array($key,$product['certifications']) && $value['user_status']!=1 && $key!=9){
-                        $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-                    }
-                }
-
-                if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
-                    $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-                }
-
-                //檢查金融卡綁定 NO_BANK_ACCOUNT
-                $bank_account = $this->user_bankaccount_model->get_by([
-                    'status'	=> 1,
-                    'investor'	=> $investor,
-                    //'verify'	=> 0,
-                    'user_id'	=> $user_id
-                ]);
-                if($bank_account){
-                    if($bank_account->verify==0) {
-                        $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-                    }
-                }else{
-                    $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
-                }
-
-                $this->target_lib->signing_target($target->id,$param,$user_id);
-                $this->response(array('result' => 'SUCCESS'));
             }
             $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
         }
@@ -1045,7 +1008,9 @@ class Product extends REST_Controller {
 
             $amortization_schedule = [];
             if(in_array($target->status,[1])){
-                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment,false,$product['visul_id']);
+                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment,false,[
+                    'visul_id' => $product['visul_id']
+                ]);
             }
 
             $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
@@ -2156,6 +2121,55 @@ class Product extends REST_Controller {
         ];
         $insert = $this->target_lib->add_target($param);
         return $insert;
+    }
+
+    private function type1_signing($param,$product,$input,$target){
+        $user_id 	= $target->user_id;
+
+        //檢查認證 NOT_VERIFIED
+        $certification_list	= $this->certification_lib->get_status($user_id,0);
+        foreach($certification_list as $key => $value){
+            if(in_array($key,$product['certifications']) && $value['user_status']!=1 && $key!=9){
+                $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+            }
+        }
+
+        $company = ['DS2P1'];
+        if(!in_array($product['visul_id'],$company)){
+            //上傳檔案欄位
+            if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+                $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+                if($image){
+                    $param['person_image'] = $image;
+                }else{
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+
+            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
+                $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+            }
+
+            //檢查金融卡綁定 NO_BANK_ACCOUNT
+            $bank_account = $this->user_bankaccount_model->get_by([
+                'status'	=> 1,
+                'investor'	=> 0,
+                //'verify'	=> 0,
+                'user_id'	=> $user_id
+            ]);
+            if($bank_account){
+                if($bank_account->verify==0) {
+                    $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                }
+            }else{
+                $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+            }
+        }
+
+        $this->target_lib->signing_target($target->id,$param,$user_id);
+        $this->response(array('result' => 'SUCCESS'));
     }
 
     private function is_sub_product($product,$sub_product_id){
