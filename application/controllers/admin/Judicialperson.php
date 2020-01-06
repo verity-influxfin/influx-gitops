@@ -344,7 +344,7 @@ class Judicialperson extends MY_Admin_Controller {
 	}
 
 	private function checkAndCreat_borrow_bankaccount($data){
-		if(in_array($data->selling_type,$this->config->item('use_taishin_selling_type'))) {
+		if(in_array($data->selling_type,$this->config->item('use_borrow_account_selling_type'))) {
 			$user_bankaccount = $this->user_bankaccount_model->get_many_by([
 				'user_id' => $data->company_user_id,
 			]);
@@ -359,6 +359,7 @@ class Judicialperson extends MY_Admin_Controller {
 					"bank_account" => $user_bankaccount[0]->bank_account,
 					"front_image" => $user_bankaccount[0]->front_image,
 					"back_image" => $user_bankaccount[0]->back_image,
+					"verify" => 2,
 				]);
 			}
 		}

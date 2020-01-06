@@ -43,12 +43,8 @@ class Target_lib{
     //簽約
     public function signing_target( $target_id, $data, $user_id=0 ){
         if($target_id){
-            $param = array(
-                'person_image'	=> $data['person_image'],
-                'status'		=> 2,
-            );
-            $rs = $this->CI->target_model->update($target_id,$param);
-            $this->insert_change_log($target_id,$param,$user_id);
+            $rs = $this->CI->target_model->update($target_id,$data);
+            $this->insert_change_log($target_id,$data,$user_id);
             return $rs;
         }
         return false;

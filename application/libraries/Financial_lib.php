@@ -7,12 +7,12 @@ define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
 	
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1,$visul_id=false){
+	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1,$visul=false){
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type,$visul_id);
+				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type,$visul);
 				return $rs;
 			}
 		}
@@ -20,7 +20,7 @@ class Financial_lib{
 	}
 
 	//取得攤還表 - 等額本息
-	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type = 1,$visul_id = false){
+	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type = 1,$visul = false){
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
 		$rate 		= floatval($rate);
@@ -102,7 +102,7 @@ class Financial_lib{
 	}
 	
 	//取得攤還表 - 先息後本
-	private function amortization_schedule_2($amount,$instalment,$rate,$date,$product_type = false,$visul_id = false){
+	private function amortization_schedule_2($amount,$instalment,$rate,$date,$product_type = false,$visul = false){
 
 		$xirr_dates		= array($date);
 		$xirr_value		= array($amount*(-1));
@@ -171,29 +171,28 @@ class Financial_lib{
 		return $schedule;
 	}
 
-	private function amortization_schedule_3($amount,$instalment,$rate,$date,$product_type = false, $visul_id = false)
+	private function amortization_schedule_3($amount,$instalment,$rate,$date,$product_type = false, $visul = false, $prepayment=false)
     {
         //驗證閏年
-        $leap_year	= $this->leap_year($date,$instalment);
-        $year_days = $leap_year?366:365;//今年日數
-        $schedule	= [
-            'amount'		=> $amount,
-            'instalment'	=> $instalment,
-            'rate'			=> $rate,
-            'date'			=> $date,
-            'total_payment'	=> 0,
-            'leap_year'		=> $leap_year,
-            'year_days'		=> $year_days
+        $leap_year = $this->leap_year($date, $instalment);
+        $year_days = $leap_year ? 366 : 365;//今年日數
+        $schedule = [
+            'amount' => $amount,
+            'instalment' => $instalment,
+            'rate' => $rate,
+            'date' => $date,
+            'total_payment' => 0,
+            'leap_year' => $leap_year,
+            'year_days' => $year_days
         ];
 
-        $list 		= array();
+        $list = array();
         $total_payment = 0;
 
-        $shareModeList = ['DS1P1','DS2P1'];
-        $amount 	= intval($amount);
+        $amount = intval($amount);
         $instalment = intval($instalment);
-        $rate 		= floatval($rate);
-        $platform = 0;
+        $rate = floatval($rate);
+        $platformFee = 0;
         $shareRate = 0;
         $startAt = 1;
 
@@ -201,12 +200,13 @@ class Financial_lib{
         $this->CI = &get_instance();
         $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting', [], 'amortization_setting');
         $inputSetting = $this->CI->amortization_setting;
-        if(in_array($visul_id,$shareModeList)){
-            $platformFee = PLATFORM_FEES;
+        $inputSetting->setUseGenerate(false);
+        if (in_array($visul['visul_id'], ['DS1P1', 'DS2P1'])) {
             $shareRate = FEV_SHARE_RATE;
-            if($visul_id == 'DS2P1'){
-                $inputSetting->setUseGenerate(false);
+            if ($visul['visul_id'] == 'DS1P1') {
+                $inputSetting->setUseGenerate(true);
             }
+            $prepayment ? $shareRate = FEV_PREPAYMENT_SHARE_RATE : '';
         }
 
         $inputSetting->setLength($instalment);
@@ -223,43 +223,26 @@ class Financial_lib{
         $this->CI->load->library('Foreign_exchange_car_lib');
         $day_amortization_schedule = $this->CI->foreign_exchange_car_lib->amortization_schedule([$loanStage1], $inputSetting);
 
-
-        //$cdate = $date;
-        //for( $coi = 0; $coi <= $instalment; $coi++ ){
-        //    $reoaynent_days = date('Y-m-',strtotime($cdate.' + '.$coi.' days')).REPAYMENT_DAY;
-        //    $reoaynent_range_days = get_range_days($cdate,$reoaynent_days);
-        //    if($reoaynent_range_days<=$instalment){
-        //        $pay_day[$reoaynent_range_days] = $reoaynent_days;
+        //if ($visul['visul_id'] == 'DS2P1') {
+        //    $odate = $date;
+        //    //還款日
+        //    $ym = date('Y-m', strtotime($date));
+        //    $d = date('d', strtotime($date));
+        //    $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
+        //    if ($d > $date) {
+        //        $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
         //    }
-        //    else{
-        //        $pay_day[$instalment] = date('Y-m-d',strtotime($date.' + '.$instalment.' days'));
-        //    }
-        //    $cdate = $reoaynent_days;
         //}
-
         //get_range_days($odate,$date);
-        foreach($day_amortization_schedule->getRows() as $PDkey => $PDvalue){
-            $interest = $PDvalue->getAnnualReturns()[0]->getFee();
-            $platform = $PDvalue->getAnnualReturns()[0]->getPlatform();
-            $share = $PDvalue->getShare();
-            $total_payment = $interest + $platform + $share + $amount;
+        foreach ($day_amortization_schedule->getRows() as $PDkey => $PDvalue) {
 
-            $list[$PDkey] = array(
-                'instalment'			=> $PDkey+1,
-                'repayment_date'		=> [],
-                'days'					=> $PDkey+1,
-                'remaining_principal'	=> $amount,
-                'principal'				=> $amount,
-                'interest'				=> $interest,
-                'total_payment'			=> $total_payment,
-            );
         }
 
-        $schedule['schedule'] 	= $list;
-        $schedule['total'] 		= array(
-            'principal'		=> $amount,
-            'interest'		=> $interest,
-            'total_payment'	=> $total_payment,
+        $schedule['schedule'] = $list;
+        $schedule['total'] = array(
+            'principal' => $amount,
+            'interest'		=> 0,
+            'total_payment' => $total_payment,
         );
         return $schedule;
     }
@@ -402,4 +385,21 @@ class Financial_lib{
 		}
 		return 0;
 	}
+
+	private function get_AnnualReturns($PDkey, $PDvalue, $amount){
+        $interest = $PDvalue->getAnnualReturns()[0]->getFee();
+        $platform = $PDvalue->getAnnualReturns()[0]->getPlatform();
+        $share = $PDvalue->getShare();
+        $total_payment = $interest + $platform + $share + $amount;
+
+        $list[$PDkey] = array(
+            'instalment'			=> $PDkey+1,
+            'repayment_date'		=> [],
+            'days'					=> $PDkey+1,
+            'remaining_principal'	=> $amount,
+            'principal'				=> $amount,
+            'interest'				=> $interest,
+            'total_payment'			=> $total_payment,
+        );
+    }
 }
