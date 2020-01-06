@@ -13,13 +13,13 @@ class Labor_insurance_lib
 
     public function __construct()
     {
-		$this->CI = &get_instance();
-		$this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
-		$this->CI->load->library('gcis_lib');
-		$this->CI->load->model('user/user_model');
-		$this->CI->load->model('user/user_meta_model');
-		$this->CI->load->model('user/user_certification_model');
-	}
+        $this->CI = &get_instance();
+        $this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+        $this->CI->load->library('gcis_lib');
+        $this->CI->load->model('user/user_model');
+        $this->CI->load->model('user/user_meta_model');
+        $this->CI->load->model('user/user_certification_model');
+    }
 
     public function check_labor_insurance($userId, $text, &$result)
     {
@@ -783,24 +783,24 @@ class Labor_insurance_lib
     public function aggregate(&$result)
     {
         if (!$result) {
-			$result = ["status" => "pending", "messages" => []];
-		}
-		foreach ($result["messages"] as $stage) {
-			if (!$result["status"]) {
-				$result["status"] = "success";
-			}
-			if ($stage["status"] == "failure") {
-				$result["status"] = "failure";
-			}
-			if ($stage["status"] == "pending" && $result["status"] == "success") {
-				$result["status"] = "pending";
-			}
-		}
-		return $result;
+            $result = ["status" => "pending", "messages" => []];
+        }
+        foreach ($result["messages"] as $stage) {
+            if (!$result["status"]) {
+                $result["status"] = "success";
+            }
+            if ($stage["status"] == "failure") {
+                $result["status"] = "failure";
+            }
+            if ($stage["status"] == "pending" && $result["status"] == "success") {
+                $result["status"] = "pending";
+            }
+        }
+        return $result;
     }
 
     public function setCurrentTime($currentTime)
     {
-		$this->currentTime = $currentTime;
-	}
+        $this->currentTime = $currentTime;
+    }
 }
