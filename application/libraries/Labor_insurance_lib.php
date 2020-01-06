@@ -197,7 +197,7 @@ class Labor_insurance_lib
         $yearInDifference = intval($endSet['year'] - $startSet['year']);
         if ($endSet['month'] - $startSet['month'] <= 0) {
             $monthInDifference = intval($endSet['month'] + (12 - $startSet['month']));
-            if ($endSet['day'] - $startSet['day'] <= 0) {
+            if ($endSet['day'] - $startSet['day'] < 0) {
                 $monthInDifference--;
             }
             if ($monthInDifference == 12) {
@@ -207,7 +207,7 @@ class Labor_insurance_lib
             }
         } else {
             $monthInDifference = intval($endSet['month'] - $startSet['month']);
-            if ($endSet['day'] - $startSet['day'] <= 0) {
+            if ($endSet['day'] - $startSet['day'] < 0) {
                 $monthInDifference--;
             }
         }
@@ -522,13 +522,13 @@ class Labor_insurance_lib
         }
 
         $initialEnrollment = $currentJobRecords[0];
-        $activatedAt = $this->convertTaiwanTimeToTimestamp($initialEnrollment['createdAt']);
-        $month = 86400 * 30;
-        $totalDifferenceInMonth = ($this->currentTime - $activatedAt) / $month;
-        $differentInYear = intval($totalDifferenceInMonth / 12);
-        $differenceInMonth = $totalDifferenceInMonth % 12;
+        $currentTimeInTaiwanTime = $this->convertTimestampToTaiwanTime($this->currentTime);
+        $dateSet = $this->compareTaiwanTime($initialEnrollment['createdAt'], $currentTimeInTaiwanTime);
 
-        $message['message'] = "現職工作年資 : {$differentInYear}年{$differenceInMonth}月";
+        $differenceInYear = $dateSet['year'];
+        $differenceInMonth = $dateSet['month'];
+
+        $message['message'] = "現職工作年資 : {$differenceInYear}年{$differenceInMonth}月";
         $result["messages"][] = $message;
     }
 
