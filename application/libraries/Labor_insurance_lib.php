@@ -131,7 +131,7 @@ class Labor_insurance_lib
 
         $endTime = $searchTimeArray[0][0];
 
-        $searchTime = $this->convertTaiwanTimeToTime($endTime);
+        $searchTime = $this->convertTaiwanTimeToTimestamp($endTime);
         if ($downloadTime != $searchTime) {
             $message["status"] = self::FAILURE;
             $message["message"] = "勞保異動明細非歷年";
@@ -162,7 +162,59 @@ class Labor_insurance_lib
         $month = mb_substr($searchTime, $monthStart, 2);
         $day = mb_substr($searchTime, $dayStart, 2);
 
+        return [
+            'year' => $year,
+            'month' => $month,
+            'day' => $day,
+        ];
+    }
+
+    private function convertTaiwanTimeToTimestamp(string $searchTime)
+    {
+        $timeSet = $this->convertTaiwanTimeToTime($searchTime);
+        $year = $timeSet['year'];
+        $month = $timeSet['month'];
+        $day = $timeSet['day'];
+
         return strtotime("{$year}-{$month}-{$day}");
+    }
+
+    private function convertTimestampToTaiwanTime($timestamp)
+    {
+        $date = date('Y/m/d', $timestamp);
+        $dateArray = explode("/", $date);
+        $dateArray[0] -= 1911;
+        return $dateArray[0] . $dateArray[1] . $dateArray[2];
+    }
+
+    public function compareTaiwanTime(string $start, string $end)
+    {
+        $startSet = $this->convertTaiwanTimeToTime($start);
+        $endSet = $this->convertTaiwanTimeToTime($end);
+
+        $yearInDifference = 0;
+        $monthInDifference = 0;
+        $yearInDifference = intval($endSet['year'] - $startSet['year']);
+        if ($endSet['month'] - $startSet['month'] <= 0) {
+            $monthInDifference = intval($endSet['month'] + (12 - $startSet['month']));
+            if ($endSet['day'] - $startSet['day'] <= 0) {
+                $monthInDifference--;
+            }
+            if ($monthInDifference == 12) {
+                $monthInDifference = 0;
+            } else {
+                $yearInDifference--;
+            }
+        } else {
+            $monthInDifference = intval($endSet['month'] - $startSet['month']);
+            if ($endSet['day'] - $startSet['day'] <= 0) {
+                $monthInDifference--;
+            }
+        }
+        return [
+            'year' => $yearInDifference,
+            'month' => $monthInDifference,
+        ];
     }
 
     public function processApplicantDetail($userId, $text, &$result)
@@ -196,7 +248,7 @@ class Labor_insurance_lib
             return;
         }
         $bornAt = trim($bornAtText[0]);
-        $bornAt = $this->convertTaiwanTimeToTime($bornAt);
+        $bornAt = $this->convertTaiwanTimeToTimestamp($bornAt);
 
         $user = $this->CI->user_model->get($userId);
 
@@ -470,7 +522,7 @@ class Labor_insurance_lib
         }
 
         $initialEnrollment = $currentJobRecords[0];
-        $activatedAt = $this->convertTaiwanTimeToTime($initialEnrollment['createdAt']);
+        $activatedAt = $this->convertTaiwanTimeToTimestamp($initialEnrollment['createdAt']);
         $month = 86400 * 30;
         $totalDifferenceInMonth = ($this->currentTime - $activatedAt) / $month;
         $differentInYear = intval($totalDifferenceInMonth / 12);
@@ -480,9 +532,44 @@ class Labor_insurance_lib
         $result["messages"][] = $message;
     }
 
-    public function processTotalJobExperience($text, &$result)
+    public function processTotalJobExperience($rows, &$result)
     {
+        $message = [
+            "stage" => "total_job",
+            "status" => self::SUCCESS,
+            "message" => ""
+        ];
 
+        $firstJobEnrolledAt = null;
+        foreach ($rows as $company => $records) {
+            $record = $records[0];
+
+            $currentEnrolledAt = $this->convertTaiwanTimeToTimestamp($record['createdAt']);
+
+            if (!$firstJobEnrolledAt) {
+                $firstJobEnrolledAt = $currentEnrolledAt;
+            }
+            if ($currentEnrolledAt < $firstJobEnrolledAt) {
+                $firstJobEnrolledAt = $currentEnrolledAt;
+            }
+        }
+
+        if (!$firstJobEnrolledAt) {
+            $message["status"] = self::FAILURE;
+            $message["message"] = "無";
+            $result["messages"][] = $message;
+            return;
+        }
+
+        $firstJobEnrolledInTaiwanTime = $this->convertTimestampToTaiwanTime($firstJobEnrolledAt);
+        $currentTimeInTaiwanTime = $this->convertTimestampToTaiwanTime($this->currentTime);
+        $dateSet = $this->compareTaiwanTime($firstJobEnrolledInTaiwanTime, $currentTimeInTaiwanTime);
+
+        $differenceInYear = $dateSet['year'];
+        $differenceInMonth = $dateSet['month'];
+
+        $message['message'] = "總工作年資 : {$differenceInYear}年{$differenceInMonth}月";
+        $result["messages"][] = $message;
     }
 
     public function processCurrentSalary($rows, &$result)
