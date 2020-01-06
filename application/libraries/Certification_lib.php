@@ -745,15 +745,20 @@ class Certification_lib{
 			$content 	= $info->content;
 			$data 		= array(
 				'social_status'		=> 1,
-				'fb_id'		=> $content['facebook']['id'],
-				'fb_name'		=> $content['facebook']['name'],
-				'fb_email'		=> $content['facebook']['email'],
-				'fb_access_token'		=> $content['facebook']['access_token'],
-				'ig_id'		=> $content['instagram']['id'],
-				'ig_username'		=> $content['instagram']['username'],
-				'ig_name'		=> $content['instagram']['name'],
-				'ig_access_token'		=> $content['instagram']['access_token'],
 			);
+			if (isset($content['facebook'])) {
+				$data['fb_name'] = $content['facebook']['name'];
+				$data['fb_id'] = $content['facebook']['id'];
+				$data['fb_email'] = $content['facebook']['email'];
+				$data['fb_access_token'] = $content['facebook']['access_token'];
+			}
+			if (isset($content['instagram'])) {
+				$data['ig_id'] = $content['instagram']['id'];
+				$data['ig_username'] = $content['instagram']['username'];
+				$data['ig_name'] = $content['instagram']['name'];
+				$data['ig_access_token'] = $content['instagram']['access_token'];
+			}
+
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
