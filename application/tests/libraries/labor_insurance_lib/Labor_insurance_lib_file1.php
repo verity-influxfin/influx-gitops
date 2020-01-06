@@ -154,7 +154,12 @@ class Labor_insurance_lib_file1 extends TestCase
 		];
 		$result = ["status" => "pending", "messages" => []];
 
-		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+		MonkeyPatch::patchMethod(
+			'Labor_insurance_lib',
+			['fetchCompanyNameFilledByUser' => "玉盛國際企業有限公司"]
+		);
+
+		$this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}

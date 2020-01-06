@@ -222,7 +222,7 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 		];
 		$result = ["status" => "pending", "messages" => []];
 
-		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+		$this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}
@@ -275,7 +275,11 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 				[
 					"stage" => "current_job",
 					"status" => "success",
-					"message" => "現職工作年資 : 2年1月"
+					"message" => "現職工作年資 : 2年1月",
+					"data" => [
+						"year" => 2,
+						"month" => 1,
+					]
 				]
 			]
 		];

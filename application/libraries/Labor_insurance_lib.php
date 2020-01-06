@@ -15,7 +15,9 @@ class Labor_insurance_lib
     {
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+		$this->CI->load->library('gcis_lib');
 		$this->CI->load->model('user/user_model');
+		$this->CI->load->model('user/user_meta_model');
 		$this->CI->load->model('user/user_certification_model');
 	}
 
@@ -28,7 +30,7 @@ class Labor_insurance_lib
         $this->processDownloadTimeMatchSearchTime($downloadTime, $text, $result);
         $rows = $this->readRows($text);
         $this->processApplicantHavingLaborInsurance($rows, $result);
-        $this->processMostRecentCompanyName($rows, $result);
+        $this->processMostRecentCompanyName($userId, $rows, $result);
         $this->processCurrentJobExperience($rows, $result);
         $this->processTotalJobExperience($rows, $result);
         $this->processJobExperiences($userId, $result);
@@ -427,7 +429,7 @@ class Labor_insurance_lib
         return $rows;
     }
 
-    public function processMostRecentCompanyName($rows, &$result)
+    public function processMostRecentCompanyName($userId, $rows, &$result)
     {
         $message = [
             "stage" => "company",
@@ -476,6 +478,14 @@ class Labor_insurance_lib
             return;
         }
 
+        $fetchedCompanyName = $this->fetchCompanyNameFilledByUser($userId);
+        if ($fetchedCompanyName != $enrolledInsurance["name"]) {
+            $message["status"] = self::PENDING;
+            $message["message"] = "與user自填公司名稱不一致";
+            $result["messages"][] = $message;
+            return;
+        }
+
         if (
             strpos($enrolledInsurance['name'], '工會') !== false
             || strpos($enrolledInsurance['name'], '漁會') !== false
@@ -489,6 +499,24 @@ class Labor_insurance_lib
         $message["status"] = self::SUCCESS;
         $message["message"] = "公司 : " . $enrolledInsurance["name"];
         $result["messages"][] = $message;
+    }
+
+    public function fetchCompanyNameFilledByUser($userId)
+    {
+        $meta = $this->CI->user_meta_model->get_by([
+            'user_id' => $userId,
+            'meta_key' => 'job_tax_id'
+        ]);
+
+        if (!$meta) {
+            return;
+        }
+
+        $response = $this->CI->gcis_lib->account_info($meta->meta_value);
+
+        if (isset($response['Company_Name'])) {
+            return $response['Company_Name'];
+        }
     }
 
     public function processCurrentJobExperience($rows, &$result)

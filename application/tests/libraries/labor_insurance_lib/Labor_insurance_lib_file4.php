@@ -154,7 +154,12 @@ class Labor_insurance_lib_file4 extends TestCase
 		];
 		$result = ["status" => "pending", "messages" => []];
 
-		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+		MonkeyPatch::patchMethod(
+			'Labor_insurance_lib',
+			['fetchCompanyNameFilledByUser' => "新北市新莊區國泰國民小學"]
+		);
+
+		$this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}

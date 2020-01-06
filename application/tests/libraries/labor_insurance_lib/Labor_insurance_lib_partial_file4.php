@@ -33,7 +33,7 @@ class Labor_insurance_lib_partial_file4 extends TestCase
         ];
         $result = ["status" => "pending", "messages" => []];
 
-        $this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+        $this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
 
         $this->assertEquals($expectedResult, $result);
     }

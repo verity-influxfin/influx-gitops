@@ -154,7 +154,36 @@ class Labor_insurance_lib_file3 extends TestCase
 		];
 		$result = ["status" => "pending", "messages" => []];
 
-		$this->labor_insurance_lib->processMostRecentCompanyName($this->rows, $result);
+		MonkeyPatch::patchMethod(
+			'Labor_insurance_lib',
+			['fetchCompanyNameFilledByUser' => "慈香庭有限公司"]
+		);
+
+		$this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
+
+		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testProcessMostRecentCompanyNameWithWrongName()
+	{
+		$expectedResult = [
+			"status" => "pending",
+			"messages" => [
+				[
+					"stage" => "company",
+					"status" => "pending",
+					"message" => "與user自填公司名稱不一致"
+				]
+			]
+		];
+		$result = ["status" => "pending", "messages" => []];
+
+		MonkeyPatch::patchMethod(
+			'Labor_insurance_lib',
+			['fetchCompanyNameFilledByUser' => ""]
+		);
+
+		$this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
 	}
