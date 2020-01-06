@@ -1083,14 +1083,26 @@ class Product extends REST_Controller {
                 }
             }
 
+            $targetDatas = [];
             if($product['visul_id'] == 'DS2P1'){
                 $targetData = json_decode($target->target_data);
                 $cer_group['car_file'] = [1,'車籍文件'];
                 $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                if($target->status != 0) {
+                    $targetDatas = [
+                        'brand' => $targetData->brand,
+                        'name' => $targetData->name,
+                        'factory_time' => $targetData->factory_time,
+                        'product_description' => $targetData->product_description,
+                    ];
+                }
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
                         empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
                     }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        if($target->status != 0){
+                            $targetDatas[$key] = $targetData->$key;
+                        }
                         empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
                     }
                 }
@@ -1119,6 +1131,7 @@ class Product extends REST_Controller {
                 'user_id' 			    => intval($target->user_id),
                 'order_id'              => intval($target->order_id),
                 'order_info'            => $order_info,
+                'targetDatas' => $targetDatas,
                 'amount' 			    => intval($target->amount),
                 'loan_amount' 		    => intval($target->loan_amount),
                 'platform_fee' 		    => intval($target->platform_fee),
@@ -1135,7 +1148,7 @@ class Product extends REST_Controller {
                 'contract'			    => $contract,
                 'credit'			    => $credit,
                 'certification'		    => $certification,
-                'certification_completeness' => $completeness>100?round($completeness):$completeness,
+                'certification_completeness' => round($completeness),
                 'amortization_schedule'	=> $amortization_schedule,
             ];
 
@@ -2100,27 +2113,35 @@ class Product extends REST_Controller {
         }
         $instalment = $input['instalment'];
 
-        $target_data = [
-            'purchase_time' => $content['purchase_time'],
-            'vin' => $content['vin'],
-            'factory_time' => $content['factory_time'],
-            'product_description' => $content['product_description'],
-        ];
+        $this->load->library('coop_lib');
+        $result = $this->coop_lib->coop_request('product/list?type=2&item_id='.$content['item_id'],'',0);
+        if(isset($result->result) && $result->result == 'SUCCESS'){
+            $target_data = [
+                'item_id' => $content['item_id'],
+                'brand' => $result->data->list[0]->brand,
+                'name' => $result->data->list[0]->name,
+                'purchase_time' => $content['purchase_time'],
+                'vin' => $content['vin'],
+                'factory_time' => $content['factory_time'],
+                'product_description' => $content['product_description'],
+            ];
 
-        $target_data = $this-> build_targetData($product,$target_data);
+            $target_data = $this-> build_targetData($product,$target_data);
 
-        $param = [
-            'product_id'	=> $param['product_id'],
-            'sub_product_id' => $param['sub_product_id'],
-            'user_id'		=> $param['user_id'],
-            'amount'		=> $content['amount'],
-            'instalment'	=> $instalment,
-            'target_data' => json_encode($target_data),
-            'reason'		=> '庫存車',
-            'status'        => 0,
-        ];
-        $insert = $this->target_lib->add_target($param);
-        return $insert;
+            $param = [
+                'product_id'	=> $param['product_id'],
+                'sub_product_id' => $param['sub_product_id'],
+                'user_id'		=> $param['user_id'],
+                'amount'		=> $content['amount'],
+                'instalment'	=> $instalment,
+                'target_data' => json_encode($target_data),
+                'reason'		=> '在庫車',
+                'status'        => 0,
+            ];
+            $insert = $this->target_lib->add_target($param);
+            return $insert;
+        }
+        $this->response(['result' => 'ERROR','error' => $result->error ]);
     }
 
     private function type1_signing($param,$product,$input,$target){
