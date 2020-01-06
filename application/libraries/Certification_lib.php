@@ -913,12 +913,10 @@ class Certification_lib{
     public function get_status($user_id,$investor=0,$company=0,$set_fail=false,$target=false){
 		if($user_id){
 			$certification = array();
-			$company_source_user_id = false;
 			if($company){
                 $total = 0;
                 $allows = ['businesstax','governmentauthorities'];
                 $company = $this->get_company_type($user_id);
-                $company_source_user_id = $company->user_id;
                 //FEV
                 $company->selling_type == 2 ? $allows[] = 'salesdetail' : '';
 
@@ -946,7 +944,7 @@ class Certification_lib{
                 if($self_targets) {
                     $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
                 }
-                $total >= 500000 || $company->selling_type == 2?$allows = array_merge($allows,['balancesheet','incomestatement','investigation','investigationjudicial','passbookcashflow'] ):'';
+                $total >= 500000 || $company->selling_type == 2?$allows = array_merge($allows,['balancesheet','incomestatement','investigationjudicial','passbookcashflow'] ):'';
                 if($total >= 1000000 && $company->selling_type != 2){
                     $allows[] = 'interview';
                 }
@@ -972,13 +970,19 @@ class Certification_lib{
                     }
                 }
             }else{
-                $certification = $this->certification;
+                foreach($this->certification as $key => $value) {
+                    if ($key < 1000) {
+                        $certification[$key] = $value;
+                    }
+                    else{
+                        unset($certification[$key]);
+                    }
+                }
             }
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-			    $ruser_id = $key == 9 && $company_source_user_id?$company_source_user_id:$user_id;
-				$user_certification = $this->get_certification_info($ruser_id,$key,$investor,$set_fail);
+                $user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
