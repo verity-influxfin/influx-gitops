@@ -15,6 +15,7 @@ class Labor_insurance_lib
     {
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+		$this->CI->load->model('user/user_model');
 		$this->CI->load->model('user/user_certification_model');
 	}
 
