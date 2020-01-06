@@ -500,10 +500,10 @@ class Certification_lib{
 	}
 	
 	public function job_verify($info = array(),$url=null) {
-		// $user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
-		// if($user_certification==false || $user_certification->status!=1){
-		// 	return false;
-		// }
+		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		if($user_certification==false || $user_certification->status!=1){
+			return false;
+		}
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
 			: $url;
