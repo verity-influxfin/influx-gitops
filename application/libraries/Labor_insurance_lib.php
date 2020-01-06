@@ -15,6 +15,7 @@ class Labor_insurance_lib
     {
 		$this->CI = &get_instance();
 		$this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+		$this->CI->load->model('user/user_certification_model');
 	}
 
     public function check_labor_insurance($userId, $text, &$result)
@@ -29,6 +30,7 @@ class Labor_insurance_lib
         $this->processMostRecentCompanyName($rows, $result);
         $this->processCurrentJobExperience($rows, $result);
         $this->processTotalJobExperience($rows, $result);
+        $this->processJobExperiences($userId, $result);
         $salary = $this->processCurrentSalary($rows, $result);
         $this->processApplicantServingWithTopCompany($text, $result);
         $this->processApplicantHavingGreatJob($text, $result);
@@ -529,6 +531,7 @@ class Labor_insurance_lib
         $differenceInMonth = $dateSet['month'];
 
         $message['message'] = "現職工作年資 : {$differenceInYear}年{$differenceInMonth}月";
+        $message['data'] = $dateSet;
         $result["messages"][] = $message;
     }
 
@@ -569,7 +572,111 @@ class Labor_insurance_lib
         $differenceInMonth = $dateSet['month'];
 
         $message['message'] = "總工作年資 : {$differenceInYear}年{$differenceInMonth}月";
+        $message['data'] = $dateSet;
         $result["messages"][] = $message;
+    }
+
+    public function processJobExperiences($userId, &$result)
+    {
+        $message = [
+            "stage" => "job",
+            "status" => self::PENDING,
+            "message" => ""
+        ];
+
+        $currentJob = null;
+        $totalJob = null;
+        foreach ($result['messages'] as $each) {
+            if ($each['stage'] == "current_job") {
+                $currentJob = $each;
+            }
+            if ($each['stage'] == "total_job") {
+                $totalJob = $each;
+            }
+        }
+
+        if (isset($currentJob['status']) && $currentJob["status"] == self::PENDING) {
+            $message["status"] = self::PENDING;
+            $message["message"] = "多家投保";
+            $result['messages'][] = $message;
+            return;
+        }
+
+        if (!$currentJob || !$totalJob || !isset($currentJob['data']) || !isset($currentJob['data'])) {
+            $message['status'] = self::FAILURE;
+            $message['message'] = "投保年資不足";
+            $message['rejected_message'] = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $result['messages'][] = $message;
+            return;
+        }
+
+        $totalEnrollment = $totalJob['data']['year'] * 12 + $totalJob['data']['month'];
+        $currentEnrollment = $currentJob['data']['year'] * 12 + $currentJob['data']['month'];
+
+        if ($this->isGraduatedWithinAYear($userId)) {
+            if ($totalEnrollment < 12 && $currentEnrollment < 4) {
+                $message["status"] = self::PENDING;
+                $message["message"] = "畢業一年內之上班族總工作年資不足一年，且現職工作年資不足四個月";
+            }
+            if ($totalEnrollment < 12 && $currentEnrollment >= 4) {
+                $message["status"] = self::SUCCESS;
+                $message['message'] = '畢業一年內之上班族總工作年資不足一年但現職工作年資四個月(含)以上';
+            }
+        } else {
+            if ($totalEnrollment < 12 && $currentEnrollment < 4) {
+                $message['status'] = self::FAILURE;
+                $message['message'] = "投保年資不足";
+                $message['rejected_message'] = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            }
+            if ($totalEnrollment < 12 && $currentEnrollment >= 4) {
+                $message['status'] = self::PENDING;
+                $message['message'] = '總工作年資不足一年，但現職工作年資四個月(含)以上';
+            }
+        }
+
+        if ($totalEnrollment >= 12) {
+            $message["status"] = self::SUCCESS;
+            if ($currentEnrollment >= 4) {
+                $message['message'] = '總工作年資一年(含)以上且現職工作年資四個月(含)以上';
+            } else {
+                $message['message'] = '總工作年資一年(含)以上且現職工作年資不足四個月';
+            }
+        }
+
+        $result['messages'][] = $message;
+    }
+
+    public function isGraduatedWithinAYear($userId)
+    {
+        $schoolCertificationDetail = $this->CI->user_certification_model->get_by([
+            'user_id' => $userId,
+            'certification_id' => 2,
+            'status' => 1,
+        ]);
+
+        if (!$schoolCertificationDetail) {
+            return false;
+        }
+
+        $graduatedString = 0;
+        $schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+        if (isset($schoolCertificationDetailArray["graduate_date"])) {
+             $graduatedString = $schoolCertificationDetailArray["graduate_date"];
+        }
+
+        if (!$graduatedString) {
+            return false;
+        }
+
+        $graduatedArray = $this->CI->regex->extractDownloadTime($graduatedString);
+        $graduatedArray[0][0] = strlen($graduatedArray[0][0]) == 3 ? $graduatedArray[0][0] : 0 . $graduatedArray[0][0];
+        $graduatedAt = $graduatedArray[0][0] . $graduatedArray[0][1] . $graduatedArray[0][2];
+
+        $currentTimeInTaiwanTime = $this->convertTimestampToTaiwanTime($this->currentTime);
+        $difference = $this->compareTaiwanTime($graduatedAt, $currentTimeInTaiwanTime);
+        $totalDifference = $difference['year'] * 12 + $difference['month'];
+
+        return $totalDifference < 12;
     }
 
     public function processCurrentSalary($rows, &$result)

@@ -229,7 +229,11 @@ class Labor_insurance_lib_file5 extends TestCase
 				[
 					"stage" => "total_job",
 					"status" => "success",
-					"message" => "總工作年資 : 7年0月"
+					"message" => "總工作年資 : 7年0月",
+					"data" => [
+						"year" => 7,
+						"month" => 0,
+					]
 				]
 			]
 		];
@@ -240,5 +244,36 @@ class Labor_insurance_lib_file5 extends TestCase
 		$this->labor_insurance_lib->processTotalJobExperience($this->rows, $result);
 
 		$this->assertEquals($expectedResult, $result);
+	}
+
+	public function testProcessJobExperiences()
+	{
+		$expectedResult = [
+			'stage' => 'job',
+			'status' => 'pending',
+			'message' => '多家投保'
+		];
+		$certificationModel = $this->getMockBuilder('user_model')
+								   ->disableOriginalConstructor()
+								   ->getMock();
+
+		$certification = new stdClass();
+		$certification->content = [
+			'graduate_date' => '民國92年6月30日'
+		];
+		$certification->content = json_encode($certification->content);
+		$certificationModel->expects($this->any())
+						   ->method('get_by')
+						   ->will($this->returnValue($certification));
+
+		$this->labor_insurance_lib->CI->user_certification_model = $certificationModel;
+
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->setCurrentTime(1578182400);
+		$this->labor_insurance_lib->processCurrentJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processTotalJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processJobExperiences($this->rows, $result);
+
+		$this->assertEquals($expectedResult, end($result['messages']));
 	}
 }

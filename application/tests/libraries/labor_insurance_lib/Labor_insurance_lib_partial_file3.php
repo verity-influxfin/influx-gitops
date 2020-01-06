@@ -56,4 +56,66 @@ class Labor_insurance_lib_partial_file3 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessJobExperiences()
+	{
+		$expectedResult = [
+			'stage' => 'job',
+			'status' => 'pending',
+			'message' => '畢業一年內之上班族總工作年資不足一年，且現職工作年資不足四個月'
+		];
+		$certificationModel = $this->getMockBuilder('user_model')
+								   ->disableOriginalConstructor()
+								   ->getMock();
+
+		$certification = new stdClass();
+		$certification->content = [
+			'graduate_date' => '民國108年6月30日'
+		];
+		$certification->content = json_encode($certification->content);
+		$certificationModel->expects($this->any())
+						   ->method('get_by')
+						   ->will($this->returnValue($certification));
+
+		$this->labor_insurance_lib->CI->user_certification_model = $certificationModel;
+
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->setCurrentTime(1578182400);
+		$this->labor_insurance_lib->processCurrentJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processTotalJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processJobExperiences($this->rows, $result);
+
+		$this->assertEquals($expectedResult, end($result['messages']));
+	}
+
+	public function testProcessJobExperiencesWithMoreThanFourMonth()
+	{
+		$expectedResult = [
+			'stage' => 'job',
+			'status' => 'success',
+			'message' => '畢業一年內之上班族總工作年資不足一年但現職工作年資四個月(含)以上'
+		];
+		$certificationModel = $this->getMockBuilder('user_model')
+								   ->disableOriginalConstructor()
+								   ->getMock();
+
+		$certification = new stdClass();
+		$certification->content = [
+			'graduate_date' => '民國108年6月30日'
+		];
+		$certification->content = json_encode($certification->content);
+		$certificationModel->expects($this->any())
+						   ->method('get_by')
+						   ->will($this->returnValue($certification));
+
+		$this->labor_insurance_lib->CI->user_certification_model = $certificationModel;
+
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->setCurrentTime(1580860800);
+		$this->labor_insurance_lib->processCurrentJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processTotalJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processJobExperiences($this->rows, $result);
+
+		$this->assertEquals($expectedResult, end($result['messages']));
+	}
 }

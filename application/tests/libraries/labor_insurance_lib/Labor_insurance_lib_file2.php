@@ -231,4 +231,34 @@ class Labor_insurance_lib_file2 extends TestCase
 
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	public function testProcessJobExperiences()
+	{
+		$expectedResult = [
+			'stage' => 'job',
+			'status' => 'failure',
+			'message' => '投保年資不足',
+			'rejected_message' => '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。'
+		];
+		$certificationModel = $this->getMockBuilder('user_model')
+								   ->disableOriginalConstructor()
+								   ->getMock();
+
+		$certification = new stdClass();
+		$certification->content = "";
+
+		$certificationModel->expects($this->any())
+						   ->method('get_by')
+						   ->will($this->returnValue($certification));
+
+		$this->labor_insurance_lib->CI->user_certification_model = $certificationModel;
+
+		$result = ["status" => "pending", "messages" => []];
+		$this->labor_insurance_lib->setCurrentTime(1578182400);
+		$this->labor_insurance_lib->processCurrentJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processTotalJobExperience($this->rows, $result);
+		$this->labor_insurance_lib->processJobExperiences($this->rows, $result);
+
+		$this->assertEquals($expectedResult, end($result['messages']));
+	}
 }
