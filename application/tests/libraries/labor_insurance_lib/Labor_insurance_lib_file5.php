@@ -276,4 +276,22 @@ class Labor_insurance_lib_file5 extends TestCase
 
 		$this->assertEquals($expectedResult, end($result['messages']));
 	}
+
+    public function testProcessApplicantServingWithTopCompany()
+    {
+        $expectedResult = [
+            "stage" => "top_company",
+            "status" => "pending",
+            "message" => "無法辨識，未成功讀取公司名稱"
+        ];
+
+        $this->labor_insurance_lib->topEnterprises = [
+            "玉盛國際企業有限公司"
+        ];
+        $result = ["status" => "pending", "messages" => []];
+        $companyName = $this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
+        $this->labor_insurance_lib->processApplicantServingWithTopCompany($companyName, $result);
+
+        $this->assertEquals($expectedResult, $result["messages"][1]);
+    }
 }

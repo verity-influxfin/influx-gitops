@@ -284,4 +284,27 @@ class Labor_insurance_lib_file4 extends TestCase
 
 		$this->assertEquals($expectedResult, end($result['messages']));
 	}
+
+    public function testProcessApplicantServingWithTopCompany()
+    {
+        $expectedResult = [
+            "stage" => "top_company",
+            "status" => "success",
+            "message" => "是否為千大企業之員工 : 否"
+        ];
+
+        MonkeyPatch::patchMethod(
+            'Labor_insurance_lib',
+            ['fetchCompanyNameFilledByUser' => "新北市新莊區國泰國民小學"]
+        );
+
+        $this->labor_insurance_lib->topEnterprises = [
+            "玉盛國際企業有限公司"
+        ];
+        $result = ["status" => "pending", "messages" => []];
+        $companyName = $this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
+        $this->labor_insurance_lib->processApplicantServingWithTopCompany($companyName, $result);
+
+        $this->assertEquals($expectedResult, $result["messages"][1]);
+    }
 }

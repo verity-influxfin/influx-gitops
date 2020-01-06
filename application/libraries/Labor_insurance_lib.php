@@ -14,11 +14,13 @@ class Labor_insurance_lib
     public function __construct()
     {
         $this->CI = &get_instance();
+        $this->CI->config->load('top_enterprise');
         $this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
         $this->CI->load->library('gcis_lib');
         $this->CI->load->model('user/user_model');
         $this->CI->load->model('user/user_meta_model');
         $this->CI->load->model('user/user_certification_model');
+        $this->topEnterprises = $this->CI->config->item("top_enterprise");
     }
 
     public function check_labor_insurance($userId, $text, &$result)
@@ -30,12 +32,12 @@ class Labor_insurance_lib
         $this->processDownloadTimeMatchSearchTime($downloadTime, $text, $result);
         $rows = $this->readRows($text);
         $this->processApplicantHavingLaborInsurance($rows, $result);
-        $this->processMostRecentCompanyName($userId, $rows, $result);
+        $companyName = $this->processMostRecentCompanyName($userId, $rows, $result);
         $this->processCurrentJobExperience($rows, $result);
         $this->processTotalJobExperience($rows, $result);
         $this->processJobExperiences($userId, $result);
         $salary = $this->processCurrentSalary($rows, $result);
-        $this->processApplicantServingWithTopCompany($text, $result);
+        $this->processApplicantServingWithTopCompany($companyName, $result);
         $this->processApplicantHavingGreatJob($text, $result);
         $this->processApplicantHavingGreatSalary($salary, $result);
         $this->aggregate($result);
@@ -499,6 +501,7 @@ class Labor_insurance_lib
         $message["status"] = self::SUCCESS;
         $message["message"] = "公司 : " . $enrolledInsurance["name"];
         $result["messages"][] = $message;
+        return $enrolledInsurance["name"];
     }
 
     public function fetchCompanyNameFilledByUser($userId)
@@ -753,9 +756,28 @@ class Labor_insurance_lib
         return $salary;
     }
 
-    public function processApplicantServingWithTopCompany($text, &$result)
+    public function processApplicantServingWithTopCompany($companyName, &$result)
     {
+        $message = [
+            "stage" => "top_company",
+            "status" => self::SUCCESS,
+            "message" => "是否為千大企業之員工 : ",
+        ];
+        if (!$companyName) {
+            $message["status"] = self::PENDING;
+            $message["message"] = "無法辨識，未成功讀取公司名稱";
+            $result['messages'][] = $message;
+            return;
+        }
 
+        if (in_array($companyName, $this->topEnterprises)) {
+            $message["status"] = self::SUCCESS;
+            $message["message"] .= "是";
+        } else {
+            $message["message"] .= "否";
+        }
+
+        $result["messages"][] = $message;
     }
 
     public function processApplicantHavingGreatJob($text, &$result)
