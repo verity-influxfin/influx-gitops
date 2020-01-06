@@ -108,6 +108,12 @@ class Certification extends MY_Admin_Controller {
 							$this->joint_credits();
 							return;
                         }
+					}
+                    if ($info->certification_id == 10) {
+						if(isset(json_decode($info->content)->pdf_file)){
+							$this->job_credits();
+							return;
+						}
                     }
 					$page_data['id'] 					= $id;
 					$page_data['remark'] 				= json_decode($info->remark, true);
@@ -599,6 +605,44 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
+	public function job_credits(){
+	    $get = $this->input->get(NULL, TRUE);
+		isset($get['id'])?intval($get['id']):0;
+		$id = isset($get["id"]) ? intval($get["id"]) : 0;
+		$info = $this->user_certification_model->get($id);
+
+	    if ($this->input->is_ajax_request()) {
+	        $this->load->library('output/json_output');
+	        if ($id <= 0) {
+	            $this->json_output->setStatusCode(204)->send();
+	        }
+
+	        $certification = $this->user_certification_model->get($id);
+			if (!$certification) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+
+			$user = $this->user_model->get($certification->user_id);
+			$this->load->library('output/user/user_output', ["data" => $user]);
+
+	        $job_credits = json_decode($certification->content);
+			$certification->content = $job_credits;
+			$this->load->library('output/user/job_credit_output', ["data" => $job_credits->result, "certification" => $certification]);
+	        $response = [
+				"user" => $this->user_output->toOne(),
+				"job_credits" => $this->job_credit_output->toOne(),
+				"statuses" => $this->user_certification_model->status_list
+			];
+
+	        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+	    }
+	    $this->load->view('admin/_header');
+	    $this->load->view('admin/_title',$this->menu);
+	    $this->load->view('admin/certification/job_credits');
+	    $this->load->view('admin/_footer');
+	}
+
 	public function joint_credits(){
 	    $get = $this->input->get(NULL, TRUE);
 		isset($get['id'])?intval($get['id']):0;
@@ -642,5 +686,6 @@ class Certification extends MY_Admin_Controller {
 	    $this->load->view('admin/certification/joint_credits',$page_data);
 	    $this->load->view('admin/_footer');
 	}
+	
 }
 ?>

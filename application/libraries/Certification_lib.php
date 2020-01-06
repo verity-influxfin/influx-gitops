@@ -535,8 +535,13 @@ class Certification_lib{
 						break;
 					case 'failure':
 						$status = 2;
+						$content=json_decode($info->content,true);
+						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status, 'sys_check' => 1,
+							'status' => $status, 
+							'sys_check' => 1,
+							'content' => json_encode($content),
+
 						));
 						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
 						break;
