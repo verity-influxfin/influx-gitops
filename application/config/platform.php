@@ -512,6 +512,7 @@ $config['sub_product_list'] = [
                     'vin' => ['String', '車身號碼'],
                     'factory_time' => ['Timestamp', '出廠時間'],
                     'product_description' => ['String', '產品備註'],
+                    'car_history_image' => ['Picture','車輛歷史報告 ( Carfax / Autocheck )','6'],
                     'car_title_image' => ['Picture', '車輛所有權狀 ( title )', '6'],
                     'car_import_proof_image' => ['Picture', '海關進口證明/進口報單', '6'],
                     'car_artc_image' => ['Picture', '交通部核發合格證明、環保驗車證明(ARTC)', '6'],

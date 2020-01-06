@@ -1123,10 +1123,10 @@ class Product extends REST_Controller {
                 $cer_group['car_file'] = [1,'車籍文件'];
                 $cer_group['car_pic'] = [1,'車輛外觀照片'];
                 foreach ($product['targetData'] as $key => $value) {
-                    if(in_array($key,['car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
-                        empty($targetData->$key)?$cer_group['car_file'][0] = 0:'';
-                    }elseif(in_array($key,['car_title_image','car_import_proof_image','car_artc_image','car_others_image','car_others_image'])){
-                        empty($targetData->$key)?$cer_group['car_pic'][0] = 0:'';
+                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
+                        empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
+                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
                     }
                 }
                 foreach ($cer_group as $cer_key => $cervalue){
