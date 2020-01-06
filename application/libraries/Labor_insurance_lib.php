@@ -28,7 +28,7 @@ class Labor_insurance_lib
         $this->processApplicantHavingLaborInsurance($rows, $result);
         $this->processMostRecentCompanyName($rows, $result);
         $this->processCurrentJobExperience($rows, $result);
-        $this->processTotalJobExperience($text, $result);
+        $this->processTotalJobExperience($rows, $result);
         $salary = $this->processCurrentSalary($rows, $result);
         $this->processApplicantServingWithTopCompany($text, $result);
         $this->processApplicantHavingGreatJob($text, $result);
