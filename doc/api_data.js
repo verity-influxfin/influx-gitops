@@ -12298,6 +12298,7 @@ define({
                             "            \"vin\": true,\n" +
                             "            \"factory_time\": true,\n" +
                             "            \"product_description\": true,\n" +
+                            "            \"car_history_image\": true,\n" +
                             "            \"car_title_image\": false,\n" +
                             "            \"car_import_proof_image\": false,\n" +
                             "            \"car_artc_image\": true,\n" +
@@ -12441,6 +12442,13 @@ define({
                             "optional": true,
                             "field": "product_description",
                             "description": "<p>產品備註</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "optional": true,
+                            "field": "car_history_image",
+                            "description": "<p>車輛歷史報告 ( Carfax / Autocheck )</p>"
                         },
                         {
                             "group": "",

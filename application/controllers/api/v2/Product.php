@@ -1089,17 +1089,15 @@ class Product extends REST_Controller {
                 $targetData = json_decode($target->target_data);
                 $cer_group['car_file'] = [1,'車籍文件'];
                 $cer_group['car_pic'] = [1,'車輛外觀照片'];
-                if($target->status != 0) {
-                    $targetDatas = [
-                        'brand' => $targetData->brand,
-                        'name' => $targetData->name,
-                        'selected_image' => $targetData->selected_image,
-                        'vin' => $targetData->vin,
-                        'purchase_time' => $targetData->purchase_time,
-                        'factory_time' => $targetData->factory_time,
-                        'product_description' => $targetData->product_description,
-                    ];
-                }
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'vin' => $targetData->vin,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
                         empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
@@ -2208,7 +2206,9 @@ class Product extends REST_Controller {
     private function build_targetData($product,$target_data){
         if(count($product['targetData']) > 0){
             foreach ($product['targetData'] as $key => $value) {
-                $target_data = array_merge($target_data, [$key => '']);
+                if(empty($target_data[$key])){
+                    $target_data = array_merge($target_data, [$key => '']);
+                }
             }
             return $target_data;
         }
