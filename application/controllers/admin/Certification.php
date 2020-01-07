@@ -77,7 +77,7 @@ class Certification extends MY_Admin_Controller {
 	
 	public function user_certification_edit(){
 		$page_data 	= array();
-		$back_url 	= admin_url('certification/user_certification_list');
+		$back_url 	= admin_url('close');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		if(empty($post)){
@@ -85,7 +85,7 @@ class Certification extends MY_Admin_Controller {
 			$cid 	= isset($get['cid'])?intval($get['cid']):0;
 			$from 	= isset($get['from'])?$get['from']:'';
 			if(!empty($from)){
-				$back_url = admin_url($from);
+				$back_url = admin_url('close');
 			}
 			if($id||$cid){
 				$info = $this->user_certification_model->get($id);
@@ -310,7 +310,8 @@ class Certification extends MY_Admin_Controller {
 				$from 	= isset($post['from'])?$post['from']:'';
 				$fail 	= isset($post['fail'])?$post['fail']:'';
 				if(!empty($from)){
-					$back_url = admin_url($from);
+					//$back_url = admin_url($from);
+					$back_url = admin_url('close');
 				}
 
 				$info = $this->user_certification_model->get($post['id']);

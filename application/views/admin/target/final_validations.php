@@ -947,7 +947,7 @@
 				} else {
                     return '<p class="form-control-static">無</p>';
 				}
-                url = '/admin/certification/user_certification_edit?from=risk&id=' + verification.id;
+                url = '/admin/certification/user_certification_edit?id=' + verification.id;
             }
 
             return '<a target="_blank" href="' + url + '">' + button + '</a>';

@@ -25,7 +25,7 @@ $config['admin_menu'] = [
     ],
     'Risk' => [
         'parent_name' => '風控專區',
-        'index' => '風控審核(全)',
+        //'index' => '風控審核(全)',
         'index?investor=0&company=0' => '自然人借款端審核',
         'index?investor=0&company=1' => '法人借款端審核',
         'index?investor=1' => '投資端審核',

@@ -259,13 +259,13 @@
 																	switch ($value['user_status']) {
 																		case '3':
 																		case '0':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -276,13 +276,13 @@
 																	switch ($value['user_status']) {
 																		case '3':
 																		case '0':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -316,13 +316,13 @@
 																	switch ($value['user_status']) {
 																		case '3':
 																		case '0':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -333,13 +333,13 @@
 																	switch ($value['user_status']) {
 																		case '3':
 																		case '0':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a href="' . admin_url('certification/user_certification_edit?from=risk&id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';

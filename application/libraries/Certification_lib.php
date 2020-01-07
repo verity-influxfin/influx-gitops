@@ -1041,8 +1041,15 @@ class Certification_lib{
                     }
                 }
             }else{
-				$certification = $this->certification;
-			}
+                foreach($this->certification as $key => $value) {
+                    if ($key < 1000) {
+                        $certification[$key] = $value;
+                    }
+                    else{
+                        unset($certification[$key]);
+                    }
+                }
+            }
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
