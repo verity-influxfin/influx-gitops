@@ -937,12 +937,14 @@ class Certification_lib{
                         }
                     }
                 }
-                $self_targets = $this->CI->target_model->get_by([
+                $self_targets = $this->CI->target_model->get_many_by([
                     'status' => 5,
                     'user_id' => $user_id,
                 ]);
                 if($self_targets) {
-                    $total += $this->CI->target_lib->get_amortization_table($targets)['remaining_principal'];
+                    foreach($self_targets as $key => $value) {
+                        $total += $this->CI->target_lib->get_amortization_table($value)['remaining_principal'];
+                    }
                 }
                 $total >= 500000 || $company->selling_type == 2?$allows = array_merge($allows,['balancesheet','incomestatement','investigationjudicial','passbookcashflow'] ):'';
                 if($total >= 1000000 && $company->selling_type != 2){

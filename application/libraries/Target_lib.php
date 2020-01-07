@@ -737,6 +737,7 @@ class Target_lib{
 		]);
 		
 		if($transactions){
+            $limit_date = '';
 			foreach($transactions as $key => $value){
 				if($value->instalment_no && $value->source==SOURCE_AR_PRINCIPAL){
 					$limit_date = $value->limit_date?$value->limit_date:$limit_date;
