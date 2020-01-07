@@ -10,6 +10,7 @@ class Labor_insurance_lib
 
     const MINIMUM_WAGE = 23800;
     const HIGH_WAGE = 50000;
+    const HIGH_WAGE_FOR_TOP_COMPANY = 40000;
 
     public function __construct()
     {
@@ -37,8 +38,8 @@ class Labor_insurance_lib
         $this->processTotalJobExperience($rows, $result);
         $this->processJobExperiences($userId, $result);
         $salary = $this->processCurrentSalary($rows, $result);
-        $this->processApplicantServingWithTopCompany($companyName, $result);
-        $this->processApplicantHavingGreatJob($text, $result);
+        $isTopCompany = $this->processApplicantServingWithTopCompany($companyName, $result);
+        $this->processApplicantHavingGreatJob($isTopCompany, $salary, $result);
         $this->processApplicantHavingGreatSalary($salary, $result);
         $this->aggregate($result);
 
@@ -763,26 +764,42 @@ class Labor_insurance_lib
             "status" => self::SUCCESS,
             "message" => "是否為千大企業之員工 : ",
         ];
+
+        $isTopCompany = false;
         if (!$companyName) {
             $message["status"] = self::PENDING;
             $message["message"] = "無法辨識，未成功讀取公司名稱";
             $result['messages'][] = $message;
-            return;
+            return $isTopCompany;
         }
 
         if (in_array($companyName, $this->topEnterprises)) {
             $message["status"] = self::SUCCESS;
+            $message["message"] .= "是";
+            $isTopCompany = true;
+        } else {
+            $message["message"] .= "否";
+        }
+
+        $result["messages"][] = $message;
+        return $isTopCompany;
+    }
+
+    public function processApplicantHavingGreatJob($isTopCompany, $salary, &$result)
+    {
+        $message = [
+            "stage" => "great_job",
+            "status" => self::SUCCESS,
+            "message" => "是否符合優良職業認定 : ",
+        ];
+
+        if ($isTopCompany && $salary > self::HIGH_WAGE_FOR_TOP_COMPANY) {
             $message["message"] .= "是";
         } else {
             $message["message"] .= "否";
         }
 
         $result["messages"][] = $message;
-    }
-
-    public function processApplicantHavingGreatJob($text, &$result)
-    {
-
     }
 
     public function processApplicantHavingGreatSalary($salary, &$result)
