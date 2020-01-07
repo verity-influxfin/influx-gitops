@@ -2155,6 +2155,21 @@ class Product extends REST_Controller {
             }
         }
 
+        //檢查金融卡綁定 NO_BANK_ACCOUNT
+        $bank_account = $this->user_bankaccount_model->get_by([
+            'status'	=> 1,
+            'investor'	=> 0,
+            //'verify'	=> 0,
+            'user_id'	=> $user_id
+        ]);
+        if($bank_account){
+            if($bank_account->verify==0) {
+                $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+            }
+        }else{
+            $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
+        }
+
         $company = ['DS2P1'];
         if(!in_array($product['visul_id'],$company)){
             //上傳檔案欄位
@@ -2171,21 +2186,6 @@ class Product extends REST_Controller {
 
             if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-            }
-
-            //檢查金融卡綁定 NO_BANK_ACCOUNT
-            $bank_account = $this->user_bankaccount_model->get_by([
-                'status'	=> 1,
-                'investor'	=> 0,
-                //'verify'	=> 0,
-                'user_id'	=> $user_id
-            ]);
-            if($bank_account){
-                if($bank_account->verify==0) {
-                    $this->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-                }
-            }else{
-                $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
             }
         }
 
