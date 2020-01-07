@@ -12,9 +12,9 @@ class Job_credit_output
         }
 
         $this->job_credits = $params["data"];
-		if (isset($params["certification"])) {
-			$this->certification = $params["certification"];
-		}
+        if (isset($params["certification"])) {
+            $this->certification = $params["certification"];
+        }
     }
 
     public function toOne()
@@ -32,19 +32,19 @@ class Job_credit_output
             "messages" => $this->mapMessages($job_credits->messages),
         ];
 
-		if (isset($this->certification->status)) {
-			if ($this->certification->status == 1) {
-				$output["status"] = "success";
-			} elseif ($this->certification->status == 2) {
-				$output["status"] = "failure";
-			} elseif ($this->certification->status == 3) {
-				$output["status"] = "pending";
-			}
-		}
+        if (isset($this->certification->status)) {
+            if ($this->certification->status == 1) {
+                $output["status"] = "success";
+            } elseif ($this->certification->status == 2) {
+                $output["status"] = "failure";
+            } elseif ($this->certification->status == 3) {
+                $output["status"] = "pending";
+            }
+        }
 
-		if (isset($this->certification->content->pdf_file)) {
-			$output["file"] = $this->certification->content->pdf_file;
-		}
+        if (isset($this->certification->content->pdf_file)) {
+            $output["file"] = $this->certification->content->pdf_file;
+        }
 
         return $output;
     }

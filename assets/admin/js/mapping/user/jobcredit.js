@@ -3,13 +3,13 @@ class JobCredit
     constructor(jobCredit) {
         this.setStageMapping();
         this.setStatus(jobCredit);
-		this.setFile(jobCredit);
+        this.setFile(jobCredit);
         this.setMessages(jobCredit);
     }
 
     setFile(jobCredit) {
-		if (!jobCredit.file) this.file= "";
-		this.file = jobCredit.file;
+        if (!jobCredit.file) this.file= "";
+        this.file = jobCredit.file;
 	}
 
     setStatus(jobCredit) {
@@ -58,10 +58,10 @@ class JobCredit
             'applicant_detail' : '個人資訊',
             'insurance_enrollment' : '是否為勞工',
             'company' : '現職公司名稱',
-			'current_job' : '現職工作年資',
-			'total_job' : '總工作年資',
-			'job' : '工作',
-			'salary' : '月薪',
+            'current_job' : '現職工作年資',
+            'total_job' : '總工作年資',
+            'job' : '工作',
+            'salary' : '月薪',
             'top_company' : '是否為千大企業之員工',
             'high_salary' : '是否為高收入族群',
         };
