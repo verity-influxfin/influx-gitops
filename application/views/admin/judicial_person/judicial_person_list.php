@@ -119,7 +119,7 @@
 											<? } ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+											<td><a target="_blank" href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
                                         </tr>
 									<?php 
 										}}
