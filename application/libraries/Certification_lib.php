@@ -1036,7 +1036,7 @@ class Certification_lib{
 				}
             }elseif($company){
                 foreach($this->certification as $key => $value){
-                    if(in_array($value['alias'],['investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','governmentauthorities','salesdetail'])){
+                    if(in_array($value['alias'],['businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','governmentauthorities','salesdetail'])){
                         $certification[$key] = $value;
                     }
                 }

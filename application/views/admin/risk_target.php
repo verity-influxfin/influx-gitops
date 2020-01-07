@@ -110,7 +110,7 @@
                                             if($certification){
 												foreach($certification as $key => $value){
 												    if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
-                                                        || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10 && $key != 9
+                                                        || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
                                                         || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && $key > 10
                                                     ){
 												        unset($certification[$key]);
