@@ -171,7 +171,7 @@ class Financial_lib{
 		return $schedule;
 	}
 
-	private function amortization_schedule_3($amount,$instalment,$rate,$date,$product_type = false, $visul = false, $prepayment=false)
+    private function amortization_schedule_3($amount, $instalment, $rate, $date, $product_type = false, $visul = false, $prepayment = false)
     {
         //驗證閏年
         $leap_year = $this->leap_year($date, $instalment);
@@ -223,25 +223,48 @@ class Financial_lib{
         $this->CI->load->library('Foreign_exchange_car_lib');
         $day_amortization_schedule = $this->CI->foreign_exchange_car_lib->amortization_schedule([$loanStage1], $inputSetting);
 
-        //if ($visul['visul_id'] == 'DS2P1') {
-        //    $odate = $date;
-        //    //還款日
-        //    $ym = date('Y-m', strtotime($date));
-        //    $d = date('d', strtotime($date));
-        //    $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
-        //    if ($d > $date) {
-        //        $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
-        //    }
-        //}
-        //get_range_days($odate,$date);
-        foreach ($day_amortization_schedule->getRows() as $PDkey => $PDvalue) {
+        if ($visul['visul_id'] == 'DS2P1') {
+            $max_instalment = $visul['instalment'][0];
+            $odate = $date;
+            //還款日
+            $ym = date('Y-m', strtotime($date));
+            $d = date('d', strtotime($date));
+            $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
+            $last_day = date('Y-m-d', strtotime($date . ' + ' . $max_instalment . ' day'));
+            if ($d > $date) {
+                $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
+            }
+            $pay_day[get_range_days($odate, $date)] = $date;
+            for ($i = 1; $i <= $max_instalment; $i++) {
+                $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
+                $rangeDays = get_range_days($odate, $date);
+                $max_instalment > $rangeDays ? $pay_day[$rangeDays] = $date : false;
+                $i = $rangeDays;
+            }
+            $date != $last_day ? $pay_day[$max_instalment] = $last_day : '';
+        }
 
+        foreach ($pay_day as $pdKey => $pdValue) {
+            $interest = $day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee();
+            $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
+            $total_payment = $pdKey == $max_instalment ? $interest + $share + $amount : $interest;
+            $list[$pdKey] = array(
+                'instalment' => $pdKey,
+                'repayment_date' => $pdValue,
+                'days' => $pdKey,
+                'remaining_principal' => $amount,
+                'principal' => $amount,
+                'interest' => $interest,
+                'share' => $share,
+                'total_payment' => $total_payment,
+            );
         }
 
         $schedule['schedule'] = $list;
         $schedule['total'] = array(
             'principal' => $amount,
-            'interest'		=> 0,
+            'interest' => $interest,
+            'share' => $share,
             'total_payment' => $total_payment,
         );
         return $schedule;
