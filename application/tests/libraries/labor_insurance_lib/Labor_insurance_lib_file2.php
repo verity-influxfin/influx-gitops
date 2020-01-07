@@ -25,8 +25,9 @@ class Labor_insurance_lib_file2 extends TestCase
 			"messages" => [
 				[
 					"stage" => "correctness",
-		            "status" => "failure",
-		            "message" => "上傳文件錯誤"
+					"status" => "failure",
+					"message" => "",
+					"rejected_message" => "上傳文件錯誤"
 				]
 			]
 		];

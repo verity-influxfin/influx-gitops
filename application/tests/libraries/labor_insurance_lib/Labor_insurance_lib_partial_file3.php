@@ -18,6 +18,27 @@ class Labor_insurance_lib_partial_file3 extends TestCase
 		$this->text = $pdf->getText();
 	}
 
+    public function testProcessDownloadTimeMatchSearchTime()
+    {
+        $expectedResult = [
+            "status" => "pending",
+            "messages" => [
+                [
+                    "stage" => "time_matches",
+                    "status" => "failure",
+                    "message" => "起始日非空白",
+                    "rejected_message" => "勞保異動明細非歷年"
+                ]
+            ]
+        ];
+
+        $downloadTime = 1574812800;
+        $result = ["status" => "pending", "messages" => []];
+        $this->labor_insurance_lib->processDownloadTimeMatchSearchTime($downloadTime, $this->text, $result);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
     public function testProcessMostRecentCompanyName()
     {
         $expectedResult = [

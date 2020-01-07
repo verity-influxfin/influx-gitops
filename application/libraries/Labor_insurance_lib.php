@@ -62,7 +62,7 @@ class Labor_insurance_lib
         }
 
         $message["status"] = self::FAILURE;
-        $message["message"] = "上傳文件錯誤";
+        $message["rejected_message"] = "上傳文件錯誤";
         $result["messages"][] = $message;
     }
 
@@ -71,11 +71,12 @@ class Labor_insurance_lib
         $message = [
             "stage" => "download_time",
             "status" => self::PENDING,
-            "message" => "無法辨識日期"
+            "message" => ""
         ];
 
         $content = $this->CI->regex->findPatternInBetween($text, "網頁下載時間", "秒");
         if (!$content) {
+            $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
@@ -84,6 +85,7 @@ class Labor_insurance_lib
 
         $downloadTimeArray = $this->CI->regex->extractDownloadTime($downloadTimeText);
         if (!$downloadTimeArray || !is_array($downloadTimeArray[0]) || count($downloadTimeArray[0]) != 6) {
+            $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
@@ -93,13 +95,12 @@ class Labor_insurance_lib
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "勞保異動明細非一個月內";
+            $message["rejected_message"] = "勞保異動明細非一個月內";
             $result["messages"][] = $message;
             return;
         }
 
         $message["status"] = self::SUCCESS;
-        $message["message"] = "";
         $result["messages"][] = $message;
         return $downloadTime;
     }
@@ -130,9 +131,10 @@ class Labor_insurance_lib
             return;
         }
 
-        if (count($searchTimeArray) == 2) {
+        if (count($searchTimeArray[0]) == 2) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "勞保異動明細非歷年";
+            $message["message"] = "起始日非空白";
+            $message["rejected_message"] = "勞保異動明細非歷年";
             $result["messages"][] = $message;
             return;
         }
@@ -142,7 +144,8 @@ class Labor_insurance_lib
         $searchTime = $this->convertTaiwanTimeToTimestamp($endTime);
         if ($downloadTime != $searchTime) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "勞保異動明細非歷年";
+            $message["message"] = "查詢時間與下載時間不一致";
+            $message["rejected_message"] = "勞保異動明細非歷年";
             $result["messages"][] = $message;
             return;
         }
