@@ -478,7 +478,10 @@ class Labor_insurance_lib
 
         if (isset($enrolledInsurance["overdue"])) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "不符合平台規範";
+            $message["message"] = [
+                "公司 : " . $enrolledInsurance["name"],
+                "不符合平台規範"
+            ];
             $message["rejected_message"] = "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
             $result["messages"][] = $message;
             return;
@@ -487,7 +490,11 @@ class Labor_insurance_lib
         $fetchedCompanyName = $this->fetchCompanyNameFilledByUser($userId);
         if ($fetchedCompanyName != $enrolledInsurance["name"]) {
             $message["status"] = self::PENDING;
-            $message["message"] = "與user自填公司名稱不一致";
+            $message["message"] = [
+                "公司 : " . $enrolledInsurance["name"],
+                "與user自填公司名稱不一致"
+            ];
+
             $result["messages"][] = $message;
             return;
         }
@@ -497,7 +504,10 @@ class Labor_insurance_lib
             || strpos($enrolledInsurance['name'], '漁會') !== false
         ) {
             $message["status"] = self::PENDING;
-            $message["message"] = "加保在公會、漁會";
+            $message["message"] = [
+                "公司 : " . $enrolledInsurance["name"],
+                "加保在公會、漁會"
+            ];
             $result["messages"][] = $message;
             return;
         }

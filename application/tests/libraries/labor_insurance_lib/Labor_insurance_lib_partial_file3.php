@@ -71,7 +71,10 @@ class Labor_insurance_lib_partial_file3 extends TestCase
 				[
 					"stage" => "company",
 					"status" => "pending",
-					"message" => "與user自填公司名稱不一致",
+					"message" => [
+						"公司 : 通合系統科技有限公司",
+						"與user自填公司名稱不一致"
+					],
 				]
 			]
 		];
