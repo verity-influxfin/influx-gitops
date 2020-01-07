@@ -12228,6 +12228,12 @@ define({
                         {
                             "group": "",
                             "type": "Boolean",
+                            "field": "car_history_image",
+                            "description": "<p>車輛歷史報告 ( Carfax / Autocheck )</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
                             "field": "car_title_image",
                             "description": "<p>車輛所有權狀(title)</p>"
                         },
@@ -14332,7 +14338,7 @@ define({
         {
             "type": "post",
             "url": "/v2/product/apply",
-            "title": "借款方 申請借款",
+            "title": "借款方 申請借款/分期",
             "version": "0.2.0",
             "name": "PostProductApply",
             "group": "Product",
@@ -14555,6 +14561,12 @@ define({
                             "optional": false,
                             "field": "218",
                             "description": "<p>未有該商品類型的經銷商資格</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "COOPERATION_TYPE_ERROR",
+                            "description": "<p>經銷商銷售類別錯誤</p>"
                         },
                         {
                             "group": "Error 4xx",
