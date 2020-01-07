@@ -1009,7 +1009,8 @@ class Product extends REST_Controller {
             $amortization_schedule = [];
             if(in_array($target->status,[1])){
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment,false,[
-                    'visul_id' => $product['visul_id']
+                    'visul_id' => $product['visul_id'],
+                    'instalment' => $product['instalment']
                 ]);
             }
 
@@ -1092,6 +1093,9 @@ class Product extends REST_Controller {
                     $targetDatas = [
                         'brand' => $targetData->brand,
                         'name' => $targetData->name,
+                        'selected_image' => $targetData->selected_image,
+                        'vin' => $targetData->vin,
+                        'purchase_time' => $targetData->purchase_time,
                         'factory_time' => $targetData->factory_time,
                         'product_description' => $targetData->product_description,
                     ];
@@ -1959,6 +1963,9 @@ class Product extends REST_Controller {
         $interest_rate = $product['interest_rate_s'];
 
         $cooperation = $this->get_cooperation_info($store_id);
+        if($cooperation->selling_type != $product['dealer']){
+            $this->response(array('result' => 'ERROR','error' => COOPERATION_TYPE_ERROR ));
+        }
         $cooperation_id  = $cooperation -> cooperation_id;
         $company_user_id = $cooperation -> company_user_id;
 
@@ -1970,6 +1977,7 @@ class Product extends REST_Controller {
         }
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
+            'selling_type' => $product['dealer'],
             'item_id'        => $item_id,
             'item_count'     => $item_count,
             'item_price'     => $item_price,
@@ -2025,17 +2033,14 @@ class Product extends REST_Controller {
                     return $order_insert;
                 }
 
-                $param = [
-                    'product_id'	=> $product_id,
-                    'sub_product_id' => $sub_product_id,
-                    'user_id'		=> $user_id,
+                $param = array_merge($param,[
                     'amount'		=> $total,
                     'instalment'	=> $instalment,
                     'platform_fee'  => $platform_fee,
                     'order_id'		=> $order_insert,
                     'reason'		=> '分期:'.$item_name,
                     'status'        => 20,
-                ];
+                ]);
                 //建立產品單號
                 $insert = $this->target_lib->add_target($param);
             }
@@ -2079,17 +2084,14 @@ class Product extends REST_Controller {
                 'factory_time' => $content['factory_time'],
                 'product_description' => $content['product_description'],
             ];
-            $param = [
-                'product_id'	=> $param['product_id'],
-                'sub_product_id' => $param['sub_product_id'],
-                'user_id'		=> $param['user_id'],
+            $param = array_merge($param,[
                 'amount'		=> $content['purchase_cost'],
                 'instalment'	=> $instalment,
                 'order_id'		=> $order_insert,
                 'target_data' => json_encode($target_data),
                 'reason'		=> '購車',
                 'status'        => 30,
-            ];
+            ]);
             $param2 = $param;
             $param2['amount'] = $content['fee_cost'];
             $param2['reason'] = '規費';
@@ -2114,12 +2116,13 @@ class Product extends REST_Controller {
         $instalment = $input['instalment'];
 
         $this->load->library('coop_lib');
-        $result = $this->coop_lib->coop_request('product/list?type=2&item_id='.$content['item_id'],'',0);
+        $result = $this->coop_lib->coop_request('product/list?type=2&item_id='.$content['item_id'],'',0,true);
         if(isset($result->result) && $result->result == 'SUCCESS'){
             $target_data = [
                 'item_id' => $content['item_id'],
                 'brand' => $result->data->list[0]->brand,
                 'name' => $result->data->list[0]->name,
+                'selected_image' => $result->data->list[0]->image,
                 'purchase_time' => $content['purchase_time'],
                 'vin' => $content['vin'],
                 'factory_time' => $content['factory_time'],
@@ -2128,16 +2131,13 @@ class Product extends REST_Controller {
 
             $target_data = $this-> build_targetData($product,$target_data);
 
-            $param = [
-                'product_id'	=> $param['product_id'],
-                'sub_product_id' => $param['sub_product_id'],
-                'user_id'		=> $param['user_id'],
+            $param = array_merge($param,[
                 'amount'		=> $content['amount'],
                 'instalment'	=> $instalment,
                 'target_data' => json_encode($target_data),
                 'reason'		=> '在庫車',
                 'status'        => 0,
-            ];
+            ]);
             $insert = $this->target_lib->add_target($param);
             return $insert;
         }
