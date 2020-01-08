@@ -434,7 +434,7 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}
-	} 
+	}
 
 	function user_bankaccount_success(){
 		$get 	= $this->input->get(NULL, TRUE);
@@ -610,7 +610,7 @@ class Certification extends MY_Admin_Controller {
 			$page_data['months'] 				= isset((json_decode($info->content, true))['months'])?(json_decode($info->content, true))['months']:0;
 			$page_data['status'] 				= ($info->status);
 		}
-		
+
 	    if ($this->input->is_ajax_request()) {
 	        $this->load->library('output/json_output');
 	        if ($id <= 0) {
@@ -642,5 +642,57 @@ class Certification extends MY_Admin_Controller {
 	    $this->load->view('admin/certification/joint_credits',$page_data);
 	    $this->load->view('admin/_footer');
 	}
+
+    public function migrate_ocr()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $certification = isset($get['certification']) ? $get['certification'] : '';
+        $startAt = isset($get['start_at']) ? $get['start_at'] : 0;
+        $endAt = isset($get['end_at']) ? $get['end_at'] : 0;
+        $offset = isset($get['offset']) ? $get['offset'] : 1;
+        $limit = isset($get['limit']) ? $get['limit'] : 20;
+
+        $this->load->library('output/json_output');
+
+        $certificationId = 0;
+        if ($certification == 'id_card') {
+            $certificationId = 1;
+        } else {
+            $this->json_output->setStatusCode(400)->send();
+        }
+
+        $where = ["certification_id" => $certificationId];
+        if ($startAt > 0) {
+            $where["updated_at >="] = $startAt;
+        }
+        if ($endAt > 0) {
+            $where["updated_at <="] = $endAt;
+        }
+
+        $skipBy = ($offset - 1) * $limit;
+
+        $this->load->model('user/user_certification_model');
+        $certifications = $this->user_certification_model->limit($limit, $skipBy)->get_many_by($where);
+
+        if (!$certifications) {
+            $this->json_output->setStatusCode(204)->send();
+        }
+
+        $this->load->model('mongo/ocr_model');
+        foreach ($certifications as $certification) {
+            $content = json_decode($certification->content);
+            $remark = json_decode($certification->remark);
+            $ocr = [
+                'reference' => md5($certification->user_id . "-" . $certification->id),
+                'certification' => $certificationId,
+                'content' => $content,
+                'remark' => $remark,
+            ];
+
+            $this->ocr_model->save($ocr);
+        }
+
+        $this->json_output->setStatusCode(200)->send();
+    }
 }
 ?>
