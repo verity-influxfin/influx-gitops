@@ -679,15 +679,33 @@ class Certification extends MY_Admin_Controller {
         }
 
         $this->load->model('mongo/ocr_model');
+
+        $textComparisons = ["name", "id_number", "id_card_date", "id_card_place", "birthday", "address"];
+        $faceComparisons = ["face", "face_flag", "face_plus", "face_count"];
         foreach ($certifications as $certification) {
             $content = json_decode($certification->content);
             $remark = json_decode($certification->remark);
+
             $ocr = [
                 'reference' => md5($certification->user_id . "-" . $certification->id),
                 'certification' => $certificationId,
-                'content' => $content,
-                'remark' => $remark,
+                'pass' => $certification->sys_check == 1
             ];
+            if (isset($remark->OCR) && $remark->OCR) {
+                foreach ($textComparisons as $key) {
+                    $ocr["comparison"][$key] = false;
+                    if (isset( $remark->OCR->$key) && $content->$key == $remark->OCR->$key) {
+                        $ocr["comparison"][$key] = true;
+                    }
+                }
+            }
+
+            foreach ($faceComparisons as $key) {
+                $ocr["comparison"][$key] = [];
+                if (isset($remark->$key) && $remark->$key) {
+                    $ocr["comparison"][$key] = $remark->$key;
+                }
+            }
 
             $this->ocr_model->save($ocr);
         }
