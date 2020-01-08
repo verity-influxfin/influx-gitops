@@ -516,5 +516,16 @@ class Sales extends MY_Admin_Controller {
 		$response = ["users" => $userOutputs];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
+
+    public function loan_overview()
+    {
+        if (!$this->input->is_ajax_request()) {
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/sales_loan_overview');
+            $this->load->view('admin/_footer');
+            return;
+        }
+    }
 }
 ?>
