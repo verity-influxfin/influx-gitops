@@ -317,9 +317,9 @@ class Target extends REST_Controller {
 			
 			$product_list 	= $this->config->item('product_list');
 			$product_info	= $product_list[$target->product_id];
-			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment);
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
 		
-			$user_info 	= $this->user_model->get($target->user_id); 
+			$user_info 	= $this->user_model->get($target->user_id);
 			$user		= [];
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
@@ -775,7 +775,7 @@ class Target extends REST_Controller {
 				$contract_data 	= $this->contract_lib->get_contract($value->contract_id);
 				$contract[] 	= $contract_data;
 				$data['target_ids'][] = intval($value->id);
-				$schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,'',$value->repayment);
+				$schedule = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value);
 				if($schedule){
 					foreach($schedule['schedule'] as $k => $v){
 						if(!isset($amortization_schedule['schedule'][$v['repayment_date']])){

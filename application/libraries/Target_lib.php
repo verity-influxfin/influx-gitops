@@ -473,7 +473,7 @@ class Target_lib{
 								$total += $value->amount;
 								if($total < $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount;
-									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,'',$target->repayment);
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target);
 									$contract_id	= $this->CI->contract_lib->sign_contract('lend',[
 										$value->user_id,
 										$target->user_id,
@@ -489,7 +489,7 @@ class Target_lib{
 									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
-									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,'',$target->repayment);
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target);
 									$contract_id	= $this->CI->contract_lib->sign_contract('lend',[
 										$value->user_id,
 										$target->user_id,

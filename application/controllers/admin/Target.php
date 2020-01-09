@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array('edit','verify_success','verify_failed','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer');
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('loan/investment_model');
@@ -18,9 +18,9 @@ class Target extends MY_Admin_Controller {
 		$this->load->library('target_lib');
 		$this->load->library('financial_lib');
  	}
-	
+
 	public function index(){
-		
+
 		$page_data 	= ['type'=>'list'];
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= [];
@@ -199,6 +199,7 @@ class Target extends MY_Admin_Controller {
             if ($id) {
                 $info = $this->target_model->get($id);
                 if ($info) {
+                    $this->load->library('Contract_lib');
                     $amortization_table = [];
                     $investments = [];
                     $investments_amortization_table = [];
@@ -209,6 +210,7 @@ class Target extends MY_Admin_Controller {
                         $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => array(3, 10)));
                         if ($investments) {
                             foreach ($investments as $key => $value) {
+                                $investments[$key]->contract = $this->contract_lib->get_contract($value->contract_id)['content'];
                                 $investments[$key]->user_info = $this->user_model->get($value->user_id);
                                 $investments[$key]->virtual_account = $this->virtual_account_model->get_by(array(
                                     'user_id' => $value->user_id,
@@ -230,10 +232,8 @@ class Target extends MY_Admin_Controller {
                                 ));
                                 $investments_amortization_schedule[$value->id] = $this->financial_lib->get_amortization_schedule(
                                     $value->loan_amount,
-                                    $info->instalment,
-                                    $info->interest_rate,
-                                    date('Y-m-d'),
-                                    $info->repayment
+                                    $info,
+                                    date('Y-m-d')
                                 );
                             }
                         }
@@ -615,7 +615,7 @@ class Target extends MY_Admin_Controller {
 			]);
 
             if($user->company_status == 0){
-                $schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+                $schoolCertificationDetailArray = $schoolCertificationDetail?json_decode($schoolCertificationDetail->content, true):false;
                 if (isset($schoolCertificationDetailArray["graduate_date"])) {
                     $graduateDate = new stdClass();
                     $graduateDate->meta_key = "school_graduate_date";
@@ -630,8 +630,8 @@ class Target extends MY_Admin_Controller {
                     'certification_id' => 4,
                     'status' => 1,
                 ]);
-                $instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
-                if ($instagramCertificationDetailArray["type"] == "instagram") {
+                $instagramCertificationDetailArray = $instagramCertificationDetail?json_decode($instagramCertificationDetail->content, true):false;
+                if (isset($instagramCertificationDetailArray["type"]) && $instagramCertificationDetailArray["type"] == "instagram") {
                     $picture = $instagramCertificationDetailArray["info"]["picture"];
                     $this->usermeta->setInstagramPicture($picture);
                 }
@@ -762,13 +762,13 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_evaluation');
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
 		$where						= array('status'=>[4]);
 		$fields 					= ['target_no','user_id','delay'];
-		
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				$where[$field] = $input[$field];
@@ -806,7 +806,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/waiting_loan_target',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	function target_loan(){
 		$get 		= $this->input->get(NULL, TRUE);
 		$ids		= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
@@ -825,7 +825,7 @@ class Target extends MY_Admin_Controller {
 			alert('請選擇待放款的案件',admin_url('Target/waiting_loan'));
 		}
 	}
-	
+
 	function subloan_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -887,7 +887,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function loan_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -908,7 +908,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function loan_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -925,7 +925,7 @@ class Target extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	public function transaction_display(){
 		$page_data 	= array('type'=>'edit');
 		$get 		= $this->input->get(NULL, TRUE);
@@ -950,16 +950,16 @@ class Target extends MY_Admin_Controller {
 				$this->load->view('admin/_header');
 				$this->load->view('admin/transaction_edit',$page_data);
 				$this->load->view('admin/_footer');
-				
+
 			}else{
 				die('ERROR , id is not exist');
 			}
 		}else{
 			die('ERROR , id is not exist');
 		}
-		
+
 	}
-	
+
 	public function repayment(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
@@ -986,7 +986,7 @@ class Target extends MY_Admin_Controller {
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
 			}
-			
+
 			$this->load->model('user/user_meta_model');
 			$users_school 	= $this->user_meta_model->get_many_by([
 				'meta_key' 	=> ['school_name','school_department'],
@@ -1012,7 +1012,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/targets_repayment',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function target_export(){
 		$post 	= $this->input->post(NULL, TRUE);
 		$ids 	= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
@@ -1022,7 +1022,7 @@ class Target extends MY_Admin_Controller {
 		}else{
 			$where = ['status'=>$status];
 		}
-		
+
 		$product_list				= $this->config->item('product_list');
 		$list 						= $this->target_model->get_many_by($where);
 		$school_list 				= [];
@@ -1040,7 +1040,7 @@ class Target extends MY_Admin_Controller {
 				if($credit){
 					$list[$key]->credit = $credit;
 				}
-				
+
 				if(in_array($value->status,[5,10])){
 					$amortization_table = $this->target_lib->get_amortization_table($value);
 					$list[$key]->amortization_table = [
@@ -1049,16 +1049,16 @@ class Target extends MY_Admin_Controller {
 						'remaining_principal'	=> $amortization_table['remaining_principal'],
 					];
 				}else{
-					$amortization_table = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$value->loan_date,$value->repayment);
+					$amortization_table = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value,$value->loan_date);
 					$list[$key]->amortization_table = [
 						'total_payment_m'		=> $amortization_table['total_payment'],
 						'total_payment'			=> $amortization_table['total']['total_payment'],
 						'remaining_principal'	=> $value->loan_amount,
 					];
 				}
-				
+
 			}
-			
+
 			$this->load->model('user/user_meta_model');
 			$users_school 	= $this->user_meta_model->get_many_by(array(
 				'meta_key' 	=> ['school_name','school_department'],
@@ -1084,7 +1084,7 @@ class Target extends MY_Admin_Controller {
                 <th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>信評核准日期</th></tr></thead><tbody>';
 
 		if(isset($list) && !empty($list)){
-			
+
 			foreach($list as $key => $value){
 				$sub_status = $value->status==10&&$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':'';
 				$credit = isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):'';
@@ -1201,7 +1201,7 @@ class Target extends MY_Admin_Controller {
         $html .= '</tbody></table>';
 		echo $html;
 	}
-	
+
 	public function prepayment(){
 		$page_data 	= array('type'=>'list');
 		$input 		= $this->input->get(NULL, TRUE);
@@ -1211,7 +1211,7 @@ class Target extends MY_Admin_Controller {
 		);
 		$list		= array();
 		$fields 	= ['target_no','user_id'];
-		
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				if($field=='target_no'){
@@ -1263,7 +1263,7 @@ class Target extends MY_Admin_Controller {
 					$list[$key]->bidding_date = $target_change->created_at;
 				}
 			}
-			
+
 			$this->load->model('user/user_meta_model');
 			$users_school 	= $this->user_meta_model->get_many_by([
 				'meta_key' 	=> ['school_name','school_department'],
@@ -1337,7 +1337,7 @@ class Target extends MY_Admin_Controller {
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
 			}
-			
+
 			$this->load->model('user/user_meta_model');
 			$users_school 	= $this->user_meta_model->get_many_by([
 				'meta_key' 	=> ['school_name','school_department'],
@@ -1364,15 +1364,17 @@ class Target extends MY_Admin_Controller {
 		$this->load->view('admin/target/targets_finished',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function waiting_signing(){
-		$page_data 					= ['type'=>'list'];
-		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>[1,21]]);
-		$school_list 				= [];
-		$user_list 					= [];
-		$amortization_table 		= [];
-		if($list){
+        $page_data = ['type' => 'list'];
+        $input = $this->input->get(NULL, TRUE);
+        $list = $this->target_model->get_many_by(['status' => [1, 21]]);
+        $product_list = $this->config->item('product_list');
+        $sub_product_list = $this->config->item('sub_product_list');
+        $school_list = [];
+        $user_list = [];
+        $amortization_table = [];
+        if ($list) {
 			foreach($list as $key => $value){
 				$user_list[] = $value->user_id;
 				$limit_date  = $value->created_at + (TARGET_APPROVE_LIMIT*86400);
@@ -1384,14 +1386,14 @@ class Target extends MY_Admin_Controller {
 				if($credit){
 					$list[$key]->credit = $credit;
 				}
-				$amortization_table = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value->instalment,$value->interest_rate,$value->loan_date,$value->repayment);
+				$amortization_table = $this->financial_lib->get_amortization_schedule($value->loan_amount,$value,$value->loan_date);
 				$list[$key]->amortization_table = [
 					'total_payment_m'		=> $amortization_table['total_payment'],
 					'total_payment'			=> $amortization_table['total']['total_payment'],
 					'remaining_principal'	=> $value->loan_amount,
 				];
 			}
-			
+
 			$this->load->model('user/user_meta_model');
 			$users_school 	= $this->user_meta_model->get_many_by([
 				'meta_key' 	=> ['school_name','school_department'],
@@ -1405,8 +1407,8 @@ class Target extends MY_Admin_Controller {
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
-		$page_data['product_list']		= $this->config->item('product_list');
-        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+		$page_data['product_list']		= $product_list;
+        $page_data['sub_product_list'] = $sub_product_list;
 		$page_data['list'] 				= $list;
 		$page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['status_list'] 		= $this->target_model->status_list;

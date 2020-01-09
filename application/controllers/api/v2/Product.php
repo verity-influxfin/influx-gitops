@@ -1007,14 +1007,11 @@ class Product extends REST_Controller {
             }
 
             $amortization_schedule = [];
-            if(in_array($target->status,[1])){
-                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date='',$target->repayment,false,[
-                    'visul_id' => $product['visul_id'],
-                    'instalment' => $product['instalment']
-                ]);
+            if(in_array($target->status,[1,2,3,4])){
+                $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
             }
 
-            $credit = $this->credit_lib->get_credit($user_id, $target->product_id);
+            $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id);
 
             $contract = '';
             if($target->contract_id){
@@ -1045,7 +1042,7 @@ class Product extends REST_Controller {
                      }
 
                     if(in_array($target->status,array(21,22,23,24))){
-                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),intval($orders->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
+                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),$orders,$date,$product['type']);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
                             $user_id,
@@ -1102,9 +1099,7 @@ class Product extends REST_Controller {
                     if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
                         empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
                     }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        if($target->status != 0){
-                            $targetDatas[$key] = $targetData->$key;
-                        }
+                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
                         empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
                     }
                 }
@@ -1291,7 +1286,7 @@ class Product extends REST_Controller {
             $this->load->library('contract_lib');
             foreach($orders as $key => $value){
                 $date = get_entering_date();
-                $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),intval($value->instalment),ORDER_INTEREST_RATE,$date,1);
+                $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($value->total),$orders,$date);
                 $company = $this->user_model->get(intval($value->company_user_id));
                 $items 		= [];
                 $item_name	= explode(',',$value->item_name);
@@ -1430,7 +1425,7 @@ class Product extends REST_Controller {
                 $item_count[$k] = intval($v);
             }
 
-            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1);
+            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),$orders,$date);
 
             $this->load->library('contract_lib');
             $contract = $this->contract_lib->sign_contract('order',[
@@ -1659,7 +1654,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),intval($order->instalment),ORDER_INTEREST_RATE,$date,1,$product['type']);
+                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),$orders,$date,$product['type']);
 
                     $this->load->library('contract_lib');
                     $contract = $this->contract_lib->sign_contract('order',[

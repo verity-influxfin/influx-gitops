@@ -6,13 +6,30 @@ define('FINANCIAL_ACCURACY', 1.0e-6);
 define('FINANCIAL_MAX_ITERATIONS', 100);
 	
 class Financial_lib{
-	
-	public function get_amortization_schedule($amount=0,$instalment=0,$rate=0,$date='',$repayment_type=1,$product_type=1,$visul=false){
+
+    public function __construct()
+    {
+        $this->CI = &get_instance();
+    }
+
+	public function get_amortization_schedule($amount=0,$target=[],$date='',$prepayment=false){
+        $instalment = $target->instalment;
+        $rate = $target->interest_rate;
+        $repayment_type = $target->repayment;
+
+        $product_list = $this->CI->config->item('product_list');
+        $product = $product_list[$target->product_id];
+        $sub_product_id = $target->sub_product_id;
+        if($this->is_sub_product($product,$sub_product_id)){
+            $product = $this->trans_sub_product($product,$sub_product_id);
+        }
+
+
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
 			$method	= 'amortization_schedule_'.$repayment_type;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($amount,$instalment,$rate,$date,$product_type,$visul);
+				$rs = $this->$method($amount,$instalment,$rate,$date,$product,$prepayment);
 				return $rs;
 			}
 		}
@@ -20,7 +37,8 @@ class Financial_lib{
 	}
 
 	//取得攤還表 - 等額本息
-	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product_type = 1,$visul = false){
+	private function amortization_schedule_1($amount,$instalment,$rate,$date,$product,$prepayment=false){
+        $product_type = $product['type'];
 		$amount 	= intval($amount);
 		$instalment = intval($instalment);
 		$rate 		= floatval($rate);
@@ -66,7 +84,7 @@ class Financial_lib{
 
                 //消費貸
                 $i==1?$first_total_payment=$total_payment:0;
-                if($i==$instalment && $product_type==2){
+                if($i==$instalment && $product_type == 2){
                     $interest += $first_total_payment - ($interest + $principal);
                 }
 
@@ -102,8 +120,7 @@ class Financial_lib{
 	}
 	
 	//取得攤還表 - 先息後本
-	private function amortization_schedule_2($amount,$instalment,$rate,$date,$product_type = false,$visul = false){
-
+	private function amortization_schedule_2($amount,$instalment,$rate,$date,$product,$prepayment=false){
 		$xirr_dates		= array($date);
 		$xirr_value		= array($amount*(-1));
 		//驗證閏年
@@ -171,8 +188,9 @@ class Financial_lib{
 		return $schedule;
 	}
 
-    private function amortization_schedule_3($amount, $instalment, $rate, $date, $product_type = false, $visul = false, $prepayment = false)
+    private function amortization_schedule_3($amount,$instalment,$rate,$date,$product,$prepayment=false)
     {
+        $visul_id = $product['visul_id'];
         //驗證閏年
         $leap_year = $this->leap_year($date, $instalment);
         $year_days = $leap_year ? 366 : 365;//今年日數
@@ -196,14 +214,12 @@ class Financial_lib{
         $shareRate = 0;
         $startAt = 1;
 
-
-        $this->CI = &get_instance();
         $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting', [], 'amortization_setting');
         $inputSetting = $this->CI->amortization_setting;
         $inputSetting->setUseGenerate(false);
-        if (in_array($visul['visul_id'], ['DS1P1', 'DS2P1'])) {
+        if (in_array($visul_id, ['DS1P1', 'DS2P1'])) {
             $shareRate = FEV_SHARE_RATE;
-            if ($visul['visul_id'] == 'DS1P1') {
+            if ($visul_id == 'DS1P1') {
                 $inputSetting->setUseGenerate(true);
             }
             $prepayment ? $shareRate = FEV_PREPAYMENT_SHARE_RATE : '';
@@ -223,8 +239,8 @@ class Financial_lib{
         $this->CI->load->library('Foreign_exchange_car_lib');
         $day_amortization_schedule = $this->CI->foreign_exchange_car_lib->amortization_schedule([$loanStage1], $inputSetting);
 
-        if ($visul['visul_id'] == 'DS2P1') {
-            $max_instalment = $visul['instalment'][0];
+        if ($visul_id == 'DS2P1') {
+            $max_instalment = $instalment;
             $odate = $date;
             //還款日
             $ym = date('Y-m', strtotime($date));
@@ -423,6 +439,42 @@ class Financial_lib{
             'principal'				=> $amount,
             'interest'				=> $interest,
             'total_payment'			=> $total_payment,
+        );
+    }
+
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
         );
     }
 }
