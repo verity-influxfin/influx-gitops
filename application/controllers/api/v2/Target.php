@@ -322,6 +322,7 @@ class Target extends REST_Controller {
                 $product = $this->trans_sub_product($product,$sub_product_id);
             }
 
+            $target->investor = 1;
 			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
 		
 			$user_info 	= $this->user_model->get($target->user_id);

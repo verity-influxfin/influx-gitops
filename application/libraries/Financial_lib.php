@@ -24,6 +24,7 @@ class Financial_lib{
             $product = $this->trans_sub_product($product,$sub_product_id);
         }
 
+        isset($target)?$product['investor']=$target->investor:'';
 
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
@@ -259,9 +260,9 @@ class Financial_lib{
             }
             $date != $last_day ? $pay_day[$max_instalment] = $last_day : '';
         }
-
+        $interest = 0;
         foreach ($pay_day as $pdKey => $pdValue) {
-            $interest = $day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee();
+            $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee()-$interest);
             $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
             $total_payment = $pdKey == $max_instalment ? $interest + $share + $amount : $interest;
             $list[$pdKey] = array(
@@ -271,10 +272,10 @@ class Financial_lib{
                 'remaining_principal' => $amount,
                 'principal' => ($pdKey==$max_instalment?$amount:0),
                 'interest' => $interest,
-                'share' => $share,
                 'total_payment' => $total_payment,
             );
         }
+        $product['investor']==1?$list[$pdKey]['share'] = $share:'';
 
         $schedule['schedule'] = $list;
         $schedule['total'] = array(

@@ -943,7 +943,7 @@ class Certification_lib{
                 ]);
                 if($self_targets) {
                     foreach($self_targets as $key => $value) {
-                        $total += $this->CI->target_lib->get_amortization_table($value)['remaining_principal'];
+                        //$total += $this->CI->target_lib->get_amortization_table($value)['remaining_principal'];
                     }
                 }
                 $total >= 500000 || $company->selling_type == 2?$allows = array_merge($allows,['balancesheet','incomestatement','investigationjudicial','passbookcashflow'] ):'';
