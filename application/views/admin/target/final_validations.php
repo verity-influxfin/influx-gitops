@@ -487,7 +487,7 @@
                             <p>分數調整：(-400 ~ 400)</p>
                             <input type="number" class="creditArea credit-input" value="0" min="-400" max="400">
                             <input type="text" class="creditArea hide" name="score" disabled="">
-                            <button class="btn btn-warning" type="submit">額度試算</button>
+                            <button class="btn btn-warning hide" type="submit">額度試算</button>
                         </form>
 					</div>
 					<div class="col-sm-8">
@@ -533,7 +533,7 @@
 							<div class="col-lg-12 text-center">
 								<p style="display:inline">審批內容：</p>
 								<input type="text" name="description"/>
-								<button class="btn btn-success" type="submit">送出</button>
+								<button class="btn btn-warning" type="submit">額度試算</button>
                                 <button class="btn btn-danger" data-url="/admin/Target/verify_failed" id="verify_failed">不通過</button>
 							</div>
 						</form>
@@ -593,14 +593,13 @@
 
                 let userJson = response.response.user;
                 user = new User(userJson);
+                console.log(response.response.user.company);
                 if(response.response.user.company == 1){
                     $('.natual').css('display','none');
                     $('.company').css('display','block');
                     $('#targetDatas').removeClass('hide');
                     fillCompanyUserInfo(user);
                 }else{
-                    $('.natual').css('display','none');
-                    $('.company').css('display','block');
                     fillUserInfo(user)
                 }
 
@@ -1037,6 +1036,8 @@
                     fillCreditInfo(credit, true);
                     modifiedPoints = points;
                     $('#credit-evaluation button').attr('disabled',false);
+                    $('#evaluation-complete [type=submit]').text('通過');
+                    $('#evaluation-complete [type=submit]').removeClass('btn-warning').addClass('btn-success');
                 }
             });
         });
@@ -1045,9 +1046,10 @@
             e.preventDefault();
             $('#evaluation-complete button').attr('disabled',true);
             if (modifiedPoints === null) {
-                alert('請先試算過後，再行送出。');
+                $('#credit-evaluation [type=submit]').click();
                 $('#evaluation-complete button').attr('disabled',false);
-				return;
+                $('#evaluation-complete [type=submit]').click();
+                return;
             }
 
             var isConfirmed = confirm("確認是否要通過審核？");
