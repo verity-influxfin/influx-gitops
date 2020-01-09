@@ -335,6 +335,13 @@ class Financial_lib{
         }
         return 0;
     }
+
+    public function get_ar_fee($price=0){
+        if($price){
+            return intval(round($price/100*REPAYMENT_PLATFORM_FEES,0));
+        }
+        return 0;
+    }
     public function get_delay_interest($remaining_principal=0,$delay_days=0){
 		if($remaining_principal && $delay_days > GRACE_PERIOD){
 			return intval(round($remaining_principal*DELAY_INTEREST*$delay_days/100,0));

@@ -431,7 +431,7 @@ class Transaction_lib{
 										];
 										
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
-										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 										$transaction[]	= [
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
@@ -552,7 +552,7 @@ class Transaction_lib{
 									];
 
 									$total 	= intval($payment['interest'])+intval($payment['principal']);
-									$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+									$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 									$transaction[]	= [
 										'source'			=> SOURCE_AR_FEES,
 										'entering_date'		=> $date,
@@ -1059,7 +1059,6 @@ class Transaction_lib{
 									'status'			=> 2
 								);
 
-
 								//攤還表
 								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target,$date);
 								if($amortization_schedule){
@@ -1093,7 +1092,7 @@ class Transaction_lib{
 										);
 
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
-										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 										$transaction[]	= array(
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
