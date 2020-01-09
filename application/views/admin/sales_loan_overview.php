@@ -36,6 +36,86 @@
                 </form>
             </div>
         </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <table id="total" class="table table-bordered">
+                    <tr>
+                        <td>總計</td>
+                    </tr>
+                    <tr>
+                        <td>身份</td>
+                        <td>申貸戶</td>
+                        <td>核可未簽約戶</td>
+                        <td>上架中戶</td>
+                        <td>成交戶數</td>
+                        <td>成交率（成交戶/申貸戶）</td>
+                        <td>申請案</td>
+                        <td>成交筆數</td>
+                        <td>核可未簽約金額</td>
+                        <td>上架中金額</td>
+                        <td>成交金額</td>
+                    </tr>
+                </table>
+                </br></br>
+                <table id="credit-loan" class="table table-bordered">
+                    <tr>
+                        <td>信用貸款</td>
+                    </tr>
+                    <tr>
+                        <td>身份</td>
+                        <td>申貸戶</td>
+                        <td>核可未簽約戶</td>
+                        <td>上架中戶</td>
+                        <td>成交戶數</td>
+                        <td>成交率（成交戶/申貸戶）</td>
+                        <td>申請案</td>
+                        <td>成交筆數</td>
+                        <td>核可未簽約金額</td>
+                        <td>上架中金額</td>
+                        <td>成交金額</td>
+                    </tr>
+                </table>
+                </br></br>
+                <table id="credit-loan" class="table table-bordered">
+                    <tr>
+                        <td>工程師貸</td>
+                    </tr>
+                    <tr>
+                        <td>身份</td>
+                        <td>申貸戶</td>
+                        <td>核可未簽約戶</td>
+                        <td>上架中戶</td>
+                        <td>成交戶數</td>
+                        <td>成交率（成交戶/申貸戶）</td>
+                        <td>申請案</td>
+                        <td>成交筆數</td>
+                        <td>核可未簽約金額</td>
+                        <td>上架中金額</td>
+                        <td>成交金額</td>
+                    </tr>
+                </table>
+                </br></br>
+                <table id="credit-loan" class="table table-bordered">
+                    <tr>
+                        <td>手機貸</td>
+                    </tr>
+                    <tr>
+                        <td>身份</td>
+                        <td>申貸戶</td>
+                        <td>核可未簽約戶</td>
+                        <td>上架中戶</td>
+                        <td>成交戶數</td>
+                        <td>成交率（成交戶/申貸戶）</td>
+                        <td>申請案</td>
+                        <td>成交筆數</td>
+                        <td>核可未簽約金額</td>
+                        <td>上架中金額</td>
+                        <td>成交金額</td>
+                    </tr>
+                </table>
+                </br></br>
+            </div>
+        </div>
     </div>
 </div>
 
