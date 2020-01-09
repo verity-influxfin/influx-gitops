@@ -547,6 +547,35 @@ class Repayment extends REST_Controller {
 				$this->response([ 'result' => 'ERROR','error' => APPLY_NO_PERMISSION ]);
 			}
 
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+
+            $targetDatas = [];
+            if($product['visul_id'] == 'DS2P1'){
+                $targetData = json_decode($target->target_data);
+                $cer_group['car_file'] = [1,'車籍文件'];
+                $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'vin' => $targetData->vin,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
+                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                    }
+                }
+            }
+
 			$next_repayment = [
 				'date' 				=> '',
 				'instalment'		=> 0,
@@ -611,7 +640,8 @@ class Repayment extends REST_Controller {
 				'damage_rate' 		=> intval($target->damage_rate),
 				'reason' 			=> $target->reason,
 				'remark' 			=> $target->remark,
-				'instalment' 		=> intval($target->instalment),
+                'targetDatas' => $targetDatas,
+                'instalment' 		=> intval($target->instalment),
 				'repayment' 		=> intval($target->repayment),
 				'delay' 			=> intval($target->delay),
 				'delay_days' 		=> intval($target->delay_days),
@@ -1080,4 +1110,38 @@ class Repayment extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => ['list' => $list]));
     }
 
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
 }
