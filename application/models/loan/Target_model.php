@@ -115,4 +115,53 @@ class Target_model extends MY_Model
         return $data;
     }
 
+    public function getCountByStatus($status, $isNewApplicant, $createdRange = [], $convertedRange = [])
+    {
+        $this->db->select('
+                    COUNT(*) AS count,
+                    status,
+                    product_id,
+                    sub_product_id,
+                    SUM(least(loan_amount, amount)) AS sumAmount
+                 ')
+                 ->from('p2p_loan.targets');
+
+        if ($status) {
+            $this->db->where_in('status', $status);
+        }
+
+        if (isset($createdRange['start'])) {
+            $this->db->where(['created_at >=' => $createdRange['start']]);
+        }
+        if (isset($createdRange['end'])) {
+            $this->db->where(['created_at <=' => $createdRange['end']]);
+        }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
+
+        if ($isNewApplicant) {
+            $this->db->where("user_id IN (
+                SELECT user_id
+                FROM p2p_loan.targets
+                GROUP BY user_id
+                HAVING COUNT(*) = 1
+            )");
+        } else {
+            $this->db->where("user_id IN (
+                SELECT user_id
+                FROM p2p_loan.targets
+                GROUP BY user_id
+                HAVING COUNT(*) > 1
+            )");
+        }
+
+        $this->db->group_by('status, product_id, sub_product_id');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }

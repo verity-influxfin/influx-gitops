@@ -526,6 +526,51 @@ class Sales extends MY_Admin_Controller {
             $this->load->view('admin/_footer');
             return;
         }
+
+        $get = $this->input->get(NULL, TRUE);
+        $loanStartAt = isset($get["loan_sdate"]) ? $get["loan_sdate"] : "";
+        $loanEndAt = isset($get["loan_edate"]) ? $get["loan_edate"] : "";
+        $convertStartAt = isset($get["conversion_sdate"]) ? $get["conversion_sdate"] : "";
+        $convertEndAt = isset($get["conversion_edate"]) ? $get["conversion_edate"] : "";
+
+        $this->load->library('output/json_output');
+        if (!$loanStartAt || !$loanEndAt || !$convertStartAt || !$convertEndAt) {
+            $this->json_output->setStatusCode(400)->send();
+        }
+
+        $status = [0, 1, 2, 4, 5];
+        $createdRange = [
+            "start" => strtotime($loanStartAt . ' 00:00:00'),
+            "end" => strtotime($loanEndAt . ' 23:59:59'),
+        ];
+        $convertedRange = [
+            "start" => strtotime($convertStartAt . ' 00:00:00'),
+            "end" => strtotime($convertEndAt . ' 23:59:59'),
+        ];
+        $rows = $this->target_model->getCountByStatus($status, false, $createdRange, $convertedRange);
+
+        $tableTypes = ['total', 'creditLoan', 'techiLoan', 'mobilePhoneLoan'];
+        $tables = [];
+        foreach ($tableTypes as $tableType) {
+            $this->load->library('report/loan/loan_table', ["type" => $tableType], "{$tableType}Table");
+            $tableName = "{$tableType}Table";
+            $$tableName = $this->$tableName;
+        }
+
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "total_table"], "total_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $creditLoanTable, "alias" => "credit_loan_table"], "credit_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "techi_loan_table"], "techi_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "mobile_phone_loan_table"], "mobile_phone_loan_table_output");
+
+        $response = [
+            'total_table' => $this->total_table_output->toOne(),
+            'credit_loan_table' => $this->credit_loan_table_output->toOne(),
+            'techi_loan_table' => $this->techi_loan_table_output->toOne(),
+            'mobile_phone_loan_table' => $this->mobile_phone_loan_table_output->toOne(),
+        ];
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 }
+
 ?>
