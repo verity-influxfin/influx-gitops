@@ -269,7 +269,7 @@ class Financial_lib{
                 'repayment_date' => $pdValue,
                 'days' => $pdKey,
                 'remaining_principal' => $amount,
-                'principal' => $amount,
+                'principal' => ($pdKey==$max_instalment?$amount:0),
                 'interest' => $interest,
                 'share' => $share,
                 'total_payment' => $total_payment,
