@@ -984,6 +984,9 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
+            $certification		= [];
+            $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
+
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
@@ -991,16 +994,57 @@ class Product extends REST_Controller {
                 $product = $this->trans_sub_product($product,$sub_product_id);
             }
 
-            $completeness_level = 0;
-            $certification		= [];
-            $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
+            $completeness_level = 100 / count($certification_list);
+
+            $targetDatas = [];
+            if($product['visul_id'] == 'DS2P1'){
+                $targetData = json_decode($target->target_data);
+                $cer_group['car_file'] = [1,'車籍文件'];
+                $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'vin' => $targetData->vin,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
+                        empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
+                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                        empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
+                    }
+                }
+
+                $completeness_level = 100 / (count($certification_list) + count($cer_group));
+
+                foreach ($cer_group as $cer_key => $cervalue){
+                    $certification[] = [
+                        "id"=> null,
+                        "alias"=> $cer_key,
+                        "name"=> $cervalue[1],
+                        "status"=> 1,
+                        "description"=> null,
+                        "user_status"=> $cervalue[0],
+                        "certification_id"=> null,
+                        "updated_at"=> null,
+                        "type"=> 'targetData',
+                        "certification_completeness"=> 'targetData',
+                        "completeness" => ceil($cervalue[0] == 1?$completeness_level:0)
+                    ];
+                }
+            }
+
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
-                        $value['user_status'] == 1?$completeness_level++:'';
+                        $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
                         $certification[] = $value;
                     }
                 }
@@ -1081,46 +1125,6 @@ class Product extends REST_Controller {
                 }
             }
 
-            $targetDatas = [];
-            if($product['visul_id'] == 'DS2P1'){
-                $targetData = json_decode($target->target_data);
-                $cer_group['car_file'] = [1,'車籍文件'];
-                $cer_group['car_pic'] = [1,'車輛外觀照片'];
-                $targetDatas = [
-                    'brand' => $targetData->brand,
-                    'name' => $targetData->name,
-                    'selected_image' => $targetData->selected_image,
-                    'vin' => $targetData->vin,
-                    'purchase_time' => $targetData->purchase_time,
-                    'factory_time' => $targetData->factory_time,
-                    'product_description' => $targetData->product_description,
-                ];
-                foreach ($product['targetData'] as $key => $value) {
-                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
-                        empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
-                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
-                        empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
-                    }
-                }
-                foreach ($cer_group as $cer_key => $cervalue){
-                    $certification[] = [
-                        "id"=> null,
-                        "alias"=> $cer_key,
-                        "name"=> $cervalue[1],
-                        "status"=> 1,
-                        "description"=> null,
-                        "user_status"=> $cervalue[0],
-                        "certification_id"=> null,
-                        "updated_at"=> null,
-                        "type"=> 'targetData',
-                    ];
-                    $cervalue[0] == 1?$completeness_level++:'';
-                }
-            }
-
-            $completeness = 100 / count($certification) * $completeness_level;
-
             $data = [
                 'id' 				    => intval($target->id),
                 'target_no' 		    => $target->target_no,
@@ -1145,7 +1149,6 @@ class Product extends REST_Controller {
                 'contract'			    => $contract,
                 'credit'			    => $credit,
                 'certification'		    => $certification,
-                'certification_completeness' => round($completeness),
                 'amortization_schedule'	=> $amortization_schedule,
             ];
 
