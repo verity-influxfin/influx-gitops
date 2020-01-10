@@ -388,14 +388,14 @@ $config['visul_id_des'] = [
         'name' => '代購代付融資',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>幫您貸車進來</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_1.jpg',
-        'banner' => FRONT_CDN_URL . 'foreign_vehicle/image_sub_1.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_1.jpg',
         'status' => 1
     ],
     'DS2' => [
         'name' => '在庫車融資專案',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
-        'banner' => FRONT_CDN_URL . 'foreign_vehicle/image_sub_2.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'status' => 1
     ],
     'NS1P1' => [
