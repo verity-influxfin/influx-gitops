@@ -156,9 +156,9 @@ class Account extends MY_Admin_Controller {
 				}
 
 				$bank_type_to = substr($value->bank_account_to, 0, 5);
-				$bank_type_to == TAISHIN_VIRTUAL_CODE
-					? TAISHIN_VIRTUAL_CODE
-					: CATHAY_VIRTUAL_CODE;
+				($bank_type_to == TAISHIN_VIRTUAL_CODE) ?
+					$bank_type_to  = TAISHIN_VIRTUAL_CODE
+					: $bank_type_to  = CATHAY_VIRTUAL_CODE;
 					
 				if(is_virtual_account($value->bank_account_to,$bank_type_to)){
 

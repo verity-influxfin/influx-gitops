@@ -47,7 +47,9 @@ class Passbook_lib{
 			if($transaction && in_array($transaction->source,$this->credit) && $transaction->status==2 && $transaction->passbook_status==0 ){
 				$this->CI->transaction_model->update($transaction_id,['passbook_status'=>2]);//lock
 				$bank_type = substr($transaction->bank_account_to, 0, 5);
-				$bank_type==TAISHIN_VIRTUAL_CODE ? TAISHIN_VIRTUAL_CODE : CATHAY_VIRTUAL_CODE;
+				($bank_type == TAISHIN_VIRTUAL_CODE) ?
+					$bank_type = TAISHIN_VIRTUAL_CODE
+					: $bank_type = CATHAY_VIRTUAL_CODE;
 				if(is_virtual_account($transaction->bank_account_to,$bank_type)){
 					$param[] = array(
 						'virtual_account'	=> $transaction->bank_account_to,

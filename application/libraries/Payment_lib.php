@@ -180,7 +180,9 @@ class Payment_lib{
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account" => $value->virtual_account));
 			if ($virtual_account) {
 				$bank_type = substr($virtual_account->virtual_account, 0, 5);
-				$bank_type == TAISHIN_VIRTUAL_CODE ? TAISHIN_VIRTUAL_CODE : CATHAY_VIRTUAL_CODE;
+				($bank_type == TAISHIN_VIRTUAL_CODE) ?
+					$bank_type = TAISHIN_VIRTUAL_CODE
+					: $bank_type = CATHAY_VIRTUAL_CODE;
 				$investor			= investor_virtual_account($value->virtual_account, $bank_type) ? 1 : 0;
 				$where                	= array(
 					"user_id"              => $virtual_account->user_id,
