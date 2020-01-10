@@ -25,7 +25,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>申請人 ID</label>
-                                <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
+                                <a class="fancyframe" href="<?= admin_url('User/display?id=' . isset($data->user_id) ? $data->user_id : "") ?>">
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>

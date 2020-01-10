@@ -84,7 +84,7 @@ class Judicialperson extends MY_Admin_Controller {
                 if ($info) {
                     $this->load->library('Gcis_lib');
                     $user_info = $this->user_model->get($info->user_id);
-					$info->user_name = $user_info->name;
+					$info->user_name = isset($user_info->name)?$user_info->name:'';
 					$page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);//公司統編查詢
 					$page_data['search_type']=0;
 					if(empty($page_data['company_data'])){//商業統編查詢，利用商業登記基本資料取得商業司資料
