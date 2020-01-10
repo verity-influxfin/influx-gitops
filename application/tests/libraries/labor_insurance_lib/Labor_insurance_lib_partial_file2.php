@@ -12,7 +12,7 @@ class Labor_insurance_lib_partial_file2 extends TestCase
 	}
 
 	private function readInputFile(){
-		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/7.pdf";
+		$outfile = dirname(__FILE__, 3) .  "/files/libraries/labor_insurance_lib/7-decoded.pdf";
 		$parser = new \Smalot\PdfParser\Parser();
 		$pdf = $parser->parseFile($outfile);
 		$this->text = $pdf->getText();

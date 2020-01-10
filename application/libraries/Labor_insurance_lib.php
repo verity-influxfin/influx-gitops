@@ -195,6 +195,9 @@ class Labor_insurance_lib
         $date = date('Y/m/d', $timestamp);
         $dateArray = explode("/", $date);
         $dateArray[0] -= 1911;
+        if (strlen($dateArray[0]) == 2) {
+            $dateArray[0] = "0" . $dateArray[0];
+        }
         return $dateArray[0] . $dateArray[1] . $dateArray[2];
     }
 
@@ -349,7 +352,10 @@ class Labor_insurance_lib
 
             if ($currentIndex > 0) {
                 $isNumber = is_numeric($each);
-                $isTimeFormat = strlen($each) == 7 && is_numeric($each);
+                $isTimeFormat = (strlen($each) == 7 || strlen($each) == 8) && is_numeric($each);
+                if ($isTimeFormat && strlen($each) == 8) {
+                    $each = substr($each, 0, -1);
+                }
                 if ($currentIndex == 2) {
                     $row['name'] = $each;
                     $currentIndex++;
