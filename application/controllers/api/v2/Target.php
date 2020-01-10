@@ -155,8 +155,8 @@ class Target extends REST_Controller {
                             'product_description' => $targetData->product_description,
                         ];
                         foreach ($product['targetData'] as $skey => $svalue) {
-                            if(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                                $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                            if(in_array($skey,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                                $targetDatas[$skey] = isset($targetData->$skey)?$targetData->$skey:'';
                             }
                         }
                     }
