@@ -24,7 +24,7 @@ class Financial_lib{
             $product = $this->trans_sub_product($product,$sub_product_id);
         }
 
-        isset($target->investor)?$product['investor']=$target->investor:'';
+        isset($target->user_id)?$product['user_id']=$target->user_id:'';
 
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
@@ -260,14 +260,17 @@ class Financial_lib{
             }
             $date != $last_day ? $pay_day[$max_instalment] = $last_day : '';
         }
-        $interest = 0;
         $total_interest = 0;
+        $all_total_payment = 0;
         $past = 0;
         foreach ($pay_day as $pdKey => $pdValue) {
             $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee())-$total_interest;
             $total_interest += $interest;
             $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
-            $total_payment = ($pdKey == $max_instalment ? $total_interest + $share + $amount : $interest);
+            $total_payment = ($pdKey == $max_instalment
+                ? $product['user_id'] == $this->CI->user_info->id ? $interest + $share + $amount : $interest + $amount
+                : $interest);
+            $all_total_payment += $total_payment;
             $list[$pdKey] = array(
                 'instalment' => $pdKey,
                 'repayment_date' => $pdValue,
@@ -277,17 +280,17 @@ class Financial_lib{
                 'interest' => $interest,
                 'total_payment' => $total_payment,
             );
+            $product['user_id']==$this->CI->user_info->id && $pdKey == $max_instalment?$list[$pdKey]['share'] = $share:'';
             $past = $pdKey;
         }
-        isset($product['investor'])&&$product['investor']==1?$list[$pdKey]['share'] = $share:'';
 
         $schedule['schedule'] = $list;
         $schedule['total'] = array(
             'principal' => $amount,
             'interest' => $total_interest,
-            'share' => $share,
-            'total_payment' => $total_payment,
+            'total_payment' => $all_total_payment,
         );
+        $product['user_id']==$this->CI->user_info->id?$schedule['total']['share'] = $share:'';
         return $schedule;
     }
 
