@@ -24,7 +24,7 @@ class Financial_lib{
             $product = $this->trans_sub_product($product,$sub_product_id);
         }
 
-        isset($target)?$product['investor']=$target->investor:'';
+        isset($target->investor)?$product['investor']=$target->investor:'';
 
 		if($amount && $instalment && $rate && $repayment_type){
 			$date 	= empty($date)?get_entering_date():$date;
@@ -275,7 +275,7 @@ class Financial_lib{
                 'total_payment' => $total_payment,
             );
         }
-        $product['investor']==1?$list[$pdKey]['share'] = $share:'';
+        isset($product['investor'])&&$product['investor']==1?$list[$pdKey]['share'] = $share:'';
 
         $schedule['schedule'] = $list;
         $schedule['total'] = array(
