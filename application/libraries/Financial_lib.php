@@ -251,31 +251,30 @@ class Financial_lib{
             if ($d >= $date) {
                 $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
             }
-            $rangeDays = get_range_days($odate, $date);
+            $pay_day[get_range_days($odate, $date)] = $date;
             for ($i = 1; $i <= $max_instalment; $i++) {
                 $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
-                if($max_instalment > $rangeDays){
-                    $interest = $day_amortization_schedule->getRows()[$rangeDays - 1]->getAnnualReturns()[0]->getFee();
-                    $share = $day_amortization_schedule->getRows()[$rangeDays - 1]->getShare();
-                    $total_payment = $rangeDays == $max_instalment ? $interest + $share + $amount : $interest;
-                    $list[$i] = array(
-                        'instalment' => $i,
-                        'repayment_date' => $date,
-                        'days' => $rangeDays,
-                        'remaining_principal' => $amount,
-                        'principal' => ($rangeDays==$max_instalment?$amount:0),
-                        'interest' => $interest,
-                        'total_payment' => $total_payment,
-                    );
-                }
-                $date = $odate;
                 $rangeDays = get_range_days($odate, $date);
+                $max_instalment > $rangeDays ? $pay_day[$rangeDays] = $date : false;
                 $i = $rangeDays;
             }
             $date != $last_day ? $pay_day[$max_instalment] = $last_day : '';
         }
         $interest = 0;
-
+        foreach ($pay_day as $pdKey => $pdValue) {
+            $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee()-$interest);
+            $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
+            $total_payment = $pdKey == $max_instalment ? $interest + $share + $amount : $interest;
+            $list[$pdKey] = array(
+                'instalment' => $pdKey,
+                'repayment_date' => $pdValue,
+                'days' => $pdKey,
+                'remaining_principal' => $amount,
+                'principal' => ($pdKey==$max_instalment?$amount:0),
+                'interest' => $interest,
+                'total_payment' => $total_payment,
+            );
+        }
         isset($product['investor'])&&$product['investor']==1?$list[$pdKey]['share'] = $share:'';
 
         $schedule['schedule'] = $list;
