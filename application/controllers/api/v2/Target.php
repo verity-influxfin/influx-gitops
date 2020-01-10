@@ -122,12 +122,19 @@ class Target extends REST_Controller {
 		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
-		$product_list 	= $this->config->item('product_list');
+        $product_list = $this->config->item('product_list');
+
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
 				$user_info 	= $this->user_model->get($value->user_id); 
 				$user		= [];
 				if($user_info){
+                    $product = $product_list[$value->product_id];
+                    $sub_product_id = $value->sub_product_id;
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
+                    }
+
 					$age  = get_age($user_info->birthday);
 					if($product_list[$value->product_id]['identity']==1){
 						$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
@@ -135,7 +142,25 @@ class Target extends REST_Controller {
 					}else{
 						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'company_name']);
 					}
-					
+
+                    $targetDatas = [];
+                    if($product['visul_id'] == 'DS2P1'){
+                        $targetData = json_decode($value->target_data);
+                        $targetDatas = [
+                            'brand' => $targetData->brand,
+                            'name' => $targetData->name,
+                            'selected_image' => $targetData->selected_image,
+                            'purchase_time' => $targetData->purchase_time,
+                            'factory_time' => $targetData->factory_time,
+                            'product_description' => $targetData->product_description,
+                        ];
+                        foreach ($product['targetData'] as $skey => $svalue) {
+                            if(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                                $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                            }
+                        }
+                    }
+
 					$user = array(
 						'sex' 			=> $user_info->sex,
 						'age'			=> $age,
@@ -157,6 +182,7 @@ class Target extends REST_Controller {
 					'expire_time' 		=> intval($value->expire_time),
 					'invested' 			=> intval($value->invested),
 					'reason' 			=> $value->reason,
+					'targetDatas' => $targetDatas,
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
