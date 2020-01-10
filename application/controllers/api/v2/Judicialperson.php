@@ -756,7 +756,8 @@ class Judicialperson extends REST_Controller {
 	public function cooperation_post($from_judicialApply = false)
     {
 		$input 	= $this->input->post(NULL, TRUE);
-        $user_id = $from_judicialApply?$from_judicialApply['user_id']:$this->user_info->id;
+        $user_id = $from_judicialApply?(isset($from_judicialApply['user_id'])?$from_judicialApply['user_id']:''):$this->user_info->id;
+        $judicial_person= false;
         if(!$from_judicialApply){
             $this->not_incharge();
 
