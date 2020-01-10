@@ -782,7 +782,9 @@ class Judicialperson extends REST_Controller {
         $mfile_fields 	= [];
         if($business['business_model'] == 0 ){
             array_push($file_fields,'facade_image');
-            array_push($mfile_fields,'store_image');
+            if($business['selling_type'] == 0 ) {
+                array_push($mfile_fields, 'store_image');
+            }
         }
 
         if($business['selling_type'] == 2 ) {
