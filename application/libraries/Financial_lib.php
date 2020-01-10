@@ -245,10 +245,10 @@ class Financial_lib{
             $odate = $date;
             //還款日
             $ym = date('Y-m', strtotime($date));
-            $d = date('d', strtotime($date));
+            $d = date('Y-m-d', strtotime($date));
             $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
             $last_day = date('Y-m-d', strtotime($date . ' + ' . $max_instalment . ' day'));
-            if ($d > $date) {
+            if ($d >= $date) {
                 $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
             }
             $pay_day[get_range_days($odate, $date)] = $date;
