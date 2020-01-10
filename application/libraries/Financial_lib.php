@@ -261,26 +261,30 @@ class Financial_lib{
             $date != $last_day ? $pay_day[$max_instalment] = $last_day : '';
         }
         $interest = 0;
+        $total_interest = 0;
+        $past = 0;
         foreach ($pay_day as $pdKey => $pdValue) {
-            $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee()-$interest);
+            $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee())-$total_interest;
+            $total_interest += $interest;
             $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
-            $total_payment = $pdKey == $max_instalment ? $interest + $share + $amount : $interest;
+            $total_payment = ($pdKey == $max_instalment ? $total_interest + $share + $amount : $interest);
             $list[$pdKey] = array(
                 'instalment' => $pdKey,
                 'repayment_date' => $pdValue,
-                'days' => $pdKey,
+                'days' => $pdKey-$past,
                 'remaining_principal' => $amount,
                 'principal' => ($pdKey==$max_instalment?$amount:0),
                 'interest' => $interest,
                 'total_payment' => $total_payment,
             );
+            $past = $pdKey;
         }
         isset($product['investor'])&&$product['investor']==1?$list[$pdKey]['share'] = $share:'';
 
         $schedule['schedule'] = $list;
         $schedule['total'] = array(
             'principal' => $amount,
-            'interest' => $interest,
+            'interest' => $total_interest,
             'share' => $share,
             'total_payment' => $total_payment,
         );
