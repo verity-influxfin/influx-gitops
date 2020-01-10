@@ -4,9 +4,18 @@ class JobCredit
         this.setStageMapping();
         this.setStatus(jobCredit);
         this.setFile(jobCredit);
-        this.setMessages(jobCredit);
-    }
-
+		this.setMessages(jobCredit);
+		this.setLicenseStatus(jobCredit);
+		this.setProLevel(jobCredit);
+	}
+	setLicenseStatus(jobCredit) {
+        if (!jobCredit.license_status) this.licenseStatus= "";
+		this.licenseStatus = jobCredit.license_status;
+	}
+	setProLevel(jobCredit) {
+        if (!jobCredit.pro_level) this.proLevel= "";
+		this.proLevel = jobCredit.pro_level;
+	}
     setFile(jobCredit) {
         if (!jobCredit.file) this.file= "";
         this.file = jobCredit.file;

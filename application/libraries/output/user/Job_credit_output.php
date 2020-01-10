@@ -42,6 +42,18 @@ class Job_credit_output
             }
         }
 
+        if (isset($this->certification->content->license_status)) {
+            $output["license_status"] = $this->certification->content->license_status;
+        } else {
+            $output["license_status"] = 0;
+        }
+
+        if (isset($this->certification->content->pro_level)) {
+            $output["pro_level"] = $this->certification->content->pro_level;
+        } else {
+            $output["pro_level"] = 0;
+        }
+
         if (isset($this->certification->content->pdf_file)) {
             $output["file"] = $this->certification->content->pdf_file;
         }

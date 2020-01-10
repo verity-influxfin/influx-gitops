@@ -109,11 +109,9 @@ class Certification extends MY_Admin_Controller {
 							return;
                         }
 					}
-                    if ($info->certification_id == 10) {
-                        if(isset(json_decode($info->content)->pdf_file)){
+                    if ($info->certification_id == 10 && isset(json_decode($info->content)->pdf_file)) {
                             $this->job_credits();
                             return;
-                        }
                     }
 					$page_data['id'] 					= $id;
 					$page_data['remark'] 				= json_decode($info->remark, true);
@@ -261,8 +259,8 @@ class Certification extends MY_Admin_Controller {
 							if(isset($post['pro_level'])){
 								$pro_level = is_numeric($post['pro_level'])&&$post['pro_level']<=5?$post['pro_level']:0;
 							}
-							$content['license_status'] 	= $license_status;
-							$content['pro_level'] 		= $pro_level;
+							$content['license_status'] 	= $post['license_status'];
+							$content['pro_level'] 		= $post['pro_level'];
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						}
 						elseif($info->certification_id==9){
@@ -632,7 +630,7 @@ class Certification extends MY_Admin_Controller {
 			$response = [
 				"user" => $this->user_output->toOne(),
 				"job_credits" => $this->job_credit_output->toOne(),
-				"statuses" => $this->user_certification_model->status_list
+				"statuses" => $this->user_certification_model->status_list,
 			];
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();

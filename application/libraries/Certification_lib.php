@@ -520,17 +520,23 @@ class Certification_lib{
 				switch ($res['status']) {
 					case 'pending': //轉人工
 						$status = 3;
+						$content=json_decode($info->content,true);
+						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status,
 							'sys_check' => 1,
+							'content' => json_encode($content),
 						));
 						break;
 					case 'success':
 						$status = 1;
 						$this->set_success($info->id,1);
+						$content=json_decode($info->content,true);
+						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status,
 							'sys_check' => 1,
+							'content' => json_encode($content),
 						));
 						break;
 					case 'failure':
