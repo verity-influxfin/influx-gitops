@@ -397,13 +397,19 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="disabledSelect">銀行流水帳內頁</label>
-                                        <? if (isset($content['bankbook_image'])) { ?>
-                                            <? foreach ($content['passbook_image'] as $key => $value) { ?>
-                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                    <img src="<?= $value ? $value : "" ?>"
-                                                         style='width:100%;max-width:300px'>
-                                                </a>
-                                            <? }
+                                        <? if (isset($data->cooperation_content)) {
+                                             foreach (json_decode($data->cooperation_content)->passbook_image as $key => $value) {
+                                                 if(is_array($value)){?>
+
+                                                 <?}
+                                                 else{?>
+                                                     <a href="<?= isset($value) ? $value : "" ?>"
+                                                        data-fancybox="images">
+                                                         <img src="<?= $value ? $value : "" ?>"
+                                                              style='width:100%;max-width:300px'>
+                                                     </a>
+                                                 <? }
+                                             }
                                         } else {
                                             echo "未上傳";
                                         } ?>

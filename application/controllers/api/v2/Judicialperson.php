@@ -270,9 +270,9 @@ class Judicialperson extends REST_Controller {
                             'user_id'	=> $user_id,
                         ]);
                         if($list && count($list)==count($image_ids)){
-                            $passbook_image[$field] = [];
+                            $file_fields_image[$field] = [];
                             foreach ($list as $k => $v) {
-                                $passbook_image[$field][] = $v->url;
+                                $file_fields_image[$field][] = $v->url;
                             }
                         }
                     }
@@ -338,7 +338,10 @@ class Judicialperson extends REST_Controller {
             $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
 
             if($param['cooperation']==2){
-                $param = $this->cooperation_post($param,$passbook_image);
+                $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
+            }
+            else{
+                $param['cooperation_content'] = json_encode(['passbook_image'=>$passbook_image]);
             }
 
             $exist = $this -> judicial_person_model->get_by(array(
@@ -794,11 +797,11 @@ class Judicialperson extends REST_Controller {
             array_push($file_fields,'store_sign_image');
         }
 
+        $content = [];
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
-        $passbook_image&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
+        $passbook_image? $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image:'';
 
         //上傳檔案欄位
-		$content = [];
         foreach ($file_fields as $field) {
 			$image_id = intval($input[$field]);
 			if (!$image_id) {
@@ -817,7 +820,7 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 
-		foreach ($mfile_fields as $field) {
+        foreach ($mfile_fields as $field) {
 			$image_ids = explode(',',$input[$field]);
 			if(count($image_ids)>4){
 				$image_ids = array_slice($image_ids,0,4);
