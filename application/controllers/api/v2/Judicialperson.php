@@ -270,9 +270,9 @@ class Judicialperson extends REST_Controller {
                             'user_id'	=> $user_id,
                         ]);
                         if($list && count($list)==count($image_ids)){
-                            $param[$field] = [];
-                            foreach($list as $k => $v){
-                                $param[$field][] = $v->url;
+                            $passbook_image[$field] = [];
+                            foreach ($list as $k => $v) {
+                                $passbook_image[$field][] = $v->url;
                             }
                         }
                     }
@@ -335,12 +335,13 @@ class Judicialperson extends REST_Controller {
 
             }
 
-			if($param['cooperation']==2){
-			    $param = $this->cooperation_post($param);
-			}
-
             $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
-			$exist = $this -> judicial_person_model->get_by(array(
+
+            if($param['cooperation']==2){
+                $param = $this->cooperation_post($param,$passbook_image);
+            }
+
+            $exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
 				'status'          => 2
@@ -753,11 +754,11 @@ class Judicialperson extends REST_Controller {
      *     }
 	 *
      */
-	public function cooperation_post($from_judicialApply = false)
+	public function cooperation_post($from_judicialApply = false,$passbook_image=false)
     {
 		$input 	= $this->input->post(NULL, TRUE);
         $user_id = $from_judicialApply?(isset($from_judicialApply['user_id'])?$from_judicialApply['user_id']:''):$this->user_info->id;
-        $judicial_person= false;
+        $judicial_person= true;
         if(!$from_judicialApply){
             $this->not_incharge();
 
@@ -794,7 +795,7 @@ class Judicialperson extends REST_Controller {
         }
 
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
-        isset($input['passbook_dealer_image'])&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
+        $passbook_image&&$input['passbook_image']?array_push($file_fields,'passbook_image'):'';
 
         //上傳檔案欄位
 		$content = [];
