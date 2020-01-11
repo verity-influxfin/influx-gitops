@@ -750,7 +750,7 @@ $config['certifications'] = [
     1003 => ['id' => 1003, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
     1004 => ['id' => 1004, 'alias' => 'passbookcashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
     1005 => ['id' => 1005, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '', 'optional' => []],
-    1006 => ['id' => 1006, 'alias' => 'cerCreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
+    1006 => ['id' => 1006, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
     1007 => ['id' => 1007, 'alias' => 'governmentauthorities', 'name' => '事業變更登記表', 'status' => 1, 'description' => '', 'optional' => []],
 
     2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
