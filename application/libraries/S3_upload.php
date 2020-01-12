@@ -237,7 +237,7 @@ class S3_upload {
 		$name = sha1(time().rand(1,9).rand(1,9).rand(1,9)).'.jpg';
 		if($keep){
 			$type = $keep['type'];
-			$name = $keep['name'].'.jpg';
+			$name = $keep['name'];
 		}
 		if (!empty($image_data)) {
 			$result = $this->client->putObject(array(

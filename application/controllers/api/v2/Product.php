@@ -1785,11 +1785,6 @@ class Product extends REST_Controller {
                     if(array_key_exists($key,$product['targetData'])  && !empty($input[$key])){
                         if($product['targetData'][$key][0] == 'Picture'){
                             $targetData->$key = $this->get_pic_url($user_id,$key,$input[$key],$product['targetData'][$key][2]);
-                            preg_match('/\/image.+/', $targetData->$key,$matches);
-                            $this->s3_upload->public_image_by_data(file_get_contents($targetData->$key),FRONT_S3_BUCKET,$user_id,[
-                                'type' => 'targetdata',
-                                'name' => $matches[0],
-                            ]);
                         }
                         else{
                             $targetData->$key = $input[$key];
@@ -2232,6 +2227,7 @@ class Product extends REST_Controller {
     }
 
     private function get_pic_url($user_id, $key, $image_ids, $limit){
+        $this->load->library('S3_upload');
         $image_ids = explode(',',$image_ids);
         if(count($image_ids) > $limit){
             $image_ids = array_slice($image_ids,0,$limit);
@@ -2246,6 +2242,12 @@ class Product extends REST_Controller {
             $content = [];
             foreach($list as $k => $v){
                 $content[] = $v->url;
+                preg_match('/image.+/', $v->url,$matches);
+                $this->s3_upload->public_image_by_data(file_get_contents($v->url),FRONT_S3_BUCKET,$user_id,[
+                    'type' => 'targetdata',
+                    'name' => $matches[0],
+                ]);
+
             }
             return $content;
         }else{
