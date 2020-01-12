@@ -1010,12 +1010,26 @@ class Product extends REST_Controller {
                     'factory_time' => $targetData->factory_time,
                     'product_description' => $targetData->product_description,
                 ];
+                $cer_file = ['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'];
+                $car_pic = ['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'];
                 foreach ($product['targetData'] as $key => $value) {
-                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
-                        empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
-                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
-                        empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
+                    if(in_array($key,array_merge($cer_file,$car_pic))){
+                        if(isset($targetData->$key) && !empty($targetData->$key)){
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue){
+                                preg_match('/\/image.+/', $svalue,$matches);
+                                $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        }
+                        else{
+                            $targetDatas[$key] = '';
+                        }
+                        if(in_array($key,$cer_file)){
+                            empty($targetData->$key)?$cer_group['car_file'][0] = null:'';
+                        }elseif(in_array($key,$car_pic)){
+                            empty($targetData->$key)?$cer_group['car_pic'][0] = null:'';
+                        }
                     }
                 }
 
@@ -1771,6 +1785,11 @@ class Product extends REST_Controller {
                     if(array_key_exists($key,$product['targetData'])  && !empty($input[$key])){
                         if($product['targetData'][$key][0] == 'Picture'){
                             $targetData->$key = $this->get_pic_url($user_id,$key,$input[$key],$product['targetData'][$key][2]);
+                            preg_match('/\/image.+/', $targetData->$key,$matches);
+                            $this->s3_upload->public_image_by_data(file_get_contents($targetData->$key),FRONT_S3_BUCKET,$user_id,[
+                                'type' => 'targetdata',
+                                'name' => $matches[0],
+                            ]);
                         }
                         else{
                             $targetData->$key = $input[$key];

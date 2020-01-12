@@ -569,11 +569,65 @@ class Repayment extends REST_Controller {
                     'product_description' => $targetData->product_description,
                 ];
                 foreach ($product['targetData'] as $key => $value) {
-                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'])){
-                    }elseif(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image','car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        if(isset($targetData->$key)){
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue){
+                                preg_match('/\/image.+/', $svalue,$matches);
+                                $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        }
+                        else{
+                            $targetDatas[$key] = '';
+                        }
                     }
                 }
+
+                $virtual_account	= array(
+                    'bank_code'			=> '',
+                    'branch_code'		=> '',
+                    'bank_name'			=> '',
+                    'branch_name'		=> '',
+                    'virtual_account'	=> '',
+                );
+                $bank_account 		= array(
+                    'bank_code'		=> '',
+                    'branch_code'	=> '',
+                    'bank_account'	=> '',
+                );
+
+                $virtual 	= $this->virtual_account_model->get_by([
+                    'investor' => 0,
+                    'user_id' => $user_id,
+                    'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%'
+                ]);
+                if($virtual){
+                    $virtual_account	= array(
+                        'bank_code'			=> TAISHIN_BANK_CODE,
+                        'branch_code'		=> TAISHIN_BRANCH_CODE,
+                        'bank_name'			=> TAISHIN_BANK_NAME,
+                        'branch_name'		=> TAISHIN_BRANCH_NAME,
+                        'virtual_account'	=> $virtual->virtual_account,
+                    );
+                }
+
+                //檢查金融卡綁定 NO_BANK_ACCOUNT
+                $user_bankaccount 	= $this->user_bankaccount_model->get_by([
+                    'investor'	=> 0,
+                    'status'	=> 1,
+                    'user_id'	=> $user_id,
+                    'verify'	=> 1
+                ]);
+                if($user_bankaccount){
+                    $bank_account 		= array(
+                        'bank_code'		=> $user_bankaccount->bank_code,
+                        'branch_code'	=> $user_bankaccount->branch_code,
+                        'bank_account'	=> $user_bankaccount->bank_account,
+                    );
+                }
+                $targetDatas['virtual_account'] = $virtual_account;
+                $targetDatas['bank_account'] = $bank_account;
             }
 
 			$next_repayment = [

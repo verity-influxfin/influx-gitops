@@ -309,15 +309,22 @@ defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD'	, getenv('E
 defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'		, getenv('ENV_CATHAY_CUST_ACCNO'));
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'		, getenv('ENV_CATHAY_VIRTUAL_CODE'));
 defined('CATHAY_AES_KEY')     		OR define('CATHAY_AES_KEY'			, getenv('ENV_CATHAY_AES_KEY'));
-defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '013');
+defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '812');
 defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'		, '0154');
 defined('CATHAY_BANK_NAME')     	OR define('CATHAY_BANK_NAME'		, '國泰世華商業銀行');
 defined('CATHAY_BRANCH_NAME')     	OR define('CATHAY_BRANCH_NAME'		, '信義分行');
 defined('CATHAY_COMPANY_NAME')     	OR define('CATHAY_COMPANY_NAME'		, '普匯金融科技股份有限公司');
 defined('CATHAY_COMPANY_ACCOUNT')   OR define('CATHAY_COMPANY_ACCOUNT'	, '015035006602');
 
-defined('TAISHIN_VIRTUAL_CODE')     	OR define('TAISHIN_VIRTUAL_CODE'		, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
-defined('TAISHIN_CUST_ACCNO')     	OR define('TAISHIN_CUST_ACCNO'		, getenv('ENV_TAISHIN_CUST_ACCNO'));
+defined('TAISHIN_VIRTUAL_CODE') OR define('TAISHIN_VIRTUAL_CODE', getenv('ENV_TAISHIN_VIRTUAL_CODE'));
+defined('TAISHIN_CUST_ACCNO') OR define('TAISHIN_CUST_ACCNO', getenv('ENV_TAISHIN_CUST_ACCNO'));
+defined('TAISHIN_BANK_CODE') OR define('TAISHIN_BANK_CODE', '812');
+defined('TAISHIN_BRANCH_CODE') OR define('TAISHIN_BRANCH_CODE', '');
+defined('TAISHIN_BANK_NAME') OR define('TAISHIN_BANK_NAME', '台新國際商業銀行');
+defined('TAISHIN_BRANCH_NAME') OR define('TAISHIN_BRANCH_NAME', '');
+defined('TAISHIN_COMPANY_NAME') OR define('TAISHIN_COMPANY_NAME', '普匯金融科技股份有限公司');
+defined('TAISHIN_COMPANY_ACCOUNT') OR define('TAISHIN_COMPANY_ACCOUNT', '20680100217837');
+
 
 //Ezpay
 defined('EZPAY_ID')     			OR define('EZPAY_ID'				, getenv('ENV_EZPAY_ID'));

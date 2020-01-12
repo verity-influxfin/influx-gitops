@@ -125,7 +125,7 @@ class Target extends REST_Controller {
         $product_list = $this->config->item('product_list');
 
 		if(!empty($target_list)){
-			foreach($target_list as $key => $value){
+            foreach($target_list as $key => $value){
 				$user_info 	= $this->user_model->get($value->user_id); 
 				$user		= [];
 				if($user_info){
@@ -156,7 +156,17 @@ class Target extends REST_Controller {
                         ];
                         foreach ($product['targetData'] as $skey => $svalue) {
                             if(in_array($skey,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                                $targetDatas[$skey] = isset($targetData->$skey)?$targetData->$skey:'';
+                                if(isset($targetData->$key) && !empty($targetData->$key)){
+                                    $pic_array = [];
+                                    foreach ($targetData->$key as $svalue){
+                                        preg_match('/\/image.+/', $svalue,$matches);
+                                        $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                                    }
+                                    $targetDatas[$key] = $pic_array;
+                                }
+                                else{
+                                    $targetDatas[$key] = '';
+                                }
                             }
                         }
                     }
@@ -386,7 +396,17 @@ class Target extends REST_Controller {
                 ];
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        $targetDatas[$key] = isset($targetData->$key)?$targetData->$key:'';
+                        if(isset($targetData->$key) && !empty($targetData->$key)){
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue){
+                                preg_match('/\/image.+/', $svalue,$matches);
+                                $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        }
+                        else{
+                            $targetDatas[$key] = '';
+                        }
                     }
                 }
             }
