@@ -247,7 +247,7 @@ class Financial_lib{
             $ym = date('Y-m', strtotime($date));
             $d = date('Y-m-d', strtotime($date));
             $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
-            $last_day = date('Y-m-d', strtotime($date . ' + ' . $max_instalment . ' day'));
+            $last_day = date('Y-m-d', strtotime($d . ' + ' . $max_instalment . ' day'));
             if ($d >= $date) {
                 $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
             }
