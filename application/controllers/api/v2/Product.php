@@ -2180,20 +2180,20 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
         }
 
-        $company = ['DS2P1'];
-        if(!in_array($product['visul_id'],$company)){
-            //上傳檔案欄位
-            if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
-                $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
-                if($image){
-                    $param['person_image'] = $image;
-                }else{
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }
+        //上傳檔案欄位
+        if (isset($_FILES['person_image']) && !empty($_FILES['person_image'])) {
+            $image 	= $this->s3_upload->image($_FILES,'person_image',$user_id,'signing_target');
+            if($image){
+                $param['person_image'] = $image;
             }else{
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
+        }else{
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
 
+        $company = ['DS2P1'];
+        if(!in_array($product['visul_id'],$company)){
             if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
