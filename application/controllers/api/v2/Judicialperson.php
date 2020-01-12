@@ -341,7 +341,7 @@ class Judicialperson extends REST_Controller {
                 $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
             }
             else{
-                $param['cooperation_content'] = json_encode(['passbook_image'=>$passbook_image]);
+                $param['cooperation_content'] = json_encode($file_fields_image['passbook_image']);
             }
 
             $exist = $this -> judicial_person_model->get_by(array(
