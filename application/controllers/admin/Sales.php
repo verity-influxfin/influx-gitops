@@ -516,5 +516,197 @@ class Sales extends MY_Admin_Controller {
 		$response = ["users" => $userOutputs];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
+
+    public function loan_overview()
+    {
+        if (!$this->input->is_ajax_request()) {
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/sales_loan_overview');
+            $this->load->view('admin/_footer');
+            return;
+        }
+
+        $get = $this->input->get(NULL, TRUE);
+        $loanStartAt = isset($get["loan_sdate"]) ? $get["loan_sdate"] : "";
+        $loanEndAt = isset($get["loan_edate"]) ? $get["loan_edate"] : "";
+        $convertStartAt = isset($get["conversion_sdate"]) ? $get["conversion_sdate"] : "";
+        $convertEndAt = isset($get["conversion_edate"]) ? $get["conversion_edate"] : "";
+
+        $this->load->library('output/json_output');
+        if (!$loanStartAt || !$loanEndAt || !$convertStartAt || !$convertEndAt) {
+            $this->json_output->setStatusCode(400)->send();
+        }
+
+        $status = [0, 1, 2, 4, 5, 10, 21, 22, 23, 24];
+        $createdRange = [
+            "start" => strtotime($loanStartAt . ' 00:00:00'),
+            "end" => strtotime($loanEndAt . ' 23:59:59'),
+        ];
+        $convertedRange = [
+            "start" => strtotime($convertStartAt . ' 00:00:00'),
+            "end" => strtotime($convertEndAt . ' 23:59:59'),
+        ];
+
+        $tableTypes = ['total', 'creditLoan', 'techiLoan', 'mobilePhoneLoan'];
+        $tables = [];
+        foreach ($tableTypes as $tableType) {
+            $this->load->library('report/loan/loan_table', ["type" => $tableType], "{$tableType}Table");
+            $tableName = "{$tableType}Table";
+            $$tableName = $this->$tableName;
+        }
+
+        $statusToApplicantMethodMapping = [
+            0 => 'Applicants',
+            1 => 'PendingSigningApplicants',
+            2 => 'PendingSigningApplicants',
+            21 => 'PendingSigningApplicants',
+            22 => 'PendingSigningApplicants',
+            23 => 'PendingSigningApplicants',
+            3 => 'OnTheMarket',
+            4 => 'OnTheMarket',
+            5 => 'MatchedApplicants',
+            10 => 'MatchedApplicants',
+            24 => 'MatchedApplicants',
+        ];
+
+        $statusToApplicationAmountMapping = [
+            1 => 'ApprovedPendingSigningAmount',
+            2 => 'ApprovedPendingSigningAmount',
+            21 => 'ApprovedPendingSigningAmount',
+            22 => 'ApprovedPendingSigningAmount',
+            23 => 'ApprovedPendingSigningAmount',
+            3 => 'OnTheMarketAmount',
+            4 => 'OnTheMarketAmount',
+            5 => 'MatchedAmount',
+            10 => 'MatchedAmount',
+            24 => 'MatchedAmount',
+        ];
+
+        $productToTableMapping = [
+            1 => ['totalTable', 'creditLoanTable'],
+            2 => ['totalTable', 'mobilePhoneLoanTable'],
+            3 => ['totalTable', 'creditLoanTable'],
+            4 => ['totalTable', 'mobilePhoneLoanTable'],
+        ];
+        $subProductToTableMapping = [
+            '1-1' => ['totalTable', 'techiLoanTable'],
+            '3-1' => ['totalTable', 'techiLoanTable'],
+        ];
+        $productAndTypeToRowMapping = [
+            '1-0' => 'NewStudents',
+            '1-1' => 'ExistingStudents',
+            '1-2' => 'NewStudents',
+            '1-3' => 'NewStudents',
+            '1-4' => 'NewStudents',
+            '2-0' => 'NewStudents',
+            '2-1' => 'ExistingStudents',
+            '2-2' => 'NewStudents',
+            '2-3' => 'NewStudents',
+            '2-4' => 'NewStudents',
+            '3-0' => 'NewOfficeWorkers',
+            '3-1' => 'ExistingOfficeWorkers',
+            '3-2' => 'NewOfficeWorkers',
+            '3-3' => 'NewOfficeWorkers',
+            '3-4' => 'NewOfficeWorkers',
+            '4-0' => 'NewOfficeWorkers',
+            '4-1' => 'ExistingOfficeWorkers',
+            '4-2' => 'NewOfficeWorkers',
+            '4-3' => 'NewOfficeWorkers',
+            '4-4' => 'NewOfficeWorkers',
+        ];
+
+        $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
+        $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, false, $createdRange, $convertedRange);
+
+        $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange, $convertedRange);
+        $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange, $convertedRange);
+
+        $applicationAmounts = $this->target_model->getApplicationAmountByStatus([1, 2, 3, 4, 5, 10, 21, 22, 23, 24], $createdRange, $convertedRange);
+
+        $rowsByApplicantType = [
+            $newApplicantRows,
+            $existingApplicantRows,
+            $applicationCountByStatus,
+            $matchedCountByStatus,
+            $applicationAmounts
+        ];
+
+        for ($i = 0; $i < count($rowsByApplicantType); $i++) {
+            $rows = $rowsByApplicantType[$i];
+            foreach ($rows as $row) {
+                if (!isset($productToTableMapping[$row->product_id])) {
+                    continue;
+                }
+                $key = "{$row->product_id}-{$i}";
+                if ($i < 2 && !isset($productAndTypeToRowMapping[$key])) {
+                    continue;
+                }
+                $tables = $productToTableMapping[$row->product_id];
+
+                $productAndSubProduct = "{$row->product_id}-{$row->sub_product_id}";
+                if (isset($subProductToTableMapping[$productAndSubProduct])) {
+                    $tables = $subProductToTableMapping[$productAndSubProduct];
+                }
+
+                $key = "{$row->product_id}-{$i}";
+                $getRowMethod = "get" . $productAndTypeToRowMapping[$key];
+
+                if ($i < 2) {
+                    $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
+                    $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
+
+
+                } elseif ($i == 2) {
+                    $getMethod = 'getApplications';
+                    $setMethod = 'setApplications';
+                } elseif ($i == 3) {
+                    $getMethod = 'getMatchedApplications';
+                    $setMethod = 'setMatchedApplications';
+                } elseif ($i == 4) {
+                    if (isset($statusToApplicationAmountMapping[$row->status])) {
+                        $amountMethod = $statusToApplicationAmountMapping[$row->status];
+                        $getAmountMethod = "get{$amountMethod}";
+                        $setAmountMethod = "set{$amountMethod}";
+                    }
+                }
+
+                foreach ($tables as $table) {
+                    if ($i < 4) {
+                        $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);
+                        $$table->$getRowMethod()->$setMethod($current);
+
+                        if ($row->status != 0) {
+                            $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
+                            $$table->$getRowMethod()->setApplicants($current);
+                        }
+                    } elseif ($i == 4 && isset($statusToApplicationAmountMapping[$row->status])) {
+                        $currentAmount = $$table->$getRowMethod()->$getAmountMethod() + intval($row->sumAmount);
+                        $$table->$getRowMethod()->$setAmountMethod($currentAmount);
+                    }
+                }
+            }
+        }
+
+        foreach ($tableTypes as $tableType) {
+            $tableName = "{$tableType}Table";
+            $this->$tableName->aggregate();
+        }
+
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "total_table"], "total_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $creditLoanTable, "alias" => "credit_loan_table"], "credit_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $techiLoanTable, "alias" => "techi_loan_table"], "techi_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $mobilePhoneLoanTable, "alias" => "mobile_phone_loan_table"], "mobile_phone_loan_table_output");
+
+        $response = [
+            'total_table' => $this->total_table_output->toOne(),
+            'credit_loan_table' => $this->credit_loan_table_output->toOne(),
+            'techi_loan_table' => $this->techi_loan_table_output->toOne(),
+            'mobile_phone_loan_table' => $this->mobile_phone_loan_table_output->toOne(),
+        ];
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
 }
+
 ?>

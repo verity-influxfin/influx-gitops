@@ -75,6 +75,7 @@ $config['admin_menu'] = [
 		'index'				=> '借款報表',
 		'register_report'	=> '註冊報表',
 		'bonus_report'		=> '獎金報表',
+		'loan_overview'     => '申貸總覽'
 	],
 	'Account' 				=> [
 		'parent_name'		=> '財務作業',
