@@ -570,6 +570,19 @@ class Sales extends MY_Admin_Controller {
             24 => 'MatchedApplicants',
         ];
 
+        $statusToApplicationAmountMapping = [
+            1 => 'ApprovedPendingSigningAmount',
+            2 => 'ApprovedPendingSigningAmount',
+            21 => 'ApprovedPendingSigningAmount',
+            22 => 'ApprovedPendingSigningAmount',
+            23 => 'ApprovedPendingSigningAmount',
+            3 => 'OnTheMarketAmount',
+            4 => 'OnTheMarketAmount',
+            5 => 'MatchedAmount',
+            10 => 'MatchedAmount',
+            24 => 'MatchedAmount',
+        ];
+
         $productToTableMapping = [
             1 => ['totalTable', 'creditLoanTable'],
             2 => ['totalTable', 'mobilePhoneLoanTable'],
@@ -635,6 +648,12 @@ class Sales extends MY_Admin_Controller {
                 if ($i < 2) {
                     $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
                     $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
+
+                    if (isset($statusToApplicationAmountMapping[$row->status])) {
+                        $amountMethod = $statusToApplicationAmountMapping[$row->status];
+                        $getAmountMethod = "get{$amountMethod}";
+                        $setAmountMethod = "set{$amountMethod}";
+                    }
                 } elseif ($i == 2) {
                     $getMethod = 'getApplications';
                     $setMethod = 'setApplications';
@@ -650,6 +669,11 @@ class Sales extends MY_Admin_Controller {
                     if ($row->status != 0) {
                         $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
                         $$table->$getRowMethod()->setApplicants($current);
+                    }
+
+                    if ($i < 2 && isset($statusToApplicationAmountMapping[$row->status])) {
+                        $currentAmount = $$table->$getRowMethod()->$getAmountMethod() + intval($row->sumAmount);
+                        $$table->$getRowMethod()->$setAmountMethod($currentAmount);
                     }
                 }
             }
