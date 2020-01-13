@@ -166,6 +166,10 @@
 
         function fillReport(table, tableName) {
             for (var i = 0; i < table.rows.length; i++) {
+                var row = "";
+                if (i % 2 == 0) {
+                    row = '<td rowspan=2 class="center-text">'
+                }
                 $("<tr>").append(
                     $('<td class="center-text">').append(table.rows[i].name),
                     $('<td class="center-text">').append(table.rows[i].applicants),
@@ -173,8 +177,8 @@
                     $('<td class="center-text">').append(table.rows[i].onTheMarket),
                     $('<td class="center-text">').append(table.rows[i].matchedApplicants),
                     $('<td class="center-text">').append(table.rows[i].matchRate),
-                    $('<td class="center-text">').append(table.rows[i].applications),
-                    $('<td class="center-text">').append(table.rows[i].matchedApplications),
+                    $(row).append(table.rows[i].applications),
+                    $(row).append(table.rows[i].matchedApplications),
                     $('<td class="center-text">').append(table.rows[i].approvedPendingSigningAmount),
                     $('<td class="center-text">').append(table.rows[i].onTheMarketAmount),
                     $('<td class="center-text">').append(table.rows[i].matchedAmount),

@@ -556,7 +556,7 @@ class Sales extends MY_Admin_Controller {
             $$tableName = $this->$tableName;
         }
 
-        $statusToMethodMapping = [
+        $statusToApplicantMethodMapping = [
             0 => 'Applicants',
             1 => 'PendingSigningApplicants',
             2 => 'PendingSigningApplicants',
@@ -583,27 +583,43 @@ class Sales extends MY_Admin_Controller {
         $productAndTypeToRowMapping = [
             '1-0' => 'NewStudents',
             '1-1' => 'ExistingStudents',
+            '1-2' => 'NewStudents',
+            '1-3' => 'NewStudents',
             '2-0' => 'NewStudents',
             '2-1' => 'ExistingStudents',
+            '2-2' => 'NewStudents',
+            '2-3' => 'NewStudents',
             '3-0' => 'NewOfficeWorkers',
             '3-1' => 'ExistingOfficeWorkers',
+            '3-2' => 'NewOfficeWorkers',
+            '3-3' => 'NewOfficeWorkers',
             '4-0' => 'NewOfficeWorkers',
             '4-1' => 'ExistingOfficeWorkers',
+            '4-2' => 'NewOfficeWorkers',
+            '4-3' => 'NewOfficeWorkers',
         ];
 
-        $newApplicantRows = $this->target_model->getCountByStatus($status, true, $createdRange, $convertedRange);
-        $existingApplicantRows = $this->target_model->getCountByStatus($status, false, $createdRange, $convertedRange);
+        $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
+        $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, false, $createdRange, $convertedRange);
 
-        $rowsByApplicantType = [$newApplicantRows, $existingApplicantRows];
+        $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange);
+        $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange);
 
-        for ($i = 0; $i < 2; $i++) {
+        $rowsByApplicantType = [
+            $newApplicantRows,
+            $existingApplicantRows,
+            $applicationCountByStatus,
+            $matchedCountByStatus,
+        ];
+
+        for ($i = 0; $i < count($rowsByApplicantType); $i++) {
             $rows = $rowsByApplicantType[$i];
             foreach ($rows as $row) {
                 if (!isset($productToTableMapping[$row->product_id])) {
                     continue;
                 }
                 $key = "{$row->product_id}-{$i}";
-                if (!isset($productAndTypeToRowMapping[$key])) {
+                if ($i < 2 && !isset($productAndTypeToRowMapping[$key])) {
                     continue;
                 }
                 $tables = $productToTableMapping[$row->product_id];
@@ -616,8 +632,16 @@ class Sales extends MY_Admin_Controller {
                 $key = "{$row->product_id}-{$i}";
                 $getRowMethod = "get" . $productAndTypeToRowMapping[$key];
 
-                $getMethod = 'get' . $statusToMethodMapping[$row->status];
-                $setMethod = 'set' . $statusToMethodMapping[$row->status];
+                if ($i < 2) {
+                    $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
+                    $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
+                } elseif ($i == 2) {
+                    $getMethod = 'getApplications';
+                    $setMethod = 'setApplications';
+                } elseif ($i == 3) {
+                    $getMethod = 'getMatchedApplications';
+                    $setMethod = 'setMatchedApplications';
+                }
 
                 foreach ($tables as $table) {
                     $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);

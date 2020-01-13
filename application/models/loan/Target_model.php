@@ -115,7 +115,7 @@ class Target_model extends MY_Model
         return $data;
     }
 
-    public function getCountByStatus($status, $isNewApplicant, $createdRange = [], $convertedRange = [])
+    public function getUniqueApplicantCountByStatus($status, $isNewApplicant, $createdRange = [], $convertedRange = [])
     {
         if ($isNewApplicant) {
             $this->db->select("MIN(id) AS target_id")
@@ -163,6 +163,33 @@ class Target_model extends MY_Model
         }
         if (isset($convertedRange['end'])) {
             $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
+
+        $this->db->group_by('status, product_id, sub_product_id');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getApplicationCountByStatus($status = [], $createdRange = [])
+    {
+        $this->db->select('
+                    COUNT(*) AS count,
+                    status,
+                    product_id,
+                    sub_product_id
+                 ')
+                 ->from("p2p_loan.targets");
+
+        if ($status) {
+            $this->db->where_in('status', $status);
+        }
+
+        if (isset($createdRange['start'])) {
+            $this->db->where(['created_at >=' => $createdRange['start']]);
+        }
+        if (isset($createdRange['end'])) {
+            $this->db->where(['created_at <=' => $createdRange['end']]);
         }
 
         $this->db->group_by('status, product_id, sub_product_id');
