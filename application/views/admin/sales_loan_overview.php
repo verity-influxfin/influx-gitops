@@ -17,24 +17,28 @@
                     <table>
                         <tr>
                             <td>申貸區間：</td>
-                            <td><a id="loan-range-today" target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
-                            <td><a id="loan-range-all" target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
+                            <td><a id="loan-range-today" target="_self" class="btn btn-default float-right btn-md margin-besides" >本日</a></td>
+                            <td><a id="loan-range-all" target="_self" class="btn btn-default float-right btn-md margin-besides" >全部</a></td>
                             <td class="center-text gap">|</td>
-                            <td><input id="loan_sdate" name="loan_sdate" type="text" data-toggle="datepicker"/></td>
+                            <td><a id="loan-range-from-start" target="_self" class="btn btn-default float-right btn-md margin-besides" ><<開站以來</a></td>
+                            <td><input id="loan_sdate" class="margin-besides" name="loan_sdate" type="text" data-toggle="datepicker"/></td>
                             <td>-</td>
-                            <td><input id="loan_edate" name="loan_edate" type="text" data-toggle="datepicker"/></td>
+                            <td><input id="loan_edate" class="margin-besides" name="loan_edate" type="text" data-toggle="datepicker"/></td>
+                            <td><a id="loan-range-til-today" target="_self" class="btn btn-default float-right btn-md margin-besides" >直至今日>></a></td>
                             <td class="center-text gap">|</td>
                         </tr>
                         <tr>
                             <td>轉化區間：</td>
-                            <td><a id="conversion-range-today" target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
-                            <td><a id="conversion-range-all" target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
+                            <td><a id="conversion-range-today" target="_self" class="btn btn-default float-right btn-md margin-besides" >本日</a></td>
+                            <td><a id="conversion-range-all" target="_self" class="btn btn-default float-right btn-md margin-besides" >全部</a></td>
                             <td class="center-text gap">|</td>
-                            <td><input id="conversion_sdate" name="conversion_sdate" data-toggle="datepicker"/></td>
+                            <td><a id="conversion-range-from-start" target="_self" class="btn btn-default float-right btn-md margin-besides" ><<開站以來</a></td>
+                            <td><input id="conversion_sdate" class="margin-besides" name="conversion_sdate" data-toggle="datepicker"/></td>
                             <td>-</td>
-                            <td><input id="conversion_edate" name="conversion_edate" data-toggle="datepicker"/></td>
+                            <td><input id="conversion_edate" class="margin-besides" name="conversion_edate" data-toggle="datepicker"/></td>
+                            <td><a id="conversion-range-til-today" target="_self" class="btn btn-default float-right btn-md margin-besides" >直至今日>></a></td>
                             <td class="center-text gap">|</td>
-                            <td><button class="btn btn-default float-right btn-md" type="submit">查詢</button></td>
+                            <td><button class="btn btn-default float-right btn-md margin-besides" type="submit">查詢</button></td>
                         </tr>
                     </table>
                 </form>
@@ -271,6 +275,15 @@
             $('input[name=loan_sdate]').val('2018-08-03');
             $('input[name=loan_edate]').val(todayString);
         });
+        $('#loan-range-from-start').click(function() {
+            $('input[name=loan_sdate]').val('2018-08-03');
+        });
+        $('#loan-range-til-today').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=loan_edate]').val(todayString);
+        });
         $('#conversion-range-today').click(function() {
             var today = new Date();
             var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
@@ -285,12 +298,26 @@
             $('input[name=conversion_sdate]').val('2018-08-03');
             $('input[name=conversion_edate]').val(todayString);
         });
+        $('#conversion-range-from-start').click(function() {
+            $('input[name=conversion_sdate]').val('2018-08-03');
+        });
+        $('#conversion-range-til-today').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=conversion_edate]').val(todayString);
+        });
     });
 </script>
 
 <style>
     .center-text {
         text-align: center;
+    }
+
+    .margin-besides {
+        margin-left: 10px;
+        margin-right: 10px;
     }
 
     .gap {
