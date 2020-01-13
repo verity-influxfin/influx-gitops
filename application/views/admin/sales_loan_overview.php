@@ -149,6 +149,10 @@
 
             pTag = '<p class="form-control-static"></p>';
             for (var i = 0; i < 5; i++) {
+                var row = "";
+                if (i % 2 == 0) {
+                    row = '<td rowspan=2 class="fake-fields center-text">'
+                }
                 $("<tr>").append(
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
@@ -156,11 +160,11 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
+                    $(row).append(pTag),
+                    $(row).append(pTag),
+                    $(row).append(pTag),
+                    $(row).append(pTag),
+                    $(row).append(pTag),
                 ).appendTo("#" + table);
             }
         }
@@ -180,9 +184,9 @@
                     $('<td class="center-text">').append(table.rows[i].matchRate),
                     $(row).append(table.rows[i].applications),
                     $(row).append(table.rows[i].matchedApplications),
-                    $('<td class="center-text">').append(table.rows[i].approvedPendingSigningAmount),
-                    $('<td class="center-text">').append(table.rows[i].onTheMarketAmount),
-                    $('<td class="center-text">').append(table.rows[i].matchedAmount),
+                    $(row).append(table.rows[i].approvedPendingSigningAmount),
+                    $(row).append(table.rows[i].onTheMarketAmount),
+                    $(row).append(table.rows[i].matchedAmount),
                 ).appendTo("#" + tableName);
             }
         }

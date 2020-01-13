@@ -598,18 +598,22 @@ class Sales extends MY_Admin_Controller {
             '1-1' => 'ExistingStudents',
             '1-2' => 'NewStudents',
             '1-3' => 'NewStudents',
+            '1-4' => 'NewStudents',
             '2-0' => 'NewStudents',
             '2-1' => 'ExistingStudents',
             '2-2' => 'NewStudents',
             '2-3' => 'NewStudents',
+            '2-4' => 'NewStudents',
             '3-0' => 'NewOfficeWorkers',
             '3-1' => 'ExistingOfficeWorkers',
             '3-2' => 'NewOfficeWorkers',
             '3-3' => 'NewOfficeWorkers',
+            '3-4' => 'NewOfficeWorkers',
             '4-0' => 'NewOfficeWorkers',
             '4-1' => 'ExistingOfficeWorkers',
             '4-2' => 'NewOfficeWorkers',
             '4-3' => 'NewOfficeWorkers',
+            '4-4' => 'NewOfficeWorkers',
         ];
 
         $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
@@ -618,11 +622,14 @@ class Sales extends MY_Admin_Controller {
         $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange);
         $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange);
 
+        $applicationAmounts = $this->target_model->getApplicationAmountByStatus([1, 2, 3, 4, 5, 10, 21, 22, 23, 24], $createdRange);
+
         $rowsByApplicantType = [
             $newApplicantRows,
             $existingApplicantRows,
             $applicationCountByStatus,
             $matchedCountByStatus,
+            $applicationAmounts
         ];
 
         for ($i = 0; $i < count($rowsByApplicantType); $i++) {
@@ -649,29 +656,31 @@ class Sales extends MY_Admin_Controller {
                     $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
                     $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
 
-                    if (isset($statusToApplicationAmountMapping[$row->status])) {
-                        $amountMethod = $statusToApplicationAmountMapping[$row->status];
-                        $getAmountMethod = "get{$amountMethod}";
-                        $setAmountMethod = "set{$amountMethod}";
-                    }
+
                 } elseif ($i == 2) {
                     $getMethod = 'getApplications';
                     $setMethod = 'setApplications';
                 } elseif ($i == 3) {
                     $getMethod = 'getMatchedApplications';
                     $setMethod = 'setMatchedApplications';
+                } elseif ($i == 4) {
+                    if (isset($statusToApplicationAmountMapping[$row->status])) {
+                        $amountMethod = $statusToApplicationAmountMapping[$row->status];
+                        $getAmountMethod = "get{$amountMethod}";
+                        $setAmountMethod = "set{$amountMethod}";
+                    }
                 }
 
                 foreach ($tables as $table) {
-                    $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);
-                    $$table->$getRowMethod()->$setMethod($current);
+                    if ($i < 4) {
+                        $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);
+                        $$table->$getRowMethod()->$setMethod($current);
 
-                    if ($row->status != 0) {
-                        $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
-                        $$table->$getRowMethod()->setApplicants($current);
-                    }
-
-                    if ($i < 2 && isset($statusToApplicationAmountMapping[$row->status])) {
+                        if ($row->status != 0) {
+                            $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
+                            $$table->$getRowMethod()->setApplicants($current);
+                        }
+                    } elseif ($i == 4 && isset($statusToApplicationAmountMapping[$row->status])) {
                         $currentAmount = $$table->$getRowMethod()->$getAmountMethod() + intval($row->sumAmount);
                         $$table->$getRowMethod()->$setAmountMethod($currentAmount);
                     }
