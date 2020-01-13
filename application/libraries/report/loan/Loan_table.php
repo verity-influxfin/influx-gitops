@@ -50,6 +50,39 @@ class Loan_table
         $this->total = $this->CI->$loanTotalType;
     }
 
+    public function aggregate()
+    {
+        $this->aggregateColumns(
+            [$this->newOfficeWorkers, $this->existingOfficeWorkers, $this->newStudents, $this->existingStudents],
+            $this->total
+        );
+    }
+
+    public function aggregateColumns($sources, $target)
+    {
+        $columns = [
+            "Applicants",
+            "PendingSigningApplicants",
+            "OnTheMarket",
+            "MatchedApplicants",
+            "MatchRate",
+            "Applications",
+            "MatchedApplications",
+            "ApprovedPendingSigningAmount",
+            "OnTheMarketAmount",
+            "MatchedAmount",
+        ];
+
+        foreach ($sources as $sourceTable) {
+            foreach ($columns as $column) {
+                $getMethod = "get{$column}";
+                $setMethod = "set{$column}";
+                $currentSum = $sourceTable->$getMethod() + $target->$getMethod();
+                $target->$setMethod($currentSum);
+            }
+        }
+    }
+
     /**
      * Get the value of New Office Workers
      *

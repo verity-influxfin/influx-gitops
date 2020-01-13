@@ -679,6 +679,11 @@ class Sales extends MY_Admin_Controller {
             }
         }
 
+        foreach ($tableTypes as $tableType) {
+            $tableName = "{$tableType}Table";
+            $this->$tableName->aggregate();
+        }
+
         $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "total_table"], "total_table_output");
         $this->load->library('output/report/loan/loan_table_output', ["data" => $creditLoanTable, "alias" => "credit_loan_table"], "credit_loan_table_output");
         $this->load->library('output/report/loan/loan_table_output', ["data" => $techiLoanTable, "alias" => "techi_loan_table"], "techi_loan_table_output");
