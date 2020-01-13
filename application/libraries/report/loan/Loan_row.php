@@ -23,7 +23,7 @@ class Loan_row
     protected $matchedApplicants;
 
     /**
-     * @var int
+     * @var float
      */
     protected $matchRate;
 
@@ -151,7 +151,7 @@ class Loan_row
     /**
      * Get the value of Match Rate
      *
-     * @return int
+     * @return float
      */
     public function getMatchRate()
     {
@@ -161,7 +161,7 @@ class Loan_row
     /**
      * Set the value of Match Rate
      *
-     * @param int $matchRate
+     * @param float $matchRate
      *
      * @return self
      */

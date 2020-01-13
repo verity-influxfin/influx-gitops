@@ -29,7 +29,7 @@ class Loan_row_output
             'pending_signing_applicants' => intval($row->getPendingSigningApplicants()),
             'on_the_market' => intval($row->getOnTheMarket()),
             'matched_applicants' => intval($row->getMatchedApplicants()),
-            'match_rate' => intval($row->getMatchRate()),
+            'match_rate' => (float) $row->getMatchRate(),
             'applications' => intval($row->getApplications()),
             'matched_applications' => intval($row->getMatchedApplications()),
             'approved_pending_signing_amount' => intval($row->getApprovedPendingSigningAmount()),

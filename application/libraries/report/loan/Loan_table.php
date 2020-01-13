@@ -65,7 +65,6 @@ class Loan_table
             "PendingSigningApplicants",
             "OnTheMarket",
             "MatchedApplicants",
-            "MatchRate",
             "Applications",
             "MatchedApplications",
             "ApprovedPendingSigningAmount",
@@ -80,6 +79,18 @@ class Loan_table
                 $currentSum = $sourceTable->$getMethod() + $target->$getMethod();
                 $target->$setMethod($currentSum);
             }
+        }
+
+        $sources[] = $target;
+        foreach ($sources as $table) {
+            $matchRate = 0;
+            if ($table->getApplicants() > 0) {
+                $matchRate = round(
+                    $table->getMatchedApplicants() / (float) $table->getApplicants(),
+                    4
+                );
+            }
+            $table->setMatchRate($matchRate);
         }
     }
 

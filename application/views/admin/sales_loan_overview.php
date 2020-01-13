@@ -1,4 +1,5 @@
 <script src="<?=base_url()?>assets/admin/js/common/amountconvertor.js"></script>
+<script src="<?=base_url()?>assets/admin/js/common/percentage.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/report/loan/loantable.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/report/loan/loanrow.js"></script>
 <div id="page-wrapper">
@@ -219,15 +220,17 @@
                         window.close();
                         return;
                     }
+
+                    var percentage = new Percentage();
                     var amountConvertor = new AmountConvertor();
 
-                    var totalTable = new LoanTable(response.response.total_table, amountConvertor);
+                    var totalTable = new LoanTable(response.response.total_table, amountConvertor, percentage);
                     fillReport(totalTable, 'total');
-                    var totalTable = new LoanTable(response.response.credit_loan_table, amountConvertor);
+                    var totalTable = new LoanTable(response.response.credit_loan_table, amountConvertor, percentage);
                     fillReport(totalTable, 'credit-loan');
-                    var totalTable = new LoanTable(response.response.techi_loan_table, amountConvertor);
+                    var totalTable = new LoanTable(response.response.techi_loan_table, amountConvertor, percentage);
                     fillReport(totalTable, 'techi-loan');
-                    var totalTable = new LoanTable(response.response.mobile_phone_loan_table, amountConvertor);
+                    var totalTable = new LoanTable(response.response.mobile_phone_loan_table, amountConvertor, percentage);
                     fillReport(totalTable, 'mobile-phone-loan');
                 },
                 error: function(error) {
