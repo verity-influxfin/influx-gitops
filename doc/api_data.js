@@ -22777,6 +22777,12 @@ define({
                             "optional": false,
                             "field": "target_id",
                             "description": "<p>Targets ID</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "certified_documents",
+                            "description": "<p>證明文件(外匯車貸必填)</p>"
                         }
                     ]
                 }
@@ -23271,7 +23277,7 @@ define({
         {
             "type": "post",
             "url": "/v2/repayment/prepayment/",
-            "title": "借款方 申請提前還款",
+            "title": "借款方 申請清算/提前還款",
             "version": "0.2.0",
             "name": "PostRepaymentPrepayment",
             "group": "Repayment",

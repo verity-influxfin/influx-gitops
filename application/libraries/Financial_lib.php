@@ -218,19 +218,21 @@ class Financial_lib{
         $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_setting', [], 'amortization_setting');
         $inputSetting = $this->CI->amortization_setting;
         $inputSetting->setUseGenerate(false);
-        if (in_array($visul_id, ['DS1P1', 'DS2P1'])) {
-            $shareRate = FEV_SHARE_RATE;
-            if ($visul_id == 'DS1P1') {
-                $inputSetting->setUseGenerate(true);
-            }
-            $prepayment ? $shareRate = FEV_PREPAYMENT_SHARE_RATE : '';
-        }
-
         $inputSetting->setLength($instalment);
         $inputSetting->setInterests($rate * 0.01);
         $inputSetting->setPlatformProportion($platformFee * 0.01);
         $inputSetting->setShareRate($shareRate * 0.01);
         $inputSetting->setYearDays($year_days);
+
+        if (in_array($visul_id, ['DS1P1', 'DS2P1'])) {
+            $shareRate = FEV_SHARE_RATE;
+            if ($visul_id == 'DS1P1') {
+                $inputSetting->setUseGenerate(true);
+            }elseif ($visul_id == 'DS2P1') {
+                $inputSetting->setShareRate($prepayment['sold'] * 0.01);
+            }
+            $prepayment ? $shareRate = FEV_PREPAYMENT_SHARE_RATE : '';
+        }
 
         $this->CI->load->library('entity/amortization/Foreign_exchange_car_amortization_schedule_loan', [], "loan1");
         $loanStage1 = $this->CI->loan1;
@@ -263,25 +265,33 @@ class Financial_lib{
         $total_interest = 0;
         $all_total_payment = 0;
         $past = 0;
-        foreach ($pay_day as $pdKey => $pdValue) {
-            $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee())-$total_interest;
-            $total_interest += $interest;
-            $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
-            $total_payment = ($pdKey == $max_instalment
-                ? $product['user_id'] == $this->CI->user_info->id ? $interest + $share + $amount : $interest + $amount
-                : $interest);
-            $all_total_payment += $total_payment;
-            $list[$pdKey] = array(
-                'instalment' => $pdKey,
-                'repayment_date' => $pdValue,
-                'days' => $pdKey-$past,
-                'remaining_principal' => $amount,
-                'principal' => ($pdKey==$max_instalment?$amount:0),
-                'interest' => $interest,
-                'total_payment' => $total_payment,
-            );
-            $product['user_id']==$this->CI->user_info->id && $pdKey == $max_instalment?$list[$pdKey]['share'] = $share:'';
-            $past = $pdKey;
+        if($prepayment){
+            $days = $prepayment['days'];
+            $total_interest = ($day_amortization_schedule->getRows()[$days - 1]->getAnnualReturns()[0]->getFee());
+            $share = $day_amortization_schedule->getRows()[$days - 1]->getShare();
+            $all_total_payment = $total_interest + $share + $amount;
+        }
+        else{
+            foreach ($pay_day as $pdKey => $pdValue) {
+                $interest = ($day_amortization_schedule->getRows()[$pdKey - 1]->getAnnualReturns()[0]->getFee())-$total_interest;
+                $total_interest += $interest;
+                $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
+                $total_payment = ($pdKey == $max_instalment
+                    ? $product['user_id'] == $this->CI->user_info->id ? $interest + $share + $amount : $interest + $amount
+                    : $interest);
+                $all_total_payment += $total_payment;
+                $list[$pdKey] = array(
+                    'instalment' => $pdKey,
+                    'repayment_date' => $pdValue,
+                    'days' => $pdKey-$past,
+                    'remaining_principal' => $amount,
+                    'principal' => ($pdKey==$max_instalment?$amount:0),
+                    'interest' => $interest,
+                    'total_payment' => $total_payment,
+                );
+                $product['user_id']==$this->CI->user_info->id && $pdKey == $max_instalment?$list[$pdKey]['share'] = $share:'';
+                $past = $pdKey;
+            }
         }
 
         $schedule['schedule'] = $list;

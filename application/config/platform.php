@@ -8,7 +8,7 @@ $config['admin_menu'] = [
         'index' => '全部列表',
         'waiting_evaluation' => '待二審',
         'waiting_signing' => '待簽約',
-        'waiting_verify' => '待審批',
+        'waiting_verify' => '待上架',
         'waiting_bidding' => '已上架',
         'waiting_loan' => '待放款',
         'repayment' => '還款中',
@@ -630,8 +630,8 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['N1', 'N2', 'N3', 'NS1'],
-    'company' => ['D1', 'DS1'],
+    'nature' => ['N1', 'N2', 'NS1'],
+    'company' => [ 'DS2'],
 ];
 
 
