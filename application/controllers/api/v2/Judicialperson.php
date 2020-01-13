@@ -840,7 +840,7 @@ class Judicialperson extends REST_Controller {
 			}
 		}
 
-		if($judicial_person && $from_judicialApply){
+		if($judicial_person || $from_judicialApply){
 			$param	= array(
                 'business_model'        => $business['business_model'],
                 'selling_type'          => $business['selling_type'],
