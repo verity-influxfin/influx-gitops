@@ -12,7 +12,7 @@ class Prepayment_lib{
 		$this->CI->load->library('Transaction_lib');
     }
  
-	public function get_prepayment_info($target=[],$certified_documents=false){
+	public function get_prepayment_info($target=[]){
 		if($target->status == 5 && $target->delay_days==0){
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
@@ -53,7 +53,7 @@ class Prepayment_lib{
 							case SOURCE_AR_PRINCIPAL:
 								$remaining_principal[$value->investment_id]	+= $value->amount;
 								break;
-							case SOURCE_AR_INTEREST: 
+							case SOURCE_AR_INTEREST:
 								if($value->limit_date <= $entering_date){
 									$last_settlement_date = $value->limit_date;
 									$interest_payable[$value->investment_id] += $value->amount;
@@ -65,9 +65,10 @@ class Prepayment_lib{
 					}
 				}
 
-                $days  = get_range_days($last_settlement_date,$entering_date);
-				if($remaining_principal && $days){
-                    $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
+                $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
+                if($remaining_principal){
+                    $days  = get_range_days($last_settlement_date,$entering_date);
+
                     $product_list = $this->CI->config->item('product_list');
                     $product = $product_list[$target->product_id];
                     $sub_product_id = $target->sub_product_id;
@@ -80,13 +81,15 @@ class Prepayment_lib{
 
                         $certified_documents = false;
                         if(!empty($input['certified_documents'])){
+                            $targetData = [];
                             $imgage = $this->CI->log_image_model->get_by([
                                 'id'		=> $input['certified_documents'],
                                 'user_id'	=> $target->user_id,
                             ]);
-
-                            $targetData = json_decode($target->target_data);
-                            $targetData->certified_documents = $imgage->url;
+                            if($imgage){
+                                $targetData = json_decode($target->target_data);
+                                $targetData->certified_documents = $imgage->url;
+                            }
                             $this->CI->target_model->update($target->id,[
                                 'target_data' => json_encode($targetData)
                             ]);
@@ -102,12 +105,14 @@ class Prepayment_lib{
                         $liquidated_damages = $amortization_schedule['share'];
                     }
 					else{
-                        foreach($remaining_principal as $k => $v){
-                            $interest_payable[$k] 	= $this->CI->financial_lib->get_interest_by_days($days,$v,$target->instalment,$target->interest_rate,$target->loan_date);
+					    if($days){
+                            foreach($remaining_principal as $k => $v){
+                                $interest_payable[$k] 	= $this->CI->financial_lib->get_interest_by_days($days,$v,$target->instalment,$target->interest_rate,$target->loan_date);
+                            }
                         }
                         $remaining_principal = array_sum($remaining_principal);
                         $interest_payable = array_sum($interest_payable);
-                        $liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($data['remaining_principal'],$target->damage_rate);
+                        $liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($remaining_principal,$target->damage_rate);
                     }
 
 					$data['remaining_principal'] 	= $remaining_principal;
@@ -125,12 +130,23 @@ class Prepayment_lib{
 	public function apply_prepayment($target){
 		if($target && $target->status==5 && $target->delay_days==0){
 			$info  = $this->get_prepayment_info($target);
-			$this->CI->load->model('user/virtual_account_model');
-			$virtual_account = $this->CI->virtual_account_model->get_by(array(
-				'status'		=> 1,
-				'investor'		=> 0,
-				'user_id'		=> $target->user_id
-			));
+            $product_list = $this->CI->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+            $virtualAccountParm = [
+                'status'		=> 1,
+                'investor'		=> 0,
+                'user_id'		=> $target->user_id
+            ];
+            if($product['visul_id'] == 'DS2P1'){
+                $virtualAccountParm['virtual_account like'] = TAISHIN_VIRTUAL_CODE.'%';
+            }
+
+            $this->CI->load->model('user/virtual_account_model');
+			$virtual_account = $this->CI->virtual_account_model->get_by($virtualAccountParm);
 			if($info && $virtual_account){
 				$this->CI->load->library('Transaction_lib');
 				$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);

@@ -267,8 +267,14 @@ class Financial_lib{
         $past = 0;
         if($prepayment){
             $days = $prepayment['days'];
-            $total_interest = ($day_amortization_schedule->getRows()[$days - 1]->getAnnualReturns()[0]->getFee());
-            $share = $day_amortization_schedule->getRows()[$days - 1]->getShare();
+            if($days>0){
+                $share = $day_amortization_schedule->getRows()[$days - 1]->getShare();
+                $total_interest = ($day_amortization_schedule->getRows()[$days - 1]->getAnnualReturns()[0]->getFee());
+            }
+            else{
+                $share = $day_amortization_schedule->getRows()[$days]->getShare();
+                $total_interest = 0;
+            }
             $all_total_payment = $total_interest + $share + $amount;
         }
         else{
