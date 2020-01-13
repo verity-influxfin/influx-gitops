@@ -54,6 +54,12 @@ class Job_credit_output
             $output["pro_level"] = 0;
         }
 
+        if (isset($this->certification->content->salary)) {
+			$output["salary"] = $this->certification->content->salary;
+        } else {
+			$output["salary"] = 0;
+        }
+		
         if (isset($this->certification->content->pdf_file)) {
             $output["file"] = $this->certification->content->pdf_file;
         }

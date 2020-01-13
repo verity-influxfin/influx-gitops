@@ -7,10 +7,15 @@ class JobCredit
 		this.setMessages(jobCredit);
 		this.setLicenseStatus(jobCredit);
 		this.setProLevel(jobCredit);
+		this.setSalary(jobCredit);
 	}
 	setLicenseStatus(jobCredit) {
         if (!jobCredit.license_status) this.licenseStatus= "";
 		this.licenseStatus = jobCredit.license_status;
+	}
+	setSalary(jobCredit) {
+        if (!jobCredit.salary) this.salary= "";
+		this.salary = jobCredit.salary;
 	}
 	setProLevel(jobCredit) {
         if (!jobCredit.pro_level) this.proLevel= "";

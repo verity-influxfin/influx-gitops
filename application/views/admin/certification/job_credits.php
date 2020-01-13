@@ -50,6 +50,8 @@
 									<select id="license_status"></select>
 									<span>專家調整 (最高5級)</span>
 									<select id="pro_level"></select>
+									<span>修改自填月薪</span>
+									<input id="salary"></input>
 									<button type="submit" class="btn btn-primary">送出</button>
 							</div>
 						</div>
@@ -105,7 +107,7 @@
 	
 		$("#verification-change").submit(function(e) {
 			e.preventDefault();
-
+		
 			var isConfirmed = confirm("確認是否要通過審核？");
 			if (!isConfirmed) {
 				return false;
@@ -115,15 +117,15 @@
 			var url = form.attr('action');
 			var status = $("#verification").val();
 			var license_status = $("#license_status").val();
+			var salary=$("#salary").val();
 			var pro_level = $("#pro_level").val();
 			var data = {
 				'id': certificationId,
 				'status': status,
 				'license_status':license_status,
-				'pro_level':pro_level
+				'pro_level':pro_level,
+				'salary':salary
 			}
-			
-
 			$.ajax({
 				type: "POST",
 				url: url,
@@ -179,7 +181,7 @@
 			} else if (jobCredits.status == "待人工驗證") {
 				$("#verification").val(3).change();
 			}
-
+			$("#salary").val(jobCredits.salary).change();
 			$("#license_status").val(jobCredits.licenseStatus).change();
 			$("#pro_level").val(jobCredits.proLevel).change();
 			for (var i = 0; i < jobCredits.messages.length; i++) {
