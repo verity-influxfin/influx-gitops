@@ -619,10 +619,10 @@ class Sales extends MY_Admin_Controller {
         $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
         $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, false, $createdRange, $convertedRange);
 
-        $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange);
-        $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange);
+        $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange, $convertedRange);
+        $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange, $convertedRange);
 
-        $applicationAmounts = $this->target_model->getApplicationAmountByStatus([1, 2, 3, 4, 5, 10, 21, 22, 23, 24], $createdRange);
+        $applicationAmounts = $this->target_model->getApplicationAmountByStatus([1, 2, 3, 4, 5, 10, 21, 22, 23, 24], $createdRange, $convertedRange);
 
         $rowsByApplicantType = [
             $newApplicantRows,

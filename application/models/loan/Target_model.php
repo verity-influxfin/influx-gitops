@@ -171,7 +171,7 @@ class Target_model extends MY_Model
         return $query->result();
     }
 
-    public function getApplicationCountByStatus($status = [], $createdRange = [])
+    public function getApplicationCountByStatus($status = [], $createdRange = [], $convertedRange = [])
     {
         $this->db->select('
                     COUNT(*) AS count,
@@ -191,6 +191,12 @@ class Target_model extends MY_Model
         if (isset($createdRange['end'])) {
             $this->db->where(['created_at <=' => $createdRange['end']]);
         }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
 
         $this->db->group_by('status, product_id, sub_product_id');
         $query = $this->db->get();
@@ -198,7 +204,7 @@ class Target_model extends MY_Model
         return $query->result();
     }
 
-    public function getApplicationAmountByStatus($status = [], $createdRange = [])
+    public function getApplicationAmountByStatus($status = [], $createdRange = [], $convertedRange = [])
     {
         $this->db->select('
                     status,
@@ -217,6 +223,12 @@ class Target_model extends MY_Model
         }
         if (isset($createdRange['end'])) {
             $this->db->where(['created_at <=' => $createdRange['end']]);
+        }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
         }
 
         $this->db->group_by('status, product_id, sub_product_id');
