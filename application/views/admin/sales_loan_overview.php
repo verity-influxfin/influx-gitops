@@ -1,3 +1,4 @@
+<script src="<?=base_url()?>assets/admin/js/common/amountconvertor.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/report/loan/loantable.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/report/loan/loanrow.js"></script>
 <div id="page-wrapper">
@@ -15,8 +16,8 @@
                     <table>
                         <tr>
                             <td>申貸區間：</td>
-                            <td><a target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
-                            <td><a target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
+                            <td><a id="loan-range-today" target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
+                            <td><a id="loan-range-all" target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
                             <td class="center-text gap">|</td>
                             <td><input id="loan_sdate" name="loan_sdate" type="text" data-toggle="datepicker"/></td>
                             <td>-</td>
@@ -25,8 +26,8 @@
                         </tr>
                         <tr>
                             <td>轉化區間：</td>
-                            <td><a target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
-                            <td><a target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
+                            <td><a id="conversion-range-today" target="_self" class="btn btn-default float-right btn-md" >本日</a></td>
+                            <td><a id="conversion-range-all" target="_self" class="btn btn-default float-right btn-md" >全部</a></td>
                             <td class="center-text gap">|</td>
                             <td><input id="conversion_sdate" name="conversion_sdate" data-toggle="datepicker"/></td>
                             <td>-</td>
@@ -214,14 +215,15 @@
                         window.close();
                         return;
                     }
+                    var amountConvertor = new AmountConvertor();
 
-                    var totalTable = new LoanTable(response.response.total_table);
+                    var totalTable = new LoanTable(response.response.total_table, amountConvertor);
                     fillReport(totalTable, 'total');
-                    var totalTable = new LoanTable(response.response.credit_loan_table);
+                    var totalTable = new LoanTable(response.response.credit_loan_table, amountConvertor);
                     fillReport(totalTable, 'credit-loan');
-                    var totalTable = new LoanTable(response.response.techi_loan_table);
+                    var totalTable = new LoanTable(response.response.techi_loan_table, amountConvertor);
                     fillReport(totalTable, 'techi-loan');
-                    var totalTable = new LoanTable(response.response.mobile_phone_loan_table);
+                    var totalTable = new LoanTable(response.response.mobile_phone_loan_table, amountConvertor);
                     fillReport(totalTable, 'mobile-phone-loan');
                 },
                 error: function(error) {
@@ -246,6 +248,35 @@
 
             fillFakeReports();
             fetchOverviewReport(loanStartAt, loanEndAt, convertedStartAt, convertedEndAt);
+        });
+
+        $('#loan-range-today').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=loan_sdate]').val(todayString);
+            $('input[name=loan_edate]').val(todayString);
+        });
+        $('#loan-range-all').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=loan_sdate]').val('2018-08-03');
+            $('input[name=loan_edate]').val(todayString);
+        });
+        $('#conversion-range-today').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=conversion_sdate]').val(todayString);
+            $('input[name=conversion_edate]').val(todayString);
+        });
+        $('#conversion-range-all').click(function() {
+            var today = new Date();
+            var todayString = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
+
+            $('input[name=conversion_sdate]').val('2018-08-03');
+            $('input[name=conversion_edate]').val(todayString);
         });
     });
 </script>

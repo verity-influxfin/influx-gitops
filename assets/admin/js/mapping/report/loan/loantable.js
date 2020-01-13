@@ -1,9 +1,9 @@
 class LoanTable
 {
-    constructor(table) {
+    constructor(table, amountConvertor) {
         this.rows = [];
         for (var row in table) {
-            this.rows.push(new LoanRow(row, table[row]));
+            this.rows.push(new LoanRow(row, table[row], amountConvertor));
         }
     }
 }
