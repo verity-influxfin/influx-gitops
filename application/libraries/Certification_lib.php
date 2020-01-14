@@ -74,6 +74,11 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+				if (in_array($id, [9, 10])) {
+					$this->CI->user_certification_model->update($info->id,array(
+						'expire_time'	=> strtotime("+1 months", time()),
+					));
+				}
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -375,9 +380,11 @@ class Certification_lib{
         if($info && $info->status ==0 && $info->certification_id==4) {
             $status 	 = 3;
             $content     = json_decode($info->content);
-            $media       = $content->info->counts->media;
-            $followed_by = $content->info->counts->followed_by;
-            if($media >= 10 && $followed_by >= 10){
+            $media       = $content->instagram->counts->media;
+            $followed_by = $content->instagram->counts->followed_by;
+            $is_fb_email = isset($content->facebook->email);
+            $is_fb_name = isset($content->facebook->name);
+            if($media >= 10 && $followed_by >= 10 && $is_fb_email && $is_fb_name){
                 $status = 1;
                 $this->set_success($info->id);
             }
@@ -423,19 +430,77 @@ class Certification_lib{
 		}
 		return false;
 	}
+
+
 	public function investigation_verify($info = array(), $url=null)
 	{
-		if ($info && $info->status == 0 && $info->certification_id == 9) {
-			//進到ＯＣＲ
-			$status = 3;
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status, 'sys_check' => 1,
-				'content' => json_encode(array('pdf_file' => $url))
-			));
+		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		if($user_certification==false || $user_certification->status!=1){
+			return false;
+		}
+		$url = isset(json_decode($info->content)->pdf_file) ?
+			json_decode($info->content)->pdf_file
+			: $url;
+		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
+			$this->CI->load->library('Joint_credit_lib');
+			$return_type=json_decode($info->content)->return_type;
+			$result = [
+				'status' => null,
+				'messages' => []
+			];
+			$parser = new \Smalot\PdfParser\Parser();
+			$pdf    = $parser->parseFile($url);
+			$text = $pdf->getText();
+			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
+			switch ($res['status']) {
+				case 'pending': //轉人工
+					$status = 3;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status,
+						'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
+					));
+					break;
+				case 'success':
+					$status = 1;
+					$get_time=$res['messages'][10]['message'];
+					$get_months=$res['messages'][8]['message'][0];
+					$get_credit_rate=$res['messages'][8]['message'][2];
+					$times=preg_replace('/[^\d]/','',$get_time);
+					$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
+					$months=preg_replace('/[^\d]/','',$get_months);
+					$this->CI->user_certification_model->update($info->id, array(
+						'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
+					));
+					$this->set_success($info->id,1);
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status
+					));
+					break;
+				case 'failure':
+					$status = 2;
+					$this->CI->user_certification_model->update($info->id, array(
+						'status' => $status, 'sys_check' => 1,
+						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
+					));
+					$this->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
+					break;
+			}
 			return true;
 		}
 		return false;
 	}
+
+	public function save_mail_url($info = array(),$url) {
+		$content=json_decode($info->content,true);
+		$content['pdf_file']=$url;
+		$this->CI->user_certification_model->update($info->id, array(
+			'content'=>json_encode($content)
+		));
+		return true;
+	}
+
 	public function job_verify($info = array(),$url=null) {
 		if ($info && $info->status == 0 && $info->certification_id == 10) {
 			$status = 3;
@@ -681,6 +746,19 @@ class Certification_lib{
 			$data 		= array(
 				'social_status'		=> 1,
 			);
+			if (isset($content['facebook'])) {
+				$data['fb_name'] = $content['facebook']['name'];
+				$data['fb_id'] = $content['facebook']['id'];
+				$data['fb_email'] = $content['facebook']['email'];
+				$data['fb_access_token'] = $content['facebook']['access_token'];
+			}
+			if (isset($content['instagram'])) {
+				$data['ig_id'] = $content['instagram']['id'];
+				$data['ig_username'] = $content['instagram']['username'];
+				$data['ig_name'] = $content['instagram']['name'];
+				$data['ig_access_token'] = $content['instagram']['access_token'];
+			}
+
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
@@ -699,7 +777,7 @@ class Certification_lib{
                 'diploma_major'		=> $content['major'],
                 'diploma_department'=> $content['department'],
                 'diploma_system'	=> $content['system'],
-				'diploma_image'		=> $content['diploma_image'],
+				'diploma_image'		=> $content['diploma_image'][0],
 			);
 
             $rs = $this->user_meta_progress($data,$info);
