@@ -783,7 +783,7 @@ class Repayment extends REST_Controller {
 			if($target->status != 5 || $target->delay_days > 0 ){
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
-			
+
 			$data = $this->prepayment_lib->get_prepayment_info($target);
 			$this->response(['result' => 'SUCCESS','data' => $data]);
 		}
@@ -1146,7 +1146,7 @@ class Repayment extends REST_Controller {
 			'investor'	=> 0,
 			'user_id'	=> $user_id
 		]);
-		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account,150);
 		if($passbook_list){
 			$transaction_source = $this->config->item('transaction_source');
 			foreach($passbook_list as $key => $value){

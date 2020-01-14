@@ -1167,7 +1167,7 @@ class Recoveries extends REST_Controller {
 			'investor'	=> 1,
 			'user_id'	=> $user_id
 		]);
-		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account,150);
 		if($passbook_list){
 			$transaction_source = $this->config->item('transaction_source');
 			foreach($passbook_list as $key => $value){

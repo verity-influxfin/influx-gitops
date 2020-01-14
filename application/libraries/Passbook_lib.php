@@ -84,10 +84,13 @@ class Passbook_lib{
 	}
 	
 	//取得資金資料
-	public function get_passbook_list($virtual_account=''){
+	public function get_passbook_list($virtual_account='',$limit=false){
 		$list = [];
 		if($virtual_account){
-			$virtual_passbook 	= $this->CI->virtual_passbook_model->limit(150)->order_by('tx_datetime,created_at','asc')->get_many_by([
+		    if(!$limit){
+                $this->CI->virtual_passbook_model->limit($limit);
+            }
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
 				'virtual_account' => $virtual_account
 			]);
 			if($virtual_passbook){
