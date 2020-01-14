@@ -360,12 +360,9 @@
 												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>本金合計</td>
-													<td><?=$investments_amortization_schedule[$value->id]["amount"]?></td>
+													<td colspan="2"><?=$investments_amortization_schedule[$value->id]["amount"]?></td>
 													<td>本息合計</td>
-													<td><?=$investments_amortization_schedule[$value->id]["total"]["total_payment"]?></td>
-													<td>XIRR</td>
-													<td><?=$investments_amortization_schedule[$value->id]["XIRR"]?>%</td>
-													<td><?=$investments_amortization_schedule[$value->id]["date"]?></td>
+													<td colspan="3"><?=$investments_amortization_schedule[$value->id]["total"]["total_payment"]?></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
