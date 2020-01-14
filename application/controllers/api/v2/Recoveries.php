@@ -906,6 +906,14 @@ class Recoveries extends REST_Controller {
                 }
             }
 
+            $reason = $target_info->reason;
+            $reason_description = '';
+            $json_reason = json_decode($reason);
+            if(!is_null($json_reason)){
+                $reason = $json_reason->reason;
+                $reason_description = $json_reason->reason_description;
+            }
+
 			$target = [
 				'id'			=> intval($target_info->id),
 				'target_no'		=> $target_info->target_no,
@@ -916,7 +924,8 @@ class Recoveries extends REST_Controller {
 				'loan_amount'	=> intval($target_info->loan_amount),
 				'credit_level'	=> intval($target_info->credit_level),
 				'interest_rate'	=> floatval($target_info->interest_rate),
-				'reason'		=> $target_info->reason,
+				'reason'		=> $reason,
+				'reason_description' => $reason_description,
 				'remark'		=> $target_info->remark,
 				'targetDatas'		=> $targetDatas,
 				'instalment' 	=> intval($target_info->instalment),
@@ -926,9 +935,9 @@ class Recoveries extends REST_Controller {
 				'loan_date'		=> $target_info->loan_date,
 				'status'		=> intval($target_info->status),
 				'sub_status'	=> intval($target_info->sub_status),
-				'created_at'	=> intval($target_info->created_at),			
+				'created_at'	=> intval($target_info->created_at),
 			];
-			
+
 			$repayment_detail = [];
 			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
 				'target_id'	=> $target_info->id,

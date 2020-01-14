@@ -413,6 +413,15 @@ class Target extends REST_Controller {
 
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data['content']:'';
+
+			$reason = $target->reason;
+            $reason_description = '';
+            $json_reason = json_decode($reason);
+            if(!is_null($json_reason)){
+                $reason = $json_reason->reason;
+                $reason_description = $json_reason->reason_description;
+            }
+
 			$data = array(
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
@@ -421,7 +430,8 @@ class Target extends REST_Controller {
 				'loan_amount' 		=> intval($target->loan_amount),
 				'credit_level' 		=> intval($target->credit_level),
 				'interest_rate' 	=> floatval($target->interest_rate),
-				'reason' 			=> $target->reason,
+				'reason'		=> $reason,
+				'reason_description' => $reason_description,
 				'remark' 			=> $target->remark,
 				'targetDatas' => $targetDatas,
 				'instalment' 		=> intval($target->instalment),

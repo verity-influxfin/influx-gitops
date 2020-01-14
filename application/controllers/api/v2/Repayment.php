@@ -680,6 +680,15 @@ class Repayment extends REST_Controller {
                 $subloan = $this->subloan_lib->get_subloan($target);
                 $subloan_target_id = $subloan?intval($subloan->new_target_id):'';
             }
+
+			$reason = $target->reason;
+            $reason_description = '';
+            $json_reason = json_decode($reason);
+            if(!is_null($json_reason)){
+                $reason = $json_reason->reason;
+                $reason_description = $json_reason->reason_description;
+            }
+
 			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
@@ -692,7 +701,8 @@ class Repayment extends REST_Controller {
 				'credit_level' 		=> intval($target->credit_level),
 				'interest_rate' 	=> floatval($target->interest_rate),
 				'damage_rate' 		=> intval($target->damage_rate),
-				'reason' 			=> $target->reason,
+				'reason'		=> $reason,
+				'reason_description' => $reason_description,
 				'remark' 			=> $target->remark,
                 'targetDatas' => $targetDatas,
                 'instalment' 		=> intval($target->instalment),
