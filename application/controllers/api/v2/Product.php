@@ -1864,6 +1864,13 @@ class Product extends REST_Controller {
             }
         }
         isset($input['reason'])?$param['reason'] = $input['reason']:'';
+        if(isset($input['reason_description'])&&!empty($input['reason_description'])){
+            $build = [
+                'reason' => $param['reason'],
+                'reason_description' => $input['reason_description']
+            ];
+            $param['reason'] = json_encode($build) ;
+        }
         isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
 
         //邀請碼保留月

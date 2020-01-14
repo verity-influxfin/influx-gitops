@@ -14404,6 +14404,13 @@ define({
                             "description": "<p>(信貸) 借款原因</p>"
                         },
                         {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "reason_description",
+                            "description": "<p>(信貸)借款原因描述</p>"
+                        },
+                        {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "store_id",
