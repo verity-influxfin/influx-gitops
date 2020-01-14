@@ -623,8 +623,14 @@ class Certification extends MY_Admin_Controller {
 
 			$user = $this->user_model->get($certification->user_id);
 			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->model('user/user_meta_model');
+            $salary             = $this->user_meta_model->get_by([
+                'user_id'   => $certification->user_id,
+                'meta_key'  => ['job_salary']
+            ]);
 
 			$job_credits = json_decode($certification->content);
+			$job_credits->job_salary=$salary->meta_value;
 			$certification->content = $job_credits;
 			$this->load->library('output/user/job_credit_output', ["data" => $job_credits->result, "certification" => $certification]);
 			$response = [
