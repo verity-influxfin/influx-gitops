@@ -43,6 +43,13 @@
 								</tr>
 							</table>
 							<div class="center-text">
+								<form id="salary-change" class="align-form container" action="/admin/Certification/user_certification_edit">
+									<span>修改自填月薪: </span>
+									<input id="salary"></input>
+									<button type="submit" class="btn btn-primary">修改自填月薪</button>
+								</form>
+							</div>
+							<div class="center-text">
 								<form id="verification-change" class="align-form container" action="/admin/Certification/user_certification_edit">
 									<span>審核: </span>
 									<select id="verification"></select>
@@ -50,9 +57,8 @@
 									<select id="license_status"></select>
 									<span>專家調整 (最高5級)</span>
 									<select id="pro_level"></select>
-									<span>修改自填月薪</span>
-									<input id="salary"></input>
 									<button type="submit" class="btn btn-primary">送出</button>
+									</form>
 							</div>
 						</div>
 					</div>
@@ -104,6 +110,35 @@
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
+
+		$("#salary-change").submit(function(e) {
+			e.preventDefault();
+			var isConfirmed = confirm("確認是否要更新月薪資料？");
+			if (!isConfirmed) {
+				return false;
+			}
+			
+			var form = $(this);
+			var url = form.attr('action');
+			var status = $("#verification").val();
+			var salary=$("#salary").val();
+			var data = {
+				'id': certificationId,
+				'salary':salary
+			}
+
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: data,
+				success: function(response) {
+					window.close();
+				},
+				error: function() {
+					alert('送出失敗，請重整頁面後，再試一次。');
+				}
+			});
+		});
 	
 		$("#verification-change").submit(function(e) {
 			e.preventDefault();
@@ -117,14 +152,12 @@
 			var url = form.attr('action');
 			var status = $("#verification").val();
 			var license_status = $("#license_status").val();
-			var salary=$("#salary").val();
 			var pro_level = $("#pro_level").val();
 			var data = {
 				'id': certificationId,
 				'status': status,
 				'license_status':license_status,
 				'pro_level':pro_level,
-				'salary':salary
 			}
 			$.ajax({
 				type: "POST",
