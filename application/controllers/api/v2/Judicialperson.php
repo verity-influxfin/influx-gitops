@@ -773,12 +773,21 @@ class Judicialperson extends REST_Controller {
             }
         }
 
-        $fields 	= ['business_model','selling_type','cooperation_address','cooperation_contact','cooperation_phone'];
+        $fields 	= ['business_model','selling_type'];
         foreach ($fields as $field) {
             if (!isset($input[$field]) && !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
                 $business[$field] = intval($input[$field]);
+            }
+        }
+
+        $fields 	= ['cooperation_address','cooperation_contact','cooperation_phone'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field]) && !$input[$field]) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $business[$field] = $input[$field];
             }
         }
 
