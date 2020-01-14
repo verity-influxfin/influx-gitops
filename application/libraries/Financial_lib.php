@@ -191,6 +191,7 @@ class Financial_lib{
 
     private function amortization_schedule_3($amount,$instalment,$rate,$date,$product,$prepayment=false)
     {
+        $user_info = isset($this->CI->user_info->id)?$this->CI->user_info->id:0;
         $visul_id = $product['visul_id'];
         //驗證閏年
         $leap_year = $this->leap_year($date, $instalment);
@@ -295,7 +296,7 @@ class Financial_lib{
                     'interest' => $interest,
                     'total_payment' => $total_payment,
                 );
-                $product['user_id']==$this->CI->user_info->id && $pdKey == $max_instalment?$list[$pdKey]['share'] = $share:'';
+                $product['user_id']==$user_info && $pdKey == $max_instalment?$list[$pdKey]['share'] = $share:'';
                 $past = $pdKey;
             }
         }
@@ -306,7 +307,7 @@ class Financial_lib{
             'interest' => $total_interest,
             'total_payment' => $all_total_payment,
         );
-        $product['user_id']==$this->CI->user_info->id?$schedule['total']['share'] = $share:'';
+        $product['user_id']==$user_info?$schedule['total']['share'] = $share:'';
         return $schedule;
     }
 
