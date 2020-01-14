@@ -207,7 +207,7 @@
 	function is_virtual_account($account){
 		if($account){
 			$account = trim($account);
-			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE){
+			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE || substr($account,0,5) == TAISHIN_VIRTUAL_CODE){
 				return true;
 			}
 		}
@@ -216,7 +216,7 @@
 	
 	function investor_virtual_account($account){
 		if($account){
-			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE && substr($account,4,1)==INVESTOR_VIRTUAL_CODE){
+			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE && substr($account,4,1)==INVESTOR_VIRTUAL_CODE || substr($account,0,5)==TAISHIN_VIRTUAL_CODE){
 				return true;
 			}
 		}
