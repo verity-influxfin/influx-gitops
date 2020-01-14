@@ -46,10 +46,11 @@ class Passbook extends MY_Admin_Controller {
 	public function edit(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?$get['id']:'';
-		if($id==PLATFORM_VIRTUAL_ACCOUNT){
+		$virtual_accounts = [PLATFORM_VIRTUAL_ACCOUNT,PLATFORM_TAISHIN_VIRTUAL_ACCOUNT];
+		if(in_array($id,$virtual_accounts)){
 			$virtual_account = new stdClass();
-			$virtual_account->id = PLATFORM_VIRTUAL_ACCOUNT;
-			$virtual_account->virtual_account = PLATFORM_VIRTUAL_ACCOUNT;
+			$virtual_account->id = $id;
+			$virtual_account->virtual_account = $id;
 			$virtual_account->user_id 		= 0;
 			$virtual_account->investor 		= 0;
 		}else{
