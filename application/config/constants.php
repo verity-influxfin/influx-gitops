@@ -243,6 +243,7 @@ defined('ORDER_TRANSFER_RANGE_DAYS')OR define('ORDER_TRANSFER_RANGE_DAYS', 30); 
 defined('DIPLOMA_RANGE_DAYS')   	OR define('DIPLOMA_RANGE_DAYS'		, 395); //最高學歷允許免年徵畢業時間
 defined('TAX_RATE')   				OR define('TAX_RATE'				, 5); //稅率
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
+defined('PLATFORM_TAISHIN_VIRTUAL_ACCOUNT') OR define('PLATFORM_TAISHIN_VIRTUAL_ACCOUNT', '97213000000000'); //
 defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
