@@ -632,7 +632,9 @@ class Account extends MY_Admin_Controller {
 						$info[$value->virtual_account] = $this->virtual_account_model->get_by(array(
 							"virtual_account" => $value->virtual_account
 						));
-						$info[$value->virtual_account]->user_info = $this->user_model->get($info[$value->virtual_account]->user_id);
+						if(isset($info[$value->virtual_account])){
+                            $info[$value->virtual_account]->user_info = $this->user_model->get($info[$value->virtual_account]->user_id);
+                        }
 					}
 					$list[$value->virtual_account] += $value->amount;
 				}
