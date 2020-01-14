@@ -380,9 +380,11 @@ class Certification_lib{
         if($info && $info->status ==0 && $info->certification_id==4) {
             $status 	 = 3;
             $content     = json_decode($info->content);
-            $media       = $content->info->counts->media;
-            $followed_by = $content->info->counts->followed_by;
-            if($media >= 10 && $followed_by >= 10){
+            $media       = $content->instagram->counts->media;
+            $followed_by = $content->instagram->counts->followed_by;
+            $is_fb_email = isset($content->facebook->email);
+            $is_fb_name = isset($content->facebook->name);
+            if($media >= 10 && $followed_by >= 10 && $is_fb_email && $is_fb_name){
                 $status = 1;
                 $this->set_success($info->id);
             }
@@ -790,6 +792,19 @@ class Certification_lib{
 			$data 		= array(
 				'social_status'		=> 1,
 			);
+			if (isset($content['facebook'])) {
+				$data['fb_name'] = $content['facebook']['name'];
+				$data['fb_id'] = $content['facebook']['id'];
+				$data['fb_email'] = $content['facebook']['email'];
+				$data['fb_access_token'] = $content['facebook']['access_token'];
+			}
+			if (isset($content['instagram'])) {
+				$data['ig_id'] = $content['instagram']['id'];
+				$data['ig_username'] = $content['instagram']['username'];
+				$data['ig_name'] = $content['instagram']['name'];
+				$data['ig_access_token'] = $content['instagram']['access_token'];
+			}
+
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){

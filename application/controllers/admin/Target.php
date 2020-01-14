@@ -621,6 +621,9 @@ class Target extends MY_Admin_Controller {
 			if ($instagramCertificationDetailArray["type"] == "instagram") {
 				$picture = $instagramCertificationDetailArray["info"]["picture"];
 				$this->usermeta->setInstagramPicture($picture);
+			}else if(isset($instagramCertificationDetailArray['instagram']['picture'])){
+				$picture =$instagramCertificationDetailArray['instagram']['picture'];
+				$this->usermeta->setInstagramPicture($picture);
 			}
 
 			$user->profile = $this->usermeta->values();
@@ -731,7 +734,7 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $userList]);
 
 			$response = [
-				"users" => $this->user_output->toMany(false),
+				"users" => $this->user_output->toMany(),
 				"targets" => $this->target_output->toMany(),
 			];
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();

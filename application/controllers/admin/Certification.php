@@ -691,5 +691,74 @@ class Certification extends MY_Admin_Controller {
 	    $this->load->view('admin/_footer');
 	}
 
+    public function migrate_ocr()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $certification = isset($get['certification']) ? $get['certification'] : '';
+        $startAt = isset($get['start_at']) ? $get['start_at'] : 0;
+        $endAt = isset($get['end_at']) ? $get['end_at'] : 0;
+        $offset = isset($get['offset']) ? $get['offset'] : 1;
+        $limit = isset($get['limit']) ? $get['limit'] : 20;
+
+        $this->load->library('output/json_output');
+
+        $certificationId = 0;
+        if ($certification == 'id_card') {
+            $certificationId = 1;
+        } else {
+            $this->json_output->setStatusCode(400)->send();
+        }
+
+        $where = ["certification_id" => $certificationId];
+        if ($startAt > 0) {
+            $where["updated_at >="] = $startAt;
+        }
+        if ($endAt > 0) {
+            $where["updated_at <="] = $endAt;
+        }
+
+        $skipBy = ($offset - 1) * $limit;
+
+        $this->load->model('user/user_certification_model');
+        $certifications = $this->user_certification_model->limit($limit, $skipBy)->get_many_by($where);
+
+        if (!$certifications) {
+            $this->json_output->setStatusCode(204)->send();
+        }
+
+        $this->load->model('mongo/ocr_model');
+
+        $textComparisons = ["name", "id_number", "id_card_date", "id_card_place", "birthday", "address"];
+        $faceComparisons = ["face", "face_flag", "face_plus", "face_count"];
+        foreach ($certifications as $certification) {
+            $content = json_decode($certification->content);
+            $remark = json_decode($certification->remark);
+
+            $ocr = [
+                'reference' => md5($certification->user_id . "-" . $certification->id),
+                'certification' => $certificationId,
+                'pass' => $certification->sys_check == 1
+            ];
+            if (isset($remark->OCR) && $remark->OCR) {
+                foreach ($textComparisons as $key) {
+                    $ocr["comparison"][$key] = false;
+                    if (isset( $remark->OCR->$key) && $content->$key == $remark->OCR->$key) {
+                        $ocr["comparison"][$key] = true;
+                    }
+                }
+            }
+
+            foreach ($faceComparisons as $key) {
+                $ocr["comparison"][$key] = [];
+                if (isset($remark->$key) && $remark->$key) {
+                    $ocr["comparison"][$key] = $remark->$key;
+                }
+            }
+
+            $this->ocr_model->save($ocr);
+        }
+
+        $this->json_output->setStatusCode(200)->send();
+    }
 }
 ?>

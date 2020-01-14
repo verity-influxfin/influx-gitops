@@ -115,4 +115,125 @@ class Target_model extends MY_Model
         return $data;
     }
 
+    public function getUniqueApplicantCountByStatus($status, $isNewApplicant, $createdRange = [], $convertedRange = [])
+    {
+        if ($isNewApplicant) {
+            $this->db->select("MIN(id) AS target_id")
+                     ->from('p2p_loan.targets')
+                     ->where_in('status', $status)
+                     ->group_by('user_id');
+            $fromTable = $this->db->get_compiled_select();
+        } else {
+            $this->db->select('user_id AS existing_user_id');
+            $this->db->from('p2p_loan.targets');
+            $this->db->where_in('status', [5, 9, 10]);
+            $this->db->where('created_at <=', $createdRange['start']);
+            $this->db->where('loan_date <=', date('Y-m-d', $createdRange['end']));
+            $this->db->group_by('user_id');
+            $fromTable = $this->db->get_compiled_select();
+        }
+
+        $this->db->select('
+                    COUNT(user_id) AS count,
+                    status,
+                    product_id,
+                    sub_product_id,
+                    SUM(least(loan_amount, amount)) AS sumAmount
+                 ')
+                 ->from("({$fromTable}) AS uniqueTargets");
+
+        if ($isNewApplicant) {
+            $this->db->join('p2p_loan.targets', 'uniqueTargets.target_id = targets.id');
+        } else {
+            $this->db->join('p2p_loan.targets', 'uniqueTargets.existing_user_id = targets.user_id');
+        }
+
+        if ($status) {
+            $this->db->where_in('status', $status);
+        }
+
+        if (isset($createdRange['start'])) {
+            $this->db->where(['created_at >=' => $createdRange['start']]);
+        }
+        if (isset($createdRange['end'])) {
+            $this->db->where(['created_at <=' => $createdRange['end']]);
+        }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
+
+        $this->db->group_by('status, product_id, sub_product_id');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getApplicationCountByStatus($status = [], $createdRange = [], $convertedRange = [])
+    {
+        $this->db->select('
+                    COUNT(*) AS count,
+                    status,
+                    product_id,
+                    sub_product_id
+                 ')
+                 ->from("p2p_loan.targets");
+
+        if ($status) {
+            $this->db->where_in('status', $status);
+        }
+
+        if (isset($createdRange['start'])) {
+            $this->db->where(['created_at >=' => $createdRange['start']]);
+        }
+        if (isset($createdRange['end'])) {
+            $this->db->where(['created_at <=' => $createdRange['end']]);
+        }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
+
+        $this->db->group_by('status, product_id, sub_product_id');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getApplicationAmountByStatus($status = [], $createdRange = [], $convertedRange = [])
+    {
+        $this->db->select('
+                    status,
+                    product_id,
+                    sub_product_id,
+                    SUM(least(loan_amount, amount)) AS sumAmount
+                 ')
+                 ->from("p2p_loan.targets");
+
+        if ($status) {
+            $this->db->where_in('status', $status);
+        }
+
+        if (isset($createdRange['start'])) {
+            $this->db->where(['created_at >=' => $createdRange['start']]);
+        }
+        if (isset($createdRange['end'])) {
+            $this->db->where(['created_at <=' => $createdRange['end']]);
+        }
+        if (isset($convertedRange['start'])) {
+            $this->db->where(['updated_at >=' => $convertedRange['start']]);
+        }
+        if (isset($convertedRange['end'])) {
+            $this->db->where(['updated_at <=' => $convertedRange['end']]);
+        }
+
+        $this->db->group_by('status, product_id, sub_product_id');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }
