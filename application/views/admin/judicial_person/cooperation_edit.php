@@ -299,19 +299,6 @@
                                         echo "未上傳";
                                     } ?>
                                 </div>
-                                <div class="form-group">
-                                    <label for="disabledSelect">存摺封面</label>
-                                    <? if (isset($content['bankbook_image'])) { ?>
-                                        <? foreach ($content['bankbook_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>"
-                                                     style='width:100%;max-width:300px'>
-                                            </a>
-                                        <? }
-                                    } else {
-                                        echo "未上傳";
-                                    } ?>
-                                </div>
                             </div>
                         </div>
                     </div>

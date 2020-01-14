@@ -235,6 +235,11 @@ class Judicialperson extends MY_Admin_Controller {
                     $user_info = $this->user_model->get($info->user_id);
 					$info->cerCreditJudicial = $this->get_cerCreditJudicial($info->company_user_id);
                     $this->load->library('Gcis_lib');
+					$where = [
+						'user_id' => $info->user_id,
+						'status' => 1,
+					];
+					$page_data['bankbook_image'] = $this->user_bankaccount_model->get_by($where);
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['user_info'] 	= $user_info;
