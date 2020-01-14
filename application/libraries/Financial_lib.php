@@ -284,7 +284,7 @@ class Financial_lib{
                 $total_interest += $interest;
                 $share = $day_amortization_schedule->getRows()[$pdKey - 1]->getShare();
                 $total_payment = ($pdKey == $max_instalment
-                    ? $product['user_id'] == $this->CI->user_info->id ? $interest + $share + $amount : $interest + $amount
+                    ? $product['user_id'] == $user_info ? $interest + $share + $amount : $interest + $amount
                     : $interest);
                 $all_total_payment += $total_payment;
                 $list[$pdKey] = array(
