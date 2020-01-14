@@ -525,29 +525,31 @@ class Certification_lib{
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status,
 							'sys_check' => 1,
-							'content' => json_encode($content),
+							'content' => json_encode($content)
 						));
 						break;
 					case 'success':
 						$status = 1;
-						$this->set_success($info->id,1);
 						$content=json_decode($info->content,true);
+						$content['pro_level']=0;
+						$content['license_status']=0;
 						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status,
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
+						$this->set_success($info->id,1);
 						break;
 					case 'failure':
 						$status = 2;
 						$content=json_decode($info->content,true);
+						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
 						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status, 
 							'sys_check' => 1,
 							'content' => json_encode($content),
-
 						));
 						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
 						break;
