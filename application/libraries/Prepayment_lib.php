@@ -89,11 +89,11 @@ class Prepayment_lib{
                             if($imgage){
                                 $targetData = json_decode($target->target_data);
                                 $targetData->certified_documents = $imgage->url;
+                                $this->CI->target_model->update($target->id,[
+                                    'target_data' => json_encode($targetData)
+                                ]);
+                                $certified_documents = true;
                             }
-                            $this->CI->target_model->update($target->id,[
-                                'target_data' => json_encode($targetData)
-                            ]);
-                            $certified_documents = true;
                         }
 
                         $amortization_schedule = $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target,$last_settlement_date,[
