@@ -154,10 +154,14 @@ class Product extends REST_Controller {
         $visul_id_des          = $this->config->item('visul_id_des');
         $sub_product_list      = $this->config->item('sub_product_list');
         $certification = $this->config->item('certifications');
+        $company = isset($this->user_info->company)?$this->user_info->company:false;
+        if($company){
+            $this->load->model('user/judicial_person_model');
+            $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
+        }
         $login = false;
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
             $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor,$this->user_info->company);
-            $company = isset($this->user_info->company)?$this->user_info->company:false;
             $login = true;
         }else{
             $certification_list = [];
@@ -220,6 +224,7 @@ class Product extends REST_Controller {
                     'charge_platform_min'	=> $value['charge_platform_min'],
                     'instalment'			=> $value['instalment'],
                     'repayment'				=> $value['repayment'],
+                    'sealler'				=> $value['dealer'],
                     'sub_product'		    => $value['sub_product'],
                     'hidenMainProduct'		=> $value['hidenMainProduct'],
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
@@ -244,16 +249,17 @@ class Product extends REST_Controller {
             $hidenMainProduct = [];
             $type_list = [];
             $designate = [];
-            $company = isset($this->user_info->company)?$this->user_info->company:false;
+            $allow_visul_list = [];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
-                    if ($company == 1 && isset($t2[3]) || $company == 0 && !isset($t2[3])) {
+                    if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
                         foreach ($t2 as $key3 => $t3) {
                             $sub_product_info = [];
                             $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
                                     if(isset($sub_product_list[$t4])){
+                                        $allow_visul_list[] = $sub_product_list[$t4]['visul_id'];
                                         $sub_product_list[$t4]['name'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['name'];
                                         $sub_product_list[$t4]['description'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['description'];
                                         $sub_product_list[$t4]['status'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['status'];
@@ -294,13 +300,15 @@ class Product extends REST_Controller {
             $total_list = [];
             $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id){
-                $total_list[] = [
-                    'visul'        => $id,
-                    'name'         => $visul_id_des[$id]['name'],
-                    'icon'         => $visul_id_des[$id]['icon'],
-                    'description'  => $visul_id_des[$id]['description'],
-                    'status'       => $visul_id_des[$id]['status'],
-                ];
+                if(in_array($id,$allow_visul_list)){
+                    $total_list[] = [
+                        'visul'        => $id,
+                        'name'         => $visul_id_des[$id]['name'],
+                        'icon'         => $visul_id_des[$id]['icon'],
+                        'description'  => $visul_id_des[$id]['description'],
+                        'status'       => $visul_id_des[$id]['status'],
+                    ];
+                }
             }
             $parm2 = array(
                 'total_list' 					=> $total_list,
