@@ -261,19 +261,17 @@
                                         echo "未上傳";
                                     } ?>
                                 </div>
-                                <div class="form-group">
-                                    <label for="disabledSelect">店內正面照</label>
-                                    <? if (isset($content['store_image'])) { ?>
+                                <? if ($data->selling_type == 0 && isset($content['store_image'])) { ?>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">店內正面照</label>
                                         <? foreach ($content['store_image'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>"
                                                      style='width:100%;max-width:300px'>
                                             </a>
-                                        <? }
-                                    } else {
-                                        echo "未上傳";
-                                    } ?>
-                                </div>
+                                        <? } ?>
+                                    </div>
+                                <? } ?>
                                 <div class="form-group">
                                     <label for="disabledSelect">銀行流水帳正面</label>
                                     <? if (isset($content['facade_image'])) { ?>
