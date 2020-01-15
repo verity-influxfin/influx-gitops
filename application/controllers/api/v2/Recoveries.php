@@ -904,6 +904,13 @@ class Recoveries extends REST_Controller {
                         }
                     }
                 }
+                $user = array(
+                    'name' 			=> '',
+                    'id_number'		=> '',
+                    'sex' 			=> '',
+                    'age'			=> '',
+                    'company_name'	=> '',
+                );
             }
 
             $reason = $target_info->reason;

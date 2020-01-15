@@ -143,6 +143,12 @@ class Target extends REST_Controller {
 						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'company_name']);
 					}
 
+                    $user = array(
+                        'sex' 			=> $user_info->sex,
+                        'age'			=> $age,
+                        'company_name'	=> $user_meta?$user_meta->meta_value:'',
+                    );
+
                     $targetDatas = [];
                     if($product['visul_id'] == 'DS2P1'){
                         $targetData = json_decode($value->target_data);
@@ -169,13 +175,12 @@ class Target extends REST_Controller {
                                 }
                             }
                         }
+                        $user = array(
+                            'sex' 			=> '',
+                            'age'			=> '',
+                            'company_name'	=> '',
+                        );
                     }
-
-					$user = array(
-						'sex' 			=> $user_info->sex,
-						'age'			=> $age,
-						'company_name'	=> $user_meta?$user_meta->meta_value:'',
-					);
 				}
 				
 				$list[] = array(
@@ -371,7 +376,7 @@ class Target extends REST_Controller {
 					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
                     $user_meta->meta_value 	= preg_replace('/\(自填\)/', '',$user_meta->meta_value);
 				}else{
-					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'company_name']);
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'diploma_name']);
 				}
 				
 				$user = array(
@@ -409,6 +414,13 @@ class Target extends REST_Controller {
                         }
                     }
                 }
+                $user = array(
+                    'name' 			=> '',
+                    'id_number'		=> '',
+                    'sex' 			=> '',
+                    'age'			=> '',
+                    'company_name'	=> '',
+                );
             }
 
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
