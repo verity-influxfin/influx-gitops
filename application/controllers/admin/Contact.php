@@ -44,6 +44,8 @@ class Contact extends MY_Admin_Controller {
 			if($id){
 				$info = $this->user_contact_model->get_by('id', $id);
 				if($info){
+					$this->load->model('user/user_model');
+					$page_data['user']			= $this->user_model->get($info->user_id);
 					$page_data['data'] 			= $info;
 					$page_data['name_list'] 	= $this->admin_model->get_name_list();
 					$page_data['status_list'] 	= $this->user_contact_model->status_list;
@@ -105,6 +107,47 @@ class Contact extends MY_Admin_Controller {
 				alert('發送失敗，請洽工程師',admin_url('contact/send_email'));
 			}
 		}
+	}
+
+	public function certifications()
+	{
+		$this->load->model('user/user_certification_model');
+		$certification 	= $this->config->item('certifications');
+		foreach($certification as $id => $value){
+			$certification_name_list[$id] = $value['name'];
+		}
+
+		$page_data 	= array('type'=>'list','list'=>array());
+		$input 		= $this->input->get(NULL, TRUE);
+		$list		= array();
+		$where		= array();
+		$fields 	= ['user_id','certification_id','status'];
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!='') {
+				$where[$field] = $input[$field];
+			}
+		}
+
+		if(!empty($where)){
+			if(!isset($where['certification_id'])){
+				$where['certification_id !='] = 3;
+			}
+			$list	= $this->user_certification_model->order_by('id','ASC')->get_many_by($where);
+		}
+
+		foreach ($list as $certification) {
+			$certification->remark = json_decode($certification->remark);
+		}
+
+		$page_data['list'] 					= $list;
+		$page_data['certification_list'] 	= $certification_name_list;
+		unset($page_data['certification_list'][3]);
+		$page_data['status_list'] 			= $this->user_certification_model->status_list;
+		$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/contact_user_certification_list',$page_data);
+		$this->load->view('admin/_footer');
 	}
 }
 ?>

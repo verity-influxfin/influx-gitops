@@ -911,6 +911,7 @@ class Target_lib{
 								$count++;
 								$param = [
 									'status' => 9,
+									'sub_status' => 0,
 									'remark' => $value->remark.'系統自動取消'
 								];
 								$this->CI->target_model->update($value->id,$param);

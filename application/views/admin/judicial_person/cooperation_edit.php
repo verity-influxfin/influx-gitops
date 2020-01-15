@@ -263,51 +263,60 @@
                                 </div>
                                 <? if ($data->selling_type == 0 && isset($content['store_image'])) { ?>
                                     <div class="form-group">
-                                        <label for="disabledSelect">店內正面照</label>
-                                        <? foreach ($content['store_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>"
-                                                     style='width:100%;max-width:300px'>
+									<? if($content['store_image']!=0){ ?>
+											<label for="disabledSelect">店內正面照</label>
+											<? foreach($content['store_image'] as $key => $value){ ?>
+												<a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+													<img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+												</a>
+											<? } ?>
+									<? } ?>	
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳正面</label>
+                                        <a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
+                                            <img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳內頁</label>
+                                        <? foreach($content['passbook_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
                                             </a>
                                         <? } ?>
                                     </div>
-                                <? } ?>
-                                <div class="form-group">
-                                    <label for="disabledSelect">銀行流水帳正面</label>
-                                    <? if (isset($content['facade_image'])) { ?>
-                                        <a href="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>"
-                                           data-fancybox="images">
-                                            <img src="<?= isset($content['front_image']) ? $content['front_image'] : "" ?>"
-                                                 style='width:100%;max-width:300px'>
-                                        </a>
-                                    <? } else {
-                                        echo "未上傳";
-                                    } ?>
+                                    <div class="form-group">
+									   <? if($content['bankbook_image']!=0){ ?>
+											<label for="disabledSelect">存摺封面</label>
+											<? foreach($content['bankbook_image'] as $key => $value){ ?>
+												<a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+													<img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+												</a>
+											<? } ?>
+									<? } ?>
+                                        <? if(isset($content['form_401_image'])){ ?>
+                                            <div class="form-group">
+                                                <label for="disabledSelect">401表格</label>
+                                                <? foreach($content['form_401_image'] as $key => $value){ ?>
+                                                    <a href="<?=$value ?>" data-fancybox="images">
+                                                        <img src="<?=$value ?>" style='width:100%;max-width:300px'>
+                                                    </a>
+                                                <? } ?>
+                                            </div>
+                                        <? } ?>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="disabledSelect">銀行流水帳內頁</label>
-                                    <? if (isset($content['passbook_dealer_image'])) { ?>
-                                        <? foreach ($content['passbook_dealer_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>"
-                                                     style='width:100%;max-width:300px'>
-                                            </a>
-                                        <? }
-                                    } else {
-                                        echo "未上傳";
-                                    } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.row (nested) -->
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-12 -->
+							</div>
+						</div>
+						<!-- /.row (nested) -->
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
     </div>
-    <!-- /.row -->
-</div>
-<!-- /#page-wrapper -->
+    <!-- /#page-wrapper -->

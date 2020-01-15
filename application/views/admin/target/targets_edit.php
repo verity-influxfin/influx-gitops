@@ -155,27 +155,57 @@
                                         <tr style="background-color:#f5f5f5;">
                                             <td colspan="8">消費資訊</td>
                                         </tr>
-                                        <tr><td width="110px">訂單編號</td><td width="150px"><?=$order->merchant_order_no;?></td><td width="110px">法人商號(賣家)</td><td colspan="3"><a class="fancyframe" href="<?=admin_url('judicialperson/cooperation_edit?id='.$judicial_person->id) ?>" ><?=isset($judicial_person->user_id)?$judicial_person->company:"";?></a></td></tr>
-                                        <tr><td>商品名稱</td><td><?=$order->item_name;?></td><td>數量</td><td><?=$order->item_count;?></td><td width="110px">報價金額</td><td width="100px"><?=$order->amount;?></td></tr>
-                                        <tr><td>買家暱稱</td><td><?=$order->nickname;?></td><td>交易方式</td><td colspan="3"><?=$delivery_list[$order->delivery];?></td></tr>
-                                        <tr><td>出貨照片</td><td colspan="5"><?=$order->shipped_image != ''?"<a href='".$order->shipped_image."' data-fancybox='images'><img src='".$order->shipped_image."' style='width:30%;'></a>":'尚未出貨';?></td></tr>
-                                        <? if($order->delivery == 1){?>
-                                            <tr><td>貨運單號</td><td colspan="5"><?=$order->merchant_orshipped_numberder_no!=''?$order->merchant_orshipped_numberder_no:'尚未出貨';?></td></tr>
+                                        <tr>
+                                            <td width="110px">訂單編號</td>
+                                            <td width="150px"><?= $order->merchant_order_no; ?></td>
+                                            <td width="110px">法人商號(賣家)</td>
+                                            <td colspan="3"><a class="fancyframe"
+                                                               href="<?= admin_url('judicialperson/cooperation_edit?id=' . $judicial_person->id) ?>"><?= isset($judicial_person->user_id) ? $judicial_person->company : ""; ?></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>商品名稱</td>
+                                            <td><?= $order->item_name; ?></td>
+                                            <td>數量</td>
+                                            <td><?= $order->item_count; ?></td>
+                                            <td width="110px">報價金額</td>
+                                            <td width="100px"><?= $order->amount; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>買家暱稱</td>
+                                            <td><?= $order->nickname; ?></td>
+                                            <td>交易方式</td>
+                                            <td colspan="3"><?= $delivery_list[$order->delivery]; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>出貨照片</td>
+                                            <td colspan="5"><?= $order->shipped_image != '' ? "<a href='" . $order->shipped_image . "' data-fancybox='images'><img src='" . $order->shipped_image . "' style='width:30%;'></a>" : '尚未出貨'; ?></td>
+                                        </tr>
+                                        <? if ($order->delivery == 1) { ?>
+                                            <tr>
+                                                <td>貨運單號</td>
+                                                <td colspan="5"><?= $order->merchant_orshipped_numberder_no != '' ? $order->merchant_orshipped_numberder_no : '尚未出貨'; ?></td>
+                                            </tr>
                                         <? } ?>
-                                        <? if($data->sub_status == 9){?>
-                                            <tr><td colspan="6">
-                                            <form role="form" method="post">
-                                                <fieldset>
-                                                    <div class="form-group hide">
-                                                        <select id="status" name="status" class="form-control" onchange="check_fail();" >
-                                                            <option value="2"></option>
-                                                        </select>
-                                                        <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary">核可申請金額</button>
-                                                </fieldset>
-                                            </form>
-                                            </td></tr>
+                                        <? if ($data->sub_status == 9) { ?>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <form role="form" method="post">
+                                                        <fieldset>
+                                                            <div class="form-group hide">
+                                                                <select id="status" name="status" class="form-control"
+                                                                        onchange="check_fail();">
+                                                                    <option value="2"></option>
+                                                                </select>
+                                                                <input type="hidden" name="id"
+                                                                       value="<?= isset($data->id) ? $data->id : ""; ?>">
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">核可申請金額
+                                                            </button>
+                                                        </fieldset>
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         <? } ?>
                                         </tbody>
                                     </table>
@@ -361,9 +391,10 @@
 													</p>
 												</td>
 												<td><p class="form-control-static">待交易區流水號</p></td>
-												<td colspan="3">
-													<p class="form-control-static"><?=isset($value->frozen_id)?$value->frozen_id:"";?></p>
-												</td>
+                                                <td>
+                                                    <p class="form-control-static"><?= isset($value->frozen_id) ? $value->frozen_id : ""; ?></p>
+                                                </td>
+                                                <td colspan="2"><p class="form-control-static contract" data-id="<?=$value->id ?>" data-value="<?=$value->contract ?>">借貸契約</p></td>
 											</tr>
 											<? if(isset($investments_amortization_schedule[$value->id]) && $investments_amortization_schedule[$value->id]){?>
 												<tr style="background-color:#f5f5f5;">
@@ -374,7 +405,9 @@
 													<td colspan="2"><?=$investments_amortization_schedule[$value->id]["amount"]?></td>
 													<td>本息合計</td>
 													<td colspan="3"><?=$investments_amortization_schedule[$value->id]["total"]["total_payment"]?></td>
-												</tr>
+                                                    <td>放款日</td>
+                                                    <td colspan="3"><?= $investments_amortization_schedule[$value->id]["date"] ?></td>
+                                                </tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
 													<td>期初本金</td>
@@ -385,8 +418,8 @@
 													<td>還款合計</td>
 												</tr>
 												<?	foreach($investments_amortization_schedule[$value->id]["schedule"] as $k => $v){ ?>
-												
-												
+
+
 												<tr>
 													<td><?=$v['instalment'] ?></td>
 													<td><?=$v['remaining_principal'] ?></td>
@@ -397,7 +430,7 @@
 													<td><?=$v['total_payment'] ?></td>
 												</tr>
 											<? }} ?>
-											
+
 											<? if(isset($investments_amortization_table[$value->id]) && $investments_amortization_table[$value->id]){ ?>
 												<tr style="background-color:#f5f5f5;">
 													<td colspan="8"><a class="fancyframe" href="<?=admin_url('Target/transaction_display?id='.$data->id) ?>" >攤還表</a></td>
@@ -407,10 +440,9 @@
 													<td><?=$investments_amortization_table[$value->id]["amount"]?></td>
 													<td>本息合計</td>
 													<td><?=$investments_amortization_table[$value->id]["total_payment"]?></td>
-													<td>XIRR</td>
-													<td><?=$investments_amortization_table[$value->id]["XIRR"]?>%</td>
-													<td colspan="2"><?=$investments_amortization_table[$value->id]["date"]?></td>
-												</tr>
+                                                    <td>放款日</td>
+                                                    <td colspan="3"><?= $investments_amortization_table[$value->id]["date"] ?></td>
+                                                </tr>
 												<tr style="background-color:#f5f5f5;">
 													<td>期數</td>
 													<td>期初本金</td>

@@ -58,4 +58,40 @@ class User_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+	public function getStudents($filters, $offset = 0, $limit = 20)
+	{
+		$this->db->select('users.*')
+				 ->from ('p2p_user.users')
+				 ->join('p2p_user.user_meta as meta', 'users.id = meta.user_id');
+
+		foreach ($filters as $filter) {
+			if ($filter[0] == 'status') {
+				$this->db->where('users.status ' . $filter[1], $filter[2]);
+			}
+			if ($filter[0] == 'created_at') {
+				$this->db->where('users.created_at ' . $filter[1], $filter[2]);
+			}
+			if ($filter[0] == 'meta_key') {
+				$this->db->where('meta.meta_key ' . $filter[1], $filter[2]);
+			}
+			if ($filter[0] == 'promote_code') {
+				if ($filter[1] == "!=") {
+					$this->db->where('users.promote_code ' . $filter[1], $filter[2]);
+				} elseif ($filter[1] == "in") {
+					$this->db->where_in('users.promote_code', $filter[2]);
+				} elseif ($filter[1] == "not in") {
+					$this->db->where_not_in('users.promote_code', $filter[2]);
+				} else {
+					$this->db->where('users.promote_code', $filter[2]);
+				}
+			}
+		}
+
+		$this->db->limit($limit, $offset);
+
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 }

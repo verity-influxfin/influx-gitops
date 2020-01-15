@@ -28,10 +28,11 @@ class Sendemail
 
 	public function send_verify_school($certification_id,$email=""){
 		if($certification_id && !empty($email)){
+            $mail_event = $this->CI->config->item('mail_event');
 			$type	 = 'school';
 			$code	 = md5($email.time());
 			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
-			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link),TRUE);
+			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link, "type"=> 'b01', "mail_event"=> $mail_event),TRUE);
 			$subject = "普匯inFlux - 學校電子郵件認證";
 			$param = array(
 				"certification_id"	=> $certification_id,
@@ -49,15 +50,18 @@ class Sendemail
 
 	public function send_verify_email($certification_id,$email="",$investor=0){
 		if($certification_id && !empty($email)){
+		    $mail_event = $this->CI->config->item('mail_event');
 			$type	 = 'email';
 			$code	 = md5($email.time());
 			if($investor){
 				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
+				$show_type = 'i01';
 			}else{
 				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
+                $show_type = 'b01';
 			}
 			
-			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link),TRUE);
+			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link, "type"=> $show_type , "mail_event"=> $mail_event),TRUE);
 			$subject = '普匯inFlux - 電子郵件認證';
 			$param = array(
 				'certification_id'	=> $certification_id,
@@ -98,11 +102,12 @@ class Sendemail
 		return false;
 	}
 	
-	public function user_notification($user_id=0,$title="",$content="",$attach=false,$replay_to=false,$replay_to_name=false){
+	public function user_notification($user_id=0,$title="",$content="",$type=false,$attach=false,$replay_to=false,$replay_to_name=false){
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
 			if($user_info && $user_info->email){
-				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
+			    $mail_event = $this->CI->config->item('mail_event');
+				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type , "mail_event"=> $mail_event),TRUE);
 				if($attach){
                     $this->CI->email->initialize($this->config);
                     $this->CI->email->clear(TRUE);
@@ -131,7 +136,8 @@ class Sendemail
 	
 	public function email_notification($email="",$title="",$content=""){
 		if($email){
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content ),TRUE);
+		    $mail_event = $this->CI->config->item('mail_event');
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> 'b08', "mail_event"=> $mail_event),TRUE);
 			return $this->send($email,$title,$content);
 		}
 		return false;
@@ -139,13 +145,16 @@ class Sendemail
 	
 	public function admin_notification($title="",$content=""){
 		$admin_email 	= $this->CI->config->item('admin_email');
-		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content , "url"=> base_url()),TRUE);
+		$mail_event = $this->CI->config->item('mail_event');
+		$content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content , "url"=> base_url(), "type"=> 'b02', "mail_event"=> $mail_event),TRUE);
 		return $this->send($admin_email,$title,$content);
 	}
 	
 	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status=""){
 		if($email){
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content,"investor_status"=>$investor_status),TRUE);
+		    $mail_event = $this->CI->config->item('mail_event');
+		    $type = $investor_status==1?'i':'b';
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content,"investor_status"=>$investor_status, "type"=> $type.'08', "mail_event"=> $mail_event),TRUE);
 			$this->CI->email->initialize($this->config);
 			$this->CI->email->clear(TRUE);
 			$this->CI->email->to($email);

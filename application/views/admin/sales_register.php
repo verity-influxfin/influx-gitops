@@ -63,18 +63,34 @@
 											?>
 												<tr>
 													<td><p class="form-control-static"><?=$admins_name[$key]; ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["count"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["fb"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["school"]) ?></p></td>
-													<td><p class="form-control-static"><?=intval($value["name"]) ?></p></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["count"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["fb"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["school"]) ?></p></a></td>
+													<td><a href="accounts?category=sales&admin_id=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["name"]) ?></p></a></td>
+												</tr>
+											<? }} ?>
+											<?
+											if(!empty($list['marketing'])){
+												foreach($list['marketing'] as $key => $value){
+													$sum['count'] 	+= intval($value['count']);
+													$sum['school'] 	+= intval($value['school']);
+													$sum['fb'] 		+= intval($value['fb']);
+													$sum['name'] 	+= intval($value['name']);
+											?>
+												<tr>
+													<td><p class="form-control-static"><?=$key; ?></p></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["count"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["fb"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["school"]) ?></p></a></td>
+													<td><a href="accounts?category=marketing&code=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=intval($value["name"]) ?></p></a></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td>合計</td>
-												<td><?=$sum['count']; ?></td>
-												<td><?=$sum['fb']; ?></td>
-												<td><?=$sum['school']; ?></td>
-												<td><?=$sum['name']; ?></td>
+												<td><a href="accounts?category=sales-marketing&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['count']; ?></p></a></td>
+												<td><a href="accounts?category=sales-marketing&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['fb']; ?></p></a></td>
+												<td><a href="accounts?category=sales-marketing&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['school']; ?></p></a></td>
+												<td><a href="accounts?category=sales-marketing&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$sum['name']; ?></p></a></td>
 											</tr>
 											</tbody>
 										</table>
@@ -94,10 +110,10 @@
 												<td>實名認證</td>
 											</tr>
 											<tr style="background-color:#f5f5f5;">
-												<td><?=$list['platform']['count']?$list['platform']['count']:0; ?></td>
-												<td><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></td>
-												<td><?=$list['platform']['school']?$list['platform']['school']:0; ?></td>
-												<td><?=$list['platform']['name']?$list['platform']['name']:0; ?></td>
+												<td><a href="accounts?category=others&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['count']?$list['platform']['count']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['fb']?$list['platform']['fb']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['school']?$list['platform']['school']:0; ?></a></td>
+												<td><a href="accounts?category=others&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$list['platform']['name']?$list['platform']['name']:0; ?></a></td>
 											</tr>
 											</tbody>
 										</table>
@@ -132,20 +148,20 @@
 													<td><p class="form-control-static"><?=$admins_name[$partner_list[$key]->admin_id]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_type[$partner_list[$key]->type]; ?></p></td>
 													<td><p class="form-control-static"><?=$partner_list[$key]->company; ?></p></td>
-													<td><p class="form-control-static"><?=$value['count']?$value['count']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['fb']?$value['fb']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['school']?$value['school']:0; ?></p></td>
-													<td><p class="form-control-static"><?=$value['name']?$value['name']:0; ?></p></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['count']?$value['count']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['fb']?$value['fb']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['school']?$value['school']:0; ?></p></a></td>
+													<td><a href="accounts?category=partner&partner_id=<?= $key ?>&type=name&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><p class="form-control-static"><?=$value['name']?$value['name']:0; ?></p></a></td>
 												</tr>
 											<? }} ?>
 											<tr style="background-color:#f5f5f5;">
 												<td></td>
 												<td></td>
 												<td>合計</td>
-												<td><?=$sum["count"]; ?></td>
-												<td><?=$sum["fb"]; ?></td>
-												<td><?=$sum["school"]; ?></td>
-												<td><?=$sum["name"]; ?></td>
+												<td><a href="accounts?category=partner&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["count"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=fb&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["fb"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["school"]; ?></a></td>
+												<td><a href="accounts?category=partner&type=student&sdate=<?= $sdate ?>&edate=<?= $edate ?>" target="_blank"><?=$sum["name"]; ?></a></td>
 											</tr>
 											</tbody>
 										</table>

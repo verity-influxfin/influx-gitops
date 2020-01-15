@@ -6698,7 +6698,8 @@ define({
                             "type": "String",
                             "allowedValues": [
                                 "instagram",
-                                "line"
+                                "line",
+                                "facebook"
                             ],
                             "optional": false,
                             "field": "type",
@@ -9049,6 +9050,128 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/judicialperson/cooperation"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/v2/judicialperson/cooperationrepwstatus",
+            "title": "法人經銷 重設經銷商密碼",
+            "version": "0.2.0",
+            "name": "PostJudicialpersonCooperationrepwstatus",
+            "group": "Judicialperson",
+            "description": "<p>只有負責人登入法人帳號情況下可操作。</p>",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_id",
+                            "description": "<p>cooperation_id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_key",
+                            "description": "<p>cooperation_key</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "cooperation_account",
+                            "description": "<p>經銷商使用者帳號</p>"
+                        },    {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "new_password",
+                            "description": "<p>強制寫入新密碼，沒帶key(new_password)時為解鎖</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "315",
+                            "description": "<p>經銷商不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "363",
+                            "description": "<p>經銷商帳號不存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "315",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"315\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "422",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"363\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Judicialperson.php",
+            "groupTitle": "Judicialperson",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/judicialperson/cooperationrepwstatus"
                 }
             ]
         },
@@ -35946,6 +36069,13 @@ define({
                             "optional": false,
                             "field": "content",
                             "description": "<p>內容</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "optional": true,
+                            "field": "image",
+                            "description": "<p>附圖(最多5張)</p>"
                         },
                         {
                             "group": "Parameter",

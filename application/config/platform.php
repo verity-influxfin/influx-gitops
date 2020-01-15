@@ -63,37 +63,39 @@ $config['admin_menu'] = [
         'parent_name' => '客服管理',
         'index' => '投訴與建議',
         'send_email' => '通知工具',
+        'certifications'    => '會員認證審核列表',
     ],
     'User' => [
         'parent_name' => '會員管理',
         'index' => '會員列表',
         'blocked_users' => '鎖定帳號管理',
     ],
-    'Admin' => [
-        'parent_name' => '後台人員管理',
-        'role_list' => '權限管理',
-        'index' => '人員列表',
-    ],
-    'Sales' => [
-        'parent_name' => '業務報表',
-        'index' => '借款報表',
-        'register_report' => '註冊報表',
-        'bonus_report' => '獎金報表',
-    ],
-    'Account' => [
-        'parent_name' => '財務作業',
-        'daily_report' => '交易日報表',
-        'passbook_report' => '虛擬帳號餘額明細表',
-        'estatement' => '個人對帳單',
-        'index' => '收支統計表',
-    ],
-    'Article' => [
-        'parent_name' => '活動及最新消息',
-        'index' => '最新活動',
-        'index?type=2' => '最新消息',
-    ],
-    'Agreement' => ['name' => '協議書'],
-    'Contract' => ['name' => '合約書'],
+	'Admin' 				=> [
+		'parent_name'		=> '後台人員管理',
+		'role_list'			=> '權限管理',
+		'index'				=> '人員列表',
+	],
+	'Sales' 				=> [
+		'parent_name'		=> '業務報表',
+		'index'				=> '借款報表',
+		'register_report'	=> '註冊報表',
+		'bonus_report'		=> '獎金報表',
+		'loan_overview'     => '申貸總覽'
+	],
+	'Account' 				=> [
+		'parent_name'		=> '財務作業',
+		'daily_report'		=> '交易日報表',
+		'passbook_report'	=> '虛擬帳號餘額明細表',
+		'estatement'		=> '個人對帳單',
+		'index'				=> '收支統計表',
+	],
+	'Article' 				=> [
+		'parent_name'		=> '活動及最新消息',
+		'index'				=> '最新活動',
+		'index?type=2'		=> '最新消息',
+	],
+	'Agreement' 			=> ['name'=>'協議書'],
+    'Contract' 			    => ['name'=>'合約書'],
 ];
 
 //內部通知Email
@@ -926,5 +928,6 @@ $config['certifications_msg'] = [
     2000 => []
 ];
 
+$config['mail_event'] = '20_01';//current_event//19christmas
 $config['use_taishin_selling_type'] = [2];
 $config['use_borrow_account_selling_type'] = [2];

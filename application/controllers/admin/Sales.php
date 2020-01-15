@@ -119,6 +119,7 @@ class Sales extends MY_Admin_Controller {
 		$list = [
 			'platform'	=>['count'=>0,'name'=>0,'school'=>0,'fb'=>0],
 			'partner' 	=>[],
+			'marketing' =>[],
 			'sales' 	=>[],
 		];
 		$user_list		= $this->user_model->get_many_by([
@@ -175,7 +176,19 @@ class Sales extends MY_Admin_Controller {
 					if(!empty($value->name))
 						$list['sales'][$id]['name'] ++;
 					
-				}else{
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = ['count'=>0,'name'=>0,'school'=>0,'fb'=>0];
+					}
+
+					$list['marketing'][$value->promote_code]['count'] ++;
+					if($value->school)
+						$list['marketing'][$value->promote_code]['school'] ++;
+					if(!empty($value->nickname))
+						$list['marketing'][$value->promote_code]['fb'] ++;
+					if(!empty($value->name))
+						$list['marketing'][$value->promote_code]['name'] ++;
+				} else{
 					$list['platform']['count'] ++;
 					if($value->school)
 						$list['platform']['school'] ++;
@@ -250,6 +263,19 @@ class Sales extends MY_Admin_Controller {
 						'status'		=> $value->status,
 						'promote_code'	=> $value->promote_code,
 					);
+				} elseif ($value->promote_code) {
+					if (!isset($list['marketing'][$value->promote_code])) {
+						$list['marketing'][$value->promote_code] = [];
+					}
+					$list['marketing'][$value->promote_code][] = [
+						'id' => $value->id,
+						'amount' => $value->amount,
+						'loan_amount' => $value->loan_amount,
+						'platform_fee' => $value->platform_fee,
+						'loan_date' => $value->loan_date,
+						'status' => $value->status,
+						'promote_code' => $value->promote_code,
+					];
 				}
 				
 				if($value->promote_code=='' || (!isset($admins_qrcode[$value->promote_code]) && !isset($partner_qrcode[$value->promote_code]))){
@@ -282,6 +308,7 @@ class Sales extends MY_Admin_Controller {
 		$get 		= $this->input->get(NULL, TRUE);
 		$type 		= isset($get['type'])&&$get['type']?$get['type']:date('Y-m-d');
 		$id 		= isset($get['id'])&&$get['id']?$get['id']:0;
+		$code		= isset($get['code'])&&$get['code']?$get['code'] : '';
 		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
 		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
 		$list		= array();
@@ -314,6 +341,15 @@ class Sales extends MY_Admin_Controller {
 			}
 		}
 		
+		if ($type == 'marketing' && $code) {
+			$target_list = $this->target_model->order_by('loan_date')->get_many_by(array(
+				'status' => array(5,10),
+				'loan_date >=' => $sdate,
+				'loan_date <=' => $edate,
+				'promote_code' => $code,
+			));
+		}
+
 		if($type=='platform'){
 			$name			= '無分類';
 			$admins_qrcode 	= $this->admin_model->get_qrcode_list();
@@ -335,6 +371,9 @@ class Sales extends MY_Admin_Controller {
 		
 		if(!empty($target_list)){
 			foreach($target_list as $key => $value){
+				if ($type == "platform" && isset($value->promote_code) && $value->promote_code) {
+					continue;
+				}
 				$list[] = $value;
 			}
 		}
@@ -351,5 +390,323 @@ class Sales extends MY_Admin_Controller {
 		$this->load->view('admin/sales_bonus_detail',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function accounts()
+	{
+		if (!$this->input->is_ajax_request()) {
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/sales_accounts');
+			$this->load->view('admin/_footer');
+			return;
+		}
+
+		$get = $this->input->get(NULL, TRUE);
+		$type = isset($get["type"]) ? $get["type"] : "";
+		$sdate = isset($get['sdate'])&&$get['sdate']?$get['sdate']:date('Y-m-d');
+		$edate = isset($get['edate'])&&$get['edate']?$get['edate']:date('Y-m-d');
+		$category = isset($get["category"]) ? $get["category"] : "";
+		$partnerId = isset($get["partner_id"]) ? $get["partner_id"] : "";
+		$code = isset($get["code"]) ? $get["code"] : "";
+		$adminId = isset($get["admin_id"]) ? $get["admin_id"] : "";
+		$offset = isset($get["offset"]) && $get["offset"] >= 1 ? ($get["offset"] - 1) * 20 : 0;
+		$limit = 20;
+
+		$this->load->library('output/json_output');
+		if ($category == "partner" || $category == "sales-marketing") {
+			$partners 	= $this->partner_model->get_many_by(['status'=>1]);
+			$partnerQrCode = null;
+			$partnerQrCodes = [];
+			if($partners){
+				foreach($partners as $key => $value){
+					if ($partnerId) {
+						if ($partnerId == $value->id) {
+							$partnerQrCode = $value->my_promote_code;
+						}
+					} else {
+						$partnerQrCodes[] = $value->my_promote_code;
+					}
+				}
+			}
+		}
+
+		$adminQrCode = "";
+		if ($category == "sales") {
+			if (!$adminId) {
+				$this->json_output->setStatusCode(400)->send();
+			}
+			$adminQrCodes = $this->admin_model->get_qrcode_list();
+			if ($adminQrCodes) {
+				foreach ($adminQrCodes as $qrCode => $id) {
+					if ($id == $adminId) {
+						$adminQrCode = $qrCode;
+						break;
+					}
+				}
+			}
+		}
+
+		if ($type == "student") {
+			$filters = [
+				['status', '=', 1],
+				['created_at', '>=', strtotime($sdate.' 00:00:00')],
+				['created_at', '<=', strtotime($edate.' 23:59:59')],
+				['meta_key', '=', 'student_status']
+			];
+			if ($category == "others") {
+				$filters[] = ['promote_code', '=', ''];
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters[] = ['promote_code', '=', $partnerQrCode];
+				}
+				if ($partnerQrCodes) {
+					$filters[] = ['promote_code', 'in', $partnerQrCodes];
+				}
+			} elseif ($category == 'sales-marketing') {
+				$filters[] = ['promote_code', '!=', ''];
+				$filters[] = ['promote_code', "not in" ,$partnerQrCodes];
+			} elseif ($category == "marketing") {
+				$filters[] = ['promote_code', '=', $code];
+			} elseif ($category == "sales") {
+				$filters[] = ['promote_code', '=', $adminQrCode];
+			}
+
+			$users = $this->user_model->getStudents($filters, $offset, $limit);
+		} else {
+			$filters = [
+				'status' => 1,
+				'created_at >='	=> strtotime($sdate.' 00:00:00'),
+				'created_at <='	=> strtotime($edate.' 23:59:59'),
+			];
+			if ($type == "fb") {
+				$filters["nickname !="] = "";
+			}
+			if ($type == "name") {
+				$filters["name !="] = "";
+			}
+			if ($category == "others") {
+				$filters["promote_code"] = "";
+			} elseif ($category == "partner") {
+				if ($partnerQrCode) {
+					$filters['promote_code'] = $partnerQrCode;
+				}
+				if ($partnerQrCodes) {
+					$filters['promote_code'] = $partnerQrCodes;
+				}
+			} elseif ($category == 'sales-marketing') {
+				$filters['promote_code !='] = '';
+				$filters['promote_code NOT'] = $partnerQrCodes;
+			} elseif ($category == "marketing") {
+				$filters['promote_code'] = $code;
+			} elseif ($category == "sales") {
+				$filters['promote_code'] = $adminQrCode;
+			}
+
+			$users = $this->user_model->limit($limit, $offset)->get_many_by($filters);
+		}
+
+		if (!$users) {
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$this->load->library('output/user/user_output', ["data" => $users]);
+
+		$userOutputs = $this->user_output->toMany("mapForSales");
+
+		$response = ["users" => $userOutputs];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+    public function loan_overview()
+    {
+        if (!$this->input->is_ajax_request()) {
+            $this->load->view('admin/_header');
+            $this->load->view('admin/_title', $this->menu);
+            $this->load->view('admin/sales_loan_overview');
+            $this->load->view('admin/_footer');
+            return;
+        }
+
+        $get = $this->input->get(NULL, TRUE);
+        $loanStartAt = isset($get["loan_sdate"]) ? $get["loan_sdate"] : "";
+        $loanEndAt = isset($get["loan_edate"]) ? $get["loan_edate"] : "";
+        $convertStartAt = isset($get["conversion_sdate"]) ? $get["conversion_sdate"] : "";
+        $convertEndAt = isset($get["conversion_edate"]) ? $get["conversion_edate"] : "";
+
+        $this->load->library('output/json_output');
+        if (!$loanStartAt || !$loanEndAt || !$convertStartAt || !$convertEndAt) {
+            $this->json_output->setStatusCode(400)->send();
+        }
+
+        $status = [0, 1, 2, 4, 5, 10, 21, 22, 23, 24];
+        $createdRange = [
+            "start" => strtotime($loanStartAt . ' 00:00:00'),
+            "end" => strtotime($loanEndAt . ' 23:59:59'),
+        ];
+        $convertedRange = [
+            "start" => strtotime($convertStartAt . ' 00:00:00'),
+            "end" => strtotime($convertEndAt . ' 23:59:59'),
+        ];
+
+        $tableTypes = ['total', 'creditLoan', 'techiLoan', 'mobilePhoneLoan'];
+        $tables = [];
+        foreach ($tableTypes as $tableType) {
+            $this->load->library('report/loan/loan_table', ["type" => $tableType], "{$tableType}Table");
+            $tableName = "{$tableType}Table";
+            $$tableName = $this->$tableName;
+        }
+
+        $statusToApplicantMethodMapping = [
+            0 => 'Applicants',
+            1 => 'PendingSigningApplicants',
+            2 => 'PendingSigningApplicants',
+            21 => 'PendingSigningApplicants',
+            22 => 'PendingSigningApplicants',
+            23 => 'PendingSigningApplicants',
+            3 => 'OnTheMarket',
+            4 => 'OnTheMarket',
+            5 => 'MatchedApplicants',
+            10 => 'MatchedApplicants',
+            24 => 'MatchedApplicants',
+        ];
+
+        $statusToApplicationAmountMapping = [
+            1 => 'ApprovedPendingSigningAmount',
+            2 => 'ApprovedPendingSigningAmount',
+            21 => 'ApprovedPendingSigningAmount',
+            22 => 'ApprovedPendingSigningAmount',
+            23 => 'ApprovedPendingSigningAmount',
+            3 => 'OnTheMarketAmount',
+            4 => 'OnTheMarketAmount',
+            5 => 'MatchedAmount',
+            10 => 'MatchedAmount',
+            24 => 'MatchedAmount',
+        ];
+
+        $productToTableMapping = [
+            1 => ['totalTable', 'creditLoanTable'],
+            2 => ['totalTable', 'mobilePhoneLoanTable'],
+            3 => ['totalTable', 'creditLoanTable'],
+            4 => ['totalTable', 'mobilePhoneLoanTable'],
+        ];
+        $subProductToTableMapping = [
+            '1-1' => ['totalTable', 'techiLoanTable'],
+            '3-1' => ['totalTable', 'techiLoanTable'],
+        ];
+        $productAndTypeToRowMapping = [
+            '1-0' => 'NewStudents',
+            '1-1' => 'ExistingStudents',
+            '1-2' => 'NewStudents',
+            '1-3' => 'NewStudents',
+            '1-4' => 'NewStudents',
+            '2-0' => 'NewStudents',
+            '2-1' => 'ExistingStudents',
+            '2-2' => 'NewStudents',
+            '2-3' => 'NewStudents',
+            '2-4' => 'NewStudents',
+            '3-0' => 'NewOfficeWorkers',
+            '3-1' => 'ExistingOfficeWorkers',
+            '3-2' => 'NewOfficeWorkers',
+            '3-3' => 'NewOfficeWorkers',
+            '3-4' => 'NewOfficeWorkers',
+            '4-0' => 'NewOfficeWorkers',
+            '4-1' => 'ExistingOfficeWorkers',
+            '4-2' => 'NewOfficeWorkers',
+            '4-3' => 'NewOfficeWorkers',
+            '4-4' => 'NewOfficeWorkers',
+        ];
+
+        $newApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, true, $createdRange, $convertedRange);
+        $existingApplicantRows = $this->target_model->getUniqueApplicantCountByStatus($status, false, $createdRange, $convertedRange);
+
+        $applicationCountByStatus = $this->target_model->getApplicationCountByStatus([], $createdRange, $convertedRange);
+        $matchedCountByStatus = $this->target_model->getApplicationCountByStatus([5, 10], $createdRange, $convertedRange);
+
+        $applicationAmounts = $this->target_model->getApplicationAmountByStatus([1, 2, 3, 4, 5, 10, 21, 22, 23, 24], $createdRange, $convertedRange);
+
+        $rowsByApplicantType = [
+            $newApplicantRows,
+            $existingApplicantRows,
+            $applicationCountByStatus,
+            $matchedCountByStatus,
+            $applicationAmounts
+        ];
+
+        for ($i = 0; $i < count($rowsByApplicantType); $i++) {
+            $rows = $rowsByApplicantType[$i];
+            foreach ($rows as $row) {
+                if (!isset($productToTableMapping[$row->product_id])) {
+                    continue;
+                }
+                $key = "{$row->product_id}-{$i}";
+                if ($i < 2 && !isset($productAndTypeToRowMapping[$key])) {
+                    continue;
+                }
+                $tables = $productToTableMapping[$row->product_id];
+
+                $productAndSubProduct = "{$row->product_id}-{$row->sub_product_id}";
+                if (isset($subProductToTableMapping[$productAndSubProduct])) {
+                    $tables = $subProductToTableMapping[$productAndSubProduct];
+                }
+
+                $key = "{$row->product_id}-{$i}";
+                $getRowMethod = "get" . $productAndTypeToRowMapping[$key];
+
+                if ($i < 2) {
+                    $getMethod = 'get' . $statusToApplicantMethodMapping[$row->status];
+                    $setMethod = 'set' . $statusToApplicantMethodMapping[$row->status];
+
+
+                } elseif ($i == 2) {
+                    $getMethod = 'getApplications';
+                    $setMethod = 'setApplications';
+                } elseif ($i == 3) {
+                    $getMethod = 'getMatchedApplications';
+                    $setMethod = 'setMatchedApplications';
+                } elseif ($i == 4) {
+                    if (isset($statusToApplicationAmountMapping[$row->status])) {
+                        $amountMethod = $statusToApplicationAmountMapping[$row->status];
+                        $getAmountMethod = "get{$amountMethod}";
+                        $setAmountMethod = "set{$amountMethod}";
+                    }
+                }
+
+                foreach ($tables as $table) {
+                    if ($i < 4) {
+                        $current = $$table->$getRowMethod()->$getMethod() + intval($row->count);
+                        $$table->$getRowMethod()->$setMethod($current);
+
+                        if ($row->status != 0) {
+                            $current = $$table->$getRowMethod()->getApplicants() + intval($row->count);
+                            $$table->$getRowMethod()->setApplicants($current);
+                        }
+                    } elseif ($i == 4 && isset($statusToApplicationAmountMapping[$row->status])) {
+                        $currentAmount = $$table->$getRowMethod()->$getAmountMethod() + intval($row->sumAmount);
+                        $$table->$getRowMethod()->$setAmountMethod($currentAmount);
+                    }
+                }
+            }
+        }
+
+        foreach ($tableTypes as $tableType) {
+            $tableName = "{$tableType}Table";
+            $this->$tableName->aggregate();
+        }
+
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $totalTable, "alias" => "total_table"], "total_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $creditLoanTable, "alias" => "credit_loan_table"], "credit_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $techiLoanTable, "alias" => "techi_loan_table"], "techi_loan_table_output");
+        $this->load->library('output/report/loan/loan_table_output', ["data" => $mobilePhoneLoanTable, "alias" => "mobile_phone_loan_table"], "mobile_phone_loan_table_output");
+
+        $response = [
+            'total_table' => $this->total_table_output->toOne(),
+            'credit_loan_table' => $this->credit_loan_table_output->toOne(),
+            'techi_loan_table' => $this->techi_loan_table_output->toOne(),
+            'mobile_phone_loan_table' => $this->mobile_phone_loan_table_output->toOne(),
+        ];
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
 }
+
 ?>

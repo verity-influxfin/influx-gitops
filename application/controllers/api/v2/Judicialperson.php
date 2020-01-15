@@ -864,7 +864,7 @@ class Judicialperson extends REST_Controller {
             }
 			$rs = $this->judicial_person_model->update($judicial_person->id,$param);
 		}
-		
+
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
 		}else{
@@ -938,7 +938,42 @@ class Judicialperson extends REST_Controller {
 		
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
-	
+
+    public function cooperationrepwstatus_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $fields 	= ['cooperation_id','cooperation_key','cooperation_account'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+        $company_user_id = $this->user_info->id;
+        $this->load->model('user/cooperation_model');
+        $judicial_person = $this->cooperation_model->get_by(array(
+            'company_user_id' => $company_user_id,
+            'cooperation_id' => $content['cooperation_id'],
+            'cooperation_key' => $content['cooperation_key'],
+        ));
+        if($judicial_person){
+            $parm = [
+                'cooperation_id' => $content['cooperation_id'],
+                'cooperation_key' => $content['cooperation_key'],
+                'cooperation_account' => $content['cooperation_account'],
+            ];
+            isset($input['new_password'])&&!empty($input['new_password'])?$parm['new_password'] = sha1($input['new_password']) :'';
+            $this->load->library('coop_lib');
+            $result = $this->coop_lib->coop_request('user/repwstatus',$parm,$company_user_id);
+            if($result->result == 'SUCCESS'){
+                $this->response(['result' => 'SUCCESS']);
+            }
+            $this->response(['result' => 'ERROR','error' => $result->error ]);
+        }
+        $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
+    }
+
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');

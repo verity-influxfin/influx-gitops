@@ -81,7 +81,9 @@
 										</td>
 										<td class="table-field"><p class="form-control-static">地址</p></td>
 										<td class="table-ten">
-											<p id="address" class="form-control-static"></p>
+											<div class="scrollable">
+												<p id="address" class="form-control-static"></p>
+											</div>
 										</td>
 										<td class="table-field"><p class="form-control-static">系所</p></td>
 										<td class="table-twenty">
@@ -375,13 +377,17 @@
 								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="40%">關聯原因</th>
-										<th width="30%">借款/投資端</th>
+										<th width="20%">關聯原因</th>
+										<th width="30%">關聯值</th>
+										<th width="20%">借款/投資端</th>
 										<th width="30%">使用者編號</th>
 									</tr>
 									</thead>
 									<tbody>
 										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
 											<td class="center-text fake-fields">
 												<p class="form-control-static"></p>
 											</td>
@@ -438,10 +444,10 @@
 				</div>
 			</div>
 		</div>
-        <div class="col-lg-12">
+		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					歸戶案件總攬（僅顯示申請中/還款中/逾期中）
+					歸戶案件總覽（僅顯示申請中/還款中/逾期中）
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -452,10 +458,11 @@
 									<tr class="odd list">
 										<th width="10%">案號</th>
 										<th width="10%">產品</th>
-										<th width="12%">核准金額</th>
-										<th width="12%">本金餘額</th>
-										<th width="12%">可動用餘額</th>
-										<th width="10%">狀態</th>
+										<th width="10%">申請金額</th>
+										<th width="10%">核准金額</th>
+										<th width="10%">本金餘額</th>
+										<th width="10%">可動用餘額</th>
+										<th width="6%">狀態</th>
 										<th width="10%">有效時間</th>
 										<th width="14%">借款原因</th>
                                         <th width="10%">詳情</th>
@@ -479,16 +486,11 @@
 				<div class="panel-body">
 					<div class="col-sm-4">
 						<h5>分數調整部分</h5>
-                        <form id="credit-evaluation" method="GET" action="/admin/Target/credits">
-                            <span class="targetDataInputblock hide">
-                                <div>案件徵提加分：</div>
-                                <input type="text" class="creditArea targetDataInput" value="0" disabled="">
-                            </span>
-                            <p>分數調整：(-400 ~ 400)</p>
-                            <input type="number" class="creditArea credit-input" value="0" min="-400" max="400">
-                            <input type="text" class="creditArea hide" name="score" disabled="">
-                            <button class="btn btn-warning hide" type="submit">額度試算</button>
-                        </form>
+						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
+							<p>分數調整：(-400 ~ 400)</p>
+							<input type="text" name="score" value="0"/>
+							<button class="btn btn-default" type="submit">額度試算</button>
+						</form>
 					</div>
 					<div class="col-sm-8">
 						<h5>調整後額度試算部分</h5>
@@ -572,6 +574,7 @@
             },
             complete: function () {
                 targetInfoAjaxLock = false;
+				fetchRelatedUsers(userId);
             },
             success: function (response) {
                 hideLoadingAnimation();
@@ -593,7 +596,6 @@
 
                 let userJson = response.response.user;
                 user = new User(userJson);
-                console.log(response.response.user.company);
                 if(response.response.user.company == 1){
                     $('.natual').css('display','none');
                     $('.company').css('display','block');
@@ -642,29 +644,32 @@
 
         var relatedUsersIndex = 1;
         var relatedUsers = [];
-        $.ajax({
-            type: "GET",
-            url: "/admin/User/related_users" + "?id=" + userId,
-            beforeSend: function () {
-                relatedUserAjaxLock = true;
-            },
-            complete: function () {
-                relatedUserAjaxLock = false;
-            },
-            success: function (response) {
-                fillFakeRelatedUsers(false);
-                if (response.status.code != 200) {
-                    return;
-                }
+		function fetchRelatedUsers(userId) {
+			$.ajax({
+				type: "GET",
+				url: "/admin/User/related_users" + "?id=" + userId,
+				beforeSend: function () {
+					relatedUserAjaxLock = true;
+				},
+				complete: function () {
+					relatedUserAjaxLock = false;
+				},
+				success: function (response) {
+					fillFakeRelatedUsers(false);
+					if (response.status.code != 200) {
+						return;
+					}
 
-                let relatedUsersJson = response.response.related_users;
-                for (var i = 0; i < relatedUsersJson.length; i++) {
-                    var relatedUser = new RelatedUser(relatedUsersJson[i]);
-                    relatedUsers.push(relatedUser);
+					let relatedUsersJson = response.response.related_users;
+					for (var i = 0; i < relatedUsersJson.length; i++) {
+						var relatedUser = new RelatedUser(relatedUsersJson[i]);
+						relatedUsers.push(relatedUser);
+					}
+					fillRelatedUsers();
 				}
-                fillRelatedUsers();
-            }
-        });
+			});
+		}
+
 
         $('#load-more').on('click', function() {
             fillRelatedUsers();
@@ -699,6 +704,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                 ).appendTo("#related-users");
 			}
 		}
@@ -717,10 +723,12 @@
             for (var i = start; i < end; i++) {
                 var reasonText = mapRelatedUsersReasons(relatedUsers[i].reason);
                 var reason = '<p class="form-control-static">' + reasonText + '</p>';
+                var value = '<p class="form-control-static">' + relatedUsers[i].relatedValue + '</p>';
                 var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
 				var userLink = '<a href="' + '/admin/user/edit?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
                 $("<tr>").append(
                     $('<td class="center-text">').append(reason),
+                    $('<td class="center-text">').append(value),
                     $('<td class="center-text">').append(statuses),
                     $('<td class="center-text">').append(userLink),
                 ).appendTo("#related-users");
@@ -813,8 +821,10 @@
 			    $("#instagram-username").text(user.instagram.username);
 			    $("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
             }
-			$("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
-			$("#facebook-username").text(user.facebook.username);
+			if (user.facebook) {
+                $("#facebook-profile-picture").prepend('<img id="facebook-profile-picture-content" src="' + user.getFbProfilePicture() + '" style="width:30%;" />');
+                $("#facebook-username").text(user.facebook.username);
+			}
 		}
 
         function fillCompanyUserInfo(user) {
@@ -846,7 +856,7 @@
 			if (isReEvaluated) prefix = "new-";
 			$("#" + prefix + "product-name").text(credit.product.name);
 			$("#" + prefix + "credit-level").text(credit.level);
-			$("#" + prefix + "credit-amount").text(credit.amount);
+			$("#" + prefix + "credit-amount").text(convertNumberSplitedByThousands(credit.amount));
 			$("#" + prefix + "credit-points").text(credit.points);
 			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
 			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
@@ -976,6 +986,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag)
                 ).appendTo("#targets");
 			}
@@ -985,14 +996,21 @@
             for (var i = 0; i < targets.length; i++) {
                 let target = targets[i];
                 var backgroundColor = target.status.text == '待核可' ? 'bg-danger' : '';
+
+                var amountRequested = convertNumberSplitedByThousands(target.amount.requested);
+                var amountApproved = convertNumberSplitedByThousands(target.amount.approved);
+                var amountRemaining = convertNumberSplitedByThousands(target.amount.remaining);
+                var principal = convertNumberSplitedByThousands(target.amount.principal);
+
                 $("<tr>").append(
                     getCenterTextCell(target.number, backgroundColor),
                     getCenterTextCell(target.product.name, backgroundColor),
-                    getCenterTextCell(target.amount.approved, backgroundColor),
-                    getCenterTextCell(target.amount.remaining, backgroundColor),
-                    getCenterTextCell(target.amount.principal, backgroundColor),
+                    getCenterTextCell(amountRequested, backgroundColor),
+                    getCenterTextCell(amountApproved, backgroundColor),
+                    getCenterTextCell(amountRemaining, backgroundColor),
+                    getCenterTextCell(principal, backgroundColor),
                     getCenterTextCell(target.status.text, backgroundColor),
-                    getCenterTextCell(target.expireAt, backgroundColor),
+                    getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
                     getCenterTextCell(target.reason, backgroundColor),
                     getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
                 ).appendTo("#targets");
@@ -1001,6 +1019,16 @@
 
 		function getCenterTextCell(value, additionalCssClass = "") {
             return '<td class="center-text ' + additionalCssClass + '">' + value + '</td>';
+		}
+
+		function convertNumberSplitedByThousands(value) {
+			var convertedNumbers = value;
+			try {
+				convertedNumbers = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			} catch(err) {
+
+			}
+            return convertedNumbers;
 		}
 
         $("#credit-evaluation").submit(function(e) {
@@ -1194,5 +1222,9 @@
 		background-size: 800px 104px;
 		height: 30px;
 		position: relative;
+	}
+
+	.scrollable {
+		overflow: auto;
 	}
 </style>

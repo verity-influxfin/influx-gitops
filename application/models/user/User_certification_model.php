@@ -15,6 +15,11 @@ class User_certification_model extends MY_Model
 		0 =>	"借款端",
 		1 =>	"出借端",
 	);
+	public $certificationContentKeyMapping = [
+		'id_number' => 1,
+		'bank_account' => 3,
+		'address' => 1,
+	];
 	
 	public function __construct()
 	{
@@ -41,19 +46,33 @@ class User_certification_model extends MY_Model
 
 	public function get_users_with_same_value($userId, $key, $values)
 	{
-		if (!$values) return [];
+		if (
+			!$values
+			|| !isset($this->certificationContentKeyMapping[$key])
+		) {
+			return [];
+		}
 
 		$this->db->select('users.*')
 			->from('p2p_user.user_certification as cert')
 			->join('p2p_user.users as users', 'users.id = cert.user_id')
 			->where('user_id !=', $userId);
 
+		$certificationId = $this->certificationContentKeyMapping[$key];
+		$this->db->where('cert.certification_id', $certificationId);
+
 		$numbersLike = count($values);
-		$valueQuery = [];
 		$this->db->group_start();
 		for ($i = 0; $i < $numbersLike; $i++) {
 			$value = $values[$i];
-			$value = "\"{$key}\":\"{$value}";
+			if (preg_match('/[^A-Za-z0-9]/', $value)) {
+				$value = json_encode($value);
+				$value = rtrim($value, '"');
+				$value = ltrim($value, '"');
+			}
+
+			$value = "{$key}\":\"{$value}\"";
+
 			if ($i == 0) $this->db->like("content", $value);
 			else $this->db->or_like("content", $value);
 		}
@@ -62,6 +81,7 @@ class User_certification_model extends MY_Model
 		$this->db->group_by('cert.user_id');
 
 		$query = $this->db->get();
+
 		return $query->result();
 	}
 }

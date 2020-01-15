@@ -30,6 +30,10 @@
                                            <a href="<?=admin_url('user/edit?id='.$data->user_id) ?>" target="_blank" ><?=isset($data->user_id)?$data->user_id:"" ?></a>
                                         </div>
                                         <div class="form-group">
+                                            <label>Email</label><br>
+                                            <p><?= isset($user->email) ? $user->email : '' ?></p>
+                                        </div>
+                                        <div class="form-group">
                                             <label>借款端/出借端</label>
                                             <p><?=isset($data->investor)?$investor_list[$data->investor]:"" ?></p>
                                         </div>
@@ -38,15 +42,19 @@
 											<p><?=isset($data->content)?$data->content:"" ?></p>
                                         </div>
 										<div class="form-group">
-                                            <label>附圖</label>
+                                            <label>附圖</label><br />
 											<? 
 												if(isset($data->image) && !empty($data->image)){
 													$image = json_decode($data->image,TRUE);
 													foreach($image as $key => $value){
-														if(!empty($value)){
-												?>
-													<img src='<?=$value ?>' style='width:30%'>
-												<? }}} ?>
+														if(!empty($value)&&!is_array($value)){ ?>
+													        <img src='<?=$value ?>' style='width:30%'>
+												        <? }elseif(is_array($value)){
+                                                            foreach($value as $key_arr => $value_arr){ ?>
+                                                                <img src='<?=$value_arr ?>' style='width:30%'>
+                                                            <?}
+                                                        }}
+												} ?>
                                         </div>
 										<div class="form-group">
                                             <label>回報時間</label> 

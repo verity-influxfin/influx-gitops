@@ -8,18 +8,18 @@ class Log_userlogin_model extends MY_Model
 		0 =>	"失敗",
 		1 =>	"成功"
 	);
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->_database = $this->load->database('log',TRUE);
  	}
-	
+
 	protected function before_data_c($data)
     {
         $data['created_at'] = time();
         $data['created_ip'] = get_ip();
-		
+
 		$this->load->library('user_agent');
 		if ($this->agent->is_browser()){
 			$agent = $this->agent->browser().' '.$this->agent->version();
@@ -36,26 +36,43 @@ class Log_userlogin_model extends MY_Model
 			'platform'	=> $this->agent->platform(),
             'device_id'	=> $device_id
 		]);
-		
-		return $data;
-    } 	
 
-    public function get_same_ip_users($user_id)
+		return $data;
+    }
+
+	public function getCurrentInstance($data)
+	{
+		$convertedData = $this->before_data_c($data);
+		$convertedData["client"] = json_decode($convertedData["client"]);
+		return $convertedData;
+	}
+
+    public function get_same_ip_users($user_id, $time = 0)
 	{
 		$this->db->select('created_ip')
 				 ->from ('p2p_log.user_login_log ')
 			     ->where('user_id', $user_id);
 
+		if ($time > 0) {
+			$this->db->where('login.created_at >', $time);
+		}
+
 		$subQuery = $this->db->get_compiled_select();
 
-		$this->db->select('users.*')
+		$this->db->select('users.*, login.created_ip as login_ip')
 			     ->from('p2p_log.user_login_log as login')
 				 ->join('p2p_user.users as users', 'users.id = login.user_id')
 		         ->where('login.user_id !=', $user_id)
-		         ->where('login.user_id !=', 0)
-		         ->where("login.created_ip IN ($subQuery)", null, false)
+		         ->where('login.user_id !=', 0);
+
+		if ($time > 0) {
+			$this->db->where('login.created_at >', $time);
+		}
+
+		$this->db->where("login.created_ip IN ($subQuery)", null, false)
 		 		 ->group_by('users.id');
 		$query = $this->db->get();
+
 		return $query->result();
 	}
 
@@ -74,7 +91,7 @@ class Log_userlogin_model extends MY_Model
 		$length = count($deviceIds);
 		for ($i = 0; $i < $length; $i++) {
 			$deviceId = $deviceIds[$i];
-			$value = "\"device_id\":\"{$deviceId}";
+			$value = "\"device_id\":\"{$deviceId}\"";
 			if ($i == 0) $this->db->like("client", $value);
 			else $this->db->or_like("client", $value);
 		}

@@ -300,6 +300,10 @@ defined('LINEBOT_URL')           	OR define('LINEBOT_URL'			    , getenv('ENV_LI
 defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'WW6FytNauCGA4U4UZuVbT4bqYq2tNtJo');
 defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PPlwd8Ue3EdErHHdBTNFSZ2-Yh');
 
+//台新
+defined('TAISHIN_VIRTUAL_CODE')     OR define('TAISHIN_VIRTUAL_CODE'	, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
+defined('TAISHIN_CUST_ACCNO')     OR define('TAISHIN_CUST_ACCNO'	, getenv('ENV_TAISHIN_CUST_ACCNO'));
+
 //Cathay 國泰世華
 defined('CATHAY_API_URL')      		OR define('CATHAY_API_URL'			, 'https://www.globalmyb2b.com/securities/tx10d0_txt.aspx');
 defined('CATHAY_AP2AP_API_URL')     OR define('CATHAY_AP2AP_API_URL'	, 'https://www.globalmyb2b.com/GEBANK/AP2AP/MyB2B_AP2AP_Rev.aspx');

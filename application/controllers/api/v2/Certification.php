@@ -568,11 +568,11 @@ class Certification extends REST_Controller {
             }
 
 			$file_fields = [];
-            isset($input['transcript_image'])?$file_fields[]='transcript_image':'';
+            isset($input['transcript_image']) && is_numeric($input['transcript_image'])?$file_fields[]='transcript_image':'';
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
-            isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
+            isset($input['pro_certificate_image']) && is_numeric($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
             isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
-            isset($input['game_work_image'])?$file_fields[]='game_work_image':'';
+            isset($input['game_work_image']) && is_numeric($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$input[$field]);
@@ -849,7 +849,7 @@ class Certification extends REST_Controller {
 			$this->was_verify($certification_id);
 			
 			//必填欄位
-			$fields 	= ['phone','relationship'];//'name',
+			$fields 	= ['name','phone','relationship'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -859,9 +859,8 @@ class Certification extends REST_Controller {
 			}
 
             $content['name'] 	= isset($input['name'])?$input['name']:"";
-			
-			$content['household_image'] = '';
-			if (isset($input['household_image']) && $input['household_image']) {
+
+			if (isset($input['household_image']) && is_numeric($input['household_image'])) {
 				$rs = $this->log_image_model->get_by([
 					'id'		=> intval($input['household_image']),
 					'user_id'	=> $user_id,
@@ -1225,65 +1224,93 @@ class Certification extends REST_Controller {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }
             }
-
-			if($type == 'instagram'){
-                //是否驗證過
-                $this->was_verify($certification_id);
-
-                $this->load->library('instagram_lib');
-                $info 		= $this->instagram_lib->get_info($input['access_token']);
-
-                $content = array(
-                    'type'			=> $type,
-                    'info'			=> $info,
-                    'access_token'	=> $input['access_token'],
-                );
-
-                $param		= [
-                    'user_id'			=> $user_id,
-                    'certification_id'	=> $certification_id,
-                    'investor'			=> $investor,
-                    'content'			=> json_encode($content),
-                ];
-
-                $insert = $this->user_certification_model->insert($param);
-                if($insert){
-                    $this->response(array('result' => 'SUCCESS'));
-                }else{
-                    $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-                }
-            }
-			elseif($type == 'line'){
-                $data = array(
-                    "line_access_token" => $input["access_token"],
-                    "line_displayName"  => base64_decode($input["displayName"]),
-                    "line_pictureUrl"   => $input["pictureUrl"],
-                );
-
-                $exist 		= $this->user_meta_model->get_by(array('user_id'=>$user_id , 'meta_key' => 'line_access_token'));
-                if($exist){
-                    foreach($data as $key => $value){
-                        $param = array(
-                            'user_id'		=> $user_id,
-                            'meta_key' 		=> $key,
-                        );
-                        $rs  = $this->user_meta_model->update_by($param,array('meta_value'	=> $value));
+            switch ($type) {
+                case "facebook":
+                    $this->load->library('facebook_lib');
+                    $info       = $this->facebook_lib->get_info($input['access_token']);
+                    $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
+                        'user_id'    => $user_id,
+                        'certification_id' => 4,
+                        'status' => 0,
+                        'investor' => $investor,
+                    ]);
+                    if (empty($get_data)) {
+                        $initialize_id = $this->social_initialize($user_id, $investor);
+                        $content = [
+                            'facebook' => $info,
+                            'instagram' => '',
+                        ];
+                        $rs = $this->user_certification_model->update($initialize_id, ["content" => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                    } else {
+                        $content_data = json_decode($get_data->content);
+                        $content = [
+                            'facebook' => $info,
+                            'instagram' => $content_data->instagram,
+                        ];
+                        $rs = $this->user_certification_model->update($get_data->id, ["content" => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
                     }
-                }else{
-                    foreach($data as $key => $value){
-                        $param[] = array(
-                            'user_id'		=> $user_id,
-                            'meta_key' 		=> $key,
-                            'meta_value'	=> $value
-                        );
+                    break;
+                case "instagram":
+                    $this->load->library('instagram_lib');
+                    $info         = $this->instagram_lib->get_info($input['access_token']);
+                    $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
+                        'user_id'    => $user_id,
+                        'certification_id' => 4,
+                        'status' => 0,
+                        'investor' => $investor,
+                    ]);
+                    if (empty($get_data)) {
+                        $initialize_id = $this->social_initialize($user_id, $investor);
+                        $content = [
+                            'facebook' => '',
+                            'instagram' => $info,
+                        ];
+                        $rs = $this->user_certification_model->update($initialize_id, ["content" => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                    } else {
+                        $content_data = json_decode($get_data->content);
+                        $content = [
+                            'facebook' => $content_data->facebook,
+                            'instagram' => $info,
+                        ];
+                        $rs = $this->user_certification_model->update($get_data->id, ["content" => json_encode($content)]);
+                        $rs ? $this->response(array('result' => 'SUCCESS'))
+                            : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
                     }
-                    $rs  = $this->user_meta_model->insert_many($param);
-                }
-                if($rs){
-                    $this->response(array('result' => 'SUCCESS'));
-                }else{
-                    $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-                }
+                    break;
+                case "line":
+                    $data = array(
+                        "line_access_token" => $input["access_token"],
+                        "line_displayName"  => base64_decode($input["displayName"]),
+                        "line_pictureUrl"   => $input["pictureUrl"],
+                    );
+                    $exist         = $this->user_meta_model->get_by(array('user_id' => $user_id, 'meta_key' => 'line_access_token'));
+                    if ($exist) {
+                        foreach ($data as $key => $value) {
+                            $param = array(
+                                'user_id'        => $user_id,
+                                'meta_key'         => $key,
+                            );
+                            $rs  = $this->user_meta_model->update_by($param, array('meta_value'    => $value));
+                        }
+                    } else {
+                        foreach ($data as $key => $value) {
+                            $param[] = array(
+                                'user_id'        => $user_id,
+                                'meta_key'         => $key,
+                                'meta_value'    => $value
+                            );
+                        }
+                        $rs  = $this->user_meta_model->insert_many($param);
+                    }
+                    $rs ? $this->response(array('result' => 'SUCCESS'))
+                        : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                    break;
             }
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
@@ -1458,7 +1485,6 @@ class Certification extends REST_Controller {
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-			 
 			//是否驗證過
 			$this->was_verify($certification_id);
 			
@@ -1661,9 +1687,9 @@ class Certification extends REST_Controller {
 
             isset($input['incomeDate'])?$content['incomeDate']=($input['incomeDate']>=1&&$input['incomeDate']<=31?$input['incomeDate']:5):"";
 
-            isset($input['business_image'])?$file_fields[]='business_image':'';
-            isset($input['license_image'])?$file_fields[]='license_image':'';
-            isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
+            isset($input['business_image']) && is_numeric($input['business_image'])?$file_fields[]='business_image':'';
+            isset($input['license_image']) && is_numeric($input['license_image'])?$file_fields[]='license_image':'';
+            isset($input['auxiliary_image']) && is_numeric($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
 
             $send_mail = false;
             if(isset($input['labor_type'])){
@@ -2167,5 +2193,23 @@ class Certification extends REST_Controller {
         if(!$user_certification||$user_certification->status!=1){
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
         }
-    }
+	}
+	private function social_initialize($user_id,$investor){
+        $content = [
+			'facebook' => '',
+			'instagram' => '',
+        ];
+        $param	= [
+			'user_id'			=> $user_id,
+			'certification_id'	=> 4,
+			'investor'			=> $investor,
+			'content'			=> json_encode($content),
+        ];
+        $insert_id = $this->user_certification_model->insert($param);
+        if($insert_id){
+			return $insert_id;
+        }else{
+			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR));
+        }
+	}
 }

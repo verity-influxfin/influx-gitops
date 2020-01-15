@@ -96,6 +96,19 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
 					$page_data['name_list']    = $this->admin_model->get_name_list();
+
+					$where = array(
+						'user_id'	=> $info->company_user_id,
+						'status'	=> 1,
+						'verify'	=> 1,
+						'investor'	=> 1
+					);
+					$this->load->model('user/user_bankaccount_model');
+					$user_bankaccount 	= $this->user_bankaccount_model->get_by($where);
+					if($user_bankaccount){
+						$page_data['bankaccount_id'] = $user_bankaccount->id;
+					}
+
 					$media_data =urldecode($info->sign_video);
 					$media_data =strrchr($media_data,']}');
 					if (!empty($media_data) && $media_data != false && $media_data != ']}') {

@@ -105,7 +105,7 @@
 		}
 
         function getCenterTextCell(value) {
-            console.log('<td class="center-text">' + value + '</td>');
+            //console.log('<td class="center-text">' + value + '</td>');
             return '<td class="center-text">' + value + '</td>';
         }
     });
@@ -120,7 +120,7 @@
 			background-position: 468px 0
 		}
 	}
-	
+
 	.fake-fields p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;

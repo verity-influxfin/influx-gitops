@@ -27,16 +27,30 @@ class User_output
         return $this->map($this->user, $withSensitiveInfo);
     }
 
-    public function toMany()
+    public function toMany($method = "map")
     {
         if (!$this->users || !is_array($this->users)) {
             return [];
         }
 
+        $users = [];
         foreach ($this->users as $user) {
-            $users[] = $this->map($user);
+            if (method_exists($this, $method)) {
+                $users[] = $this->$method($user);
+            }
         }
         return $users;
+    }
+
+    public function mapForSales($user)
+    {
+        $output = [
+            'id' => intval($user->id),
+            'created_at' => intval($user->created_at),
+            'promote_code' => strval($user->promote_code),
+        ];
+
+        return $output;
     }
 
     public function map($user, $withSensitiveInfo = false)
@@ -90,7 +104,7 @@ class User_output
 			$output["instagram"] = $ci->instagram_output->toOne();
 		}
 
-        if (isset($user->facebook)) {
+        if (isset($user->facebook->fb_id)) {
 			$ci =& get_instance();
 			$ci->load->library('output/user/facebook_output', ["data" => $user->facebook]);
 			$output["facebook"] = $ci->facebook_output->toOne();

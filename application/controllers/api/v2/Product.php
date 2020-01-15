@@ -233,7 +233,7 @@ class Product extends REST_Controller {
 
                 if($login){
                     if($this->user_info->investor == 0 && $this->user_info->designate==$value['dealer']){
-                        $designate = [123,456];
+                        $designate = [];
                         $designate?$parm['designate']=$designate:'';
                     }
                 }
@@ -1522,6 +1522,7 @@ class Product extends REST_Controller {
                 if(!in_array($input['instalment'],$product['instalment'])){
                     $this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
                 }
+        }
 
                  //檢驗消費貸重複申請
                 $exist = $this->target_model->get_by([
@@ -1535,7 +1536,7 @@ class Product extends REST_Controller {
 
                 //交易方式
                 $address    = '';
-                if($delivery == 1){
+                if($content['delivery'] == 1){
                     if (!isset($input['address'])) {
                         $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                     }else{
@@ -1550,15 +1551,15 @@ class Product extends REST_Controller {
             $cooperation_id  = $cooperation -> cooperation_id;
             $company_user_id = $cooperation -> company_user_id;
 
-            //對經銷商系統建立訂單
-            $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
+        //對經銷商系統建立訂單
+        $user_name    = mb_substr($name,0,1,"utf-8").(substr($id_number,1,1)==1?'先生':(substr($id_number,1,1)==2?'小姐':'先生/小姐'));
 
-            $result = $this->coop_lib->coop_request('order/screate',[
-                'cooperation_id' => $cooperation_id,
-                'item_id'        => $item_id,
-                'item_count'     => $item_count,
-                'instalment'     => $instalment,
-                'interest_rate'  => $interest_rate,
+        $result = $this->coop_lib->coop_request('order/screate',[
+            'cooperation_id' => $cooperation_id,
+            'item_id'        => $item_id,
+            'item_count'     => $item_count,
+            'instalment'     => $instalment,
+            'interest_rate'  => $interest_rate,
                 'delivery'       => $delivery,
                 'name'           => $user_name,
                 'nickname'       => $nickname,
@@ -1568,7 +1569,7 @@ class Product extends REST_Controller {
             if(isset($result->result) && $result->result == 'SUCCESS'){
                 $item_name = $result->data->product_name.
                     ($result->data->product_spec!='-'
-                        ?$result->data->product_spec
+                    ?$result->data->product_spec
                         :''
                     );
                 $merchant_order_no = $result->data->merchant_order_no;
@@ -1585,28 +1586,28 @@ class Product extends REST_Controller {
                 }
 
                 $designate?$amount=$designate->amount:'';
-                $order_parm = [
-                    'company_user_id'   => $company_user_id,
-                    'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
-                    'merchant_order_no' => $merchant_order_no,
-                    'phone'             => $phone,
-                    'product_id'	    => $product_id,
-                    'instalment'	    => $instalment,
-                    'item_price'        => $product_price,
-                    'item_name'         => $item_name,
-                    'item_count'        => $item_count,
-                    'amount'            => $amount,
-                    'platform_fee'	    => $platform_fee,
-                    'transfer_fee'      => $transfer_fee,
-                    'total'             => $total,
-                    'delivery'          => $delivery,
-                    'nickname'          => $nickname,
-                    'status'            => 0
-                ];
-                $this->load->model('transaction/order_model');
-                $order_insert = $this->order_model->insert($order_parm);
-                if($order_insert){
-                    if($designate){
+            $order_parm = [
+                'company_user_id'   => $company_user_id,
+                'order_no'          => $store_id.'-'.date('YmdHis').rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9),
+                'merchant_order_no' => $merchant_order_no,
+                'phone'             => $phone,
+                'product_id'	    => $product_id,
+                'instalment'	    => $instalment,
+                'item_price'        => $product_price,
+                'item_name'         => $item_name,
+                'item_count'        => $item_count,
+                'amount'            => $amount,
+                'platform_fee'	    => $platform_fee,
+                'transfer_fee'      => $transfer_fee,
+                'total'             => $total,
+                'delivery'          => $delivery,
+                'nickname'          => $nickname,
+                'status'            => 0
+            ];
+            $this->load->model('transaction/order_model');
+            $order_insert = $this->order_model->insert($order_parm);
+            if($order_insert){
+                if($designate){
                         return true;
                     }
 
@@ -1628,12 +1629,10 @@ class Product extends REST_Controller {
                     $this->load->library('Certification_lib');
                     $this->certification_lib->expire_certification($user_id);
                     $this->response(['result' => 'SUCCESS','data'=>['target_id'=> $insert ]]);
-                }
-                $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
             }
-            $this->response(['result' => 'ERROR','error' => $result->error ]);
+            $this->target_lib->cancel_order($order_insert,$merchant_order_no,$user_id,$phone);
         }
-        $this->response(['result' => 'ERROR','error' => PRODUCT_NOT_EXIST]);
+        $this->response(['result' => 'ERROR','error' => $result->error ]);
     }
 
     public function orderSigning_post()

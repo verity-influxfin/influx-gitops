@@ -234,9 +234,9 @@ class Credit_lib{
 			}
 		}
 
-		if ($approvalExtra && $approvalExtra->extraPoints) {
-			$total += $approvalExtra->extraPoints;
-		}
+        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+            $total += $approvalExtra->getExtraPoints();
+        }
 
 		$total = $user_info->sex=='M'?round($total*0.9):$total;
 		$param['points'] 	= intval($total);
@@ -265,8 +265,8 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra);
 	}
 
     private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
@@ -331,7 +331,7 @@ class Credit_lib{
         $rs 		= $this->CI->credit_model->insert($param);
         return $rs;
     }
-	
+
 	public function get_school_point($school_name='',$school_system=0,$school_major=''){
 		$point = 0;
 		if(!empty($school_name)){

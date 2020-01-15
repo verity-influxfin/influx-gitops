@@ -146,6 +146,7 @@ class Charge_lib
 						'status'	=> [1,2]
 					]);
 					if($transaction){
+                        $this->CI->load->library('Notification_lib');
 						$last_settlement_date 	= $target->loan_date;
 						$user_to_info 			= [];
 						$transaction_param 		= [];
@@ -209,6 +210,7 @@ class Charge_lib
 							$days  		= get_range_days($last_settlement_date,$settlement_date);
 							$leap_year 	= $this->CI->financial_lib->leap_year($target->loan_date,$target->instalment);
 							$year_days 	= $leap_year?366:365;//今年日數
+                            $msg = [];
 							if($days){
 								foreach($user_to_info as $investment_id => $value){
 									$user_to_info[$investment_id]['interest_payable'] = $this->CI->financial_lib->get_interest_by_days($days,$value['remaining_principal'],$target->instalment,$target->interest_rate,$target->loan_date);
@@ -285,6 +287,7 @@ class Charge_lib
 										'status'			=> 2
 									];
 								}
+								$msg[$user_to_info[$investment_id]['user_to']] = $value['total_amount']+$prepayment_allowance;
 							}
 
 							if(intval($liquidated_damages)>0){
@@ -303,17 +306,21 @@ class Charge_lib
 									'status'			=> 2
 								];
 							}
-							
+
 							if($transaction_param){
 								$rs  = $this->CI->transaction_model->insert_many($transaction_param);
 								if($rs){
 									foreach($rs as $key => $value){
 										$this->CI->passbook_lib->enter_account($value);
 									}
+                                    foreach ($msg as $item_arr =>$item) {
+                                        $this->CI->notification_lib->prepay_success($msg[$item_arr],1,$target->target_no,$item);
+                                    }
 								}
 							}
 						}
 					}
+                    $this->CI->notification_lib->prepay_success($target->user_id,0,$target->target_no,$total_remaining_principal);
 				}else{
 					$this->notice_normal_target($target);
 				}

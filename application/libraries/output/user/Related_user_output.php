@@ -25,11 +25,6 @@ class Related_user_output
 				$output[] = $this->map("same_device_id", $user, $withSensitiveInfo);
 			}
 		}
-		if (isset($this->records->same_ip)) {
-			foreach ($this->records->same_ip as $user) {
-				$output[] = $this->map("same_ip", $user, $withSensitiveInfo);
-			}
-		}
 		if (isset($this->records->same_contact)) {
 			foreach ($this->records->same_contact as $user) {
 				$output[] = $this->map("same_contact", $user, $withSensitiveInfo);
@@ -57,13 +52,17 @@ class Related_user_output
 		}
 		if (isset($this->records->same_address)) {
 			foreach ($this->records->same_address as $user) {
-				$output[] = $this->map("same_phone_number", $user, $withSensitiveInfo);
+				$output[] = $this->map("same_address", $user, $withSensitiveInfo);
 			}
 		}
-		if (isset($this->records->introducer)) {
-			$output[] = $this->map("same_phone_number", $this->records->introducer, $withSensitiveInfo);
+		if (isset($this->records->introducer) && $this->records->introducer) {
+			$output[] = $this->map("introducer", $this->records->introducer, $withSensitiveInfo);
 		}
-
+		if (isset($this->records->same_ip)) {
+			foreach ($this->records->same_ip as $user) {
+				$output[] = $this->map("same_ip", $user, $withSensitiveInfo);
+			}
+		}
 		return $output;
 	}
 
@@ -71,10 +70,27 @@ class Related_user_output
 	{
 		$output = [
 			"reason" => $reason,
+			"related_value" => '',
 			"investor_status" => $user->investor_status,
 			"borrower_status" => $user->status,
 			"id" => $user->id,
 		];
+
+		if ($reason == "same_phone_number") {
+			$output["related_value"] = $user->phone;
+		}
+
+		if ($reason == "same_ip") {
+			$output["related_value"] = $user->login_ip;
+		}
+
+		if ($reason == "same_id_number") {
+			$output["related_value"] = $user->id_number;
+		}
+
+		if ($reason == "introducer") {
+			$output["related_value"] = $user->promote_code;
+		}
 
 		return $output;
 	}

@@ -302,17 +302,21 @@ class User extends MY_Admin_Controller {
 			return $this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
 		}
 
-		$loginUserLogs = $this->log_userlogin_model->get_many_by(['user_id' => $userId]);
-		$deviceIds = [];
-		foreach ($loginUserLogs as $login) {
-			$content = json_decode($login->client);
-			if (isset($content->device_id)) {
-				$deviceIds[] = $content->device_id;
-			}
-		}
-		$usersWithSameDeviceId = $this->log_userlogin_model->get_same_device_id_users($userId, $deviceIds);
+		$this->load->model('mongolog/user_login_log_model');
 
-		$usersWithSameIp = $this->log_userlogin_model->get_same_ip_users($userId);
+		$usersWithSameDeviceId = [];
+		$userIds = $this->user_login_log_model->findUserIdsHavingSameDeviceIdsWith($userId);
+		if ($userIds && $userIds[0]->users) {
+			$usersWithSameDeviceId = $this->user_model->get_many_by(["id" => $userIds[0]->users]);
+		}
+
+		$usersWithSameIp = [];
+		$timeBefore = 1564102800;
+		$userWithIps = $this->user_login_log_model->findUserLoginIps($userId, $timeBefore);
+		if ($userWithIps) {
+			$user = $this->user_login_log_model->findUserIdsByIps($userWithIps->created_ips, $timeBefore);
+			$userIdsWithSameIp = $this->user_model->get_many_by(["id" => $user->users]);
+		}
 
 		$usersWithSameEmergencyContact = $this->user_meta_model->get_users_with_same_emergency_contact($userId);
 
@@ -330,12 +334,13 @@ class User extends MY_Admin_Controller {
 		$emails = [];
 		foreach ($certificationRequests as $certificationRequest) {
 			$content = json_decode($certificationRequest->content);
-			if ($certificationRequest->id == 1) {
+			$certificationId = $certificationRequest->certification_id;
+			if ($certificationId == 1) {
 				$idCardNumbers[] = $content->id_number;
 				$addresses[] = $content->address;
-			} elseif ($certificationRequest->id == 3) {
+			} elseif ($certificationId == 3) {
 				$bankAccounts[] = $content->bank_account;
-			} elseif ($certificationRequest->id == 6) {
+			} elseif ($certificationId == 6) {
 				$emails[] = $content->email;
 			}
 		}
@@ -352,13 +357,19 @@ class User extends MY_Admin_Controller {
 		}
 		$usersWithSamePhoneNumber = [];
 		if ($potentialPhoneNumbers) {
-			$usersWithSamePhoneNumber = $this->user_model->get_many_by(['phone' => $potentialPhoneNumbers]);
+			$usersWithSamePhoneNumber = $this->user_model->get_many_by([
+				'phone' => $potentialPhoneNumbers,
+				'id !=' => $userId
+			]);
 		}
 
 		$usersWithSameAddress = $this->user_certification_model->get_users_with_same_value($userId, 'address', $addresses);
 
 		$currentUser = $this->user_model->get($userId);
-		$introducer =$this->user_model->get_by(['promote_code' => $currentUser->promote_code]);
+		$introducer = [];
+		if ($currentUser->promote_code) {
+			$introducer =$this->user_model->get_by(['promote_code' => $currentUser->promote_code]);
+		}
 
 		$data = new stdClass();
 		$data->same_device_id = $usersWithSameDeviceId;
@@ -378,6 +389,33 @@ class User extends MY_Admin_Controller {
 			$this->json_output->setStatusCode(204)->send();
 		}
 		$this->json_output->setStatusCode(200)->setResponse(["related_users" => $relatedUsers])->send();
+	}
+
+	public function migrateData()
+	{
+	    $host = getenv('ENV_MONGO_HOST');
+	    $port = getenv('ENV_MONGO_PORT');
+	    $username = getenv('ENV_MONGO_USERNAME');
+	    $password = getenv('ENV_MONGO_PASSWORD');
+	    $db = new MongoDB\Driver\Manager("mongodb://{$username}:{$password}@{$host}:{$port}");
+	    $i = 0;
+	    while ($loginLogs = $this->log_userlogin_model->limit(1000, $i*1000)->get_many_by([])) {
+	        $bulk = new MongoDB\Driver\BulkWrite();
+	        foreach ($loginLogs as $loginLog) {
+	                $log = json_decode(json_encode($loginLog), true);
+	                $log["client"] = json_decode($log["client"]);
+	                $log["id"] = intval($log["id"]);
+	                $log["investor"] = intval($log["investor"]);
+	                $log["user_id"] = intval($log["user_id"]);
+	                $log["status"] = intval($log["status"]);
+	                $log["created_at"] = intval($log["created_at"]);
+	                $bulk->insert($log);
+
+	        }
+	        $writeConcern = new MongoDB\Driver\WriteConcern(0, 300);
+	        $db->executeBulkWrite('influx_logs.user-login-logs', $bulk, $writeConcern);
+	        $i++;
+	    }
 	}
 }
 ?>
