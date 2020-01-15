@@ -1,143 +1,154 @@
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-    function check_fail(){
+    function check_fail() {
         var status = $('#status :selected').val();
-        if(status==1){
+        if (status == 1) {
             $('#fail_div').show();
-        }else{
+        } else {
             $('#fail_div').hide();
         }
     }
+    $( window ).on( "load", function() {
+        $(document).on("click",".contract",function() {
+            $(window.open().document.body).html('<div style="margin: 0px;padding: 15px;height: 978px;line-height: 24px;letter-spacing: 1px;font-size: 12px;border: 0;width: 650px;white-space: pre-wrap;">'+$(this).data('value')+'</div>');
+        });
+    });
 </script>
-	
-	<div id="page-wrapper">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">標的資訊</h1>
-			</div>
-			<!-- /.col-lg-12 -->
-		</div>
-		<!-- /.row -->
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-					標的資訊
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-lg-6">
-								<div class="table-responsive">
-									<table class="table table-bordered table-hover table-striped">
-										<tbody>
-											<tr>
-												<td style="width: 20%;"><p class="form-control-static">案件 ID</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->id)?$data->id:"";?></p>
-												</td>
-												<td><p class="form-control-static">案號</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->target_no)?$data->target_no:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">產品</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->product_id)?$product_list[$data->product_id]['name']:"";?></p>
-												</td>
-												<td><p class="form-control-static">申請金額</p></td>
-												<td>
-													<p class="form-control-static">$<?=isset($data->amount)?$data->amount:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">核准金額</p></td>
-												<td>
-													<p class="form-control-static">$<?=isset($data->loan_amount)?$data->loan_amount:"";?></p>
-												</td>
-												<td><p class="form-control-static">核可利率</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->interest_rate)?floatval($data->interest_rate):"";?>%</p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">期數</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->instalment)?$instalment_list[$data->instalment]:"";?></p>
-												</td>
-												<td><p class="form-control-static">還款方式</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->repayment)?$repayment_type[$data->repayment]:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">還款虛擬帳號</p></td>
-												<td>
-													<p class="form-control-static">
 
-													<a class="fancyframe" href="<?=admin_url('Passbook/display?virtual_account='.$virtual_account->virtual_account) ?>" ><?=$virtual_account->virtual_account ?></a>
-													</p>
-												</td>
-												<td><p class="form-control-static">備註</p></td>
-												<td>
-													<p class="form-control-static"><? echo $data->remark!=''?nl2br($data->remark):"無";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">狀態</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->status)?$status_list[$data->status]:"";?></p>
-												</td>
-												<td><p class="form-control-static">放款狀態</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->loan_status)?$loan_list[$data->loan_status]:"";?> - <?=$bank_account_verify?"金融帳號已驗證":"金融帳號未驗證";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">平台服務費</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->platform_fee)?$data->platform_fee:"";?></p>
-												</td>
-												<td><p class="form-control-static">放款日期</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->loan_date)?$data->loan_date:"";?></p>
-												</td>
-											</tr>
-											<tr>
-												<td><p class="form-control-static">逾期狀態 - 天數</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->delay)?$data->delay.' - '.$data->delay_days:"";?></p>
-												</td>
-												<td><p class="form-control-static">申請日期</p></td>
-												<td>
-													<p class="form-control-static"><?=isset($data->created_at)&&!empty($data->created_at)?date("Y-m-d H:i:s",$data->created_at):"";?></p>
-												</td>
-											</tr>
-                                            <? if(isset($order->transfer_fee)){ ?>
-                                            <tr>
-                                                <td><p class="form-control-static">債轉服務費</p></td>
-                                                <td colspan="3">
-                                                    <p class="form-control-static"><?=isset($order->transfer_fee)?$order->transfer_fee:"";?></p>
-                                                </td>
-                                            </tr>
-                                            <? } ?>
-                                            <tr>
-                                                <td><p class="form-control-static">借款原因</p></td>
-                                                <td colspan="3">
-                                                    <p class="form-control-static"><? echo $data->reason!=''?$data->reason:"未填寫";?></p>
-                                                </td>
-                                            </tr>
-                                            <? if($data->order_id == 0 ){ ?>
-											<tr>
-												<td><p class="form-control-static">簽約照片</p></td>
-												<td colspan="3">
-													<?=!empty($data->person_image)?"<a href='".$data->person_image."' data-fancybox='images'><img src='".$data->person_image."' style='width:30%;'></a>":"";?>
-												</td>
-											</tr>
-                                            <? } ?>
-										</tbody>
-									</table>
-								</div>
-                            <? if($data->order_id!=0){?>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">標的資訊</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    標的資訊
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 20%;"><p class="form-control-static">案件 ID</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->id) ? $data->id : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">案號</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->target_no) ? $data->target_no : ""; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">產品</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->product_id) ? $product_list[$data->product_id]['name'] : ""; ?><?= $data->sub_product_id != 0 ? ' / ' . $sub_product_list[$data->sub_product_id]['identity'][$product_list[$data->product_id]['identity']]['name'] : '' ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">申請金額</p></td>
+                                        <td>
+                                            <p class="form-control-static">
+                                                $<?= isset($data->amount) ? $data->amount : ""; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">核准金額</p></td>
+                                        <td>
+                                            <p class="form-control-static">
+                                                $<?= isset($data->loan_amount) ? $data->loan_amount : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">核可利率</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->interest_rate) ? floatval($data->interest_rate) : ""; ?>
+                                                %</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">期數</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->instalment) ? $instalment_list[$data->instalment] : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">還款方式</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->repayment) ? $repayment_type[$data->repayment] : ""; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">還款虛擬帳號</p></td>
+                                        <td>
+                                            <p class="form-control-static">
+
+                                                <a class="fancyframe"
+                                                   href="<?= admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account) ?>"><?= $virtual_account->virtual_account ?></a>
+                                            </p>
+                                        </td>
+                                        <td><p class="form-control-static">備註</p></td>
+                                        <td>
+                                            <p class="form-control-static"><? echo $data->remark != '' ? nl2br($data->remark) : "無"; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">狀態</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->status) ? $status_list[$data->status] : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">放款狀態</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->loan_status) ? $loan_list[$data->loan_status] : ""; ?>
+                                                - <?= $bank_account_verify ? "金融帳號已驗證" : "金融帳號未驗證"; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">平台服務費</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->platform_fee) ? $data->platform_fee : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">放款日期</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->loan_date) ? $data->loan_date : ""; ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">逾期狀態 - 天數</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->delay) ? $data->delay . ' - ' . $data->delay_days : ""; ?></p>
+                                        </td>
+                                        <td><p class="form-control-static">申請日期</p></td>
+                                        <td>
+                                            <p class="form-control-static"><?= isset($data->created_at) && !empty($data->created_at) ? date("Y-m-d H:i:s", $data->created_at) : ""; ?></p>
+                                        </td>
+                                    </tr>
+                                    <? if (isset($order->transfer_fee)) { ?>
+                                        <tr>
+                                            <td><p class="form-control-static">債轉服務費</p></td>
+                                            <td colspan="3">
+                                                <p class="form-control-static"><?= isset($order->transfer_fee) ? $order->transfer_fee : ""; ?></p>
+                                            </td>
+                                        </tr>
+                                    <? } ?>
+                                    <tr>
+                                        <td><p class="form-control-static">借款原因</p></td>
+                                        <td colspan="3">
+                                            <p class="form-control-static"><? echo $data->reason != '' ? $data->reason : "未填寫"; ?></p>
+                                        </td>
+                                    </tr>
+                                    <? if ($data->order_id == 0) { ?>
+                                        <tr>
+                                            <td><p class="form-control-static">簽約照片</p></td>
+                                            <td colspan="3">
+                                                <?= !empty($data->person_image) ? "<a href='" . $data->person_image . "' data-fancybox='images'><img src='" . $data->person_image . "' style='width:30%;'></a>" : ""; ?>
+                                            </td>
+                                        </tr>
+                                    <? } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <? if ($data->order_id != 0) { ?>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" style="text-align:center;">
                                         <tbody>
