@@ -1313,6 +1313,50 @@ class User extends REST_Controller {
             $this->response(array('result' => 'SUCCESS'));
     }
 
+	/**
+     * @api {post} /v2/user/upload_m 會員 上傳影片
+	 * @apiVersion 0.2.0
+	 * @apiName PostUserUploadM
+     * @apiGroup User
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 *
+     * @apiParam {file="*.mp4","*.mov"} video 影片檔
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} image_id 圖片ID
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"media_id": 191
+     *      }
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 *
+     */
+	public function upload_m_post()
+    {
+		$user_id = $this->user_info->id;
+		$data 	 = [];
+		//上傳檔案欄位
+		if (isset($_FILES['media']) && !empty($_FILES['media'])) {
+			$this->load->library('S3_upload');
+			$media = $this->s3_upload->media_id($_FILES,'media',$user_id,'user_upload/'.$user_id);
+			if($media){
+				$data['media_id'] = $media;
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+		}
+
+		$this->response(['result' => 'SUCCESS','data' => $data]);
+    }
 
 	/**
      * @api {post} /v2/user/upload 會員 上傳圖片
