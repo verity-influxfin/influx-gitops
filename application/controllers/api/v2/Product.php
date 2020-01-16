@@ -786,6 +786,13 @@ class Product extends REST_Controller {
                     $subloan_target_status     = $new_target->status;
                     $subloan_target_sub_status = $new_target->sub_status;
                 }
+
+                $reason = $value->reason;
+                $json_reason = json_decode($reason);
+                if(!is_null($json_reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
                 $list[] = [
                     'id' 				         => intval($value->id),
                     'target_no' 		         => $value->target_no,
@@ -798,7 +805,7 @@ class Product extends REST_Controller {
                     'interest_rate' 	         => floatval($value->interest_rate),
                     'instalment' 		         => intval($value->instalment),
                     'repayment' 		         => intval($value->repayment),
-                    'reason' 			         => $value->reason,
+                    'reason' 			         => $reason,
                     'remark' 			         => $value->remark,
                     'delay' 			         => intval($value->delay),
                     'status' 			         => intval($value->status),
@@ -1145,6 +1152,12 @@ class Product extends REST_Controller {
                     $order_info['status'] 		     = intval($orders->status);
                     $order_info['created_at'] 		 = intval($orders->created_at);
                 }
+            }
+
+            $reason = $target->reason;
+            $json_reason = json_decode($reason);
+            if(!is_null($json_reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
             }
 
             $data = [

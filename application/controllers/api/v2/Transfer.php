@@ -226,6 +226,12 @@ class Transfer extends REST_Controller {
                     }
                 }
 
+                $reason = $target->reason;
+                $json_reason = json_decode($reason);
+                if(!is_null($json_reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
                 $target_info = [
                     'id' 				=> intval($target->id),
                     'target_no' 		=> $target->target_no,
@@ -238,7 +244,7 @@ class Transfer extends REST_Controller {
                     'repayment' 		=> intval($target->repayment),
                     'delay' 			=> intval($target->delay),
                     'delay_days' 		=> intval($target->delay_days),
-                    'reason' 			=> $target->reason,
+                    'reason' 			=> $reason,
                     'remark' 			=> $target->remark,
                     'status' 			=> intval($target->status),
                     'sub_status' 		=> intval($target->sub_status),
@@ -468,6 +474,12 @@ class Transfer extends REST_Controller {
 				];
 			}
 
+            $reason = $target->reason;
+            $json_reason = json_decode($reason);
+            if(!is_null($json_reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            }
+
 			$contract_data 	= $this->contract_lib->get_contract($transfer->contract_id);
 			$contract 		= isset($contract_data['content'])?$contract_data['content']:'';
 			$target_info = [
@@ -482,7 +494,7 @@ class Transfer extends REST_Controller {
 				'repayment' 		=> intval($target->repayment),
 				'delay' 			=> intval($target->delay),
 				'delay_days' 		=> intval($target->delay_days),
-				'reason' 			=> $target->reason,
+				'reason' 			=> $reason,
 				'remark' 			=> $target->remark,
 				'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
@@ -1095,6 +1107,13 @@ class Transfer extends REST_Controller {
                         'age'	=> get_age($user_info->birthday),
                     );
                 }
+
+                $reason = $target_info->reason;
+                $json_reason = json_decode($reason);
+                if(!is_null($json_reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
                 $target = array(
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
@@ -1103,7 +1122,7 @@ class Transfer extends REST_Controller {
 					'loan_amount'	=> intval($target_info->loan_amount),
 					'credit_level' 	=> intval($target_info->credit_level),
 					'interest_rate' => floatval($target_info->interest_rate),
-					'reason' 		=> $target_info->reason,
+					'reason' 		=> $reason,
 					'remark' 		=> $target_info->remark,
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),

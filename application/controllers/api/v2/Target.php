@@ -182,7 +182,13 @@ class Target extends REST_Controller {
                         );
                     }
 				}
-				
+
+                $reason = $value->reason;
+                $json_reason = json_decode($reason);
+                if(!is_null($json_reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
 				$list[] = array(
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
@@ -196,7 +202,7 @@ class Target extends REST_Controller {
 					'repayment' 		=> intval($value->repayment),
 					'expire_time' 		=> intval($value->expire_time),
 					'invested' 			=> intval($value->invested),
-					'reason' 			=> $value->reason,
+					'reason' 			=> $reason,
 					'targetDatas' => $targetDatas,
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
@@ -426,12 +432,10 @@ class Target extends REST_Controller {
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data['content']:'';
 
-			$reason = $target->reason;
-            $reason_description = '';
+            $reason = $target->reason;
             $json_reason = json_decode($reason);
             if(!is_null($json_reason)){
-                $reason = $json_reason->reason;
-                $reason_description = $json_reason->reason_description;
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
             }
 
 			$data = array(
@@ -1130,6 +1134,13 @@ class Target extends REST_Controller {
                     'age'			=> $age,
                     'company_name'	=> $user_meta?$user_meta->meta_value:'',
                 );
+
+                $reason = $target_info->reason;
+                $json_reason = json_decode($reason);
+                if(!is_null($json_reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
                 $target = [
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
@@ -1141,7 +1152,7 @@ class Target extends REST_Controller {
 					'interest_rate' => floatval($target_info->interest_rate),
 					'instalment' 	=> intval($target_info->instalment),
 					'repayment' 	=> intval($target_info->repayment),
-                    'reason' 		=> $target_info->reason,
+                    'reason' 		=> $reason,
 					'expire_time'	=> intval($target_info->expire_time),
 					'invested'		=> intval($target_info->invested),
 					'status'		=> intval($target_info->status),
