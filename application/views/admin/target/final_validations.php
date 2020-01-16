@@ -517,13 +517,13 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="table-field center-text"><p>核准時間</p></td>
-                                    <td class="center-text table-reevaluation">
-                                    <p id="new-credit-expired-at"></p>
-                                    </td>
                                     <td class="table-field center-text"><p>有效時間</p></td>
                                     <td class="center-text table-reevaluation">
                                         <p id="new-credit-created-at"></p>
+                                    </td>
+                                    <td class="table-field center-text"><p>核准時間</p></td>
+                                    <td class="center-text table-reevaluation">
+                                    <p id="new-credit-expired-at"></p>
                                     </td>
                                 </tr>
 							</table>
@@ -919,11 +919,13 @@
             var type = company==1?'.company ':'.natual ';
             if (virtualAccounts.borrower) {
                 var total = virtualAccounts.borrower.funds.total - virtualAccounts.borrower.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $(type+"#borrower-virtual-account-total").text(total + "元");
 			}
 
             if (virtualAccounts.investor) {
                 var total = virtualAccounts.investor.funds.total - virtualAccounts.investor.funds.frozen;
+                total = convertNumberSplitedByThousands(total);
                 $(type+"#investor-virtual-account-total").text(total + "元");
 			}
 		}
