@@ -8,6 +8,8 @@ class Image_recognition_lib
     function __construct()
     {
         $this->CI = &get_instance();
+        $this->CI->load->library('S3_upload');
+        $this->CI->load->library('S3_lib');
     }
 
     public function readStudentCard($image)
@@ -16,11 +18,15 @@ class Image_recognition_lib
             return;
         }
 
+        $newImageUrl = $this->CI->s3_upload->public_image_by_data(file_get_contents($image), FRONT_S3_BUCKET);
+
         $url = self::ML_URL . "student-cards";
-        $data = ["card_url" => $image];
+        $data = ["card_url" => $newImageUrl];
 
         $result = curl_get($url, $data);
         $response = json_decode($result);
+
+        $this->CI->s3_lib->public_delete_image($newImageUrl, FRONT_S3_BUCKET);
 
         if (!$result || !isset($response->status) || $response->status != 200) {
             return;
