@@ -194,7 +194,7 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
-					if (!investor_virtual_account($value->virtual_account, $bank_type)) {
+					if (!investor_virtual_account($value->virtual_account)) {
 						$this->CI->transaction_lib->recharge($value->id);
 						return true;
 					}
