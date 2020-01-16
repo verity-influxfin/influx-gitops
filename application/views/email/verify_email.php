@@ -99,7 +99,7 @@
 							<td data-bgcolor="bg-module" bgcolor="#eaeced">
 								<table class="flexible" width="600" align="center" style="margin:0 auto;margin-top:32px;" cellpadding="0" cellspacing="0">
 									<tr>
-										<td class="img-flex"><img src="<?=FRONT_CDN_URL ?>public/banner.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
+										<td class="img-flex"><img src="<?=FRONT_CDN_URL ?>mail_assets/{mail_event}/{type}.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
 									</tr>
 									<tr>
 										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bgcolor="#f9f9f9">
