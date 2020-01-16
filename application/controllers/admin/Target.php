@@ -265,11 +265,18 @@ class Target extends MY_Admin_Controller {
                         'status' => 1,
                     ));
 
+                    $reason = $info->reason;
+                    $json_reason = json_decode($reason);
+                    if(!is_null($json_reason)){
+                        $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                    }
+
                     $bank_account_verify = $bank_account ? 1 : 0;
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
                     $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;
+                    $page_data['reason'] = $reason;
                     $page_data['order'] = $order;
                     $page_data['user_info'] = $user_info;
                     $page_data['judicial_person'] = $judicial_person;

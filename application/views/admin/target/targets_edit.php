@@ -134,7 +134,7 @@
                                     <tr>
                                         <td><p class="form-control-static">借款原因</p></td>
                                         <td colspan="3">
-                                            <p class="form-control-static"><? echo $data->reason != '' ? $data->reason : "未填寫"; ?></p>
+                                            <p class="form-control-static"><? echo $reason != '' ? $reason : "未填寫"; ?></p>
                                         </td>
                                     </tr>
                                     <? if ($data->order_id == 0) { ?>

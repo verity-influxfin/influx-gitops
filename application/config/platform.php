@@ -758,6 +758,10 @@ $config['certifications'] = [
     2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
 
+$configp['stage_cer'] = [
+
+];
+
 //支援XML銀行列表
 $config['xml_bank_list'] = [
     '004', '005', '006', '007', '008', '009', '011', '012', '013', '016', '017', '021',
