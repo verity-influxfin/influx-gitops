@@ -166,7 +166,7 @@ class Target extends REST_Controller {
                                     $pic_array = [];
                                     foreach ($targetData->$key as $svalue){
                                         preg_match('/\/image.+/', $svalue,$matches);
-                                        $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
                                     }
                                     $targetDatas[$key] = $pic_array;
                                 }
@@ -405,7 +405,7 @@ class Target extends REST_Controller {
                             $pic_array = [];
                             foreach ($targetData->$key as $svalue){
                                 preg_match('/\/image.+/', $svalue,$matches);
-                                $pic_array[] = 'https://'.FRONT_S3_BUCKET.'.s3.ap-northeast-1.amazonaws.com/targetdata'.$matches[0];
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
                             }
                             $targetDatas[$key] = $pic_array;
                         }
