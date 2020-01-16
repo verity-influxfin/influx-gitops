@@ -626,16 +626,19 @@ class Target extends MY_Admin_Controller {
 
                 $this->load->library('mapping/user/usermeta', ["data" => $userMeta]);
 
-                $instagramCertificationDetail = $this->user_certification_model->get_by([
-                    'user_id' => $userId,
-                    'certification_id' => 4,
-                    'status' => 1,
-                ]);
-                $instagramCertificationDetailArray = $instagramCertificationDetail?json_decode($instagramCertificationDetail->content, true):false;
-                if (isset($instagramCertificationDetailArray["type"]) && $instagramCertificationDetailArray["type"] == "instagram") {
-                    $picture = $instagramCertificationDetailArray["info"]["picture"];
-                    $this->usermeta->setInstagramPicture($picture);
-                }
+			$instagramCertificationDetail = $this->user_certification_model->get_by([
+				'user_id' => $userId,
+				'certification_id' => 4,
+				'status' => 1,
+			]);
+			$instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+			if ($instagramCertificationDetailArray["type"] == "instagram") {
+				$picture = $instagramCertificationDetailArray["info"]["picture"];
+				$this->usermeta->setInstagramPicture($picture);
+			}else if(isset($instagramCertificationDetailArray['instagram']['picture'])){
+				$picture =$instagramCertificationDetailArray['instagram']['picture'];
+				$this->usermeta->setInstagramPicture($picture);
+			}
 
                 $user->profile = $this->usermeta->values();
                 $user->school = $this->usermeta->values();
