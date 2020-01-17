@@ -53,7 +53,7 @@ class Target_output
 	{
         $reason = $target->reason;
         $json_reason = json_decode($reason);
-        if(!is_null($json_reason)){
+        if(isset($json_reason->reason)){
             $reason = $json_reason->reason.' - '.$json_reason->reason_description;
         }
 		$output = [

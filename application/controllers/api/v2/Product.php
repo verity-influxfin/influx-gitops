@@ -789,7 +789,7 @@ class Product extends REST_Controller {
 
                 $reason = $value->reason;
                 $json_reason = json_decode($reason);
-                if(!is_null($json_reason)){
+                if(isset($json_reason->reason)){
                     $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                 }
 
@@ -1156,7 +1156,7 @@ class Product extends REST_Controller {
 
             $reason = $target->reason;
             $json_reason = json_decode($reason);
-            if(!is_null($json_reason)){
+            if(isset($json_reason->reason)){
                 $reason = $json_reason->reason.' - '.$json_reason->reason_description;
             }
 

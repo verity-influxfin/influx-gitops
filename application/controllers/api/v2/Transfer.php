@@ -228,7 +228,7 @@ class Transfer extends REST_Controller {
 
                 $reason = $target->reason;
                 $json_reason = json_decode($reason);
-                if(!is_null($json_reason)){
+                if(isset($json_reason->reason)){
                     $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                 }
 
@@ -476,7 +476,7 @@ class Transfer extends REST_Controller {
 
             $reason = $target->reason;
             $json_reason = json_decode($reason);
-            if(!is_null($json_reason)){
+            if(isset($json_reason->reason)){
                 $reason = $json_reason->reason.' - '.$json_reason->reason_description;
             }
 
@@ -1110,7 +1110,7 @@ class Transfer extends REST_Controller {
 
                 $reason = $target_info->reason;
                 $json_reason = json_decode($reason);
-                if(!is_null($json_reason)){
+                if(isset($json_reason->reason)){
                     $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                 }
 
