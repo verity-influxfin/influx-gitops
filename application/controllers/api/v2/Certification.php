@@ -610,7 +610,8 @@ class Certification extends REST_Controller {
         $this->load->model('log/log_image_model');
         $imageLog = $this->log_image_model->get($imageId);
 
-        if (!$imageLog || $imageLog->type != "student") {
+        $ownerId = $this->user_info->id;
+        if (!$imageLog || $imageLog->user_id != $ownerId) {
             $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
         }
 
