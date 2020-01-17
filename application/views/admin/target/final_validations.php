@@ -517,11 +517,11 @@
 									</td>
 								</tr>
 								<tr>
-                                    <td class="table-field center-text"><p>有效時間</p></td>
+                                    <td class="table-field center-text"><p>核准時間</p></td>
                                     <td class="center-text table-reevaluation">
                                         <p id="new-credit-created-at"></p>
                                     </td>
-                                    <td class="table-field center-text"><p>核准時間</p></td>
+                                    <td class="table-field center-text"><p>有效時間</p></td>
                                     <td class="center-text table-reevaluation">
                                     <p id="new-credit-expired-at"></p>
                                     </td>
@@ -858,8 +858,8 @@
 			$("#" + prefix + "credit-level").text(credit.level);
 			$("#" + prefix + "credit-amount").text(convertNumberSplitedByThousands(credit.amount));
 			$("#" + prefix + "credit-points").text(credit.points);
-			$("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
-			$("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
+            $("#" + prefix + "credit-created-at").text(credit.getCreatedAtAsDate());
+            $("#" + prefix + "credit-expired-at").text(credit.getExpiredAtAsDate());
         }
 
         function fillFakeVerifications(type, show = true) {
