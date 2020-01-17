@@ -17,7 +17,7 @@ class Payment_lib{
 		if(empty($check_data)){
 			$tx_datetime = date("Y-m-d H:i:s",strtotime($data['SDATE'].' '.$data['TIME']));
 			$virtual_account = "";
-			if (is_virtual_account($data['TRNACTNO']) {
+			if (is_virtual_account($data['TRNACTNO'])) {
 				strlen($data['OUTACTNO']) == 16
 					? $data['OUTACTNO'] = substr($data['OUTACTNO'], 2, 14)
 					: $data['OUTACTNO'] = $data['OUTACTNO'];
