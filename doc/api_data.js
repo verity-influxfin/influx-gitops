@@ -36269,7 +36269,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"media_id\": 191\n  }\n}",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"media_id\": 191\n  }\n}",
                         "type": "Object"
                     }
                 ]
