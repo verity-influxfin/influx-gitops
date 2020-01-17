@@ -12,7 +12,7 @@ class Prepayment_lib{
 		$this->CI->load->library('Transaction_lib');
     }
  
-	public function get_prepayment_info($target=[]){
+	public function get_prepayment_info($target=[],$set=true){
 		if($target->status == 5 && $target->delay_days==0){
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
@@ -78,22 +78,28 @@ class Prepayment_lib{
                     if($product['visul_id'] == 'DS2P1'){
                         $input = $this->CI->input->get(NULL, TRUE);
                         $this->CI->load->model('log/log_image_model');
-
+                        $targetData = json_decode($target->target_data);
                         $certified_documents = false;
-                        if(!empty($input['certified_documents'])){
-                            $targetData = [];
-                            $imgage = $this->CI->log_image_model->get_by([
-                                'id'		=> $input['certified_documents'],
-                                'user_id'	=> $target->user_id,
-                            ]);
-                            if($imgage){
-                                $targetData = json_decode($target->target_data);
-                                $targetData->certified_documents = $imgage->url;
-                                $this->CI->target_model->update($target->id,[
-                                    'target_data' => json_encode($targetData)
+                        if($set){
+                            if(!empty($input['certified_documents'])){
+                                $imgage = $this->CI->log_image_model->get_by([
+                                    'id'		=> $input['certified_documents'],
+                                    'user_id'	=> $target->user_id,
                                 ]);
-                                $certified_documents = true;
+                                if($imgage){
+                                    $targetData->certified_documents = $imgage->url;
+                                    $certified_documents = true;
+                                }
                             }
+                            else{
+                                $targetData->certified_documents = '';
+                            }
+                            $this->CI->target_model->update($target->id,[
+                                'target_data' => json_encode($targetData)
+                            ]);
+                        }
+                        else{
+                            !empty($targetData->certified_documents)?$certified_documents = true:'';
                         }
 
                         $amortization_schedule = $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target,$last_settlement_date,[
@@ -129,7 +135,7 @@ class Prepayment_lib{
 	
 	public function apply_prepayment($target){
 		if($target && $target->status==5 && $target->delay_days==0){
-			$info  = $this->get_prepayment_info($target);
+			$info  = $this->get_prepayment_info($target,false);
             $product_list = $this->CI->config->item('product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
