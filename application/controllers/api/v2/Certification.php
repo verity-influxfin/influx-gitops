@@ -622,7 +622,7 @@ class Certification extends REST_Controller {
             $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
         }
 
-        $this->response(['result' => 'ERROR']);
+        $this->response(['result' => 'SUCCESS', 'data' => ['university' => '']]);
     }
 
 	/**
