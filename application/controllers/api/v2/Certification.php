@@ -620,7 +620,7 @@ class Certification extends REST_Controller {
 
         $this->load->model('mongolog/ml_log_model');
         $log = ["imageId" => $imageId, "university" => $university];
-        $this->ml_log_model->save($ocr);
+        $this->ml_log_model->save($log);
 
         if ($university) {
             $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
