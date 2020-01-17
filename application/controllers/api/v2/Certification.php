@@ -618,6 +618,10 @@ class Certification extends REST_Controller {
         $this->load->library('image_recognition_lib');
         $university = $this->image_recognition_lib->readStudentCard($imageLog->url);
 
+        $this->load->model('mongolog/ml_log_model');
+        $log = ["imageId" => $imageId, "university" => $university];
+        $this->ml_log_model->save($ocr);
+
         if ($university) {
             $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
         }
