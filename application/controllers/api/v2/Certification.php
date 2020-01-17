@@ -1665,6 +1665,7 @@ class Certification extends REST_Controller {
                     $file_fields[] = 'labor_image';
                 }
                 elseif($input['labor_type']==1){
+					$content['labor_type']=$input['labor_type'];
                     $this->mail_check($user_id,$investor);
                     $send_mail =true;
                 }
