@@ -3,13 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Image_recognition_lib
 {
-	const ML_URL = "http://127.0.0.1:9999/ml/api/v1.0/";
-
     function __construct()
     {
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
         $this->CI->load->library('S3_lib');
+        $this->ml_url = "http://" . getenv('GRACULA_IP') . ":" . getenv('GRACULA_PORT') . "/ml/api/v1.0/";
     }
 
     public function readStudentCard($image)
@@ -20,7 +19,7 @@ class Image_recognition_lib
 
         $newImageUrl = $this->CI->s3_upload->public_image_by_data(file_get_contents($image), FRONT_S3_BUCKET);
 
-        $url = self::ML_URL . "student-cards";
+        $url = $this->ml_url  . "student-cards";
         $data = ["card_url" => $newImageUrl];
 
         $result = curl_get($url, $data);
