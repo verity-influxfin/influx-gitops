@@ -375,8 +375,15 @@ class Judicialperson extends REST_Controller {
 				$param['cooperation_content'] 	  = json_encode($content);
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
-
-            $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
+			$content=[];
+			//$param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
+			$content['transaction_password']=$this->user_info->transaction_password;
+			$content['bank_code']=$bank_parm['bank_code'];
+			$content['branch_code']=$bank_parm['branch_code'];
+			$content['bank_account']=$bank_parm['bank_account'];
+			$content['email']=$this->user_info->email;
+			$content['bankbook_images']=urlencode($bankbook_images);
+			$param['sign_video']=json_encode($content);
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
@@ -989,7 +996,68 @@ class Judicialperson extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => $result->error ]);
         }
         $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
-    }
+	}
+	
+	/**
+     * @api {post} /v2/judicialperson/verifymedia 法人經銷 對保影片
+     * @apiVersion 0.2.0
+     * @apiName PostJudicialpersonVerifymedia
+     * @apiGroup Judicialperson
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse IsCompany
+     *
+     */
+	public function verifymedia_post()
+	{
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		//上傳檔案欄位
+		$file_fields 	= ['verify_video'];
+		foreach ($file_fields as $field) {
+			$media_id = intval($input[$field]);
+			if (!$media_id) {
+				$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+			} else {
+				$rs = $this->log_image_model->get_by([
+					'id'		=> $media_id,
+					'user_id'	=> $user_id,
+				]);
+				if ($rs) {
+					$sign_video = json_decode($this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0,))->sign_video, true);
+					if (empty($sign_video)) {
+						$sign_video['judi_user_video'][] = $rs->url;
+					} else {
+						if (isset($sign_video['judi_user_video'])) {
+							array_push($sign_video['judi_user_video'],$rs->url);
+						} else {
+							$sign_video['judi_user_video'][] = $rs->url;
+						}
+					}
+					$res = $this->judicial_person_model->update_by(array(
+						'user_id' => $user_id,
+						'status'  => 0,
+					), array(
+						'sign_video' => json_encode($sign_video)
+					));
+					($res)?$this->response(array('result' => 'SUCCESS'))
+						:$this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+				} else {
+					$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+				}
+			}
+		}
+	}
 
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');
