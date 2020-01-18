@@ -6914,6 +6914,12 @@ define({
                             "optional": false,
                             "field": "201",
                             "description": "<p>新增時發生錯誤</p>"
+						},
+						{
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "202",
+                            "description": "<p>未進行所需之申請(請先申請法人身份)</p>"
                         }
                     ]
                 },
@@ -6926,6 +6932,11 @@ define({
                     {
                         "title": "201",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+					},
+					{
+                        "title": "202",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
                         "type": "Object"
                     }
                 ]

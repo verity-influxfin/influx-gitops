@@ -1034,7 +1034,11 @@ class Judicialperson extends REST_Controller {
 					'user_id'	=> $user_id,
 				]);
 				if ($rs) {
-					$sign_video = json_decode($this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0,))->sign_video, true);
+					//$sign_video = json_decode($this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0))->sign_video, true);
+					$content = $this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0));
+					(empty($content))?
+						$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ])
+						:$sign_video=json_decode($content->sign_video,true);
 					if (empty($sign_video)) {
 						$sign_video['judi_user_video'][] = $rs->url;
 					} else {

@@ -6534,6 +6534,12 @@
             "optional": false,
             "field": "100",
             "description": "<p>Token錯誤</p>"
+          },
+          {
+						"group": "Error 4xx",
+						"optional": false,
+						"field": "202",
+						"description": "<p>未進行所需之申請(請先申請法人身份)</p>"
           }
         ]
       },
@@ -6546,6 +6552,11 @@
         {
           "title": "201",
           "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+          "type": "Object"
+				},
+				{
+          "title": "202",
+          "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
           "type": "Object"
         }
       ]
