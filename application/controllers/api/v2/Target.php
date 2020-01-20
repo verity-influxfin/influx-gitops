@@ -447,7 +447,6 @@ class Target extends REST_Controller {
 				'credit_level' 		=> intval($target->credit_level),
 				'interest_rate' 	=> floatval($target->interest_rate),
 				'reason'		=> $reason,
-				'reason_description' => $reason_description,
 				'remark' 			=> $target->remark,
 				'targetDatas' => $targetDatas,
 				'instalment' 		=> intval($target->instalment),
