@@ -64,7 +64,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiSuccess {String} tax_id 公司統一編號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {Number} cooperation 經銷商功能 0:未開通 1:已開通 2:審核中
-	 * @apiSuccess {Number} status 狀態 0:審核中 1:審核通過 2:審核失敗
+	 * @apiSuccess {Number} status 狀態 0:審核中 1:審核通過 2:審核失敗 3:待對保影片上傳
 	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -391,9 +391,10 @@ class Judicialperson extends REST_Controller {
 			));
 
 			if($exist){
-				$param['status'] = 0;
+				$param['status'] = 3;
 				$rs = $this->judicial_person_model -> update($exist->id,$param);
 			}else{
+				$param['status'] = 3;
 				$rs = $this->judicial_person_model -> insert($param);
 			}
 
@@ -1035,7 +1036,7 @@ class Judicialperson extends REST_Controller {
 				]);
 				if ($rs) {
 					//$sign_video = json_decode($this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0))->sign_video, true);
-					$content = $this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0));
+					$content = $this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 3));
 					(empty($content))?
 						$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ])
 						:$sign_video=json_decode($content->sign_video,true);
@@ -1050,9 +1051,10 @@ class Judicialperson extends REST_Controller {
 					}
 					$res = $this->judicial_person_model->update_by(array(
 						'user_id' => $user_id,
-						'status'  => 0,
+						'status'  => 3,
 					), array(
-						'sign_video' => json_encode($sign_video)
+						'sign_video' => json_encode($sign_video),
+						'status'  => 0,
 					));
 					($res)?$this->response(array('result' => 'SUCCESS'))
 						:$this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));

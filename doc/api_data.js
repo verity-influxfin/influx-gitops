@@ -6275,7 +6275,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗</p>"
+                            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗 3:待對保影片上傳</p>"
                         },
                         {
                             "group": "Success 200",
