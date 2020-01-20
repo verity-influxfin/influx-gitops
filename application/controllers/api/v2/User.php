@@ -1560,9 +1560,9 @@ class User extends REST_Controller {
 		];
 		$this->log_userlogin_model->insert($loginLog);
 
-		$this->load->model('mongolog/user_login_log_model');
-		$fullLoginLog = $this->log_userlogin_model->getCurrentInstance($loginLog);
-		$this->user_login_log_model->save($fullLoginLog);
+		//$this->load->model('mongolog/user_login_log_model');
+		//$fullLoginLog = $this->log_userlogin_model->getCurrentInstance($loginLog);
+		//$this->user_login_log_model->save($fullLoginLog);
 
         $this->load->library('user_lib');
         $remind_count = $this->user_lib->auto_block_user($account,$investor,$user_id,$device_id);

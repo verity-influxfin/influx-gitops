@@ -291,11 +291,13 @@ class User extends MY_Admin_Controller {
 		$this->json_output->setStatusCode(200)->setResponse(["block" => $this->block_output->toOne()])->send();
 	}
 
-	public function related_users()
+	public function related_users($get_result=false)
 	{
 		$input = $this->input->get(NULL, TRUE);
 
-		$userId = isset($input["id"]) ? intval($input["id"]) : 0;
+		$userId = isset($input["id"])
+			? intval($input["id"])
+			: $get_result?$get_result:0;
 
 		$this->load->library('output/json_output');
 		if ($userId <= 0) {
@@ -385,6 +387,11 @@ class User extends MY_Admin_Controller {
 		$this->load->library('output/user/related_user_output', ["data" => $data]);
 
 		$relatedUsers = $this->related_user_output->toMany();
+
+		if($get_result){
+			return $relatedUsers;
+		}
+
 		if (!$relatedUsers) {
 			$this->json_output->setStatusCode(204)->send();
 		}

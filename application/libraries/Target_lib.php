@@ -229,7 +229,7 @@ class Target_lib{
     }
 
     //核可額度利率
-	public function approve_target($target = [],$remark=false,$renew=false){
+	public function approve_target($target = [], $remark = false, $renew = false, $stage_cer = false){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
 		$msg = false;
@@ -241,10 +241,13 @@ class Target_lib{
 			$product_info 	= $product_list[$product_id];
 			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 			if(!$credit){
-				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id);
-				if($rs){
-					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
-				}
+				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null,$stage_cer);
+				if(is_bool($rs)){
+                    $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
+				}else{
+                    $rs['rate'] = $this->CI->credit_lib->get_rate($rs['level'],$target->instalment,$target->product_id,$target->sub_product_id,$target);
+                    $credit = $rs;
+                }
 			}
 
 			if($credit){
@@ -299,7 +302,7 @@ class Target_lib{
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
                         $loan_amount 		= $target->amount > $credit['amount']&&$subloan_status==false?$credit['amount']:$target->amount;
 
-                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status) {
+                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer) {
                             if($product_info['type']==1||$subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
@@ -857,38 +860,39 @@ class Target_lib{
 		$ids		= [];
 		$script  	= 4;
 		$count 		= 0;
-		if($targets && !empty($targets)){
+        $allow_stage_cer = [1,3];
+        $stage_cer = false;
+        if($targets && !empty($targets)){
 			foreach($targets as $key => $value){
 				$list[$value->product_id][$value->id] = $value;
 				$ids[] = $value->id;
-				$get_amount = $value->amount;
 			}
 
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
 			if($rs){
-                $diploma = [];
                 $product_list = $this->CI->config->item('product_list');
+                $this->CI->load->library('../controllers/admin/user');
                 $product = $product_list[$value->product_id];
                 $sub_product_id = $value->sub_product_id;
                 if($this->is_sub_product($product,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_id);
                 }
-				foreach($list as $product_id => $targets){
-					$product_certification 	= $product['certifications'];
+                $product_certification = $product['certifications'];
+                foreach($list as $product_id => $targets){
 					foreach($targets as $target_id => $value){
                         $company = $value->product_id >= 1000 ?1:0;
 						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
 						$finish		 		= true;
 						foreach($certifications as $key => $certification){
-                            $key==8?$diploma=$certification:null;
 							if($finish && in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
-                                if($certification['id'] == 9){
-                                    $finish = $this->CI->certification_lib->option_investigation($product_id, $certification, $diploma);
+                                if(in_array($value->product_id,$allow_stage_cer) && $sub_product_id == 0 && in_array($value->product_id,[1,3,4,5,6,7])){
+                                    $stage_cer = true;
                                 }
                                 else{
                                     $finish = false;
-                                    break;
                                 }
+
+                                break;
                             }
 						}
 						if(!empty($value->target_data)){
@@ -900,9 +904,12 @@ class Target_lib{
                                 }
                             }
                         }
+
+                        $this->user->related_users($value->user_id)?$finish = false:'';
+
 						if($finish){
 							$count++;
-							$this->approve_target($value);
+							$this->approve_target($value,false,false,$stage_cer);
 						}else{
 							//自動取消
 							$limit_date 	= date('Y-m-d',strtotime('-'.TARGET_APPROVE_LIMIT.' days'));

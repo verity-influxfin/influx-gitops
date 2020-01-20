@@ -17,7 +17,7 @@ class Credit_lib{
     }
 	
 	//信用評比
-	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null){
+	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null, $stage_cer = false){
 		if($user_id && $product_id){
 
             //信用低落
@@ -55,6 +55,20 @@ class Credit_lib{
                 $expire_time = strtotime("+2 months", strtotime($target->loan_date));
             }
 
+            if($stage_cer){
+                $param = [];
+                $param['points'] = 100;
+                $param['level'] =$this->get_credit_level($param['points'],$product_id);
+                if(isset($this->credit['credit_amount_'.$product_id])){
+                    foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+                        if($param['points']>=$value['start'] && $param['points']<=$value['end']){
+                            $param['amount'] = $value['amount'];
+                            break;
+                        }
+                    }
+                }
+                return $param;
+            }
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
 				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
