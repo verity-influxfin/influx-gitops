@@ -877,8 +877,8 @@ class Recoveries extends REST_Controller {
             }
 
             $targetDatas = [];
+            $targetData = json_decode($target_info->target_data);
             if($product['visul_id'] == 'DS2P1') {
-                $targetData = json_decode($target_info->target_data);
                 $cer_group['car_file'] = [1, '車籍文件'];
                 $cer_group['car_pic'] = [1, '車輛外觀照片'];
                 $targetDatas = [
@@ -913,6 +913,25 @@ class Recoveries extends REST_Controller {
                 );
             }
 
+            $certification_list = [];
+            $targetData_cer = isset($targetData->certification_id)?$targetData->certification_id:false;
+            if($targetData_cer){
+                $this->load->model('user/user_certification_model');
+                $this->load->library('Certification_lib');
+                $certification 	= $this->config->item('certifications');
+                $certifications = $this->user_certification_model->get_many_by([
+                    'id' => $targetData_cer,
+                    'user_id' => $target_info->user_id,
+                ]);
+                foreach($certifications as $key => $value){
+                    $cer = $certification[$value->certification_id];
+                    $cer['user_status'] 		   = intval($value->status);
+                    $cer['certification_id'] 	   = intval($value->id);
+                    $cer['updated_at'] 		   = intval($value->updated_at);
+                    $certification_list[] = $cer;
+                }
+            }
+
             $reason = $target_info->reason;
             $json_reason = json_decode($reason);
             if(isset($json_reason->reason)){
@@ -937,10 +956,13 @@ class Recoveries extends REST_Controller {
 				'delay'			=> intval($target_info->delay),
 				'delay_days'	=> intval($target_info->delay_days),
 				'loan_date'		=> $target_info->loan_date,
+                'isTargetOpaque' => $target_info->sub_product_id==9999?true:false,
 				'status'		=> intval($target_info->status),
 				'sub_status'	=> intval($target_info->sub_status),
 				'created_at'	=> intval($target_info->created_at),
 			];
+
+            count($certification_list)>0?$target['certification'] = $certification_list:'';
 
 			$repayment_detail = [];
 			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(

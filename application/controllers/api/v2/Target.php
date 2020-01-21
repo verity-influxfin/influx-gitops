@@ -124,7 +124,7 @@ class Target extends REST_Controller {
 		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
         $product_list = $this->config->item('product_list');
 
-		if(!empty($target_list)){
+        if(!empty($target_list)){
             foreach($target_list as $key => $value){
 				$user_info 	= $this->user_model->get($value->user_id); 
 				$user		= [];
@@ -204,6 +204,7 @@ class Target extends REST_Controller {
 					'invested' 			=> intval($value->invested),
 					'reason' 			=> $reason,
 					'targetDatas' => $targetDatas,
+					'isTargetOpaque' => $sub_product_id==9999?true:false,
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
@@ -360,7 +361,8 @@ class Target extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$target 			= $this->target_model->get($target_id);
 		$data				= [];
-		if(!empty($target) && in_array($target->status,[3,4])){
+
+        if(!empty($target) && in_array($target->status,[3,4])){
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
@@ -395,8 +397,8 @@ class Target extends REST_Controller {
 			}
 
 			$targetDatas = [];
+            $targetData = json_decode($target->target_data);
             if($product['visul_id'] == 'DS2P1'){
-                $targetData = json_decode($target->target_data);
                 $targetDatas = [
                     'brand' => $targetData->brand,
                     'name' => $targetData->name,
@@ -429,6 +431,25 @@ class Target extends REST_Controller {
                 );
             }
 
+            $certification_list = [];
+            $targetData_cer = isset($targetData->certification_id)?$targetData->certification_id:false;
+            if($targetData_cer){
+                $this->load->model('user/user_certification_model');
+                $this->load->library('Certification_lib');
+                $certification 	= $this->config->item('certifications');
+                $certifications = $this->user_certification_model->get_many_by([
+                    'id' => $targetData_cer,
+                    'user_id' => $target->user_id,
+                ]);
+                foreach($certifications as $key => $value){
+                    $cer = $certification[$value->certification_id];
+                    $cer['user_status'] 		   = intval($value->status);
+                    $cer['certification_id'] 	   = intval($value->id);
+                    $cer['updated_at'] 		   = intval($value->updated_at);
+                    $certification_list[] = $cer;
+                }
+            }
+
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data['content']:'';
 
@@ -453,6 +474,7 @@ class Target extends REST_Controller {
 				'repayment' 		=> intval($target->repayment),
 				'expire_time' 		=> intval($target->expire_time),
 				'invested' 			=> intval($target->invested),
+                'isTargetOpaque' => $sub_product_id==9999?true:false,
 				'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
 				'created_at' 		=> intval($target->created_at),
@@ -460,6 +482,9 @@ class Target extends REST_Controller {
 				'user' 				=> $user,
 				'amortization_schedule' => $amortization_schedule,
 			);
+
+            count($certification_list)>0?$target['certification'] = $certification_list:'';
+
             $target->order_id!=0?$data['order_image']=$target->person_image:null;
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));

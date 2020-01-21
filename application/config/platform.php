@@ -140,7 +140,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1],
+        'sub_product' => [1,9999],
         'certifications' => [1, 2, 3, 4, 5, 6, 7],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -190,7 +190,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1],
+        'sub_product' => [1,9999],
         'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -629,6 +629,52 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
+    9999 => [
+        'visul_id' => 'OS1',
+        'identity' => [
+            1 => [
+                'visul_id' => 'OSP1',
+                'name' => '學生階段上架',
+                'product_id' => '1',
+                'loan_range_s' => 3000,
+                'loan_range_e' => 120000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [1, 3, 4, 5, 6, 7],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'weight' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>3000-12,000'
+            ],
+            2 => [
+                'visul_id' => 'OSP2',
+                'name' => '上班族階段上架',
+                'product_id' => '2',
+                'loan_range_s' => 3000,
+                'loan_range_e' => 200000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [1, 3, 4, 5, 6, 7],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'weight' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 1,
+                'description' => '可申請額度<br>3000-20,000'
+            ],
+        ],
+        'status' => 1
+    ],
 ];
 
 $config['app_product_totallist'] = [
@@ -756,10 +802,6 @@ $config['certifications'] = [
     1007 => ['id' => 1007, 'alias' => 'governmentauthorities', 'name' => '事業變更登記表', 'status' => 1, 'description' => '', 'optional' => []],
 
     2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
-];
-
-$configp['stage_cer'] = [
-
 ];
 
 //支援XML銀行列表
