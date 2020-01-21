@@ -613,7 +613,51 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
+    /**
+     * @api {post} /student_cards 辨識 學生證的學校
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationStudentCards
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String} photo id
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse TokenError
+     *
+     */
+    public function student_cards_get()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $imageId = isset($get['id']) ? intval($get['id']) : 0;
+
+        $this->load->model('log/log_image_model');
+        $imageLog = $this->log_image_model->get($imageId);
+
+        $ownerId = $this->user_info->id;
+        if (!$imageLog || $imageLog->user_id != $ownerId) {
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+
+        $this->load->library('image_recognition_lib');
+        $university = $this->image_recognition_lib->readStudentCard($imageLog->url);
+
+        $this->load->model('mongolog/ml_log_model');
+        $log = ["imageId" => $imageId, "university" => $university];
+        $this->ml_log_model->save($log);
+
+        if ($university) {
+            $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['university' => '']]);
+    }
 
 	/**
      * @api {post} /v2/certification/debitcard 認證 金融帳號認證
@@ -1697,6 +1741,7 @@ class Certification extends REST_Controller {
                     $file_fields[] = 'labor_image';
                 }
                 elseif($input['labor_type']==1){
+					$content['labor_type']=$input['labor_type'];
                     $this->mail_check($user_id,$investor);
                     $send_mail =true;
                 }

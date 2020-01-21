@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Gcis_lib
 {
 	
-	private $url = 'http://data.gcis.nat.gov.tw/od/data/api/';
+	private $url = 'https://data.gcis.nat.gov.tw/od/data/api/';
 	
     public function __construct()
     {

@@ -4017,6 +4017,99 @@ define({
             ]
         },
         {
+            "type": "get",
+            "url": "/certification/student_cards",
+            "title": "認證 學生證學校辨識",
+            "version": "0.2.0",
+            "name": "PostCertificationStudentCards",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>上傳後的image id</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"university\": \"台灣大學\"\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 1xx": [
+                        {
+                            "group": "Error 1xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        }
+                    ],
+                    "Error 2xx": [
+                        {
+                            "group": "Error 2xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/student_cards"
+                }
+            ]
+        },
+        {
             "type": "post",
             "url": "/v2/certification/debitcard",
             "title": "認證 金融帳號認證",
@@ -14878,7 +14971,7 @@ define({
                             "optional": true,
                             "field": "promote_code",
                             "description": "<p>邀請碼</p>"
-                        },
+                        }
                     ]
                 }
             },

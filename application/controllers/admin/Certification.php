@@ -111,6 +111,10 @@ class Certification extends MY_Admin_Controller {
 						}
 					}
 					elseif($info->certification_id==10){
+						if(isset(json_decode($info->content)->pdf_file)) {
+							$this->job_credits();
+							return;
+						}
 						$page_data['employee_range'] 		= $this->config->item('employee_range');
 						$page_data['position_name']			= $this->config->item('position_name');
 						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
@@ -670,6 +674,50 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('certification/difficult_word_list'));
 			}
 		}
+	}
+
+	public function job_credits(){
+		$get = $this->input->get(NULL, TRUE);
+		isset($get['id'])?intval($get['id']):0;
+		$id = isset($get["id"]) ? intval($get["id"]) : 0;
+		$info = $this->user_certification_model->get($id);
+
+		if ($this->input->is_ajax_request()) {
+			$this->load->library('output/json_output');
+			if ($id <= 0) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$certification = $this->user_certification_model->get($id);
+			if (!$certification) {
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+
+			$user = $this->user_model->get($certification->user_id);
+			$this->load->library('output/user/user_output', ["data" => $user]);
+			$this->load->model('user/user_meta_model');
+            $salary             = $this->user_meta_model->get_by([
+                'user_id'   => $certification->user_id,
+                'meta_key'  => ['job_salary']
+            ]);
+
+			$job_credits = json_decode($certification->content);
+			$job_credits->job_salary=$salary->meta_value;
+			$certification->content = $job_credits;
+			$this->load->library('output/user/job_credit_output', ["data" => $job_credits->result, "certification" => $certification]);
+			$response = [
+				"user" => $this->user_output->toOne(),
+				"job_credits" => $this->job_credit_output->toOne(),
+				"statuses" => $this->user_certification_model->status_list,
+			];
+
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/certification/job_credits');
+		$this->load->view('admin/_footer');
 	}
 
 	public function joint_credits(){
