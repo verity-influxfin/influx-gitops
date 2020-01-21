@@ -602,7 +602,7 @@ class Target extends MY_Admin_Controller {
 				'certification_id' => 2,
 				'status' => 1,
 			]);
-			$schoolCertificationDetailArray = json_decode($schoolCertificationDetail->content, true);
+			$schoolCertificationDetailArray = isset($schoolCertificationDetail->content)?json_decode($schoolCertificationDetail->content, true):'';
 			if (isset($schoolCertificationDetailArray["graduate_date"])) {
 				 $graduateDate = new stdClass();
 				 $graduateDate->meta_key = "school_graduate_date";

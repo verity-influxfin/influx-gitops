@@ -26,10 +26,10 @@ class School_output
 	public function map($school, $withSensitiveInfo = false)
 	{
 		$output = [
-			"name" => $school->name,
-			"department" => $school->department,
-			"major" => $school->major,
-			"system" => isset($this->systemMapping[$school->system]) ? $this->systemMapping[$school->system] : '',
+			"name" => isset($school->name)?$school->name:'',
+            "department" => isset($school->department)?$school->department:'',
+            "major" => isset($school->major)?$school->major:'',
+            "system" => isset($school->system) ? $this->systemMapping[$school->system] : '',
 		];
 
 		if (isset($school->graduate_date)) {
