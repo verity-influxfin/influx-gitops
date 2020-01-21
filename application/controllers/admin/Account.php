@@ -155,12 +155,7 @@ class Account extends MY_Admin_Controller {
 					$data[$key]->v_amount_from 		= "";
 				}
 
-				$bank_type_to = substr($value->bank_account_to, 0, 5);
-				($bank_type_to == TAISHIN_VIRTUAL_CODE) ?
-					$bank_type_to  = TAISHIN_VIRTUAL_CODE
-					: $bank_type_to  = CATHAY_VIRTUAL_CODE;
-					
-				if(is_virtual_account($value->bank_account_to,$bank_type_to)){
+				if(is_virtual_account($value->bank_account_to)){
 
 					$data[$key]->v_bank_account_to 	= $value->bank_account_to;
 					$data[$key]->v_amount_to 		= $value->amount;
@@ -641,7 +636,9 @@ class Account extends MY_Admin_Controller {
 						$info[$value->virtual_account] = $this->virtual_account_model->get_by(array(
 							"virtual_account" => $value->virtual_account
 						));
-						$info[$value->virtual_account]->user_info = $this->user_model->get($info[$value->virtual_account]->user_id);
+						if(isset($info[$value->virtual_account])){
+                            $info[$value->virtual_account]->user_info = $this->user_model->get($info[$value->virtual_account]->user_id);
+                        }
 					}
 					$list[$value->virtual_account] += $value->amount;
 				}

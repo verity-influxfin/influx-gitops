@@ -51,6 +51,11 @@ class Target_output
 
 	public function map($target, $withSensitiveInfo = false)
 	{
+        $reason = $target->reason;
+        $json_reason = json_decode($reason);
+        if(isset($json_reason->reason)){
+            $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+        }
 		$output = [
 			'id' => $target->id,
 			'number' => $target->target_no,
@@ -80,11 +85,17 @@ class Target_output
 				'text' => isset($this->statusMapping[$target->status]) ? $this->statusMapping[$target->status] : '',
 			],
 			'is_delay' => $target->delay == 1,
-			'reason' => $target->reason,
+			'reason' => $reason,
 			'image' => $target->person_image,
 			'expire_at' => $target->expire_time,
 			'loan_at' => $target->loan_date,
 		];
+
+		if(!empty($target->productTargetData)){
+            $output['targetData'] = $target->target_data;
+			$output['productTargetData'] = $target->productTargetData['targetData'];
+			$output['creditTargetData'] = $target->creditTargetData;
+        }
 
 		if (isset($target->amortization)) {
 			$output["remaining"] = $target->amortization["remaining_principal"];

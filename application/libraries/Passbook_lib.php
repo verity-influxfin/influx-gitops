@@ -46,11 +46,8 @@ class Passbook_lib{
 			$transaction 	= $this->CI->transaction_model->get($transaction_id);
 			if($transaction && in_array($transaction->source,$this->credit) && $transaction->status==2 && $transaction->passbook_status==0 ){
 				$this->CI->transaction_model->update($transaction_id,['passbook_status'=>2]);//lock
-				$bank_type = substr($transaction->bank_account_to, 0, 5);
-				($bank_type == TAISHIN_VIRTUAL_CODE) ?
-					$bank_type = TAISHIN_VIRTUAL_CODE
-					: $bank_type = CATHAY_VIRTUAL_CODE;
-				if(is_virtual_account($transaction->bank_account_to,$bank_type)){
+
+				if(is_virtual_account($transaction->bank_account_to)){
 					$param[] = array(
 						'virtual_account'	=> $transaction->bank_account_to,
 						'transaction_id'	=> $transaction_id,
@@ -87,9 +84,12 @@ class Passbook_lib{
 	}
 	
 	//取得資金資料
-	public function get_passbook_list($virtual_account=''){
+	public function get_passbook_list($virtual_account='',$limit=false){
 		$list = [];
 		if($virtual_account){
+		    if(!$limit){
+                $this->CI->virtual_passbook_model->limit($limit);
+            }
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
 				'virtual_account' => $virtual_account
 			]);

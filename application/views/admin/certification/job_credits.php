@@ -15,6 +15,7 @@
 				<div class="panel-heading">
 
 				</div>
+
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-lg-12">
@@ -34,6 +35,13 @@
 								</div>
 							</div>
 							</br>
+                            <div id="container">
+								<table  id="images" class="table table-bordered">
+                                    <th class="center-text table-field" width="30%">項目</th>
+									<th class="center-text table-field" width="70%">照片</th>
+                                </table>
+							</div>
+                            </br>
 							<table id="job-credits" class="table table-bordered">
 								<tr class="odd list">
 									<th class="center-text table-field" width="30%">內容</th>
@@ -105,6 +113,7 @@
 				fillJobCreditFile(jobCredits);
 				var user = new User(response.response.user);
 				fillUser(user);
+				fillExtraImages(jobCredits);
 			},
 			error: function(error) {
 				alert('資料載入失敗。請重新整理。');
@@ -117,7 +126,7 @@
 			if (!isConfirmed) {
 				return false;
 			}
-			
+
 			var form = $(this);
 			var url = form.attr('action');
 			var status = $("#verification").val();
@@ -139,15 +148,15 @@
 				}
 			});
 		});
-	
+
 		$("#verification-change").submit(function(e) {
 			e.preventDefault();
-		
+
 			var isConfirmed = confirm("確認是否要通過審核？");
 			if (!isConfirmed) {
 				return false;
 			}
-			
+
 			var form = $(this);
 			var url = form.attr('action');
 			var status = $("#verification").val();
@@ -233,7 +242,40 @@
 				).appendTo("#job-credits");
 			}
 		}
-		
+
+        function fillExtraImages(jobCredit) {
+            if (jobCredit.incomeProveImages) {
+                for (var i = 0; i < jobCredit.incomeProveImages.length; i++) {
+                    appendImage('薪資證明', jobCredit.incomeProveImages[i]);
+                }
+            }
+
+            if (jobCredit.businessImages) {
+                for (var i = 0; i < jobCredit.businessImages.length; i++) {
+                    appendImage('名片正反面', jobCredit.businessImages[i]);
+                }
+            }
+
+            if (jobCredit.auxiliaryImages) {
+                for (var i = 0; i < jobCredit.auxiliaryImages.length; i++) {
+                    appendImage('最近年度報稅扣繳憑證', jobCredit.auxiliaryImages[i]);
+                }
+            }
+
+            if (jobCredit.licenseImages) {
+                for (var i = 0; i < jobCredit.licenseImages.length; i++) {
+                    appendImage('其他專業證明證照', jobCredit.licenseImages[i]);
+                }
+            }
+        }
+
+        function appendImage(name, link) {
+            var image = '<img src="' + link + '" style="width:30%;" />'
+            $("<tr>").append(
+                $('<td class="center-text">').append(name),
+                $('<td class="center-text">').append(image),
+            ).appendTo("#images");
+        }
 
 
 	});

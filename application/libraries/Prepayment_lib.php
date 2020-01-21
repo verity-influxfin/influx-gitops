@@ -12,7 +12,7 @@ class Prepayment_lib{
 		$this->CI->load->library('Transaction_lib');
     }
  
-	public function get_prepayment_info($target=[]){
+	public function get_prepayment_info($target=[],$set=true){
 		if($target->status == 5 && $target->delay_days==0){
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
@@ -50,10 +50,10 @@ class Prepayment_lib{
 
                     if($value->status==1){
 						switch($value->source){
-							case SOURCE_AR_PRINCIPAL: 
+							case SOURCE_AR_PRINCIPAL:
 								$remaining_principal[$value->investment_id]	+= $value->amount;
 								break;
-							case SOURCE_AR_INTEREST: 
+							case SOURCE_AR_INTEREST:
 								if($value->limit_date <= $entering_date){
 									$last_settlement_date = $value->limit_date;
 									$interest_payable[$value->investment_id] += $value->amount;
@@ -65,17 +65,65 @@ class Prepayment_lib{
 					}
 				}
 
-				$data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
-				if($remaining_principal){
-					$days  = get_range_days($last_settlement_date,$entering_date);
-					if($days){
-						foreach($remaining_principal as $k => $v){
-							$interest_payable[$k] 	= $this->CI->financial_lib->get_interest_by_days($days,$v,$target->instalment,$target->interest_rate,$target->loan_date);
-						}
-					}
-					$data['remaining_principal'] 	= array_sum($remaining_principal);
-					$data['interest_payable'] 		= array_sum($interest_payable);
-					$data['liquidated_damages'] 	= $this->CI->financial_lib->get_liquidated_damages($data['remaining_principal'],$target->damage_rate);
+                $data['remaining_instalment'] 	= $target->instalment - $instalment_paid;
+                if($remaining_principal){
+                    $days  = get_range_days($last_settlement_date,$entering_date);
+
+                    $product_list = $this->CI->config->item('product_list');
+                    $product = $product_list[$target->product_id];
+                    $sub_product_id = $target->sub_product_id;
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
+                    }
+                    if($product['visul_id'] == 'DS2P1'){
+                        $input = $this->CI->input->get(NULL, TRUE);
+                        $this->CI->load->model('log/log_image_model');
+                        $targetData = json_decode($target->target_data);
+                        $certified_documents = false;
+                        if($set){
+                            if(!empty($input['certified_documents'])){
+                                $imgage = $this->CI->log_image_model->get_by([
+                                    'id'		=> $input['certified_documents'],
+                                    'user_id'	=> $target->user_id,
+                                ]);
+                                if($imgage){
+                                    $targetData->certified_documents = $imgage->url;
+                                    $certified_documents = true;
+                                }
+                            }
+                            else{
+                                $targetData->certified_documents = '';
+                            }
+                            $this->CI->target_model->update($target->id,[
+                                'target_data' => json_encode($targetData)
+                            ]);
+                        }
+                        else{
+                            !empty($targetData->certified_documents)?$certified_documents = true:'';
+                        }
+
+                        $amortization_schedule = $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target,$last_settlement_date,[
+                            'days' =>  $days,
+                            'sold' =>  $certified_documents?2:5,
+                        ])['total'];
+                        $remaining_principal = $amortization_schedule['principal'];
+                        $interest_payable = $amortization_schedule['interest'];
+                        $liquidated_damages = $amortization_schedule['share'];
+                    }
+					else{
+					    if($days){
+                            foreach($remaining_principal as $k => $v){
+                                $interest_payable[$k] 	= $this->CI->financial_lib->get_interest_by_days($days,$v,$target->instalment,$target->interest_rate,$target->loan_date);
+                            }
+                        }
+                        $remaining_principal = array_sum($remaining_principal);
+                        $interest_payable = array_sum($interest_payable);
+                        $liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($remaining_principal,$target->damage_rate);
+                    }
+
+					$data['remaining_principal'] 	= $remaining_principal;
+					$data['interest_payable'] 		= $interest_payable;
+					$data['liquidated_damages'] 	= $liquidated_damages;
 				}
 				
 				$data['total'] = $data['remaining_principal'] + $data['interest_payable'] + $data['liquidated_damages'];
@@ -87,13 +135,24 @@ class Prepayment_lib{
 	
 	public function apply_prepayment($target){
 		if($target && $target->status==5 && $target->delay_days==0){
-			$info  = $this->get_prepayment_info($target);
-			$this->CI->load->model('user/virtual_account_model');
-			$virtual_account = $this->CI->virtual_account_model->get_by(array(
-				'status'		=> 1,
-				'investor'		=> 0,
-				'user_id'		=> $target->user_id
-			));
+			$info  = $this->get_prepayment_info($target,false);
+            $product_list = $this->CI->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+            $virtualAccountParm = [
+                'status'		=> 1,
+                'investor'		=> 0,
+                'user_id'		=> $target->user_id
+            ];
+            if($product['visul_id'] == 'DS2P1'){
+                $virtualAccountParm['virtual_account like'] = TAISHIN_VIRTUAL_CODE.'%';
+            }
+
+            $this->CI->load->model('user/virtual_account_model');
+			$virtual_account = $this->CI->virtual_account_model->get_by($virtualAccountParm);
 			if($info && $virtual_account){
 				$this->CI->load->library('Transaction_lib');
 				$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
@@ -133,7 +192,40 @@ class Prepayment_lib{
 		}
 		return false;
 	}
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
 
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
 }
 
 
