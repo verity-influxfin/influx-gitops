@@ -55,104 +55,101 @@ class Credit_lib{
                 $expire_time = strtotime("+2 months", strtotime($target->loan_date));
             }
 
-            if($stage_cer){
-                $param = [];
-                $param['points'] = 100;
-                $param['level'] =$this->get_credit_level($param['points'],$product_id);
-                if(isset($this->credit['credit_amount_'.$product_id])){
-                    foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
-                        if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-                            $param['amount'] = $value['amount'];
-                            break;
-                        }
-                    }
-                }
-                return $param;
-            }
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
+				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer);
 				return $rs;
 			}
 		}
 		return false;
 	}
 	
-	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
+	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
 
-		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
-		$user_info 	= $this->CI->user_model->get($user_id);
-		$data 		= [];
-		$total 		= 0;
-		$param		= [
-		    'product_id'    => $product_id,
-		    'sub_product_id'=> $sub_product_id,
-            'user_id'       => $user_id,
-            'amount'        => 0
-        ];
-		foreach($info as $key => $value){
-			$data[$value->meta_key] = $value->meta_value;
-		}
-
-        if($sub_product_id){
-            $sub_product = $this->get_sub_product_data($sub_product_id);
-            //techie
-            if($sub_product && $sub_product_id == 1){
-                //系所加分
-                $total += in_array($data['school_department'],$sub_product->majorList)?200:0;
-                $total += isset($data['student_game_work_level'])?$data['student_game_work_level']*50:0;
-                $total += isset($data['student_license_level'])?$data['student_license_level']*50:0;
-                $total += isset($data['student_pro_level'])?$data['student_pro_level']*100:0;
+	    if($stage_cer == 0) {
+            $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
+            $user_info = $this->CI->user_model->get($user_id);
+            $data = [];
+            $total = 0;
+            $param = [
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'amount' => 0
+            ];
+            foreach ($info as $key => $value) {
+                $data[$value->meta_key] = $value->meta_value;
             }
+
+            if ($sub_product_id) {
+                $sub_product = $this->get_sub_product_data($sub_product_id);
+                //techie
+                if ($sub_product && $sub_product_id == 1) {
+                    //系所加分
+                    $total += in_array($data['school_department'], $sub_product->majorList) ? 200 : 0;
+                    $total += isset($data['student_game_work_level']) ? $data['student_game_work_level'] * 50 : 0;
+                    $total += isset($data['student_license_level']) ? $data['student_license_level'] * 50 : 0;
+                    $total += isset($data['student_pro_level']) ? $data['student_pro_level'] * 100 : 0;
+                }
+            }
+
+            //學校
+            if (isset($data['school_name']) && !empty($data['school_name'])) {
+                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major']);
+            }
+
+            //財務證明
+            if (isset($data['financial_status']) && !empty($data['financial_status'])) {
+                $total += 50;
+                if (!empty($data['financial_creditcard']) || !empty($data['financial_passbook'])) {
+                    $total += 50;
+                    if (!empty($data['financial_creditcard'])) {
+                        $total += 50;
+                    }
+                    if (!empty($data['financial_passbook'])) {
+                        $total += 50;
+                    }
+                }
+            }
+
+            if (isset($data['social_status']) && !empty($data['social_status'])) {
+                $total += 50;
+            }
+
+            //SIP
+            //if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
+            //$total += 150;
+            //}
+            //成績單
+            if (isset($data['transcript_front']) && !empty($data['transcript_front'])) {
+                $total += 100;
+            }
+            //緊急聯絡人
+            if (isset($data['emergency_relationship']) && $data['emergency_relationship'] == '監護人') {
+                $total = $total - 400;//mantis 0000003
+            }
+
+            if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+                $total += $approvalExtra->getExtraPoints();
+            }
+
+            $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
+            $param['points'] = intval($total);
+
         }
-
-		//學校
-		if(isset($data['school_name']) && !empty($data['school_name'])){
-			$total += $this->get_school_point($data['school_name'],$data['school_system'],$data['school_major']);
-		}
-
-		//財務證明
-		if(isset($data['financial_status']) && !empty($data['financial_status'])){
-			$total += 50;
-			if(!empty($data['financial_creditcard']) || !empty($data['financial_passbook'])){
-				$total += 50;
-				if(!empty($data['financial_creditcard'])){
-					$total += 50;
-				}
-				if(!empty($data['financial_passbook'])){
-					$total += 50;
-				}
-			}
-		}
-		
-		if(isset($data['social_status']) && !empty($data['social_status'])){
-			$total += 50;
-		}
-		
-		//SIP
-		//if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
-			//$total += 150;
-		//}
-		//成績單
-		if(isset($data['transcript_front']) && !empty($data['transcript_front'])){
-			$total += 100;
-		}
-		//緊急聯絡人
-		if(isset($data['emergency_relationship']) && $data['emergency_relationship']=='監護人'){
-			$total = $total - 400;//mantis 0000003
-		}
-
-		if ($approvalExtra && $approvalExtra->getExtraPoints()) {
-			$total += $approvalExtra->getExtraPoints();
-		}
-		
-		$total = $user_info->sex=='M'?round($total*0.9):$total;
-		$param['points'] 	= intval($total);
+        if(in_array($stage_cer,[1,2])){
+            $param = [];
+            $param['points'] = $total = 100;
+        }
         $param['level'] 	= $this->get_credit_level($total,$product_id);
         if(isset($this->credit['credit_amount_'.$product_id])){
             foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
                     $param['amount'] = $value['amount'];
+                    if($stage_cer!=0){
+                        $param['amount'] = $value['amount'];
+                        return $param;
+                    }
                     break;
                 }
             }
@@ -160,105 +157,121 @@ class Credit_lib{
         $param['expire_time'] = $expire_time;
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
-			return $param;
-		}
+            return $param;
+        }
 
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
 	
-	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
-		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra);
+	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
+		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer);
 	}
 
-	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
-
-		$info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
-		$user_info 	= $this->CI->user_model->get($user_id);
-		$data 		= [];
-		$total 		= 0;
-		$param		= [
-            'user_id'=> $user_id,
-            'product_id'=>$product_id,
-            'sub_product_id'=>$sub_product_id,
-            'amount'=>0,
-        ];
-		foreach($info as $key => $value){
-			$data[$value->meta_key] = $value->meta_value;
-		}
-
-        if($sub_product_id){
-            //techie
-            if($sub_product_id == 1){
-                //系所加分
-                $total += isset($data['job_license'])?$data['job_license']*50:0;
-                $total += isset($data['job_pro_level'])?$data['job_pro_level']*100:0;
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
+        if(in_array($stage_cer,[1,2])){
+            $param['points'] = $total = 100;
+        }
+        else{
+            $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
+            $user_info = $this->CI->user_model->get($user_id);
+            $data = [];
+            $total = 0;
+            $param = [
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'amount' => 0,
+            ];
+            foreach ($info as $key => $value) {
+                $data[$value->meta_key] = $value->meta_value;
             }
+
+            if ($sub_product_id) {
+                //techie
+                if ($sub_product_id == 1) {
+                    //系所加分
+                    $total += isset($data['job_license']) ? $data['job_license'] * 50 : 0;
+                    $total += isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                }
+            }
+
+            //畢業學校
+            if (isset($data['diploma_name']) && !empty($data['diploma_name'])) {
+                $total += intval($this->get_school_point($data['diploma_name'], $data['diploma_system'], '')) * 0.6;
+            }
+
+            if (isset($data['job_type'])) {
+                $total += $data['job_type'] ? 50 : 100;
+            }
+
+            if (isset($data['job_salary'])) {
+                $total += $this->get_job_salary_point(intval($data['job_salary']));
+            }
+
+            if (isset($data['job_license']) && $data['job_license']) {
+                $total += 100;
+            }
+
+            if (isset($data['job_employee'])) {
+                $total += $this->get_job_employee_point(intval($data['job_employee']));
+            }
+
+            if (isset($data['job_position'])) {
+                $total += $this->get_job_position_point(intval($data['job_position']));
+            }
+
+            if (isset($data['job_seniority'])) {
+                $total += $this->get_job_seniority_point(intval($data['job_seniority']), intval($data['job_salary']));
+            }
+
+            if (isset($data['job_company_seniority'])) {
+                $total += $this->get_job_seniority_point(intval($data['job_company_seniority']), intval($data['job_salary']));
+            }
+
+            if (isset($data['job_industry'])) {
+                $total += $this->get_job_industry_point($data['job_industry']);
+            }
+
+            //聯徵
+            if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
+                if (isset($data['investigation_times'])) {
+                    $total += $this->get_investigation_times_point(intval($data['investigation_times']));
+                }
+
+                if (isset($data['investigation_credit_rate'])) {
+                    $total += $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                }
+
+                if (isset($data['investigation_months'])) {
+                    $total += $this->get_investigation_months_point(intval($data['investigation_months']));
+                }
+            }
+
+            if ($approvalExtra && $approvalExtra->getExtraPoints()) {
+                $total += $approvalExtra->getExtraPoints();
+            }
+
+            $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
+            $param['points'] = intval($total);
         }
 
-		//畢業學校
-		if(isset($data['diploma_name']) && !empty($data['diploma_name'])){
-			$total += intval($this->get_school_point($data['diploma_name'],$data['diploma_system'],''))*0.6;
-		}
-
-		if(isset($data['job_type'])){
-			$total += $data['job_type']?50:100;
-		}
-
-		if(isset($data['job_salary'])){
-			$total += $this->get_job_salary_point(intval($data['job_salary']));
-		}
-
-		if(isset($data['job_license']) && $data['job_license']){
-			$total += 100;
-		}
-
-		if(isset($data['job_employee'])){
-			$total += $this->get_job_employee_point(intval($data['job_employee']));
-		}
-
-		if(isset($data['job_position'])){
-			$total += $this->get_job_position_point(intval($data['job_position']));
-		}
-
-		if(isset($data['job_seniority'])){
-			$total += $this->get_job_seniority_point(intval($data['job_seniority']),intval($data['job_salary']));
-		}
-
-		if(isset($data['job_company_seniority'])){
-			$total += $this->get_job_seniority_point(intval($data['job_company_seniority']),intval($data['job_salary']));
-		}
-
-		if(isset($data['job_industry'])){
-			$total += $this->get_job_industry_point($data['job_industry']);
-		}
-		
-		//聯徵
-		if(isset($data['investigation_status']) && !empty($data['investigation_status'])){
-			if(isset($data['investigation_times'])){
-				$total += $this->get_investigation_times_point(intval($data['investigation_times']));
-			}
-
-			if(isset($data['investigation_credit_rate'])){
-				$total += $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
-			}
-
-			if(isset($data['investigation_months'])){
-				$total += $this->get_investigation_months_point(intval($data['investigation_months']));
-			}
-		}
-
-        if ($approvalExtra && $approvalExtra->getExtraPoints()) {
-            $total += $approvalExtra->getExtraPoints();
-        }
-
-		$total = $user_info->sex=='M'?round($total*0.9):$total;
-		$param['points'] 	= intval($total);
 		$param['level'] 	= $this->get_credit_level($total,$product_id);
 		if(isset($this->credit['credit_amount_'.$product_id])){
 			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
 				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-					$param['amount'] = intval($data['job_salary'])*$value['rate'];
+				    $salary = intval($data['job_salary']);
+					$param['amount'] = $salary*$value['rate'];
+                    if($stage_cer!=0){
+                        if($stage_cer == 3){
+                            $param['amount'] = $salary*0.9*1;
+                        }elseif($stage_cer == 4) {
+                            $param['amount'] = $salary*0.9*2;
+                        }else{
+                            $param['amount'] = $stage_cer==1?3000:5000;
+                        }
+                        return $param;
+                    }
 					break;
 				}
 			}
@@ -279,11 +292,11 @@ class Credit_lib{
 		return $rs;
 	}
 	
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer);
 	}
 
-    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra){
+    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
 
         $info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
         $user_info 	= $this->CI->user_model->get($user_id);
@@ -539,7 +552,7 @@ class Credit_lib{
 		return false;
 	}
 	
-	public function get_credit_level($points=0,$product_id=0){
+	public function  get_credit_level($points=0,$product_id=0){
 		if(intval($points)>0 && $product_id){
 			if(isset($this->credit['credit_level_'.$product_id])){
 				foreach($this->credit['credit_level_'.$product_id] as $level => $value){
