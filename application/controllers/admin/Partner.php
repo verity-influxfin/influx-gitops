@@ -42,7 +42,7 @@ class Partner extends MY_Admin_Controller {
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
-		$school_list 	= file_get_contents('https://s3-ap-northeast-1.amazonaws.com/influxp2p/school.json');
+		$school_list 	= file_get_contents(FRONT_CDN_URL.'public/school.json');
 		$school_list 	= json_decode($school_list,true);
 		$page_data 	= array(
 			'type'			=> 'add',
@@ -89,7 +89,7 @@ class Partner extends MY_Admin_Controller {
 		$partner_name 	= $this->partner_model->get_name_list();
 		$admins_name 	= $this->admin_model->get_name_list();
 		$partner_type 	= $this->partner_type_model->get_name_list();
-		$school_list 	= file_get_contents('https://s3-ap-northeast-1.amazonaws.com/influxp2p/school.json');
+		$school_list 	= file_get_contents(FRONT_CDN_URL.'public/school.json');
 		$school_list 	= json_decode($school_list,true);
 		$page_data 	= array(
 			'type'			=> 'edit',

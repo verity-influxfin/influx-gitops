@@ -17,7 +17,7 @@ class Payment_lib{
 		if(empty($check_data)){
 			$tx_datetime = date("Y-m-d H:i:s",strtotime($data['SDATE'].' '.$data['TIME']));
 			$virtual_account = "";
-			if (is_virtual_account($data['TRNACTNO'],TAISHIN_VIRTUAL_CODE)) {
+			if (is_virtual_account($data['TRNACTNO'])) {
 				strlen($data['OUTACTNO']) == 16
 					? $data['OUTACTNO'] = substr($data['OUTACTNO'], 2, 14)
 					: $data['OUTACTNO'] = $data['OUTACTNO'];
@@ -179,11 +179,7 @@ class Payment_lib{
 			$this->CI->load->model('user/virtual_account_model');
 			$virtual_account 	= $this->CI->virtual_account_model->get_by(array("virtual_account" => $value->virtual_account));
 			if ($virtual_account) {
-				$bank_type = substr($virtual_account->virtual_account, 0, 5);
-				($bank_type == TAISHIN_VIRTUAL_CODE) ?
-					$bank_type = TAISHIN_VIRTUAL_CODE
-					: $bank_type = CATHAY_VIRTUAL_CODE;
-				$investor			= investor_virtual_account($value->virtual_account, $bank_type) ? 1 : 0;
+				$investor			= investor_virtual_account($value->virtual_account) ? 1 : 0;
 				$where                	= array(
 					"user_id"              => $virtual_account->user_id,
 					"investor"             => $investor,
@@ -194,11 +190,11 @@ class Payment_lib{
 				);
 				$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
 
-				if ($virtual_account->user_id == $user_bankaccount->user_id) {
+				if ($user_bankaccount && $virtual_account->user_id == $user_bankaccount->user_id) {
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
-					if (!investor_virtual_account($value->virtual_account, $bank_type)) {
+					if (!investor_virtual_account($value->virtual_account)) {
 						$this->CI->transaction_lib->recharge($value->id);
 						return true;
 					}

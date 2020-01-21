@@ -21,13 +21,20 @@
                             <div class="table-responsive">
                                 <table class="display responsive nowrap" width="100%">
                                     <tbody>
-									<tr class="list 0">
-										<td>平台虛擬帳號</td>
-										<td>
-											<?=PLATFORM_VIRTUAL_ACCOUNT ?>
-										</td>
-										<td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td> 
-									</tr> 
+                                    <tr class="list 0">
+                                        <td>平台國泰虛擬帳號</td>
+                                        <td>
+                                            <?=PLATFORM_VIRTUAL_ACCOUNT ?>
+                                        </td>
+                                        <td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
+                                    </tr>
+                                   <tr class="list 0">
+                                        <td>平台台新虛擬帳號</td>
+                                        <td>
+                                            <?=PLATFORM_TAISHIN_VIRTUAL_ACCOUNT ?>
+                                        </td>
+                                        <td><a href="<?=admin_url('passbook/edit')."?id=".PLATFORM_TAISHIN_VIRTUAL_ACCOUNT ?>" class="btn btn-default">查看明細</a></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>

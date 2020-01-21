@@ -28,15 +28,23 @@ class Target_lib{
 		return false;
 	}
 
+    //新增target
+    public function add_target_group($param,$code){
+        if(!empty($param)){
+            foreach ($param as $key => $val) {
+                $val['target_no'] = $this->get_target_no($val['product_id']).$code[$key];
+                $targets[] 			= $this->CI->target_model->insert($val);
+            }
+            return $targets;
+        }
+        return false;
+    }
+
     //簽約
     public function signing_target( $target_id, $data, $user_id=0 ){
         if($target_id){
-            $param = array(
-                'person_image'	=> $data['person_image'],
-                'status'		=> 2,
-            );
-            $rs = $this->CI->target_model->update($target_id,$param);
-            $this->insert_change_log($target_id,$param,$user_id);
+            $rs = $this->CI->target_model->update($target_id,$data);
+            $this->insert_change_log($target_id,$data,$user_id);
             return $rs;
         }
         return false;
@@ -221,24 +229,32 @@ class Target_lib{
     }
 
     //核可額度利率
-	public function approve_target($target = [],$remark=false,$renew=false){
+	public function approve_target($target = [], $remark = false, $renew = false, $cer = false, $stage_cer = false, $subloan_status = false){
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('contract_lib');
+        $this->CI->load->library('Anti_fraud_lib');
 		$msg = false;
 		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
-			$sub_product_id	= $target->sub_product_id;
+			$sub_product_id	= $stage_cer?9999:$target->sub_product_id;
 			$product_info 	= $product_list[$product_id];
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
+            if($this->is_sub_product($product_info,$sub_product_id)){
+                $product_info = $this->trans_sub_product($product_info,$sub_product_id);
+            }
+
+			$credit 		= $stage_cer<1?$this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target):false;
 			if(!$credit){
-				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id);
-				if($rs){
-					$credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
-				}
+				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null,$stage_cer);
+				if(is_bool($rs)){
+                    $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
+				}else{
+                    $rs['rate'] = $this->CI->credit_lib->get_rate($rs['level'],$target->instalment,$target->product_id,$target->sub_product_id,$target);
+                    $credit = $rs;
+                }
 			}
-			
+
 			if($credit){
 				$interest_rate	= $credit['rate'];
 				if($interest_rate){
@@ -282,16 +298,14 @@ class Target_lib{
                     }
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
-                    $subloan_list   = $this->CI->config->item('subloan_list');
-                    $subloan_status = preg_match('/'.$subloan_list.'/',$target->target_no)?true:false;
                     if($user_current_credit_amount >= 1000 || $subloan_status){
                         //該產品額度
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
-                        $loan_amount 		= $target->amount > $credit['amount']&&$subloan_status==false?$credit['amount']:$target->amount;
+                        $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false || $stage_cer != 0?$credit['amount']:$target->amount;
 
-                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status) {
+                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0) {
                             if($product_info['type']==1||$subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
@@ -304,7 +318,7 @@ class Target_lib{
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 0,
                                     ];
-                                    if($subloan_status || $renew){
+                                    if(empty($this->CI->anti_fraud_lib->related_users($target->user_id,true))){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark ? $param['remark'] = $remark : '';
@@ -312,6 +326,8 @@ class Target_lib{
                                     }else{
                                         $param['sub_status'] = 9;
                                     }
+                                    $param['sub_product_id'] = $sub_product_id;
+                                    $param['target_data'] = json_encode($cer);
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     if($rs && $msg){
                                         $this->CI->load->library('Notification_lib');
@@ -465,7 +481,7 @@ class Target_lib{
 								$total += $value->amount;
 								if($total < $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount;
-									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,'',$target->repayment);
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target);
 									$contract_id	= $this->CI->contract_lib->sign_contract('lend',[
 										$value->user_id,
 										$target->user_id,
@@ -481,7 +497,7 @@ class Target_lib{
 									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 								}else if($total >= $target->loan_amount && $ended){
 									$loan_amount 	= $value->amount + $target->loan_amount - $total;
-									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target->instalment,$target->interest_rate,'',$target->repayment);
+									$schedule 		= $this->CI->financial_lib->get_amortization_schedule($loan_amount,$target);
 									$contract_id	= $this->CI->contract_lib->sign_contract('lend',[
 										$value->user_id,
 										$target->user_id,
@@ -512,7 +528,7 @@ class Target_lib{
 						//流標
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->renew_subloan($target);
-						}else{
+						}elseif($target->sub_product_id != 9999){
 							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
 								'expire_time'	=> strtotime('+2 days', $target->expire_time),
@@ -729,6 +745,7 @@ class Target_lib{
 		]);
 		
 		if($transactions){
+            $limit_date = '';
 			foreach($transactions as $key => $value){
 				if($value->instalment_no && $value->source==SOURCE_AR_PRINCIPAL){
 					$limit_date = $value->limit_date?$value->limit_date:$limit_date;
@@ -841,43 +858,77 @@ class Target_lib{
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> [0,22],
-			'sub_status not'=> [9],
-			'script_status'	=> 0
+			'sub_status !=' => 9,
+			'script_status'	=> 0,
 		]);
 		$list 		= [];
 		$ids		= [];
 		$script  	= 4;
 		$count 		= 0;
-		if($targets && !empty($targets)){
+        $allow_stage_cer = [1,3];
+        $stage_cer = 0;
+        if($targets && !empty($targets)){
 			foreach($targets as $key => $value){
 				$list[$value->product_id][$value->id] = $value;
 				$ids[] = $value->id;
-				$get_amount = $value->amount;
 			}
 
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
 			if($rs){
-                $diploma = [];
-				foreach($list as $product_id => $targets){
-					$product_list 			= $this->CI->config->item('product_list');
-					$product_certification 	= $product_list[$product_id]['certifications'];
-					foreach($targets as $target_id => $value){
-						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,0,true);
+                $product_list = $this->CI->config->item('product_list');
+                $product = $product_list[$value->product_id];
+                $sub_product_id = $value->sub_product_id;
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                }
+                $product_certification = $product['certifications'];
+                $subloan_list   = $this->CI->config->item('subloan_list');
+                foreach($list as $product_id => $targets){
+                    foreach($targets as $target_id => $value){
+                        $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
+                        $company = $value->product_id >= 1000 ?1:0;
+						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
 						$finish		 		= true;
+                        $finish_stage_cer = [];
+                        $cer = [];
 						foreach($certifications as $key => $certification){
-                            $key==8?$diploma=$certification:null;
-							if(in_array($certification['id'],$product_certification) && $certification['user_status']!='1'){
-                                if($certification['id'] == 9){
-                                    $finish = $this->CI->certification_lib->option_investigation($product_id, $certification, $diploma);
+                            if($finish && in_array($certification['id'],$product_certification)){
+                                if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[1,2,3,4,5,6,7,8,9,10]) && $sub_product_id == 0 && !$subloan_status){
+                                    $certification['user_status'] == 1
+                                        ?$finish_stage_cer[] = $certification['id']==10?'A':$certification['id']
+                                        :'';
                                 }
-                                else{
+                                elseif($certification['user_status']!='1'){
                                     $finish = false;
                                 }
                             }
-						}
+                            $certification['user_status']=='1'?$cer[] = $certification['certification_id']:'';
+                        }
+
+                        $targetData = json_decode($value->target_data);
+                        foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
+                            if(empty($targetData->$targetDataKey)){
+                                $finish = false;
+                                break;
+                            }
+                        }
+
 						if($finish){
+                            $targetData->certification_id = $cer;
+                            if(count($finish_stage_cer) >= 6){
+                                $implode = implode('',$finish_stage_cer);
+                                if($implode == '134567'){
+                                    $stage_cer = 1;
+                                }elseif ($implode == '134567A'){
+                                    $stage_cer = 2;
+                                }elseif ($implode == '1345678A'){
+                                    $stage_cer = 3;
+                                }elseif ($implode == '1345679A'){
+                                    $stage_cer = 4;
+                                }
+                            }
 							$count++;
-							$this->approve_target($value);
+							$this->approve_target($value,false,false,$targetData ,$stage_cer,$subloan_status);
 						}else{
 							//自動取消
 							$limit_date 	= date('Y-m-d',strtotime('-'.TARGET_APPROVE_LIMIT.' days'));
@@ -958,5 +1009,39 @@ class Target_lib{
 		}
 		return false;
 	}
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
 
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->CI->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
 }

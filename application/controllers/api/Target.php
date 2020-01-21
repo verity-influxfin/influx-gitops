@@ -348,7 +348,7 @@ class Target extends REST_Controller {
 				}
 			}
 
-			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target->instalment,$target->interest_rate,$date="",$target->repayment);
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target,$date="");
 		
 			$user_info 	= $this->user_model->get($target->user_id); 
 			$user		= array();

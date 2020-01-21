@@ -846,10 +846,10 @@ class Recoveries extends REST_Controller {
 			}
 			
 			$target_info 	= $this->target_model->get($investment->target_id);
-			$product_list 	= $this->config->item('product_list');
-			$product_info	= $product_list[$target_info->product_id];
-			$user_info 		= $this->user_model->get($target_info->user_id); 
-			$user			= [];
+            $user_info 		= $this->user_model->get($target_info->user_id);
+            $product_list = $this->config->item('product_list');
+            $product_info	= $product_list[$target_info->product_id];
+            $user			= [];
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
@@ -869,7 +869,75 @@ class Recoveries extends REST_Controller {
 					'company_name'	=> $user_meta?$user_meta->meta_value:'',
 				);
 			}
-			
+
+            $product = $product_list[$target_info->product_id];
+            $sub_product_id = $target_info->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+
+            $targetDatas = [];
+            $targetData = json_decode($target_info->target_data);
+            if($product['visul_id'] == 'DS2P1') {
+                $cer_group['car_file'] = [1, '車籍文件'];
+                $cer_group['car_pic'] = [1, '車輛外觀照片'];
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'vin' => $targetData->vin,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
+                foreach ($product['targetData'] as $key => $value) {
+                    if (in_array($key, ['car_photo_front_image', 'car_photo_back_image', 'car_photo_all_image', 'car_photo_date_image', 'car_photo_mileage_image'])) {
+                        if (isset($targetData->$key)) {
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue) {
+                                preg_match('/\/image.+/', $svalue, $matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        } else {
+                            $targetDatas[$key] = '';
+                        }
+                    }
+                }
+                $user = array(
+                    'name' 			=> '',
+                    'id_number'		=> '',
+                    'sex' 			=> '',
+                    'age'			=> '',
+                    'company_name'	=> '',
+                );
+            }
+
+            $certification_list = [];
+            $targetData_cer = isset($targetData->certification_id)?$targetData->certification_id:false;
+            if($targetData_cer){
+                $this->load->model('user/user_certification_model');
+                $this->load->library('Certification_lib');
+                $certification 	= $this->config->item('certifications');
+                $certifications = $this->user_certification_model->get_many_by([
+                    'id' => $targetData_cer,
+                    'user_id' => $target_info->user_id,
+                ]);
+                foreach($certifications as $key => $value){
+                    $cer = $certification[$value->certification_id];
+                    $cer['user_status'] 		   = intval($value->status);
+                    $cer['certification_id'] 	   = intval($value->id);
+                    $cer['updated_at'] 		   = intval($value->updated_at);
+                    $certification_list[] = $cer;
+                }
+            }
+
+            $reason = $target_info->reason;
+            $json_reason = json_decode($reason);
+            if(isset($json_reason->reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            }
+
 			$target = [
 				'id'			=> intval($target_info->id),
 				'target_no'		=> $target_info->target_no,
@@ -880,18 +948,22 @@ class Recoveries extends REST_Controller {
 				'loan_amount'	=> intval($target_info->loan_amount),
 				'credit_level'	=> intval($target_info->credit_level),
 				'interest_rate'	=> floatval($target_info->interest_rate),
-				'reason'		=> $target_info->reason,
+				'reason'		=> $reason,
 				'remark'		=> $target_info->remark,
+				'targetDatas'		=> $targetDatas,
 				'instalment' 	=> intval($target_info->instalment),
 				'repayment' 	=> intval($target_info->repayment),
 				'delay'			=> intval($target_info->delay),
 				'delay_days'	=> intval($target_info->delay_days),
 				'loan_date'		=> $target_info->loan_date,
+                'isTargetOpaque' => $target_info->sub_product_id==9999?true:false,
 				'status'		=> intval($target_info->status),
 				'sub_status'	=> intval($target_info->sub_status),
-				'created_at'	=> intval($target_info->created_at),			
+				'created_at'	=> intval($target_info->created_at),
 			];
-			
+
+            count($certification_list)>0?$target['certification'] = $certification_list:'';
+
 			$repayment_detail = [];
 			$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
 				'target_id'	=> $target_info->id,
@@ -1130,7 +1202,7 @@ class Recoveries extends REST_Controller {
 			'investor'	=> 1,
 			'user_id'	=> $user_id
 		]);
-		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account,150);
 		if($passbook_list){
 			$transaction_source = $this->config->item('transaction_source');
 			foreach($passbook_list as $key => $value){
@@ -1674,5 +1746,40 @@ class Recoveries extends REST_Controller {
             'delay'	    => $delay_list,
         );
         $this->response(array('result' => 'SUCCESS','data' => $data ));
+    }
+
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
     }
 }

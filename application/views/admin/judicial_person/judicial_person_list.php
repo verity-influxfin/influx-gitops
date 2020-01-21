@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">法人帳號 - 申請列表</h1>
+                    <h1 class="page-header">法人 - <? echo $status_list==0?'管理':'申請';?>列表</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -52,7 +52,7 @@
 								<tr>
 									<td>會員ID：</td>
 									<td><input type="text" value="<?=isset($_GET['user_id'])&&$_GET['user_id']!=""?$_GET['user_id']:""?>" id="user_id" /></td>	
-									<td>統一編號：</td>
+									<td style="padding-left: 15px;">統一編號：</td>
 									<td><input type="text" value="<?=isset($_GET['tax_id'])&&$_GET['tax_id']!=""?$_GET['tax_id']:""?>" id="tax_id" /></td>
 									<td></td>
 								</tr>
@@ -79,19 +79,19 @@
                                 <table class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>統一編號</th>
-                                            <th>公司類型</th>
-                                            <th>公司名稱</th>
                                             <th>法人 User ID</th>
                                             <th>申請人 ID</th>
                                             <th>申請人</th>
+                                            <th>統一編號</th>
+                                            <th>公司類型</th>
+                                            <th>公司名稱</th>
                                             <th>聯絡人</th>
                                             <th>電話</th>
                                             <th>地址</th>
                                             <th>備註</th>
                                             <th>狀態</th>
 											<th>申請日期</th>
-                                            <th>Detail</th>
+                                            <th>管理</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,28 +99,29 @@
 										if(isset($list) && !empty($list)){
 											$count = 0;
 											foreach($list as $key => $value){
+                                                $media_data =str_replace(']},',"",strrchr(urldecode($value->sign_video),']}'));
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list">
-                                            <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
-                                            <td><?=isset($company_type[$value->company_type])?$company_type[$value->company_type]:"" ?></td>
-                                            <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->company_user_id)&&$value->company_user_id!=0?$value->company_user_id:"審核中" ?></td>
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
+                                            <td><?=isset($value->tax_id)?$value->tax_id:"" ?></td>
+                                            <td><?=isset($company_type[$value->company_type])?$company_type[$value->company_type]:"" ?></td>
+                                            <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->cooperation_contact)?$value->cooperation_contact:"" ?></td>
                                             <td><?=isset($value->cooperation_phone)?$value->cooperation_phone:"" ?></td>
                                             <td><?=isset($value->cooperation_address)?$value->cooperation_address:"" ?></td>
                                             <td><?=isset($value->remark)?$value->remark:"" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-											<? if($value->status==0){ ?>
+											<? if($value->status==0 && $media_data != ']}'){ ?>
 												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
 												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
-											<? } ?>
+											<? } elseif($value->status==0){echo '未上傳法人影片';} ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
-                                        </tr>                                        
+											<td><a target="_blank" href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+                                        </tr>
 									<?php 
 										}}
 									?>

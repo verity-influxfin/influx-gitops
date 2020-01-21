@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Judicialperson extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','verify_success','verify_failed');
+	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed');
 	
 	public function __construct() {
 		parent::__construct();
@@ -84,7 +84,7 @@ class Judicialperson extends MY_Admin_Controller {
                 if ($info) {
                     $this->load->library('Gcis_lib');
                     $user_info = $this->user_model->get($info->user_id);
-					$info->user_name = $user_info->name;
+					$info->user_name = isset($user_info->name)?$user_info->name:'';
 					$page_data['company_data'] = $this->gcis_lib->account_info($info->tax_id);//公司統編查詢
 					$page_data['search_type']=0;
 					if(empty($page_data['company_data'])){//商業統編查詢，利用商業登記基本資料取得商業司資料
@@ -216,13 +216,18 @@ class Judicialperson extends MY_Admin_Controller {
 			if($list){
 				foreach($list as $key => $value){
 					$user_info 	= $this->user_model->get($value->user_id);
+					$list[$key]->no_taishin = !$this->get_taishinAccount($value);
 					$list[$key]->user_name = $user_info?$user_info->name:"";
+					$list[$key]->cerCreditJudicial = $this->get_cerCreditJudicial($value->company_user_id);
+					$this->checkAndCreat_borrow_bankaccount($value);
 				}
 			}
 		}
 
+		$page_data['selling_type'] 		= $this->config->item('selling_type');
 		$page_data['list'] 				= $list;
 		$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
+		$page_data['status_list'] 		= isset($input['cooperation'])?$input['cooperation']:2;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -239,34 +244,26 @@ class Judicialperson extends MY_Admin_Controller {
             if($id){
                 $info = $this->judicial_person_model->get($id);
                 if($info){
-                    $user_info 					= $this->user_model->get($info->user_id);
+					$info->no_taishin = !$this->get_taishinAccount($info);
+                    $user_info = $this->user_model->get($info->user_id);
+					$info->cerCreditJudicial = $this->get_cerCreditJudicial($info->company_user_id);
                     $this->load->library('Gcis_lib');
+					$where = [
+						'user_id' => $info->user_id,
+						'status' => 1,
+					];
+					$page_data['bankbook_image'] = $this->user_bankaccount_model->get_by($where);
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['user_info'] 	= $user_info;
 					$page_data['data'] 			= $info;
+					$page_data['selling_type'] 		= $this->config->item('selling_type');
                     $page_data['content'] 		= json_decode($info->cooperation_content,true);
                     $page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
                     $page_data['company_type'] 		= $this->config->item('company_type');
                     $this->load->view('admin/_header');
 					$this->load->view('admin/_title',$this->menu);
-					$facade_image =array_column($page_data, 'facade_image');//找array內是否有facade_image
-					$store_image =array_column($page_data, 'store_image');//找array內是否有store_image
-					$bankbook_image =array_column($page_data, 'bankbook_image');//找array內是否有bankbook_image
-					
-					if($facade_image ==null){
-						$page_data['content']['facade_image']= false;
-					}
-					if($store_image ==null){
-						$page_data['content']['store_image']=false;
-					}
-					if($bankbook_image ==null){
-						$page_data['content']['bankbook_image']=false;
-					}
-				 // error_log(__CLASS__ . '::' . __FUNCTION__ . ' page_data = ' .print_r($page_data,1)."\n", 3, "application/debug.log");
-
 					$this->load->view('admin/judicial_person/cooperation_edit',$page_data);
-
                     $this->load->view('admin/_footer');
                 }else{
                     alert('查無此ID',admin_url('cooperation?cooperation=2'));
@@ -278,21 +275,38 @@ class Judicialperson extends MY_Admin_Controller {
             if (!empty($post['id'])) {
                 $info = $this->judicial_person_model->get($post['id']);
                 if ($info) {
-                    if ($post['cooperation'] == '1') {
+					if($post['create_taishin'] == 1){
+						if($info->cooperation!=1){
+							$data['msg'] = '經銷商未開通';
+						}
+						else{
+							$account = $this->get_taishinAccount($info);
+							if(!$account){
+								$rs = $this->virtual_account_model->insert([
+									'investor'			=> 0,
+									'user_id'			=> $info->company_user_id,
+									'virtual_account'	=> TAISHIN_VIRTUAL_CODE.'0'.substr($info->tax_id,0,8),
+								]);
+								$data['msg'] = $rs?'建立成功':'建立失敗';
+							}else{
+								$data['msg'] = '已存在帳號';
+							}
+						}
+					}elseif ($post['cooperation'] == '1') {
                         $rs = $this->judicialperson_lib->cooperation_success($post['id']);
+						$data['msg'] = $rs?'修改成功':'修改失敗';
                     } else if ($post['cooperation'] == '0') {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
-                    }
-
-                    if ($rs === true) {
-                        alert('更新成功', 'cooperation?cooperation=2');
-                    } else {
-                        alert('更新失敗，請洽工程師', 'cooperation?cooperation=2');
-                    }
+						$data['msg'] = $rs?'變更成功':'變更失敗';
+					}
+					$data['redirect'] = base_url('admin/Judicialperson/cooperation_edit?id='.$post['id']);
+					print(json_encode($data));
+					return true;
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));
                 }
-            } else {
+            }
+            else {
                 alert('查無此ID', admin_url('cooperation?cooperation=2'));
             }
         }
@@ -328,6 +342,44 @@ class Judicialperson extends MY_Admin_Controller {
 			}
 		}else{
 			echo '查無此ID';die();
+		}
+	}
+
+	private function get_cerCreditJudicial($user_id){
+		$this->load->library('certification_lib');
+		return $this->certification_lib->get_certification_info($user_id,1006,0);
+	}
+
+	private function get_taishinAccount($data){
+		if(in_array($data->selling_type,$this->config->item('use_taishin_selling_type'))){
+			return  $this->virtual_account_model->get_by(array(
+				'investor' => 0,
+				'user_id' => $data->company_user_id,
+				'virtual_account' => TAISHIN_VIRTUAL_CODE.'0'.$data->tax_id,
+			));
+		}
+		return false;
+	}
+
+	private function checkAndCreat_borrow_bankaccount($data){
+		if(in_array($data->selling_type,$this->config->item('use_borrow_account_selling_type'))) {
+			$user_bankaccount = $this->user_bankaccount_model->get_many_by([
+				'user_id' => $data->company_user_id,
+			]);
+			if (count($user_bankaccount) == 1) {
+				$user_bankaccount[0]->investor = 0;
+				$this->user_bankaccount_model->insert([
+					"user_id" => $user_bankaccount[0]->user_id,
+					"investor" => 0,
+					"user_certification_id" => $user_bankaccount[0]->user_certification_id,
+					"bank_code" => $user_bankaccount[0]->bank_code,
+					"branch_code" => $user_bankaccount[0]->branch_code,
+					"bank_account" => $user_bankaccount[0]->bank_account,
+					"front_image" => $user_bankaccount[0]->front_image,
+					"back_image" => $user_bankaccount[0]->back_image,
+					"verify" => 2,
+				]);
+			}
 		}
 	}
 }

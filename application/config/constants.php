@@ -108,6 +108,7 @@ defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司�
 defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
 defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司帳號
 defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
+defined('NOT_DEALER') OR define('NOT_DEALER' , 218); //未有該商品類型的經銷商資格
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
@@ -124,6 +125,7 @@ defined('PASSWORD_LENGTH_ERROR')  		OR define('PASSWORD_LENGTH_ERROR'		, 312);
 defined('AGENT_EXIST')  				OR define('AGENT_EXIST'					, 313);//代理人已存在
 defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314);//已申請過經銷商
 defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315);//沒申請過經銷商
+defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316);//經銷商類別錯誤
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
@@ -131,7 +133,7 @@ defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402);
 defined('PRODUCT_INSTALMENT_ERROR')  	OR define('PRODUCT_INSTALMENT_ERROR'	, 403);
 defined('APPLY_NOT_EXIST')  			OR define('APPLY_NOT_EXIST'				, 404);
 defined('APPLY_NO_PERMISSION')  		OR define('APPLY_NO_PERMISSION'			, 405);
-//defined('APPLY_ACTION_ERROR')  			OR define('APPLY_ACTION_ERROR'			, 406);
+defined('APPLY_ACTION_ERROR')  			OR define('APPLY_ACTION_ERROR'			, 406);
 defined('APPLY_STATUS_ERROR')  			OR define('APPLY_STATUS_ERROR'			, 407);
 defined('APPLY_EXIST')  				OR define('APPLY_EXIST'					, 408);
 defined('PRODUCT_REPAYMENT_ERROR')  	OR define('PRODUCT_REPAYMENT_ERROR'		, 409);
@@ -139,6 +141,7 @@ defined('PRODUCT_TYPE_ERROR')  			OR define('PRODUCT_TYPE_ERROR'			, 410);
 defined('ORDER_NOT_EXIST')  			    OR define('ORDER_NOT_EXIST'				, 411);
 defined('ORDER_STATUS_ERROR')  			OR define('ORDER_STATUS_ERROR'			, 412);
 defined('ORDER_NO_PERMISSION')  			OR define('ORDER_NO_PERMISSION'			, 413);
+defined('PRODUCT_CLOSE') OR define('PRODUCT_CLOSE' , 414);
 defined('M_ORDER_NOT_EXIST')  			OR define('M_ORDER_NOT_EXIST'			, 420);
 defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
@@ -190,6 +193,7 @@ defined('TRANSFER_COMBINE_STATUS') 		OR define('TRANSFER_COMBINE_STATUS'		, 814)
 defined('TRANSFER_PASSWORD_ERROR') 		OR define('TRANSFER_PASSWORD_ERROR'		, 815); 
 defined('COMBINATION_NOT_EXIST') 		OR define('COMBINATION_NOT_EXIST'		, 816);
 defined('TARGET_IS_BUSY') 				OR define('TARGET_IS_BUSY'				, 817);
+defined('TARGET_OWNER_EXIST') 			OR define('TARGET_OWNER_EXIST'			, 818);
 //Repayment Error Code
 //defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
 //defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 
@@ -218,6 +222,11 @@ defined('PLATFORM_FEES')   			OR define('PLATFORM_FEES'			, 3); //平台手續�
 defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低平台手續費
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('ORDER_INTEREST_RATE') 		OR define('ORDER_INTEREST_RATE'		, 18); //分期利率
+defined('FEV_INTEREST_RATE') 		OR define('FEV_INTEREST_RATE'		, 15); //分期利率
+defined('FEV_SHARE_RATE') OR define('FEV_SHARE_RATE' , 2); //平台分潤
+defined('FEV_PREPAYMENT_SHARE_RATE') OR define('FEV_PREPAYMENT_SHARE_RATE' , 5); //提早清算平台分潤
+defined('SUL_INTEREST_STARTING_RATE') 		OR define('SUL_INTEREST_STARTING_RATE' , 5); //分期利率
+defined('SUL_INTEREST_ENDING_RATE') 		OR define('SUL_INTEREST_ENDING_RATE' , 20); //分期利率
 defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%
 defined('GRACE_PERIOD') 					OR define('GRACE_PERIOD'					, 7); //寬限期
 defined('TRANSACTION_PASSWORD_LENGTH') 		OR define('TRANSACTION_PASSWORD_LENGTH'		, 6); //交易密碼長度
@@ -234,6 +243,7 @@ defined('ORDER_TRANSFER_RANGE_DAYS')OR define('ORDER_TRANSFER_RANGE_DAYS', 30); 
 defined('DIPLOMA_RANGE_DAYS')   	OR define('DIPLOMA_RANGE_DAYS'		, 395); //最高學歷允許免年徵畢業時間
 defined('TAX_RATE')   				OR define('TAX_RATE'				, 5); //稅率
 defined('PLATFORM_VIRTUAL_ACCOUNT') OR define('PLATFORM_VIRTUAL_ACCOUNT', '56630000000000'); //
+defined('PLATFORM_TAISHIN_VIRTUAL_ACCOUNT') OR define('PLATFORM_TAISHIN_VIRTUAL_ACCOUNT', '97213000000000'); //
 defined('BANK_COST_ACCOUNT') 		OR define('BANK_COST_ACCOUNT'		, '00000000000000');
 defined('LENDING_URL') 				OR define('LENDING_URL'				, getenv('ENV_LENDING_URL'));
 defined('BORROW_URL') 				OR define('BORROW_URL'				, getenv('ENV_BORROW_URL'));
@@ -304,12 +314,23 @@ defined('CATHAY_CUST_PASSWORD')    	OR define('CATHAY_CUST_PASSWORD'	, getenv('E
 defined('CATHAY_CUST_ACCNO')     	OR define('CATHAY_CUST_ACCNO'		, getenv('ENV_CATHAY_CUST_ACCNO'));
 defined('CATHAY_VIRTUAL_CODE')     	OR define('CATHAY_VIRTUAL_CODE'		, getenv('ENV_CATHAY_VIRTUAL_CODE'));
 defined('CATHAY_AES_KEY')     		OR define('CATHAY_AES_KEY'			, getenv('ENV_CATHAY_AES_KEY'));
-defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '013');
+defined('CATHAY_BANK_CODE')     	OR define('CATHAY_BANK_CODE'		, '812');
 defined('CATHAY_BRANCH_CODE')     	OR define('CATHAY_BRANCH_CODE'		, '0154');
 defined('CATHAY_BANK_NAME')     	OR define('CATHAY_BANK_NAME'		, '國泰世華商業銀行');
 defined('CATHAY_BRANCH_NAME')     	OR define('CATHAY_BRANCH_NAME'		, '信義分行');
 defined('CATHAY_COMPANY_NAME')     	OR define('CATHAY_COMPANY_NAME'		, '普匯金融科技股份有限公司');
 defined('CATHAY_COMPANY_ACCOUNT')   OR define('CATHAY_COMPANY_ACCOUNT'	, '015035006602');
+
+defined('TAISHIN_VIRTUAL_CODE') OR define('TAISHIN_VIRTUAL_CODE', getenv('ENV_TAISHIN_VIRTUAL_CODE'));
+defined('TAISHIN_CUST_ACCNO') OR define('TAISHIN_CUST_ACCNO', getenv('ENV_TAISHIN_CUST_ACCNO'));
+defined('TAISHIN_BANK_CODE') OR define('TAISHIN_BANK_CODE', '812');
+defined('TAISHIN_BRANCH_CODE') OR define('TAISHIN_BRANCH_CODE', '');
+defined('TAISHIN_BANK_NAME') OR define('TAISHIN_BANK_NAME', '台新國際商業銀行');
+defined('TAISHIN_BRANCH_NAME') OR define('TAISHIN_BRANCH_NAME', '');
+defined('TAISHIN_COMPANY_NAME') OR define('TAISHIN_COMPANY_NAME', '普匯金融科技股份有限公司');
+defined('TAISHIN_COMPANY_ACCOUNT') OR define('TAISHIN_COMPANY_ACCOUNT', '20680100217837');
+
+
 //Ezpay
 defined('EZPAY_ID')     			OR define('EZPAY_ID'				, getenv('ENV_EZPAY_ID'));
 defined('EZPAY_KEY')     			OR define('EZPAY_KEY'				, getenv('ENV_EZPAY_KEY'));
