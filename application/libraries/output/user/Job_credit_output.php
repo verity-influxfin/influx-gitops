@@ -59,9 +59,25 @@ class Job_credit_output
         } else {
 			$output["salary"] = 0;
         }
-		
+
         if (isset($this->certification->content->pdf_file)) {
             $output["file"] = $this->certification->content->pdf_file;
+        }
+
+        if (isset($this->certification->content->income_prove_image)) {
+            $output["income_prove_images"] = $this->certification->content->income_prove_image;
+        }
+
+        if (isset($this->certification->content->auxiliary_image)) {
+            $output["auxiliary_images"] = $this->certification->content->auxiliary_image;
+        }
+
+        if (isset($this->certification->content->license_image)) {
+            $output["license_images"] = $this->certification->content->license_image;
+        }
+
+        if (isset($this->certification->content->business_image)) {
+            $output["business_images"] = $this->certification->content->business_image;
         }
 
         return $output;
