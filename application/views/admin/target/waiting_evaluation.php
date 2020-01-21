@@ -16,13 +16,13 @@
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="table-responsive">
-						<table id="targets" class="table table-bordered width=100%">
+						<table id="dataTables-tables" class="table table-bordered width="100%">
 							<thead>
 							<tr>
 								<th width="30%">案號</th>
 								<th width="20%">產品</th>
 								<th width="20%">會員 ID</th>
-								<th width="30%">Detail</th>
+								<th width="30%">二審</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -74,7 +74,7 @@
 
         function fillFakeTargets(show = true) {
             if (!show) {
-                $("#targets tr:gt(0)").remove();
+                $("#dataTables-tables tr:gt(0)").remove();
                 return;
             }
 
@@ -85,7 +85,7 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag)
-                ).appendTo("#targets");
+                ).appendTo("#dataTables-tables");
 			}
 		}
 
@@ -94,13 +94,13 @@
 				let target = targets[i];
 				let user = users[i];
 
-				let detailButton = '<a href="/admin/target/final_validations?id=' + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-default">Detail</button></a>';
+				let detailButton = '<a href="/admin/target/final_validations?id=' + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-danger">審核</button></a>';
 				$("<tr>").append(
                     getCenterTextCell(target.number),
 					getCenterTextCell(target.product.name),
 					getCenterTextCell(user.id),
 					getCenterTextCell(detailButton)
-				).appendTo("#targets");
+				).appendTo("#dataTables-tables");
 			}
 		}
 

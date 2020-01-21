@@ -399,7 +399,7 @@ class Transaction_lib{
 
 								
 								//攤還表
-								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
+								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target,$date);
 								if($amortization_schedule){
 									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
 										$transaction[]	= [
@@ -431,7 +431,7 @@ class Transaction_lib{
 										];
 										
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
-										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 										$transaction[]	= [
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
@@ -520,7 +520,7 @@ class Transaction_lib{
 
 						if($investment_id){
 							//攤還表
-							$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($total_amount,$target->instalment,$target->interest_rate,$date,$target->repayment,2);
+							$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($total_amount,$target,$date);
 							if($amortization_schedule){
 								foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
 									$transaction[]	= [
@@ -552,7 +552,7 @@ class Transaction_lib{
 									];
 
 									$total 	= intval($payment['interest'])+intval($payment['principal']);
-									$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+									$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 									$transaction[]	= [
 										'source'			=> SOURCE_AR_FEES,
 										'entering_date'		=> $date,
@@ -1059,9 +1059,8 @@ class Transaction_lib{
 									'status'			=> 2
 								);
 
-
 								//攤還表
-								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target->instalment,$target->interest_rate,$date,$target->repayment);
+								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target,$date);
 								if($amortization_schedule){
 									foreach($amortization_schedule['schedule'] as $instalment_no => $payment){
 										$transaction[]	= array(
@@ -1093,7 +1092,7 @@ class Transaction_lib{
 										);
 
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
-										$ar_fee = intval(round($total/100*REPAYMENT_PLATFORM_FEES,0));
+										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 										$transaction[]	= array(
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
@@ -1258,7 +1257,7 @@ class Transaction_lib{
 
     private function reset_credit_expire_time($target=[]){
         $this->CI->load->library('credit_lib');
-        $credit = $this->CI->credit_lib->get_credit($target->user_id,$target->product_id);
+        $credit = $this->CI->credit_lib->get_credit($target->user_id,$target->product_id, $target->sub_product_id);
         $expire_time = $credit['expire_time'];
         $max_time = strtotime("+2 months", time());
         $this->CI->load->model('loan/credit_model');

@@ -26,9 +26,15 @@ class Risk extends MY_Admin_Controller {
 		$user_list 					= array();
 		$user_investor_list 		= array();
 		$certification_investor_list = array();
-		$user_certification_list	= $this->user_certification_model->get_many_by(array(
-			'status'	=> array(0,3),
-		));
+
+		$target_status = [0,1,2,21,22,30,31,32];
+		$cer_parm = [
+            'status'	=> array(0,3),
+        ];
+
+        isset($input['investor']) ? $cer_parm['investor'] = $input['investor'] : '';
+
+		$user_certification_list	= $this->user_certification_model->get_many_by($cer_parm);
 		if($user_certification_list){
 			foreach($user_certification_list as $key => $value){
 				if($value->investor){
@@ -53,30 +59,27 @@ class Risk extends MY_Admin_Controller {
 		}
 		
 		if($user_list){
-			$targets = $this->target_model->get_many_by(array(
-				'user_id'	=> $user_list,
-				'status'	=> 0
-			));
-			if($targets){
-				foreach($targets as $key => $value){
-					$list[$value->id] = $value;
-				}
-			}
-		}
-		
-		$targets = $this->target_model->get_many_by(array(
-			'status'	=> array(0,1,2,21,22)
-		));
-		if($targets){
-			foreach($targets as $key => $value){
-				$list[$value->id] = $value;
-			}
-		}
-		
-		if($list){
+            $target_parm = [
+                'user_id'	=> $user_list,
+                'status'	=> $target_status
+            ];
+            isset($input['company'])
+                ? $input['company'] == 1
+                    ?$target_parm['product_id >='] = 1000
+                    :$target_parm['product_id <'] = 1000
+                : '';
+            $targets = $this->target_model->order_by('user_id','desc')->get_many_by($target_parm);
+            if($targets){
+                foreach($targets as $key => $value){
+                    $list[$value->id] = $value;
+                }
+            }
+        }
+
+        if($list){
 			ksort($list);
 			foreach($list as $key => $value){
-				$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0);
+				$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0,0,$value);
 				if(isset($list[$key]->certification[3]['certification_id'])){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_certification_id'	=> $list[$key]->certification[3]['certification_id'],
@@ -92,7 +95,9 @@ class Risk extends MY_Admin_Controller {
 		$page_data['certification'] 		= $this->config->item('certifications');
 		$page_data['status_list'] 			= $this->target_model->status_list;
 		$page_data['product_list']			= $this->config->item('product_list');
-		
+		$page_data['sub_product_list'] = $this->config->item('sub_product_list');
+		$page_data['input'] = $input;
+
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/risk_target',$page_data);
@@ -126,8 +131,9 @@ class Risk extends MY_Admin_Controller {
 		$page_data['list'] 			= $list;
 		$page_data['status_list']	= $this->credit_model->status_list;
 		$page_data['product_list']	= $this->config->item('product_list');
+        $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/credit_list',$page_data);
 		$this->load->view('admin/_footer');

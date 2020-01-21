@@ -99,14 +99,14 @@
 							<td data-bgcolor="bg-module" bgcolor="#eaeced">
 								<table class="flexible" width="600" align="center" style="margin:0 auto;margin-top:32px;" cellpadding="0" cellspacing="0">
 									<tr>
-										<td class="img-flex"><img src="https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/mail_assets/{mail_event}/{type}.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
+										<td class="img-flex"><img src="<?=FRONT_CDN_URL ?>mail_assets/{mail_event}/{type}.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
 									</tr>
 									<tr>
 										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bgcolor="#f9f9f9">
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td align="center">
-														<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/logo.png" border="0" style="font:bold 30px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
+														<img src="<?=FRONT_CDN_URL ?>public/logo.png" border="0" style="font:bold 30px Arial, Helvetica, sans-serif; color:#606060;" width="300" height="100" alt="INFLUXFIN.COM" />
 													</td>
 												</tr>
 												<tr>

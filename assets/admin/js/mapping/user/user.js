@@ -7,6 +7,7 @@ class User
 		this.gender = user.sex;
 		this.birthday = user.birthday;
 		this.registeredAt = user.created_at;
+		this.judicial_id = user.judicial_id;
 		this.setIdCard(user)
 		this.setSchool(user)
 		this.setContact(user)

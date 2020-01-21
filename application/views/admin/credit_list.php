@@ -53,7 +53,7 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:'' ?>">
 											<td><?=isset($value->user_id)?$value->user_id:'' ?></td>
 											<td><?=isset($value->user_name)?$value->user_name:'' ?></td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></td>
                                             <td><?=isset($value->level)?$value->level:'' ?></td>
                                             <td><?=isset($value->points)?$value->points:'' ?></td>
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>

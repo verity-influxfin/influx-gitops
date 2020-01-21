@@ -39,9 +39,9 @@ class Repayment extends REST_Controller {
 			}
 			
 			//暫不開放法人
-			if(isset($tokenData->company) && $tokenData->company != 0 ){
-				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
-			}
+			//if(isset($tokenData->company) && $tokenData->company != 0 ){
+			//	$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+			//}
 			
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
@@ -547,6 +547,89 @@ class Repayment extends REST_Controller {
 				$this->response([ 'result' => 'ERROR','error' => APPLY_NO_PERMISSION ]);
 			}
 
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+            }
+
+            $targetDatas = [];
+            if($product['visul_id'] == 'DS2P1'){
+                $targetData = json_decode($target->target_data);
+                $cer_group['car_file'] = [1,'車籍文件'];
+                $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'vin' => $targetData->vin,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image','car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        if(isset($targetData->$key)){
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue){
+                                preg_match('/\/image.+/', $svalue,$matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        }
+                        else{
+                            $targetDatas[$key] = '';
+                        }
+                    }
+                }
+
+                $virtual_account	= array(
+                    'bank_code'			=> '',
+                    'branch_code'		=> '',
+                    'bank_name'			=> '',
+                    'branch_name'		=> '',
+                    'virtual_account'	=> '',
+                );
+                $bank_account 		= array(
+                    'bank_code'		=> '',
+                    'branch_code'	=> '',
+                    'bank_account'	=> '',
+                );
+
+                $virtual 	= $this->virtual_account_model->get_by([
+                    'investor' => 0,
+                    'user_id' => $user_id,
+                    'virtual_account like' => TAISHIN_VIRTUAL_CODE.'%'
+                ]);
+                if($virtual){
+                    $virtual_account	= array(
+                        'bank_code'			=> TAISHIN_BANK_CODE,
+                        'branch_code'		=> TAISHIN_BRANCH_CODE,
+                        'bank_name'			=> TAISHIN_BANK_NAME,
+                        'branch_name'		=> TAISHIN_BRANCH_NAME,
+                        'virtual_account'	=> $virtual->virtual_account,
+                    );
+                }
+
+                //檢查金融卡綁定 NO_BANK_ACCOUNT
+                $user_bankaccount 	= $this->user_bankaccount_model->get_by([
+                    'investor'	=> 0,
+                    'status'	=> 1,
+                    'user_id'	=> $user_id,
+                    'verify'	=> 1
+                ]);
+                if($user_bankaccount){
+                    $bank_account 		= array(
+                        'bank_code'		=> $user_bankaccount->bank_code,
+                        'branch_code'	=> $user_bankaccount->branch_code,
+                        'bank_account'	=> $user_bankaccount->bank_account,
+                    );
+                }
+                $targetDatas['virtual_account'] = $virtual_account;
+                $targetDatas['bank_account'] = $bank_account;
+            }
+
 			$next_repayment = [
 				'date' 				=> '',
 				'instalment'		=> 0,
@@ -597,6 +680,13 @@ class Repayment extends REST_Controller {
                 $subloan = $this->subloan_lib->get_subloan($target);
                 $subloan_target_id = $subloan?intval($subloan->new_target_id):'';
             }
+
+            $reason = $target->reason;
+            $json_reason = json_decode($reason);
+            if(isset($json_reason->reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            }
+
 			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
@@ -609,9 +699,10 @@ class Repayment extends REST_Controller {
 				'credit_level' 		=> intval($target->credit_level),
 				'interest_rate' 	=> floatval($target->interest_rate),
 				'damage_rate' 		=> intval($target->damage_rate),
-				'reason' 			=> $target->reason,
+				'reason'		=> $reason,
 				'remark' 			=> $target->remark,
-				'instalment' 		=> intval($target->instalment),
+                'targetDatas' => $targetDatas,
+                'instalment' 		=> intval($target->instalment),
 				'repayment' 		=> intval($target->repayment),
 				'delay' 			=> intval($target->delay),
 				'delay_days' 		=> intval($target->delay_days),
@@ -699,7 +790,7 @@ class Repayment extends REST_Controller {
 			if($target->status != 5 || $target->delay_days > 0 ){
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
-			
+
 			$data = $this->prepayment_lib->get_prepayment_info($target);
 			$this->response(['result' => 'SUCCESS','data' => $data]);
 		}
@@ -1062,7 +1153,7 @@ class Repayment extends REST_Controller {
 			'investor'	=> 0,
 			'user_id'	=> $user_id
 		]);
-		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+		$passbook_list = $this->passbook_lib->get_passbook_list($virtual_account->virtual_account,150);
 		if($passbook_list){
 			$transaction_source = $this->config->item('transaction_source');
 			foreach($passbook_list as $key => $value){
@@ -1080,4 +1171,38 @@ class Repayment extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => ['list' => $list]));
     }
 
+    private function sub_product_profile($product,$sub_product){
+        return array(
+            'id' => $product['id'],
+            'visul_id' => $sub_product['visul_id'],
+            'type' => $product['type'],
+            'identity' => $product['identity'],
+            'name' => $sub_product['name'],
+            'description' => $sub_product['description'],
+            'loan_range_s' => $sub_product['loan_range_s'],
+            'loan_range_e' => $sub_product['loan_range_e'],
+            'interest_rate_s' => $sub_product['interest_rate_s'],
+            'interest_rate_e' => $sub_product['interest_rate_e'],
+            'charge_platform' => $sub_product['charge_platform'],
+            'charge_platform_min' => $sub_product['charge_platform_min'],
+            'certifications' => $sub_product['certifications'],
+            'instalment' => $sub_product['instalment'],
+            'repayment' => $sub_product['repayment'],
+            'targetData' => $sub_product['targetData'],
+            'dealer' => $sub_product['dealer'],
+            'multi_target' => $sub_product['multi_target'],
+            'status' => $sub_product['status'],
+        );
+    }
+    private function is_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+    }
+
+    private function trans_sub_product($product,$sub_product_id){
+        $sub_product_list = $this->config->item('sub_product_list');
+        $sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        $product = $this->sub_product_profile($product,$sub_product_data);
+        return $product;
+    }
 }
