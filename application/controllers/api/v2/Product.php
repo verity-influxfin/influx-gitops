@@ -257,7 +257,7 @@ class Product extends REST_Controller {
                         foreach ($t2 as $key3 => $t3) {
                             $sub_product_info = [];
                             $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
-                            if (count($t3['sub_product'])) {
+                            if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
                                     if(isset($sub_product_list[$t4]) && !in_array($t4,$hiddenList)){
                                         $allow_visul_list[] = $sub_product_list[$t4]['visul_id'];
