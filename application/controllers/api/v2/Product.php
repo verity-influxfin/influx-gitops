@@ -250,15 +250,16 @@ class Product extends REST_Controller {
             $type_list = [];
             $designate = [];
             $allow_visul_list = [];
+            $hiddenList = [9999];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
                         foreach ($t2 as $key3 => $t3) {
                             $sub_product_info = [];
                             $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
-                            if (count($t3['sub_product']) > 0) {
+                            if (count($t3['sub_product'])) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
-                                    if(isset($sub_product_list[$t4])){
+                                    if(isset($sub_product_list[$t4]) && !in_array($t4,$hiddenList)){
                                         $allow_visul_list[] = $sub_product_list[$t4]['visul_id'];
                                         $sub_product_list[$t4]['name'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['name'];
                                         $sub_product_list[$t4]['description'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['description'];
