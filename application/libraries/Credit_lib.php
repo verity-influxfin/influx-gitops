@@ -66,17 +66,17 @@ class Credit_lib{
 	
 	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
 
+        $total = 0;
+        $param = [
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'user_id' => $user_id,
+            'amount' => 0
+        ];
 	    if($stage_cer == 0) {
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
             $data = [];
-            $total = 0;
-            $param = [
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'user_id' => $user_id,
-                'amount' => 0
-            ];
             foreach ($info as $key => $value) {
                 $data[$value->meta_key] = $value->meta_value;
             }
@@ -138,7 +138,6 @@ class Credit_lib{
 
         }
         if(in_array($stage_cer,[1,2])){
-            $param = [];
             $param['points'] = $total = 100;
         }
         $param['level'] 	= $this->get_credit_level($total,$product_id);
@@ -146,10 +145,6 @@ class Credit_lib{
             foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
                     $param['amount'] = $value['amount'];
-                    if($stage_cer!=0){
-                        $param['amount'] = $value['amount'];
-                        return $param;
-                    }
                     break;
                 }
             }
@@ -169,20 +164,20 @@ class Credit_lib{
 	}
 
 	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer){
-        if(in_array($stage_cer,[1,2])){
+        $total = 0;
+        $param = [
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'amount' => 0,
+        ];
+	    if(in_array($stage_cer,[1,2])){
             $param['points'] = $total = 100;
         }
         else{
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
             $data = [];
-            $total = 0;
-            $param = [
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-                'sub_product_id' => $sub_product_id,
-                'amount' => 0,
-            ];
             foreach ($info as $key => $value) {
                 $data[$value->meta_key] = $value->meta_value;
             }
@@ -551,7 +546,7 @@ class Credit_lib{
 		}
 		return false;
 	}
-	
+
 	public function  get_credit_level($points=0,$product_id=0){
 		if(intval($points)>0 && $product_id){
 			if(isset($this->credit['credit_level_'.$product_id])){

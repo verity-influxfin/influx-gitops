@@ -14,6 +14,7 @@ class Credit
 		if (!credit.product) return;
 		this.product = {}
 		this.product.id = credit.product.id;
+		this.product.sub_product_id = credit.product.sub_product_id;
 		this.product.name = credit.product.name;
 	}
 

@@ -484,7 +484,7 @@
 					二審分數調整
 				</div>
 				<div class="panel-body">
-					<div class="col-sm-4">
+					<div class="col-sm-4 changeCredit">
 						<h5>分數調整部分</h5>
 						<form id="credit-evaluation" method="GET" action="/admin/Target/credits">
 							<p>分數調整：(-400 ~ 400)</p>
@@ -492,7 +492,7 @@
 							<button class="btn btn-default" type="submit">額度試算</button>
 						</form>
 					</div>
-					<div class="col-sm-8">
+					<div class="col-sm-8 changeCredit">
 						<h5>調整後額度試算部分</h5>
 						<div class="table-responsive">
 							<table class="table table-bordered">
@@ -853,6 +853,12 @@
 
 		function fillCreditInfo(credit, isReEvaluated = false) {
 			var prefix = '';
+			if(credit.product.sub_product_id == 9999){
+                $('#credit-evaluation button').attr('disabled',false);
+                $('#evaluation-complete [type=submit]').text('通過');
+                $('#evaluation-complete [type=submit]').removeClass('btn-warning').addClass('btn-success');
+                $('.changeCredit').hide();
+            }
 			if (isReEvaluated) prefix = "new-";
 			$("#" + prefix + "product-name").text(credit.product.name);
 			$("#" + prefix + "credit-level").text(credit.level);

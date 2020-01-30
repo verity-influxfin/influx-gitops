@@ -29,7 +29,7 @@ class School_output
 			"name" => isset($school->name)?$school->name:'',
 			"department" => isset($school->department)?$school->department:'',
 			"major" => isset($school->major)?$school->major:'',
-			"system" => isset($school->system) ? $this->systemMapping[$school->system] : '',
+			"system" => isset($school->system) && isset($this->systemMapping[$school->system]) ? $this->systemMapping[$school->system] : '',
 		];
 
 		if (isset($school->graduate_date)) {

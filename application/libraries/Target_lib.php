@@ -239,20 +239,17 @@ class Target_lib{
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
 			$sub_product_id	= $stage_cer?9999:$target->sub_product_id;
-			$product_info 	= $product_list[$product_id];
+            $product_info 	= $product_list[$product_id];
             if($this->is_sub_product($product_info,$sub_product_id)){
                 $product_info = $this->trans_sub_product($product_info,$sub_product_id);
             }
 
-			$credit 		= $stage_cer<1?$this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target):false;
+			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 			if(!$credit){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null,$stage_cer);
-				if(is_bool($rs)){
+				if($rs){
                     $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
-				}else{
-                    $rs['rate'] = $this->CI->credit_lib->get_rate($rs['level'],$target->instalment,$target->product_id,$target->sub_product_id,$target);
-                    $credit = $rs;
-                }
+				}
 			}
 
 			if($credit){
