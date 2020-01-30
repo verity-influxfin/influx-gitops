@@ -498,14 +498,21 @@ class Target extends MY_Admin_Controller {
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
 
-		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
-		$credit["amount"] = $newCredits["amount"];
-		$credit["points"] = $newCredits["points"];
-		$credit["level"] = $newCredits["level"];
-		$credit["expire_time"] = $newCredits["expire_time"];
-		$this->load->library('output/loan/credit_output', ["data" => $credit]);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+        $credit["amount"] = $newCredits["amount"];
+        $credit["points"] = $newCredits["points"];
+        $credit["level"] = $newCredits["level"];
+        $credit["expire_time"] = $newCredits["expire_time"];
 
-		$response = [
+        $product_list = $this->config->item('product_list');
+        $product = $product_list[$target->product_id];
+        if($this->is_sub_product($product,$target->sub_product_id)){
+            $credit['sub_product_id'] = $target->sub_product_id;
+            $credit['sub_product_name'] = $this->trans_sub_product($product,$target->sub_product_id)['name'];
+        }
+        $this->load->library('output/loan/credit_output', ["data" => $credit]);
+
+        $response = [
 			"credits" => $this->credit_output->toOne(),
 		];
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
@@ -597,9 +604,6 @@ class Target extends MY_Admin_Controller {
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
             $target->productTargetData = $product;
-            if($this->is_sub_product($product,$sub_product_id)){
-                $target->productTargetData = $this->trans_sub_product($product,$sub_product_id);
-            }
 
             $this->config->load('credit',TRUE);
             $get_creditTargetData = $this->config->item('credit')['creditTargetData'];
@@ -621,6 +625,13 @@ class Target extends MY_Admin_Controller {
 				'certification_id' => 2,
 				'status' => 1,
 			]);
+
+            if($this->is_sub_product($product,$sub_product_id)){
+                $getSubProduct = $this->trans_sub_product($product,$sub_product_id);
+                $target->productTargetData = $getSubProduct;
+                $credits['sub_product_id'] = $sub_product_id;
+                $credits['sub_product_name'] = $getSubProduct['name'];
+            }
 
             if($user->company_status == 0){
                 $schoolCertificationDetailArray = $schoolCertificationDetail?json_decode($schoolCertificationDetail->content, true):false;
