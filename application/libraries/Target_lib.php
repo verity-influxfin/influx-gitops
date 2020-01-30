@@ -234,19 +234,21 @@ class Target_lib{
 		$this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
 		$msg = false;
-		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22)){
+		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22 || $target->status == 1 && $target->sub_product_id == 9999)){
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
-			$sub_product_id	= $stage_cer?9999:$target->sub_product_id;
+			$sub_product_id	= $stage_cer != 0
+                ? 9999
+                : ($target->sub_product_id == 9999 && $stage_cer == 0 ? 0:$target->sub_product_id);
             $product_info 	= $product_list[$product_id];
             if($this->is_sub_product($product_info,$sub_product_id)){
                 $product_info = $this->trans_sub_product($product_info,$sub_product_id);
             }
 
 			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
-			if(!$credit){
-				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null,$stage_cer);
+			if(!$credit || $stage_cer!=0){
+				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null, $stage_cer, $credit);
 				if($rs){
                     $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 				}
@@ -315,15 +317,16 @@ class Target_lib{
                                         'contract_id'		=> $contract_id,
                                         'status'			=> 0,
                                     ];
+                                    $param['sub_product_id'] = $sub_product_id;
                                     if(empty($this->CI->anti_fraud_lib->related_users($target->user_id,true))){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark ? $param['remark'] = $remark : '';
                                         $msg = true;
+                                        $target->sub_product_id == 9999 && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
                                     }else{
                                         $param['sub_status'] = 9;
                                     }
-                                    $param['sub_product_id'] = $sub_product_id;
                                     $param['target_data'] = json_encode($cer);
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     if($rs && $msg){
@@ -854,7 +857,7 @@ class Target_lib{
 		
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
-			'status'		=> [0,22],
+			'status'		=> [0,1,22],
 			'sub_status !=' => 9,
 			'script_status'	=> 0,
 		]);
@@ -882,72 +885,74 @@ class Target_lib{
                 $subloan_list   = $this->CI->config->item('subloan_list');
                 foreach($list as $product_id => $targets){
                     foreach($targets as $target_id => $value){
-                        $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
-                        $company = $value->product_id >= 1000 ?1:0;
-						$certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
-						$finish		 		= true;
-                        $finish_stage_cer = [];
-                        $cer = [];
-						foreach($certifications as $key => $certification){
-                            if($finish && in_array($certification['id'],$product_certification)){
-                                if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[1,2,3,4,5,6,7,8,9,10]) && $sub_product_id == 0 && !$subloan_status){
-                                    $certification['user_status'] == 1
+                        if($value->status != 1 || $value->status == 1 && $value->sub_product_id == 9999){
+                            $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
+                            $company = $value->product_id >= 1000 ?1:0;
+                            $certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
+                            $finish		 		= true;
+                            $finish_stage_cer = [];
+                            $cer = [];
+                            foreach($certifications as $key => $certification){
+                                if($finish && in_array($certification['id'],$product_certification)){
+                                if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
+                                    $certification['user_status'] != 1
                                         ?$finish_stage_cer[] = $certification['id']==10?'A':$certification['id']
                                         :'';
                                 }
-                                elseif($certification['user_status']!='1'){
+                                    elseif($certification['user_status']!='1'){
+                                        $finish = false;
+                                    }
+                                    $certification['user_status']=='1'?$cer[] = $certification['certification_id']:'';
+                                }
+                            }
+
+                            $targetData = json_decode($value->target_data);
+                            foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
+                                if(empty($targetData->$targetDataKey)){
                                     $finish = false;
+                                    break;
                                 }
                             }
-                            $certification['user_status']=='1'?$cer[] = $certification['certification_id']:'';
-                        }
 
-                        $targetData = json_decode($value->target_data);
-                        foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
-                            if(empty($targetData->$targetDataKey)){
-                                $finish = false;
-                                break;
-                            }
-                        }
-
-						if($finish){
-                            $targetData->certification_id = $cer;
-                            if(count($finish_stage_cer) >= 6){
-                                $implode = implode('',$finish_stage_cer);
-                                if($implode == '134567'){
-                                    $stage_cer = 1;
-                                }elseif ($implode == '134567A'){
-                                    $stage_cer = 2;
-                                }elseif ($implode == '1345678A'){
-                                    $stage_cer = 3;
-                                }elseif ($implode == '1345679A'){
-                                    $stage_cer = 4;
+                            if($finish){
+                                $targetData->certification_id = $cer;
+                                if(count($finish_stage_cer) != 0){
+                                    $implode = implode('',$finish_stage_cer);
+                                    if($implode == '2' || $implode == '89A'){
+                                        $stage_cer = 1;
+                                    }elseif ($implode == '89'){
+                                        $stage_cer = 2;
+                                    }elseif ($implode == '9'){
+                                        $stage_cer = 3;
+                                    }elseif ($implode == '8'){
+                                        $stage_cer = 4;
+                                    }
+                                }
+                                $count++;
+                                $this->approve_target($value,false,false,$targetData ,$stage_cer,$subloan_status);
+                            }else{
+                                //自動取消
+                                $limit_date 	= date('Y-m-d',strtotime('-'.TARGET_APPROVE_LIMIT.' days'));
+                                $create_date 	= date('Y-m-d',$value->created_at);
+                                if($limit_date > $create_date){
+                                    $count++;
+                                    $param = [
+                                        'status' => 9,
+                                        'sub_status' => 0,
+                                        'remark' => $value->remark.'系統自動取消'
+                                    ];
+                                    $this->CI->target_model->update($value->id,$param);
+                                    $this->insert_change_log($target_id,$param);
+                                    $this->CI->notification_lib->approve_cancel($value->user_id);
+                                    if($value->order_id !=0){
+                                        $this->CI->load->model('transaction/order_model');
+                                        $this->CI->order_model->update($value->order_id,['status'=>0]);
+                                    }
                                 }
                             }
-							$count++;
-							$this->approve_target($value,false,false,$targetData ,$stage_cer,$subloan_status);
-						}else{
-							//自動取消
-							$limit_date 	= date('Y-m-d',strtotime('-'.TARGET_APPROVE_LIMIT.' days'));
-							$create_date 	= date('Y-m-d',$value->created_at);
-							if($limit_date > $create_date){
-								$count++;
-								$param = [
-									'status' => 9,
-									'sub_status' => 0,
-									'remark' => $value->remark.'系統自動取消'
-								];
-								$this->CI->target_model->update($value->id,$param);
-								$this->insert_change_log($target_id,$param);
-								$this->CI->notification_lib->approve_cancel($value->user_id);
-								if($value->order_id !=0){
-									$this->CI->load->model('transaction/order_model');
-									$this->CI->order_model->update($value->order_id,['status'=>0]);
-								}
-							}
-						}
-						$this->CI->target_model->update($value->id,['script_status'=>0]);
-					}
+                        }
+                        $this->CI->target_model->update($value->id,['script_status'=>0]);
+                    }
 				}
 				return $count;
 			}
