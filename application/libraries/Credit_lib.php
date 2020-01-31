@@ -165,6 +165,7 @@ class Credit_lib{
 
 	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit){
         $total = 0;
+        $time = time();
         $param = [
             'user_id' => $user_id,
             'product_id' => $product_id,
@@ -270,22 +271,24 @@ class Credit_lib{
 				}
 			}
 		}
-        if($stage_cer == 0) {
-            $param['amount'] = $param['amount'] > 200000 ? 200000 : $param['amount'];
+        $param['amount'] = $param['amount'] > 200000 ? 200000 : $param['amount'];
+        if($stage_cer != 0) {
+            $expire_time = strtotime('+1 days', $time);
+        }else{
             $param['amount'] = $param['amount'] < 20000 ? 0 : $param['amount'];
-            if (intval($data['job_salary']) <= 35000) {
-                $job_salary = intval($data['job_salary']) * 2;
-                $param['amount'] = $param['amount'] > $job_salary ? $job_salary : $param['amount'];
-            }
-            $expire_time = time();
         }
         $param['expire_time'] = $expire_time;
+        if (intval($data['job_salary']) <= 35000) {
+            $job_salary = intval($data['job_salary']) * 2;
+            $param['amount'] = $param['amount'] > $job_salary ? $job_salary : $param['amount'];
+        }
+
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
 		}
 
-        if($credit){
+        if($credit['level'] == 10 && $time < $credit['expire_time']){
             $rs 		= $this->CI->credit_model->update($credit['id'],$param);
             return $rs;
         }

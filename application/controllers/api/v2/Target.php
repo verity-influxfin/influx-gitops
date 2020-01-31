@@ -483,7 +483,7 @@ class Target extends REST_Controller {
 				'amortization_schedule' => $amortization_schedule,
 			);
 
-            count($certification_list)>0?$target['certification'] = $certification_list:'';
+            count($certification_list)>0?$data['certification'] = $certification_list:'';
 
             $target->order_id!=0?$data['order_image']=$target->person_image:null;
 
