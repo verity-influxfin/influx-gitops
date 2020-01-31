@@ -60,11 +60,10 @@ class Judicialperson extends MY_Admin_Controller {
 				if (empty($sign_video)) {
 					$sign_video['judi_admin_video'][] = $media;
 				} else {
-					if (isset($sign_video['judi_admin_video'])) {
-						array_push($sign_video['judi_admin_video'],$media);
-					} else {
+					if (!isset($sign_video['judi_admin_video'])) {
+						$sign_video['judi_admin_video'] = [];
+						}
 						$sign_video['judi_admin_video'][] = $media;
-					}
 				}
 				$res = $this->judicial_person_model->update($post['id'], [
 					'sign_video' 			=> json_encode($sign_video)

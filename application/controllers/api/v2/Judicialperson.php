@@ -376,7 +376,6 @@ class Judicialperson extends REST_Controller {
 				//$param['cooperation_server_ip'] = trim($input['server_ip']);
 			}
 			$content=[];
-			//$param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
 			$content['transaction_password']=$this->user_info->transaction_password;
 			$content['bank_code']=$bank_parm['bank_code'];
 			$content['branch_code']=$bank_parm['branch_code'];
@@ -1029,7 +1028,7 @@ class Judicialperson extends REST_Controller {
 			$media_id = intval($input[$field]);
 			if (!$media_id) {
 				$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-			} else {
+			}
 				$rs = $this->log_image_model->get_by([
 					'id'		=> $media_id,
 					'user_id'	=> $user_id,
@@ -1061,7 +1060,6 @@ class Judicialperson extends REST_Controller {
 				} else {
 					$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
 				}
-			}
 		}
 	}
 
