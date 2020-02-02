@@ -253,7 +253,6 @@ class Target_lib{
                     $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 				}
 			}
-
 			if($credit){
 				$interest_rate	= $credit['rate'];
 				if($interest_rate){
@@ -302,7 +301,7 @@ class Target_lib{
                         $used_amount     	= $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
-                        $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false || $stage_cer != 0?$credit['amount']:$target->amount;
+                        $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false?$credit['amount']:$target->amount;
 
                         if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0) {
                             if($product_info['type']==1||$subloan_status){
@@ -874,17 +873,17 @@ class Target_lib{
 			}
 
 			$rs = $this->CI->target_model->update_many($ids,['script_status'=>$script]);
-			if($rs){
+            if($rs){
                 $product_list = $this->CI->config->item('product_list');
-                $product = $product_list[$value->product_id];
-                $sub_product_id = $value->sub_product_id;
-                if($this->is_sub_product($product,$sub_product_id)){
-                    $product = $this->trans_sub_product($product,$sub_product_id);
-                }
-                $product_certification = $product['certifications'];
                 $subloan_list   = $this->CI->config->item('subloan_list');
                 foreach($list as $product_id => $targets){
                     foreach($targets as $target_id => $value){
+                        $product = $product_list[$value->product_id];
+                        $sub_product_id = $value->sub_product_id;
+                        if($this->is_sub_product($product,$sub_product_id)){
+                            $product = $this->trans_sub_product($product,$sub_product_id);
+                        }
+                        $product_certification = $product['certifications'];
                         if($value->status != 1 || $value->status == 1 && $value->sub_product_id == 9999){
                             $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
                             $company = $value->product_id >= 1000 ?1:0;
@@ -894,11 +893,11 @@ class Target_lib{
                             $cer = [];
                             foreach($certifications as $key => $certification){
                                 if($finish && in_array($certification['id'],$product_certification)){
-                                if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
-                                    $certification['user_status'] != 1
-                                        ?$finish_stage_cer[] = $certification['id']==10?'A':$certification['id']
-                                        :'';
-                                }
+                                    if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
+                                        $certification['user_status'] != 1
+                                            ?$finish_stage_cer[] = $certification['id']==10?'A':$certification['id']
+                                            :'';
+                                    }
                                     elseif($certification['user_status']!='1'){
                                         $finish = false;
                                     }
