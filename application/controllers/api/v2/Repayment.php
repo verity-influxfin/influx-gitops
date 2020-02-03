@@ -318,6 +318,7 @@ class Repayment extends REST_Controller {
 	public function list_get()
     {
 		$input 				= $this->input->get(NULL, TRUE);
+        $product_list = $this->config->item('product_list');
 		$user_id 			= $this->user_info->id;
 		$targets 			= $this->target_model->get_many_by([
 			'user_id'	=> $user_id,
@@ -326,6 +327,13 @@ class Repayment extends REST_Controller {
 		$list				= [];
 		if(!empty($targets)){
 			foreach($targets as $key => $value){
+                $product = $product_list[$value->product_id];
+                $sub_product_id = $value->sub_product_id;
+                $product_name = $product['name'];
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
+                }
 				$next_repayment = [
 					'date' 			=> '',
 					'instalment'	=> '',
@@ -359,6 +367,7 @@ class Repayment extends REST_Controller {
 				$list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
+                    'product_name' => $product_name,
 					'product_id' 		=> intval($value->product_id),
 					'sub_product_id' 	=> intval($value->sub_product_id),
 					'user_id' 			=> intval($value->user_id),
@@ -549,9 +558,11 @@ class Repayment extends REST_Controller {
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
+            $product_name = $product['name'];
             $sub_product_id = $target->sub_product_id;
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
+                $product_name .= ' / ' . $product['name'];
             }
 
             $targetDatas = [];
@@ -690,6 +701,7 @@ class Repayment extends REST_Controller {
 			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
+                'product_name' => $product_name,
 				'product_id' 		=> intval($target->product_id),
 				'sub_product_id' 	=> intval($target->sub_product_id),
 				'user_id' 			=> intval($target->user_id),
