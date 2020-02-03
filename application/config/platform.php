@@ -149,7 +149,7 @@ $config['product_list'] = [
         'status' => 1,
         'dealer' => 0,
         'multi_target' => 0,
-        'hidenMainProduct' => false,
+        'hiddenMainProduct' => false,
         'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000'
     ],
     2 => [
@@ -174,7 +174,7 @@ $config['product_list'] = [
         'status' => 1,
         'dealer' => 0,
         'multi_target' => 0,
-        'hidenMainProduct' => false,
+        'hiddenMainProduct' => false,
         'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000'
     ],
     3 => [
@@ -199,7 +199,7 @@ $config['product_list'] = [
         'status' => 1,
         'dealer' => 0,
         'multi_target' => 0,
-        'hidenMainProduct' => false,
+        'hiddenMainProduct' => false,
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000'
     ],
     4 => [
@@ -224,7 +224,7 @@ $config['product_list'] = [
         'status' => 1,
         'dealer' => 0,
         'multi_target' => 0,
-        'hidenMainProduct' => false,
+        'hiddenMainProduct' => false,
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000'
     ],
     //5 => [
@@ -249,7 +249,7 @@ $config['product_list'] = [
     //    'status' => 1,
     //    'dealer' => 2,
     //    'multi_target' => 0,
-    //    'hidenMainProduct' => false,
+    //    'hiddenMainProduct' => false,
     //    'description' => ''
     //],
     //6 => [
@@ -274,7 +274,7 @@ $config['product_list'] = [
     //    'status' => 1,
     //    'dealer' => 2,
     //    'multi_target' => 0,
-    //    'hidenMainProduct' => false,
+    //    'hiddenMainProduct' => false,
     //    'description' => ''
     //],
     //7 => [
@@ -299,7 +299,7 @@ $config['product_list'] = [
     //    'status' => 1,
     //    'dealer' => 0,
     //    'multi_target' => 1,
-    //    'hidenMainProduct' => true,
+    //    'hiddenMainProduct' => true,
     //    'description' => '可申請額度<br>200,000-1,500,000',
     //],
     1000 => [
@@ -324,7 +324,7 @@ $config['product_list'] = [
         'status' => 1,
         'dealer' => 2,
         'multi_target' => 1,
-        'hidenMainProduct' => true,
+        'hiddenMainProduct' => true,
         'description' => '',
     ]
 ];
