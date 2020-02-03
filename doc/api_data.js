@@ -10175,6 +10175,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "product_name",
+                            "description": "<p>P產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "product_id",
                             "description": "<p>Product ID</p>"
                         },
@@ -13147,6 +13154,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "product_name",
+                            "description": "<p>P產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "id",
                             "description": "<p>Product ID</p>"
                         },
@@ -13331,7 +13345,7 @@ define({
                             "                                \"sub_product\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": {\n" +
                             "                                    \"id\": 18159,\n" +
                             "                                    \"product_id\": 1,\n" +
@@ -13450,7 +13464,7 @@ define({
                             "                                \"sub_product\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -13923,7 +13937,7 @@ define({
                             "                                    1\n" +
                             "                                ],\n" +
                             "                                \"sub_product\": [],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -14030,7 +14044,7 @@ define({
                             "                                    1\n" +
                             "                                ],\n" +
                             "                                \"sub_product\": [],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -14170,7 +14184,7 @@ define({
                             "                                    3\n" +
                             "                                ],\n" +
                             "                                \"sub_product\": [],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -14275,7 +14289,7 @@ define({
                             "                                    3\n" +
                             "                                ],\n" +
                             "                                \"sub_product\": [],\n" +
-                            "                                \"hidenMainProduct\": false,\n" +
+                            "                                \"hiddenMainProduct\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -17196,6 +17210,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "target.product_name",
+                            "description": "<p>產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.product_id",
                             "description": "<p>產品ID</p>"
                         },
@@ -18040,6 +18061,13 @@ define({
                             "optional": false,
                             "field": "target.target_no",
                             "description": "<p>標的案號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target.product_name",
+                            "description": "<p>P產品名稱</p>"
                         },
                         {
                             "group": "Success 200",
@@ -21075,6 +21103,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "product_name",
+                            "description": "<p>P產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "product_id",
                             "description": "<p>產品ID</p>"
                         },
@@ -22325,6 +22360,13 @@ define({
                             "optional": false,
                             "field": "target_no",
                             "description": "<p>案號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_name",
+                            "description": "<p>P產品名稱</p>"
                         },
                         {
                             "group": "Success 200",
@@ -31909,6 +31951,13 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "product_name",
+                            "description": "<p>P產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "target.product_id",
                             "description": "<p>產品ID</p>"
                         },
@@ -33031,6 +33080,13 @@ define({
                             "optional": false,
                             "field": "target.target_no",
                             "description": "<p>案號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target.product_name",
+                            "description": "<p>P產品名稱</p>"
                         },
                         {
                             "group": "Success 200",

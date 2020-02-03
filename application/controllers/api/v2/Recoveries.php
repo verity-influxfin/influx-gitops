@@ -370,6 +370,7 @@ class Recoveries extends REST_Controller {
 	public function list_get()
     {
 		$input 				= $this->input->get(NULL, TRUE);
+        $product_list = $this->config->item('product_list');
 		$user_id 			= $this->user_info->id;
 		$investor 			= $this->user_info->investor;
 		$investments		= $this->investment_model->get_many_by([
@@ -420,9 +421,17 @@ class Recoveries extends REST_Controller {
 		
 			foreach($investments as $key => $value){
 				$target_info = $this->target_model->get($value->target_id);
-				$target = array(
+                $product = $product_list[$target_info->product_id];
+                $sub_product_id = $target_info->sub_product_id;
+                $product_name = $product['name'];
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
+                }
+                $target = array(
 					'id'			=> intval($target_info->id),
 					'target_no'		=> $target_info->target_no,
+                    'product_name' => $product_name,
 					'product_id'	=> intval($target_info->product_id),
 					'sub_product_id'=> intval($target_info->sub_product_id),
 					'user_id' 		=> intval($target_info->user_id),
@@ -872,8 +881,10 @@ class Recoveries extends REST_Controller {
 
             $product = $product_list[$target_info->product_id];
             $sub_product_id = $target_info->sub_product_id;
+                $product_name = $product['name'];
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
             }
 
             $targetDatas = [];
@@ -941,6 +952,7 @@ class Recoveries extends REST_Controller {
 			$target = [
 				'id'			=> intval($target_info->id),
 				'target_no'		=> $target_info->target_no,
+                'product_name' => $product_name,
 				'product_id'	=> intval($target_info->product_id),
 				'sub_product_id'=> intval($target_info->sub_product_id),
 				'user_id'		=> intval($target_info->user_id),

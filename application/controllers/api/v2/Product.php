@@ -318,27 +318,6 @@ class Product extends REST_Controller {
             $list2 = $parm2;
         }
 
-        $list2['product_list']['type1'][0]['identity'][1]['sub_product'] = [
-            ["identity" => [
-                "product_id" => "1",
-                "name" => "學生貸"
-            ]],
-            ["identity" => [
-                "product_id" => "9999",
-                "name" => "學生階段上架"
-            ]]
-        ];
-        $list2['product_list']['type1'][0]['identity'][2]['sub_product'] = [
-            ["identity" => [
-                "product_id" => "3",
-                "name" => "上班族貸"
-            ]],
-            ["identity" => [
-                "product_id" => "9999",
-                "name" => "上班族階段上架"
-            ]]
-        ];
-
         $this->response(array('result' => 'SUCCESS','data' => [
             'list'  => $list,
             'list2' => $list2,
