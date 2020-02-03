@@ -197,6 +197,7 @@ class Target extends MY_Admin_Controller {
 		$display 	= isset($get['display'])?intval($get['display']):0;
         if(empty($post)) {
             if ($id) {
+                $delay_list      = $this->target_model->delay_list;
                 $info = $this->target_model->get($id);
                 if ($info) {
                     $this->load->library('Contract_lib');
@@ -292,6 +293,7 @@ class Target extends MY_Admin_Controller {
                     $page_data['virtual_account'] = $virtual_account;
                     $page_data['instalment_list'] = $this->config->item('instalment');
                     $page_data['repayment_type'] = $this->config->item('repayment_type');
+                    $page_data['delay_list'] 		= $delay_list;
                     $page_data['status_list'] = $this->target_model->status_list;
                     $page_data['loan_list'] = $this->target_model->loan_list;
 
@@ -521,6 +523,7 @@ class Target extends MY_Admin_Controller {
 	public function evaluation_approval()
 	{
 		$post = $this->input->post(NULL, TRUE);
+        $newCredits = false;
 
 		$targetId = isset($post["id"]) ? intval($post["id"]) : 0;
 		$points = isset($post["points"]) ? intval($post["points"]) : 0;
@@ -548,12 +551,14 @@ class Target extends MY_Admin_Controller {
             'status' => 1
         ]);
 
-		$this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
-		$this->approvalextra->setSkipInsertion(true);
-		$this->approvalextra->setExtraPoints($points);
+		if($target->sub_product_id != 9999){
+            $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
+            $this->approvalextra->setSkipInsertion(true);
+            $this->approvalextra->setExtraPoints($points);
 
-		$this->load->library('credit_lib');
-		$newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+            $this->load->library('credit_lib');
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+        }
 
         if ($remark) {
             if ($target->remark) {
@@ -563,8 +568,7 @@ class Target extends MY_Admin_Controller {
             }
         }
 
-		if (
-			$newCredits["amount"] != $credit->amount
+		if ($newCredits && $newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
 			|| $newCredits["level"] != $credit->level
 		) {
@@ -579,7 +583,16 @@ class Target extends MY_Admin_Controller {
             );
 			$this->credit_model->insert($newCredits);
 		}
-        $this->target_lib->approve_target($target,$remark,true);
+
+		if($target->sub_product_id == 9999){
+            $param['status'] = 1;
+            $param['sub_status'] = 0;
+            $remark ? $param['remark'] = $update["remark"] : '';
+            $this->target_model->update($target->id,$param);
+        }
+        else{
+            $this->target_lib->approve_target($target,$remark,true);
+        }
         $this->json_output->setStatusCode(200)->send();
     }
 

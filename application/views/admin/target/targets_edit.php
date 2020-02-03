@@ -114,9 +114,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><p class="form-control-static">逾期狀態 - 天數</p></td>
+                                        <td><p class="form-control-static">逾期狀態 / 天數</p></td>
                                         <td>
-                                            <p class="form-control-static"><?= isset($data->delay) ? $data->delay . ' - ' . $data->delay_days : ""; ?></p>
+                                            <p class="form-control-static"><?= isset($data->delay) ? $delay_list[$data->delay] . ' / ' . $data->delay_days : ""; ?></p>
                                         </td>
                                         <td><p class="form-control-static">申請日期</p></td>
                                         <td>
@@ -305,8 +305,10 @@
 													<td><?=$value['remaining_principal'] ?></td>
 													<td><?=$value['repayment_date'] ?></td>
 													<td><?=$value['days'] ?></td>
-													<td><?=$value['principal'] ?><br><?=$value['interest'] ?></td>
-													<td style="color:red;"><?=$value['liquidated_damages'] ?><br><?=$value['delay_interest'] ?></td>
+                                                    <td><?= $value['principal'] ?>
+                                                        <br><?= $value['interest'] ?></td>
+                                                    <td style="color:red;"><?= $value['liquidated_damages'] ?>
+                                                        <br><?= $value['delay_interest'] ?></td>
 													<td><?=$value['total_payment'] ?></td>
 													<td><?=$value['repayment'] ?></td>
 												</tr>
@@ -394,7 +396,7 @@
                                                 <td>
                                                     <p class="form-control-static"><?= isset($value->frozen_id) ? $value->frozen_id : ""; ?></p>
                                                 </td>
-                                                <td colspan="2"><p class="form-control-static contract" data-id="<?=$value->id ?>" data-value="<?=$value->contract ?>">借貸契約</p></td>
+                                                <td colspan="2"><p class="form-control-static contract" data-id="<?=$value->id ?>" data-value="<?=$value->contract ?>"style="color: #428bca;text-decoration: none;cursor: pointer;">借貸契約</p></td>
 											</tr>
 											<? if(isset($investments_amortization_schedule[$value->id]) && $investments_amortization_schedule[$value->id]){?>
 												<tr style="background-color:#f5f5f5;">
