@@ -1220,9 +1220,7 @@ class User extends REST_Controller {
             'created_at >=' => strtotime($beginDate)
         ]);
         $promotecount=count($promote_count);
-        if($promotecount==0 || $promotecount<3){
-			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
-        }
+
         $collect_count= floor($promotecount/3);
 		$my_detail    = $this->user_model->get_by([
 			'id'  => $user_id,
