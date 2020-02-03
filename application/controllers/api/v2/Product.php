@@ -226,7 +226,7 @@ class Product extends REST_Controller {
                     'repayment'				=> $value['repayment'],
                     'sealler'				=> $value['dealer'],
                     'sub_product'		    => $value['sub_product'],
-                    'hidenMainProduct'		=> $value['hidenMainProduct'],
+                    'hiddenMainProduct'		=> $value['hiddenMainProduct'],
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
                     'certification'         => $certification,
                 );
@@ -244,18 +244,32 @@ class Product extends REST_Controller {
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
             }
 
-            $list[] = [
-                'id'        			=> '1:9999',
-                'name' 					=> '學生階段上架',
+
+            $list[0]['sub_product'] = [
+                ["identity" => [
+                    "product_id" => "1",
+                    "name" => "學生貸"
+                ]],
+                ["identity" => [
+                    "product_id" => "9999",
+                    "name" => "學生階段上架"
+                ]]
             ];
-            $list[] = [
-                'id'        			=> '3:9999',
-                'name' 					=> '上班族階段上架',
+            $list[2]['sub_product'] = [
+                ["identity" => [
+                    "product_id" => "3",
+                    "name" => "上班族貸"
+                ]],
+                ["identity" => [
+                    "product_id" => "9999",
+                    "name" => "上班族階段上架"
+                ]]
             ];
+
 
             //list2
             //layer1
-            $hidenMainProduct = [];
+            $hiddenMainProduct = [];
             $type_list = [];
             $designate = [];
             $allow_visul_list = [];
@@ -265,7 +279,7 @@ class Product extends REST_Controller {
                     if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
                         foreach ($t2 as $key3 => $t3) {
                             $sub_product_info = [];
-                            $t3['hidenMainProduct'] == true ? $hidenMainProduct[] = $key2 : false;
+                            $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
                                     if(isset($sub_product_list[$t4]) && !in_array($t4,$hiddenList)){
@@ -298,7 +312,7 @@ class Product extends REST_Controller {
                         $type_list['type' . $key][] = [
                             'visul_id' => $key2,
                             'name' => $visul_id_des[$key2]['name'],
-                            'identity' => !in_array($key2,$hidenMainProduct)?$t2:[],
+                            'identity' => !in_array($key2,$hiddenMainProduct)?$t2:[],
                             'description' => $visul_id_des[$key2]['description'],
                             'status' => $visul_id_des[$key2]['status'],
                             'banner' => $visul_id_des[$key2]['banner'],
@@ -407,7 +421,7 @@ class Product extends REST_Controller {
             if(isset($product_list[$id])){
                 $product = $product_list[$id];
                 if(count($product['sub_product'])>0 && isset($sub_product_list[$sub_product_id])
-                    || $product['hidenMainProduct']
+                    || $product['hiddenMainProduct']
                     || $sub_product_id && !in_array($sub_product_id,$product['sub_product'])){
                     if($this->is_sub_product($product,$sub_product_id)){
                         $product = $this->trans_sub_product($product,$sub_product_id);
@@ -541,7 +555,7 @@ class Product extends REST_Controller {
 
             //使用副產品資料
             if (count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product_id])
-                || $product['hidenMainProduct']
+                || $product['hiddenMainProduct']
                 || $sub_product_id && !in_array($sub_product_id, $product['sub_product'])) {
                 if($this->is_sub_product($product,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_id);
@@ -781,6 +795,7 @@ class Product extends REST_Controller {
     {
         $this->load->library('Subloan_lib');
         $input 				       = $this->input->get(NULL, TRUE);
+        $product_list = $this->config->item('product_list');
         $user_id 			       = $this->user_info->id;
         $investor 			       = $this->user_info->investor;
         $param				       = ['user_id'=> $user_id,'status !='=> 8];
@@ -788,6 +803,13 @@ class Product extends REST_Controller {
         $list				       = [];
         if(!empty($targets)){
             foreach($targets as $key => $value){
+                $product = $product_list[$value->product_id];
+                $sub_product_id = $value->sub_product_id;
+                $product_name = $product['name'];
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
+                }
                 $subloan_target_status     = '';
                 $subloan_target_sub_status = '';
                 if($value->sub_status == 1){
@@ -806,6 +828,7 @@ class Product extends REST_Controller {
                 $list[] = [
                     'id' 				         => intval($value->id),
                     'target_no' 		         => $value->target_no,
+                    'product_name' => $product_name,
                     'product_id' 		         => intval($value->product_id),
                     'sub_product_id' 		     => intval($value->sub_product_id),
                     'user_id' 			         => intval($value->user_id),
@@ -1014,9 +1037,11 @@ class Product extends REST_Controller {
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
+            $product_name = $product['name'];
             $sub_product_id = $target->sub_product_id;
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
+                $product_name .= ' / ' . $product['name'];
             }
 
             $completeness_level = 100 / count($certification_list);
@@ -1173,6 +1198,7 @@ class Product extends REST_Controller {
             $data = [
                 'id' 				    => intval($target->id),
                 'target_no' 		    => $target->target_no,
+                'product_name' => $product_name,
                 'product_id' 		    => intval($target->product_id),
                 'user_id' 			    => intval($target->user_id),
                 'order_id'              => intval($target->order_id),
