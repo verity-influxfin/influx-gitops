@@ -1247,7 +1247,7 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            if(in_array($targets->status,array(0,1,2,20,21)) && $targets->sub_status == 0){
+            if(in_array($targets->status,array(0,1,2,20,21)) &&in_array($targets->sub_status,array(0,9))){
                 $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
                 if($rs){
                     $this->response(array('result' => 'SUCCESS'));
