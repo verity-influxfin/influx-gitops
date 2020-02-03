@@ -244,6 +244,15 @@ class Product extends REST_Controller {
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
             }
 
+            $list[] = [
+                'id'        			=> '1:9999',
+                'name' 					=> '學生階段上架',
+            ];
+            $list[] = [
+                'id'        			=> '3:9999',
+                'name' 					=> '上班族階段上架',
+            ];
+
             //list2
             //layer1
             $hidenMainProduct = [];
