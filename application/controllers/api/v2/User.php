@@ -1199,71 +1199,58 @@ class User extends REST_Controller {
      *
     */
 	public function promote_get()
-    { 	$this->load->model('log/log_game_model');
+    { 	
+        $this->load->model('log/log_game_model');
         $this->not_support_company();
         $this->load->library('line_lib');
 		$user_id 		  = $this->user_info->id;
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2019-07-22 23:00';
-        $lastday = '2019-09-15 23:59';
-        //$check= $this->line_lib->check_five_points();
-        //if( $check=='error'){
-        //    $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
-        //}
-
+        $beginDate = '2020-01-20 23:00';
+        //$lastday = '2019-09-15 23:59';
+        $check= $this->line_lib->check_thirty_points();
+        if ($check !== 'success') {
+			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
+        }
+		
+        //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
-            'created_at >=' => strtotime($beginDate),
-            'created_at <=' => strtotime($lastday),
+            'created_at >=' => strtotime($beginDate)
         ]);
+        $promotecount=count($promote_count);
+        if($promotecount==0 || $promotecount<3){
+			return;
+        }
+        $collect_count= floor($promotecount/3);
+		$my_detail    = $this->user_model->get_by([
+			'id'  => $user_id,
+			'created_at >=' => strtotime($beginDate)
+			]);
 
-        //$my_detail    = $this->user_model->get_by([
-        //    'id'  => $user_id,
-        //    'created_at >=' => strtotime($beginDate),
-        //    'created_at <=' => strtotime($lastday),
-        //]);
-        //$my_detail  =  json_decode(json_encode($my_detail),true);//obj 轉arr
-        //$my_point= empty($my_detail['promote_code'])? 0:$my_point=1;
-
-        //$this->load->model('user/user_meta_model');
-        //$my_line_id  = $this->user_meta_model->get_by([
-        //    'user_id'  => $user_id,
-        //    'meta_key'  => 'line_access_token'
-        //]);
-        //$my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr
-        //$this->load->library('game_lib');
-
-        //if(($my_point==1)&&(!empty($my_line_id)) &&(strlen($my_detail['promote_code'])==8)&&($my_detail['promote_code']!=='fbpost01') ){
-        //    $my_line_id  = $my_line_id['meta_value'];
-        //    if($my_line_id!=0&&(!empty($my_line_id))){
-        //    //需用linebot 發five points
-        //     $this->game_lib->check_five_points($user_id,$my_line_id);
-        //    }
-        //}
-        //$check_50send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_fifty_points'));
-        //$check_50send   =  json_decode(json_encode($check_50send ),true);//obj 轉arr
-        //$check_50send =count( $check_50send );
-        //$promotecount=count($promote_count);
-        //$collect_count= $promotecount/3;
-
-
-        //$this->game_lib->start_line_pionts_game($user_id,$promote_code,$promotecount);
+        $this->load->model('user/user_meta_model');
+        $my_line_id  = $this->user_meta_model->get_by([
+			'user_id'  => $user_id,
+			'meta_key'  => 'line_access_token'
+			])->meta_value;
+        $this->load->library('game_lib');
+		if (!empty($my_line_id) && $my_detail->promote_code !== 'fbpost01') {
+			$this->game_lib->count_and_send_thirty_points($user_id, $my_line_id,$collect_count);
+		}
+        $check_30send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_thirty_points'));
+        $check_30send =count( $check_30send );
 		$data = array(
             'promote_name'	           => '推薦有獎',
             'promote_code'	           => $promote_code,
 			'promote_url'	           => $url,
 			'promote_qrcode'           => $qrcode,
-            'promote_count'            => count($promote_count),
-            'promote_endtime'          => $lastday,
-            //'collect_count'            => intval($collect_count), //跟50點有關 可領取次數
-            //'done_collect_count'       =>  intval($check_50send),//跟50點有關 已領取次數
-            //'my_point'                 =>  intval($my_point),//'領五元的依據 0沒有推薦人  1.已發送 2.未發送' //非空的話就送五點 與ct有關  //大於beginDate
-            //'game_status'               => true
+            //'promote_count'            => count($promote_count),
+            'collect_count'            => intval($collect_count), //跟30點有關 可領取次數
+            'done_collect_count'       =>  intval($check_30send),//跟30點有關 已領取次數
+            'game_status'               => true
 		);
-
-		$this->response(array('result' => 'SUCCESS','data'=>$data));
+		$this->response(array('result' => 'SUCCESS','data' => $data));
     }
 
 
@@ -1272,46 +1259,46 @@ class User extends REST_Controller {
 	 * @apiVersion 0.2.0
      *
     */
-	public function promote_post()
-    {
-        $this->not_support_company();
+	// public function promote_post()
+    // {
+    //     $this->not_support_company();
 
-        $user_id 	= $this->user_info->id;
-        $promote_code	  = $this->user_info->my_promote_code;
-        $this->load->library('game_lib');
-        $this->load->library('line_lib');
-        $this->load->model('user/user_meta_model');
-        $beginDate = '2019-07-22 23:00';
-        $lastday = '2019-09-25 23:00';
-        $promote_count    = $this->user_model->get_many_by([
-            'promote_code'  => $promote_code,
-            'created_at >=' => strtotime($beginDate),
-            'created_at <=' => strtotime($lastday),
-        ]);
+    //     $user_id 	= $this->user_info->id;
+    //     $promote_code	  = $this->user_info->my_promote_code;
+    //     $this->load->library('game_lib');
+    //     $this->load->library('line_lib');
+    //     $this->load->model('user/user_meta_model');
+    //     $beginDate = '2019-07-22 23:00';
+    //     $lastday = '2019-09-25 23:00';
+    //     $promote_count    = $this->user_model->get_many_by([
+    //         'promote_code'  => $promote_code,
+    //         'created_at >=' => strtotime($beginDate),
+    //         'created_at <=' => strtotime($lastday),
+    //     ]);
 
-        $check= $this->line_lib->check_fifty_points();
-        if( $check=='error'){
-            $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
-        }
-      $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr
-      $promotecount=count($promote_count);
+    //     $check= $this->line_lib->check_fifty_points();
+    //     if( $check=='error'){
+    //         $this->response(array('result' => 'ERROR','error' =>TARGET_IS_BUSY));
+    //     }
+    //   $promote_count   =  json_decode(json_encode(   $promote_count ),true);//obj 轉arr
+    //   $promotecount=count($promote_count);
 
-      $collect_count= $promotecount/3;
-      $my_line_id  = $this->user_meta_model->get_by([
-        'user_id'  => $user_id,
-        'meta_key'  => 'line_access_token'
-         ]);
+    //   $collect_count= $promotecount/3;
+    //   $my_line_id  = $this->user_meta_model->get_by([
+    //     'user_id'  => $user_id,
+    //     'meta_key'  => 'line_access_token'
+    //      ]);
 
-        $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr
-            if((!empty($my_line_id))){
-                $my_line_id  = $my_line_id['meta_value'];
-                if($my_line_id!==0&&(!empty($my_line_id))){
-                //需用linebot 發50 points
-                $this->game_lib->check_fifty_points($user_id,$my_line_id,$collect_count);
-                }
-            }
-            $this->response(array('result' => 'SUCCESS'));
-    }
+    //     $my_line_id  =  json_decode(json_encode($my_line_id),true);//obj 轉arr
+    //         if((!empty($my_line_id))){
+    //             $my_line_id  = $my_line_id['meta_value'];
+    //             if($my_line_id!==0&&(!empty($my_line_id))){
+    //             //需用linebot 發50 points
+    //             $this->game_lib->check_fifty_points($user_id,$my_line_id,$collect_count);
+    //             }
+    //         }
+    //         $this->response(array('result' => 'SUCCESS'));
+    // }
 
 
 	/**
