@@ -282,7 +282,14 @@ class Certification extends REST_Controller {
 				}
 				$this->response(array('result' => 'SUCCESS','data' => $data));
 			}
-            $certification['id'] == 4?$data['line_bind'] = $line_bind:null;
+            if($certification['id'] == 4){
+				isset($line_bind)? $data['line_bind']: null;
+				isset($ig_bind )?$data['ig_bind']: null;
+				isset($fb_bind )?$data['fb_bind']: null;
+				empty($data)
+					? $this->response(array('result' => 'SUCCESS','data' => (object) null))
+					: $this->response(array('result' => 'SUCCESS','data' => $data));
+			}
 			$this->response(array('result' => 'SUCCESS','data' => $data));
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
