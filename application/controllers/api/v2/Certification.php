@@ -176,14 +176,6 @@ class Certification extends REST_Controller {
 		if($certification && $certification['status']==1){
             $user_id    = $this->user_info->id;
             $investor 	= $this->user_info->investor;
-            if ($certification['id'] == 4){
-                $exist = $this->user_meta_model->get_by(array(
-                    'user_id'  =>$user_id ,
-                    'meta_key' => 'line_access_token'
-                ));
-                $line_bind = $exist?1:0;
-            }
-
             if($this->user_info->company && $certification['id'] == 9){
                 $this->load->model('user/judicial_person_model');
                 $judicial_person = $this->judicial_person_model->get_by(array(
@@ -213,9 +205,32 @@ class Certification extends REST_Controller {
 					case 3: 
 						$fields 	= ['bank_code','branch_code','bank_account'];
 						break;
-					case 4: 
+					case 4:
+						$line_exist = $this->user_meta_model->get_by(array(
+							'user_id'  => $user_id,
+							'meta_key' => 'line_access_token'
+						));
+						$line_bind = $line_exist ? 1 : 0;
+						if (isset($rs->content['type'])) {
+							if ($rs->content['type'] == 'instagram') {
+								$ig_exist = 1;
+							};
+							if ($rs->content['type'] == 'facebook') {
+								$fb_exist = 1;
+							};
+						};
+						if (isset($rs->content['facebook']['name'])) {
+							$fb_exist = 1;
+						};
+						if (isset($rs->content['instagram']['name'])) {
+							$ig_exist = 1;
+						};
+						$fb_bind = $fb_exist ? 1 : 0;
+						$ig_bind = $ig_exist ? 1 : 0;
 						$fields 	= [];
-                        $data['line_bind'] = $line_bind;
+						$data['line_bind'] = $line_bind;
+						$data['fb_bind'] = $fb_bind;
+						$data['ig_bind'] = $ig_bind;
 						break;
 					case 5: 
 						$fields 	= ['name','phone','relationship'];
