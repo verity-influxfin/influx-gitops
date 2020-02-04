@@ -138,7 +138,13 @@ class Target extends REST_Controller {
 					$age  = get_age($user_info->birthday);
 					if($product_list[$value->product_id]['identity']==1){
 						$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
-                        $user_meta->meta_value 	= preg_replace('/\(自填\)/', '',$user_meta->meta_value);
+                        if(is_object($user_meta)){
+                            $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
+                        }
+                        else{
+                            $user_meta = new stdClass();
+                            $user_meta->meta_value='未提供學校資訊';
+                        }
 					}else{
 						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'company_name']);
 					}
