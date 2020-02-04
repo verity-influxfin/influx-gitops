@@ -866,8 +866,15 @@ class Recoveries extends REST_Controller {
 				$this->load->model('user/user_meta_model');
 				if($product_info['identity']==1){
 					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>'school_name']);
+                    if(is_object($user_meta)){
+                        $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
+                    }
+                    else{
+                        $user_meta = new stdClass();
+                        $user_meta->meta_value='未提供學校資訊';
+                    }
 				}else{
-					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>'company_name']);
+					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>'diploma_name']);
 				}
 				
 				$user = array(
