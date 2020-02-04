@@ -682,6 +682,8 @@ $config['app_product_totallist'] = [
     'company' => [ 'DS2'],
 ];
 
+$config['stage_option_cer'] = [2,8,9,10];
+
 
 //產品轉換代碼
 $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
