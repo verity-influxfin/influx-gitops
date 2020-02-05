@@ -448,10 +448,10 @@ class Target extends MY_Admin_Controller {
 						)
 					));
 
-					if($bank_account){
-						$waiting_list[] = $value;
-					}
-				}
+					$value->bankaccount_verify = $bank_account?1:0;
+
+                    $waiting_list[] = $value;
+                }
 			}
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');

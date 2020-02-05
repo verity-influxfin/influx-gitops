@@ -256,7 +256,7 @@ class Credit_lib{
 		if(isset($this->credit['credit_amount_'.$product_id])){
 			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
 				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-				    $salary = intval($data['job_salary']);
+				    $salary = isset($data['job_salary'])?intval($data['job_salary']):0;
 					$param['amount'] = $salary*$value['rate'];
                     if($stage_cer!=0){
                         if($stage_cer == 3){
@@ -278,11 +278,11 @@ class Credit_lib{
             $param['amount'] = $param['amount'] < 20000 ? 0 : $param['amount'];
         }
         $param['expire_time'] = $expire_time;
-        if (intval($data['job_salary']) <= 35000) {
+
+        if (!$stage_cer && intval($data['job_salary']) <= 35000) {
             $job_salary = intval($data['job_salary']) * 2;
             $param['amount'] = $param['amount'] > $job_salary ? $job_salary : $param['amount'];
         }
-
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -322,7 +322,7 @@ class Credit_lib{
         $selltype = $judicial_person->selling_type;
         $this->CI->config->load('credit',TRUE);
         $creditJudicial = $this->CI->config->item('credit')['creditJudicial'];
-        if(isset($creditJudicial[$selltype])){
+        if(isset($creditJudicial[$selltype]) && $data['creditJudicial_status'] == 1){
             foreach ($creditJudicial[$selltype] as $key => $value) {
                 $bonus = 0;
                 $score = 0;

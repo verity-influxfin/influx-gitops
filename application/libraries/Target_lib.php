@@ -317,7 +317,7 @@ class Target_lib{
                                         'status'			=> 0,
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
-                                    if(empty($this->CI->anti_fraud_lib->related_users($target->user_id,true)) && $target->product_id < 1000){
+                                    if(empty($this->CI->anti_fraud_lib->related_users($target->user_id,true)) && $target->product_id < 1000 || $renew){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark ? $param['remark'] = $remark : '';
@@ -326,7 +326,9 @@ class Target_lib{
                                     }else{
                                         $param['sub_status'] = 9;
                                     }
-                                    $param['target_data'] = json_encode($cer);
+                                    if($cer){
+                                        $param['target_data'] = json_encode($cer);
+                                    }
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     if($rs && $msg){
                                         $this->CI->load->library('Notification_lib');
@@ -914,6 +916,7 @@ class Target_lib{
                             }
 
                             if($finish){
+                                !isset($targetData)?$targetData = new stdClass():'';
                                 $targetData->certification_id = $cer;
                                 if(count($finish_stage_cer) != 0){
                                     $implode = implode('',$finish_stage_cer);

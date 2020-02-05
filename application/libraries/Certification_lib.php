@@ -1042,7 +1042,7 @@ class Certification_lib{
                 $allows = ['businesstax','governmentauthorities'];
                 $company = $this->get_company_type($user_id);
                 //FEV
-                $company->selling_type == 2 ? $allows[] = 'salesdetail' : '';
+                $company->selling_type == 2 ? $allows = array_merge($allows,['salesdetail','cercreditjudicial']) : '';
 
                 $this->CI->load->model('transaction/order_model');
                 $orders = $this->CI->order_model->get_many_by([
