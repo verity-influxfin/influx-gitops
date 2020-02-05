@@ -29,7 +29,7 @@ class Risk extends MY_Admin_Controller {
 
 		$target_status = [0,1,2,21,22,30,31,32];
 		$cer_parm = [
-            'status'	=> array(0,3),
+            'status'	=> array(0,1,3),
         ];
 
         isset($input['investor']) ? $cer_parm['investor'] = $input['investor'] : '';
@@ -87,6 +87,10 @@ class Risk extends MY_Admin_Controller {
 					$list[$key]->bank_account 	 	 = $bank_account;
 					$list[$key]->bank_account_verify = $bank_account->verify==1?1:0;
 				}
+				elseif($value->product_id >= 1000){
+                    $list[$key]->bank_account 	 	 = '';
+                    $list[$key]->bank_account_verify = 1;
+                }
 			}
 		}
 

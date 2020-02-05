@@ -47,6 +47,14 @@ class Anti_fraud_lib{
         $bankAccounts = [];
         $idCardNumbers = [];
         $emails = [];
+        $this->CI->load->model('user/user_bankaccount_model');
+        $user_bankaccount 	= $this->CI->user_bankaccount_model->get_by([
+            'user_id' => $userId,
+            'investor' => 0,
+        ]);
+        if($user_bankaccount){
+            $bankAccounts[] = $user_bankaccount->bank_account;
+        }
         foreach ($certificationRequests as $certificationRequest) {
             $content = json_decode($certificationRequest->content);
             $certificationId = $certificationRequest->certification_id;
@@ -54,7 +62,7 @@ class Anti_fraud_lib{
                 $idCardNumbers[] = $content->id_number;
                 $addresses[] = $content->address;
             } elseif ($certificationId == 3) {
-                $bankAccounts[] = $content->bank_account;
+                $bankAccounts[] = isset($content->bank_account)?$content->bank_account:false;
             } elseif ($certificationId == 6) {
                 $emails[] = $content->email;
             }

@@ -90,14 +90,13 @@
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td>
 												<button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?>class="btn
-                                                  <? if($value->sub_status==9){ ?>
-                                                        "  onclick="window.location.href='<?=admin_url('target/edit')."?id=".$value->id ?>'">額度不足</button>
-                                                  <? }else{ ?>
-                                                      <?=$value->order_id==0?"btn-success":"btn-info" ?>"
-                                                        onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批<?=isset($value->order_id)&&$value->order_id!=0?'出貨':'上架' ?></button>
-                                                  <? } ?>
-                                                <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
-                                                <?=isset($status_list[$value->status])?($value->sub_status==9?'('.$sub_list[$value->sub_status].')':$status_list[$value->status]):'' ?>
+												<? if($value->bankaccount_verify==0){ ?>
+                                                        btn-info"  onclick="window.location.href='<?=admin_url('certification/user_bankaccount_list?verify=2')."?id=".$value->id ?>'">待金融驗證</button>
+                                                <? }else{ ?>
+                                                    <?=$value->order_id==0?"btn-success":"btn-info" ?>" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批<?=isset($value->order_id)&&$value->order_id!=0?'出貨':'上架' ?></button>
+                                                    <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
+                                                <? } ?>
+                                                <?=isset($sub_list[$value->sub_status])?($value->sub_status==9?'('.$sub_list[$value->sub_status].')':''):'' ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->remark)?$value->remark:'' ?></td>
