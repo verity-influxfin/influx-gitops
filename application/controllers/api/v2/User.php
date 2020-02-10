@@ -1207,7 +1207,7 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2020-01-15 23:00';
+        $beginDate = '2020-02-09 23:00';
         $lastday = '2020-02-29 23:59';
         $check= $this->line_lib->check_thirty_points();
         if ($check !== 'success') {
