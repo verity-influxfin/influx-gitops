@@ -238,9 +238,9 @@ class Target_lib{
 			$product_list 	= $this->CI->config->item('product_list');
 			$user_id 		= $target->user_id;
 			$product_id 	= $target->product_id;
-			$sub_product_id	= $stage_cer != 0
-                ? 9999
-                : ($target->sub_product_id == 9999 && $stage_cer == 0 ? 0:$target->sub_product_id);
+			$sub_product_id	= $stage_cer == 0
+                ? ($target->sub_product_id == 9999 ? 0:$target->sub_product_id)
+                : 9999;
             $product_info 	= $product_list[$product_id];
             if($this->is_sub_product($product_info,$sub_product_id)){
                 $product_info = $this->trans_sub_product($product_info,$sub_product_id);
@@ -303,7 +303,7 @@ class Target_lib{
                         $credit['amount']   = $used_amount > $user_current_credit_amount?$user_current_credit_amount:$used_amount;
                         $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false?$credit['amount']:$target->amount;
 
-                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0) {
+                        if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if($product_info['type']==1||$subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
