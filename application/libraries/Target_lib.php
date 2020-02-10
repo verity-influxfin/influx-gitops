@@ -321,7 +321,7 @@ class Target_lib{
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark ? $param['remark'] = $remark : '';
-                                        $msg = true;
+                                        $msg = $target->status == 0 ? true:false;
                                         $target->sub_product_id == 9999 && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
                                     }else{
                                         $param['sub_status'] = 9;
