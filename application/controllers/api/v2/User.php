@@ -1207,8 +1207,8 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2020-01-20 23:00';
-        //$lastday = '2019-09-15 23:59';
+        $beginDate = '2020-02-09 23:00';
+        $lastday = '2020-02-29 23:59';
         $check= $this->line_lib->check_thirty_points();
         if ($check !== 'success') {
 			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
@@ -1217,7 +1217,8 @@ class User extends REST_Controller {
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
-            'created_at >=' => strtotime($beginDate)
+			'created_at >=' => strtotime($beginDate),
+			'created_at <=' => strtotime($lastday)
         ]);
         $promotecount=count($promote_count);
 
