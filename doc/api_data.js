@@ -35636,6 +35636,20 @@ define({
                             "optional": false,
                             "field": "my_point",
                             "description": "<p>我的被推薦點數</p>"
+						},
+						{
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "collect_count",
+                            "description": "<p>可領取次數</p>"
+						},
+						{
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "done_collect_count",
+                            "description": "<p>已領取次數</p>"
                         },
                         {
                             "group": "Success 200",

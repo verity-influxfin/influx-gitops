@@ -1207,7 +1207,7 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2020-02-09 23:00';
+        $beginDate = '2020-01-15 23:00';
         $lastday = '2020-02-29 23:59';
         $check= $this->line_lib->check_thirty_points();
         if ($check !== 'success') {
@@ -1234,8 +1234,13 @@ class User extends REST_Controller {
 			'meta_key'  => 'line_access_token'
 			])->meta_value;
         $this->load->library('game_lib');
-		if (!empty($my_line_id) && $my_detail->promote_code !== 'fbpost01') {
-			$this->game_lib->count_and_send_thirty_points($user_id, $my_line_id,$collect_count);
+		//if (!empty($my_line_id) && $my_detail->promote_code !== 'fbpost01') {
+		if (!empty($my_line_id) && isset($my_detail->promote_code)) {
+			$promote_code=$my_detail->promote_code;
+			if($promote_code!== 'fbpost01'){
+				$this->game_lib->count_and_send_thirty_points($user_id, $my_line_id, $collect_count);
+			}
+			
 		}
         $check_30send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_thirty_points'));
         $check_30send =count( $check_30send );
@@ -1546,9 +1551,9 @@ class User extends REST_Controller {
 		];
 		$this->log_userlogin_model->insert($loginLog);
 
-		$this->load->model('mongolog/user_login_log_model');
-		$fullLoginLog = $this->log_userlogin_model->getCurrentInstance($loginLog);
-		$this->user_login_log_model->save($fullLoginLog);
+		// $this->load->model('mongolog/user_login_log_model');
+		// $fullLoginLog = $this->log_userlogin_model->getCurrentInstance($loginLog);
+		// $this->user_login_log_model->save($fullLoginLog);
 
         $this->load->library('user_lib');
         $remind_count = $this->user_lib->auto_block_user($account,$investor,$user_id,$device_id);
