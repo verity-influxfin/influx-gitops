@@ -335,11 +335,13 @@ class Judicialperson extends REST_Controller {
 
             }
 
-            $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
+            if($param['cooperation']==2){
+                $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
+            }
+            else{
+                $param['cooperation_content'] = json_encode($file_fields_image['passbook_image']);
+            }
 
-				$param['cooperation_content'] 	  = json_encode($content);
-				//$param['cooperation_server_ip'] = trim($input['server_ip']);
-			}
 			$content=[];
 			$content['transaction_password']=$this->user_info->transaction_password;
 			$content['bank_code']=$bank_parm['bank_code'];
@@ -348,6 +350,7 @@ class Judicialperson extends REST_Controller {
 			$content['email']=$this->user_info->email;
 			$content['bankbook_images']=urlencode($bankbook_images);
 			$param['sign_video']=json_encode($content);
+
 			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
