@@ -64,7 +64,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiSuccess {String} tax_id 公司統一編號
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {Number} cooperation 經銷商功能 0:未開通 1:已開通 2:審核中
-	 * @apiSuccess {Number} status 狀態 0:審核中 1:審核通過 2:審核失敗
+	 * @apiSuccess {Number} status 狀態 0:審核中 1:審核通過 2:審核失敗 3:待對保影片上傳
 	 * @apiSuccess {Number} created_at 申請日期
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -337,23 +337,28 @@ class Judicialperson extends REST_Controller {
 
             $param['sign_video'] = $this->user_info->transaction_password.','.$bank_parm['bank_code'].','.$bank_parm['branch_code'].','.$bank_parm['bank_account'].','.$this->user_info->email.','.urlencode($bankbook_images);
 
-            if($param['cooperation']==2){
-                $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
-            }
-            else{
-                $param['cooperation_content'] = json_encode($file_fields_image['passbook_image']);
-            }
-
-            $exist = $this -> judicial_person_model->get_by(array(
+				$param['cooperation_content'] 	  = json_encode($content);
+				//$param['cooperation_server_ip'] = trim($input['server_ip']);
+			}
+			$content=[];
+			$content['transaction_password']=$this->user_info->transaction_password;
+			$content['bank_code']=$bank_parm['bank_code'];
+			$content['branch_code']=$bank_parm['branch_code'];
+			$content['bank_account']=$bank_parm['bank_account'];
+			$content['email']=$this->user_info->email;
+			$content['bankbook_images']=urlencode($bankbook_images);
+			$param['sign_video']=json_encode($content);
+			$exist = $this -> judicial_person_model->get_by(array(
 				'user_id'         => $user_id,
 				'tax_id'          => $param['tax_id'],
 				'status'          => 2
 			));
 
 			if($exist){
-				$param['status'] = 0;
+				$param['status'] = 3;
 				$rs = $this->judicial_person_model -> update($exist->id,$param);
 			}else{
+				$param['status'] = 3;
 				$rs = $this->judicial_person_model -> insert($param);
 			}
 
@@ -972,7 +977,72 @@ class Judicialperson extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => $result->error ]);
         }
         $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
-    }
+	}
+	
+	/**
+     * @api {post} /v2/judicialperson/verifymedia 法人經銷 對保影片
+     * @apiVersion 0.2.0
+     * @apiName PostJudicialpersonVerifymedia
+     * @apiGroup Judicialperson
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse IsCompany
+     *
+     */
+	public function verifymedia_post()
+	{
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		//上傳檔案欄位
+		$file_fields 	= ['verify_video'];
+		foreach ($file_fields as $field) {
+			$media_id = intval($input[$field]);
+			if (!$media_id) {
+				$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+			}
+				$rs = $this->log_image_model->get_by([
+					'id'		=> $media_id,
+					'user_id'	=> $user_id,
+				]);
+				if ($rs) {
+					//$sign_video = json_decode($this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 0))->sign_video, true);
+					$content = $this->judicial_person_model->get_by(array('user_id' => $user_id,'status' => 3));
+					(empty($content))?
+						$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ])
+						:$sign_video=json_decode($content->sign_video,true);
+					if (empty($sign_video)) {
+						$sign_video['judi_user_video'][] = $rs->url;
+					} else {
+						if (isset($sign_video['judi_user_video'])) {
+							array_push($sign_video['judi_user_video'],$rs->url);
+						} else {
+							$sign_video['judi_user_video'][] = $rs->url;
+						}
+					}
+					$res = $this->judicial_person_model->update_by(array(
+						'user_id' => $user_id,
+						'status'  => 3,
+					), array(
+						'sign_video' => json_encode($sign_video),
+						'status'  => 0,
+					));
+					($res)?$this->response(array('result' => 'SUCCESS'))
+						:$this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+				} else {
+					$this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+				}
+		}
+	}
 
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');

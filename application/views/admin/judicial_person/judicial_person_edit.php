@@ -33,12 +33,12 @@
 								<label>申請人</label>
 								<p class="form-control-static"><?= isset($data->user_name) ? $data->user_name : "" ?></p>
 							</div>
-                            <div class="form-group">
-                                <label>法人 User ID</label>
-                                <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->company_user_id) ?>">
-                                    <p><?= isset($data->company_user_id) ? $data->company_user_id : "" ?></p>
-                                </a>
-                            </div>
+							<div class="form-group">
+								<label>法人 User ID</label>
+								<a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->company_user_id) ?>">
+									<p><?= isset($data->company_user_id) ? $data->company_user_id : "" ?></p>
+								</a>
+							</div>
 							<div class="form-group">
 								<label>統一編號</label>
 								<p class="form-control-static"><?= isset($data->tax_id) ? $data->tax_id : "" ?></p>
@@ -85,21 +85,36 @@
 								<label>備註</label>
 								<p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
 							</div>
-							<h1>上傳對保影片</h1>
+							<? if ($data->status == 0) { ?>
+								<h1>上傳對保影片</h1>
+								<div class="form-group">
+									<form action="<?= admin_url('Judicialperson/media_upload') ?>" method="post" enctype="multipart/form-data">
+										檔案名稱:<input type="file" name="media" /><br />
+										<input type="hidden" name="user_id" value="<?= isset($data->user_id) ? $data->user_id : ""; ?>">
+										<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
+										<input type="submit" class="btn btn-primary" value="上傳檔案" />
+									</form>
+								</div>
+							<? } ?>
 							<div class="form-group">
-								<form action="<?= admin_url('Judicialperson/media_upload') ?>" method="post" enctype="multipart/form-data">
-									檔案名稱:<input type="file" name="media" /><br />
-									<input type="hidden" name="user_id" value="<?= isset($data->user_id) ? $data->user_id : ""; ?>">
-									<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
-									<input type="submit" class="btn btn-primary" value="上傳檔案" />
-								</form>
+								<h1>對保人員上傳：</h1>
+								<? if (!empty($media_list['judi_admin_video'])) { ?>
+									<? foreach ($media_list['judi_admin_video'] as $value) { ?>
+										<video width="400" controls>
+											<source src="<?= isset($value) ? $value : "" ?>" type="video/mp4">
+											<source src="<?= isset($value) ? $value : "" ?>" type="video/mov">
+										</video>
+									<? } ?>
+								<? } ?>
 							</div>
 							<div class="form-group">
-								<? if (!empty($media_list)) { ?>
-									<h1>下載已上傳之對保影片</h1>
-									<? foreach ($media_list as $key => $value) { ?>
-										<a href="<?= isset($value) ? $value : "" ?>" target="_blank">下載連結
-										</a>
+								<h1>負責人上傳：</h1>
+								<? if (!empty($media_list['judi_user_video'])) { ?>
+									<? foreach ($media_list['judi_user_video'] as $value) { ?>
+										<video width="400" controls>
+											<source src="<?= isset($value) ? $value : "" ?>" type="video/mp4">
+											<source src="<?= isset($value) ? $value : "" ?>" type="video/mov">
+										</video>
 									<? } ?>
 								<? } ?>
 							</div>
@@ -119,7 +134,7 @@
 							</form>
 						</div>
 						<div class="col-lg-6">
-                            <h1>商業司資料</h1>
+							<h1>商業司資料</h1>
 							<? if ($company_data && $search_type == 0) { ?>
 								<h3>公司登記</h3>
 								<div class="form-group">
@@ -365,6 +380,89 @@
 													</td>
 												</tr>
 
+<<<<<<< HEAD
+											</tbody>
+										</table>
+									<? } else { ?>
+										<div class="form-group">系統查無登記資料，線上商業司<a href="https://findbiz.nat.gov.tw/fts/query/QueryBar/queryInit.do">查詢</a>如有資料警請回報IT工程師</div>
+									<? } ?>
+									</div>
+									<div class="form-group">
+										<? if ($shareholders) {
+										?>
+											<table class="table table-bordered table-hover table-striped">
+												<tbody>
+													<? foreach ($shareholders as $key => $value) { ?>
+														<tr>
+															<td>
+																<p class="form-control-static">職稱名稱</p>
+															</td>
+															<td>
+																<p class="form-control-static"><?= isset($value['Person_Position_Name']) ? $value['Person_Position_Name'] : '' ?></p>
+															</td>
+															<td>
+																<p class="form-control-static">董監事股東姓名</p>
+															</td>
+															<td>
+																<p class="form-control-static"><?= isset($value['Person_Name']) ? $value['Person_Name'] : '' ?></p>
+															</td>
+															<td>
+																<p class="form-control-static">所代表法人</p>
+															</td>
+															<td>
+																<p class="form-control-static"><?= isset($value['Juristic_Person_Name']) ? $value['Juristic_Person_Name'] : '' ?></p>
+															</td>
+															<td>
+																<p class="form-control-static">持有股份數</p>
+															</td>
+															<td>
+																<p class="form-control-static"><?= isset($value['Person_Shareholding']) ? number_format($value['Person_Shareholding']) : '' ?></p>
+															</td>
+														</tr>
+													<? } ?>
+												</tbody>
+											</table>
+										<? } ?>
+									</div>
+									<div class="col-lg-6">
+										<h1>圖片</h1>
+										<div class="form-group">
+											<label for="disabledSelect">營利事業變更登記表正本</label>
+											<? if (isset($content['enterprise_registration_image'])) {
+												foreach ($content['enterprise_registration_image'] as $key => $value) {
+											?>
+													<a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+														<img src="<?= $value ? $value : "" ?>" style='width:100%;max-width:300px'>
+													</a>
+											<?
+												}
+											} else {
+												echo "未上傳";
+											} ?>
+										</div>
+										<div class="form-group">
+											<label for="disabledSelect">存摺封面</label>
+											<? if (isset($bankaccount_id)) { ?>
+												<a href="../certification/user_bankaccount_edit?id=<?= isset($bankaccount_id) ? $bankaccount_id : "" ?>" target="_blank">金融帳號頁面</a>
+											<? } else {
+												echo "未上傳";
+											} ?>
+										</div>
+									</div>
+								</div>
+						</div>
+						<!-- /.row (nested) -->
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+	</div>
+	<!-- /#page-wrapper -->
+=======
                                         </tbody>
                                     </table>
                                     <? } else { ?>
@@ -460,3 +558,4 @@
         <!-- /.row -->
     </div>
     <!-- /#page-wrapper -->
+>>>>>>> develop

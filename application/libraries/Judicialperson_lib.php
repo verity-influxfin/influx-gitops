@@ -24,20 +24,19 @@ class Judicialperson_lib{
 					'phone' => $judicial_person->tax_id
 				]);
 				if(!$exist){
-					$judicial_person_data = explode(',',$judicial_person->sign_video);
-                    $transaction_password = $judicial_person_data[0];
-                    $bank_code            = $judicial_person_data[1];
-                    $branch_code          = $judicial_person_data[2];
-                    $bank_account         = $judicial_person_data[3];
-                    $email                = $judicial_person_data[4];
-					$bankbook_images      = urldecode($judicial_person_data[5]);
-					unset( $judicial_person_data[0], $judicial_person_data[1], $judicial_person_data[2], $judicial_person_data[3], $judicial_person_data[4], $judicial_person_data[5]);
-					if(empty($judicial_person_data))
+                    $judicial_person_data = json_decode($judicial_person->sign_video,true);
+                    $transaction_password = $judicial_person_data['transaction_password'];
+                    $bank_code            = $judicial_person_data['bank_code'];
+                    $branch_code          = $judicial_person_data['branch_code'];
+                    $bank_account         = $judicial_person_data['bank_account'];
+                    $email                = $judicial_person_data['email'];
+					$bankbook_images      = urldecode($judicial_person_data['bankbook_images']);
+					if(empty($judicial_person_data['judi_admin_video'])|| empty($judicial_person_data['judi_user_video']))
 					{
-						echo '請先上傳法人對保影片';die();
+						echo '請先上傳法人或請負責人上傳對保影片';die();
 					}
-					$media=$judicial_person_data;
-					$media=implode(",",$media);
+					$media=json_encode($judicial_person_data);
+
 					$user_param = [
 						'name'				   => $judicial_person->company,
 						'nickname'			   => $judicial_person->company,

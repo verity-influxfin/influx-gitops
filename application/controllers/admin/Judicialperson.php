@@ -56,18 +56,21 @@ class Judicialperson extends MY_Admin_Controller {
 			if ($media === false) {
 				alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 			} else {
-				$sign_video= $this->judicial_person_model->get($post['id'])->sign_video;
-				if(empty($sign_video)){
-					$this->judicial_person_model->update($post['id'], [
-						'sign_video' 			=> $media
-					]);	
-				}else{
-					$media= $sign_video.','. $media;
-					$this->judicial_person_model->update($post['id'], [
-						'sign_video' 			=> $media
-					]);	
+				$sign_video = json_decode($this->judicial_person_model->get($post['id'])->sign_video,true);
+				if (empty($sign_video)) {
+					$sign_video['judi_admin_video'][] = $media;
+				} else {
+					if (!isset($sign_video['judi_admin_video'])) {
+						$sign_video['judi_admin_video'] = [];
+						}
+						$sign_video['judi_admin_video'][] = $media;
 				}
-				alert('檔案上傳成功', 'index?status=0');
+				$res = $this->judicial_person_model->update($post['id'], [
+					'sign_video' 			=> json_encode($sign_video)
+				]);
+				($res)?
+					alert('檔案上傳成功', 'index?status=0')
+					:alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 			}
 		} else {
 			alert('檔案上傳失敗，請洽工程師', 'index?status=0');
@@ -109,13 +112,8 @@ class Judicialperson extends MY_Admin_Controller {
 						$page_data['bankaccount_id'] = $user_bankaccount->id;
 					}
 
-					$media_data =urldecode($info->sign_video);
-					$media_data =strrchr($media_data,']}');
-					if (!empty($media_data) && $media_data != false && $media_data != ']}') {
-						$media = str_replace(']},', "", $media_data);
-						$media = explode(',', $media);
-						$page_data['media_list'] = $media;
-					}
+					$media_data =json_decode($info->sign_video,true);
+					$page_data['media_list'] = $media_data;
                     $page_data['company_type'] = $this->config->item('company_type');
                     $this->load->view('admin/_header');
 					$this->load->view('admin/_title', $this->menu);
@@ -129,12 +127,10 @@ class Judicialperson extends MY_Admin_Controller {
                 alert('查無此ID', admin_url('index?status=0'));
             }
         }else {
-            if (!empty($post['id'])) {
+			if (!empty($post['id'])) {
 				$info = $this->judicial_person_model->get($post['id']);
-				$media_data =urldecode($info->sign_video);
-				$media_data =strrchr($media_data,']}');
-				$media_data =str_replace(']},',"",$media_data);
-				if ($info && !empty($media_data) && $media_data != false && $media_data != ']}') {
+				$media_data = json_decode($info->sign_video, true);
+				if ($info && !empty($media_data) && isset($media_data['judi_admin_video'])) {
 					if ($post['status'] == '1') {
 						$rs = $this->judicialperson_lib->apply_success($post['id']);
 					} else if ($post['status'] == '2') {
@@ -146,8 +142,8 @@ class Judicialperson extends MY_Admin_Controller {
 					} else {
 						alert('更新失敗，請洽工程師', 'index?status=0');
 					}
-				} else if ($info && (empty($media_data) || $media_data == ']}')) {
-					alert('請先上傳法人影片', 'index?status=0');
+				} else if ($info && (empty($media_data) || !isset($media_data['judi_admin_video']) || !isset($media_data['judi_user_video']))) {
+					alert('請先上傳法人或請負責人上傳對保影片', 'index?status=0');
 				} else {
 					alert('查無此ID', admin_url('index?status=0'));
 				}

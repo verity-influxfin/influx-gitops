@@ -12,7 +12,10 @@ class S3_upload {
 		'image/png'	 => '.png' ,
 		'image/gif'	 => '.gif' ,
 	);
-	
+	public $vedio_type = array(
+		'video/mp4' =>	'.mp4' ,
+		'video/mov'	 => '.mov' ,
+	);
 	private $client;
 	
     public function __construct()
@@ -336,6 +339,45 @@ class S3_upload {
 			return false;
 		}
 	}
+
+	//return id
+	public function media_id ($files,$name='media',$user_id=0,$type='test')
+    {
+		if (isset($files[$name]) && $files[$name]) {
+			
+			if(isset($this->vedio_type[$files[$name]['type']])){
+				$fileType = $this->vedio_type[$files[$name]['type']];
+				$format= strrchr($files['media']['name'],'.');
+				$result = $this->client->putObject(array(
+					'Bucket' 		=> S3_BUCKET,
+					'Key'    		=> $type.'/'.$name.$user_id.round(microtime(true) * 1000).rand(1,99).$format,
+					'SourceFile'   		=> $files['media']['tmp_name']
+				));
+
+				if(isset($result['ObjectURL'])){
+					$data = array(
+						'type'		=> $type,
+						'user_id'	=> $user_id,
+						'file_name'	=> $files[$name]['name'],
+						'url'		=> $result['ObjectURL'],
+					);
+					
+					$media_id = $this->CI->log_image_model->insert($data);
+					return $media_id;
+				}else{
+					$this->error = 'upload error.';
+				}
+			}else{
+				$this->error = '只支援mp4 mov影片檔';
+			}
+        }else{
+			$this->error = 'No file.';
+		}
+		
+		return false;
+    }
+	
+
 	//upload to public bucket
 	public function image_public ($files,$name='image')
     {

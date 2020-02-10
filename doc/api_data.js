@@ -8349,7 +8349,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗</p>"
+                            "description": "<p>狀態 0:審核中 1:審核通過 2:審核失敗 3:待對保影片上傳</p>"
                         },
                         {
                             "group": "Success 200",
@@ -8926,6 +8926,114 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/judicialperson/apply"
+                }
+            ]
+		},
+		{
+            "type": "post",
+            "url": "/v2/judicialperson/verifymedia",
+            "title": "法人會員 對保影片",
+            "version": "0.2.0",
+            "name": "PostJudicialpersonVerifymedia",
+            "group": "Judicialperson",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "verify_video",
+                            "description": "<p>對保影片(影片ID)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+						},
+						{
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "202",
+                            "description": "<p>未進行所需之申請(請先申請法人身份)</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+					},
+					{
+                        "title": "202",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Judicialperson.php",
+            "groupTitle": "Judicialperson",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/judicialperson/verifymedia"
                 }
             ]
         },
@@ -38887,6 +38995,119 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/user/upload"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/upload_m",
+            "title": "會員 上傳影片",
+            "version": "0.2.0",
+            "name": "PostUserUploadM",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "allowedValues": [
+                                "\"*.mov\"",
+                                "\"*.mp4\""
+                            ],
+                            "optional": false,
+                            "field": "media",
+                            "description": "<p>影片檔</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "media_id",
+                            "description": "<p>影片ID</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"media_id\": 191\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/upload_m"
                 }
             ],
             "error": {
