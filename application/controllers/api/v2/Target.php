@@ -497,7 +497,11 @@ class Target extends REST_Controller {
 				'amortization_schedule' => $amortization_schedule,
 			);
 
-            count($certification_list)>0?$data['certification'] = $certification_list:'';
+            if(count($certification_list)>0){
+                $target_tips = $this->config->item('target_tips');
+                $data['certification'] = $certification_list;
+                $data['target_tips'] = $target_tips;
+            }
 
             $target->order_id!=0?$data['order_image']=$target->person_image:null;
 

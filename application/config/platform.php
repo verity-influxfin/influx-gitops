@@ -684,6 +684,7 @@ $config['app_product_totallist'] = [
 
 $config['stage_option_cer'] = [2,8,9,10];
 
+$config['target_tips'] = '此標的使用者未提供完整資訊，下標前請審慎評估。';
 
 //產品轉換代碼
 $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
