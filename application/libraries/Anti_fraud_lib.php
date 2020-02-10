@@ -9,12 +9,10 @@ class Anti_fraud_lib{
         $this->CI = &get_instance();
     }
 
-	public function related_users($userId,$get_result=false){
-
-
-        $this->CI->load->library('output/json_output');
-        if ($userId <= 0 && !$get_result) {
-            return $this->CI->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
+    public function related_users($userId)
+    {
+        if ($userId <= 0) {
+            return [];
         }
 
         $this->CI->load->model('mongolog/user_login_log_model');
@@ -94,6 +92,20 @@ class Anti_fraud_lib{
             $introducer =$this->CI->user_model->get_by(['promote_code' => $currentUser->promote_code]);
         }
 
+        if (
+            !$usersWithSameDeviceId
+            && !$usersWithSameIp
+            && !$usersWithSameEmergencyContact
+            && !$emergencyContact
+            && !$usersWithSameBankAccount
+            && !$usersWithSameIdNumber
+            && !$usersWithSamePhoneNumber
+            && !$usersWithSameAddress
+            && !$introducer
+        ) {
+            return [];
+        }
+
         $data = new stdClass();
         $data->same_device_id = $usersWithSameDeviceId;
         $data->same_ip = $usersWithSameIp;
@@ -105,17 +117,6 @@ class Anti_fraud_lib{
         $data->same_address = $usersWithSameAddress;
         $data->introducer = $introducer;
 
-        $this->CI->load->library('output/user/related_user_output', ["data" => $data]);
-
-        $relatedUsers = $this->CI->related_user_output->toMany();
-
-        if($get_result){
-            return $relatedUsers;
-        }
-
-        if (!$relatedUsers) {
-            $this->CI->json_output->setStatusCode(204)->send();
-        }
-        $this->CI->json_output->setStatusCode(200)->setResponse(["related_users" => $relatedUsers])->send();
+        return $data;
 	}
 }
