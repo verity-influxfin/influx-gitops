@@ -291,13 +291,22 @@ class User extends MY_Admin_Controller {
 		$this->json_output->setStatusCode(200)->setResponse(["block" => $this->block_output->toOne()])->send();
 	}
 
-	public function related_users()
-	{
-		$input = $this->input->get(NULL, TRUE);
-		$this->load->library('Anti_fraud_lib');
-		$this->anti_fraud_lib->related_users($input["id"]);
+    public function related_users()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $this->load->library('Anti_fraud_lib');
+        $this->load->library('output/json_output');
+        $relatedUserData = $this->anti_fraud_lib->related_users($input["id"]);
 
-	}
+        $this->load->library('output/user/related_user_output', ["data" => $relatedUserData]);
+
+        $relatedUsers = $this->related_user_output->toMany();
+
+        if (!$relatedUsers) {
+            $this->json_output->setStatusCode(204)->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(["related_users" => $relatedUsers])->send();
+    }
 
 	public function migrateData()
 	{

@@ -199,6 +199,7 @@ class Target extends REST_Controller {
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
 					'product_id' 		=> intval($value->product_id),
+					'sub_product_id' => intval($value->sub_product_id),
 					'credit_level' 		=> intval($value->credit_level),
 					'user_id' 			=> intval($value->user_id),
 					'user' 				=> $user,
@@ -475,6 +476,7 @@ class Target extends REST_Controller {
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
 				'product_id' 		=> intval($target->product_id),
+                'sub_product_id' => intval($target->sub_product_id),
 				'user_id' 			=> intval($target->user_id),
 				'loan_amount' 		=> intval($target->loan_amount),
 				'credit_level' 		=> intval($target->credit_level),
@@ -495,7 +497,11 @@ class Target extends REST_Controller {
 				'amortization_schedule' => $amortization_schedule,
 			);
 
-            count($certification_list)>0?$data['certification'] = $certification_list:'';
+            if(count($certification_list)>0){
+                $target_tips = $this->config->item('target_tips');
+                $data['certification'] = $certification_list;
+                $data['target_tips'] = $target_tips;
+            }
 
             $target->order_id!=0?$data['order_image']=$target->person_image:null;
 
