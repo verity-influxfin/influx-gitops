@@ -62,7 +62,7 @@
                                             <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a target="_blank" href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}

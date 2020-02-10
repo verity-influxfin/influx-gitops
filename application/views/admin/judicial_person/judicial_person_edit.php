@@ -1,12 +1,12 @@
 <script>
-	function check_fail() {
-		var status = $('#status :selected').val();
-		if (status == 2) {
-			$('#fail_div').show();
-		} else {
-			$('#fail_div').hide();
-		}
-	}
+    function check_fail() {
+        var status = $('#status :selected').val();
+        if (status == 2) {
+            $('#fail_div').show();
+        } else {
+            $('#fail_div').hide();
+        }
+    }
 </script>
 
 <div id="page-wrapper">
@@ -51,36 +51,36 @@
 								<label>公司名稱</label>
 								<p class="form-control-static"><?= isset($data->company) ? $data->company : "" ?></p>
 							</div>
-							<? if (!empty($data->cooperation_address)) { ?>
-								<div class="form-group">
-									<label>公司地址</label>
-									<p class="form-control-static"><?= $data->cooperation_address ?></p>
-								</div>
-							<? } ?>
-							<? if (!empty($data->cooperation_phone)) { ?>
-								<div class="form-group">
-									<label>公司電話</label>
-									<p class="form-control-static"><?= $data->cooperation_phone ?></p>
-								</div>
-							<? } ?>
-							<? if (!empty($data->cooperation_contact)) { ?>
-								<div class="form-group">
-									<label>聯絡人</label>
-									<p class="form-control-static"><?= $data->cooperation_contact ?></p>
-								</div>
-							<? } ?>
-							<div class="form-group">
-								<label>營運模式</label>
-								<p class="form-control-static"><?= isset($data->business_model)
-																	? $data->business_model == 0
-																	? '線下'
-																	: '線上'
-																	: "" ?></p>
-							</div>
-							<div class="form-group">
-								<label>商品類型</label>
-								<p class="form-control-static"><?= isset($data->selling_type) ? $this->config->item('selling_type')[$data->selling_type] : "" ?></p>
-							</div>
+                            <? if(!empty($data->cooperation_address)){ ?>
+                                <div class="form-group">
+                                    <label>公司地址</label>
+                                    <p class="form-control-static"><?=$data->cooperation_address ?></p>
+                                </div>
+                            <? } ?>
+                            <? if(!empty($data->cooperation_phone)){ ?>
+                                <div class="form-group">
+                                    <label>公司電話</label>
+                                    <p class="form-control-static"><?=$data->cooperation_phone ?></p>
+                                </div>
+                            <? } ?>
+                            <? if(!empty($data->cooperation_contact)){ ?>
+                                <div class="form-group">
+                                    <label>聯絡人</label>
+                                    <p class="form-control-static"><?=$data->cooperation_contact ?></p>
+                                </div>
+                            <? } ?>
+                            <div class="form-group">
+                                <label>營運模式</label>
+                                <p class="form-control-static"><?= isset($data->business_model)
+                                        ? $data->business_model == 0
+                                            ? '線下'
+                                            : '線上'
+                                        : "" ?></p>
+                            </div>
+                            <div class="form-group">
+                                <label>商品類型</label>
+                                <p class="form-control-static"><?= isset($data->selling_type) ? $this->config->item('selling_type')[$data->selling_type] : "" ?></p>
+                            </div>
 							<div class="form-group">
 								<label>備註</label>
 								<p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
@@ -380,6 +380,7 @@
 													</td>
 												</tr>
 
+<<<<<<< HEAD
 											</tbody>
 										</table>
 									<? } else { ?>
@@ -461,3 +462,100 @@
 		<!-- /.row -->
 	</div>
 	<!-- /#page-wrapper -->
+=======
+                                        </tbody>
+                                    </table>
+                                    <? } else { ?>
+                                        <div class="form-group">系統查無登記資料，線上商業司<a
+                                                    href="https://findbiz.nat.gov.tw/fts/query/QueryBar/queryInit.do">查詢</a>如有資料警請回報IT工程師
+                                        </div>
+                                    <? } ?>
+                                </div>
+                                <div class="form-group">
+                                    <? if ($shareholders) {
+                                        ?>
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <tbody>
+                                            <? foreach ($shareholders as $key => $value) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <p class="form-control-static">職稱名稱</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static"><?= isset($value['Person_Position_Name']) ? $value['Person_Position_Name'] : '' ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static">董監事股東姓名</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static"><?= isset($value['Person_Name']) ? $value['Person_Name'] : '' ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static">所代表法人</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static"><?= isset($value['Juristic_Person_Name']) ? $value['Juristic_Person_Name'] : '' ?></p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static">持有股份數</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="form-control-static"><?= isset($value['Person_Shareholding']) ? number_format($value['Person_Shareholding']) : '' ?></p>
+                                                    </td>
+                                                </tr>
+                                            <? } ?>
+                                            </tbody>
+                                        </table>
+                                    <? } ?>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h1>圖片</h1>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">營利事業變更登記表正本</label>
+                                        <? if (isset($content['enterprise_registration_image'])) {
+                                            foreach ($content['enterprise_registration_image'] as $key => $value) {
+                                                ?>
+                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                    <img src="<?= $value ? $value : "" ?>"
+                                                         style='width:100%;max-width:300px'>
+                                                </a>
+                                                <?
+                                            }
+                                        } else {
+                                            echo "未上傳";
+                                        } ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳內頁</label>
+                                        <? if (isset($data->cooperation_content)) {
+                                             foreach (json_decode($data->cooperation_content)->passbook_image as $key => $value) {
+                                                 if(is_array($value)){?>
+
+                                                 <?}
+                                                 else{?>
+                                                     <a href="<?= isset($value) ? $value : "" ?>"
+                                                        data-fancybox="images">
+                                                         <img src="<?= $value ? $value : "" ?>"
+                                                              style='width:100%;max-width:300px'>
+                                                     </a>
+                                                 <? }
+                                             }
+                                        } else {
+                                            echo "未上傳";
+                                        } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+>>>>>>> develop

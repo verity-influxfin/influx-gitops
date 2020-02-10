@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">
-					<img src="https://s3-ap-northeast-1.amazonaws.com/influxp2p/estatement/logo.png" alt="" width="150px" />
+					<img src="<?=FRONT_CDN_URL ?>public/logo.png" alt="" width="150px" />
 				</a>
                 <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:""?> [ <?=isset($role_name)?$role_name:""?> ]</h5>
             </div>

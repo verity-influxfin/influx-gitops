@@ -47,14 +47,37 @@ class Judicialperson_lib{
 						'company_status'	   => 1,
 						'transaction_password' => $transaction_password,
 					];
-					$user_id = $this->CI->user_model->insert($user_param);
-					if($user_id){
-						$agent_param = [
-							'company_user_id'	=> $user_id,
-							'incharge'			=> 1,
-							'user_id'			=> $judicial_person->user_id,
-						];
-						$this->CI->judicial_agent_model->insert($agent_param);
+                    $user_id = $this->CI->user_model->insert($user_param);
+                    if($user_id) {
+                        $agent_param = [
+                            'company_user_id' => $user_id,
+                            'incharge' => 1,
+                            'user_id' => $judicial_person->user_id,
+                        ];
+                        $virtual_data = [];
+                        $virtual_data[] = [
+                            'investor' => 1,
+                            'user_id' => $user_id,
+                            'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+                        ];
+
+                        $virtual_data[] = [
+                            'investor' => 0,
+                            'user_id' => $user_id,
+                            'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+                        ];
+
+                        if (in_array($judicial_person->selling_type, $this->CI->config->item('use_taishin_selling_type'))) {
+                            $virtual_data[] = [
+                                'investor' => 0,
+                                'user_id' => $user_id,
+                                'virtual_account' => TAISHIN_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+                            ];
+                        }
+                    }
+                    $v_rs = $this->CI->virtual_account_model->insert_many($virtual_data);
+                    if($v_rs){
+                        $this->CI->judicial_agent_model->insert($agent_param);
                         $param		= [
                             'user_id'			=> $user_id,
                             'certification_id'	=> 3,
@@ -64,7 +87,7 @@ class Judicialperson_lib{
                             'status'            => 1,
                         ];
                         $insert = $this->CI->user_certification_model->insert($param);
-						//建立金融帳號
+                        //建立金融帳號
                         $bankaccount_info = [
                             'user_id'               => $user_id,
                             'investor'              => 1,
@@ -77,26 +100,14 @@ class Judicialperson_lib{
                         ];
                         $this->CI->user_bankaccount_model->insert($bankaccount_info);
 
-                        $virtual_data 	= [];
-                        $virtual_data[] = [
-                            'investor'			=> 1,
-                            'user_id'			=> $user_id,
-                            'virtual_account'	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
-                        ];
+                        $this->CI->judicial_person_model->update($person_id, [
+                            'status' 			=> 1,
+                            'company_user_id'	=> $user_id,
+                            'sign_video'        => $media,
+                        ]);
+                        return true;
 
-                        $virtual_data[] = [
-                            'investor'			=> 0,
-                            'user_id'			=> $user_id,
-                            'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.'0'.substr($judicial_person->tax_id,0,8),
-                        ];
-						$this->CI->virtual_account_model->insert_many($virtual_data);
-						$this->CI->judicial_person_model->update($person_id, [
-							'status' 			=> 1,
-							'company_user_id'	=> $user_id,
-							'sign_video'        => $media,
-						]);
-						return true;
-					}
+                    }
 				}
 			}
 		}
@@ -128,7 +139,6 @@ class Judicialperson_lib{
 					'company_user_id'	=> $judicial_person->company_user_id,
                     'cooperation_id'	=> 'CO'.$judicial_person->tax_id,
                     'cooperation_key'	=> SHA1(COOPER_KEY.$judicial_person->tax_id.time()),
-					//'server_ip'		=> $judicial_person->cooperation_server_ip,
 					'type'		        => $judicial_person->selling_type,
                     'status'			=> 1,
 				);

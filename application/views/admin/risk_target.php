@@ -6,7 +6,11 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">風控專區</h1>
+                    <h1 class="page-header">
+                        <?=isset($input['investor']) && $input['investor'] == 1?'投資端審核':'' ?>
+                        <?=isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1?'法人借款端審核':'' ?>
+                        <?=isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0?'自然人借款端審核':'' ?>
+                    </h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -101,13 +105,24 @@
 											<th>產品名稱</th>
                                             <th>狀態</th>
                                             <th>最後更新時間</th>
-											<? if($certification){
+											<?
+                                            $investor_cer = [1,3,5,6];
+                                            if($certification){
 												foreach($certification as $key => $value){
-													echo '<th>'.$value['name'].'</th>';
-												}
+												    if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
+                                                        || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
+                                                        || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && $key > 10
+                                                    ){
+												        unset($certification[$key]);
+												        continue;
+                                                    }
+                                                    echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
+                                                }
 											}
 											?>
+                                            <?if(isset($input['investor']) && $input['investor'] != 1){?>
                                             <th>退件</th>
+                                            <?}?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -138,14 +153,14 @@
 																	if($value[1]["user_status"]==1){
 																		echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md nhide" >金融驗證</a><span class="sword" style="display:none">可金融驗證</span>';
 																	}else{
-																		echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-warning btn-circle nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
+																		echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-warning btn-circle nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
 																	}
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value["bank_account"]->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
 																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_list?verify=2').'" class="btn btn-default btn-md nhide" >金融驗證</a><span class="sword" style="display:none">可金融驗證</span>';
@@ -156,16 +171,16 @@
 														}else{
 															switch($user_status){
 																case '0': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-warning btn-circle nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-success'.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
 																	break;
 																default:
 																	break;
@@ -197,7 +212,7 @@
 													<?=isset($value->user_id)?$value->user_id:"" ?>
 												</a>
 											</td>
-                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?></td>
+                                            <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></td>
 											<td>
 												<? 
 													if($value->status==2){
@@ -243,16 +258,16 @@
 														if($k==3){
 															switch($value->certification[$k]["user_status"]){
 																case '0': 
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
-																	echo '<a href="'.admin_url('certification/user_bankaccount_edit?from=risk&id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
 																	break;
 																default:
 																	break;
@@ -260,16 +275,16 @@
 														}else{
 															switch($value->certification[$k]["user_status"]){
 																case '0': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-warning'.$sys_check.' nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-warning'.$sys_check.' nhide"><i class="fa fa-refresh"></i></button></a><span class="sword" style="display:none">資料更新中</span>';
 																	break;
 																case '1':
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
 																	break;
 																case '2': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
 																	break;
 																case '3': 
-																	echo '<a href="'.admin_url('certification/user_certification_edit?from=risk&id='.$certification_id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+																	echo '<a target="_blank" href="'.admin_url('certification/user_certification_edit?id='.$certification_id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
 																	break;
 																default:
 																	break;
@@ -280,7 +295,9 @@
 												}
 												}
 											?>
-                                            <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>                                          
+                                            <? if(isset($input['investor']) && $input['investor'] != 1){?>
+                                                <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>
+                                            <?}?>
                                         </tr>                                    
 									<?php 
 										}}

@@ -77,84 +77,106 @@ class Certification extends MY_Admin_Controller {
 
 	public function user_certification_edit(){
 		$page_data 	= array();
-		$back_url 	= admin_url('certification/user_certification_list');
+		$back_url 	= admin_url('close');
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
 		if(empty($post)){
 			$id 	= isset($get['id'])?intval($get['id']):0;
+			$cid 	= isset($get['cid'])?intval($get['cid']):0;
 			$from 	= isset($get['from'])?$get['from']:'';
 			if(!empty($from)){
-				$back_url = admin_url($from);
+				$back_url = admin_url('close');
 			}
-			if($id){
+			if($id||$cid){
 				$info = $this->user_certification_model->get($id);
-				if ($info) {
-					$certification 						= $this->certification[$info->certification_id];
-					$page_data['certification_list'] 	= $this->certification_name_list;
-					$page_data['data'] 					= $info;
-					$page_data['content'] 				= json_decode($info->content, true);
+				if($info||$cid){
+					$certification = $this->certification[$info->certification_id];
+					$page_data['certification_list'] = $this->certification_name_list;
+					$page_data['data'] = $info;
+					$page_data['content'] = json_decode($info->content, true);
 
-					if ($info->certification_id == 2) {
+					if($info->certification_id==2) {
 						//加入SIP網址++
-						$school_data = trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/school_with_loaction.json'), "\xEF\xBB\xBF");
+						$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
 						$school_data = json_decode($school_data, true);
 						$school = $page_data['content']['school'];
 						$sipURL = isset($school_data[$school]['sipURL']) ? $school_data[$school]['sipURL'] : '';
 						$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 						//加入SIP網址--
-					}
-                    if ($info->certification_id == 9) {
-                        if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
+
+					}elseif ($info->certification_id == 9) {
+						if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
 							$this->joint_credits();
 							return;
-                        }
+						}
 					}
-                    if ($info->certification_id == 10 && isset(json_decode($info->content)->pdf_file)) {
-                            $this->job_credits();
-                            return;
-                    }
-					$page_data['id'] 					= $id;
-					$page_data['remark'] 				= json_decode($info->remark, true);
-					$page_data['status_list'] 			= $this->user_certification_model->status_list;
-					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
-					$page_data['school_system'] 		= $this->config->item('school_system');
-					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
-
-					if (isset($page_data['content']['programming_language']) && is_string($page_data["content"]["programming_language"])) {
-						$page_data['content']['programming_language'] = json_decode($page_data["content"]["programming_language"], true);
-					}
-					if($info->certification_id==10){
+					elseif($info->certification_id==10){
+						if(isset(json_decode($info->content)->pdf_file)) {
+							$this->job_credits();
+							return;
+						}
 						$page_data['employee_range'] 		= $this->config->item('employee_range');
 						$page_data['position_name']			= $this->config->item('position_name');
 						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
 						$page_data['industry_name'] 		= $this->config->item('industry_name');
 						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
-						if (isset($page_data['content']['job_title'])) {
-							$job_title = file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/cert_title.json');
-							$page_data['job_title'] = preg_split('/"},{/', preg_split('/' . $page_data['content']['job_title'] . '","des":"/', $job_title)[1])[0];
-							if (isset($page_data['content']['programming_language'])) {
-								$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
-								$set_lang_level = ['入門', '參與開發', '獨立執行'];
-								foreach ($page_data['content']['programming_language'] as $lang_list => $lang) {
-									$lang_level = ' (' . $set_lang_level[$lang['level'] - 1] . ')';
-									$lang['id'] != '' ? $techie_lang[] = $languageList->{$lang['id']} . $lang_level : $other_lang[] = $lang['des'] . $lang_level;
-								}
-								$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
-								$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
-							}
+						if (isset($page_data['content']['job_title'])){
+							$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
+							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
 						}
-					} elseif ($info->certification_id == 2) {
-						if (isset($page_data['content']['programming_language'])) {
-							$languageList = json_decode(trim(file_get_contents('https://influxp2p-front-assets.s3-ap-northeast-1.amazonaws.com/json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
-							$set_lang_level = ['入門', '參與開發', '獨立執行'];
-							foreach ($page_data['content']['programming_language'] as $lang_list => $lang) {
-								$lang_level = ' (' . $set_lang_level[$lang['level'] - 1] . ')';
-								$lang['id'] != '' ? $techie_lang[] = $languageList->{$lang['id']} . $lang_level : $other_lang[] = $lang['des'] . $lang_level;
-							}
-							$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
-							$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
+					}elseif($cid == 1006 || $info->certification_id==1006){
+						$selltype = isset($get['selltype'])?$get['selltype']:0;
+						$user_id = isset($get['user_id'])?$get['user_id']:0;
+						$new = true;
+						if($info){
+							$user_id = $info->user_id;
+							$cid = $info->certification_id;
+							$this->load->model('user/judicial_person_model');
+							$list = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+							$list?$selltype=$list->selling_type:'';
+							$new = false;
 						}
+						$this->config->load('credit');
+						$creditJudicial = $this->config->item('creditJudicial');
+						if(isset($creditJudicial[$selltype])){
+							$certification = $this->certification[$cid];
+							$page_data['user_id'] = $user_id;
+							$page_data['selltype'] = $selltype;
+							$page_data['selling_type'] = $this->config->item('selling_type')[$selltype];
+							$page_data['cid'] = $cid;
+							$page_data['data'] = $info;
+							$page_data['content'] = isset($info->content)?json_decode($info->content,true):false;
+							$page_data['creditJudicialConfig'] = $creditJudicial[$selltype];
+							$page_data['certification_list'] = $this->certification_name_list;
+							$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
+
+							$this->load->view('admin/_header');
+							$this->load->view('admin/_title',$this->menu);
+							$this->load->view('admin/certification/'.$certification['alias'],$page_data);
+							$this->load->view('admin/_footer');
+							return true;
+						}
+						alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
 					}
+
+					if(isset($page_data['content']['programming_language']) && is_string($page_data["content"]["programming_language"])){
+						$page_data['content']['programming_language'] = json_decode($page_data["content"]["programming_language"], true);
+						$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+						$set_lang_level =['入門','參與開發','獨立執行'];
+						foreach($page_data['content']['programming_language'] as $lang_list => $lang){
+							$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
+							$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+						}
+						$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
+						$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
+					}
+
+					$page_data['id'] 					= $id;
+					$page_data['remark'] 				= json_decode($info->remark,true);
+					$page_data['status_list'] 			= $this->user_certification_model->status_list;
+					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
+					$page_data['school_system'] 		= $this->config->item('school_system');
+					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
 					$page_data['from'] 					= $from;
 					$this->load->view('admin/_header');
 					$this->load->view('admin/_title', $this->menu);
@@ -236,11 +258,60 @@ class Certification extends MY_Admin_Controller {
 				$content['company'] = $post['company'];
 				$this->user_certification_model->update($id,['content'=>json_encode($content)]);
 				alert('更新成功','user_certification_edit?id='.$id);
+			}elseif (!empty($post['cid'])){
+				$certification_id 	= $post['cid'];
+				$certification 		= $this->certification[$certification_id];
+				if($certification){
+					$user_id = $post['id'];
+					$selltype = $post['selltype'];
+					$content	= [];
+
+					$this->load->library('Certification_lib');
+					$user_certification	= $this->certification_lib->get_certification_info($user_id,$certification_id,0);
+					if(!$user_certification || $user_certification->status == 2){
+						$this->config->load('credit');
+						$creditJudicial = $this->config->item('creditJudicial');
+						if(isset($creditJudicial[$selltype])){
+							foreach ($creditJudicial[$selltype] as $key => $value) {
+								if($value['selctType'] == 'select' && isset($post[$key])){
+									$content[$key] = $post[$key];
+								}elseif ($value['selctType'] == 'radio'){
+									foreach ($value['descrtion'] as $descrtionKey => $descrtionValue) {
+										if(isset($post[$descrtionValue[0]])){
+											$content[$descrtionValue[0]] = $post[$descrtionValue[0]];
+										}
+										else{
+											$data['msg'] = '報告產生異常';
+										}
+									}
+								}
+							}
+							$insert = $this->user_certification_model->insert([
+								'user_id'			=> $user_id,
+								'certification_id'	=> $certification_id,
+								'investor'			=> 0,
+								'content'			=> json_encode($content),
+							]);
+							$insert = $this->certification_lib->set_success($insert);
+							if($insert){
+								$data['msg'] = '報告儲存成功';
+							}else{
+								$data['msg'] = '報告儲存失敗';
+							}
+						}
+					}else{
+						$data['msg'] = '報告已存在';
+					}
+				}
+				$data['redirect'] = base_url('admin/Judicialperson/cooperation?cooperation=1');
+				print(json_encode($data));
+				return false;
 			}elseif(!empty($post['id'])){
 				$from 	= isset($post['from'])?$post['from']:'';
 				$fail 	= isset($post['fail'])?$post['fail']:'';
 				if(!empty($from)){
-					$back_url = admin_url($from);
+					//$back_url = admin_url($from);
+					$back_url = admin_url('close');
 				}
 
 				$info = $this->user_certification_model->get($post['id']);
@@ -259,8 +330,8 @@ class Certification extends MY_Admin_Controller {
 							if(isset($post['pro_level'])){
 								$pro_level = is_numeric($post['pro_level'])&&$post['pro_level']<=5?$post['pro_level']:0;
 							}
-							$content['license_status'] 	= $post['license_status'];
-							$content['pro_level'] 		= $post['pro_level'];
+							$content['license_status'] 	= $license_status;
+							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						}
 						elseif($info->certification_id==9){
@@ -288,6 +359,8 @@ class Certification extends MY_Admin_Controller {
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
+						}elseif($info->certification_id==1006){
+							$fail = '評估表已失效';
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
@@ -331,8 +404,11 @@ class Certification extends MY_Admin_Controller {
 		$fields 	= ['investor','verify'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
-			    if($field == 'investor' && $input['investor'] ==2){
-                    $where['investor']   = 1;
+				if($field == 'investor' && $input['investor'] ==3){
+					$where['investor']   = 1;
+					$where['back_image'] = '';
+				}elseif($field == 'investor' && $input['investor'] ==2){
+                    $where['investor']   = 0;
                     $where['back_image'] = '';
                 }elseif($field == 'investor' && $input['investor'] ==1){
                     $where['investor']      = 1;

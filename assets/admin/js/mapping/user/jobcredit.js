@@ -8,6 +8,10 @@ class JobCredit
 		this.setLicenseStatus(jobCredit);
 		this.setProLevel(jobCredit);
 		this.setSalary(jobCredit);
+		this.setIncomeProveImages(jobCredit);
+		this.setAuxiliaryImages(jobCredit);
+		this.setLicenseImages(jobCredit);
+		this.setBusinessImages(jobCredit);
 	}
 	setLicenseStatus(jobCredit) {
         if (!jobCredit.license_status) this.licenseStatus= "";
@@ -39,6 +43,30 @@ class JobCredit
             jobCredit.messages[i].stage = this.mapStage(jobCredit.messages[i].stage);
             this.messages.push(jobCredit.messages[i]);
         }
+    }
+
+    setIncomeProveImages(jobCredit) {
+        this.incomeProveImages = [];
+        if (!jobCredit.income_prove_images) return;
+        this.incomeProveImages = jobCredit.income_prove_images;
+    }
+
+    setAuxiliaryImages(jobCredit) {
+        this.auxiliaryImages = [];
+        if (!jobCredit.auxiliary_images) return;
+        this.auxiliaryImages = jobCredit.auxiliary_images;
+    }
+
+    setLicenseImages(jobCredit) {
+        this.licenseImages = [];
+        if (!jobCredit.license_images) return;
+        this.licenseImages = jobCredit.license_images;
+    }
+
+    setBusinessImages(jobCredit) {
+        this.businessImages = [];
+        if (!jobCredit.business_images) return;
+        this.businessImages = jobCredit.business_images;
     }
 
     mapStatus(status) {

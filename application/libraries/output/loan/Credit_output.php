@@ -34,7 +34,8 @@ class Credit_output
 			'id' => $credit->id,
 			'product' => [
 				'id' => $credit->product_id,
-				'name' => isset($this->productMapping[$credit->product_id]["name"]) ? $this->productMapping[$credit->product_id]["name"] : '',
+				'sub_product_id' => isset($credit->sub_product_id)?$credit->sub_product_id:'',
+				'name' => $this->productMapping[$credit->product_id]["name"] . (isset($credit->sub_product_name) ? ' / ' . $credit->sub_product_name : ''),
 			],
 			'level' => $credit->level,
 			'points' => $credit->points,
@@ -51,11 +52,15 @@ class Credit_output
 		$credit = new stdClass();
 		$credit->id = $creditInput["id"];
 		$credit->product_id = $creditInput["product_id"];
-		$credit->level = $creditInput["level"];
-		$credit->points = $creditInput["points"];
-		$credit->amount = $creditInput["amount"];
-		$credit->expire_time = $creditInput["expire_time"];
-		$credit->created_at = $creditInput["created_at"];
+		if(isset($creditInput["sub_product_id"])){
+            $credit->sub_product_id = $creditInput["sub_product_id"];
+            $credit->sub_product_name = $creditInput["sub_product_name"];
+        }
+        $credit->level = $creditInput["level"];
+        $credit->points = $creditInput["points"];
+        $credit->amount = $creditInput["amount"];
+        $credit->expire_time = $creditInput["expire_time"];
+        $credit->created_at = $creditInput["created_at"];
 		return $credit;
 	}
 

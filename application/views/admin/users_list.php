@@ -67,7 +67,7 @@
 											<td><?=isset($value->block_status)&&$value->block_status?"封鎖":"否" ?></td>
 											<td><?=isset($value->promote_code)?$value->promote_code:"" ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a target="_blank" href="<?=admin_url('user/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
                                         </tr>                                        
 									<?php 
 										}}

@@ -34,8 +34,8 @@ class facebook_output
 	public function convertToFacebookObject($userMetaInputs)
 	{
 		$facebook = new stdClass();
-		$facebook->id = $userMetaInputs->fb_id;
-		$facebook->username = $userMetaInputs->fb_name;
+		$facebook->id = isset($userMetaInputs->fb_id)?$userMetaInputs->fb_id:'';
+		$facebook->username = isset($userMetaInputs->fb_name)?$userMetaInputs->fb_name:'';
 		return $facebook;
 	}
 }
