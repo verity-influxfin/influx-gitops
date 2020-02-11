@@ -61,7 +61,39 @@ class Game_lib{
 		
 	  }
  
- 
-	
- 
+	  public function count_and_send_thirty_points($user_id,$my_line_id,$collect_count){
+		$this->CI->load->model('log/log_game_model');
+		$this->CI->load->library('line_lib');
+		$check = $this->CI->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_thirty_points'));
+		$size=count($check);
+		if ($size == 0 && $collect_count >= 0) {
+			//送出第一次linebot 
+			for ($i = 1; $i <= $collect_count; $i++) {
+				$param = array(
+					"user_id" => $user_id, "content" => $my_line_id, "memo" => 'send_thirty_points'
+				);
+				$this->CI->log_game_model->insert($param);
+				$this->CI->line_lib->send_thirty_points($my_line_id);
+			}
+		}
+		if ($size > 0 && ($collect_count > $size)) {
+			$res = $collect_count - $size;
+			for ($i = 1; $i <= $res; $i++) {
+				$param = array(
+					"user_id" => $user_id, "content" => $my_line_id, "memo" => 'send_thirty_points'
+				);
+				$this->CI->log_game_model->insert($param);
+				$this->CI->line_lib->send_thirty_points($my_line_id);
+			}
+		}
+        // if(empty($check)){
+		//送出linebot 
+		// 	$this->CI->line_lib->send_thirty_points($my_line_id);
+		// 	$param = array(
+		// 		"user_id"=>$user_id , "content" => $my_line_id, "memo"=>'send_thirty_points');
+		// 		$this->CI->log_game_model->insert($param);
+		// }
+		
+	}
+
 }
