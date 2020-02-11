@@ -1249,7 +1249,7 @@ class User extends REST_Controller {
             'promote_code'	           => $promote_code,
 			'promote_url'	           => $url,
 			'promote_qrcode'           => $qrcode,
-            //'promote_count'            => count($promote_count),
+            'promote_count'            => count($promote_count),//檢查推薦幾人
             'collect_count'            => intval($collect_count), //跟30點有關 可領取次數
             'done_collect_count'       =>  intval($check_30send),//跟30點有關 已領取次數
             'game_status'               => true
