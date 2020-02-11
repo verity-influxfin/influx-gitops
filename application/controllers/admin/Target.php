@@ -273,7 +273,10 @@ class Target extends MY_Admin_Controller {
                     }
 
                     $bank_account_verify = $bank_account ? 1 : 0;
-                    $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
+                    $credit_list = $this->credit_model->get_many_by(array(
+                        'user_id' => $user_id,
+                        'status !=' => 2,
+                    ));
                     $user_info = $this->user_model->get($user_id);
                     $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;

@@ -151,7 +151,7 @@ class Credit_lib{
         }
         $param['expire_time'] = $expire_time;
 
-        if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
+        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
 

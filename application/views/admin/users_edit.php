@@ -194,7 +194,7 @@
 														<p class="form-control-static">產品</p>
 													</td>
 													<td>
-														<p class="form-control-static"><?= isset($value->product_id) ? $product_list[$value->product_id]['name'] : ""; ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></p>
+														<p class="form-control-static"><?= isset($value->product_id) ? $product_list[$value->product_id]['name'] : ""; ?><?=isset($sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']])?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></p>
 													</td>
 													<td style="background-color: #f5f5f5">
 														<p class="form-control-static">信用等級</p>
