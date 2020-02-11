@@ -177,7 +177,10 @@ class User extends MY_Admin_Controller {
 				'status'	=> 1,
 				'verify'	=> 1,
 			));
-			$credit_list		= $this->credit_model->get_many_by(array('user_id'=>$id));
+			$credit_list		= $this->credit_model->get_many_by(array(
+				'user_id' => $id,
+				'status !=' => 2,
+			));
 			$info = $this->user_model->get($id);
 			if($info){
                 $this->load->library('certification_lib');
