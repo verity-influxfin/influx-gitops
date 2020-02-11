@@ -327,7 +327,7 @@ class Target_lib{
                                         $param['sub_status'] = 9;
                                     }
                                     if($cer){
-                                        $param['target_data'] = json_encode($cer);
+                                         $param['target_data'] = json_encode($cer);
                                     }
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     if($rs && $msg){
@@ -895,13 +895,13 @@ class Target_lib{
                             $cer = [];
                             foreach($certifications as $key => $certification){
                                 if($finish && in_array($certification['id'],$product_certification)){
-                                    if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
-                                        $certification['user_status'] != 1
-                                            ?$finish_stage_cer[] = $certification['id']==10?'A':$certification['id']
-                                            :'';
-                                    }
-                                    elseif($certification['user_status']!='1'){
-                                        $finish = false;
+                                    if($certification['user_status']!='1'){
+                                        if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
+                                            $finish_stage_cer[] = $certification['id']==10?'A':$certification['id'];
+                                        }
+                                        else{
+                                            $finish = false;
+                                        }
                                     }
                                     $certification['user_status']=='1'?$cer[] = $certification['certification_id']:'';
                                 }
