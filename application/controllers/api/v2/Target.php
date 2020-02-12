@@ -449,20 +449,29 @@ class Target extends REST_Controller {
             if($targetData_cer){
                 $this->load->model('user/user_certification_model');
                 $this->load->library('Certification_lib');
-                $certification 	= $this->config->item('certifications');
+                $certification = $this->config->item('certifications');
                 $certifications = $this->user_certification_model->get_many_by([
                     'id' => $targetData_cer,
                     'user_id' => $target->user_id,
                 ]);
-                foreach($certifications as $key => $value){
-                    $cer = $certification[$value->certification_id];
-                    $cer['user_status'] 		   = intval($value->status);
-                    $cer['certification_id'] 	   = intval($value->id);
-                    $cer['updated_at'] 		   = intval($value->updated_at);
+                foreach ($certifications as $key => $value) {
+                    $cur_cer[$value->certification_id] = $value;
+                }
+                foreach ($product['certifications'] as $key => $value) {
+                    $cer = $certification[$value];
+                    if (!isset($cur_cer[$value])) {
+                        $cer['user_status'] = null;
+                        $cer['certification_id'] = null;
+                        $cer['updated_at'] = null;
+                    } else {
+                        $cer['user_status'] = intval($cur_cer[$value]->status);
+                        $cer['certification_id'] = intval($cur_cer[$value]->id);
+                        $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
+                    }
+                    unset($cer['optional']);
                     $certification_list[] = $cer;
                 }
             }
-
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data['content']:'';
 
