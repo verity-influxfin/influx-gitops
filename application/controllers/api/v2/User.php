@@ -1224,8 +1224,7 @@ class User extends REST_Controller {
 
         $collect_count= floor($promotecount/3);
 		$my_detail    = $this->user_model->get_by([
-			'id'  => $user_id,
-			'created_at >=' => strtotime($beginDate)
+			'id'  => $user_id
 			]);
 
         $this->load->model('user/user_meta_model');
@@ -1289,8 +1288,7 @@ class User extends REST_Controller {
 
         $collect_count= floor($promotecount/3);
 		$my_detail    = $this->user_model->get_by([
-			'id'  => $user_id,
-			'created_at >=' => strtotime($beginDate)
+			'id'  => $user_id
 			]);
 
         $this->load->model('user/user_meta_model');
