@@ -42,7 +42,7 @@ class Target_output
 		}
 
 		$targets = [];
-		foreach ($this->targets as $target) {
+        foreach ($this->targets as $target) {
 			$targetOutput = $this->map($target);
 			$targets[] = $targetOutput;
 		}
@@ -64,7 +64,7 @@ class Target_output
 				'name' => isset($this->productMapping[$target->product_id]["name"])
                           ? $this->productMapping[$target->product_id]["name"]
                               . (
-                                  $target->sub_product_id!=0
+                                  isset($this->subProductMapping[$target->sub_product_id])
                                   ?' / '.$this->subProductMapping[$target->sub_product_id]['identity'][$this->productMapping[$target->product_id]['identity']]['name']
                                   :''
                               )
