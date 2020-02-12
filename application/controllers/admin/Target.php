@@ -560,13 +560,7 @@ class Target extends MY_Admin_Controller {
             $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
         }
 
-        if ($remark) {
-            if ($target->remark) {
-                $update["remark"] = $target->remark . "," . $remark;
-            } else {
-                $update["remark"] = $remark;
-            }
-        }
+        $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark) . FINAL_VALIDATIONS;
 
 		if ($newCredits && $newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
@@ -587,7 +581,7 @@ class Target extends MY_Admin_Controller {
 		if($target->sub_product_id == 9999){
             $param['status'] = 1;
             $param['sub_status'] = 0;
-            $remark ? $param['remark'] = $update["remark"] : '';
+            $param['remark'] = $remark;
             $this->target_model->update($target->id,$param);
         }
         else{
