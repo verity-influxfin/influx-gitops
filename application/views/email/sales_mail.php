@@ -163,8 +163,9 @@
                         <table class="flexible" width="800" align="center" style="margin:0 auto;margin-top:32px;"
                                cellpadding="0" cellspacing="0">
                             <tr>
-                                <td class="img-flex"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}.jpg"
-                                                          style="vertical-align:top;" width="800" alt=""/></td>
+                                <td class="img-flex">
+                                    <a href="{url}"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}.jpg"
+                                            style="vertical-align:top;" width="800" alt=""/></a></td>
                             </tr>
                             <tr>
                                 <td data-bgcolor="bg-block" class="holder" style="padding:35px 30px 45px;"
