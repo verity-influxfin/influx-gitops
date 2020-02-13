@@ -320,7 +320,11 @@ class Target_lib{
                                     if($this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 || $renew){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
-                                        $param['remark'] = empty($target->remark) ? $remark : $target->remark . ', '.$remark;
+                                        $remark
+                                            ? $param['remark'] = (empty($target->remark)
+                                                ? $remark
+                                                : $target->remark . ', '.$remark)
+                                            : '';
                                         $msg = $target->status == 0 ? true:false;
                                         $target->sub_product_id == 9999 && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
                                     }else{
