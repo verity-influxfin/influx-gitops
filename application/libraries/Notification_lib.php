@@ -671,20 +671,17 @@ $name 您好，
     {
         $user_list = [];
         $count = 0;
-        $status = 0;
-        $investor_status = 0;
-        $investor == 0 ? $status = 1 : '';
-        $investor == 1 ? $investor_status = 1 : '';
+        $param = [
+            'email !=' => null,
+        ];
+        $investor == 0 ? $param['status'] = 1 : '';
+        $investor == 1 ? $param['investor_status'] = 1 : '';
         if ($investor == 2) {
-            $status = 1;
-            $investor_status = 1;
+            $param['status'] = 1;
+            $param['investor_status'] = 1;
         }
         if ($user_id == 0) {
-            $user_list = $this->CI->user_model->get_many_by([
-                'email !=' => null,
-                'status' => $status,
-                'investor_status' => $investor_status,
-            ]);
+            $user_list = $this->CI->user_model->get_many_by($param);
         } else {
             $user_info = $this->CI->user_model->get($user_id);
             $user_list[] = $user_info;
