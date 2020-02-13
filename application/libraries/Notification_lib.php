@@ -667,7 +667,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $investor = 0)
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0)
     {
         $user_list = [];
         $count = 0;
@@ -699,7 +699,7 @@ $name 您好，
                 );
                 $this->CI->user_notification_model->insert($param);
                 $this->CI->load->library('Sendemail');
-                $this->CI->sendemail->EDM($user_id, $title, nl2br($content), $EDM);
+                $this->CI->sendemail->EDM($user_id, $title, nl2br($content), $EDM, $url);
                 $count++;
             }
             $this->CI->load->library('parser');

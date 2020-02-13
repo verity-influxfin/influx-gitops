@@ -197,12 +197,13 @@ class Sendemail
 		}
     }
 
-    public function EDM($user_id, $title="",$content="",$EDM){
-        if($user_id){
-            $user_info 		= $this->CI->user_model->get($user_id);
-            if($user_info && $user_info->email){
-                $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM), TRUE);
-                return $this->send($user_info->email,$title, $content);
+    public function EDM($user_id, $title = "", $content = "", $EDM, $url)
+    {
+        if ($user_id) {
+            $user_info = $this->CI->user_model->get($user_id);
+            if ($user_info && $user_info->email) {
+                $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM, "url" => $url), TRUE);
+                return $this->send($user_info->email, $title, $content);
             }
         }
         return false;
