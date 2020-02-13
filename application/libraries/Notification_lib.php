@@ -692,14 +692,14 @@ $name 您好，
         if (count($user_list) > 0) {
             foreach ($user_list as $key => $value) {
                 $param = array(
-                    "user_id" => $user_id,
+                    "user_id" => $value->id,
                     "investor" => $investor,
                     "title" => $title,
                     "content" => $this->remove_emoji($content),
                 );
                 $this->CI->user_notification_model->insert($param);
                 $this->CI->load->library('Sendemail');
-                $this->CI->sendemail->EDM($user_id, $title, nl2br($content), $EDM, $url);
+                $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $url);
                 $count++;
             }
             $this->CI->load->library('parser');
