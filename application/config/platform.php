@@ -977,6 +977,6 @@ $config['certifications_msg'] = [
     2000 => []
 ];
 
-$config['mail_event'] = '20_01';//current_event//19christmas
+$config['mail_event'] = '2020_spring';//current_event //19christmas //20_01
 $config['use_taishin_selling_type'] = [2];
 $config['use_borrow_account_selling_type'] = [2];
