@@ -226,7 +226,7 @@ defined('FEV_INTEREST_RATE') 		OR define('FEV_INTEREST_RATE'		, 15); //分期利
 defined('FEV_SHARE_RATE') OR define('FEV_SHARE_RATE' , 2); //平台分潤
 defined('FEV_PREPAYMENT_SHARE_RATE') OR define('FEV_PREPAYMENT_SHARE_RATE' , 5); //提早清算平台分潤
 defined('STAGE_CER_MIN_AMOUNT') OR define('STAGE_CER_MIN_AMOUNT' , 3000);
-defined('FINAL_VALIDATIONS') OR define('FINAL_VALIDATIONS' , '(二審過件) ');
+defined('FINAL_VALIDATIONS') OR define('FINAL_VALIDATIONS' , '(二審過件)');
 defined('SUL_INTEREST_STARTING_RATE') 		OR define('SUL_INTEREST_STARTING_RATE' , 5); //分期利率
 defined('SUL_INTEREST_ENDING_RATE') 		OR define('SUL_INTEREST_ENDING_RATE' , 20); //分期利率
 defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%
