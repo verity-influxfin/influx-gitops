@@ -123,6 +123,7 @@ class Target extends REST_Controller {
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
         $product_list = $this->config->item('product_list');
+        $user_meta = '';
 
         if(!empty($target_list)){
             foreach($target_list as $key => $value){
@@ -131,23 +132,47 @@ class Target extends REST_Controller {
 				if($user_info){
                     $product = $product_list[$value->product_id];
                     $sub_product_id = $value->sub_product_id;
+                    $product_name = $product['name'];
                     if($this->is_sub_product($product,$sub_product_id)){
                         $product = $this->trans_sub_product($product,$sub_product_id);
+                        $product_name .= ' / ' . $product['name'];
                     }
 
-					$age  = get_age($user_info->birthday);
-					if($product_list[$value->product_id]['identity']==1){
-						$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'school_name']);
-                        if(is_object($user_meta)){
-                            $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
-                        }
-                        else{
+                    $age = get_age($user_info->birthday);
+                    if ($product_list[$value->product_id]['identity'] == 1) {
+                        $user_meta = $this->user_meta_model->get_by(['user_id' => $value->user_id, 'meta_key' => 'school_name']);
+                        if (is_object($user_meta)) {
+                            $user_meta->meta_value = preg_replace('/\(自填\)/', '', $user_meta->meta_value);
+                        } else {
                             $user_meta = new stdClass();
-                            $user_meta->meta_value='未提供學校資訊';
+                            $user_meta->meta_value = '未提供學校資訊';
                         }
-					}else{
-						$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$value->user_id,'meta_key'=>'diploma_name']);
-					}
+                    } elseif ($product_list[$value->product_id]['identity'] == 2) {
+                        $meta_info = $this->user_meta_model->get_many_by([
+                            'user_id' => $value->user_id,
+                            'meta_key' => ['job_company', 'diploma_name']
+                        ]);
+                        if ($meta_info) {
+                            $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                                ? $meta_info[0]->meta_value
+                                : (isset($meta_info[1]) >= 2
+                                    ? $meta_info[1]->meta_value
+                                    : false));
+                            $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                                ? $meta_info[0]->meta_value
+                                : (isset($meta_info[1]) >= 2
+                                    ? $meta_info[1]->meta_value
+                                    : false);
+                            $user_meta->meta_value = count($meta_info) == 2
+                                ? $job_company . '/' . $diploma_name
+                                : ($job_company
+                                    ? $job_company
+                                    : $diploma_name);
+                        } else {
+                            $user_meta = new stdClass();
+                            $user_meta->meta_value = '未提供相關資訊';
+                        }
+                    }
 
                     $user = array(
                         'sex' 			=> $user_info->sex,
@@ -198,6 +223,7 @@ class Target extends REST_Controller {
 				$list[] = array(
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
+                    'product_name' => $product_name,
 					'product_id' 		=> intval($value->product_id),
 					'sub_product_id' => intval($value->sub_product_id),
 					'credit_level' 		=> intval($value->credit_level),
@@ -368,14 +394,17 @@ class Target extends REST_Controller {
 		$input 				= $this->input->get(NULL, TRUE);
 		$target 			= $this->target_model->get($target_id);
 		$data				= [];
+        $user_meta = '';
 
         if(!empty($target) && in_array($target->status,[3,4])){
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
             $sub_product_id = $target->sub_product_id;
+            $product_name = $product['name'];
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
             }
 
             $target->investor = 1;
@@ -396,9 +425,32 @@ class Target extends REST_Controller {
                         $user_meta = new stdClass();
                         $user_meta->meta_value='未提供學校資訊';
                     }
-				}else{
-					$user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'diploma_name']);
-				}
+				} elseif ($product_list[$target->product_id]['identity'] == 2) {
+                    $meta_info = $this->user_meta_model->get_many_by([
+                        'user_id' => $target->user_id,
+                        'meta_key' => ['job_company', 'diploma_name']
+                    ]);
+                    $user_meta = new stdClass();
+                    if ($meta_info) {
+                        $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false));
+                        $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false);
+                        $user_meta->meta_value = count($meta_info) == 2
+                            ? $job_company . '/' . $diploma_name
+                            : ($job_company
+                                ? $job_company
+                                : $diploma_name);
+                    } else {
+                        $user_meta->meta_value = '未提供相關資訊';
+                    }
+                }
 				
 				$user = array(
 					'name' 			=> $name,
@@ -484,6 +536,7 @@ class Target extends REST_Controller {
 			$data = array(
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
+                'product_name' => $product_name,
 				'product_id' 		=> intval($target->product_id),
                 'sub_product_id' => intval($target->sub_product_id),
 				'user_id' 			=> intval($target->user_id),
