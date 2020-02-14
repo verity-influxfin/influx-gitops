@@ -238,13 +238,8 @@
         preg_match_all("/有限公司|股份有限公司/u", $name, $match);
         $match_status = isset($match[0][0]) && !empty($match[0][0]);
         $match_status ? $name = preg_replace('/有限公司|股份有限公司/u', '', $name) : '';
-        $word_m = '';
+        $word_m = '○';
         $word = $name;
-        $len = mb_strlen($word);
-        $w_midle_len = $len > 2 ? $len : 0;
-        for ($i = 0, $c = $w_midle_len - 2; $i < $c; $i++) {
-            $word_m .= '○';
-        }
         $rs = mb_substr($word, 0, 1) . $word_m . (mb_strlen($word) == 2 ? '○' : mb_substr($word, -1));
         $match_status ? ($rs .= $match[0][0]) : '';
         return $rs;
