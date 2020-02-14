@@ -317,7 +317,7 @@ class Target_lib{
                                         'status'			=> 0,
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
-                                    if($this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 || $renew){
+                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 || $renew){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark
@@ -891,7 +891,7 @@ class Target_lib{
                         }
                         $product_certification = $product['certifications'];
                         $evaluation = FINAL_VALIDATIONS;
-                        if($value->status != 1 || $value->status == 1 && $value->sub_product_id == 9999 && preg_match('/'.$evaluation.'/',$value->remark) != 0){
+                        if($value->status != '1' || $value->status == '1' && $value->sub_product_id == '9999' && preg_match('/'.$evaluation.'/u',$value->remark) == 0){
                             $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
                             $company = $value->product_id >= 1000 ?1:0;
                             $certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
