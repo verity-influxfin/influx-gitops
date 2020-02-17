@@ -975,7 +975,7 @@ class Recoveries extends REST_Controller {
 				'delay'			=> intval($target_info->delay),
 				'delay_days'	=> intval($target_info->delay_days),
 				'loan_date'		=> $target_info->loan_date,
-                'isTargetOpaque' => $target_info->sub_product_id==9999?true:false,
+                'isTargetOpaque' => $target_info->sub_product_id == STAGE_CER_TARGET ? true : false,
 				'status'		=> intval($target_info->status),
 				'sub_status'	=> intval($target_info->sub_status),
 				'created_at'	=> intval($target_info->created_at),

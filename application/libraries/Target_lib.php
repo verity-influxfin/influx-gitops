@@ -234,19 +234,22 @@ class Target_lib{
 		$this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
 		$msg = false;
-		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22 || $target->status == 1 && $target->sub_product_id == 9999)){
-			$product_list 	= $this->CI->config->item('product_list');
-			$user_id 		= $target->user_id;
-			$product_id 	= $target->product_id;
+		if(!empty($target) && ($target->status == 0
+                || $renew
+                || $target->status == 22
+                || $target->status == 1 && $target->sub_product_id == STAGE_CER_TARGET)){
+			$product_list = $this->CI->config->item('product_list');
+			$user_id = $target->user_id;
+			$product_id = $target->product_id;
 			$sub_product_id	= $stage_cer == 0
-                ? ($target->sub_product_id == 9999 ? 0:$target->sub_product_id)
-                : 9999;
-            $product_info 	= $product_list[$product_id];
+                ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
+                : STAGE_CER_TARGET;
+            $product_info = $product_list[$product_id];
             if($this->is_sub_product($product_info,$sub_product_id)){
                 $product_info = $this->trans_sub_product($product_info,$sub_product_id);
             }
 
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
+            $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 			if(!$credit || $stage_cer!=0){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null, $stage_cer, $credit);
 				if($rs){
@@ -304,7 +307,7 @@ class Target_lib{
                         $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false?$credit['amount']:$target->amount;
 
                         if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-                            if($product_info['type']==1||$subloan_status){
+                            if($product_info['type']==1 || $subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
                                 if($contract_id){
@@ -317,7 +320,7 @@ class Target_lib{
                                         'status'			=> 0,
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
-                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 || $renew){
+                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $renew){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark
@@ -326,7 +329,7 @@ class Target_lib{
                                                 : $target->remark . ', '.$remark)
                                             : '';
                                         $msg = $target->status == 0 ? true:false;
-                                        $target->sub_product_id == 9999 && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
+                                        $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
                                     }else{
                                         $param['sub_status'] = 9;
                                     }
@@ -533,7 +536,7 @@ class Target_lib{
 						//流標
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->renew_subloan($target);
-						}elseif($target->sub_product_id != 9999){
+						}elseif($target->sub_product_id != STAGE_CER_TARGET){
 							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
 								'expire_time'	=> strtotime('+2 days', $target->expire_time),
@@ -863,7 +866,6 @@ class Target_lib{
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> [0,1,22],
-			'sub_status !=' => 9,
 			'script_status'	=> 0,
 		]);
 		$list 		= [];
@@ -871,7 +873,6 @@ class Target_lib{
 		$script  	= 4;
 		$count 		= 0;
         $allow_stage_cer = [1,3];
-        $stage_cer = 0;
         if($targets && !empty($targets)){
 			foreach($targets as $key => $value){
 				$list[$value->product_id][$value->id] = $value;
@@ -884,6 +885,7 @@ class Target_lib{
                 $subloan_list   = $this->CI->config->item('subloan_list');
                 foreach($list as $product_id => $targets){
                     foreach($targets as $target_id => $value){
+                        $stage_cer = 0;
                         $product = $product_list[$value->product_id];
                         $sub_product_id = $value->sub_product_id;
                         if($this->is_sub_product($product,$sub_product_id)){
@@ -891,7 +893,8 @@ class Target_lib{
                         }
                         $product_certification = $product['certifications'];
                         $evaluation = FINAL_VALIDATIONS;
-                        if($value->status != '1' || $value->status == '1' && $value->sub_product_id == '9999' && preg_match('/'.$evaluation.'/u',$value->remark) == 0){
+                        if($value->status != '1' && $value->sub_product_id != STAGE_CER_TARGET
+                            || $value->sub_product_id == STAGE_CER_TARGET && preg_match('/'.$evaluation.'/u',$value->remark) == 0){
                             $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
                             $company = $value->product_id >= 1000 ?1:0;
                             $certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
@@ -901,7 +904,7 @@ class Target_lib{
                             foreach($certifications as $key => $certification){
                                 if($finish && in_array($certification['id'],$product_certification)){
                                     if($certification['user_status']!='1'){
-                                        if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
+                                        if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status){
                                             $finish_stage_cer[] = $certification['id']==10?'A':$certification['id'];
                                         }
                                         else{
