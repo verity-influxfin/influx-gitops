@@ -1602,10 +1602,12 @@ class Target extends MY_Admin_Controller {
         ];
         foreach ($targets as $target) {
             $output = [
+                "id" => (int) $target->id,
                 "product_id" => (int) $target->product_id,
                 "loan_amnt" => (int) $target->amount,
                 "funded_amnt" => (int) $target->loan_amount,
                 "term" => (int) $target->instalment,
+                "overdue" => $target->delay_days > 7,
                 "purpose" => "",
                 "verification_status" => false,
                 "pymnt_plan" => true,
