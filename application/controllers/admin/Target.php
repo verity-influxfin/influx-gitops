@@ -1577,6 +1577,7 @@ class Target extends MY_Admin_Controller {
 
         $batch = 1000;
         $iters = intval(count($userIds) / $batch);
+        if ($userIds && $iters == 0) $iters = 1;
         $this->load->model("user/user_meta_model");
         for ($i = 0; $i < $iters; $i++) {
             $start = $i * $batch;
