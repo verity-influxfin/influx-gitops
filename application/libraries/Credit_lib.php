@@ -246,7 +246,7 @@ class Credit_lib{
         }
 
         $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
-        if(in_array($stage_cer,[1,2])){
+        if(in_array($stage_cer,[1,2,3,4])){
             $param['points'] = $total = 100;
         }else{
             $param['points'] = intval($total);

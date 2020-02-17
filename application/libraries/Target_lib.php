@@ -3,15 +3,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Target_lib{
-	
-	
+
+
 	public function __construct()
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->library('Notification_lib');
     }
-	
+
 	//新增target
 	public function add_target($param){
 		if(!empty($param)){
@@ -110,7 +110,7 @@ class Target_lib{
 			];
 			$rs = $this->CI->target_model->update($target->id,$param);
 			$this->insert_change_log($target->id,$param,0,$admin_id);
-			
+
 			$this->CI->load->model('loan/investment_model');
 			$this->CI->load->model('transaction/frozen_amount_model');
 			$investments = $this->CI->investment_model->get_many_by([
@@ -126,7 +126,7 @@ class Target_lib{
 					}
 				}
 			}
-			
+
 			if($target->sub_status==8){
 				$this->CI->load->library('Subloan_lib');
 				$this->CI->subloan_lib->subloan_success_return($target,$admin_id);
@@ -139,7 +139,7 @@ class Target_lib{
 		}
 		return false;
 	}
-	
+
 	//取消
 	public function cancel_target($target=[],$user_id=0,$phone=0){
 		if($target){
@@ -180,7 +180,7 @@ class Target_lib{
         }
         return false;
     }
-	
+
 	//取消
 	public function cancel_investment($target=[],$investment=[],$user_id=0){
 		if($target && $target->status==3 && $target->script_status==0){
@@ -194,7 +194,7 @@ class Target_lib{
 				if($investment->status ==1 && $investment->frozen_status==1 && $investment->frozen_id){
 					$this->CI->load->model('transaction/frozen_amount_model');
 					$this->CI->frozen_amount_model->update($investment->frozen_id,['status'=>0]);
-					
+
 					//重新計算
 					$investments = $this->CI->investment_model->get_many_by([
 						'target_id'	=> $target->id,
@@ -234,19 +234,22 @@ class Target_lib{
 		$this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
 		$msg = false;
-		if(!empty($target) && ($target->status == 0|| $renew || $target->status==22 || $target->status == 1 && $target->sub_product_id == 9999)){
-			$product_list 	= $this->CI->config->item('product_list');
-			$user_id 		= $target->user_id;
-			$product_id 	= $target->product_id;
+		if(!empty($target) && ($target->status == 0
+                || $renew
+                || $target->status == 22
+                || $target->status == 1 && $target->sub_product_id == STAGE_CER_TARGET)){
+			$product_list = $this->CI->config->item('product_list');
+			$user_id = $target->user_id;
+			$product_id = $target->product_id;
 			$sub_product_id	= $stage_cer == 0
-                ? ($target->sub_product_id == 9999 ? 0:$target->sub_product_id)
-                : 9999;
-            $product_info 	= $product_list[$product_id];
+                ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
+                : STAGE_CER_TARGET;
+            $product_info = $product_list[$product_id];
             if($this->is_sub_product($product_info,$sub_product_id)){
                 $product_info = $this->trans_sub_product($product_info,$sub_product_id);
             }
 
-			$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
+            $credit = $this->CI->credit_lib->get_credit($user_id,$product_id,$sub_product_id,$target);
 			if(!$credit || $stage_cer!=0){
 				$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,$sub_product_id,null, $stage_cer, $credit);
 				if($rs){
@@ -304,7 +307,7 @@ class Target_lib{
                         $loan_amount 		= $target->amount > $credit['amount'] && $subloan_status == false?$credit['amount']:$target->amount;
 
                         if($loan_amount >= $product_info['loan_range_s']||$subloan_status || $stage_cer!=0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-                            if($product_info['type']==1||$subloan_status){
+                            if($product_info['type']==1 || $subloan_status){
                                 $platform_fee	= $this->CI->financial_lib->get_platform_fee($loan_amount);
                                 $contract_id	= $this->CI->contract_lib->sign_contract('lend',['',$user_id,$loan_amount,$interest_rate,'']);
                                 if($contract_id){
@@ -317,7 +320,7 @@ class Target_lib{
                                         'status'			=> 0,
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
-                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 || $renew){
+                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $renew){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 0 : '';
                                         $remark
@@ -326,7 +329,7 @@ class Target_lib{
                                                 : $target->remark . ', '.$remark)
                                             : '';
                                         $msg = $target->status == 0 ? true:false;
-                                        $target->sub_product_id == 9999 && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
+                                        $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0:'';
                                     }else{
                                         $param['sub_status'] = 9;
                                     }
@@ -410,8 +413,6 @@ class Target_lib{
 
 	public function target_verify_success($target = [],$admin_id=0){
 		if(!empty($target) && $target->status==2){
-			$product_list 	= $this->CI->config->item('product_list');
-			$product_info 	= $product_list[$target->product_id];
 			$param = [
 				'status' 		=> 3 ,
 				'launch_times'	=> 1
@@ -437,12 +438,12 @@ class Target_lib{
 			$this->CI->notification_lib->target_verify_failed($target->user_id,0,$remark);
 			if($target->order_id !=0){
 				$this->CI->load->model('transaction/order_model');
-				$order = $this->CI->order_model->update($target->order_id,['status'=>0]);
+				$this->CI->order_model->update($target->order_id,['status'=>0]);
 			}
 		}
 		return false;
 	}
-	
+
 	//判斷流標或結標或凍結投資款項
 	function check_bidding($target){
 		if( $target && $target->status == 3){
@@ -458,7 +459,7 @@ class Target_lib{
 				'status'	=> [0,1]
 			]);
 			if($investments){
-				
+
 				$amount = 0;
 				foreach($investments as $key => $value){
 					if($value->status ==1 && $value->frozen_status==1 && $value->frozen_id){
@@ -468,7 +469,7 @@ class Target_lib{
 				//更新invested
 				$this->CI->target_model->update($target->id,['invested'=>$amount]);
 				if($amount >= $target->loan_amount){
-					
+
 					//結標
 					$target_update_param = [
 						'status'		=> 4,
@@ -514,7 +515,7 @@ class Target_lib{
 										'loan_amount'	=> $loan_amount,
 										'contract_id'	=> $contract_id ,
 										'status'		=> 2
-									]; 
+									];
 									$this->CI->notification_lib->auction_closed($value->user_id,1,$target->target_no,$loan_amount);
 									$ended 			= false;
 								}else{
@@ -533,7 +534,7 @@ class Target_lib{
 						//流標
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->renew_subloan($target);
-						}elseif($target->sub_product_id != 9999){
+						}elseif($target->sub_product_id != STAGE_CER_TARGET){
 							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
 								'expire_time'	=> strtotime('+2 days', $target->expire_time),
@@ -580,7 +581,7 @@ class Target_lib{
 								}
 							}
 						}
-						
+
 						$investments = $this->CI->investment_model->get_many_by([
 							'target_id'	=> $target->id,
 							'status'	=> 1
@@ -602,7 +603,7 @@ class Target_lib{
 				if($target->expire_time < time()){
 					if($target->sub_status==8){
 						$this->CI->subloan_lib->renew_subloan($target);
-					}else{
+					}elseif($target->sub_product_id != STAGE_CER_TARGET){
 						$this->CI->target_model->update($target->id,[
 							'launch_times'	=> $target->launch_times + 1,
 							'expire_time'	=> strtotime('+2 days', $target->expire_time),
@@ -645,16 +646,16 @@ class Target_lib{
 			'sub_loan_fees'			=> 0,
 			'platform_fees'			=> 0,
 			'list'					=> [],
-			
+
 		];
 		$transactions 	= $this->CI->transaction_model->get_many_by([
 			'user_from'	=> $target->user_id,
 			'target_id' => $target->id,
 			'status !=' => 0
 		]);
-		
+
 		$list = [];
-		if($transactions){	
+		if($transactions){
 			foreach($transactions as $key => $value){
 				if(intval($value->instalment_no) && !isset($list[$value->instalment_no])){
 					$list[$value->instalment_no] = [
@@ -672,30 +673,30 @@ class Target_lib{
 					];
 				}
 				switch($value->source){
-					case SOURCE_AR_PRINCIPAL: 
+					case SOURCE_AR_PRINCIPAL:
 						$list[$value->instalment_no]['principal'] 			+= $value->amount;
 						break;
-					case SOURCE_AR_INTEREST: 
+					case SOURCE_AR_INTEREST:
 						$list[$value->instalment_no]['interest']  			+= $value->amount;
 						break;
 					case SOURCE_AR_DAMAGE:
 						$list[$value->instalment_no]['liquidated_damages'] 	+= $value->amount;
 						break;
-					case SOURCE_AR_DELAYINTEREST: 
+					case SOURCE_AR_DELAYINTEREST:
 						$list[$value->instalment_no]['delay_interest'] 		+= $value->amount;
 						break;
-					case SOURCE_SUBLOAN_FEE: 
+					case SOURCE_SUBLOAN_FEE:
 						$schedule['sub_loan_fees'] += $value->amount;
 						break;
-					case SOURCE_FEES: 
+					case SOURCE_FEES:
 						$schedule['platform_fees'] += $value->amount;
 						break;
 					case SOURCE_PRINCIPAL:
                         $list[$value->instalment_no]['r_principal'] 		+= $value->amount;
 					case SOURCE_INTEREST:
 					case SOURCE_DELAYINTEREST:
-					case SOURCE_DAMAGE: 
-					case SOURCE_PREPAYMENT_DAMAGE: 
+					case SOURCE_DAMAGE:
+					case SOURCE_PREPAYMENT_DAMAGE:
 						$list[$value->instalment_no]['repayment'] += $value->amount;
 						if($value->source==SOURCE_PRINCIPAL){
 							$schedule['remaining_principal'] -= $value->amount;
@@ -707,7 +708,7 @@ class Target_lib{
 						break;
 				}
 			}
-			
+
 			$old_date 	= $target->loan_date;
 			$total 		= intval($target->loan_amount);
 			ksort($list);
@@ -726,10 +727,10 @@ class Target_lib{
 		$schedule['list'] = $list;
 		return $schedule;
 	}
-	
+
 	//出借端回款計畫
 	public function get_investment_amortization_table($target=[],$investment=[]){
-		
+
 		$xirr_dates		= [$target->loan_date];
 		$xirr_value		= [$investment->loan_amount*(-1)];
 		$list 			= [];
@@ -748,7 +749,7 @@ class Target_lib{
 			'target_id' 	=> $target->id,
 			'status' 		=> [1,2]
 		]);
-		
+
 		if($transactions){
             $limit_date = '';
 			foreach($transactions as $key => $value){
@@ -765,42 +766,42 @@ class Target_lib{
 						'remaining_principal'=> 0,//期初本金
 						'repayment_date'	=> $limit_date,//還款日
 						'ar_fees'			=> 0,//應收回款手續費
-					]; 
+					];
 				}
 			}
 			foreach($transactions as $key => $value){
 				switch ($value->source) {
-					case SOURCE_AR_PRINCIPAL: 
+					case SOURCE_AR_PRINCIPAL:
 						$list[$value->instalment_no]['principal'] += $value->amount;
 						break;
 					case SOURCE_AR_INTEREST:
 						$list[$value->instalment_no]['interest'] += $value->amount;
 						break;
-					case SOURCE_AR_DELAYINTEREST: 
+					case SOURCE_AR_DELAYINTEREST:
 						$list[$value->instalment_no]['delay_interest'] 	+= $value->amount;
 						break;
-					case SOURCE_PRINCIPAL: 
-					case SOURCE_DELAYINTEREST: 
-					case SOURCE_INTEREST: 
+					case SOURCE_PRINCIPAL:
+					case SOURCE_DELAYINTEREST:
+					case SOURCE_INTEREST:
 						$list[$value->instalment_no]['repayment'] += $value->amount;
 						if($value->source==SOURCE_PRINCIPAL){
 							$repayment_principal += $value->amount;
 						}
 						break;
-					case SOURCE_AR_FEES: 
+					case SOURCE_AR_FEES:
 						$list[$value->instalment_no]['ar_fees'] += $value->amount;
 						break;
 					default:
 						break;
 				}
 				if($value->instalment_no){
-					$list[$value->instalment_no]['total_payment'] = 
-					$list[$value->instalment_no]['interest'] + 
-					$list[$value->instalment_no]['principal'] + 
+					$list[$value->instalment_no]['total_payment'] =
+					$list[$value->instalment_no]['interest'] +
+					$list[$value->instalment_no]['principal'] +
 					$list[$value->instalment_no]['delay_interest'];
 				}
 			}
-			
+
 			$old_date 	= $target->loan_date;
 			$total 		= intval($investment->loan_amount);
 			$this->CI->load->model('loan/transfer_model');
@@ -811,7 +812,7 @@ class Target_lib{
 			if($transfer){
 				$total 	= intval($transfer->principal);
 			}
-			
+
 			$schedule['remaining_principal'] = $total - $repayment_principal;
 			ksort($list);
 			foreach($list as $key => $value){
@@ -819,7 +820,7 @@ class Target_lib{
 				$list[$key]['remaining_principal'] 	= $total;
 				$old_date = $value['repayment_date'];
 				$total = $total - $value['principal'];
-				
+
 				$schedule['total_payment'] += $value['total_payment'];
 				$xirr_dates[] = $value['repayment_date'];
 				$xirr_value[] = $value['total_payment'];
@@ -830,7 +831,7 @@ class Target_lib{
 		$schedule['list'] = $list;
 		return $schedule;
 	}
-	
+
 	public function script_check_bidding(){
 		$script  	= 3;
 		$count 		= 0;
@@ -856,14 +857,13 @@ class Target_lib{
 		}
 		return $count;
 	}
-	
+
 	//審核額度
 	public function script_approve_target(){
-		
+
 		$this->CI->load->library('Certification_lib');
 		$targets 	= $this->CI->target_model->get_many_by([
 			'status'		=> [0,1,22],
-			'sub_status !=' => 9,
 			'script_status'	=> 0,
 		]);
 		$list 		= [];
@@ -871,7 +871,6 @@ class Target_lib{
 		$script  	= 4;
 		$count 		= 0;
         $allow_stage_cer = [1,3];
-        $stage_cer = 0;
         if($targets && !empty($targets)){
 			foreach($targets as $key => $value){
 				$list[$value->product_id][$value->id] = $value;
@@ -884,6 +883,7 @@ class Target_lib{
                 $subloan_list   = $this->CI->config->item('subloan_list');
                 foreach($list as $product_id => $targets){
                     foreach($targets as $target_id => $value){
+                        $stage_cer = 0;
                         $product = $product_list[$value->product_id];
                         $sub_product_id = $value->sub_product_id;
                         if($this->is_sub_product($product,$sub_product_id)){
@@ -891,7 +891,8 @@ class Target_lib{
                         }
                         $product_certification = $product['certifications'];
                         $evaluation = FINAL_VALIDATIONS;
-                        if($value->status != '1' || $value->status == '1' && $value->sub_product_id == '9999' && preg_match('/'.$evaluation.'/u',$value->remark) == 0){
+                        if($value->status != '1' && $value->sub_product_id != STAGE_CER_TARGET
+                            || $value->sub_product_id == STAGE_CER_TARGET && preg_match('/'.$evaluation.'/u',$value->remark) == 0){
                             $subloan_status = preg_match('/'.$subloan_list.'/',$value->target_no)?true:false;
                             $company = $value->product_id >= 1000 ?1:0;
                             $certifications 	= $this->CI->certification_lib->get_status($value->user_id,0,$company,true,$value);
@@ -901,7 +902,7 @@ class Target_lib{
                             foreach($certifications as $key => $certification){
                                 if($finish && in_array($certification['id'],$product_certification)){
                                     if($certification['user_status']!='1'){
-                                        if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == 9999) && !$subloan_status){
+                                        if(in_array($value->product_id,$allow_stage_cer) && in_array($certification['id'],[2,8,9,10]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status){
                                             $finish_stage_cer[] = $certification['id']==10?'A':$certification['id'];
                                         }
                                         else{
@@ -998,7 +999,7 @@ class Target_lib{
 		}
 		return false;
 	}
-	
+
 	public function insert_investment_change_log($investment_id,$update_param,$user_id=0,$admin_id=0){
 		if($investment_id){
 			$this->CI->load->model('log/Log_investmentschange_model');

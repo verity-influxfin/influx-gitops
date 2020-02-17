@@ -397,7 +397,7 @@ class Product extends REST_Controller {
 
             if(isset($product_list[$id])){
                 $product = $product_list[$id];
-                if(count($product['sub_product'])>0 && isset($sub_product_list[$sub_product_id])
+                if(count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product_id])
                     || $product['hiddenMainProduct']
                     || $sub_product_id && !in_array($sub_product_id,$product['sub_product'])){
                     if($this->is_sub_product($product,$sub_product_id)){

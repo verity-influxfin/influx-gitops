@@ -512,7 +512,8 @@ class Target extends REST_Controller {
                 foreach ($product['certifications'] as $key => $value) {
                     $cer = $certification[$value];
                     if (!isset($cur_cer[$value])) {
-                        $cer['user_status'] = null;
+                        $cer['description'] = '未'.$cer['description'];
+                        $cer['user_status'] = 2;
                         $cer['certification_id'] = null;
                         $cer['updated_at'] = null;
                     } else {
