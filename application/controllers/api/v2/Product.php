@@ -558,7 +558,7 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
             }
 
-            if ($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) {
+            if (($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) && $product['type'] != 2) {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
             }
 

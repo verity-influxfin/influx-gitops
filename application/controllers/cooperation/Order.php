@@ -830,6 +830,7 @@ class Order extends REST_Controller {
                     $rs2 = $this->target_lib->order_target_change($order->id,20,[
                             'amount'        => $total,
                             'platform_fee'  => $platform_fee,
+                            'interest_rate'  => ORDER_INTEREST_RATE,
                             'status'        => 21,
                         ],$order->company_user_id);
                     if($rs2){
@@ -838,7 +839,7 @@ class Order extends REST_Controller {
                         $product_list 	= $this->config->item('product_list');
                         $product 		= isset($product_list[$target->product_id])?$product_list[$target->product_id]:false;
                         if($product) {
-                            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total), intval($order->instalment), ORDER_INTEREST_RATE, get_entering_date(), 1, $product['type']);
+                            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total), $target, ORDER_INTEREST_RATE, get_entering_date(), 1, $product['type']);
                             $this->sms_lib->notice_order_quotes($target->user_id, $order->item_name, $target->instalment, $amortization_schedule['total_payment']);
                             $this->notification_lib->notice_order_quotes($target->user_id, $order->item_name, $target->instalment, $amortization_schedule['total_payment']);
                         }
