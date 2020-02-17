@@ -11,13 +11,14 @@
 					var user_id 			= $('#user_id').val();
 					var target_no 			= $('#target_no').val();
 					var status 				= $('#status :selected').val();
-                    if(user_id==''&&target_no==''&&status==''){
+                    var dateRange           = '&sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
+					if(user_id==''&&target_no==''&&status==''){
                         if(confirm(target_no+"即將撈取各狀態分割債權，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
-                            top.location = './index?all=all';
+                            top.location = './index?all=all'+dateRange;
                         }
                     }
                     else {
-                        top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no;
+                        top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no+dateRange;
                     }
 				}
 
@@ -59,7 +60,13 @@
 									<td><input type="text" value="<?=isset($_GET['target_no'])&&$_GET['target_no']!=""?$_GET['target_no']:""?>" id="target_no" /></td>
 									<td></td>
 								</tr>
-								<tr>
+                                <tr style="vertical-align: baseline;">
+                                    <td style="padding: 14px 0;">從：</td>
+                                    <td><input type="text" value="<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?>" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>
+                                    <td style="">到：</td>
+                                    <td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
+                                </tr>
+                                <tr>
 									<td>狀態：</td>
 									<td>
 										<select id="status">
