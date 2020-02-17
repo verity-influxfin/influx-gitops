@@ -1557,5 +1557,116 @@ class Target extends MY_Admin_Controller {
             'status' => $sub_product['status'],
         );
     }
+
+    public function get_test_data()
+    {
+        $input = $this->input->get();
+        $productId = isset($input['product_id']) ? $input['product_id'] : 0;
+        $limit = isset($input['limit']) ? $input['limit'] : 500;
+        $this->load->model("loan/target_model");
+        $targets = $this->target_model->limit($limit)->get_many_by([
+            "product_id" => $productId,
+            "status" => [4, 5, 10]
+        ]);
+
+        $users = [];
+        $userIds = [];
+        foreach ($targets as $target) {
+            $userIds[] = $target->user_id;
+        }
+
+        $batch = 1000;
+        $iters = intval(count($userIds) / $batch);
+        $this->load->model("user/user_meta_model");
+        for ($i = 0; $i < $iters; $i++) {
+            $start = $i * $batch;
+            $currentUserIds = array_slice($userIds, $start, $batch);
+            $metaKeys = ["financial_income", "job_seniority", "investigation_times", "investigation_credit_rate"];
+            $metas = $this->user_meta_model->get_many_by(["user_id" => $currentUserIds, "meta_key" => $metaKeys]);
+            foreach ($metas as $meta) {
+                if (!isset($users[$meta->user_id])) {
+                    $users[$meta->user_id] = [];
+                }
+                $users[$meta->user_id][$meta->meta_key] = $meta->meta_value;
+            }
+        }
+
+        $result = [];
+        $mapping = [];
+        $metaMapping = [
+            "financial_income" => "annual_inc",
+            "job_seniority" => "emp_length",
+            "investigation_times" => "inq_last_6mths",
+            "investigation_credit_rate" => "bc_util"
+        ];
+        foreach ($targets as $target) {
+            $output = [
+                "product_id" => (int) $target->product_id,
+                "loan_amnt" => (int) $target->amount,
+                "funded_amnt" => (int) $target->loan_amount,
+                "term" => (int) $target->instalment,
+                "purpose" => "",
+                "verification_status" => false,
+                "pymnt_plan" => true,
+                "initial_list_status" => true,
+                "home_ownership" => null,
+            ];
+            if ($target->reason) {
+                $reason = json_decode($target->reason);
+                if (isset($reason->reason)) {
+                    $output["purpose"] = $reason->reason;
+                }
+                if (isset($reason->reason_description)) {
+                    $output["purpose"] .= "-" . $reason->reason_description;
+                }
+
+            }
+            if (!isset($users[$target->user_id])) {
+                foreach ($metaMapping as $key => $value) {
+                    $output[$value] = null;
+                }
+                $result[] = $output;
+                continue;
+            }
+            $user = $users[$target->user_id];
+            foreach ($metaMapping as $key => $value) {
+                if (!isset($user[$key])) {
+                    $output[$value] = null;
+                } else {
+                    $output[$value] = $user[$key];
+                    if ($key == "investigation_credit_rate") {
+                        $output[$value] .= "%";
+                    }
+                    if ($key == "job_seniority") {
+                        $output["verification_status"] = true;
+                    }
+                }
+            }
+            $result[] = $output;
+        }
+        if (!$result) {
+            return;
+        }
+        $i = 0;
+        foreach ($result[0] as $key => $value) {
+            echo $key;
+            $i++;
+            if ($i <= 12) {
+                echo ",";
+            }
+        }
+        echo "<br>";
+        foreach ($result as $each) {
+            $i = 0;
+            foreach ($each as $key => $value) {
+                echo $value;
+                $i++;
+                if ($i <= 12) {
+                    echo ",";
+                }
+            }
+            echo "<br>";
+        }
+    }
 }
 ?>
