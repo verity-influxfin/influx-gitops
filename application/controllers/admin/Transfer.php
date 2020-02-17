@@ -40,6 +40,8 @@ class Transfer extends MY_Admin_Controller {
 		}
 
         isset($input['all'])&&$input['all']=='all'?$where=['status' => [3,10]]:'';
+        isset($input['sdate'])&&$input['sdate']!=''?$where['created_at >=']=strtotime($input['sdate']):'';
+        isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
 		if($target_no!='' || !empty($where)){
 			$where['status'] = isset($where['status'])?$where['status']:$show_status;
 			$query = $target_no!=''?['target_no like' => $target_no]:($where['status']==3?['status' => [5]]:['status' => [5,10]]);
