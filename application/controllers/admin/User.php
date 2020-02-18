@@ -313,13 +313,24 @@ class User extends MY_Admin_Controller {
 
 	public function migrateData()
 	{
+	    $input = $this->input->get(NULL, TRUE);
+	    $startAt = isset($input["start_at"]) ? $input["start_at"] : 0;
+	    $endAt = isset($input["end_at"]) ? $input["end_at"] : 0;
 	    $host = getenv('ENV_MONGO_HOST');
 	    $port = getenv('ENV_MONGO_PORT');
 	    $username = getenv('ENV_MONGO_USERNAME');
 	    $password = getenv('ENV_MONGO_PASSWORD');
 	    $db = new MongoDB\Driver\Manager("mongodb://{$username}:{$password}@{$host}:{$port}");
 	    $i = 0;
-	    while ($loginLogs = $this->log_userlogin_model->limit(1000, $i*1000)->get_many_by([])) {
+	    $whereQuery = [];
+	    if ($startAt > 0) {
+	        $whereQuery["created_at >="] = $startAt;
+	    }
+	    if ($endAt > 0) {
+	        $whereQuery["created_at <="] = $endAt;
+	    }
+
+	    while ($loginLogs = $this->log_userlogin_model->limit(1000, $i*1000)->get_many_by($whereQuery)) {
 	        $bulk = new MongoDB\Driver\BulkWrite();
 	        foreach ($loginLogs as $loginLog) {
 	                $log = json_decode(json_encode($loginLog), true);
@@ -330,7 +341,6 @@ class User extends MY_Admin_Controller {
 	                $log["status"] = intval($log["status"]);
 	                $log["created_at"] = intval($log["created_at"]);
 	                $bulk->insert($log);
-
 	        }
 	        $writeConcern = new MongoDB\Driver\WriteConcern(0, 300);
 	        $db->executeBulkWrite('influx_logs.user-login-logs', $bulk, $writeConcern);
