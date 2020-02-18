@@ -497,8 +497,8 @@ class Target extends REST_Controller {
             }
 
             $certification_list = [];
-            $targetData_cer = isset($targetData->certification_id)?$targetData->certification_id:false;
-            if($targetData_cer){
+            $targetData_cer = isset($targetData->certification_id) ? $targetData->certification_id : false;
+            if ($targetData_cer) {
                 $this->load->model('user/user_certification_model');
                 $this->load->library('Certification_lib');
                 $certification = $this->config->item('certifications');
@@ -512,12 +512,12 @@ class Target extends REST_Controller {
                 foreach ($product['certifications'] as $key => $value) {
                     $cer = $certification[$value];
                     if (!isset($cur_cer[$value])) {
-                        $cer['description'] = '未'.$cer['description'];
+                        $cer['description'] = '未' . $cer['description'];
                         $cer['user_status'] = 2;
                         $cer['certification_id'] = null;
                         $cer['updated_at'] = null;
                     } else {
-                        $cer['user_status'] = intval($cur_cer[$value]->status);
+                        $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
                         $cer['certification_id'] = intval($cur_cer[$value]->id);
                         $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
                     }
@@ -525,8 +525,8 @@ class Target extends REST_Controller {
                     $certification_list[] = $cer;
                 }
             }
-			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
-			$contract 		= $contract_data?$contract_data['content']:'';
+            $contract_data = $this->contract_lib->get_contract($target->contract_id);
+            $contract = $contract_data ? $contract_data['content'] : '';
 
             $reason = $target->reason;
             $json_reason = json_decode($reason);
