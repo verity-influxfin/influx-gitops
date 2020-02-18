@@ -667,6 +667,25 @@ $name 您好，
         return $rs;
     }
 
+    public function stageCer_Target_remind($user_id){
+
+            $title = "【媒合失敗】您未能媒合成功";
+            $content = '很可惜，您未能媒合成功，
+建議可再提供更多資料或訊息，
+加強信用透明度。';
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+
+        return $rs;
+    }
+
     public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0)
     {
         $user_list = [];

@@ -1705,7 +1705,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                     }
 
-                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),$orders,$date,$product['type']);
+                    $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),$target,$target->interest_rate,$product['type']);
 
                     $this->load->library('contract_lib');
                     $contract = $this->contract_lib->sign_contract('order',[
