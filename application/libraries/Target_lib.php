@@ -338,7 +338,6 @@ class Target_lib{
                                     }
                                     $rs = $this->CI->target_model->update($target->id,$param);
                                     if($rs && $msg){
-                                        $this->CI->load->library('Notification_lib');
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
                                     }
                                     $this->insert_change_log($target->id,$param);
@@ -394,11 +393,11 @@ class Target_lib{
 	}
 
     private function approve_target_fail($user_id,$target,$maxAmountAlarm=false){
-	    $remak = '信用不足'.($maxAmountAlarm?'(多產品總額度超過歸戶)':'');
+	    $remark = '信用不足'.($maxAmountAlarm?'(多產品總額度超過歸戶)':'');
         $param = [
             'loan_amount'		=> 0,
             'status'			=> '9',
-            'remark'			=> $remak,
+            'remark'			=> $remark,
         ];
         $this->CI->target_model->update($target->id,$param);
         $this->insert_change_log($target->id,$param);
@@ -427,6 +426,7 @@ class Target_lib{
 
     public function target_verify_failed($target = [],$admin_id=0,$remark='審批不通過'){
 		if(!empty($target)){
+            $remark = !empty($target->remark) ? $target->remark . ', ' . $remark : $remark;
 			$param = [
 				'loan_amount'		=> 0,
 				'status'			=> 9,
@@ -534,7 +534,18 @@ class Target_lib{
 						//流標
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->renew_subloan($target);
-						}elseif($target->sub_product_id != STAGE_CER_TARGET){
+						}elseif($target->sub_product_id == STAGE_CER_TARGET){
+                            $remark = '(階段上架流標)';
+                            $param = [
+                                'loan_amount'		=> 0,
+                                'status'			=> 9,
+                                'sub_status'			=> 0,
+                                'remark'			=> !empty($target->remark) ? $target->remark . ', ' . $remark : $remark,
+                            ];
+                            $this->CI->target_model->update($target->id,$param);
+                            $this->insert_change_log($target->id,$param,0,0);
+                            $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
+						}else{
 							$target_update_param = [
 								'launch_times'	=> $target->launch_times + 1,
 								'expire_time'	=> strtotime('+2 days', $target->expire_time),
@@ -603,7 +614,18 @@ class Target_lib{
 				if($target->expire_time < time()){
 					if($target->sub_status==8){
 						$this->CI->subloan_lib->renew_subloan($target);
-					}elseif($target->sub_product_id != STAGE_CER_TARGET){
+                    }elseif($target->sub_product_id == STAGE_CER_TARGET){
+                        $remark = '(階段上架流標)';
+                        $param = [
+                            'loan_amount'		=> 0,
+                            'status'			=> 9,
+                            'sub_status'			=> 0,
+                            'remark'			=> !empty($target->remark) ? $target->remark . ', ' . $remark : $remark,
+                        ];
+                        $this->CI->target_model->update($target->id,$param);
+                        $this->insert_change_log($target->id,$param,0,0);
+                        $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
+                    }else{
 						$this->CI->target_model->update($target->id,[
 							'launch_times'	=> $target->launch_times + 1,
 							'expire_time'	=> strtotime('+2 days', $target->expire_time),
