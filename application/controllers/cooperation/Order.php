@@ -796,70 +796,70 @@ class Order extends REST_Controller {
     public function quotes_post()
     {
         $product_list = $this->config->item('product_list');
-        $input 	      = $this->input->post(NULL, TRUE);
-        $fields       = ['merchant_order_no','phone','quotes'];
+        $input = $this->input->post(NULL, TRUE);
+        $fields = ['merchant_order_no', 'phone', 'quotes'];
         foreach ($fields as $field) {
             if (!isset($input[$field])) {
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }else{
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            } else {
                 $content[$field] = $input[$field];
             }
         }
-        $quotes            = $content['quotes'];
-        $order             = $this->get_order($content['merchant_order_no'],$content['phone']);
-        if($order){
-            if($order->status == 0){
+        $quotes = $content['quotes'];
+        $order = $this->get_order($content['merchant_order_no'], $content['phone']);
+        if ($order) {
+            if ($order->status == 0) {
                 $product_info = $product_list[$order->product_id];
-                if($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']){
-                    $this->response(array('result' => 'ERROR','error' => PRODUCT_AMOUNT_RANGE ));
+                if ($quotes < $product_info['loan_range_s'] && $quotes > $product_info['loan_range_e']) {
+                    $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
                 }
 
-                $platform_fee   = $this->financial_lib->get_platform_fee2($quotes);
-                $transfer_fee   = $this->financial_lib->get_transfer_fee($quotes+$platform_fee);
-                $total 		    = $quotes + $platform_fee + $transfer_fee;
+                $platform_fee = $this->financial_lib->get_platform_fee2($quotes);
+                $transfer_fee = $this->financial_lib->get_transfer_fee($quotes + $platform_fee);
+                $total = $quotes + $platform_fee + $transfer_fee;
 
-                $rs = $this->order_lib->order_change($order->id,0, [
-                        'amount'            => $quotes,
-                        'platform_fee'      => $platform_fee,
-                        'transfer_fee'      => $transfer_fee,
-                        'total'             => $total,
-                        'item_price'        => $quotes,
-                        'status'            => 1,
-                    ],$order->company_user_id);
-                if($rs){
-                    $rs2 = $this->target_lib->order_target_change($order->id,20,[
-                            'amount'        => $total,
-                            'platform_fee'  => $platform_fee,
-                            'interest_rate'  => ORDER_INTEREST_RATE,
-                            'status'        => 21,
-                        ],$order->company_user_id);
-                    if($rs2){
-                        $target         = $this->target_model->get_by('order_id', $order->id);
-                        $order          = $this->order_model->get_by('id', $order->id);
-                        $product_list 	= $this->config->item('product_list');
-                        $product 		= isset($product_list[$target->product_id])?$product_list[$target->product_id]:false;
-                        if($product) {
-                            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total), $target, ORDER_INTEREST_RATE, get_entering_date(), 1, $product['type']);
+                $rs = $this->order_lib->order_change($order->id, 0, [
+                    'amount' => $quotes,
+                    'platform_fee' => $platform_fee,
+                    'transfer_fee' => $transfer_fee,
+                    'total' => $total,
+                    'item_price' => $quotes,
+                    'status' => 1,
+                ], $order->company_user_id);
+                if ($rs) {
+                    $rs2 = $this->target_lib->order_target_change($order->id, 20, [
+                        'amount' => $total,
+                        'platform_fee' => $platform_fee,
+                        'interest_rate' => ORDER_INTEREST_RATE,
+                        'status' => 21,
+                    ], $order->company_user_id);
+                    if ($rs2) {
+                        $target = $this->target_model->get_by('order_id', $order->id);
+                        $order = $this->order_model->get_by('id', $order->id);
+                        $product_list = $this->config->item('product_list');
+                        $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : false;
+                        if ($product) {
+                            $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total), $target, get_entering_date(), 1, $product['type']);
                             $this->sms_lib->notice_order_quotes($target->user_id, $order->item_name, $target->instalment, $amortization_schedule['total_payment']);
                             $this->notification_lib->notice_order_quotes($target->user_id, $order->item_name, $target->instalment, $amortization_schedule['total_payment']);
                         }
                         $this->response(array('result' => 'SUCCESS'));
-                    }else{
-                        $this->order_lib->order_change($order->id,1, [
-                            'amount'            => 0,
-                            'platform_fee'      => 0,
-                            'transfer_fee'      => 0,
-                            'total'             => 0,
-                            'item_price'        => 0,
-                            'status'            => 0,
-                        ],$order->company_user_id);
+                    } else {
+                        $this->order_lib->order_change($order->id, 1, [
+                            'amount' => 0,
+                            'platform_fee' => 0,
+                            'transfer_fee' => 0,
+                            'total' => 0,
+                            'item_price' => 0,
+                            'status' => 0,
+                        ], $order->company_user_id);
                     }
                 }
-                $this->response(array('result' => 'ERROR','error' => M_ORDER_ACTION_ERROR ));
+                $this->response(array('result' => 'ERROR', 'error' => M_ORDER_ACTION_ERROR));
             }
-            $this->response(array('result' => 'ERROR','error' => M_ORDER_STATUS_ERROR ));
+            $this->response(array('result' => 'ERROR', 'error' => M_ORDER_STATUS_ERROR));
         }
-        $this->response(array('result' => 'ERROR','error' => M_ORDER_NOT_EXIST ));
+        $this->response(array('result' => 'ERROR', 'error' => M_ORDER_NOT_EXIST));
     }
 
     public function shipped_post()
