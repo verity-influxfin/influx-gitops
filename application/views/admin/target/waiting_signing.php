@@ -28,7 +28,7 @@
                         ctr.prop('disabled',true);
                     }
 				}
-                function failed(id){
+                function order_fail(id){
                     if(confirm("確認自待簽約退件？案件將自動取消")){
                         if(id){
                             var p 		= prompt("請輸入退案原因，將自動通知使用者，不通知請按取消",'');
@@ -37,7 +37,7 @@
                                 remark = encodeURIComponent(p);
                             }
                             $.ajax({
-                                url: './verify_failed?id='+id+'&remark='+remark,
+                                url: './order_fail?id='+id+'&remark='+remark,
                                 type: 'GET',
                                 success: function(response) {
                                     alert(response);
@@ -115,7 +115,7 @@
                                             <td>
                                                 <?
                                                     if($value->status == 21){
-                                                        echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">退消費貸商品</button>';
+                                                        echo '<button class="btn btn-danger" onclick="order_fail('.$value->id.')">消費貸退件</button>';
                                                     }
                                                 ?>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
