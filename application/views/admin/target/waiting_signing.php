@@ -28,6 +28,25 @@
                         ctr.prop('disabled',true);
                     }
 				}
+                function order_fail(id){
+                    if(confirm("確認自待簽約退件？案件將自動取消")){
+                        if(id){
+                            var p 		= prompt("請輸入退案原因，將自動通知使用者，不通知請按取消",'');
+                            var remark 	= '';
+                            if(p){
+                                remark = encodeURIComponent(p);
+                            }
+                            $.ajax({
+                                url: './order_fail?id='+id+'&remark='+remark,
+                                type: 'GET',
+                                success: function(response) {
+                                    alert(response);
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                }
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -94,6 +113,11 @@
                                             <td><?=isset($value->loan_date)?$value->loan_date:"" ?></td>
                                             <td><?=isset($value->delay)?$delay_list[$value->delay]:"" ?> <?=$value->delay?$value->delay_days.'天':"" ?></td>
                                             <td>
+                                                <?
+                                                    if($value->status == 21){
+                                                        echo '<button class="btn btn-danger" onclick="order_fail('.$value->id.')">消費貸退件</button>';
+                                                    }
+                                                ?>
 											<?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
 											<?=$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':"" ?>
 											</td>
