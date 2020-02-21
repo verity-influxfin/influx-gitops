@@ -239,7 +239,6 @@ class Target_lib{
                 || $target->status == 22
                 || $target->status == 1 && $target->sub_product_id == STAGE_CER_TARGET)){
 			$product_list = $this->CI->config->item('product_list');
-            $evaluation = FINAL_VALIDATIONS;
 			$user_id = $target->user_id;
 			$product_id = $target->product_id;
 			$sub_product_id	= $stage_cer == 0
@@ -321,10 +320,10 @@ class Target_lib{
                                         'status'			=> 0,
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
-                                    $evaluation_status = preg_match('/' . $evaluation . '/u', $value->remark) == 0;
+                                    $evaluation_status = $target->sub_status == 10;
                                     if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status){
                                         $param['status'] = 1;
-                                        $renew || $evaluation_status ? $param['sub_status'] = 0 : '';
+                                        $renew ? $param['sub_status'] = 0 : '';
                                         $remark
                                             ? $param['remark'] = (empty($target->remark)
                                                 ? $remark
@@ -559,12 +558,10 @@ class Target_lib{
 						if($target->sub_status==8){
 							$this->CI->subloan_lib->renew_subloan($target);
 						}elseif($target->sub_product_id == STAGE_CER_TARGET){
-                            $remark = '(階段上架流標)';
                             $param = [
                                 'loan_amount'		=> 0,
                                 'status'			=> 9,
                                 'sub_status'			=> 0,
-                                'remark'			=> !empty($target->remark) ? $target->remark . ', ' . $remark : $remark,
                             ];
                             $this->CI->target_model->update($target->id,$param);
                             $this->insert_change_log($target->id,$param,0,0);
@@ -639,12 +636,10 @@ class Target_lib{
 					if($target->sub_status==8){
 						$this->CI->subloan_lib->renew_subloan($target);
                     }elseif($target->sub_product_id == STAGE_CER_TARGET){
-                        $remark = '(階段上架流標)';
                         $param = [
                             'loan_amount'		=> 0,
                             'status'			=> 9,
                             'sub_status'			=> 0,
-                            'remark'			=> !empty($target->remark) ? $target->remark . ', ' . $remark : $remark,
                         ];
                         $this->CI->target_model->update($target->id,$param);
                         $this->insert_change_log($target->id,$param,0,0);

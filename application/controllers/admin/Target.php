@@ -578,7 +578,7 @@ class Target extends MY_Admin_Controller {
             $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
         }
 
-        $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark) . FINAL_VALIDATIONS;
+        $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
 
 		if ($newCredits && $newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
