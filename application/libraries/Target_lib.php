@@ -321,9 +321,9 @@ class Target_lib{
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
                                     $evaluation_status = $target->sub_status == 10;
-                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status){
+                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && !in_array($target->sub_status,[9]) || $subloan_status || $renew || $evaluation_status){
                                         $param['status'] = 1;
-                                        $renew ? $param['sub_status'] = 0 : '';
+                                        $renew ? $param['sub_status'] = 10 : '';
                                         $remark
                                             ? $param['remark'] = (empty($target->remark)
                                                 ? $remark
@@ -341,7 +341,9 @@ class Target_lib{
                                     if($rs && $msg){
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
                                     }
-                                    $this->insert_change_log($target->id,$param);
+                                    if($target->status != $param['status'] || $target->sub_status != $param['sub_status']){
+                                        $this->insert_change_log($target->id,$param);
+                                    }
                                     return true;
                                 }
                             }else if($product_info['type'] == 2){
