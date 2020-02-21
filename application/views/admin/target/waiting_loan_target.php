@@ -174,7 +174,7 @@
 												?>
 											</td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
-											<td><?=isset($sub_status_list[$value->sub_status])?$sub_status_list[$value->sub_status]:'' ?></td>
+											<td><?=isset($sub_status_list[$value->sub_status])?$sub_status_list[$value->sys_check]:'' ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
