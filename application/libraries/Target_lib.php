@@ -321,7 +321,7 @@ class Target_lib{
                                     ];
                                     $param['sub_product_id'] = $sub_product_id;
                                     $evaluation_status = $target->sub_status == 10;
-                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && !in_array($target->sub_status,[9]) || $subloan_status || $renew || $evaluation_status){
+                                    if(!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status){
                                         $param['status'] = 1;
                                         $renew ? $param['sub_status'] = 10 : '';
                                         $remark
