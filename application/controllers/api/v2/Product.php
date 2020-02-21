@@ -689,7 +689,7 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            if($target->status != 1 || $target->sub_status != 0){
+            if($target->status != 1 || !in_array($target->sub_status, [0, 10])){
                 $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
             }
 
