@@ -534,6 +534,8 @@ class Certification extends REST_Controller {
 				}
 			}
 
+            isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
+
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
             isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
 

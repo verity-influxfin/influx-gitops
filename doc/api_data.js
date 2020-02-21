@@ -7328,6 +7328,13 @@ define({
                             "optional": true,
                             "field": "game_work_image",
                             "description": "<p>競賽作品照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "retry",
+                            "description": "<p>重試次數</p>"
                         }
                     ]
                 }
