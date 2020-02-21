@@ -1127,7 +1127,7 @@ class Product extends REST_Controller {
                      }
 
                     if(in_array($target->status,array(21,22,23,24))){
-                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),$orders,$date,$product['type']);
+                        $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),$target,$date,$product['type']);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
                             $user_id,
