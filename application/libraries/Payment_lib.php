@@ -867,23 +867,23 @@ class Payment_lib{
 				$this->CI->load->model('log/Log_targetschange_model'); 
 				//抓sub_status=0
 				//status sub script loan 4 0 0 3
-				if(((!empty($target_detail))&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){ 
+				if(((!empty($target_detail))&&($target_detail['status']==4))&&(($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){
 					//if( ($target_detail_amout==$bankamount+$value['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 					if (($target_detail_amout == $bankamount + $value['Fee'])) { //比對金額 時間
-					$this->CI->target_model->update($content_data,['sub_status'=>20]);//已驗證成功
+					$this->CI->target_model->update($content_data,['sys_check'=>20]);//已驗證成功
 					//加db log
 		
 						$param		= [
 							'target_id'		=> $target_detail['id'],
-							'sub_status'	=> 20
+							'sys_check'	=> 20
 						];
 						$this->CI->Log_targetschange_model->insert($param);
 					}else{
-							$this->CI->target_model->update($content_data,['sub_status'=>21]);//轉人工
+							$this->CI->target_model->update($content_data,['sys_check'=>21]);//轉人工
 						//加db log
 						$param		= [
 							'target_id'		=> $target_detail['id'],
-							'sub_status'	=> 21
+							'sys_check'	=> 21
 						];
 						$this->CI->Log_targetschange_model->insert($param);
 
@@ -1129,24 +1129,24 @@ class Payment_lib{
 		$this->CI->load->model('log/Log_targetschange_model'); 
 		 //抓sub_status=0
 		 //status sub script loan 4 0 0 3
-		 if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){ 
+		 if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){
 
 			//if( ($target_detail_amout==$bankamount+$data['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 			if (($target_detail_amout == $bankamount + $data['Fee'])) { //比對金額 時間
-			 $this->CI->target_model->update($content,['sub_status'=>20]);//已驗證成功
+			 $this->CI->target_model->update($content,['sys_check'=>20]);//已驗證成功
 			 //加db log
  
 				$param		= [
 					'target_id'		=> $target_detail['id'],
-					'sub_status'	=> 20
+					'sys_check'	=> 20
 				];
 				$this->CI->Log_targetschange_model->insert($param);
 			}else{
-					$this->CI->target_model->update($content,['sub_status'=>21]);//轉人工
+					$this->CI->target_model->update($content,['sys_check'=>21]);//轉人工
 				//加db log
 				$param		= [
 					'target_id'		=> $target_detail['id'],
-					'sub_status'	=> 21
+					'sys_check'	=> 21
 				];
 				$this->CI->Log_targetschange_model->insert($param);
 
