@@ -341,7 +341,7 @@ class Target_lib{
                                     if($rs && $msg){
                                         $this->CI->notification_lib->approve_target($user_id,'1',$loan_amount,$subloan_status);
                                     }
-                                    if($target->status != $param['status'] || $target->sub_status != $param['sub_status']){
+                                    if((isset($param['status']) && $target->status != $param['status']) || (isset($param['sub_status']) && $target->sub_status != $param['sub_status'])){
                                         $this->insert_change_log($target->id,$param);
                                     }
                                     return true;
