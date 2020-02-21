@@ -252,7 +252,7 @@ class Transfer extends MY_Admin_Controller {
 
 			header('Content-type:application/vnd.ms-excel');
 			header('Content-Disposition: attachment; filename=repayment_schedule_'.date('Ymd').'.xls');
-			$html = '<table><thead><tr><th>還款日</th><th>已實現本金</th><th>已實現利息</th><th>還款合計</th><th>已還款</th><th>每期回款金額</th></tr></thead><tbody>';
+			$html = '<table><thead><tr><th>還款日</th><th>當期本金餘額</th><th>當期利息</th><th>本息合計</th><th>當期償還本息</th><th>投資回款費用</th><th>投資回款淨額</th></tr></thead><tbody>';
 
 			if(isset($list) && !empty($list)){
 				ksort($list);
@@ -266,6 +266,7 @@ class Transfer extends MY_Admin_Controller {
                         $html .= '<td>'.$value['interest'].'</td>';
                         $html .= '<td>'.$total.'</td>';
                         $html .= '<td>'.$value['repayment'].'</td>';
+                        $html .= '<td>'.$value['ar_fees'].'</td>';
                         $html .= '<td>'.$profit.'</td>';
                         $html .= '</tr>';
                     }
