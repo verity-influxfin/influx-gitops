@@ -142,7 +142,7 @@
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td>
-												<? if(($value->loan_status==2 && $value->sub_status==0)||($value->loan_status==2 && $value->sys_check==20)||($value->loan_status==2 && $value->sys_check==21)){ ?>
+												<? if(($value->loan_status==2 && $value->sys_check==0)||($value->loan_status==2 && $value->sys_check==20)||($value->loan_status==2 && $value->sys_check==21)){ ?>
 												<input class="targets" type="checkbox" data-targetno="<?=isset($value->target_no)?$value->target_no:'' ?>" value="<?=isset($value->id)?$value->id:'' ?>" />
 												<? } ?>
 												&nbsp;<?=isset($value->target_no)?$value->target_no:'' ?>
@@ -158,7 +158,7 @@
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount-$value->platform_fee:'' ?></td>
                                             <td>
 												<?=isset($loan_list[$value->loan_status])?(time()>=$value->expire_time&&$value->sub_status==8?'已過期':$loan_list[$value->loan_status]):'' ?>
-												<? if($value->loan_status==3 && ($value->sub_status==0 || $value->sys_check==20 || $value->sys_check==21)){
+												<? if($value->loan_status==3 && ($value->sys_check==0 || $value->sys_check==20 || $value->sys_check==21)){
 													echo '<button class="btn btn-success" onclick="success('.$value->id.')">成功</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="failed('.$value->id.')">失敗重發</button>&nbsp;';
 													echo '<button class="btn btn-danger" onclick="rollback('.$value->id.')">整案退回</button>';
@@ -174,7 +174,7 @@
 												?>
 											</td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:'' ?></td>
-											<td><?=isset($sub_status_list[$value->sub_status])?$sub_status_list[$value->sys_check]:'' ?></td>
+											<td><?=isset($sub_status_list[$value->sys_check])?$sub_status_list[$value->sys_check]:'' ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
                                         </tr>                                        
