@@ -1730,9 +1730,10 @@ class Recoveries extends REST_Controller {
                                         'unrecorded'     => 0,
                                     );
                                 }
+                                $r_fees = isset($v['r_fees']) ? $v['r_fees'] : 0;
                                 $normal_list[$v['repayment_date']]['principal']     += $v['principal'];
                                 $normal_list[$v['repayment_date']]['interest']      += $v['interest'];
-                                $normal_list[$v['repayment_date']]['total_payment'] += $v['repayment'];
+                                $normal_list[$v['repayment_date']]['total_payment'] += $v['repayment'] - $r_fees;
                                 if($v['repayment']!==0){
                                     $normal_list[$v['repayment_date']]['recorded']++;
                                 }
