@@ -51,7 +51,7 @@ class Target_model extends MY_Model
 	);
 	
 	public $delay_list   = array(
-		0 =>	"無",
+		0 =>	"未逾期",
 		1 =>	"逾期中",
 	);
 

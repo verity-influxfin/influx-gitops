@@ -9,6 +9,7 @@
 			<script type="text/javascript">
 				function showChang(){
 					var user_id 			= $('#user_id').val();
+                    var delay 				= $('#delay :selected').val();
 					var target_no 			= $('#target_no').val();
 					var status 				= $('#status :selected').val();
                     var dateRange           = '&sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
@@ -18,7 +19,7 @@
                         }
                     }
                     else {
-                        top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no+dateRange;
+                        top.location = './index?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no+ '&delay=' + delay+dateRange;
                     }
 				}
 
@@ -67,6 +68,15 @@
                                     <td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
                                 </tr>
                                 <tr>
+                                    <td>逾期：</td>
+                                    <td>
+                                        <select id="delay">
+                                            <option value='' >請選擇</option>
+                                            <? foreach($delay_list as $key => $value){ ?>
+                                                <option value="<?=$key?>" <?=isset($_GET['delay'])&&$_GET['delay']!=''&&intval($_GET['delay'])==intval($key)?"selected":''?>><?=$value?></option>
+                                            <? } ?>
+                                        </select>
+                                    </td>
 									<td>狀態：</td>
 									<td>
 										<select id="status">

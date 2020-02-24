@@ -808,6 +808,8 @@ class Target_lib{
 						'days'				=> 0,//本期天數
 						'remaining_principal'=> 0,//期初本金
 						'repayment_date'	=> $limit_date,//還款日
+						'r_fees'			=> 0,//回款手續費
+                        'r_delayinterest' => 0,
 						'ar_fees'			=> 0,//應收回款手續費
 					];
 				}
@@ -825,6 +827,11 @@ class Target_lib{
 						break;
 					case SOURCE_PRINCIPAL:
 					case SOURCE_DELAYINTEREST:
+                        $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
+                    case SOURCE_FEES:
+                        if($value->source==SOURCE_FEES){
+                            $list[$value->instalment_no]['r_fees'] += $value->amount;
+                        }
 					case SOURCE_INTEREST:
 						$list[$value->instalment_no]['repayment'] += $value->amount;
 						if($value->source==SOURCE_PRINCIPAL){

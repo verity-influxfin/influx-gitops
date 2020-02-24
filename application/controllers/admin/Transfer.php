@@ -44,7 +44,13 @@ class Transfer extends MY_Admin_Controller {
         isset($input['edate'])&&$input['edate']!=''?$where['created_at <=']=strtotime($input['edate']):'';
 		if($target_no!='' || !empty($where)){
 			$where['status'] = isset($where['status'])?$where['status']:$show_status;
-			$query = $target_no!=''?['target_no like' => $target_no]:($where['status']==3?['status' => [5]]:['status' => [5,10]]);
+			$query = $target_no!=''
+                ?['target_no like' => $target_no]
+                :($where['status']==3
+                    ?['status' => [5]]
+                    :['status' => [5,10]]
+                );
+            isset($input['delay'])? $query['delay'] = $input['delay'] : '';
 			if(!empty($target_no)||$query){
 				$target_ids 	= array();
 				$target_list 	= $this->target_model->get_many_by(
@@ -236,13 +242,19 @@ class Transfer extends MY_Admin_Controller {
 								$list[$v['repayment_date']] = array(
 									'principal'	=> 0,
 									'interest'	=> 0,
+									'delay_interest'	=> 0,
 									'ar_fees'	=> 0,
+                                    'r_fees' => 0,
+                                    'r_delayinterest' => 0,
 									'repayment'	=> 0,
 								);
 							}
 							$list[$v['repayment_date']]['principal'] 	+= $v['principal'];
 							$list[$v['repayment_date']]['interest'] 	+= $v['interest'];
+                            $list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
 							$list[$v['repayment_date']]['ar_fees'] 		+= $v['ar_fees'];
+                            $list[$v['repayment_date']]['r_fees'] += $v['r_fees'];
+                            $list[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
 							$list[$v['repayment_date']]['repayment'] 	+= $v['repayment'];
 						}
 					}
@@ -258,16 +270,17 @@ class Transfer extends MY_Admin_Controller {
 				ksort($list);
 				foreach($list as $key => $value){
 				    if(substr($key, -2)=='10'){
-                        $total 	= $value['principal']+$value['interest'];
-                        $profit = $value['principal']+$value['interest']-$value['ar_fees'];
+                        $total = $value['principal'] + $value['interest'];
+                        $r_fee = $value['r_fees'];
+                        $profit = $value['repayment'] - $r_fee;
                         $html .= '<tr>';
-                        $html .= '<td>'.$key.'</td>';
-                        $html .= '<td>'.$value['principal'].'</td>';
-                        $html .= '<td>'.$value['interest'].'</td>';
-                        $html .= '<td>'.$total.'</td>';
-                        $html .= '<td>'.$value['repayment'].'</td>';
-                        $html .= '<td>'.$value['ar_fees'].'</td>';
-                        $html .= '<td>'.$profit.'</td>';
+                        $html .= '<td>' . $key . '</td>';
+                        $html .= '<td>' . $value['principal'] . '</td>';
+                        $html .= '<td>' . $value['interest'] . '</td>';
+                        $html .= '<td>' . $total . '</td>';
+                        $html .= '<td>' . $value['repayment'] . '</td>';
+                        $html .= '<td>' . $r_fee . '</td>';
+                        $html .= '<td>' . $profit . '</td>';
                         $html .= '</tr>';
                     }
 				}
