@@ -534,6 +534,8 @@ class Certification extends REST_Controller {
 				}
 			}
 
+            isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
+
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
             isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
 
@@ -654,10 +656,14 @@ class Certification extends REST_Controller {
      * @apiUse TokenError
      *
      */
-    public function student_cards_get()
+    public function student_cards_post()
     {
-        $get = $this->input->get(NULL, TRUE);
-        $imageId = isset($get['id']) ? intval($get['id']) : 0;
+        $post = $this->input->post(NULL, TRUE);
+        $imageId = isset($post['id']) ? intval($post['id']) : 0;
+
+        if ($imageId <= 0) {
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
 
         $this->load->model('log/log_image_model');
         $imageLog = $this->log_image_model->get($imageId);
@@ -667,18 +673,57 @@ class Certification extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
         }
 
-        $this->load->library('image_recognition_lib');
-        $university = $this->image_recognition_lib->readStudentCard($imageLog->url);
+        $ownerId = $this->user_info->id;
 
-        $this->load->model('mongolog/ml_log_model');
-        $log = ["imageId" => $imageId, "university" => $university];
-        $this->ml_log_model->save($log);
+        $this->load->library('image_recognition_lib');
+        $this->image_recognition_lib->requestStudentCardIdentification($imageLog, $ownerId);
+
+        $this->response(['result' => 'SUCCESS']);
+    }
+
+    /**
+     * @api {post} /student_cards 辨識 學生證的學校
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationStudentCards
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String} photo id
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse TokenError
+     *
+     */
+    public function student_cards_get()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $imageId = isset($get['id']) ? intval($get['id']) : 0;
+
+        $this->load->model('log/log_image_model');
+        $imageLog = $this->log_image_model->get($imageId);
+
+        if (!$imageLog) {
+            $this->response(['result' => 'SUCCESS']);
+        }
+
+        $ownerId = $this->user_info->id;
+        if (!$imageLog || $imageLog->user_id != $ownerId) {
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+
+        $this->load->library('image_recognition_lib');
+        $university = $this->image_recognition_lib->getStudentCardIdentification($imageLog);
 
         if ($university) {
             $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
         }
 
-        $this->response(['result' => 'SUCCESS', 'data' => ['university' => '']]);
+        $this->response(['result' => 'SUCCESS']);
     }
 
 	/**

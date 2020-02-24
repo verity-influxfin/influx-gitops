@@ -52,30 +52,34 @@ class S3_lib {
 		);
 	}
 		
-		public function public_delete_image($s3_url,$bucket=AZURE_S3_BUCKET)
-		{  
+    public function public_delete_image($s3_url,$bucket=AZURE_S3_BUCKET,$imageInfo=[])
+    {
+        $filename = 'azure_image';
+        if ($imageInfo) {
+            $filename = $imageInfo["name"];
+        }
 
-			$key=str_replace('https://'.$bucket.'.s3.ap-northeast-1.amazonaws.com/','',$s3_url);
-			$result= $this->client->deleteObject(array(
-				'Bucket' 		=> $bucket,
-				'Key'    		=> $key,
-			));
-			if(isset($result['@metadata']['effectiveUri'])){
-			$data = array(
-				'type'		=> 'delete_image',
-				'user_id'	=> 0,
-				'file_name'	=> 'azure_image',
-				'url'		=> $result['@metadata']['effectiveUri'],
-				'exif'		=> 'public',
-			);
-            
-			$this->CI->log_image_model->insert($data);
-			return true;
-			}else{
-				return false;	
-			}
-			
-		}
+        $key = str_replace('https://' . $bucket . '.s3.ap-northeast-1.amazonaws.com/', '', $s3_url);
+        $result= $this->client->deleteObject([
+            'Bucket' => $bucket,
+            'Key' => $key,
+        ]);
+
+        if(isset($result['@metadata']['effectiveUri'])){
+            $data = [
+                'type' => 'delete_image',
+                'user_id' => 0,
+                'file_name'	=> $filename,
+                'url' => $result['@metadata']['effectiveUri'],
+                'exif' => 'public',
+            ];
+
+            $this->CI->log_image_model->insert($data);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	public function get_mailbox_list()
 	{   

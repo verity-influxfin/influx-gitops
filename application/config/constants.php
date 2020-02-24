@@ -366,6 +366,7 @@ defined('AZURE_S3_BUCKET')          OR define('AZURE_S3_BUCKET'         , getenv
 defined('S3_BUCKET_MAILBOX')          OR define('S3_BUCKET_MAILBOX'         , getenv('ENV_S3_BUCKET_MAILBOX'));
 
 defined('FRONT_CDN_URL')     		OR define('FRONT_CDN_URL'			, 'https://d3imllwf4as09k.cloudfront.net/');
+defined('INFLUX_S3_URL')     		OR define('INFLUX_S3_URL'			, 'https://influxp2p-front-assets.s3.ap-northeast-1.amazonaws.com/');
 defined('IMAGE_MAX_WIDTH')     		OR define('IMAGE_MAX_WIDTH'			, 3000);
 
 //SMTP GMAIL
