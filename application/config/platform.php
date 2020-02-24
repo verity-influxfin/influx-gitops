@@ -63,39 +63,39 @@ $config['admin_menu'] = [
         'parent_name' => '客服管理',
         'index' => '投訴與建議',
         'send_email' => '通知工具',
-        'certifications'    => '會員認證審核列表',
+        'certifications' => '會員認證審核列表',
     ],
     'User' => [
         'parent_name' => '會員管理',
         'index' => '會員列表',
         'blocked_users' => '鎖定帳號管理',
     ],
-	'Admin' 				=> [
-		'parent_name'		=> '後台人員管理',
-		'role_list'			=> '權限管理',
-		'index'				=> '人員列表',
-	],
-	'Sales' 				=> [
-		'parent_name'		=> '業務報表',
-		'index'				=> '借款報表',
-		'register_report'	=> '註冊報表',
-		'bonus_report'		=> '獎金報表',
-		'loan_overview'     => '申貸總覽'
-	],
-	'Account' 				=> [
-		'parent_name'		=> '財務作業',
-		'daily_report'		=> '交易日報表',
-		'passbook_report'	=> '虛擬帳號餘額明細表',
-		'estatement'		=> '個人對帳單',
-		'index'				=> '收支統計表',
-	],
-	'Article' 				=> [
-		'parent_name'		=> '活動及最新消息',
-		'index'				=> '最新活動',
-		'index?type=2'		=> '最新消息',
-	],
-	'Agreement' 			=> ['name'=>'協議書'],
-    'Contract' 			    => ['name'=>'合約書'],
+    'Admin' => [
+        'parent_name' => '後台人員管理',
+        'role_list' => '權限管理',
+        'index' => '人員列表',
+    ],
+    'Sales' => [
+        'parent_name' => '業務報表',
+        'index' => '借款報表',
+        'register_report' => '註冊報表',
+        'bonus_report' => '獎金報表',
+        'loan_overview' => '申貸總覽'
+    ],
+    'Account' => [
+        'parent_name' => '財務作業',
+        'daily_report' => '交易日報表',
+        'passbook_report' => '虛擬帳號餘額明細表',
+        'estatement' => '個人對帳單',
+        'index' => '收支統計表',
+    ],
+    'Article' => [
+        'parent_name' => '活動及最新消息',
+        'index' => '最新活動',
+        'index?type=2' => '最新消息',
+    ],
+    'Agreement' => ['name' => '協議書'],
+    'Contract' => ['name' => '合約書'],
 ];
 
 //內部通知Email
@@ -140,7 +140,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1,STAGE_CER_TARGET],
+        'sub_product' => [1, STAGE_CER_TARGET],
         'certifications' => [1, 2, 3, 4, 5, 6, 7],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -190,7 +190,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1,STAGE_CER_TARGET],
+        'sub_product' => [1, STAGE_CER_TARGET],
         'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -353,12 +353,12 @@ $config['visul_id_des'] = [
     ],
     'N4' => [
         'name' => '創業貸',
-        'description' =>'創業資金免煩惱',
-        'icon'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
-        'banner'   => FRONT_CDN_URL.'app_asset/image_loan_03.jpg',
+        'description' => '創業資金免煩惱',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'status' => 1
     ],
-    'D1'	   => [
+    'D1' => [
         'name' => '外匯車專案',
         'description' => '幫您貸車進來',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
@@ -480,10 +480,10 @@ $config['sub_product_list'] = [
                 'instalment' => [180],
                 'repayment' => [3],
                 'targetData' => [
-                    'vin' => ['String','車身號碼'],
-                    'factory_time' => ['Timestamp','出廠時間'],
-                    'product_description' => ['String','產品備註)'],
-                    'car_history_image' => ['Picture','車輛歷史報告 ( Carfax / Autocheck )','6'],
+                    'vin' => ['String', '車身號碼'],
+                    'factory_time' => ['Timestamp', '出廠時間'],
+                    'product_description' => ['String', '產品備註)'],
+                    'car_history_image' => ['Picture', '車輛歷史報告 ( Carfax / Autocheck )', '6'],
                 ],
                 'weight' => [],
                 'status' => 1,
@@ -515,7 +515,7 @@ $config['sub_product_list'] = [
                     'vin' => ['String', '車身號碼'],
                     'factory_time' => ['Timestamp', '出廠時間'],
                     'product_description' => ['String', '產品備註'],
-                    'car_history_image' => ['Picture','車輛歷史報告 ( Carfax / Autocheck )','6'],
+                    'car_history_image' => ['Picture', '車輛歷史報告 ( Carfax / Autocheck )', '6'],
                     'car_title_image' => ['Picture', '車輛所有權狀 ( title )', '6'],
                     'car_import_proof_image' => ['Picture', '海關進口證明/進口報單', '6'],
                     'car_artc_image' => ['Picture', '交通部核發合格證明、環保驗車證明(ARTC)', '6'],
@@ -679,12 +679,12 @@ $config['sub_product_list'] = [
 
 $config['app_product_totallist'] = [
     'nature' => ['N1', 'N2', 'NS1'],
-    'company' => [ 'DS2'],
+    'company' => ['DS2'],
 ];
 
-$config['stage_option_cer'] = [2,8,9,10];
+$config['stage_option_cer'] = [2, 8, 9, 10];
 
-$config['target_tips'] = '此標的使用者未提供完整資訊，下標前請審慎評估。';
+$config['target_tips'] = '此標的使用者未提供完整資訊，下標前請審慎評估';
 
 //產品轉換代碼
 $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
@@ -718,37 +718,37 @@ $config['school_system'] = [
 ];
 
 //科目名稱
-$config['transaction_source']= [
-	1	=> '平台代收',
-	2	=> '提領',
-	3	=> '出借款',
-	4	=> '平台服務費',
-	5	=> '轉換產品服務費',
-	6	=> '債權轉讓服務費',
-	7	=> '提前還款補償金',
-	8	=> '提前還款手續費',
-	9	=> '應付平台服務費',
-	10	=> '債權轉讓金',
+$config['transaction_source'] = [
+    1 => '平台代收',
+    2 => '提領',
+    3 => '出借款',
+    4 => '平台服務費',
+    5 => '轉換產品服務費',
+    6 => '債權轉讓服務費',
+    7 => '提前還款補償金',
+    8 => '提前還款手續費',
+    9 => '應付平台服務費',
+    10 => '債權轉讓金',
 
-	11	=> '應付借款本金',
-	12	=> '還款本金',
-	13	=> '應付借款利息',
-	14	=> '還款利息',
+    11 => '應付借款本金',
+    12 => '還款本金',
+    13 => '應付借款利息',
+    14 => '還款利息',
 
-    50	=> '平台服務費沖正',
-    51	=> '債權轉讓服務費沖正',
-    52	=> '債權轉讓金沖正',
-    53	=> '銀行錯帳撥還',
+    50 => '平台服務費沖正',
+    51 => '債權轉讓服務費沖正',
+    52 => '債權轉讓金沖正',
+    53 => '銀行錯帳撥還',
 
-	81	=> '平台驗證費',
-	82	=> '平台驗證費退回',
-	83	=> '跨行轉帳費',
-	84	=> '跨行轉帳費退回',
+    81 => '平台驗證費',
+    82 => '平台驗證費退回',
+    83 => '跨行轉帳費',
+    84 => '跨行轉帳費退回',
 
-	91	=> '應付手續費',
-	92	=> '已還手續費',
-	93	=> '應付延滯息',
-	94	=> '已還延滯息',
+    91 => '應付手續費',
+    92 => '已還手續費',
+    93 => '應付延滯息',
+    94 => '已還延滯息',
 ];
 
 $config['internal_transaction_source'] = [
