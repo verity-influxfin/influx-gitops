@@ -661,6 +661,10 @@ class Certification extends REST_Controller {
         $post = $this->input->post(NULL, TRUE);
         $imageId = isset($post['id']) ? intval($post['id']) : 0;
 
+        if ($imageId <= 0) {
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+
         $this->load->model('log/log_image_model');
         $imageLog = $this->log_image_model->get($imageId);
 
