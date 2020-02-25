@@ -37,7 +37,8 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 				[
 					"stage" => "time_matches",
 					"status" => "failure",
-					"message" => "勞保異動明細非歷年"
+					"message" => "起始日非空白",
+					"rejected_message" => "勞保異動明細非歷年"
 				]
 			]
 		];
