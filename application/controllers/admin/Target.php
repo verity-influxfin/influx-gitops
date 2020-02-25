@@ -598,7 +598,7 @@ class Target extends MY_Admin_Controller {
 
 		if($target->sub_product_id == 9999){
             $param['status'] = 1;
-            $param['sub_status'] = 0;
+            $param['sub_status'] = 10;
             $param['remark'] = $remark;
             $this->target_model->update($target->id,$param);
         }

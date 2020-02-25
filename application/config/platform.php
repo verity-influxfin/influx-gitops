@@ -366,7 +366,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'NS1' => [
-        'name' => 'Techi貸',
+        'name' => 'Techie工程師貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
