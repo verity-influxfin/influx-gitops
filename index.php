@@ -1,6 +1,6 @@
 <?php
 set_time_limit(0);
-ini_set('memory_limit','256M');
+ini_set('memory_limit','386M');
 ini_set('upload_max_filesize', '200M');
 ini_set('post_max_size', '253M');
 /*
