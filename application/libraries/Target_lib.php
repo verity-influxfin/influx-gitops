@@ -328,6 +328,7 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == 10;
+                                $newStatus = false;
                                 if (!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) {
                                     $param['status'] = 1;
                                     $renew ? $param['sub_status'] = 10 : '';
@@ -338,7 +339,11 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                    $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);;
+
+                                    $newStatus = isset($param['status']) && $target->status != $param['status'] || isset($param['sub_status']) && $target->sub_status != $param['sub_status'];
+                                    if($newStatus){
+                                        $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
+                                    }
                                 } else {
                                     $param['sub_status'] = 9;
                                 }
@@ -349,7 +354,7 @@ class Target_lib
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
                                 }
-                                if ((isset($param['status']) && $target->status != $param['status']) || (isset($param['sub_status']) && $target->sub_status != $param['sub_status'])) {
+                                if ($newStatus) {
                                     $this->insert_change_log($target->id, $param);
                                 }
                                 return true;
