@@ -354,7 +354,7 @@ class Payment_lib{
 				$content 	= "";
 				$ids 		= array();
 				foreach($targets as $key => $value){
-					if($value->status==4 && $value->sub_status==0 && $value->loan_status==2){
+					if($value->status==4 && in_array($value->sub_status, [0, 10]) && $value->loan_status==2){
 						$user_info = $this->CI->user_model->get($value->user_id);
 						if($user_info){
 							$bankaccount 	= $this->CI->user_bankaccount_model->get_by(array(
