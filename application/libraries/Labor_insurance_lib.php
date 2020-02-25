@@ -74,7 +74,7 @@ class Labor_insurance_lib
             "message" => ""
         ];
 
-        $content = $this->CI->regex->findPatternInBetween($text, "網頁下載時間", "秒");
+        $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "網頁下載時間", "秒");
         if (!$content) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
@@ -91,7 +91,6 @@ class Labor_insurance_lib
         }
 
         $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
-
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
@@ -113,7 +112,7 @@ class Labor_insurance_lib
             "message" => "無法辨識日期"
         ];
 
-        $content = $this->CI->regex->findPatternInBetween($text, "查詢日期起訖：", "【");
+        $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "查詢日期起訖：", "【");
         if (!$content) {
             $result["messages"][] = $message;
             return;
@@ -142,6 +141,7 @@ class Labor_insurance_lib
         $endTime = $searchTimeArray[0][0];
 
         $searchTime = $this->convertTaiwanTimeToTimestamp($endTime);
+
         if ($downloadTime != $searchTime) {
             $message["status"] = self::FAILURE;
             $message["message"] = "查詢時間與下載時間不一致";
