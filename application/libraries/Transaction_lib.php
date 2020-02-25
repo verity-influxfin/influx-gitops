@@ -453,7 +453,6 @@ class Transaction_lib{
 							if($rs && is_array($rs)){
 								$target_update_param = [
 									'status'		=> 5,
-                                    'sub_status'    => 0,
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
 								];

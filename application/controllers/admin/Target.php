@@ -940,7 +940,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3 && ($info->sub_status==0||$info->sub_status==20||$info->sub_status==21)){
+			if($info && $info->status==4 && $info->loan_status==3 && in_array($info->sys_check, [20, 21])){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_success($id,$this->login_info->id);
 				if($rs){
