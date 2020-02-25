@@ -599,6 +599,12 @@ class Labor_insurance_lib
         foreach ($rows as $company => $records) {
             $record = $records[0];
 
+            if (!isset($record['createdAt'])) {
+                $message["status"] = self::PENDING;
+                $message["message"] = "資料無法完全辨識。";
+                $result["messages"][] = $message;
+                return;
+            }
             $currentEnrolledAt = $this->convertTaiwanTimeToTimestamp($record['createdAt']);
 
             if (!$firstJobEnrolledAt) {
