@@ -54,8 +54,8 @@ class Labor_insurance_lib_file3 extends TestCase
 			"messages" => [
 				[
 					"stage" => "download_time",
-		            "status" => "pending",
-		            "message" => "無法辨識日期"
+		            "status" => "success",
+		            "message" => ""
 				]
 			]
 		];
@@ -172,7 +172,10 @@ class Labor_insurance_lib_file3 extends TestCase
 				[
 					"stage" => "company",
 					"status" => "pending",
-					"message" => "與user自填公司名稱不一致"
+					"message" => [
+					     "公司 : 慈香庭有限公司",
+					     "與user自填公司名稱不一致"
+					]
 				]
 			]
 		];
