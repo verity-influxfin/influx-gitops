@@ -709,11 +709,17 @@ $name 您好，
             foreach ($user_list as $key => $value) {
                 $param = array(
                     "user_id" => $value->id,
-                    "investor" => $investor,
                     "title" => $title,
                     "content" => $this->remove_emoji($content),
                 );
-                $this->CI->user_notification_model->insert($param);
+                if($investor == 0 || $investor == 2 ){
+                    $param['investor'] = 0;
+                    $this->CI->user_notification_model->insert($param);
+                }
+                if($investor == 1 || $investor == 2 ){
+                    $param['investor'] = 1;
+                    $this->CI->user_notification_model->insert($param);
+                }
                 $this->CI->load->library('Sendemail');
                 $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $url);
                 $count++;

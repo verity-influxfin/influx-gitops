@@ -319,43 +319,40 @@ class Target_lib
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if ($product_info['type'] == 1 || $subloan_status) {
                                 $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount);
-                                $contract_id = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
-                                if ($contract_id) {
-                                    $param = [
-                                        'loan_amount' => $loan_amount,
-                                        'credit_level' => $credit['level'],
-                                        'platform_fee' => $platform_fee,
-                                        'interest_rate' => $interest_rate,
-                                        'contract_id' => $contract_id,
-                                        'status' => 0,
-                                    ];
-                                    $param['sub_product_id'] = $sub_product_id;
-                                    $evaluation_status = $target->sub_status == 10;
-                                    if (!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) {
-                                        $param['status'] = 1;
-                                        $renew ? $param['sub_status'] = 10 : '';
-                                        $remark
-                                            ? $param['remark'] = (empty($target->remark)
+                                $param = [
+                                    'sub_product_id' => $sub_product_id,
+                                    'loan_amount' => $loan_amount,
+                                    'credit_level' => $credit['level'],
+                                    'platform_fee' => $platform_fee,
+                                    'interest_rate' => $interest_rate,
+                                    'status' => 0,
+                                ];
+                                $evaluation_status = $target->sub_status == 10;
+                                if (!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) {
+                                    $param['status'] = 1;
+                                    $renew ? $param['sub_status'] = 10 : '';
+                                    $remark
+                                        ? $param['remark'] = (empty($target->remark)
                                             ? $remark
                                             : $target->remark . ', ' . $remark)
-                                            : '';
-                                        $msg = $target->status == 0 ? true : false;
-                                        $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                    } else {
-                                        $param['sub_status'] = 9;
-                                    }
-                                    if ($cer) {
-                                        $param['target_data'] = json_encode($cer);
-                                    }
-                                    $rs = $this->CI->target_model->update($target->id, $param);
-                                    if ($rs && $msg) {
-                                        $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
-                                    }
-                                    if ((isset($param['status']) && $target->status != $param['status']) || (isset($param['sub_status']) && $target->sub_status != $param['sub_status'])) {
-                                        $this->insert_change_log($target->id, $param);
-                                    }
-                                    return true;
+                                        : '';
+                                    $msg = $target->status == 0 ? true : false;
+                                    $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
+                                    $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);;
+                                } else {
+                                    $param['sub_status'] = 9;
                                 }
+                                if ($cer) {
+                                    $param['target_data'] = json_encode($cer);
+                                }
+                                $rs = $this->CI->target_model->update($target->id, $param);
+                                if ($rs && $msg) {
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
+                                }
+                                if ((isset($param['status']) && $target->status != $param['status']) || (isset($param['sub_status']) && $target->sub_status != $param['sub_status'])) {
+                                    $this->insert_change_log($target->id, $param);
+                                }
+                                return true;
                             } else if ($product_info['type'] == 2) {
                                 $allow = true;
                                 $sub_status = 0;
