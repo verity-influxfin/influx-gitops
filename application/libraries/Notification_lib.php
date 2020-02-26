@@ -765,7 +765,7 @@ $name 您好，
                     $this->CI->user_notification_model->insert($param);
                 }
                 $this->CI->load->library('Sendemail');
-                $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+                $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
                 $count++;
             }
             $this->CI->load->library('parser');
