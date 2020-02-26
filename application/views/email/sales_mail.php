@@ -176,7 +176,7 @@
                                                 data-max="26" data-link-color="link text color"
                                                 data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;"
                                                 align="center"
-                                                style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; padding:0 0 23px;letter-spacing: 1px">
+                                                style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; letter-spacing: 1px">
                                                 {content}
                                             </td>
                                         </tr>

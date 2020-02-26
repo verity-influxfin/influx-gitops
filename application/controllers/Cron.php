@@ -321,5 +321,16 @@ class Cron extends CI_Controller {
         $this->load->library('Notification_lib');
         $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor);
     }
+
+	public function notice_msg(){
+        $input = $this->input->get();
+        $user_id = isset($input['user_id']) ? $input['user_id'] : 0;
+        $title = $input['title'];
+        $content = $input['content'];
+        $investor = isset($input['investor']) ? $input['investor'] : 0;
+        $type = isset($input['type']) ? $input['type'] : 'b03';
+        $this->load->library('Notification_lib');
+        $this->notification_lib->notice_msg($user_id, $title, $content, $investor, $type);
+    }
 }
 
