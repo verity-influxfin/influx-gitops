@@ -914,7 +914,7 @@ class Payment_lib{
 		);
 		$payment_detail=$this->CI->payment_model->get_many_by($where);
 	   $payment_size=count($payment_detail);
-	   if($payment_size==1){ //第一層邏輯 payment vs 國泰 資料比對    
+	   if($payment_size>=1){ //第一層邏輯 payment vs 國泰 資料比對
 
 		 	$bankaccount_detail=$this->CI->user_bankaccount_model->get($content_data);
 		 	$user_id=$bankaccount_detail->user_id;
@@ -995,7 +995,7 @@ class Payment_lib{
 		);
 		$payment_detail = $this->CI->payment_model->get_many_by($where);
 		$payment_size = count($payment_detail);
-		if ($payment_size == 1) { //第一層邏輯 payment vs 國泰 資料比對    
+		if ($payment_size >= 1) { //第一層邏輯 payment vs 國泰 資料比對
 			$bankaccount_detail = $this->CI->user_bankaccount_model->get($content);
 			$user_id = $bankaccount_detail->user_id;
 			$user_detail = $this->CI->user_model->get($user_id);
@@ -1129,7 +1129,7 @@ class Payment_lib{
 		$this->CI->load->model('log/Log_targetschange_model'); 
 		 //抓sub_status=0
 		 //status sub script loan 4 0 0 3
-		 if((!empty($target_detail)&&($target_detail['status']==4))&&(($target_detail['sub_status']==0)&&($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){
+           if(((!empty($target_detail))&&($target_detail['status']==4))&&(($target_detail['script_status']==0))&&($target_detail['loan_status']==3)){
 
 			//if( ($target_detail_amout==$bankamount+$data['Fee'])&&($created_at==$bank_txtime)){ //比對金額 時間
 			if (($target_detail_amout == $bankamount + $data['Fee'])) { //比對金額 時間
