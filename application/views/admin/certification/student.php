@@ -12,6 +12,65 @@
 				$('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
 				$('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
 			});
+
+            $(document).ready(function() {
+                var university = $("#university").text();
+                var account = $("#account").text();
+
+                fetchSipLogin(university, account)
+                function fetchSipLogin(university, account) {
+                    var data = {'university' : university, 'account' : account}
+                    var queryParam = jQuery.param(data);
+
+                    var url = '/admin/certification/sip?' + queryParam
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(response) {
+                            if (!response) {
+                                fillSipLogin();
+                                return;
+                            }
+                            if (response.status.code == 204) {
+                                fillSipLogin();
+                                return;
+                            }
+
+                            if (response.response.sip.university == "university_not_found") {
+                                fillSipLogin(response.response.sip.university);
+                            } else if (response.response.sip.status == "finished") {
+                                fillSipLogin(response.response.sip.loginStatus);
+                            } else {
+                                fillSipLogin(response.response.sip.status);
+                            }
+                        },
+                        error: function() {
+                            fillSipLogin();
+                        }
+                    });
+                }
+
+                function fillSipLogin(status = null) {
+                    if (!status) {
+                        $("#sip-login-info").html("出現錯誤");
+                        return;
+                    }
+
+                    var mapping = getLoginStatusMapping()
+                    status = status.toLowerCase()
+                    $("#sip-login-info").html(mapping[status]);
+                }
+
+                function getLoginStatusMapping() {
+                    return {
+                        'false' : '登入失敗',
+                        'true' : '登入成功',
+                        'started' : '爬蟲正在執行中',
+                        'requested' : '爬蟲尚未開始',
+                        'university_not_found' : '不支援此學校'
+                    }
+                }
+            });
 		</script>
 		<div id="page-wrapper">
 			<div class="row">
@@ -38,7 +97,7 @@
 									</div>
 									<div class="form-group">
 										<label>學校名稱</label>
-										<p class="form-control-static"><?= isset($content['school']) ? $content['school'] : "" ?></p>
+										<p id="university" class="form-control-static"><?= isset($content['school']) ? $content['school'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>學制</label>
@@ -66,7 +125,7 @@
 									</div>
 									<div class="form-group">
 										<label>SIP帳號</label>
-										<p class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
+										<p id="account" class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP密碼</label>
@@ -79,6 +138,10 @@
 												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結</a>
 											<? } ?>
 										<? }else{echo "無";} ?>
+									</div>
+									<div class="form-group">
+										<label>SIP登入結果</label><br>
+										<p id="sip-login-info" class="form-control-static">等待中...</p>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>

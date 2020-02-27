@@ -767,6 +767,23 @@ class Certification extends MY_Admin_Controller {
 	    $this->load->view('admin/_footer');
 	}
 
+    public function sip()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $university = isset($input['university']) ? $input['university'] : '';
+        $account = isset($input['account']) ? $input['account'] : '';
+        $this->load->library('scraper/sip_lib');
+        $loginInfo = $this->sip_lib->getSipLogin($university, $account);
+
+        $this->load->library('output/json_output');
+        if (!$loginInfo) {
+            $this->json_output->setStatusCode(204)->send();
+        }
+
+        $response = ["sip" => json_decode(json_encode($loginInfo), true)];
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
     public function migrate_ocr()
     {
         $get = $this->input->get(NULL, TRUE);
