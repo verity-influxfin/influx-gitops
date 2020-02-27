@@ -379,7 +379,7 @@ defined('SES_SMTP_ACCOUNT')   		OR define('SES_SMTP_ACCOUNT'		, getenv('ENV_SES_
 defined('SES_SMTP_PASSWORD')   		OR define('SES_SMTP_PASSWORD'		, getenv('ENV_SES_SMTP_PASSWORD'));
 
 defined('PDF_OWNER_PASSWORD')   	OR define('PDF_OWNER_PASSWORD'		, getenv('ENV_PDF_OWNER_PASSWORD'));
-
+//200227_[6p8u5h66e88y1]
 //COOP
 defined('LINK_FAIL')  	            	OR define('LINK_FAIL'		            , 500);//與主系統連線失敗
 

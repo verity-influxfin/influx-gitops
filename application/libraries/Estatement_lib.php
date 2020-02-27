@@ -803,8 +803,9 @@ class Estatement_lib{
 		return false;
 	}
 	
-	public function upload_pdf($user_id=0,$html="",$password="",$title="",$file_name="",$path="",$orientation=false,$loaalTemp=false){
+	public function upload_pdf($user_id=0,$html="",$password="",$title="",$file_name="",$path="",$orientation=false,$loaalTemp=false,$bpassword=false){
 		if($user_id){
+            $spassword = $bpassword ? $bpassword : PDF_OWNER_PASSWORD;
             $orientation?'P':'L';
 			$pdf = new TCPDF($orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 			$permissions  = array(
@@ -817,7 +818,7 @@ class Estatement_lib{
 				'assemble', 
 				'print-high'
 			);
-			$pdf->SetProtection($permissions , $password , PDF_OWNER_PASSWORD, 0, null);
+			$pdf->SetProtection($permissions , $password , $spassword, 0, null);
 			$pdf->SetCreator(GMAIL_SMTP_NAME);
 			$pdf->SetAuthor(GMAIL_SMTP_NAME);
 			//$pdf->SetTitle($title);
