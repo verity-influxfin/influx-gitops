@@ -935,7 +935,9 @@ class Transaction_lib{
                                                     "",
                                                     ($file_name.".pdf"),
                                                     "temp",
-                                                    true
+                                                    true,
+                                                    false,
+                                                    $transfer_investments->user_id
                                                 );
                                                 //crate amortization
                                                 $xlsxs = $this->transfer_amortization($invest_list,$invest_target,$target->delay,$investment->user_id,$transfer_investments->user_id,$target);
