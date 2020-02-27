@@ -30,4 +30,23 @@ class Sip_lib
 
         return true;
     }
+
+    public function getSipLogin($university, $account)
+    {
+        if(!$university || !$account) {
+            return;
+        }
+
+        $encodedUni = urlencode($university);
+        $url = $this->scraperUrl  . "sips/{$encodedUni}/login?account={$account}";
+
+        $result = curl_get($url);
+        $response = json_decode($result);
+
+        if (!$result || !isset($response->status) || $response->status != 200) {
+            return;
+        }
+
+        return $response->response;
+    }
 }
