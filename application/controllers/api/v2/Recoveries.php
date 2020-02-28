@@ -1749,10 +1749,11 @@ class Recoveries extends REST_Controller
                                         'total_payment' => 0,
                                     );
                                 }
+                                $r_fees = isset($v['r_fees']) ? $v['r_fees'] : 0;
                                 $delay_list[$v['repayment_date']]['principal'] += $v['principal'];
                                 $delay_list[$v['repayment_date']]['interest'] += $v['interest'];
                                 $delay_list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
-                                $delay_list[$v['repayment_date']]['total_payment'] += $v['repayment'];
+                                $delay_list[$v['repayment_date']]['total_payment'] += $v['repayment'] - $r_fees;
                             }
                         }
                     }
