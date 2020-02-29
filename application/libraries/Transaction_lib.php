@@ -937,7 +937,7 @@ class Transaction_lib{
                                                     "temp",
                                                     true,
                                                     false,
-                                                    $transfer_investments->user_id
+                                                    $user_info[$transfer_investments->user_id]->id_number
                                                 );
                                                 //crate amortization
                                                 $xlsxs = $this->transfer_amortization($invest_list,$invest_target,$target->delay,$investment->user_id,$transfer_investments->user_id,$target);
