@@ -1275,9 +1275,12 @@ class Certification_lib{
                 'investor' => $investor,
                 'status !=' => 2,
             ]);
-            if($certification) {
+            if ($certification) {
                 foreach ($certification as $key => $value) {
-                    if ($value->expire_time <= time() && $investor == 0 && !in_array($value->certification_id, [IDCARD, DEBITCARD, EMERGENCY, EMAIL])) {
+                    if ($investor == 0 && !in_array($value->certification_id, [IDCARD, DEBITCARD, EMERGENCY, EMAIL])
+                        && $value->expire_time <= time()
+                    || in_array($value->certification_id, [INVESTIGATION, JOB])
+                        && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)) {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }
                 }
