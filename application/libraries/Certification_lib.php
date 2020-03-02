@@ -1286,8 +1286,6 @@ class Certification_lib{
                 }
             }
         }
-//        1577895400
-//1580313600
         return false;
     }
 
