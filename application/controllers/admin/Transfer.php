@@ -53,7 +53,7 @@ class Transfer extends MY_Admin_Controller
                     ? ['status' => [5]]
                     : ['status' => [5, 10]]
                 );
-            isset($input['delay']) && !empty($input['delay']) ? $query['delay'] = $input['delay'] : '';
+            isset($input['delay']) && $input['delay'] != '' ? $query['delay'] = ($input['delay'] == 0 ? 0 : 1) : '';
             if (!empty($target_no) || $query) {
                 $target_ids = array();
                 $target_list = $this->target_model->get_many_by(
