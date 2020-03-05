@@ -240,7 +240,7 @@ class Target_lib
     }
 
     //核可額度利率
-    public function approve_target($target = [], $remark = false, $renew = false, $cer = false, $stage_cer = false, $subloan_status = false)
+    public function approve_target($target = [], $remark = false, $renew = false, $targetData = false, $stage_cer = false, $subloan_status = false)
     {
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('contract_lib');
@@ -347,9 +347,9 @@ class Target_lib
                                 } else {
                                     $param['sub_status'] = 9;
                                 }
-                                if ($cer) {
-                                    $param['target_data'] = json_encode($cer);
-                                }
+                                !$targetData ? $targetData = new stdClass() : '';
+                                $targetData->credit_level = $credit['level'];
+                                $param['target_data'] = json_encode($targetData);
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
@@ -835,9 +835,11 @@ class Target_lib
             foreach ($transactions as $key => $value) {
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:
+                        !isset($list[$value->instalment_no]['principal'])?$list[$value->instalment_no]['principal'] = 0:'';
                         $list[$value->instalment_no]['principal'] += $value->amount;
                         break;
                     case SOURCE_AR_INTEREST:
+                        !isset($list[$value->instalment_no]['interest'])?$list[$value->instalment_no]['interest'] = 0:'';
                         $list[$value->instalment_no]['interest'] += $value->amount;
                         break;
                     case SOURCE_AR_DELAYINTEREST:
@@ -848,15 +850,18 @@ class Target_lib
                         $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
                     case SOURCE_FEES:
                         if ($value->source == SOURCE_FEES) {
+                            !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
                             $list[$value->instalment_no]['r_fees'] += $value->amount;
                         }
                     case SOURCE_INTEREST:
+                        !isset($list[$value->instalment_no]['repayment'])?$list[$value->instalment_no]['repayment'] = 0:'';
                         $list[$value->instalment_no]['repayment'] += $value->amount;
                         if ($value->source == SOURCE_PRINCIPAL) {
                             $repayment_principal += $value->amount;
                         }
                         break;
                     case SOURCE_AR_FEES:
+                        !isset($list[$value->instalment_no]['ar_fees'])?$list[$value->instalment_no]['ar_fees'] = 0:'';
                         $list[$value->instalment_no]['ar_fees'] += $value->amount;
                         break;
                     default:
@@ -864,9 +869,9 @@ class Target_lib
                 }
                 if ($value->instalment_no) {
                     $list[$value->instalment_no]['total_payment'] =
-                        $list[$value->instalment_no]['interest'] +
-                        $list[$value->instalment_no]['principal'] +
-                        $list[$value->instalment_no]['delay_interest'];
+                        (isset($list[$value->instalment_no]['interest'])? $list[$value->instalment_no]['interest'] : 0) +
+                        (isset($list[$value->instalment_no]['principal'])? $list[$value->instalment_no]['principal'] : 0) +
+                        (isset($list[$value->instalment_no]['delay_interest'])? $list[$value->instalment_no]['delay_interest'] : 0);
                 }
             }
 
@@ -884,13 +889,13 @@ class Target_lib
             $schedule['remaining_principal'] = $total - $repayment_principal;
             ksort($list);
             foreach ($list as $key => $value) {
-                $list[$key]['days'] = get_range_days($old_date, $value['repayment_date']);
+                $list[$key]['days'] = isset($value['repayment_date'])?get_range_days($old_date, $value['repayment_date']):null;
                 $list[$key]['remaining_principal'] = $total;
-                $old_date = $value['repayment_date'];
-                $total = $total - $value['principal'];
+                $old_date = isset($value['repayment_date'])?$value['repayment_date']:null;
+                $total = $total - (isset($value['principal'])?$value['principal']:0);
 
                 $schedule['total_payment'] += $value['total_payment'];
-                $xirr_dates[] = $value['repayment_date'];
+                $xirr_dates[] = isset($value['repayment_date'])?$value['repayment_date']:null;
                 $xirr_value[] = $value['total_payment'];
             }
 
