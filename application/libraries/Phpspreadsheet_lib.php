@@ -12,7 +12,7 @@ class Phpspreadsheet_lib
         $this->CI = &get_instance();
     }
 
-	public function excel($filename,$data,$title='',$subject='',$descri='',$user_id='',$export=true,$no_sum=[],$sum=false){
+	public function excel($filename,$data,$title='',$subject='',$descri='',$user_id='',$export=true,$sum=false,$merge_sum=false,$merge_title = false){
         if($data){
             // Create new Spreadsheet object
             $spreadsheet = new Spreadsheet();
@@ -30,6 +30,13 @@ class Phpspreadsheet_lib
             foreach ($data as $sheet => $contents){
                 $sheet>0?$spreadsheet->createSheet():'';
                 $row = 1;
+                if($merge_title){
+                        foreach ($merge_title as $mergeTitleIndex => $mergeTitle) {
+                            $cut = explode(':',$mergeTitleIndex);
+                            $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($cut[0]) .'1:' . $this->num2alpha($cut[1]) . '1');
+                        }
+                        $row++;
+                }
                 foreach ($contents['title'] as $titleIndex => $title) {
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), $title);
                 }
@@ -40,27 +47,30 @@ class Phpspreadsheet_lib
                     }
                     $row++;
                 }
-                foreach ($contents['title'] as $titleIndex => $titleContent) {
-                    $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex).'1')->getFont()->setSize(13);
-                    if($titleIndex==0){
-                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0).($row), '合計');
-                    }
-                    else{
-                        if(!in_array($titleIndex,$no_sum)){
-                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($titleIndex).'1:'.$this->num2alpha($titleIndex).($row-1).')');
+                if($sum){
+                    foreach ($contents['title'] as $titleIndex => $titleContent) {
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex).'1')->getFont()->setSize(13);
+                        if($titleIndex==0){
+                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0).($row), '合計');
+                        }
+                        else{
+                            if(in_array($titleIndex,$sum)){
+                                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($titleIndex).'1:'.$this->num2alpha($titleIndex).($row-1).')');
+                            }
                         }
                     }
-                }
-                if($sum){
                     $row++;
+                }
+                if($merge_sum){
                     foreach ($contents['title'] as $titleIndex => $titleContent) {
                         if($titleIndex==0){
+                            $nrow = $row-($sum?1:0);
                             $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0).($row), '');
-                            $sum?$spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha(0).($row-1).':'.$this->num2alpha(0).($row)):'';
+                            $merge_sum?$spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha(0).($nrow).':'.$this->num2alpha(0).($row)):'';
                         }else{
-                            if($sum[0]==$titleIndex){
-                                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($sum[0]).($row-1).':'.$this->num2alpha($sum[1]).($row-1).')');
-                                $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($sum[0]).($row).':'.$this->num2alpha($sum[1]).($row));
+                            if($merge_sum[0]==$titleIndex){
+                                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($merge_sum[0]).($row-1).':'.$this->num2alpha($merge_sum[1]).($row-1).')');
+                                $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($merge_sum[0]).($row).':'.$this->num2alpha($merge_sum[1]).($row));
                             }
                         }
                     }
