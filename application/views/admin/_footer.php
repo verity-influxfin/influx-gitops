@@ -61,7 +61,7 @@
                         "sLast":"尾頁"}
                 }
             });
-			
+
 			$('#dataTables-paging').dataTable({
 				"bPaginate": true, // 顯示換頁
 				"searching": true, // 顯示搜尋
@@ -113,6 +113,21 @@
 			return false;
 		}
 
+        function ajpost(url,data,async){
+            $.ajax({
+                type:'POST',
+                async:async!=true?false:true,
+                timeout:3000,
+                url:url,
+                data:data,
+                success:function(wri){
+                    val=wri;
+                },error:function(wri){
+                    val=false;
+                }
+            });
+            return val;
+        }
 	</script>
 </body>
 
