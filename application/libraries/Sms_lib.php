@@ -79,7 +79,8 @@ class Sms_lib {
                 $content 	= "親愛的用戶：
 您好！專屬您的借款app「普匯inFlux」已經上線，網頁版服務將於7/25關閉，請至app商店搜尋「普匯inFlux」下載。網址：https://reurl.cc/6z2Yb
 您的借款".$target_no."，本期應還本息合計為".$amount."元，您的應還款日為".$date."，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可下載APP「普匯inFlux」→帳戶提領查看，如已還款，請忽略本訊息。敬告用戶，本公司不會以簡訊、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號，感謝您。";
-				return $this->send('target_notice',$user_id,$phone,$content);
+				//return $this->send('target_notice',$user_id,$phone,$content);
+				return true;
 			}
 		}				
 		return false;
@@ -91,7 +92,7 @@ class Sms_lib {
 			if($user_info){
 				$phone 		= $user_info->phone;
 				$content 	= "親愛的用戶：
-				您好！您在普匯inFlux申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
+您好！您在普匯inFlux申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
 		}				
