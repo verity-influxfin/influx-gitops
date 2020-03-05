@@ -20,6 +20,7 @@ $config['admin_menu'] = [
     'Transfer' => [
         'parent_name' => '債權管理',
         'index' => '全部列表',
+        'assets_list' => '資產列表(全部列表v2)',
         'waiting_transfer' => '債轉待收購',
         'waiting_transfer_success' => '債轉待放款',
     ],
@@ -704,8 +705,8 @@ $config['product_identity'] = [
 
 //還款方式
 $config['repayment_type'] = [
-    1 => '等額本息',
-    2 => '繳息不還本',
+    1 => '本息均攤',
+    2 => '繳息不還本/按月付息',
     3 => '以日計息',
 ];
 
@@ -980,3 +981,18 @@ $config['certifications_msg'] = [
 $config['mail_event'] = '2020_spring';//current_event //19christmas //20_01
 $config['use_taishin_selling_type'] = [2];
 $config['use_borrow_account_selling_type'] = [2];
+
+$config['target_status'] = [
+    0 => '正常還款',
+    1 => '到期結案',
+    2 => '提早清償',
+    3 => '逾期中',
+];
+
+$config['target_delay_range'] = [
+    0 => '觀察資產(D7)',
+    1 => '關注資產(M1)',
+    2 => '次級資產(M2)',
+    3 => '可疑資產(M3)',
+    4 => '不良資產(>M3)',
+];
