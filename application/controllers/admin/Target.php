@@ -76,7 +76,8 @@ class Target extends MY_Admin_Controller {
 			$list = $this->target_model->get_many_by($where);
 			$tmp  = [];
 			if($list){
-				foreach($list as $key => $value){
+                $this->load->model('user/user_meta_model');
+                foreach($list as $key => $value){
 					if($value->status==2 || $value->status==23 && $value->sub_status==0 ){
 					    if(!isset($tmp[$value->user_id]['bank_account_verify'])){
                             $bank_account 		= $this->user_bankaccount_model->get_by(array(
@@ -91,7 +92,6 @@ class Target extends MY_Admin_Controller {
                     }
 
                     if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
-                        $this->load->model('user/user_meta_model');
                         $get_meta = $this->user_meta_model->get_many_by([
                             'meta_key' => ['school_name', 'school_department','job_company'],
                             'user_id' => $value->user_id,
