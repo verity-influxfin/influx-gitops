@@ -547,8 +547,6 @@ class Transfer extends MY_Admin_Controller
             : (isset($where['status'])
             ? $where = $this->target_query_status($where)
             : $show_status);
-        isset($post['sdate']) && $post['sdate'] != '' ? $where['created_at >='] = strtotime($post['sdate']) : '';
-        isset($post['edate']) && $post['edate'] != '' ? $where['created_at <='] = strtotime($post['edate']) : '';
         if ($target_no != '' || !empty($where) || $export || $josn) {
             $query = $target_no != ''
                 ? ['target_no like' => $target_no]
@@ -565,6 +563,8 @@ class Transfer extends MY_Admin_Controller
                 $wheres['target_id'] = $target_ids;
             }
             isset($post['user_id']) && $post['user_id'] != '' ? $wheres['user_id'] = $post['user_id'] : '';
+            isset($post['sdate']) && $post['sdate'] != '' ? $wheres['created_at >='] = strtotime($post['sdate']) : '';
+            isset($post['edate']) && $post['edate'] != '' ? $wheres['created_at <='] = strtotime($post['edate']) : '';
             if (isset($wheres['target_id']) || isset($wheres['user_id']) || $export) {
                 $wheres['status'] = [3 ,10];
                 $export ? $wheres = [ 'id' => $export] : '';
@@ -731,7 +731,7 @@ class Transfer extends MY_Admin_Controller
             $query['sub_status'] = [2,4];
         } elseif ($query['status'] == 1) {
             $query['status'] = 10;
-            $query['sub_status'] = [0,10];
+            $query['sub_status'] = [0,8,10];
         }
 
         return  $query;
