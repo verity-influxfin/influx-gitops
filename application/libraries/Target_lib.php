@@ -899,7 +899,7 @@ class Target_lib
                 $xirr_value[] = $value['total_payment'];
             }
 
-            $schedule['XIRR'] = $this->CI->financial_lib->XIRR($xirr_value, $xirr_dates);
+            $schedule['XIRR'] = 0;//200306 close
         }
         $schedule['list'] = $list;
         return $schedule;

@@ -58,8 +58,11 @@
             $.ajax({
                 type:'POST',
                 url:location.origin+"/admin/Transfer/assets_list",
+                timeout:120000,
                 data:data,
                 beforeSend: function () {
+                    $('.investment').prop("checked", false);
+                    check_checked();
                     $('.asearch').attr('disabled',true).text('撈取中..');
                 },
                 success:function(wri){
@@ -84,8 +87,12 @@
                         $('.asearch').attr('disabled',false).text('查詢');
                     }
                     else{
+                        $('.asearch').attr('disabled',false).text('查詢');
                         alert('撈取失敗');
                     }
+                },error:function(wri){
+                    $('.asearch').attr('disabled',false).text('查詢');
+                    alert('撈取時間過長..請與系統確認');
                 }
             });
         });
