@@ -686,7 +686,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school )
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false )
     {
         $user_list = [];
         $user_ids = false;
