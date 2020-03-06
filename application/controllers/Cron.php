@@ -318,8 +318,9 @@ class Cron extends CI_Controller {
         $EDM = $input['EDM'];
         $url = $input['url'];
         $investor = isset($input['investor']) ? $input['investor'] : 0;
+        $school = isset($input['school']) && $input['school'] != '' ? $input['school'] : false;
         $this->load->library('Notification_lib');
-        $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor);
+        $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school);
     }
 
 	public function notice_msg(){
