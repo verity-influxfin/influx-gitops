@@ -686,9 +686,10 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0)
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false )
     {
         $user_list = [];
+        $user_ids = false;
         $count = 0;
         $param = [
             'email !=' => null,
@@ -699,12 +700,26 @@ $name 您好，
             $param['status'] = 1;
             $param['investor_status'] = 1;
         }
+
+        if ($school) {
+            $this->CI->load->model('user/user_meta_model');
+            $school_list = $this->CI->user_meta_model->get_many_by([
+                "meta_key" => "school_name",
+                "meta_value" => $school,
+            ]);
+            foreach ($school_list as $key => $value) {
+                $user_ids[] = $value->user_id;
+            }
+            $user_ids ? $param['id'] = $user_ids : false;
+        }
+
         if ($user_id == 0) {
             $user_list = $this->CI->user_model->get_many_by($param);
         } else {
             $user_info = $this->CI->user_model->get($user_id);
             $user_list[] = $user_info;
         }
+
         if (count($user_list) > 0) {
             foreach ($user_list as $key => $value) {
                 $param = array(
