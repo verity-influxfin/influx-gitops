@@ -68,21 +68,27 @@
                 success:function(wri){
                     res=$.parseJSON(wri);
                     if(res.result == "SUCCESS"){
-                        var title = '',content = '';
-                        $.each(res.data.title, function(a,b){
-                            title+='<td>'+b+ (a==1?'  <a href="javascript:void(0)" onclick="checked_all();" class="btn">全選</a> ':'')+'</td>';
-                        });
-                        $('.adata thead').html('<tr>'+title+'<td></td></tr>');
-                        $.each(res.data.content, function(a,b){
-                            cut = a.split('|');
-                            var temp = '',selection = '';
-                            $.each(b, function(c,d){
-                                selection = c == 1?' <input class="investment" type="checkbox" onclick="check_checked();" value="'+cut[0]+'"':'';
-                                temp += '<td>' + d + selection +'</td>';
-                                c == b.length-1 ? temp += ('<td>' + '<a target="_blank" href="'+location.origin+'/admin/target/edit?id='+cut[1]+'" class="btn btn-default">案件詳情</a>' + '</td>') : '';
+                        if(res.data.length != 0){
+                            var title = '',content = '';
+                            $.each(res.data.title, function(a,b){
+                                title+='<td>'+b+ (a==1?'  <a href="javascript:void(0)" onclick="checked_all();" class="btn">全選</a> ':'')+'</td>';
                             });
-                            content += '<tr>'+ temp +'</tr>';
-                        });
+                            $('.adata thead').html('<tr>'+title+'<td></td></tr>');
+                            $.each(res.data.content, function(a,b){
+                                cut = a.split('|');
+                                var temp = '',selection = '';
+                                $.each(b, function(c,d){
+                                    selection = c == 1?' <input class="investment" type="checkbox" onclick="check_checked();" value="'+cut[0]+'"':'';
+                                    temp += '<td>' + d + selection +'</td>';
+                                    c == b.length-1 ? temp += ('<td>' + '<a target="_blank" href="'+location.origin+'/admin/target/edit?id='+cut[1]+'" class="btn btn-default">案件詳情</a>' + '</td>') : '';
+                                });
+                                content += '<tr>'+ temp +'</tr>';
+                            });
+                        }
+                        else{
+                            $('.adata thead').html('<tr><td></td></tr>');
+                            content += '<tr><td style="text-align: center;">無資料</td></tr>';
+                        }
                         $('.adata tbody').html('<tr>'+content+'</tr>');
                         $('.asearch').attr('disabled',false).text('查詢');
                     }

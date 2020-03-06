@@ -671,6 +671,12 @@ class Transfer extends MY_Admin_Controller
                     ]);
                 }
             }
+            else{
+                echo json_encode([
+                    'result' => 'SUCCESS',
+                    'data' => []
+                ]);
+            }
         }else{
             $page_data['target_status'] = $target_status;
             $this->load->view('admin/_header');
