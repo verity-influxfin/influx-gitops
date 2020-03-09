@@ -833,6 +833,12 @@ class Target_lib
                 }
             }
             foreach ($transactions as $key => $value) {
+                if ($value->source == SOURCE_FEES) {
+                    !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
+                    $list[$value->instalment_no]['r_fees'] += $value->amount;
+                }elseif ($value->source == SOURCE_DELAYINTEREST){
+                    $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
+                }
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:
                         !isset($list[$value->instalment_no]['principal'])?$list[$value->instalment_no]['principal'] = 0:'';
@@ -847,12 +853,6 @@ class Target_lib
                         break;
                     case SOURCE_PRINCIPAL:
                     case SOURCE_DELAYINTEREST:
-                        $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
-                    case SOURCE_FEES:
-                        if ($value->source == SOURCE_FEES) {
-                            !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
-                            $list[$value->instalment_no]['r_fees'] += $value->amount;
-                        }
                     case SOURCE_INTEREST:
                         !isset($list[$value->instalment_no]['repayment'])?$list[$value->instalment_no]['repayment'] = 0:'';
                         $list[$value->instalment_no]['repayment'] += $value->amount;
