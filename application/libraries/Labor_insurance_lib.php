@@ -353,8 +353,13 @@ class Labor_insurance_lib
             if ($currentIndex > 0) {
                 $isNumber = is_numeric($each);
                 $isTimeFormat = (strlen($each) == 7 || strlen($each) == 8) && is_numeric($each);
-                if ($isTimeFormat && strlen($each) == 8) {
-                    $each = substr($each, 0, -1);
+                if ($this->isIdStickToData($each, $numAdded)) {
+                    if (strlen($each) == 8) {
+                        $each = substr($each, 0, -1);
+                    } else {
+                        $each = substr($each, 0, 7);
+                    }
+                    $isTimeFormat = true;
                 }
                 if ($currentIndex == 2) {
                     $row['name'] = $each;
@@ -439,6 +444,22 @@ class Labor_insurance_lib
             $rows[$row['name']][] = $row;
         }
         return $rows;
+    }
+
+    private function isIdStickToData($currentElement, $totalProcessedRows)
+    {
+        if (!is_numeric($currentElement)) {
+            return false;
+        }
+
+        if (strlen($currentElement) == 8 && substr($currentElement, 7, 1) == $totalProcessedRows + 2) {
+            return true;
+        }
+
+        if (strlen($currentElement) == 9 && substr($currentElement, 7, 2) == $totalProcessedRows + 2) {
+            return true;
+        }
+        return false;
     }
 
     public function processMostRecentCompanyName($userId, $rows, &$result)
