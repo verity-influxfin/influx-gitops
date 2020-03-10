@@ -1596,7 +1596,9 @@ class Target extends MY_Admin_Controller {
         $batch = 1000;
         $iters = intval(count($userIds) / $batch);
         if ($userIds && $iters == 0) $iters = 1;
+        $this->load->model("user/user_model");
         $this->load->model("user/user_meta_model");
+        $this->load->model("user/user_certification_model");
         for ($i = 0; $i < $iters; $i++) {
             $start = $i * $batch;
             $currentUserIds = array_slice($userIds, $start, $batch);
@@ -1608,15 +1610,88 @@ class Target extends MY_Admin_Controller {
                 }
                 $users[$meta->user_id][$meta->meta_key] = $meta->meta_value;
             }
+
+            $certificationDetails = $this->user_certification_model->get_many_by([
+                'user_id' => $currentUserIds,
+                'certification_id' => [2, 4],
+                'status' => 1,
+            ]);
+
+            $certificationKeys = ["school", "major", "system", "grade", "media", "follows", "followed_by"];
+            foreach ($certificationDetails as $certificationDetail) {
+                if (!isset($users[$certificationDetail->user_id])) {
+                    $users[$certificationDetail->user_id] = [];
+                }
+                $certificationContent = json_decode($certificationDetail->content);
+
+                foreach ($certificationKeys as $key) {
+                    if (!isset($certificationContent->school)) {
+                        if (!isset($certificationContent->info->counts->$key)) continue;
+                        $users[$certificationDetail->user_id][$key] = $certificationContent->info->counts->$key;
+                    } else {
+                        if (!isset($certificationContent->$key)) continue;
+                        $users[$certificationDetail->user_id][$key] = $certificationContent->$key;
+                    }
+                }
+            }
+
+            $incomeExpenditureKeys = ['parttime', 'allowance', 'scholarship', 'other_income', 'restaurant', 'transportation', 'entertainment', 'other_expense'];
+            $ieDetails = $this->user_certification_model->get_many_by([
+                'user_id' => $currentUserIds,
+                'certification_id' => 7,
+                'status' => 1,
+            ]);
+            foreach ($ieDetails as $ie) {
+                if (!isset($users[$ie->user_id])) {
+                    $users[$ie->user_id] = [];
+                }
+                $certificationContent = json_decode($ie->content);
+
+                foreach ($incomeExpenditureKeys as $key) {
+                    $users[$ie->user_id][$key] = $certificationContent->$key;
+                }
+            }
+
+            $userKeys = ["id_number", "sex", "birthday", "id_card_place", "created_at"];
+            $userInfoArray = $this->user_model->get_many_by(["id" => $currentUserIds]);
+            foreach ($userInfoArray as $userInfo) {
+                if (!isset($users[$userInfo->id])) {
+                    $users[$userInfo->user_id] = [];
+                }
+
+                foreach ($userKeys as $key) {
+                    $users[$userInfo->id][$key] = $userInfo->$key;
+                }
+            }
         }
 
         $result = [];
         $mapping = [];
         $metaMapping = [
+            'parttime' => 'part_time',
+            'allowance' => 'allowance',
+            'scholarship' => 'scholarship',
+            'other_income' => 'other_income',
+            'restaurant' => 'food_expenditure',
+            'transportation' => 'transportation_expenses',
+            'entertainment' => 'entertainment_expenses',
+            'other_expense' => 'other_expenses',
+
+            "sex" => "gender",
+            "id_card_place" => "location",
+            "created_at" => "register_at",
+            "birthday" => "dob",
+            "school" => "uni",
+            "major" => "department",
+            "system" => "degree",
+            "grade" => "grade",
+            "media" => "posts",
+            "follows" => "num_follow",
+            "followed_by" => "num_followed_by",
             "financial_income" => "annual_inc",
             "job_seniority" => "emp_length",
             "investigation_times" => "inq_last_6mths",
-            "investigation_credit_rate" => "bc_util"
+            "investigation_credit_rate" => "bc_util",
         ];
         foreach ($targets as $target) {
             $output = [
@@ -1661,6 +1736,12 @@ class Target extends MY_Admin_Controller {
                     if ($key == "job_seniority") {
                         $output["verification_status"] = true;
                     }
+                    if ($key == "id_card_place") {
+                        $output["location"] = substr($user["id_number"], 0, 1);
+                    }
+                    if ($key == "birthday") {
+                        $output["dob"] = strtotime($user["birthday"]);
+                    }
                 }
             }
             $result[] = $output;
@@ -1669,10 +1750,11 @@ class Target extends MY_Admin_Controller {
             return;
         }
         $i = 0;
+        $numCols = 33;
         foreach ($result[0] as $key => $value) {
             echo $key;
             $i++;
-            if ($i <= 12) {
+            if ($i <= $numCols) {
                 echo ",";
             }
         }
@@ -1682,7 +1764,7 @@ class Target extends MY_Admin_Controller {
             foreach ($each as $key => $value) {
                 echo $value;
                 $i++;
-                if ($i <= 12) {
+                if ($i <= $numCols) {
                     echo ",";
                 }
             }
