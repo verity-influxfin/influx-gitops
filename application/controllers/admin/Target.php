@@ -1602,7 +1602,7 @@ class Target extends MY_Admin_Controller {
         for ($i = 0; $i < $iters; $i++) {
             $start = $i * $batch;
             $currentUserIds = array_slice($userIds, $start, $batch);
-            $metaKeys = ["financial_income", "job_seniority", "investigation_times", "investigation_credit_rate"];
+            $metaKeys = ["school_name", "school_major", "school_system", "school_grade", "financial_income", "job_seniority", "investigation_times", "investigation_credit_rate"];
             $metas = $this->user_meta_model->get_many_by(["user_id" => $currentUserIds, "meta_key" => $metaKeys]);
             foreach ($metas as $meta) {
                 if (!isset($users[$meta->user_id])) {
@@ -1613,11 +1613,11 @@ class Target extends MY_Admin_Controller {
 
             $certificationDetails = $this->user_certification_model->get_many_by([
                 'user_id' => $currentUserIds,
-                'certification_id' => [2, 4],
+                'certification_id' => 4,
                 'status' => 1,
             ]);
 
-            $certificationKeys = ["school", "major", "system", "grade", "media", "follows", "followed_by"];
+            $certificationKeys = ["media", "follows", "followed_by"];
             foreach ($certificationDetails as $certificationDetail) {
                 if (!isset($users[$certificationDetail->user_id])) {
                     $users[$certificationDetail->user_id] = [];
@@ -1625,13 +1625,8 @@ class Target extends MY_Admin_Controller {
                 $certificationContent = json_decode($certificationDetail->content);
 
                 foreach ($certificationKeys as $key) {
-                    if (!isset($certificationContent->school)) {
-                        if (!isset($certificationContent->info->counts->$key)) continue;
+                    if (isset($certificationContent->info->counts->$key))
                         $users[$certificationDetail->user_id][$key] = $certificationContent->info->counts->$key;
-                    } else {
-                        if (!isset($certificationContent->$key)) continue;
-                        $users[$certificationDetail->user_id][$key] = $certificationContent->$key;
-                    }
                 }
             }
 
@@ -1639,7 +1634,6 @@ class Target extends MY_Admin_Controller {
             $ieDetails = $this->user_certification_model->get_many_by([
                 'user_id' => $currentUserIds,
                 'certification_id' => 7,
-                'status' => 1,
             ]);
             foreach ($ieDetails as $ie) {
                 if (!isset($users[$ie->user_id])) {
@@ -1656,7 +1650,7 @@ class Target extends MY_Admin_Controller {
             $userInfoArray = $this->user_model->get_many_by(["id" => $currentUserIds]);
             foreach ($userInfoArray as $userInfo) {
                 if (!isset($users[$userInfo->id])) {
-                    $users[$userInfo->user_id] = [];
+                    $users[$userInfo->id] = [];
                 }
 
                 foreach ($userKeys as $key) {
@@ -1681,10 +1675,10 @@ class Target extends MY_Admin_Controller {
             "id_card_place" => "location",
             "created_at" => "register_at",
             "birthday" => "dob",
-            "school" => "uni",
-            "major" => "department",
-            "system" => "degree",
-            "grade" => "grade",
+            "school_name" => "uni",
+            "school_major" => "department",
+            "school_system" => "degree",
+            "school_grade" => "grade",
             "media" => "posts",
             "follows" => "num_follow",
             "followed_by" => "num_followed_by",
