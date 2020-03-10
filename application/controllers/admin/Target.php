@@ -1702,6 +1702,7 @@ class Target extends MY_Admin_Controller {
                 "home_ownership" => null,
             ];
             if ($target->reason) {
+                $output["reason"] = $target->reason;
                 $reason = json_decode($target->reason);
                 if (isset($reason->reason)) {
                     $output["purpose"] = $reason->reason;
@@ -1709,7 +1710,6 @@ class Target extends MY_Admin_Controller {
                 if (isset($reason->reason_description)) {
                     $output["purpose"] .= "-" . $reason->reason_description;
                 }
-
             }
             if (!isset($users[$target->user_id])) {
                 foreach ($metaMapping as $key => $value) {
