@@ -246,7 +246,7 @@ class Payment_lib{
 				$user_info = $this->CI->user_model->get($value->user_id);
 				if($user_info && $user_info->name){
 					$difficult = false;
-					$name_list = mb_str_split($user_info->name);
+					$name_list = mb_str_splits($user_info->name);
 					if($name_list){
 						$name = "";
 						foreach($name_list as $k => $v){
@@ -371,7 +371,7 @@ class Payment_lib{
 								$amount = intval($value->loan_amount) - intval($value->platform_fee);
 								$ids[] 	= $value->id;
 								
-								$name_list = mb_str_split($user_info->name);
+								$name_list = mb_str_splits($user_info->name);
 								if($name_list){
 									$name = "";
 									foreach($name_list as $k => $v){
@@ -500,7 +500,7 @@ class Payment_lib{
 									$amount = intval($value->amount);
 									$ids[] 	= $value->id;
 									
-									$name_list = mb_str_split($user_info->name);
+									$name_list = mb_str_splits($user_info->name);
 									if($name_list){
 										$name = "";
 										foreach($name_list as $k => $v){

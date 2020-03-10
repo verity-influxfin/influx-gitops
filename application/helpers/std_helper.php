@@ -315,7 +315,7 @@
 		echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";  
 	}
 	
-	function mb_str_split($str){
+	function mb_str_splits($str){
 		return preg_split('/(?<!^)(?!$)/u', $str );
 	}
 	//民國轉西元
