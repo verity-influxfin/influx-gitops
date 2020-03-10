@@ -269,19 +269,20 @@ class Transfer extends MY_Admin_Controller
 
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
-            $html = '<table><thead><tr><th>還款日</th><th>當期本金餘額</th><th>當期利息</th><th>本息合計</th><th>當期償還本息</th><th>投資回款費用</th><th>投資回款淨額</th></tr></thead><tbody>';
+            $html = '<table><thead><tr><th>還款日</th><th>代收-應付借款本金</th><th>代收-應付借款利息</th><th>代收-應付延滯息</th><th>代收-應付總額</th><th>代收-當期償還本息</th><th>手續費收入-期付金回款</th><th>投資回款淨額</th></tr></thead><tbody>';
 
             if (isset($list) && !empty($list)) {
                 ksort($list);
                 foreach ($list as $key => $value) {
                     if (substr($key, -2) == '10') {
-                        $total = $value['principal'] + $value['interest'];
+                        $total = $value['principal'] + $value['interest'] + $value['r_delayinterest'];
                         $r_fee = $value['r_fees'];
                         $profit = $value['repayment'] - $r_fee;
                         $html .= '<tr>';
                         $html .= '<td>' . $key . '</td>';
                         $html .= '<td>' . $value['principal'] . '</td>';
                         $html .= '<td>' . $value['interest'] . '</td>';
+                        $html .= '<td>' . $value['r_delayinterest'] . '</td>';
                         $html .= '<td>' . $total . '</td>';
                         $html .= '<td>' . $value['repayment'] . '</td>';
                         $html .= '<td>' . $r_fee . '</td>';
@@ -563,9 +564,10 @@ class Transfer extends MY_Admin_Controller
                 $wheres['target_id'] = $target_ids;
             }
             isset($post['user_id']) && $post['user_id'] != '' ? $wheres['user_id'] = $post['user_id'] : '';
+            isset($post['trans_status']) && $post['trans_status'] != '' ? $wheres['transfer_status'] = $post['trans_status'] : '';
             isset($post['sdate']) && $post['sdate'] != '' ? $wheres['created_at >='] = strtotime($post['sdate']) : '';
             isset($post['edate']) && $post['edate'] != '' ? $wheres['created_at <='] = strtotime($post['edate']) : '';
-            if (isset($wheres['target_id']) || isset($wheres['user_id']) || $export) {
+            if (isset($wheres['target_id']) || isset($wheres['user_id']) || isset($wheres['transfer_status']) || $export) {
                 $wheres['status'] = [3 ,10];
                 $export ? $wheres = [ 'id' => $export] : '';
                 $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($wheres);
@@ -615,60 +617,115 @@ class Transfer extends MY_Admin_Controller
                     $list[$key]->delay_type = $target_delay_range[$this->delay_type($targets[$value->target_id])];
                     isset(json_decode($targets[$value->target_id]->target_data)->credit_level) ? $targets[$value->target_id]->credit_level = json_decode($targets[$value->target_id]->target_data)->credit_level : null;
                 }
+
+//                foreach ($investments as $key => $value) {
+//                    $target = $this->target_model->get($value->target_id);
+//                    $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
+//                    if ($amortization_table && !empty($amortization_table['list'])) {
+//                        foreach ($amortization_table['list'] as $k => $v) {
+//                            if (!isset($list[$v['repayment_date']])) {
+//                                $list[$v['repayment_date']] = array(
+//                                    'principal' => 0,
+//                                    'interest' => 0,
+//                                    'delay_interest' => 0,
+//                                    'ar_fees' => 0,
+//                                    'r_fees' => 0,
+//                                    'r_delayinterest' => 0,
+//                                    'repayment' => 0,
+//                                );
+//                            }
+//                            $list[$v['repayment_date']]['principal'] += $v['principal'];
+//                            $list[$v['repayment_date']]['interest'] += $v['interest'];
+//                            $list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
+//                            $list[$v['repayment_date']]['ar_fees'] += $v['ar_fees'];
+//                            $list[$v['repayment_date']]['r_fees'] += $v['r_fees'];
+//                            $list[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
+//                            $list[$v['repayment_date']]['repayment'] += $v['repayment'];
+//                        }
+//                    }
+//                }
+
             }
         }
 
         if($export || $josn){
-            $product_list = $this->config->item('product_list');
-            $sub_product_list = $this->config->item('sub_product_list');
-            $repayment_type = $this->config->item('repayment_type');
-            $subloan_list = $this->config->item('subloan_list');
-            $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評'];
             if (isset($list) && !empty($list)) {
+                $type = $export ? $post['type'] : false;
                 $cell  = [];
-                foreach ($list as $key => $value) {
-                    $target = $targets[$value->target_id];
-                    $cell[$value->id.'|'.$target->id] = [
-                        (isset($product_list[$target->product_id])?$product_list[$target->product_id]['name']:'').($target->sub_product_id!=0?'/'.$sub_product_list[$target->sub_product_id]['identity'][$product_list[$target->product_id]['identity']]['name']:'').(isset($target->target_no)?(preg_match('/'.$subloan_list.'/',$target->target_no)?'(產品轉換)':''):''),
-                        $target->target_no ,
-                        $target->user_id ,
-                        $value->user_id ,
-                        $target->loan_amount ,
-                        $value->loan_amount ,
-                        $value->amortization_table["remaining_principal"] ,
-                        $target->credit_level ,
-                        (isset($value->company)?$value->company:'') . (isset($value->company)&&isset($value->school_name)?'/':'') . (isset($value->school_name)?$value->school_name:'') ,
-                        (isset($value->school_department)?$value->school_department:'') ,
-                        $target->interest_rate ,
-                        $target->instalment ,
-                        $repayment_type[$target->repayment] ,
-                        $target->loan_date ,
-                        $value->target_status ,
-                        $target->delay_days ,
-                        ($target->delay_days == 0? "N/A" : $value->delay_type) ,
-                        ($target->delay_days == 0? "N/A" : $target->credit_level) ,
+                if($type == 'amortization'){
+                    $this->load->library('Phpspreadsheet_lib');
+                    $mergeTItle = [
+                        '0:3' => '本金攤還表-計劃',
+                        '4:10' => '提早清償(正常)',
+                        '11:15' => '到期已結案(正常)',
+                        '16:20' => '正常還款',
+                        '21:25' => '逾期中',
                     ];
-                }
-                if(!$josn){
+                    $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評'];
+                    //$investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($ids);
                     $contents[] = [
-                        'sheet' => '債權明細表',
+                        'sheet' => '資產管理工作底稿(普匯)',
                         'title' => $sheetTItle,
                         'content' => $cell,
                     ];
-
+                    $file_name = date("YmdHis",time()).'_amortization';
                     $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
-                    $this->load->library('Phpspreadsheet_lib');
-                    $file_name = date("YmdHis",time()).'_assets';
-                    $this->phpspreadsheet_lib->excel($file_name,$contents,'債權明細表','分割債權細項',$descri,$this->login_info->id,true,[4,5,6],[]);
+                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,false,[1,20],$mergeTItle);
                 }else{
-                    echo json_encode([
-                        'result' => 'SUCCESS',
-                        'data' => [
-                            'sheet' => '債權明細表',
-                            'title' => $sheetTItle,
-                            'content' => $cell,
-                        ]
-                    ]);
+                    $product_list = $this->config->item('product_list');
+                    $sub_product_list = $this->config->item('sub_product_list');
+                    $repayment_type = $this->config->item('repayment_type');
+                    $subloan_list = $this->config->item('subloan_list');
+                    $transfer_status_list = $this->investment_model->transfer_status_list;
+                    $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評','債轉狀態'];
+                    $cell  = [];
+                    foreach ($list as $key => $value) {
+                        $target = $targets[$value->target_id];
+                        $cell[$value->id.'|'.$target->id] = [
+                            (isset($product_list[$target->product_id])?$product_list[$target->product_id]['name']:'').($target->sub_product_id!=0?'/'.$sub_product_list[$target->sub_product_id]['identity'][$product_list[$target->product_id]['identity']]['name']:'').(isset($target->target_no)?(preg_match('/'.$subloan_list.'/',$target->target_no)?'(產品轉換)':''):''),
+                            $target->target_no ,
+                            $target->user_id ,
+                            $value->user_id ,
+                            $target->loan_amount ,
+                            $value->loan_amount ,
+                            $value->amortization_table["remaining_principal"] ,
+                            $target->credit_level ,
+                            (isset($value->company)?$value->company:'') . (isset($value->company)&&isset($value->school_name)?'/':'') . (isset($value->school_name)?$value->school_name:'') ,
+                            (isset($value->school_department)?$value->school_department:'') ,
+                            $target->interest_rate ,
+                            $target->instalment ,
+                            $repayment_type[$target->repayment] ,
+                            $target->loan_date ,
+                            $value->target_status ,
+                            $target->delay_days ,
+                            ($target->delay_days == 0? "N/A" : $value->delay_type) ,
+                            ($target->delay_days == 0? "N/A" : $target->credit_level) ,
+                            $value->transfer_status == 0 || $value->transfer_status == 1? "N/A" : $transfer_status_list[$value->transfer_status] ,
+                        ];
+                    }
+                    if($export){
+                        $this->load->library('Phpspreadsheet_lib');
+                        $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
+                        if($type == 'assets'){
+                            $contents[] = [
+                                'sheet' => '債權明細表',
+                                'title' => $sheetTItle,
+                                'content' => $cell,
+                            ];
+
+                            $file_name = date("YmdHis",time()).'_assets';
+                            $this->phpspreadsheet_lib->excel($file_name,$contents,'債權明細表','分割債權細項',$descri,$this->login_info->id,true,[4,5,6],[]);
+                        }
+                    }else{
+                        echo json_encode([
+                            'result' => 'SUCCESS',
+                            'data' => [
+                                'sheet' => '債權明細表',
+                                'title' => $sheetTItle,
+                                'content' => $cell,
+                            ]
+                        ]);
+                    }
                 }
             }
             else{
@@ -685,31 +742,6 @@ class Transfer extends MY_Admin_Controller
             $this->load->view('admin/_footer');
         }
     }
-
-    public function amortization_export2()
-    {
-        $post = $this->input->post(NULL, TRUE);
-        $html = '';
-        $ids = isset($post['ids']) && $post['ids'] ? explode(',', $post['ids']) : '';
-        $list = array();
-        if ($ids && is_array($ids)) {
-            $mergeTItle = [
-                '0:3' => '本金攤還表-計劃',
-                '4:10' => '提早清償(正常)',
-                '11:15' => '到期已結案(正常)',
-                '16:20' => '正常還款',
-                '21:25' => '逾期中',
-            ];
-            $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評'];
-            $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($ids);
-            $this->load->library('Phpspreadsheet_lib');
-            $file_name = date("YmdHis",time()).'_assets';
-            $this->phpspreadsheet_lib->excel($file_name,'$contents','債權明細表','分割債權細項',$descri,$this->login_info->id,true,false,[1,20],$mergeTItle);
-        }
-        echo $html;
-    }
-
-
 
     public function target_status($target = false)
     {
