@@ -425,7 +425,7 @@ class Certification extends MY_Admin_Controller {
 				$user = $this->user_model->get($value->user_id);
 				if($user){
 					$list[$key]->user_name 		= $user->name;
-					$list[$key]->user_name_list = $user->name?mb_str_split($user->name):'';
+					$list[$key]->user_name_list = $user->name?mb_str_splits($user->name):'';
 				}
 			}
 		}

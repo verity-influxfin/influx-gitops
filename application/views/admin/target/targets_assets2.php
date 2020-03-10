@@ -45,6 +45,7 @@
             var user_id = $('#user_id').val();
             var target_no = $('#target_no').val();
             var status = $('#status :selected').val();
+            var trans_status = $('#trans_status :selected').val();
             var dateRange = '&sdate=' + $('#sdate').val() + '&edate=' + $('#edate').val();
             var data = '';
             if (user_id == '' && target_no == '' && status == '') {
@@ -52,7 +53,7 @@
                     data = 'data=1&all=all' + dateRange;
                 }
             }else{
-                data = 'data=1&status=' + status + '&user_id=' + user_id + '&target_no=' + target_no  + dateRange;
+                data = 'data=1&status=' + status + '&trans_status=' + trans_status + '&user_id=' + user_id + '&target_no=' + target_no  + dateRange;
             }
 
             $.ajax({
@@ -89,6 +90,7 @@
                             $('.adata thead').html('<tr><td></td></tr>');
                             content += '<tr><td style="text-align: center;">無資料</td></tr>';
                         }
+                        $('.panel-body').show();
                         $('.adata tbody').html('<tr>'+content+'</tr>');
                         $('.asearch').attr('disabled',false).text('查詢');
                     }
@@ -120,11 +122,11 @@
                                        id="target_no"/></td>
                         </tr>
                         <tr>
-                            <td>從：</td>
+                            <td>案件取得時間：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['sdate']) && $_GET['sdate'] != '' ? $_GET['sdate'] : '' ?>"
                                        id="sdate" data-toggle="datepicker" placeholder="不指定區間"/></td>
-                            <td>到：</td>
+                            <td>至：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['edate']) && $_GET['edate'] != '' ? $_GET['edate'] : '' ?>"
                                        id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間"/>
@@ -142,6 +144,14 @@
                                     } ?>
                                 </select>
                             </td>
+                            <td>債轉狀態：</td>
+                            <td>
+                                <select id="trans_status">
+                                    <option value="">請選擇</option>
+                                        <option value="0" <?= intval($_GET['status']) == 0 ? "selected" : "" ?>>無</option>
+                                        <option value="2" <?= intval($_GET['status']) == 2 ? "selected" : "" ?>>已轉出</option>
+                                </select>
+                            </td>
                         </tr>
                     </table>
                     <table>
@@ -154,6 +164,7 @@
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
                                     <input id="assets_export" type="hidden" name="ids"/>
+                                    <input type="hidden" name="type" value="assets"/>
                                 </form>
                             </td>
                             <td>
@@ -168,9 +179,9 @@
 
                 </div>
                 <!-- /.panel-heading -->
-                <div class="panel-body">
+                <div class="panel-body" style="display: none;">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover adata" width="100%" id="dataTables-tables3">
+                        <table class="table table-striped table-bordered table-hover adata" width="100%">
                             <thead>
                             <tr>
                                 <td></td>

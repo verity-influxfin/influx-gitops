@@ -32,13 +32,17 @@ class Phpspreadsheet_lib
                 $row = 1;
                 if($merge_title){
                         foreach ($merge_title as $mergeTitleIndex => $mergeTitle) {
-                            $cut = explode(':',$mergeTitleIndex);
-                            $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($cut[0]) .'1:' . $this->num2alpha($cut[1]) . '1');
+                            $cut = explode(':', $mergeTitleIndex);
+                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($cut[0]) . '1', $mergeTitle);
+                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getAlignment()->setHorizontal('center');
+                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getFont()->setSize(13);
+                            $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($cut[0]) . '1:' . $this->num2alpha($cut[1]) . '1');
                         }
                         $row++;
                 }
                 foreach ($contents['title'] as $titleIndex => $title) {
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), $title);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getAlignment()->setHorizontal('center');
                 }
                 $row++;
                 foreach ($contents['content'] as $rowInddex => $rowContent) {

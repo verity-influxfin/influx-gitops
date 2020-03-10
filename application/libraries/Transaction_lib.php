@@ -1156,7 +1156,7 @@ class Transaction_lib{
             $investment_amortization = [];
             $contents = [];
             $cell     = [];
-            $no_sum   = [1,2];
+            $no_sum   = [3,4,5];
             $sum      = [3,6];
             $sheetTItle = ['案號','應還日期','逾期天數','本金餘額','應收利息','應收延滯息','違約金'];
             $normal_title = ['日期','應收本金','應收利息','合計','當期本金餘額'];
