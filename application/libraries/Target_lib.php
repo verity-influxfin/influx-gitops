@@ -339,9 +339,7 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-
-                                    $newStatus = isset($param['status']) && $target->status != $param['status'] || isset($param['sub_status']) && $target->sub_status != $param['sub_status'];
-                                    if($newStatus){
+                                    if($target->contract_id == null){
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }
                                 } else {
