@@ -1580,9 +1580,11 @@ class Target extends MY_Admin_Controller {
     {
         $input = $this->input->get();
         $productId = isset($input['product_id']) ? $input['product_id'] : 0;
+        $order = isset($input['order']) ? $input['order'] : 'asc';
+        $skip = isset($input['skip']) ? $input['skip'] : 0;
         $limit = isset($input['limit']) ? $input['limit'] : 500;
         $this->load->model("loan/target_model");
-        $targets = $this->target_model->limit($limit)->get_many_by([
+        $targets = $this->target_model->limit($limit, $skip)->order_by('id', $order)->get_many_by([
             "product_id" => $productId,
             "status" => [4, 5, 10]
         ]);
@@ -1702,7 +1704,7 @@ class Target extends MY_Admin_Controller {
                 "home_ownership" => null,
             ];
             if ($target->reason) {
-                $output["reason"] = $target->reason;
+                $output["purpose"] = $target->reason;
                 $reason = json_decode($target->reason);
                 if (isset($reason->reason)) {
                     $output["purpose"] = $reason->reason;
