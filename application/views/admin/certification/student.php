@@ -28,11 +28,11 @@
                         url: url,
                         success: function(response) {
                             if (!response) {
-                                fillSipLogin();
+                                fillSipLogin('response_not_json');
                                 return;
                             }
                             if (response.status.code == 204) {
-                                fillSipLogin();
+                                fillSipLogin('request_not_found');
                                 return;
                             }
 
@@ -67,7 +67,9 @@
                         'true' : '登入成功',
                         'started' : '爬蟲正在執行中',
                         'requested' : '爬蟲尚未開始',
-                        'university_not_found' : '不支援此學校'
+                        'university_not_found' : '不支援此學校',
+                        'request_not_found' : '請求未被收到',
+                        'response_not_json' : 'Server回傳資料非json格式'
                     }
                 }
             });
