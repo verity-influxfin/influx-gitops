@@ -1213,6 +1213,7 @@ class Target extends REST_Controller {
 			'status'	=> [0,1,2]
 		]);
         $list			= [];
+        $user_meta = '';
 
         $product_list 	= $this->config->item('product_list');
 
@@ -1222,18 +1223,46 @@ class Target extends REST_Controller {
                 $target_user_info = $this->user_model->get($target_info->user_id);
                 $age  = get_age($target_user_info->birthday);
                 $user		= [];
-                if($product_list[$target_info->product_id]['identity']==1){
-                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_user_info->id,'meta_key'=>'school_name']);
-                    if(is_object($user_meta)){
-                        $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
-                    }
-                    else{
-                        $user_meta = new stdClass();
-                        $user_meta->meta_value='未提供學校資訊';
-                    }
-                }else{
-                    $user_meta 	= $this->user_meta_model->get_by(['user_id'=>$target_user_info->id,'meta_key'=>'diploma_name']);
+
+                $product = $product_list[$target_info->product_id];
+                $sub_product_id = $target_info->sub_product_id;
+                $product_name = $product['name'];
+
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name .= ' / ' . $product['name'];
                 }
+                if ($product_list[$target_info->product_id]['identity'] == 1) {
+                    $user_meta = $this->user_meta_model->get_by(['user_id' => $target_info->user_id, 'meta_key' => 'school_name']);
+                    if (is_object($user_meta)) {
+                        $user_meta->meta_value = preg_replace('/\(自填\)/', '', $user_meta->meta_value);
+                    } else {
+                        $user_meta = new stdClass();
+                        $user_meta->meta_value = '未提供學校資訊';
+                    }
+                } elseif ($product_list[$target_info->product_id]['identity'] == 2) {
+                    $meta_info = $this->user_meta_model->get_many_by([
+                        'user_id' => $target_info->user_id,
+                        'meta_key' => ['job_company', 'diploma_name']
+                    ]);
+                    if ($meta_info) {
+                        $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false));
+                        $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false);
+                        $user_meta->meta_value = $job_company ? $job_company : $diploma_name;
+                    } else {
+                        $user_meta = new stdClass();
+                        $user_meta->meta_value = '未提供相關資訊';
+                    }
+                }
+
                 $user = array(
                     'sex' 			=> $target_user_info->sex,
                     'age'			=> $age,
