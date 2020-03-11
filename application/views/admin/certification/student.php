@@ -18,6 +18,19 @@
                 var account = $("#account").text();
 
                 fetchSipLogin(university, account)
+
+                setInterval(regularCheckSipResult, 5000);
+
+                function regularCheckSipResult() {
+                    var sipResult = $("#sip-login-info").text();
+
+                    if (sipResult != '爬蟲尚未開始' && sipResult != '爬蟲正在執行中') {
+                        return;
+                    }
+
+                    fetchSipLogin(university, account)
+                }
+
                 function fetchSipLogin(university, account) {
                     var data = {'university' : university, 'account' : account}
                     var queryParam = jQuery.param(data);
@@ -28,11 +41,11 @@
                         url: url,
                         success: function(response) {
                             if (!response) {
-                                fillSipLogin();
+                                fillSipLogin('response_not_json');
                                 return;
                             }
                             if (response.status.code == 204) {
-                                fillSipLogin();
+                                fillSipLogin('request_not_found');
                                 return;
                             }
 
@@ -67,10 +80,58 @@
                         'true' : '登入成功',
                         'started' : '爬蟲正在執行中',
                         'requested' : '爬蟲尚未開始',
-                        'university_not_found' : '不支援此學校'
+                        'university_not_found' : '不支援此學校',
+                        'request_not_found' : '請求未被收到',
+                        'response_not_json' : 'Server回傳資料非json格式'
                     }
                 }
+
+                $("#request-sip-login").click(function(e) {
+                    var university = $("#university").text();
+                    var account = $("#account").text();
+                    var password = $("#password").text();
+
+                    var sipResult = $("#sip-login-info").text();
+                    if (sipResult == '登入成功') {
+                        alert('已成功登入');
+                    }
+
+                    requestSipLogin(university, account, password);
+                });
+
+                function requestSipLogin(university, account, password) {
+                    var data = {
+                        'university' : university,
+                        'account' : account,
+                        'password' : password
+                    }
+
+                    var url = '/admin/certification/sip_login'
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: data,
+                        success: function(response) {
+                            if (!response) {
+                                alert('登入請求未成功送出');
+                                return;
+                            }
+                            if (response.status.code == 400) {
+                                alert('參數錯誤，登入請求未成功送出');
+                                return;
+                            }
+
+                            alert('登入請求已經送出');
+                            fillSipLogin('requested');
+                        },
+                        error: function() {
+                            alert('登入請求未成功送出');
+                        }
+                    });
+                }
             });
+
 		</script>
 		<div id="page-wrapper">
 			<div class="row">
@@ -129,7 +190,7 @@
 									</div>
 									<div class="form-group">
 										<label>SIP密碼</label>
-										<p class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
+										<p id="password" class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP 網址</label><br>
@@ -142,6 +203,7 @@
 									<div class="form-group">
 										<label>SIP登入結果</label><br>
 										<p id="sip-login-info" class="form-control-static">等待中...</p>
+										<a id="request-sip-login" class="btn btn-default">再登入一次</a>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>
