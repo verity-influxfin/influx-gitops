@@ -147,9 +147,9 @@
                             <td>債轉狀態：</td>
                             <td>
                                 <select id="trans_status">
-                                    <option value="">請選擇</option>
-                                        <option value="0" <?= intval($_GET['status']) == 0 ? "selected" : "" ?>>無</option>
-                                        <option value="2" <?= intval($_GET['status']) == 2 ? "selected" : "" ?>>已轉出</option>
+                                    <option value="">不過濾</option>
+                                    <option value="0">無</option>
+                                    <option value="2">已轉出</option>
                                 </select>
                             </td>
                         </tr>
@@ -168,10 +168,11 @@
                                 </form>
                             </td>
                             <td>
-                                <form action="<?= admin_url('transfer/amortization_export') ?>" method="post"
+                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                                     <input id="amortization_export" type="hidden" name="ids"/>
+                                    <input type="hidden" name="type" value="assets"/>
                                 </form>
                             </td>
                         </tr>
