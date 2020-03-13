@@ -112,6 +112,17 @@
                 <div class="panel-heading">
                     <table>
                         <tr>
+                            <td>
+                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
+                                      style="display: inline-block">
+                                    <input type="submit" class="btn btn-warning float-right" value="資產管理工作底稿"/>
+                                    <input type="hidden" name="type" value="platform_assets"/>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
                             <td>投資人ID：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['user_id']) && $_GET['user_id'] != "" ? $_GET['user_id'] : "" ?>"
@@ -172,7 +183,7 @@
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                                     <input id="amortization_export" type="hidden" name="ids"/>
-                                    <input type="hidden" name="type" value="assets"/>
+                                    <input type="hidden" name="type" value="amortization"/>
                                 </form>
                             </td>
                         </tr>

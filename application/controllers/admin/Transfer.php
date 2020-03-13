@@ -522,6 +522,7 @@ class Transfer extends MY_Admin_Controller
         ini_set('display_errors','off');
         $page_data = array('type' => 'list');
         $list = array();
+        $amortization = array();
         $targets = array();
         $input = $this->input->get(NULL, TRUE);
         $post = $this->input->post(NULL, TRUE);
@@ -530,6 +531,7 @@ class Transfer extends MY_Admin_Controller
         $target_no = '';
         $fields = ['status', 'target_no'];
         $target_status = $this->config->item('target_status');
+        $type = isset($post['type']) && $post['type'] != '' ? $post['type'] : false;
         $export = isset($post['ids']) && $post['ids'] ? explode(',', $post['ids']) : false;
         $josn = isset($post['data']) && $post['data'] ? explode(',', $post['data']) : false;
 
@@ -543,36 +545,39 @@ class Transfer extends MY_Admin_Controller
             }
         }
 
-        !$export && isset($post['all']) && $post['all'] == 'all'
-            ? $where['status'] = [3, 10]
+        !$export && isset($post['all']) && $post['all'] == 'all' || $type == 'platform_assets'
+            ? $where['status'] = [5, 10]
             : (isset($where['status'])
-            ? $where = $this->target_query_status($where)
-            : $show_status);
+                ? $where = $this->target_query_status($where)
+                : $show_status);
+
         if ($target_no != '' || !empty($where) || $export || $josn) {
             $query = $target_no != ''
                 ? ['target_no like' => $target_no]
                 : $where;
             isset($post['delay']) && $post['delay'] != '' ? $query['delay'] = ($post['delay'] == 0 ? 0 : 1) : '';
+            isset($post['user_id']) && $post['user_id'] != '' ? $wheres['user_id'] = $post['user_id'] : '';
+            isset($post['trans_status']) && $post['trans_status'] != '' ? $wheres['transfer_status'] = $post['trans_status'] : '';
+            isset($post['sdate']) && $post['sdate'] != '' ? $wheres['created_at >='] = strtotime($post['sdate']) : '';
+            isset($post['edate']) && $post['edate'] != '' ? $wheres['created_at <='] = strtotime($post['edate']) : '';
             $target_ids = array();
             $target_list = $this->target_model->get_many_by(
                 $query
             );
-            if ($target_list) {
+            if($type == 'platform_assets'){
+                $list = $target_list;
+            }
+            elseif ($target_list) {
                 foreach ($target_list as $key => $value) {
                     $target_ids[] = $value->id;
                 }
                 $wheres['target_id'] = $target_ids;
             }
-            isset($post['user_id']) && $post['user_id'] != '' ? $wheres['user_id'] = $post['user_id'] : '';
-            isset($post['trans_status']) && $post['trans_status'] != '' ? $wheres['transfer_status'] = $post['trans_status'] : '';
-            isset($post['sdate']) && $post['sdate'] != '' ? $wheres['created_at >='] = strtotime($post['sdate']) : '';
-            isset($post['edate']) && $post['edate'] != '' ? $wheres['created_at <='] = strtotime($post['edate']) : '';
+
             if (isset($wheres['target_id']) || isset($wheres['user_id']) || isset($wheres['transfer_status']) || $export) {
                 $wheres['status'] = [3 ,10];
                 $export ? $wheres = [ 'id' => $export] : '';
                 $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($wheres);
-            }
-            if ($list) {
                 $target_ids = array();
                 $ids = array();
                 $user_list = array();
@@ -588,69 +593,80 @@ class Transfer extends MY_Admin_Controller
                         $targets[$value->id] = $value;
                     }
                 }
+            }
 
+            if ($list) {
                 $this->load->model('user/user_meta_model');
                 $target_delay_range = $this->config->item('target_delay_range');
                 foreach ($list as $key => $value) {
-                    $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value);
-                    if(!isset($targets[$value->target_id]->school)||!isset($targets[$value->target_id]->company)) {
-                        $get_meta = $this->user_meta_model->get_many_by([
-                            'meta_key' => ['school_name', 'school_department','job_company'],
-                            'user_id' => $targets[$value->target_id]->user_id,
-                        ]);
-                        if ($get_meta) {
-                            foreach ($get_meta as $skey => $svalue) {
-                                $svalue->meta_key == 'school_name' ? $targets[$value->target_id]->school['school_name'] = $svalue->meta_value : '';
-                                $svalue->meta_key == 'school_department' ? $targets[$value->target_id]->school['school_department'] = $svalue->meta_value : '';
-                                $svalue->meta_key == 'job_company' ? $targets[$value->target_id]->company = $svalue->meta_value : '';
+                    if($type == 'platform_assets'){
+                        $list[$key]->amortization_table = $this->target_lib->get_full_amortization_table($value);
+                    }else{
+                        $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value);
+                    }
+                    if (in_array($type,['amortization','platform_assets']) && $list[$key]->amortization_table && !empty($list[$key]->amortization_table['list'])) {
+                        foreach ($list[$key]->amortization_table['list'] as $k => $v) {
+                            if (!isset($amortization[$v['repayment_date']])) {
+                                $amortization[$v['repayment_date']] = array(
+                                    'principal' => 0,
+                                    'interest' => 0,
+                                    'delay_interest' => 0,
+                                    'ar_fees' => 0,
+                                    'repayment' => 0,
+                                    'liquidated_damages' => 0,
+                                    'r_principal' => 0,
+                                    'r_interest' => 0,
+                                    'r_fees' => 0,
+                                    'r_delayinterest' => 0,
+                                    'r_liquidated_damages' => 0,
+                                    'sub_loan_fees' => 0,
+                                );
                             }
+                            $amortization[$v['repayment_date']]['principal'] += $v['principal'];
+                            $amortization[$v['repayment_date']]['interest'] += $v['interest'];
+                            $amortization[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
+                            $amortization[$v['repayment_date']]['ar_fees'] += $v['ar_fees'];
+                            $amortization[$v['repayment_date']]['repayment'] += $v['repayment'];
+                            $amortization[$v['repayment_date']]['liquidated_damages'] += $v['liquidated_damages'];
+                            $amortization[$v['repayment_date']]['r_principal'] += $v['r_principal'];
+                            $amortization[$v['repayment_date']]['r_interest'] += $v['r_interest'];
+                            $amortization[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
+                            $amortization[$v['repayment_date']]['r_liquidated_damages'] += $v['r_liquidated_damages'];
+                            $amortization[$v['repayment_date']]['r_fees'] += $v['r_fees'];
+                            $amortization[$v['repayment_date']]['sub_loan_fees'] += $v['sub_loan_fees'];
                         }
                     }
-                    if(isset($targets[$value->target_id]->school['school_name'])){
-                        $list[$key]->school_name       = $targets[$value->target_id]->school['school_name'];
-                        $list[$key]->school_department = $targets[$value->target_id]->school['school_department'];
+                    else{
+                        if(!isset($targets[$value->target_id]->school)||!isset($targets[$value->target_id]->company)) {
+                            $get_meta = $this->user_meta_model->get_many_by([
+                                'meta_key' => ['school_name', 'school_department','job_company'],
+                                'user_id' => $targets[$value->target_id]->user_id,
+                            ]);
+                            if ($get_meta) {
+                                foreach ($get_meta as $skey => $svalue) {
+                                    $svalue->meta_key == 'school_name' ? $targets[$value->target_id]->school['school_name'] = $svalue->meta_value : '';
+                                    $svalue->meta_key == 'school_department' ? $targets[$value->target_id]->school['school_department'] = $svalue->meta_value : '';
+                                    $svalue->meta_key == 'job_company' ? $targets[$value->target_id]->company = $svalue->meta_value : '';
+                                }
+                            }
+                        }
+                        if(isset($targets[$value->target_id]->school['school_name'])){
+                            $list[$key]->school_name       = $targets[$value->target_id]->school['school_name'];
+                            $list[$key]->school_department = $targets[$value->target_id]->school['school_department'];
+                        }
+
+                        isset($targets[$value->target_id]->company)?$list[$key]->company=$targets[$value->target_id]->company:'';
+
+                        $list[$key]->target_status = $target_status[$this->target_status($targets[$value->target_id])];
+                        $list[$key]->delay_type = $target_delay_range[$this->delay_type($targets[$value->target_id])];
+                        isset(json_decode($targets[$value->target_id]->target_data)->credit_level) ? $targets[$value->target_id]->credit_level = json_decode($targets[$value->target_id]->target_data)->credit_level : null;
                     }
-
-                    isset($targets[$value->target_id]->company)?$list[$key]->company=$targets[$value->target_id]->company:'';
-
-                    $list[$key]->target_status = $target_status[$this->target_status($targets[$value->target_id])];
-                    $list[$key]->delay_type = $target_delay_range[$this->delay_type($targets[$value->target_id])];
-                    isset(json_decode($targets[$value->target_id]->target_data)->credit_level) ? $targets[$value->target_id]->credit_level = json_decode($targets[$value->target_id]->target_data)->credit_level : null;
                 }
-
-//                foreach ($investments as $key => $value) {
-//                    $target = $this->target_model->get($value->target_id);
-//                    $amortization_table = $this->target_lib->get_investment_amortization_table($target, $value);
-//                    if ($amortization_table && !empty($amortization_table['list'])) {
-//                        foreach ($amortization_table['list'] as $k => $v) {
-//                            if (!isset($list[$v['repayment_date']])) {
-//                                $list[$v['repayment_date']] = array(
-//                                    'principal' => 0,
-//                                    'interest' => 0,
-//                                    'delay_interest' => 0,
-//                                    'ar_fees' => 0,
-//                                    'r_fees' => 0,
-//                                    'r_delayinterest' => 0,
-//                                    'repayment' => 0,
-//                                );
-//                            }
-//                            $list[$v['repayment_date']]['principal'] += $v['principal'];
-//                            $list[$v['repayment_date']]['interest'] += $v['interest'];
-//                            $list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
-//                            $list[$v['repayment_date']]['ar_fees'] += $v['ar_fees'];
-//                            $list[$v['repayment_date']]['r_fees'] += $v['r_fees'];
-//                            $list[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
-//                            $list[$v['repayment_date']]['repayment'] += $v['repayment'];
-//                        }
-//                    }
-//                }
-
             }
         }
 
         if($export || $josn){
             if (isset($list) && !empty($list)) {
-                $type = $export ? $post['type'] : false;
                 $cell  = [];
                 if($type == 'amortization'){
                     $this->load->library('Phpspreadsheet_lib');
@@ -661,8 +677,37 @@ class Transfer extends MY_Admin_Controller
                         '16:20' => '正常還款',
                         '21:25' => '逾期中',
                     ];
-                    $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評'];
-                    //$investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($ids);
+                    $sheetTItle = ['還款日', '代收-期付本金', '代收-期付利息', '本息合計', '代收-期付本金', '代收-期付利息', '本息合計', '手續費收入-期付金回款', '手續費收入-違約金(提還）', '代收-提前還款補償金', '投資回款淨額', '代收-期付本金', '代收-期付利息', '本息合計', '手續費收入-期付金回款', '投資回款淨額', '代收-期付本金', '代收-期付利息', '本息合計', '手續費收入-期付金回款', '投資回款淨額', '代收-應付借款本金', '代收-應付借款利息', '代收-應付延滯息', '應收款項-違約金(逾期)', '應收款項-期付金回款手續費'];
+                    foreach ($amortization as $amortizationKey => $amortizationValue) {
+                        $cell[] = [
+                            $amortizationKey,
+                            $amortizationValue['principal'],
+                            $amortizationValue['interest'],
+                            $amortizationValue['principal'] + $amortizationValue['interest'],
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            $amortizationValue['r_principal'],
+                            $amortizationValue['r_interest'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'],
+                            $amortizationValue['r_fees'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] - $amortizationValue['r_fees'],
+                            $amortizationValue['principal'],
+                            $amortizationValue['interest'],
+                            $amortizationValue['delay_interest'],
+                            $amortizationValue['liquidated_damages'],
+                            $amortizationValue['ar_fees'],
+                        ];
+                    }
                     $contents[] = [
                         'sheet' => '資產管理工作底稿(普匯)',
                         'title' => $sheetTItle,
@@ -670,7 +715,7 @@ class Transfer extends MY_Admin_Controller
                     ];
                     $file_name = date("YmdHis",time()).'_amortization';
                     $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
-                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,false,[1,20],$mergeTItle);
+                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3],false,$mergeTItle);
                 }else{
                     $product_list = $this->config->item('product_list');
                     $sub_product_list = $this->config->item('sub_product_list');
