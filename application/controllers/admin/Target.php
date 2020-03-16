@@ -272,6 +272,12 @@ class Target extends MY_Admin_Controller {
                         $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                     }
 
+                    $target_data = $info->target_data;
+                    $json_target_data = json_decode($target_data);
+                    if (isset($json_target_data->autoVerifyLog)) {
+                        $page_data['autoVerifyLog'] = $json_target_data->autoVerifyLog;
+                    }
+
                     $bank_account_verify = $bank_account ? 1 : 0;
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);

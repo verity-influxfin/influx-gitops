@@ -422,17 +422,16 @@ class Target_lib
         return false;
     }
 
-    public function target_verify_success($target = [], $admin_id = 0)
+    public function target_verify_success($target = [], $admin_id = 0, $param = [])
     {
         if (!empty($target) && $target->status == 2) {
-            $param = [
-                'status' => 3,
-                'launch_times' => 1
-            ];
+            $param['status'] = 3;
+            $param['launch_times'] = 1;
             $target->sub_status != 8 ? $param['expire_time'] = strtotime('+2 days', time()) : '';
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, 0, $admin_id);
             $this->CI->notification_lib->target_verify_success($target);
+            return true;
         }
         return false;
     }
@@ -454,6 +453,17 @@ class Target_lib
                 $this->CI->load->model('transaction/order_model');
                 $this->CI->order_model->update($target->order_id, ['status' => 0]);
             }
+        }
+        return false;
+    }
+
+    public function target_sign_failed($target = [], $admin_id = 0, $product_name, $param = [])
+    {
+        if (!empty($target)) {
+            $param['status'] = 1;
+            $this->CI->target_model->update($target->id, $param);
+            $this->insert_change_log($target->id, $param, 0, $admin_id);
+            $this->CI->notification_lib->target_sign_failed($target->user_id, 0, $product_name);
         }
         return false;
     }
