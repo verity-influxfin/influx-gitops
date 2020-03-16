@@ -1322,6 +1322,7 @@ class Certification_lib{
                     $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
                     $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
                     if ($remark['face'][0] < 90 || $remark['face'][1] < 90) {
+                        $this->CI->load->library('Faceplusplus_lib');
                         $idcard_cer_token = $this->CI->faceplusplus_lib->get_face_token($idcard_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_token = $this->CI->faceplusplus_lib->get_face_token($idcard_cer->content['person_image'], $user_id, $cer_id);
                         $signing_face_count = $signing_face_token && is_array($signing_face_token) ? count($signing_face_token) : 0;
