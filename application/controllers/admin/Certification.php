@@ -876,27 +876,26 @@ class Certification extends MY_Admin_Controller {
         $this->json_output->setStatusCode(200)->send();
     }
 
-    public function get_papagoface_report(){
+	public function get_papagoface_report()
+	{
 		$get = $this->input->get(NULL, TRUE);
 		$limit = isset($get['limit']) ? $get['limit'] : 10;
 		$this->load->library('Certification_lib');
-		$res = $this->certification_lib->papago_facedetact_repport($limit);
-			//        $this->CI->load->library('Papago_lib');
-//        $content = $this->CI->papago_lib->OCR($img_url, $user_id, $cer_id);
-//        $cell  = [];
-//        $this->load->library('Phpspreadsheet_lib');
-//        $sheetTItle = [''];
-//        foreach ($amortization as $amortizationKey => $amortizationValue) {
-//            $cell[] = [];
-//        }
-//        $contents[] = [
-//            'sheet' => '資產管理工作底稿(普匯)',
-//            'title' => $sheetTItle,
-//            'content' => $cell,
-//        ];
-//        $file_name = date("YmdHis",time()).'_amortization';
-//        $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
-//        $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3],false,$mergeTItle);
+		$cell = $this->certification_lib->papago_facedetact_repport($limit);
+		$this->load->library('Phpspreadsheet_lib');
+		$mergeTItle = [
+			'1:2' => 'Azure',
+			'3:4' => 'Face8',
+		];
+		$sheetTItle = ['user_id', 'face1準確度', 'face2準確度', 'face1準確度', 'face2準確度'];
+		$contents[] = [
+			'sheet' => 'PAPAGO FACE8測試',
+			'title' => $sheetTItle,
+			'content' => $cell,
+		];
+		$file_name = date("YmdHis", time()) . '_PAPAGO';
+		$descri = '普匯inFlux 後台管理者 ' . $this->login_info->id . ' [ 債權管理查詢 ]';
+		$this->phpspreadsheet_lib->excel($file_name, $contents, '本金餘額攤還表', '各期金額', $descri, $this->login_info->id, true, false, false, $mergeTItle);
 	}
 }
 ?>

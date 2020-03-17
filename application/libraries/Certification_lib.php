@@ -1302,9 +1302,12 @@ class Certification_lib{
         $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
             'certification_id' => 1,
         ]);
+        $list = [];
         foreach ($certification_list as $key => $value) {
-            //compare
+            $person_compare = [];
+            $thresholds = [];
             $content = json_decode($value->content, true);
+            $remark = json_decode($value->remark, true);
             $user_id = $value->user_id;
             $cer_id = $value->id;
             $this->CI->load->library('Papago_lib');
@@ -1314,9 +1317,18 @@ class Certification_lib{
             $front_count = count($front_face);
             if ($person_count >= 2 && $person_count <= 3 && $front_count == 1) {
                 foreach ($person_face as $token) {
-                    $person_compare[] = $this->CI->papago_lib->compare($token['face_token'], $front_face[0]['face_token'], $user_id, $cer_id);
+                    $compare_res = $this->CI->papago_lib->compare($token['face_token'], $front_face[0]['face_token'], $user_id, $cer_id);
+                    $person_compare[] = $compare_res->confidence*100;
                 }
             }
+            $list[] = [
+                $user_id,
+                $remark->face[0],
+                $remark->face[1],
+                $person_compare[0],
+                $person_compare[1],
+            ];
         }
+        return $list;
     }
 }
