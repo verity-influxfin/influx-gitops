@@ -18,11 +18,11 @@ class Papago_lib
     {
         $api_url = 'https://api.face8.ai/api/detect';
         $data = [
-            'image_base64' => file_get_contents($url),
+            'image_base64' => base64_encode(file_get_contents($url)),
         ];
         $result = $this->papago_curl($api_url, $data);
         $this->log_event('detect', $user_id, $cer_id, $result, $data);
-        return $result->faces;
+        return $result;
     }
 
     //Papago API Face - compare
@@ -34,7 +34,7 @@ class Papago_lib
             'image_base64_2' => base64_encode(file_get_contents($url[1])),
         ];
         $result = $this->papago_curl($api_url, $data);
-        $this->log_event('detect', $user_id, $cer_id, $result, $data);
+        $this->log_event('compare', $user_id, $cer_id, $result, $data);
         return $result;
     }
 

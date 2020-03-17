@@ -1296,4 +1296,27 @@ class Certification_lib{
         ));
         return $company;
     }
+
+    public function papago_facedetact_repport($limit = 10)
+    {
+        $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
+            'certification_id' => 1,
+        ]);
+        foreach ($certification_list as $key => $value) {
+            //compare
+            $content = json_decode($value->content, true);
+            $user_id = $value->user_id;
+            $cer_id = $value->id;
+            $this->CI->load->library('Papago_lib');
+            $person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
+            $front_face = $this->CI->papago_lib->detect($content['front_image'], $user_id, $cer_id);
+            $person_count = count($person_face);
+            $front_count = count($front_face);
+            if ($person_count >= 2 && $person_count <= 3 && $front_count == 1) {
+                foreach ($person_face as $token) {
+                    $person_compare[] = $this->CI->papago_lib->compare($token['face_token'], $front_face[0]['face_token'], $user_id, $cer_id);
+                }
+            }
+        }
+    }
 }
