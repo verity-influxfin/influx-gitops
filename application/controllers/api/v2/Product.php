@@ -2246,17 +2246,17 @@ class Product extends REST_Controller {
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
         if (in_array($product['id'], $allow_fast_verify_product)) {
             $targetData = json_decode($target->target_data);
-            $faceDetact = isset($targetData->autoVerifyLog)
+            $faceDetect = isset($targetData->autoVerifyLog)
                 ? count($targetData->autoVerifyLog) >= 2
                     ? false : true
                 : true;
-            if ($faceDetact) {
+            if ($faceDetect) {
                 $this->load->library('certification_lib');
-                $faceDetact_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
-                if ($faceDetact_res['error'] == '') {
+                $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
+                if ($faceDetect_res['error'] == '') {
                     $target->status = TARGET_WAITING_VERIFY;
                     $targetData->autoVerifyLog[] = [
-                        'faceDetact' => $faceDetact_res,
+                        'faceDetect' => $faceDetect_res,
                         'res' => TARGET_WAITING_BIDDING,
                         'verify_at' => time()
                     ];
@@ -2264,7 +2264,7 @@ class Product extends REST_Controller {
                     $this->target_lib->target_verify_success($target, 0, $param);
                 } else {
                     $targetData->autoVerifyLog[] = [
-                        'faceDetact' => $faceDetact_res,
+                        'faceDetect' => $faceDetect_res,
                         'res' => TARGET_WAITING_SIGNING,
                         'verify_at' => time()
                     ];

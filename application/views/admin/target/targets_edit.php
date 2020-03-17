@@ -152,18 +152,18 @@
                                                 ?>
                                                 </td><td colspan="2">
                                                 <?
-                                                if (isset($fvalue->faceDetact->error) && $fvalue->faceDetact->error) {
-                                                    echo '<p style="color:red;" class="form-control-static">辨識錯誤：<br />' . $fvalue->faceDetact->error . '</p>';
+                                                if (isset($fvalue->faceDetect->error) && $fvalue->faceDetect->error) {
+                                                    echo '<p style="color:red;" class="form-control-static">辨識錯誤：<br />' . $fvalue->faceDetect->error . '</p>';
                                                 }
-                                                if ($fvalue->faceDetact->face && is_array($fvalue->faceDetact->face)) {
+                                                if ($fvalue->faceDetect->face && is_array($fvalue->faceDetect->face)) {
                                                     echo '<p class="form-control-static">辨識結果(Sys1)：';
-                                                    foreach ($fvalue->faceDetact->face as $key => $value) {
+                                                    foreach ($fvalue->faceDetect->face as $key => $value) {
                                                         echo $value . "% ";
                                                     }
                                                     echo '</p>';
-                                                    if (isset($fvalue->faceDetact->faceplus) && count($fvalue->faceDetact->faceplus) > 0) {
+                                                    if (isset($fvalue->faceDetect->faceplus) && count($fvalue->faceDetect->faceplus) > 0) {
                                                         echo '<p class="form-control-static">辨識結果(Sys2)：';
-                                                        foreach ($fvalue->faceDetact->faceplus as $key => $value) {
+                                                        foreach ($fvalue->faceDetect->faceplus as $key => $value) {
                                                             echo $value . "% ";
                                                         }
                                                         echo '</p>';
