@@ -847,6 +847,10 @@ class Target_lib
                         'remaining_principal' => 0,//期初本金
                         'repayment_date' => $limit_date,//還款日
                         'ar_fees' => 0,//應收回款手續費
+                        'r_principal' => 0,
+                        'r_interest' => 0,
+                        'r_fees' => 0,
+                        'r_delayinterest' => 0,
                     ];
                 }
             }
@@ -941,18 +945,31 @@ class Target_lib
             foreach ($transactions as $key => $value) {
                 $date = $value->limit_date;
                 if($value->limit_date == null){
-                    $ym = date('Y-m', strtotime($date));
-                    $d = date('Y-m-d', strtotime($date));
-                    $date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
-                    $last_day = date('Y-m-d', strtotime($d . ' + ' . $max_instalment . ' day'));
-                    if ($d >= $date) {
-                        $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
+                    $ym 		= date('Y-m',strtotime($date));
+                    $date 		= date('Y-m-',strtotime($ym.' + 1 month')).REPAYMENT_DAY;
+                    if($i==1 && $odate > date('Y-m-',strtotime($odate)).REPAYMENT_DAY){
+                        $date 		= date('Y-m-',strtotime($date.' + 1 month')).REPAYMENT_DAY;
                     }
 
                     if(!isset($list[$fdate])){
                         $list[$fdate] = [];
                     }
                 }
+                $list[$value->instalment_no] = [
+                    'ar_principal' => 0,//11
+                    'ar_interest' => 0,//13
+                    'ar_fees' => 0,//9
+                    'ar_delay_interest' => 0,//93
+                    'ar_damage' => 0,//91
+                    'r_principal' => 0,//12
+                    'r_interest' => 0,//14
+                    'r_fees' => 0,//4
+                    'r_delayinterest' => 0,//94
+                    'r_damage' => 0,//92
+                    'subloan_fee' => 0,//5
+                    'prepayment_allowance' => 0,//7
+                    'prepayment_damage' => 0,//8
+                ];
                 switch ($value->source) {
                     case SOURCE_AR_INTEREST:
                         echo SOURCE_AR_INTEREST;

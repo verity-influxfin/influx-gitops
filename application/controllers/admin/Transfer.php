@@ -250,6 +250,8 @@ class Transfer extends MY_Admin_Controller
                                     'delay_interest' => 0,
                                     'ar_fees' => 0,
                                     'r_fees' => 0,
+                                    'r_principal' => 0,
+                                    'r_interest' => 0,
                                     'r_delayinterest' => 0,
                                     'repayment' => 0,
                                 );
@@ -259,6 +261,8 @@ class Transfer extends MY_Admin_Controller
                             $list[$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
                             $list[$v['repayment_date']]['ar_fees'] += $v['ar_fees'];
                             $list[$v['repayment_date']]['r_fees'] += $v['r_fees'];
+                            $list[$v['repayment_date']]['r_principal'] += $v['r_principal'];
+                            $list[$v['repayment_date']]['r_interest'] += $v['r_interest'];
                             $list[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
                             $list[$v['repayment_date']]['repayment'] += $v['repayment'];
                         }
@@ -548,7 +552,7 @@ class Transfer extends MY_Admin_Controller
         !$export && isset($post['all']) && $post['all'] == 'all' || $type == 'platform_assets'
             ? $where['status'] = [5, 10]
             : (isset($where['status'])
-                ? $where = $this->target_query_status($where)
+                ? $where = $this->target_delay_type($where)
                 : $show_status);
 
         if ($target_no != '' || !empty($where) || $export || $josn) {
@@ -599,7 +603,7 @@ class Transfer extends MY_Admin_Controller
                 $this->load->model('user/user_meta_model');
                 $target_delay_range = $this->config->item('target_delay_range');
                 foreach ($list as $key => $value) {
-                    if($type == 'platform_assets'){
+                    if(in_array($type,['platform_assets', 'amortization'])){
                         $list[$key]->amortization_table = $this->target_lib->get_full_amortization_table($value);
                     }else{
                         $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value);
@@ -668,7 +672,7 @@ class Transfer extends MY_Admin_Controller
         if($export || $josn){
             if (isset($list) && !empty($list)) {
                 $cell  = [];
-                if($type == 'amortization'){
+                if($type == 'platform_assets'){
                     $this->load->library('Phpspreadsheet_lib');
                     $mergeTItle = [
                         '0:3' => '本金攤還表-計劃',
@@ -716,7 +720,48 @@ class Transfer extends MY_Admin_Controller
                     $file_name = date("YmdHis",time()).'_amortization';
                     $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
                     $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3],false,$mergeTItle);
-                }else{
+                }elseif($type == 'amortization'){
+                    $this->load->library('Phpspreadsheet_lib');
+                    $sheetTItle = ['還款日', '本金餘額', '當期利息', '本息合計', '違約金', '延滯息', '當期償還本息', '回款手續費', '補貼', '投資回款淨額'];
+                    foreach ($amortization as $amortizationKey => $amortizationValue) {
+                        $cell[] = [
+                            $amortizationKey,
+                            $amortizationValue['principal'],
+                            $amortizationValue['interest'],
+                            $amortizationValue['principal'] + $amortizationValue['interest'],
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            $amortizationValue['r_principal'],
+                            $amortizationValue['r_interest'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'],
+                            $amortizationValue['r_fees'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] - $amortizationValue['r_fees'],
+                            $amortizationValue['principal'],
+                            $amortizationValue['interest'],
+                            $amortizationValue['delay_interest'],
+                            $amortizationValue['liquidated_damages'],
+                            $amortizationValue['ar_fees'],
+                        ];
+                    }
+                    $contents[] = [
+                        'sheet' => '資產管理工作底稿(普匯)',
+                        'title' => $sheetTItle,
+                        'content' => $cell,
+                    ];
+                    $file_name = date("YmdHis",time()).'_amortization';
+                    $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
+                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3],false,$mergeTItle);
+                }elseif($type == 'assets'){
                     $product_list = $this->config->item('product_list');
                     $sub_product_list = $this->config->item('sub_product_list');
                     $repayment_type = $this->config->item('repayment_type');
@@ -780,7 +825,10 @@ class Transfer extends MY_Admin_Controller
                 ]);
             }
         }else{
-            $page_data['target_status'] = $target_status;
+            $page_data['type_status'] = [
+                0 => '正常案',
+                1 => '逾期案',
+            ];
             $this->load->view('admin/_header');
             $this->load->view('admin/_title', $this->menu);
             $this->load->view('admin/target/targets_assets2', $page_data);
@@ -801,7 +849,7 @@ class Transfer extends MY_Admin_Controller
         return $current_status;
     }
 
-    public function target_query_status($query)
+    private function target_query_status($query)
     {
         if ($query['status'] == 0) {
             $query['status'] = 5;
@@ -817,6 +865,17 @@ class Transfer extends MY_Admin_Controller
             $query['sub_status'] = [0,8,10];
         }
 
+        return  $query;
+    }
+
+    private function target_delay_type($query)
+    {
+        if ($query['status'] == 0) {
+            $query['delay'] = 0;
+        } elseif ($query['status'] == 1) {
+            $query['delay'] = 1;
+        }
+        $query['status'] = [5, 10];
         return  $query;
     }
 

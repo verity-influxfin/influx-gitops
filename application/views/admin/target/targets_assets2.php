@@ -148,7 +148,7 @@
                             <td>
                                 <select id="status">
                                     <option value="">請選擇</option>
-                                    <? foreach ($target_status as $key => $value) {
+                                    <? foreach ($type_status as $key => $value) {
                                         ?>
                                         <option value="<?= $key ?>" <?= isset($_GET['status']) && $_GET['status'] != "" && intval($_GET['status']) == intval($key) ? "selected" : "" ?>><?= $value ?></option>
                                         <?
@@ -179,11 +179,10 @@
                                 </form>
                             </td>
                             <td>
-                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
+                                <form action="<?= admin_url('transfer/amortization_export') ?>" method="post"
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                                     <input id="amortization_export" type="hidden" name="ids"/>
-                                    <input type="hidden" name="type" value="amortization"/>
                                 </form>
                             </td>
                         </tr>
