@@ -144,6 +144,35 @@
                                                 <?= !empty($data->person_image) ? "<a href='" . $data->person_image . "' data-fancybox='images'><img src='" . $data->person_image . "' style='width:30%;'></a>" : ""; ?>
                                             </td>
                                         </tr>
+                                        <? if(isset($autoVerifyLog)){ ?>
+                                        <tr><td rowspan="3"><p class="form-control-static">簽約照臉部辨識</p></td></tr>
+                                            <?
+                                            foreach ($autoVerifyLog as $fkey => $fvalue) {
+                                                    echo '<tr><td><p class="form-control-static">系統 ' . date("【Y/m/d H:i:s】",$fvalue->verify_at) . ($fvalue->res == TARGET_WAITING_BIDDING ? '案件上架' : '案件退至〈待簽約〉'), '</p>';
+                                                ?>
+                                                </td><td colspan="2">
+                                                <?
+                                                if (isset($fvalue->faceDetect->error) && $fvalue->faceDetect->error) {
+                                                    echo '<p style="color:red;" class="form-control-static">辨識錯誤：<br />' . $fvalue->faceDetect->error . '</p>';
+                                                }
+                                                if ($fvalue->faceDetect->face && is_array($fvalue->faceDetect->face)) {
+                                                    echo '<p class="form-control-static">辨識結果(Sys1)：';
+                                                    foreach ($fvalue->faceDetect->face as $key => $value) {
+                                                        echo $value . "% ";
+                                                    }
+                                                    echo '</p>';
+                                                    if (isset($fvalue->faceDetect->faceplus) && count($fvalue->faceDetect->faceplus) > 0) {
+                                                        echo '<p class="form-control-static">辨識結果(Sys2)：';
+                                                        foreach ($fvalue->faceDetect->faceplus as $key => $value) {
+                                                            echo $value . "% ";
+                                                        }
+                                                        echo '</p>';
+                                                    }
+                                                }
+                                                echo '</td></tr>';
+                                            }
+                                                ?>
+                                        <? } ?>
                                     <? } ?>
                                     </tbody>
                                 </table>

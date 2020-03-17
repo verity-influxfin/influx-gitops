@@ -2241,7 +2241,39 @@ class Product extends REST_Controller {
             }
         }
 
-        $this->target_lib->signing_target($target->id,$param,$user_id);
+        $this->target_lib->signing_target($target->id, $param, $user_id);
+
+        $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
+        if (in_array($product['id'], $allow_fast_verify_product)) {
+            $targetData = json_decode($target->target_data);
+            $faceDetect = isset($targetData->autoVerifyLog)
+                ? count($targetData->autoVerifyLog) >= 2
+                    ? false : true
+                : true;
+            if ($faceDetect) {
+                $this->load->library('certification_lib');
+                $faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $param['person_image']);
+                if ($faceDetect_res['error'] == '') {
+                    $target->status = TARGET_WAITING_VERIFY;
+                    $targetData->autoVerifyLog[] = [
+                        'faceDetect' => $faceDetect_res,
+                        'res' => TARGET_WAITING_BIDDING,
+                        'verify_at' => time()
+                    ];
+                    $param['target_data'] = json_encode($targetData);
+                    $this->target_lib->target_verify_success($target, 0, $param);
+                } else {
+                    $targetData->autoVerifyLog[] = [
+                        'faceDetect' => $faceDetect_res,
+                        'res' => TARGET_WAITING_SIGNING,
+                        'verify_at' => time()
+                    ];
+                    $param['target_data'] = json_encode($targetData);
+                    $this->target_lib->target_sign_failed($target, 0, $product['name'], $param);
+                }
+            }
+        }
+
         $this->response(array('result' => 'SUCCESS'));
     }
 

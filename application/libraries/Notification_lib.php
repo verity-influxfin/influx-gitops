@@ -162,6 +162,25 @@ class Notification_lib{
 		return $rs;
 	}
 
+    public function target_sign_failed($user_id, $investor = 0, $product_name = "", $type=1)
+    {
+        $title = "【簽約失敗】";
+        $content = "親愛的會員您好：
+系統偵測到您申請的 [" . $product_name . "] 簽約照片異常，
+請重新簽約。";
+
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => $investor,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        return $rs;
+    }
+
     public function target_cancel_bidding($user_id,$investor=0,$remark=""){
         $title = "【下架通知】";
         $content = "親愛的用戶，

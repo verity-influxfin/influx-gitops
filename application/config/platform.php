@@ -996,3 +996,5 @@ $config['target_delay_range'] = [
     3 => '可疑資產(M3)',
     4 => '不良資產(>M3)',
 ];
+
+$config['allow_fast_verify_product'] = [1, 3];
