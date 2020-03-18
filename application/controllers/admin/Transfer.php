@@ -607,13 +607,13 @@ class Transfer extends MY_Admin_Controller
                             }
                             if (!isset($amortization[$v['repayment_date']])) {
                                 $date = $v['repayment_date'];
-                                $odate = $date;
-                                $ym = date('Y-m', strtotime($odate));
-                                $date = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
-                                if ($odate > date('Y-m-', strtotime($odate)) . REPAYMENT_DAY) {
-                                    $date = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
-                                }
-                                $amortization[$date] = array(
+                                $odate = $ndate = $date;
+//                                $ym = date('Y-m', strtotime($odate));
+//                                $date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
+//                                if ($odate > $date) {
+//                                    $ndate = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
+//                                }
+                                $amortization[$ndate] = array(
                                     'principal' => 0,
                                     'interest' => 0,
                                     'delay_interest' => 0,
@@ -630,20 +630,20 @@ class Transfer extends MY_Admin_Controller
                                     'r_subloan_fees' => 0,
                                 );
                             }
-                            $amortization[$date]['principal'] += $v['principal'];
-                            $amortization[$date]['interest'] += $v['interest'];
-                            $amortization[$date]['delay_interest'] += $v['delay_interest'];
-                            $amortization[$date]['ar_fees'] += $v['ar_fees'];
-                            $amortization[$date]['repayment'] += $v['repayment'];
-                            $amortization[$date]['liquidated_damages'] += $v['liquidated_damages'];
-                            $amortization[$date]['r_principal'] += $v['r_principal'];
-                            $amortization[$date]['r_interest'] += $v['r_interest'];
-                            $amortization[$date]['r_fees'] += $v['r_fees'];
-                            $amortization[$date]['r_delayinterest'] += $v['r_delayinterest'];
-                            $amortization[$date]['r_prepayment_allowance'] += $v['r_prepayment_allowance'];
-                            $amortization[$date]['r_damages'] += $v['r_damages'];
-                            $amortization[$date]['r_preapymentDamages'] += $v['r_preapymentDamages'];
-                            $amortization[$date]['r_subloan_fees'] += $v['r_subloan_fees'];
+                            $amortization[$ndate]['principal'] += $v['principal'];
+                            $amortization[$ndate]['interest'] += $v['interest'];
+                            $amortization[$ndate]['delay_interest'] += $v['delay_interest'];
+                            $amortization[$ndate]['ar_fees'] += $v['ar_fees'];
+                            $amortization[$ndate]['repayment'] += $v['repayment'];
+                            $amortization[$ndate]['liquidated_damages'] += $v['liquidated_damages'];
+                            $amortization[$ndate]['r_principal'] += $v['r_principal'];
+                            $amortization[$ndate]['r_interest'] += $v['r_interest'];
+                            $amortization[$ndate]['r_fees'] += $v['r_fees'];
+                            $amortization[$ndate]['r_delayinterest'] += $v['r_delayinterest'];
+                            $amortization[$ndate]['r_prepayment_allowance'] += $v['r_prepayment_allowance'];
+                            $amortization[$ndate]['r_damages'] += $v['r_damages'];
+                            $amortization[$ndate]['r_preapymentDamages'] += $v['r_preapymentDamages'];
+                            $amortization[$ndate]['r_subloan_fees'] += $v['r_subloan_fees'];
                         }
                         ksort($amortization);
                     }
