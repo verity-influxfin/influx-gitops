@@ -809,7 +809,7 @@ class Target_lib
     }
 
     //出借端回款計畫
-    public function get_investment_amortization_table($target = [], $investment = [])
+    public function get_investment_amortization_table($target = [], $investment = [], $full = false)
     {
 
         $xirr_dates = [$target->loan_date];
@@ -825,8 +825,9 @@ class Target_lib
             'remaining_principal' => 0,
         ];
         $repayment_principal = 0;
+        $investment_id = $full ? [$investment->id, 0] : $investment->id;
         $transactions = $this->CI->transaction_model->get_many_by([
-            'investment_id' => $investment->id,
+            'investment_id' => $investment_id,
             'target_id' => $target->id,
             'status' => [1, 2]
         ]);
@@ -851,6 +852,10 @@ class Target_lib
                         'r_interest' => 0,
                         'r_fees' => 0,
                         'r_delayinterest' => 0,
+                        'r_prepayment_allowance' => 0,
+                        'r_damages' => 0,
+                        'r_preapymentDamages' => 0,
+                        'r_subloan_fees' => 0,
                     ];
                 }
             }
@@ -867,6 +872,18 @@ class Target_lib
                 }elseif ($value->source == SOURCE_DELAYINTEREST){
                     !isset($list[$value->instalment_no]['r_delayinterest'])?$list[$value->instalment_no]['r_delayinterest'] = 0:'';
                     $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
+                }elseif ($value->source == SOURCE_PREPAYMENT_ALLOWANCE){
+                    !isset($list[$value->instalment_no]['r_prepayment_allowance'])?$list[$value->instalment_no]['r_prepayment_allowance'] = 0:'';
+                    $list[$value->instalment_no]['r_prepayment_allowance'] += $value->amount;
+                }elseif ($value->source == SOURCE_DAMAGE){
+                    !isset($list[$value->instalment_no]['r_damages'])?$list[$value->instalment_no]['r_damages'] = 0:'';
+                    $list[$value->instalment_no]['r_damages'] += $value->amount;
+                }elseif ($value->source == SOURCE_PREPAYMENT_DAMAGE){
+                    !isset($list[$value->instalment_no]['r_preapymentDamages'])?$list[$value->instalment_no]['r_preapymentDamages'] = 0:'';
+                    $list[$value->instalment_no]['r_preapymentDamages'] += $value->amount;
+                }elseif ($value->source == SOURCE_SUBLOAN_FEE) {
+                    !isset($list[$value->instalment_no]['r_subloan_fees'])?$list[$value->instalment_no]['r_subloan_fees'] = 0:'';
+                    $list[$value->instalment_no]['r_subloan_fees'] += $value->amount;
                 }
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:

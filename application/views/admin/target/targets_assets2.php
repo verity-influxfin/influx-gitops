@@ -112,17 +112,6 @@
                 <div class="panel-heading">
                     <table>
                         <tr>
-                            <td>
-                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
-                                      style="display: inline-block">
-                                    <input type="submit" class="btn btn-warning float-right" value="資產管理工作底稿"/>
-                                    <input type="hidden" name="type" value="platform_assets"/>
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
                             <td>投資人ID：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['user_id']) && $_GET['user_id'] != "" ? $_GET['user_id'] : "" ?>"
@@ -159,7 +148,7 @@
                             <td>
                                 <select id="trans_status">
                                     <option value="">不過濾</option>
-                                    <option value="0">無</option>
+                                    <option value="0" selected>無</option>
                                     <option value="2">已轉出</option>
                                 </select>
                             </td>
@@ -173,16 +162,25 @@
                             <td>
                                 <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
                                       style="display: inline-block">
+                                    <input type="submit" class="btn btn-warning float-right" value="資產管理工作底稿" disabled/>
+                                    <input id="assets_export" type="hidden" name="ids"/>
+                                    <input type="hidden" name="type" value="platform_assets"/>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
+                                      style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
                                     <input id="assets_export" type="hidden" name="ids"/>
                                     <input type="hidden" name="type" value="assets"/>
                                 </form>
                             </td>
                             <td>
-                                <form action="<?= admin_url('transfer/amortization_export') ?>" method="post"
+                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                                     <input id="amortization_export" type="hidden" name="ids"/>
+                                    <input type="hidden" name="type" value="amortization"/>
                                 </form>
                             </td>
                         </tr>

@@ -530,8 +530,6 @@ class Transfer extends MY_Admin_Controller
         $targets = array();
         $input = $this->input->get(NULL, TRUE);
         $post = $this->input->post(NULL, TRUE);
-        $show_status = array(3, 10);
-        $where = array();
         $target_no = '';
         $fields = ['status', 'target_no'];
         $target_status = $this->config->item('target_status');
@@ -549,13 +547,11 @@ class Transfer extends MY_Admin_Controller
             }
         }
 
-        !$export && isset($post['all']) && $post['all'] == 'all' || $type == 'platform_assets'
-            ? $where['status'] = [5, 10]
-            : (isset($where['status'])
-                ? $where = $this->target_delay_type($where)
-                : $show_status);
 
-        if ($target_no != '' || !empty($where) || $export || $josn) {
+        if ($target_no != '' || $export || $josn) {
+            isset($where['status'])
+                ? $where = $this->target_delay_type($where)
+                : $where['status'] = [5 ,10];
             $query = $target_no != ''
                 ? ['target_no like' => $target_no]
                 : $where;
@@ -603,14 +599,10 @@ class Transfer extends MY_Admin_Controller
                 $this->load->model('user/user_meta_model');
                 $target_delay_range = $this->config->item('target_delay_range');
                 foreach ($list as $key => $value) {
-                    if(in_array($type,['platform_assets', 'amortization'])){
-                        $list[$key]->amortization_table = $this->target_lib->get_full_amortization_table($value);
-                    }else{
-                        $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value);
-                    }
+                    $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value, true);
                     if (in_array($type,['amortization','platform_assets']) && $list[$key]->amortization_table && !empty($list[$key]->amortization_table['list'])) {
                         foreach ($list[$key]->amortization_table['list'] as $k => $v) {
-                            if (!isset($amortization[$v['repayment_date']])) {
+                            if (!isset($amortization[$v['repayment_date']]) && $amortization[$v['repayment_date']] != '') {
                                 $amortization[$v['repayment_date']] = array(
                                     'principal' => 0,
                                     'interest' => 0,
@@ -622,8 +614,10 @@ class Transfer extends MY_Admin_Controller
                                     'r_interest' => 0,
                                     'r_fees' => 0,
                                     'r_delayinterest' => 0,
-                                    'r_liquidated_damages' => 0,
-                                    'sub_loan_fees' => 0,
+                                    'r_prepayment_allowance' => 0,
+                                    'r_damages' => 0,
+                                    'r_preapymentDamages' => 0,
+                                    'r_subloan_fees' => 0,
                                 );
                             }
                             $amortization[$v['repayment_date']]['principal'] += $v['principal'];
@@ -634,10 +628,12 @@ class Transfer extends MY_Admin_Controller
                             $amortization[$v['repayment_date']]['liquidated_damages'] += $v['liquidated_damages'];
                             $amortization[$v['repayment_date']]['r_principal'] += $v['r_principal'];
                             $amortization[$v['repayment_date']]['r_interest'] += $v['r_interest'];
-                            $amortization[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
-                            $amortization[$v['repayment_date']]['r_liquidated_damages'] += $v['r_liquidated_damages'];
                             $amortization[$v['repayment_date']]['r_fees'] += $v['r_fees'];
-                            $amortization[$v['repayment_date']]['sub_loan_fees'] += $v['sub_loan_fees'];
+                            $amortization[$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
+                            $amortization[$v['repayment_date']]['r_prepayment_allowance'] += $v['r_prepayment_allowance'];
+                            $amortization[$v['repayment_date']]['r_damages'] += $v['r_damages'];
+                            $amortization[$v['repayment_date']]['r_preapymentDamages'] += $v['r_preapymentDamages'];
+                            $amortization[$v['repayment_date']]['r_subloan_fees'] += $v['r_subloan_fees'];
                         }
                     }
                     else{
@@ -729,28 +725,12 @@ class Transfer extends MY_Admin_Controller
                             $amortizationValue['principal'],
                             $amortizationValue['interest'],
                             $amortizationValue['principal'] + $amortizationValue['interest'],
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            $amortizationValue['r_principal'],
-                            $amortizationValue['r_interest'],
-                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'],
-                            $amortizationValue['r_fees'],
-                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] - $amortizationValue['r_fees'],
-                            $amortizationValue['principal'],
-                            $amortizationValue['interest'],
+                            $amortizationValue['r_damages'] + $amortizationValue['r_preapymentDamages'],
                             $amortizationValue['delay_interest'],
-                            $amortizationValue['liquidated_damages'],
-                            $amortizationValue['ar_fees'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] + $amortizationValue['delay_interest'] + $amortizationValue['r_damages'] + $amortizationValue['r_preapymentDamages'],
+                            $amortizationValue['r_fees'],
+                            $amortizationValue['r_prepayment_allowance'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] + $amortizationValue['delay_interest'] + $amortizationValue['r_prepayment_allowance'] - $amortizationValue['r_fees'],
                         ];
                     }
                     $contents[] = [
@@ -761,7 +741,7 @@ class Transfer extends MY_Admin_Controller
                     $file_name = date("YmdHis",time()).'_amortization';
                     $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
                     $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3],false,$mergeTItle);
-                }elseif($type == 'assets'){
+                }else{
                     $product_list = $this->config->item('product_list');
                     $sub_product_list = $this->config->item('sub_product_list');
                     $repayment_type = $this->config->item('repayment_type');
