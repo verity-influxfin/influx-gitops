@@ -31,35 +31,45 @@ class Phpspreadsheet_lib
                 $sheet>0?$spreadsheet->createSheet():'';
                 $row = 1;
                 if($merge_title){
-                        foreach ($merge_title as $mergeTitleIndex => $mergeTitle) {
-                            $cut = explode(':', $mergeTitleIndex);
-                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($cut[0]) . '1', $mergeTitle);
-                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getAlignment()->setHorizontal('center');
-                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getFont()->setSize(13);
-                            $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($cut[0]) . '1:' . $this->num2alpha($cut[1]) . '1');
-                        }
-                        $row++;
+                    foreach ($merge_title as $mergeTitleIndex => $mergeTitle) {
+                        $cut = explode(':', $mergeTitleIndex);
+                        $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($cut[0]) . '1', $mergeTitle);
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getAlignment()->setHorizontal('center');
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getFont()->setSize(13);
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($cut[0]) . '1')->getFont()->setBold(true);
+                        $spreadsheet->setActiveSheetIndex($sheet)->mergeCells($this->num2alpha($cut[0]) . '1:' . $this->num2alpha($cut[1]) . '1');
+                    }
+                    $row++;
+                    $spreadsheet->getActiveSheet()->freezePane('B2');
                 }
                 foreach ($contents['title'] as $titleIndex => $title) {
                     $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), $title);
                     $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getAlignment()->setHorizontal('center');
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getFont()->setSize(13);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getFont()->setBold(true);
                 }
                 $row++;
+                $spreadsheet->getActiveSheet()->freezePane('B'.$row);
                 foreach ($contents['content'] as $rowInddex => $rowContent) {
                     foreach ($rowContent as $rowContentInddex => $rowValue) {
                         $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($rowContentInddex) . ($row), $rowValue);
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($rowContentInddex) . ($row))->getAlignment()->setHorizontal('center');
                     }
                     $row++;
                 }
                 if($sum){
                     foreach ($contents['title'] as $titleIndex => $titleContent) {
                         $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex).'1')->getFont()->setSize(13);
+                        $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex).'1')->getFont()->setBold(true);
                         if($titleIndex==0){
-                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0).($row), '合計');
+                            $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0) . ($row), '合計');
+                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha(0) . ($row))->getAlignment()->setHorizontal('center');
                         }
                         else{
                             if(in_array($titleIndex,$sum)){
                                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($titleIndex).'1:'.$this->num2alpha($titleIndex).($row-1).')');
+                                $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getAlignment()->setHorizontal('center');
+
                             }
                         }
                     }

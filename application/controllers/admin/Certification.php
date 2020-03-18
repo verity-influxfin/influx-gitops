@@ -884,10 +884,11 @@ class Certification extends MY_Admin_Controller {
 		$cell = $this->certification_lib->papago_facedetact_repport($limit);
 		$this->load->library('Phpspreadsheet_lib');
 		$mergeTItle = [
-			'1:2' => 'Azure',
-			'3:4' => 'Face8',
+			'2:4' => 'Azure',
+			'5:7' => 'Face++',
+			'8:10' => 'Face8',
 		];
-		$sheetTItle = ['user_id', 'face1準確度', 'face2準確度', 'face1準確度', 'face2準確度'];
+		$sheetTItle = ['user_id', '發證日期', '人臉數', 'face1準確度', 'face2準確度', '人臉數', 'face1準確度', 'face2準確度', '人臉數', 'face1準確度', 'face2準確度'];
 		$contents[] = [
 			'sheet' => 'PAPAGO FACE8測試',
 			'title' => $sheetTItle,
