@@ -122,14 +122,14 @@
                                        id="target_no"/></td>
                         </tr>
                         <tr>
-                            <td>案件取得時間：</td>
+                            <td>區間資料：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['sdate']) && $_GET['sdate'] != '' ? $_GET['sdate'] : '' ?>"
-                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間"/></td>
+                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間" disabled/></td>
                             <td>至：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['edate']) && $_GET['edate'] != '' ? $_GET['edate'] : '' ?>"
-                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間"/>
+                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間" disabled/>
                             </td>
                         </tr>
                         <tr>
@@ -137,7 +137,7 @@
                             <td>
                                 <select id="status">
                                     <option value="">請選擇</option>
-                                    <? foreach ($target_status as $key => $value) {
+                                    <? foreach ($type_status as $key => $value) {
                                         ?>
                                         <option value="<?= $key ?>" <?= isset($_GET['status']) && $_GET['status'] != "" && intval($_GET['status']) == intval($key) ? "selected" : "" ?>><?= $value ?></option>
                                         <?
@@ -148,7 +148,7 @@
                             <td>
                                 <select id="trans_status">
                                     <option value="">不過濾</option>
-                                    <option value="0">無</option>
+                                    <option value="0" selected>無</option>
                                     <option value="2">已轉出</option>
                                 </select>
                             </td>
@@ -158,6 +158,14 @@
                         <tr>
                             <td>
                                 <a class="btn btn-info asearch">查詢</a>
+                            </td>
+                            <td>
+                                <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
+                                      style="display: inline-block">
+                                    <input type="submit" class="btn btn-warning float-right" value="資產管理工作底稿" disabled/>
+                                    <input id="platform_assets" type="hidden" name="ids"/>
+                                    <input type="hidden" name="type" value="platform_assets"/>
+                                </form>
                             </td>
                             <td>
                                 <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
@@ -172,7 +180,7 @@
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                                     <input id="amortization_export" type="hidden" name="ids"/>
-                                    <input type="hidden" name="type" value="assets"/>
+                                    <input type="hidden" name="type" value="amortization"/>
                                 </form>
                             </td>
                         </tr>

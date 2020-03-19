@@ -740,6 +740,28 @@ class Target_lib
                         'r_principal' => 0,
                     ];
                 }
+                //if ($value->source == SOURCE_PRINCIPAL) {
+                //    !isset($list[$value->instalment_no]['r_principal'])?$list[$value->instalment_no]['r_principal'] = 0:'';
+                //    $list[$value->instalment_no]['r_principal'] += $value->amount;
+                //}elseif ($value->source == SOURCE_INTEREST) {
+                //    !isset($list[$value->instalment_no]['r_interest'])?$list[$value->instalment_no]['r_interest'] = 0:'';
+                //    $list[$value->instalment_no]['r_interest'] += $value->amount;
+                //}elseif ($value->source == SOURCE_DELAYINTEREST){
+                //    !isset($list[$value->instalment_no]['r_delayinterest'])?$list[$value->instalment_no]['r_delayinterest'] = 0:'';
+                //    $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
+                //}elseif ($value->source == SOURCE_DAMAGE){
+                //    !isset($list[$value->instalment_no]['r_damages'])?$list[$value->instalment_no]['r_damages'] = 0:'';
+                //    $list[$value->instalment_no]['r_damages'] += $value->amount;
+                //}elseif ($value->source == SOURCE_PREPAYMENT_DAMAGE){
+                //    !isset($list[$value->instalment_no]['r_preapymentDamages'])?$list[$value->instalment_no]['r_preapymentDamages'] = 0:'';
+                //    $list[$value->instalment_no]['r_preapymentDamages'] += $value->amount;
+                //}elseif ($value->source == SOURCE_FEES) {
+                //    !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
+                //    $list[$value->instalment_no]['r_fees'] += $value->amount;
+                //}elseif ($value->source == SOURCE_SUBLOAN_FEE) {
+                //    !isset($list[$value->instalment_no]['r_subloan_fees'])?$list[$value->instalment_no]['r_subloan_fees'] = 0:'';
+                //    $list[$value->instalment_no]['r_subloan_fees'] += $value->amount;
+                //}
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:
                         $list[$value->instalment_no]['principal'] += $value->amount;
@@ -797,7 +819,7 @@ class Target_lib
     }
 
     //出借端回款計畫
-    public function get_investment_amortization_table($target = [], $investment = [])
+    public function get_investment_amortization_table($target = [], $investment = [], $full = false)
     {
 
         $xirr_dates = [$target->loan_date];
@@ -813,8 +835,9 @@ class Target_lib
             'remaining_principal' => 0,
         ];
         $repayment_principal = 0;
+        $investment_id = $full ? [$investment->id, 0] : $investment->id;
         $transactions = $this->CI->transaction_model->get_many_by([
-            'investment_id' => $investment->id,
+            'investment_id' => $investment_id,
             'target_id' => $target->id,
             'status' => [1, 2]
         ]);
@@ -834,18 +857,43 @@ class Target_lib
                         'days' => 0,//本期天數
                         'remaining_principal' => 0,//期初本金
                         'repayment_date' => $limit_date,//還款日
-                        'r_fees' => 0,//回款手續費
-                        'r_delayinterest' => 0,
                         'ar_fees' => 0,//應收回款手續費
+                        'r_principal' => 0,
+                        'r_interest' => 0,
+                        'r_fees' => 0,
+                        'r_delayinterest' => 0,
+                        'r_prepayment_allowance' => 0,
+                        'r_damages' => 0,
+                        'r_preapymentDamages' => 0,
+                        'r_subloan_fees' => 0,
                     ];
                 }
             }
             foreach ($transactions as $key => $value) {
-                if ($value->source == SOURCE_FEES) {
+                if ($value->source == SOURCE_PRINCIPAL) {
+                    !isset($list[$value->instalment_no]['r_principal'])?$list[$value->instalment_no]['r_principal'] = 0:'';
+                    $list[$value->instalment_no]['r_principal'] += $value->amount;
+                }elseif ($value->source == SOURCE_INTEREST) {
+                    !isset($list[$value->instalment_no]['r_interest'])?$list[$value->instalment_no]['r_interest'] = 0:'';
+                    $list[$value->instalment_no]['r_interest'] += $value->amount;
+                }elseif ($value->source == SOURCE_FEES) {
                     !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
                     $list[$value->instalment_no]['r_fees'] += $value->amount;
                 }elseif ($value->source == SOURCE_DELAYINTEREST){
+                    !isset($list[$value->instalment_no]['r_delayinterest'])?$list[$value->instalment_no]['r_delayinterest'] = 0:'';
                     $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
+                }elseif ($value->source == SOURCE_PREPAYMENT_ALLOWANCE){
+                    !isset($list[$value->instalment_no]['r_prepayment_allowance'])?$list[$value->instalment_no]['r_prepayment_allowance'] = 0:'';
+                    $list[$value->instalment_no]['r_prepayment_allowance'] += $value->amount;
+                }elseif ($value->source == SOURCE_DAMAGE){
+                    !isset($list[$value->instalment_no]['r_damages'])?$list[$value->instalment_no]['r_damages'] = 0:'';
+                    $list[$value->instalment_no]['r_damages'] += $value->amount;
+                }elseif ($value->source == SOURCE_PREPAYMENT_DAMAGE){
+                    !isset($list[$value->instalment_no]['r_preapymentDamages'])?$list[$value->instalment_no]['r_preapymentDamages'] = 0:'';
+                    $list[$value->instalment_no]['r_preapymentDamages'] += $value->amount;
+                }elseif ($value->source == SOURCE_SUBLOAN_FEE) {
+                    !isset($list[$value->instalment_no]['r_subloan_fees'])?$list[$value->instalment_no]['r_subloan_fees'] = 0:'';
+                    $list[$value->instalment_no]['r_subloan_fees'] += $value->amount;
                 }
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:
@@ -857,6 +905,7 @@ class Target_lib
                         $list[$value->instalment_no]['interest'] += $value->amount;
                         break;
                     case SOURCE_AR_DELAYINTEREST:
+                        !isset($list[$value->instalment_no]['delay_interest'])?$list[$value->instalment_no]['delay_interest'] = 0:'';
                         $list[$value->instalment_no]['delay_interest'] += $value->amount;
                         break;
                     case SOURCE_PRINCIPAL:
@@ -877,9 +926,9 @@ class Target_lib
                 }
                 if ($value->instalment_no) {
                     $list[$value->instalment_no]['total_payment'] =
-                        (isset($list[$value->instalment_no]['interest'])? $list[$value->instalment_no]['interest'] : 0) +
-                        (isset($list[$value->instalment_no]['principal'])? $list[$value->instalment_no]['principal'] : 0) +
-                        (isset($list[$value->instalment_no]['delay_interest'])? $list[$value->instalment_no]['delay_interest'] : 0);
+                        $list[$value->instalment_no]['interest'] +
+                        $list[$value->instalment_no]['principal'] +
+                        $list[$value->instalment_no]['delay_interest'];
                 }
             }
 
@@ -893,7 +942,9 @@ class Target_lib
             if ($transfer) {
                 $total = intval($transfer->principal);
             }
-
+            $schedule['target_status'] = $target->status;
+            $schedule['target_sub_status'] = $target->sub_status;
+            $schedule['target_delay_days'] = $target->delay_days;
             $schedule['remaining_principal'] = $total - $repayment_principal;
             ksort($list);
             foreach ($list as $key => $value) {
@@ -911,6 +962,88 @@ class Target_lib
         }
         $schedule['list'] = $list;
         return $schedule;
+    }
+
+    public function get_full_amortization_table($target = []){
+        $list = [];
+        $transactions = $this->CI->transaction_model->get_many_by([
+            'target_id' => $target->id,
+            'status' => [1, 2]
+        ]);
+        if ($transactions) {
+            foreach ($transactions as $key => $value) {
+                $date = $value->limit_date;
+                if($value->limit_date == null){
+                    $ym 		= date('Y-m',strtotime($date));
+                    $date 		= date('Y-m-',strtotime($ym.' + 1 month')).REPAYMENT_DAY;
+                    if($i==1 && $odate > date('Y-m-',strtotime($odate)).REPAYMENT_DAY){
+                        $date 		= date('Y-m-',strtotime($date.' + 1 month')).REPAYMENT_DAY;
+                    }
+
+                    if(!isset($list[$fdate])){
+                        $list[$fdate] = [];
+                    }
+                }
+                $list[$value->instalment_no] = [
+                    'ar_principal' => 0,//11
+                    'ar_interest' => 0,//13
+                    'ar_fees' => 0,//9
+                    'ar_delay_interest' => 0,//93
+                    'ar_damage' => 0,//91
+                    'r_principal' => 0,//12
+                    'r_interest' => 0,//14
+                    'r_fees' => 0,//4
+                    'r_delayinterest' => 0,//94
+                    'r_damage' => 0,//92
+                    'subloan_fee' => 0,//5
+                    'prepayment_allowance' => 0,//7
+                    'prepayment_damage' => 0,//8
+                ];
+                switch ($value->source) {
+                    case SOURCE_AR_INTEREST:
+                        echo SOURCE_AR_INTEREST;
+                        break;
+                    case SOURCE_AR_FEES:
+                        echo SOURCE_AR_FEES;
+                        break;
+                    case SOURCE_AR_PRINCIPAL:
+                        echo SOURCE_AR_PRINCIPAL;
+                        break;
+                    case SOURCE_AR_DELAYINTEREST:
+                        echo SOURCE_AR_DELAYINTEREST;
+                        break;
+                    case SOURCE_AR_DAMAGE:
+                        echo SOURCE_AR_DAMAGE;
+                        break;
+                    case SOURCE_SUBLOAN_FEE://AR
+                        echo SOURCE_SUBLOAN_FEE;
+                        break;
+                    case SOURCE_INTEREST:
+                        echo SOURCE_INTEREST;
+                        break;
+                    case SOURCE_FEES:
+                        echo SOURCE_FEES;
+                        break;
+                    case SOURCE_PRINCIPAL:
+                        echo SOURCE_PRINCIPAL;
+                        break;
+                    case SOURCE_DELAYINTEREST:
+                        echo SOURCE_DELAYINTEREST;
+                        break;
+                    case SOURCE_DAMAGE:
+                        echo SOURCE_DAMAGE;
+                        break;
+                    case SOURCE_PREPAYMENT_ALLOWANCE://AR
+                        echo SOURCE_PREPAYMENT_ALLOWANCE;
+                        break;
+                    case SOURCE_PREPAYMENT_DAMAGE://AR
+                        echo SOURCE_PREPAYMENT_DAMAGE;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public function script_check_bidding()
