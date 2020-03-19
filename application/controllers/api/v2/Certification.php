@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Certification extends REST_Controller {
 
 	public $user_info,$certification;
-	
+
     public function __construct()
     {
         parent::__construct();
@@ -22,7 +22,7 @@ class Certification extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -31,7 +31,7 @@ class Certification extends REST_Controller {
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
-			
+
 			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities']) ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
@@ -40,7 +40,7 @@ class Certification extends REST_Controller {
 			//if($tokenData->company==1 && $tokenData->incharge != 1 ){
 				//$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 			//}
-			
+
 			if($this->request->method != 'get'){
                     $this->load->model('log/log_request_model');
                 $this->log_request_model->insert(array(
@@ -51,7 +51,7 @@ class Certification extends REST_Controller {
 					'agent'		=> $tokenData->agent,
 				));
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
@@ -59,7 +59,7 @@ class Certification extends REST_Controller {
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
-	
+
 	/**
      * @api {get} /v2/certification/list 認證 認證列表
 	 * @apiVersion 0.2.0
@@ -73,7 +73,7 @@ class Certification extends REST_Controller {
 	 * @apiSuccess {String} description 簡介
 	 * @apiSuccess {String} alias 認證代號
 	 * @apiSuccess {Number} user_status 用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗
-	 * 
+	 *
      * @apiSuccessExample {Object} SUCCESS
      * {
      * 		"result":"SUCCESS",
@@ -101,7 +101,7 @@ class Certification extends REST_Controller {
 	 * @apiUse BlockUser
 	 * @apiUse NotIncharge
      */
-	 
+
 	public function list_get()
     {
 		$user_id 			= $this->user_info->id;
@@ -196,13 +196,13 @@ class Certification extends REST_Controller {
 				);
 
 				switch($certification['id']){
-					case 1: 
+					case 1:
 						$fields 	= ['name','id_number','id_card_date','id_card_place','birthday','address'];
 						break;
-					case 2: 
+					case 2:
 						$fields 	= ['school','major','department','student_id','system','email','grade'];
 						break;
-					case 3: 
+					case 3:
 						$fields 	= ['bank_code','branch_code','bank_account'];
 						break;
 					case 4:
@@ -232,22 +232,22 @@ class Certification extends REST_Controller {
 						$data['fb_bind'] = $fb_bind;
 						$data['ig_bind'] = $ig_bind;
 						break;
-					case 5: 
+					case 5:
 						$fields 	= ['name','phone','relationship'];
 						break;
-					case 6: 
+					case 6:
 						$fields 	= ['email'];
 						break;
-					case 7: 
+					case 7:
 						$fields 	= ['parttime','allowance','scholarship','other_income','restaurant','transportation','entertainment','other_expense'];
 						break;
-					case 8: 
+					case 8:
 						$fields 	= ['school','major','department','system'];
 						break;
-					case 9: 
+					case 9:
 						$fields 	= ['return_type'];
 						break;
-					case 10: 
+					case 10:
 						$fields 	= ['tax_id','company','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
 					case 1000:
@@ -274,7 +274,7 @@ class Certification extends REST_Controller {
 					default:
 						break;
 				}
-				
+
 				foreach ($fields as $field) {
 					if (isset($rs->content[$field]) && !empty($rs->content[$field])) {
 						$data[$field] = $rs->content[$field];
@@ -294,7 +294,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
 	/**
      * @api {post} /v2/certification/idcard 認證 實名認證
 	 * @apiVersion 0.2.0
@@ -362,10 +362,10 @@ class Certification extends REST_Controller {
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-			
+
 			//是否驗證過
 			$this->was_verify($certification_id);
-			
+
 			//必填欄位
 			$fields 	= ['id_number','id_card_date','id_card_place','birthday'];//'name',,'address'
 			foreach ($fields as $field) {
@@ -382,11 +382,11 @@ class Certification extends REST_Controller {
 			//if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
 			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			//}
-			
+
 			//if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
 			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			//}
-			
+
 			//檢查身分證字號
 			$id_check = check_cardid($input['id_number']);
 			if(!$id_check){
@@ -427,6 +427,14 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
+				// scraper api
+        $this->load->library('scraper/judicial_yuan_lib.php');
+				$this->sip_lib->requestJudicialYuanVerdicts(
+				    $content['name'],
+				    $content['address'],
+				    $content['??']
+				);
+
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -434,7 +442,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
 	/**
      * @api {post} /v2/certification/student 認證 學生身份認證
 	 * @apiVersion 0.2.0
@@ -542,25 +550,25 @@ class Certification extends REST_Controller {
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
-			
+
 			$this->load->model('user/user_meta_model');
-			
+
 			//Email是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
 				'meta_key'	=> 'school_email',
 				'meta_value'=> $content['email'],
 			));
-			
+
 			if($user_meta && $user_meta->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
 			}
-			
+
 			//學號是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
 				'meta_key'	=> 'student_id',
 				'meta_value'=> $content['student_id'],
 			));
-			
+
 			if($user_meta && $user_meta->user_id != $user_id){
 				$user_school = $this->user_meta_model->get_by(array(
 					'user_id'	=> $user_meta->user_id,
@@ -619,7 +627,7 @@ class Certification extends REST_Controller {
             }
 
             $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:"";
-			
+
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
@@ -815,10 +823,10 @@ class Certification extends REST_Controller {
 			if($this->user_info->company==1 && $this->user_info->incharge != 1){
 				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 			}
-			
+
 			//是否驗證過
 			$this->was_verify($certification_id);
-			
+
 			//必填欄位
 			$fields 	= ['bank_code','branch_code','bank_account'];
 			foreach ($fields as $field) {
@@ -828,7 +836,7 @@ class Certification extends REST_Controller {
 					$content[$field] = trim($input[$field]);
 				}
 			}
-			
+
 			if(strlen($content['bank_code'])!=3){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_CODE_ERROR ));
 			}
@@ -838,19 +846,19 @@ class Certification extends REST_Controller {
 			if(strlen(intval($content['bank_account']))<8 || strlen($content['bank_account'])<10 || strlen($content['bank_account'])>14 || is_virtual_account($content['bank_account'])){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_ERROR ));
 			}
-			
+
 			$where = [
 				'investor'		=> $investor,
 				'bank_code'		=> $content['bank_code'],
 				'bank_account'	=> $content['bank_account'],
 				'status'		=> 1,
 			];
-			
+
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
 			if($user_bankaccount){
 				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_EXIST ));
 			}
-			
+
 			//上傳檔案欄位
 			$file_fields 	= ['front_image','back_image'];
 			foreach ($file_fields as $field) {
@@ -878,7 +886,7 @@ class Certification extends REST_Controller {
 				'expire_time'		=> strtotime('+20 years'),
 				'content'			=> json_encode($content),
 			];
-			
+
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$bankaccount_info = [
@@ -891,7 +899,7 @@ class Certification extends REST_Controller {
 					'front_image'	=> $content['front_image'],
 					'back_image'	=> $content['back_image'],
 				];
-				
+
 				if($investor){
 					$bankaccount_info['verify'] = 2;
 				}else{
@@ -904,9 +912,9 @@ class Certification extends REST_Controller {
 						$bankaccount_info['verify'] = 2;
 					}
 				}
-				
+
 				$this->user_bankaccount_model->insert($bankaccount_info);
-				
+
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -962,10 +970,10 @@ class Certification extends REST_Controller {
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= [];
-			
+
 			//是否驗證過
 			$this->was_verify($certification_id);
-			
+
 			//必填欄位
 			$fields 	= ['name','phone','relationship'];
 			foreach ($fields as $field) {
@@ -1029,8 +1037,8 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
-	
+
+
 	/**
      * @api {post} /v2/certification/email 認證 常用電子信箱
 	 * @apiVersion 0.2.0
@@ -1082,7 +1090,7 @@ class Certification extends REST_Controller {
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-			
+
 			//是否驗證過
 			$this->was_verify($certification_id);
 
@@ -1095,11 +1103,11 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
-			
+
 			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL)) {
 				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 			}
-		
+
 			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
@@ -1117,7 +1125,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
 	/**
      * @api {post} /v2/certification/verifyemail 認證 認證電子信箱(學生身份、常用電子信箱)
 	 * @apiVersion 0.2.0
@@ -1161,13 +1169,13 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
-		
+
 		$input['email'] = base64_decode($input['email']);
-		
+
 		if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
 		}
-	
+
 		$rs = $this->sendemail->verify_code($input['type'],$input['email'],$input['code']);
 		if($rs){
 			$this->response(array('result' => 'SUCCESS'));
@@ -1176,7 +1184,7 @@ class Certification extends REST_Controller {
 		}
 
     }
-	
+
 	/**
      * @api {post} /v2/certification/financial 認證 財務訊息認證
 	 * @apiVersion 0.2.0
@@ -1230,10 +1238,10 @@ class Certification extends REST_Controller {
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-			 
+
 			//是否驗證過
 			$this->was_verify($certification_id);
-			
+
 			//必填欄位
 			$fields 	= [
 				'parttime',
@@ -1252,7 +1260,7 @@ class Certification extends REST_Controller {
 					$content[$field] = intval($input[$field]);
 				}
 			}
-			
+
 			//上傳檔案欄位
 			$file_fields 	= ['creditcard_image','passbook_image'];
 			foreach ($file_fields as $field) {
@@ -1272,7 +1280,7 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
-			
+
 			$param		= array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
@@ -1289,7 +1297,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
 	/**
      * @api {post} /v2/certification/social 認證 社交認證
 	 * @apiVersion 0.2.0
@@ -1556,7 +1564,7 @@ class Certification extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
-	
+
 	/**
      * @api {post} /v2/certification/investigation 認證 聯合徵信認證
 	 * @apiVersion 0.2.0
@@ -1605,7 +1613,7 @@ class Certification extends REST_Controller {
 			$content	= array();
 			//是否驗證過
 			$this->was_verify($certification_id);
-			
+
 			$content['return_type'] = isset($input['return_type']) && intval($input['return_type'])?$input['return_type']:0;
 
 			$send_mail = false;
@@ -1715,7 +1723,7 @@ class Certification extends REST_Controller {
 	 * <br>Q：醫療保健及社會工作服務業
 	 * <br>R：藝術、娛樂及休閒服務業
 	 * <br>S：其他服務業
-	 * @apiParam {Number=0,1,2,3,4,5,6} employee=0 企業規模	
+	 * @apiParam {Number=0,1,2,3,4,5,6} employee=0 企業規模
 	 * <br>0：1~20（含）
 	 * <br>1：20~50（含）
 	 * <br>2：50~100（含）
@@ -1852,7 +1860,7 @@ class Certification extends REST_Controller {
 					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
 				}
 			}
-			
+
 			$param		= [
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
