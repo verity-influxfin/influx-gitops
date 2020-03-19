@@ -759,7 +759,7 @@ class Transfer extends MY_Admin_Controller
                     ];
                     $file_name = date("YmdHis",time()).'_amortization';
                     $descri = '普匯inFlux 後台管理者 '.$this->login_info->id.' [ 債權管理查詢 ]';
-                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3,4,5,6,7,8,9],false,$mergeTItle);
+                    $this->phpspreadsheet_lib->excel($file_name,$contents,'本金餘額攤還表','各期金額',$descri,$this->login_info->id,true,[1,2,3,4,5,6,7,8,9]);
                 }else{
                     $product_list = $this->config->item('product_list');
                     $sub_product_list = $this->config->item('sub_product_list');
