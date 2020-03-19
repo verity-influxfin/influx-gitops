@@ -163,7 +163,7 @@
                                 <form action="<?= admin_url('transfer/assets_list') ?>" method="post"
                                       style="display: inline-block">
                                     <input type="submit" class="btn btn-warning float-right" value="資產管理工作底稿" disabled/>
-                                    <input id="assets_export" type="hidden" name="ids"/>
+                                    <input id="platform_assets" type="hidden" name="ids"/>
                                     <input type="hidden" name="type" value="platform_assets"/>
                                 </form>
                             </td>

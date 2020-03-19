@@ -932,7 +932,9 @@ class Target_lib
             if ($transfer) {
                 $total = intval($transfer->principal);
             }
-
+            $schedule['target_status'] = $target->status;
+            $schedule['target_sub_status'] = $target->sub_status;
+            $schedule['target_delay_days'] = $target->delay_days;
             $schedule['remaining_principal'] = $total - $repayment_principal;
             ksort($list);
             foreach ($list as $key => $value) {
