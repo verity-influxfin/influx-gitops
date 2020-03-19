@@ -1297,7 +1297,7 @@ class Certification_lib{
         return $company;
     }
 
-    public function papago_facedetact_repport($limit = 10)
+    public function papago_facedetact_report($limit = 10)
     {
         $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
             'certification_id' => 1,
