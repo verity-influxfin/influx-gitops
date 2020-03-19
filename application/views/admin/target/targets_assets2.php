@@ -122,14 +122,14 @@
                                        id="target_no"/></td>
                         </tr>
                         <tr>
-                            <td>案件取得時間：</td>
+                            <td>區間資料：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['sdate']) && $_GET['sdate'] != '' ? $_GET['sdate'] : '' ?>"
-                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間"/></td>
+                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間" disabled/></td>
                             <td>至：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['edate']) && $_GET['edate'] != '' ? $_GET['edate'] : '' ?>"
-                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間"/>
+                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間" disabled/>
                             </td>
                         </tr>
                         <tr>
