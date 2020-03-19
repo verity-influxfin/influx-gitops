@@ -536,6 +536,22 @@ class Transfer extends MY_Admin_Controller
         $type = isset($post['type']) && $post['type'] != '' ? $post['type'] : false;
         $export = isset($post['ids']) && $post['ids'] ? explode(',', $post['ids']) : false;
         $josn = isset($post['data']) && $post['data'] ? explode(',', $post['data']) : false;
+        $amortization_format = array(
+            'principal' => 0,
+            'interest' => 0,
+            'delay_interest' => 0,
+            'ar_fees' => 0,
+            'repayment' => 0,
+            'liquidated_damages' => 0,
+            'r_principal' => 0,
+            'r_interest' => 0,
+            'r_fees' => 0,
+            'r_delayinterest' => 0,
+            'r_prepayment_allowance' => 0,
+            'r_damages' => 0,
+            'r_preapymentDamages' => 0,
+            'r_subloan_fees' => 0,
+        );
 
         foreach ($fields as $field) {
             if (isset($post[$field]) && trim($post[$field]) != '') {
@@ -606,29 +622,13 @@ class Transfer extends MY_Admin_Controller
                                 continue;
                             }
                             if (!isset($amortization[$v['repayment_date']])) {
-                                $date = $v['repayment_date'];
-                                $odate = $ndate = $date;
-//                                $ym = date('Y-m', strtotime($odate));
-//                                $date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
-//                                if ($odate > $date) {
-//                                    $ndate = date('Y-m-', strtotime($date . ' + 1 month')) . REPAYMENT_DAY;
-//                                }
-                                $amortization[$ndate] = array(
-                                    'principal' => 0,
-                                    'interest' => 0,
-                                    'delay_interest' => 0,
-                                    'ar_fees' => 0,
-                                    'repayment' => 0,
-                                    'liquidated_damages' => 0,
-                                    'r_principal' => 0,
-                                    'r_interest' => 0,
-                                    'r_fees' => 0,
-                                    'r_delayinterest' => 0,
-                                    'r_prepayment_allowance' => 0,
-                                    'r_damages' => 0,
-                                    'r_preapymentDamages' => 0,
-                                    'r_subloan_fees' => 0,
-                                );
+                                $odate = $ndate = $date = $v['repayment_date'];
+                                if(date('d', strtotime($date)) != 10){
+                                    $ym = date('Y-m', strtotime($odate));
+                                    $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
+                                    $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
+                                }
+                                !isset($amortization[$ndate]) ? $amortization[$ndate] = $amortization_format : '';
                             }
                             $amortization[$ndate]['principal'] += $v['principal'];
                             $amortization[$ndate]['interest'] += $v['interest'];
@@ -646,6 +646,14 @@ class Transfer extends MY_Admin_Controller
                             $amortization[$ndate]['r_subloan_fees'] += $v['r_subloan_fees'];
                         }
                         ksort($amortization);
+
+                        $firstDate = $month = strtotime(array_keys($amortization)[0]);
+                        $lastDate = strtotime(end(array_keys($amortization)));
+                        while ($month < $lastDate) {
+                            $month = strtotime("+1 month", $month);
+                            $nymd = date('Y-m-d', $month);
+                            !isset($amortization[$nymd]) ? $amortization[$nymd] = $amortization_format: '';
+                        }
                     }
                     else{
                         if(!isset($targets[$value->target_id]->school)||!isset($targets[$value->target_id]->company)) {
