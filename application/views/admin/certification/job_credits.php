@@ -270,15 +270,70 @@
         }
 
         function appendImage(name, link) {
-            var image = '<img src="' + link + '" style="width:30%;" />'
+            var image = '<a href="' + link +'" data-fancybox="images"><img src="' + link + '" style="width:30%;max-width:400px"></a>';
             $("<tr>").append(
                 $('<td class="center-text">').append(name),
                 $('<td class="center-text">').append(image),
             ).appendTo("#images");
         }
+    });
 
+    var RotateImage = function (instance) {
+        this.instance = instance;
 
-	});
+        this.init();
+    };
+
+    $.extend(RotateImage.prototype, {
+        $button_left: null,
+        $button_right: null,
+        transitionanimation: true,
+
+        init: function () {
+            var self = this;
+
+            self.$button_right = $('<button data-rotate-right class="fancybox-button fancybox-button--rotate" title="Rotate to right"><span class="oi oi-action-redo"></span></button>')
+                .prependTo(this.instance.$refs.toolbar)
+                .on('click', function (e) {
+                    self.rotate('right');
+                });
+
+            self.$button_left = $('<button data-rotate-left class="fancybox-button fancybox-button--rotate" title="Rotate to left"><span class="oi oi-action-undo"></span></button>')
+                .prependTo(this.instance.$refs.toolbar)
+                .on('click', function (e) {
+                    self.rotate('left');
+                });
+        },
+
+        rotate: function (direction) {
+            var self = this;
+            var image = self.instance.current.$image[0];
+            var angle = parseInt(self.instance.current.$image.attr('data-angle')) || 0;
+
+            if (direction == 'right') {
+                angle += 90;
+            } else {
+                angle -= 90;
+            }
+
+            if (!self.transitionanimation) {
+                angle = angle % 360;
+            } else {
+                $(image).css('transition', 'transform .3s ease-in-out');
+            }
+
+            self.instance.current.$image.attr('data-angle', angle);
+
+            $(image).css('webkitTransform', 'rotate(' + angle + 'deg)');
+            $(image).css('mozTransform', 'rotate(' + angle + 'deg)');
+        }
+    });
+
+    $(document).on('onInit.fb', function (e, instance) {
+        if (!instance.opts.rotate) {
+            instance.Rotate = new RotateImage(instance);
+        }
+    });
 </script>
 <style>
 	#container p {

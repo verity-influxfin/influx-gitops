@@ -64,12 +64,12 @@ class Phpspreadsheet_lib
                         if($titleIndex==0){
                             $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0) . ($row), '合計');
                             $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha(0) . ($row))->getAlignment()->setHorizontal('center');
+                            $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha(0) . ($row))->getFont()->setBold(true);
                         }
                         else{
                             if(in_array($titleIndex,$sum)){
                                 $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha($titleIndex).($row), '=SUM('.$this->num2alpha($titleIndex).'1:'.$this->num2alpha($titleIndex).($row-1).')');
                                 $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha($titleIndex) . ($row))->getAlignment()->setHorizontal('center');
-
                             }
                         }
                     }

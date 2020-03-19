@@ -7,6 +7,8 @@
     <title>inFlux Admin</title>
     <!-- Bootstrap Core CSS -->
     <link href="<?=base_url()?>assets/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
+
     <!-- MetisMenu CSS -->
     <link href="<?=base_url()?>assets/admin/css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
     <!-- Custom CSS -->

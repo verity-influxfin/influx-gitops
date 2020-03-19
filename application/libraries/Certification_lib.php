@@ -1348,4 +1348,65 @@ class Certification_lib{
         }
         return $list;
     }
+  
+    public function veify_signing_face($user_id, $url = false)
+    {
+        if ($url) {
+            $msg = '';
+            $remark = [];
+            $idcard_cer = $this->get_certification_info($user_id, 1, 0);
+            if ($idcard_cer && $idcard_cer->status == 1) {
+                $cer_id = $idcard_cer->id;
+                $this->CI->load->library('Azure_lib');
+                $idcard_cer_face = $this->CI->azure_lib->detect($idcard_cer->content['person_image'], $user_id, $cer_id);
+                $signing_face = $this->CI->azure_lib->detect($url, $user_id, $cer_id);
+                $signing_face_count = count($signing_face);
+                if ($signing_face_count == 0) {
+                    $rotate = $this->face_rotate($url, $user_id);
+                    if ($rotate) {
+                        $idcard_cer->content['person_image'] = $rotate['url'];
+                        $signing_face_count = $rotate['count'];
+                    }
+                }
+                if ($signing_face_count >= 2 && $signing_face_count <= 3) {
+                    $person_compare[] = $this->CI->azure_lib->verify($idcard_cer_face[0]['faceId'], $signing_face[0]['faceId'], $user_id, $cer_id);
+                    $person_compare[] = $this->CI->azure_lib->verify($idcard_cer_face[1]['faceId'], $signing_face[1]['faceId'], $user_id, $cer_id);
+                    $remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
+                    $remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+                    if ($remark['face'][0] < 90 || $remark['face'][1] < 90) {
+                        $this->CI->load->library('Faceplusplus_lib');
+                        $idcard_cer_token = $this->CI->faceplusplus_lib->get_face_token($idcard_cer->content['person_image'], $user_id, $cer_id);
+                        $signing_face_token = $this->CI->faceplusplus_lib->get_face_token($idcard_cer->content['person_image'], $user_id, $cer_id);
+                        $signing_face_count = $signing_face_token && is_array($signing_face_token) ? count($signing_face_token) : 0;
+                        if ($signing_face_count == 0) {
+                            $rotate = $this->face_rotate($idcard_cer->content['person_image'], $user_id, $cer_id, 'faceplusplus');
+                            if ($rotate) {
+                                $idcard_cer->content['person_image'] = $rotate['url'];
+                                $signing_face_count = $rotate['count'];
+                                $signing_face_token = $signing_face_count;
+                            }
+                        }
+                        if ($signing_face_count == 2) {
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($idcard_cer_token[0], $signing_face_token[0], $user_id, $cer_id);
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($idcard_cer_token[1], $signing_face_token[1], $user_id, $cer_id);
+                            sort($answer);
+                            $remark['faceplus'] = $answer;
+                            if ($answer[0] < 90 || $answer[1] < 90) {
+                                $msg .= 'Sys2人臉比對分數不足';
+                            }
+                        } else {
+                            $msg .= 'Sys2人臉數量不足';
+                        }
+                    }elseif ($remark['face'][0] == 100){
+                        $msg .= '分數過高，可能為同一張照片';
+                    }
+                } else {
+                    $msg .= '系統判定人臉數量不正確，可能有陰影或其他因素';
+                }
+            }
+            $remark['error'] = $msg;
+            return $remark;
+        }
+        return false;
+    }
 }
