@@ -753,7 +753,7 @@ class Transfer extends MY_Admin_Controller
                         ];
                     }
                     $contents[] = [
-                        'sheet' => '資產管理工作底稿(普匯)',
+                        'sheet' => '本金攤還表',
                         'title' => $sheetTItle,
                         'content' => $cell,
                     ];
