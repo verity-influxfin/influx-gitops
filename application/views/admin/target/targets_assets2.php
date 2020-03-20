@@ -44,7 +44,7 @@
         $(document).off("click",".asearch").on("click",".asearch" ,  function(){
             var user_id = $('#user_id').val();
             var target_no = $('#target_no').val();
-            var status = $('#status :selected').val();
+            var status = $('#status :selected').val() != '' ? '&status=' + $('#status :selected').val() : '';
             var trans_status = $('#trans_status :selected').val();
             var dateRange = '&sdate=' + $('#sdate').val() + '&edate=' + $('#edate').val();
             var data = '';
@@ -53,7 +53,7 @@
                     data = 'data=1&all=all' + dateRange;
                 }
             }else{
-                data = 'data=1&status=' + status + '&trans_status=' + trans_status + '&user_id=' + user_id + '&target_no=' + target_no  + dateRange;
+                data = 'data=1' + status + '&trans_status=' + trans_status + '&user_id=' + user_id + '&target_no=' + target_no  + dateRange;
             }
 
             $.ajax({
