@@ -621,8 +621,8 @@ class Transfer extends MY_Admin_Controller
                             if ($v['repayment_date'] == null) {
                                 continue;
                             }
-                            if (!isset($amortization[$v['repayment_date']])) {
-                                $odate = $ndate = $date = $v['repayment_date'];
+                            $odate = $ndate = $date = $v['repayment_date'];
+                            if (!isset($amortization[$ndate])) {
                                 if(date('d', strtotime($date)) != 10){
                                     $ym = date('Y-m', strtotime($odate));
                                     $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
@@ -647,7 +647,7 @@ class Transfer extends MY_Admin_Controller
                         }
                         ksort($amortization);
 
-                        $firstDate = $month = strtotime(array_keys($amortization)[0]);
+                        $month = strtotime(array_keys($amortization)[0]);
                         $lastDate = strtotime(end(array_keys($amortization)));
                         while ($month < $lastDate) {
                             $month = strtotime("+1 month", $month);
