@@ -746,7 +746,7 @@ class Transfer extends MY_Admin_Controller
                             $amortizationValue['principal'] + $amortizationValue['interest'],
                             $amortizationValue['r_damages'] + $amortizationValue['r_preapymentDamages'],
                             $amortizationValue['delay_interest'],
-                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'] + $amortizationValue['delay_interest'] + $amortizationValue['r_damages'] + $amortizationValue['r_preapymentDamages'],
+                            $amortizationValue['r_principal'] + $amortizationValue['r_interest'],
                             $amortizationValue['r_fees'],
                             $amortizationValue['r_prepayment_allowance'],
                             $amortizationValue['r_principal'] + $amortizationValue['r_interest'] + $amortizationValue['delay_interest'] + $amortizationValue['r_prepayment_allowance'] - $amortizationValue['r_fees'],
@@ -851,15 +851,18 @@ class Transfer extends MY_Admin_Controller
     private function target_query_status($query)
     {
         if ($query['status'] == 0) {
+            $query['status'] = [5,10];
+            $query['delay'] = 0;
+        } elseif ($query['status'] == 1) {
             $query['status'] = 5;
             $query['delay'] = 0;
-        } elseif ($query['status'] == 3) {
+        } elseif ($query['status'] == 4) {
             $query['status'] = 5;
             $query['delay'] = 1;
-        } elseif ($query['status'] == 2) {
+        } elseif ($query['status'] == 3) {
             $query['status'] = 10;
             $query['sub_status'] = [2,4];
-        } elseif ($query['status'] == 1) {
+        } elseif ($query['status'] == 2) {
             $query['status'] = 10;
             $query['sub_status'] = [0,8,10];
         }
