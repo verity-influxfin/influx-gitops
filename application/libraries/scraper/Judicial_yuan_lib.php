@@ -6,8 +6,8 @@ class Judicial_yuan_lib
     function __construct()
     {
         $this->CI = &get_instance();
-        $judicialYuanServerPort = '10000';
-        $this->scraperUrl = 'http://127.0.0.1:10000/scraper/api/v1.0/';//"http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
+        $judicialYuanServerPort = '9998';
+        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
     }
 
     public function requestJudicialYuanVerdicts($name, $address, $reference)
