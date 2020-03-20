@@ -875,5 +875,28 @@ class Certification extends MY_Admin_Controller {
 
         $this->json_output->setStatusCode(200)->send();
     }
+
+	public function get_papagoface_report()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		$limit = isset($get['limit']) ? $get['limit'] : 10;
+		$this->load->library('Certification_lib');
+		$cell = $this->certification_lib->papago_facedetact_report($limit);
+		$this->load->library('Phpspreadsheet_lib');
+		$mergeTitle = [
+			'2:4' => 'Azure',
+			'5:7' => 'Face++',
+			'8:10' => 'Face8',
+		];
+		$sheetTItle = ['user_id', '發證日期', '人臉數', 'face1準確度', 'face2準確度', '人臉數', 'face1準確度', 'face2準確度', '人臉數', 'face1準確度', 'face2準確度'];
+		$contents[] = [
+			'sheet' => 'PAPAGO FACE8測試',
+			'title' => $sheetTItle,
+			'content' => $cell,
+		];
+		$file_name = date("YmdHis", time()) . '_PAPAGO';
+		$descri = '普匯inFlux 後台管理者 ' . $this->login_info->id . ' [ 債權管理查詢 ]';
+		$this->phpspreadsheet_lib->excel($file_name, $contents, '本金餘額攤還表', '各期金額', $descri, $this->login_info->id, true, false, false, $mergeTitle);
+	}
 }
 ?>

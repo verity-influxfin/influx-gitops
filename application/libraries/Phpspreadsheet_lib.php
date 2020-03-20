@@ -65,7 +65,6 @@ class Phpspreadsheet_lib
                             $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->num2alpha(0) . ($row), '合計');
                             $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha(0) . ($row))->getAlignment()->setHorizontal('center');
                             $spreadsheet->getActiveSheet($sheet)->getStyle($this->num2alpha(0) . ($row))->getFont()->setBold(true);
-
                         }
                         else{
                             if(in_array($titleIndex,$sum)){

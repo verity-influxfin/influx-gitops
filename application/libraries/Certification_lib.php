@@ -1297,6 +1297,58 @@ class Certification_lib{
         return $company;
     }
 
+    public function papago_facedetact_report($limit = 10)
+    {
+        $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
+            'certification_id' => 1,
+            'remark like' => '%face":[%',
+            'remark not like' => '%face":[]%',
+            'remark like' => '%faceplus":[%',
+            'remark not like' => '%faceplus":[]%',
+        ]);
+        $list = [];
+        foreach ($certification_list as $key => $value) {
+            $person_compare = [];
+            $content = json_decode($value->content, true);
+            $remark = json_decode($value->remark, true);
+            $user_id = $value->user_id;
+            $cer_id = $value->id;
+            $this->CI->load->library('Papago_lib');
+            $person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
+            $front_face = $this->CI->papago_lib->detect($content['front_image'], $user_id, $cer_id);
+            $person_count = count($person_face['faces']);
+            $front_count = count($front_face['faces']);
+            foreach ($person_face['faces'] as $token) {
+                if(isset($token['face_token'])){
+                    $compare_res = $this->CI->papago_lib->compare([$token['face_token'], $front_face['faces'][0]['face_token']], $user_id, $cer_id);
+                    $person_compare[] = isset($compare_res['confidence']) ? $compare_res['confidence'] * 100 : '0';
+                }
+            }
+            $ocount_person_count = $remark['face_count']['person_count'];
+            $ocount_front_count = $remark['face_count']['front_count'];
+            $azure_face1 = isset($remark['face'][0]) ? $remark['face'][0] : 'n/a';
+            $azure_face2 = isset($remark['face'][1]) ? $remark['face'][1] : 'n/a';
+            $faceplus_face1 = isset($remark['faceplus'][0]) ? $remark['faceplus'][0] : 'n/a';
+            $faceplus_face2 = isset($remark['faceplus'][1]) ? $remark['faceplus'][1] : 'n/a';
+            $face8_face1 = isset($person_compare[0]) ? $person_compare[0] : 'n/a';
+            $face8_face2 = isset($person_compare[1]) ? $person_compare[1] : 'n/a';
+            $list[] = [
+                $user_id,
+                $content['id_card_date'],
+                $ocount_person_count . '/' . $ocount_front_count,
+                $azure_face1,
+                $azure_face2,
+                $ocount_person_count . '/' . $ocount_front_count,
+                $faceplus_face1,
+                $faceplus_face2,
+                $person_count . '/' . $front_count,
+                $face8_face1,
+                $face8_face2,
+            ];
+        }
+        return $list;
+    }
+  
     public function veify_signing_face($user_id, $url = false)
     {
         if ($url) {
