@@ -427,12 +427,11 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				// scraper api
-        $this->load->library('scraper/judicial_yuan_lib.php');
-				$this->sip_lib->requestJudicialYuanVerdicts(
-				    $content['name'],
-				    $content['address'],
-				    $content['??']
+				$this->load->library('scraper/judicial_yuan_lib.php');
+	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
+				    $input['name'],
+				    $input['address'],
+				    $user_id
 				);
 
 				$this->response(array('result' => 'SUCCESS'));
