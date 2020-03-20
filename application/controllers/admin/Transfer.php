@@ -566,7 +566,7 @@ class Transfer extends MY_Admin_Controller
 
         if ($target_no != '' || $export || $josn) {
             isset($where['status'])
-                ? $where = $this->target_delay_type($where)
+                ? $where = $this->target_query_status($where)
                 : $where['status'] = [5 ,10];
             $query = $target_no != ''
                 ? ['target_no like' => $target_no]
@@ -824,10 +824,7 @@ class Transfer extends MY_Admin_Controller
                 ]);
             }
         }else{
-            $page_data['type_status'] = [
-                0 => '正常案',
-                1 => '逾期案',
-            ];
+            $page_data['type_status'] = $this->config->item('target_status');
             $this->load->view('admin/_header');
             $this->load->view('admin/_title', $this->menu);
             $this->load->view('admin/target/targets_assets2', $page_data);
@@ -838,12 +835,14 @@ class Transfer extends MY_Admin_Controller
     public function target_status($target = false)
     {
         $current_status = 0;
-        if ($target->status == 5 && $target->delay == 1) {
-            $current_status = 3;
-        } elseif ($target->status == 10 && in_array($target->sub_status, [2, 4])) {
-            $current_status = 2;
-        } elseif ($target->status == 10) {
+        if ($target->status == 5 && $target->delay == 0) {
             $current_status = 1;
+        } elseif ($target->status == 10 && in_array($target->sub_status, [0, 8, 10])) {
+            $current_status = 2;
+        } elseif ($target->status == 10 && in_array($target->sub_status, [2, 4])) {
+            $current_status = 3;
+        } elseif ($target->status == 5 && $target->delay == 1) {
+            $current_status = 4;
         }
         return $current_status;
     }
@@ -851,23 +850,22 @@ class Transfer extends MY_Admin_Controller
     private function target_query_status($query)
     {
         if ($query['status'] == 0) {
-            $query['status'] = [5,10];
+            $query['status'] = [5, 10];
             $query['delay'] = 0;
         } elseif ($query['status'] == 1) {
             $query['status'] = 5;
             $query['delay'] = 0;
+        } elseif ($query['status'] == 2) {
+            $query['status'] = 10;
+            $query['sub_status'] = [0, 8, 10];
+        } elseif ($query['status'] == 3) {
+            $query['status'] = 10;
+            $query['sub_status'] = [2, 4];
         } elseif ($query['status'] == 4) {
             $query['status'] = 5;
             $query['delay'] = 1;
-        } elseif ($query['status'] == 3) {
-            $query['status'] = 10;
-            $query['sub_status'] = [2,4];
-        } elseif ($query['status'] == 2) {
-            $query['status'] = 10;
-            $query['sub_status'] = [0,8,10];
         }
-
-        return  $query;
+        return $query;
     }
 
     private function target_delay_type($query)
