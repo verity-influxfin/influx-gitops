@@ -1349,7 +1349,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => 0,
+                        'status' => [0 ,3],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1378,7 +1378,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => 0,
+                        'status' => [0 ,3],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
