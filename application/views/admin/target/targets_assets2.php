@@ -125,21 +125,17 @@
                             <td>區間資料：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['sdate']) && $_GET['sdate'] != '' ? $_GET['sdate'] : '' ?>"
-                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間" title="待確認規格" disabled/></td>
+                                       id="sdate" data-toggle="datepicker" placeholder="不指定區間" disabled/></td>
                             <td>至：</td>
                             <td><input type="text"
                                        value="<?= isset($_GET['edate']) && $_GET['edate'] != '' ? $_GET['edate'] : '' ?>"
-                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間" title="待確認規格" disabled/>
+                                       id="edate" data-toggle="datepicker" style="width: 182px;" placeholder="不指定區間" disabled/>
                             </td>
                         </tr>
                         <tr>
                             <td>狀態：</td>
                             <td>
-                                <select id="status" title="正常案    -> 還款中/到期結案/完成逾期清償/提前還款/產品轉換
-正常還款-> 還款中未結案
-到期結案-> 正常案到期結案/完成逾期清償
-提早清償-> 提前還款/產品轉換
-逾期中    -> 逾期中">
+                                <select id="status">
                                     <option value="">請選擇</option>
                                     <? foreach ($type_status as $key => $value) {
                                         ?>
@@ -148,9 +144,9 @@
                                     } ?>
                                 </select>
                             </td>
-                            <td class="hidden">債轉狀態：</td>
-                            <td class="hidden">
-                                <select id="trans_status"  title="是否轉出的案件">
+                            <td>債轉狀態：</td>
+                            <td>
+                                <select id="trans_status">
                                     <option value="">不過濾</option>
                                     <option value="0" selected>無</option>
                                     <option value="2">已轉出</option>
