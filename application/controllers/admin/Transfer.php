@@ -834,14 +834,15 @@ class Transfer extends MY_Admin_Controller
 
     public function target_status($target = false)
     {
-        $current_status = 0;
         if ($target->status == 5 && $target->delay == 0) {
-            $current_status = 1;
+            $current_status = 0;
         } elseif ($target->status == 10 && in_array($target->sub_status, [0, 8, 10])) {
+            $current_status = 1;
+        } elseif ($target->status == 10 && in_array($target->sub_status, [4])) {
             $current_status = 2;
-        } elseif ($target->status == 10 && in_array($target->sub_status, [2, 4])) {
+        } elseif ($target->status == 5 && $target->delay == 1 && $target->delay_days > 7) {
             $current_status = 3;
-        } elseif ($target->status == 5 && $target->delay == 1) {
+        } elseif ($target->status == 10 && $target->sub_status == 2) {
             $current_status = 4;
         }
         return $current_status;
@@ -850,20 +851,21 @@ class Transfer extends MY_Admin_Controller
     private function target_query_status($query)
     {
         if ($query['status'] == 0) {
-            $query['status'] = [5, 10];
+            $query['status'] = [5];
             $query['delay'] = 0;
         } elseif ($query['status'] == 1) {
-            $query['status'] = 5;
-            $query['delay'] = 0;
-        } elseif ($query['status'] == 2) {
             $query['status'] = 10;
             $query['sub_status'] = [0, 8, 10];
-        } elseif ($query['status'] == 3) {
+        } elseif ($query['status'] == 2) {
             $query['status'] = 10;
-            $query['sub_status'] = [2, 4];
-        } elseif ($query['status'] == 4) {
+            $query['sub_status'] = [4];
+        } elseif ($query['status'] == 3) {
             $query['status'] = 5;
             $query['delay'] = 1;
+            $query['delay_days >'] = 7;
+        } elseif ($query['status'] == 4) {
+            $query['status'] = 10;
+            $query['sub_status'] = [2];
         }
         return $query;
     }
