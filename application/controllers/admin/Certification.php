@@ -531,6 +531,48 @@ class Certification extends MY_Admin_Controller {
 				$this->load->library('Certification_lib');
 				$this->certification_lib->set_success($info->user_certification_id);
 				$this->user_bankaccount_model->update($id,array('verify'=>1));
+
+				$this->load->library('target_lib');
+				$target = $this->target_model->get_by([
+					'status' => TARGET_WAITING_VERIFY,
+				]);
+				$product_list = $this->config->item('product_list');
+				$product = $product_list[$target->product_id];
+				$sub_product_id = $target->sub_product_id;
+				if($this->is_sub_product($product,$sub_product_id)){
+					$product = $this->trans_sub_product($product,$sub_product_id);
+				}
+
+				$allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
+				if (in_array($target->product_id, $allow_fast_verify_product) && $target->sub_product_id != STAGE_CER_TARGET) {
+					$targetData = json_decode($target->target_data);
+					$faceDetect = isset($targetData->autoVerifyLog)
+						? count($targetData->autoVerifyLog) >= 2
+							? false : true
+						: true;
+					if ($faceDetect) {
+						$this->load->library('certification_lib');
+						$faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $target->person_image);
+						if ($faceDetect_res['error'] == '') {
+							$target->status = TARGET_WAITING_VERIFY;
+							$targetData->autoVerifyLog[] = [
+								'faceDetect' => $faceDetect_res,
+								'res' => TARGET_WAITING_BIDDING,
+								'verify_at' => time()
+							];
+							$param['target_data'] = json_encode($targetData);
+							$this->target_lib->target_verify_success($target, 0, $param);
+						} else {
+							$targetData->autoVerifyLog[] = [
+								'faceDetect' => $faceDetect_res,
+								'res' => TARGET_WAITING_SIGNING,
+								'verify_at' => time()
+							];
+							$param['target_data'] = json_encode($targetData);
+							$this->target_lib->target_sign_failed($target, 0, $product['name'], $param);
+						}
+					}
+				}
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();
@@ -897,6 +939,41 @@ class Certification extends MY_Admin_Controller {
 		$file_name = date("YmdHis", time()) . '_PAPAGO';
 		$descri = '普匯inFlux 後台管理者 ' . $this->login_info->id . ' [ 債權管理查詢 ]';
 		$this->phpspreadsheet_lib->excel($file_name, $contents, '本金餘額攤還表', '各期金額', $descri, $this->login_info->id, true, false, false, $mergeTitle);
+	}
+
+	private function is_sub_product($product,$sub_product_id){
+		$sub_product_list = $this->config->item('sub_product_list');
+		return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
+	}
+
+	private function trans_sub_product($product,$sub_product_id){
+		$sub_product_list = $this->config->item('sub_product_list');
+		$sub_product_data = $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+		$product = $this->sub_product_profile($product,$sub_product_data);
+		return $product;
+	}
+	private function sub_product_profile($product,$sub_product){
+		return array(
+			'id' => $product['id'],
+			'visul_id' => $sub_product['visul_id'],
+			'type' => $product['type'],
+			'identity' => $product['identity'],
+			'name' => $sub_product['name'],
+			'description' => $sub_product['description'],
+			'loan_range_s' => $sub_product['loan_range_s'],
+			'loan_range_e' => $sub_product['loan_range_e'],
+			'interest_rate_s' => $sub_product['interest_rate_s'],
+			'interest_rate_e' => $sub_product['interest_rate_e'],
+			'charge_platform' => $sub_product['charge_platform'],
+			'charge_platform_min' => $sub_product['charge_platform_min'],
+			'certifications' => $sub_product['certifications'],
+			'instalment' => $sub_product['instalment'],
+			'repayment' => $sub_product['repayment'],
+			'targetData' => $sub_product['targetData'],
+			'dealer' => $sub_product['dealer'],
+			'multi_target' => $sub_product['multi_target'],
+			'status' => $sub_product['status'],
+		);
 	}
 }
 ?>
