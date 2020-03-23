@@ -983,11 +983,11 @@ $config['use_taishin_selling_type'] = [2];
 $config['use_borrow_account_selling_type'] = [2];
 
 $config['target_status'] = [
-    0 => '正常案',
-    1 => '正常還款',
-    2 => '到期結案',
-    3 => '提早清償',
-    4 => '逾期中',
+    0 => '正常案-正常還款中',
+    1 => '正常案-已結案',
+    2 => '正常案-提前清償',
+    3 => '逾期案-還款中',
+    4 => '逾期案-清償',
 ];
 
 $config['target_delay_range'] = [
