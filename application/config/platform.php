@@ -141,7 +141,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1, STAGE_CER_TARGET],
+        'sub_product' => [1, STAGE_CER_TARGET, 5000],
         'certifications' => [1, 2, 3, 4, 5, 6, 7],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -191,7 +191,7 @@ $config['product_list'] = [
         'interest_rate_e' => 20,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [1, STAGE_CER_TARGET],
+        'sub_product' => [1, STAGE_CER_TARGET, 5001],
         'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -366,6 +366,20 @@ $config['visul_id_des'] = [
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
         'status' => 1
     ],
+    'LS1' => [
+        'name' => '學生貸',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
+    'LF1' => [
+        'name' => '上班族貸',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'status' => 1
+    ],
     'NS1' => [
         'name' => '資訊工程師專案',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
@@ -408,6 +422,14 @@ $config['visul_id_des'] = [
     'NS1P2' => [
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    ],
+    'LS1P1' => [
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    ],
+    'LF1P1' => [
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
     ]
 ];
 $config['sub_product_mapping'] = [
@@ -418,7 +440,7 @@ $config['map_sub_product'] = [
     '1:1' => '[1]->'
 ];
 $config['sub_product_list'] = [
-    '1' => [
+    1 => [
         'visul_id' => 'NS1',
         'identity' => [
             1 => [
@@ -464,7 +486,7 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
-    '2' => [
+    2 => [
         'visul_id' => 'DS1',
         'identity' => [
             3 => [
@@ -495,7 +517,7 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
-    '3' => [
+    3 => [
         'visul_id' => 'DS2',
         'identity' => [
             3 => [
@@ -630,6 +652,58 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
+    5000 => [
+        'visul_id' => 'LS1',
+        'identity' => [
+            1 => [
+                'visul_id' => 'LS1P1',
+                'name' => '學生貸',
+                'product_id' => '1:0',
+                'loan_range_s' => 5000,
+                'loan_range_e' => 120000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [1, 2, 3, 4, 5, 6, 7],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'weight' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 0,
+                'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000'
+            ]
+        ],
+        'status' => 1
+    ],
+    5001 => [
+        'visul_id' => 'LF1',
+        'identity' => [
+            2 => [
+                'visul_id' => 'LF1P1',
+                'name' => '上班族貸',
+                'product_id' => '3:0',
+                'loan_range_s' => 10000,
+                'loan_range_e' => 200000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
+                'instalment' => [3, 6, 12, 18, 24],
+                'repayment' => [1],
+                'targetData' => [],
+                'weight' => [],
+                'status' => 1,
+                'dealer' => 0,
+                'multi_target' => 0,
+                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000'
+            ]
+        ],
+        'status' => 1
+    ],
     9999 => [
         'visul_id' => 'OS1',
         'identity' => [
@@ -679,7 +753,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['N1', 'N2', 'NS1'],
+    'nature' => ['N1', 'N2', 'NS1', 'LS1', 'LF1'],
     'company' => ['DS2'],
 ];
 

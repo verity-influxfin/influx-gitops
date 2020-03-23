@@ -254,8 +254,8 @@ class Product extends REST_Controller {
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
+                        $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
-                            $sub_product_info = [];
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
@@ -281,7 +281,7 @@ class Product extends REST_Controller {
                                             }
                                             $sub_product_list[$t4]['identity'][$idekey]['target'] = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
                                         }
-                                        $sub_product_info[] = $sub_product_list[$t4];
+                                        isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
                                     }
                                 }
                             }
