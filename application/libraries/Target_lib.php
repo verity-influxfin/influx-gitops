@@ -925,6 +925,9 @@ class Target_lib
                         break;
                 }
                 if ($value->instalment_no) {
+                    !isset($list[$value->instalment_no]['interest'])?$list[$value->instalment_no]['interest'] = 0 : '';
+                    !isset($list[$value->instalment_no]['principal'])?$list[$value->instalment_no]['principal'] = 0 : '';
+                    !isset($list[$value->instalment_no]['delay_interest'])?$list[$value->instalment_no]['delay_interest'] = 0 : '';
                     $list[$value->instalment_no]['total_payment'] =
                         $list[$value->instalment_no]['interest'] +
                         $list[$value->instalment_no]['principal'] +
