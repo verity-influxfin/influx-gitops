@@ -228,6 +228,251 @@ class Transfer extends MY_Admin_Controller
         echo $html;
     }
 
+    /**
+     * New version of the index controller
+     */
+    public function obligations()
+    {
+        $page_data = array('type' => 'list');
+        $list = array();
+        $transfers = array();
+        $targets = array();
+        $school_list = array();
+        $input = $this->input->get(NULL, TRUE);
+        $show_status = array(3, 10);
+        $where = array();
+        $target_no = '';
+        $fields = ['status', 'target_no', 'user_id'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field]) && $input[$field] != '') {
+                if ($field == 'target_no') {
+                    $target_no = '%' . $input[$field] . '%';
+                } else {
+                    $where[$field] = $input[$field];
+                }
+            }
+        }
+
+        isset($input['all']) && $input['all'] == 'all' ? $where = ['status' => [3, 10]] : '';
+        isset($input['sdate']) && $input['sdate'] != '' ? $where['created_at >='] = strtotime($input['sdate']) : '';
+        isset($input['edate']) && $input['edate'] != '' ? $where['created_at <='] = strtotime($input['edate']) : '';
+        if ($target_no != '' || !empty($where)) {
+            $where['status'] = isset($where['status']) ? $where['status'] : $show_status;
+            $query = $target_no != ''
+                ? ['target_no like' => $target_no]
+                : ($where['status'] == 3
+                    ? ['status' => [5]]
+                    : ['status' => [5, 10]]
+                );
+            isset($input['delay']) && $input['delay'] != '' ? $query['delay'] = ($input['delay'] == 0 ? 0 : 1) : '';
+            if (!empty($target_no) || $query) {
+                $target_ids = array();
+                $target_list = $this->target_model->get_many_by(
+                    $query
+                );
+                if ($target_list) {
+                    foreach ($target_list as $key => $value) {
+                        $target_ids[] = $value->id;
+                    }
+                    $where['target_id'] = $target_ids;
+                }
+            }
+
+            if (isset($where['target_id']) || isset($where['user_id'])) {
+                $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+            }
+
+            if ($list) {
+                $target_ids = array();
+                $ids = array();
+                $user_list = array();
+
+                foreach ($list as $key => $value) {
+                    $target_ids[] = $value->target_id;
+                    $ids[] = $value->id;
+                }
+
+                //$target_list 	= $this->target_model->get_many($target_ids);
+                if ($target_list) {
+                    foreach ($target_list as $key => $value) {
+                        $user_list[] = $value->user_id;
+                        $targets[$value->id] = $value;
+                    }
+                }
+
+                foreach ($list as $key => $value) {
+                    $list[$key]->amortization_table = $this->target_lib->get_investment_amortization_table($targets[$value->target_id], $value);
+                }
+
+                $this->load->model('user/user_meta_model');
+                $users_school = $this->user_meta_model->get_many_by(array(
+                    'meta_key' => array('school_name', 'school_department'),
+                    'user_id' => $user_list,
+                ));
+                if ($users_school) {
+                    foreach ($users_school as $key => $value) {
+                        $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+                    }
+                }
+
+                $transfer_list = $this->transfer_model->get_many_by(array('investment_id' => $ids));
+                if ($transfer_list) {
+                    foreach ($transfer_list as $key => $value) {
+                        $transfers[$value->investment_id] = $value;
+                    }
+                }
+            }
+        }
+
+        $page_data['repayment_type'] = $this->config->item('repayment_type');
+        $page_data['list'] = $list;
+        $page_data['delay_list'] = $this->target_model->delay_list;
+        $page_data['status_list'] = $this->target_model->status_list;
+        $page_data['show_status'] = $show_status;
+        $page_data['investment_status_list'] = $this->investment_model->status_list;
+        $page_data['transfer_status_list'] = $this->investment_model->transfer_status_list;
+        $page_data['transfers'] = $transfers;
+        $page_data['targets'] = $targets;
+        $page_data['school_list'] = $school_list;
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/target/obligations', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    /**
+     * New version of amortization_export
+     * Mostly follows the same rule but modifies a bit to fit requirements
+     */
+    public function amortization_schedule()
+    {
+        $post = $this->input->post(NULL, TRUE);
+        $ids = isset($post['ids']) && $post['ids'] ? explode(',', $post['ids']) : '';
+
+        $html = '';
+        $rows = ['normal' => [], 'overdue' => []];
+        if (!$ids || !is_array($ids)) {
+            return;
+        }
+
+        $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($ids);
+
+        $amortizationTable = [];
+
+        if (!$investments) {
+            header('Content-type:application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+            $html = '<table><thead><tr><th>還款日</th><th>本金金額</th><th>本金餘額</th><th>當期利息</th><th>本息合計</th><th>延滯息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>';
+            $html .= '</tbody></table>';
+            echo $html;
+            return;
+        }
+
+        foreach ($investments as $key => $value) {
+            $target = $this->target_model->get($value->target_id);
+            $amortizationTables = $this->target_lib->get_investment_amortization_table_v2($target, $value);
+            if (
+                !$amortizationTables
+                || !isset($amortizationTables['normal'])
+                || !isset($amortizationTables['overdue'])
+            ) {
+                continue;
+            }
+            $isPrepayment = false;
+            if (in_array($target->sub_status, [4])) {
+                $isPrepayment = true;
+            }
+            foreach ($amortizationTables as $key => $value) {
+                $currentRows = $value['rows'];
+                if ($isPrepayment && $key == 'normal') {
+                    $key = 'prepayment';
+                }
+
+                foreach ($currentRows as $k => $v) {
+                    if (!$v['repayment_date']) {
+                        continue;
+                    }
+                    if (!isset($rows[$key][$v['repayment_date']])) {
+                        $rows[$key][$v['repayment_date']] = array(
+                            'remaining_principal' => 0,
+                            'principal' => 0,
+                            'r_principal' => 0,
+                            'interest' => 0,
+                            'r_interest' => 0,
+                            'damage' => 0,
+                            'prepayment_allowance' => 0,
+                            'prepayment_damage' => 0,
+                            'delay_interest' => 0,
+                            'ar_fees' => 0,
+                            'r_fees' => 0,
+                            'r_delayinterest' => 0,
+                            'repayment' => 0,
+                        );
+                    }
+                    // $v['repayment_date'] = $this->goToNext($v['repayment_date']);
+
+                    // echo $key . " " . $v['repayment_date'] . " " . $v['r_principal'] . "<br><br>\n";
+                    $rows[$key][$v['repayment_date']]['remaining_principal'] += $v['remaining_principal'];
+                    $rows[$key][$v['repayment_date']]['r_principal'] += $v['r_principal'];
+                    $rows[$key][$v['repayment_date']]['principal'] += $v['principal'];
+                    $rows[$key][$v['repayment_date']]['r_interest'] += $v['r_interest'];
+                    $rows[$key][$v['repayment_date']]['interest'] += $v['interest'];
+                    $rows[$key][$v['repayment_date']]['damage'] += $v['damage'];
+                    $rows[$key][$v['repayment_date']]['prepayment_allowance'] += $v['prepayment_allowance'];
+                    $rows[$key][$v['repayment_date']]['prepayment_damage'] += $v['prepayment_damage'];
+                    $rows[$key][$v['repayment_date']]['delay_interest'] += $v['delay_interest'];
+                    $rows[$key][$v['repayment_date']]['ar_fees'] += $v['ar_fees'];
+                    $rows[$key][$v['repayment_date']]['r_fees'] += $v['r_fees'];
+                    $rows[$key][$v['repayment_date']]['r_delayinterest'] += $v['r_delayinterest'];
+                    $rows[$key][$v['repayment_date']]['repayment'] += $v['repayment'];
+                }
+            }
+        }
+
+
+        header('Content-type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+        foreach (['normal', 'overdue', 'prepayment'] as $type) {
+            if ($type == 'normal') {
+                $tableName = '正常案';
+            } elseif ($type == 'overdue') {
+                $tableName = '逾期案';
+            } else {
+                $tableName = '提前清償';
+            }
+            $html = "<table>{$tableName}<thead><tr><th>還款日</th><th>本金金額</th><th>本金餘額</th><th>當期利息</th><th>本息合計</th><th>違約金</th><th>延滯息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+            ksort($rows[$type]);
+            foreach ($rows[$type] as $key => $value) {
+                if ($type != 'prepayment' && substr($key, -2) == '10' || $type == 'prepayment') {
+                    $total = $value['r_principal'] + $value['r_interest'];
+                    $r_fee = $value['r_fees'];
+                    $profit = $value['repayment'] - $r_fee;
+                    $html .= '<tr>';
+                    $html .= '<td>' . $key . '</td>';
+                    $html .= '<td>' . $value['principal'] . '</td>';
+                    $html .= '<td>' . $value['remaining_principal'] . '</td>';
+                    $html .= '<td>' . $value['interest'] . '</td>';
+                    $html .= '<td>' . ($value['principal'] + $value['interest']) . '</td>';
+                    $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
+                    $html .= '<td>' . $value['r_delayinterest'] . '</td>';
+                    $html .= '<td>' . $total . '</td>';
+                    $html .= '<td>' . $value['r_fees'] . '</td>';
+                    if ($type == 'prepayment') {
+                        $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
+                    } else {
+                        $html .= '<td>0</td>';
+                    }
+                    $html .= '<td>' . $profit . '</td>';
+                    $html .= '</tr>';
+                }
+            }
+            $html .= '</tbody></table><br>';
+            echo $html;
+        }
+    }
+
     public function amortization_export()
     {
         $post = $this->input->post(NULL, TRUE);
