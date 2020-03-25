@@ -563,6 +563,8 @@ class Charge_lib
 				'status'	=> 1
 			]);
 			if($transaction){
+                $this->CI->load->model('loan/contract_model');
+                $contract = $this->CI->contract_model->get($target->contract_id);
 				$settlement 			= true;
 				$user_to_info 			= [];
 				$transaction_param 		= [];
@@ -601,13 +603,9 @@ class Charge_lib
 
 					if($user_to_info){
 						$total_remaining_principal = 0;
-						foreach($user_to_info as $investment_id => $value){
-                            if ($target->order_id != 0) {
-                                $this->CI->load->model('loan/contract_model');
-                                $contract = $this->CI->contract_model->get($target->contract_id);
-                                if ($contract->format_id == 3) {
-                                    $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
-                                }
+                        foreach($user_to_info as $investment_id => $value){
+                            if ($contract->format_id == 3) {
+                                $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
                                 $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
                             }
@@ -672,12 +670,8 @@ class Charge_lib
 				}else{
 					if($user_to_info){
 						foreach($user_to_info as $investment_id => $value){
-                            if ($target->order_id != 0) {
-                                $this->CI->load->model('loan/contract_model');
-                                $contract = $this->CI->contract_model->get($target->contract_id);
-                                if ($contract->format_id == 3) {
-                                    $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
-                                }
+                            if ($contract->format_id == 3) {
+                                $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
                                 $delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
                             }

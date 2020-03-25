@@ -283,7 +283,7 @@ class Subloan extends REST_Controller {
 			}
 		}
 
-		isset($input['product_id'])?$param['product_id']=$input['product_id']:'';
+		isset($input['product_id'])?$param['product_id']=$input['product_id']:1;
 		
 		$target = $this->target_model->get($input['target_id']);
 		if(!empty($target) && $target->status == 5 ){

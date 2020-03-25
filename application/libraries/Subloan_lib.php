@@ -55,14 +55,21 @@ class Subloan_lib{
 						default:
 							break;
 					}
+                    $limit_date = $value->limit_date;
 				} 
 
 				$data['remaining_instalment'] 	= $target->instalment - $instalment;
 				
 				if($remaining_principal){
+                    $this->CI->load->model('loan/contract_model');
+                    $contract = $this->CI->contract_model->get($target->contract_id);
 					foreach($remaining_principal as $k => $v){
 						$data['remaining_principal'] 	+= $v;
-						$data['delay_interest_payable'] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days);
+                        if ($contract->format_id == 3) {
+                            $data['delay_interest_payable'] += $this->CI->financial_lib->get_interest_by_days($target->delay_days, $v, $instalment, 20, $limit_date);
+                        } else {
+                            $data['delay_interest_payable'] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days);
+                        }
 					}
 					
 					foreach($interest_payable as $k => $v){
