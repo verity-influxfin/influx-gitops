@@ -716,8 +716,7 @@ $name 您好，
         $investor == 0 ? $param['status'] = 1 : '';
         $investor == 1 ? $param['investor_status'] = 1 : '';
         if ($investor == 2) {
-            $param['status'] = 1;
-            $param['investor_status'] = 1;
+            $param['email !='] = '';
         }
 
         if ($school) {
