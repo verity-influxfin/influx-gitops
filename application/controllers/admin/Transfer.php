@@ -411,9 +411,7 @@ class Transfer extends MY_Admin_Controller
                             'repayment' => 0,
                         );
                     }
-                    // $v['repayment_date'] = $this->goToNext($v['repayment_date']);
 
-                    // echo $key . " " . $v['repayment_date'] . " " . $v['r_principal'] . "<br><br>\n";
                     $rows[$key][$v['repayment_date']]['remaining_principal'] += $v['remaining_principal'];
                     $rows[$key][$v['repayment_date']]['r_principal'] += $v['r_principal'];
                     $rows[$key][$v['repayment_date']]['principal'] += $v['principal'];

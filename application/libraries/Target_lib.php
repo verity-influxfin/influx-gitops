@@ -996,7 +996,7 @@ class Target_lib
         if ($transfer) {
             $total = intval($transfer->principal);
         }
-        // echo $total . " " . $normalRepaymentPrincipal . " " . $overdueRepaymentPrincipal . "<br>\n";
+
         $normalSchedule['remaining_principal'] = $total - $normalRepaymentPrincipal - $overdueRepaymentPrincipal;
         $overdueSchedule['remaining_principal'] = $overdueRepaymentPrincipal;
 
