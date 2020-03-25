@@ -19,6 +19,7 @@ class Papago_lib
         $api_url = 'https://api.face8.ai/api/detect';
         $data = [
             'image_base64' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents($url)),
+            'min_face_size' => 48,
         ];
         $result = $this->papago_curl($api_url, $data);
         $this->log_event('detect', $user_id, $cer_id, $result, $url);
