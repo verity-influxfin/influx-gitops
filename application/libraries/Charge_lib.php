@@ -602,7 +602,15 @@ class Charge_lib
 					if($user_to_info){
 						$total_remaining_principal = 0;
 						foreach($user_to_info as $investment_id => $value){
-							$user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'],$delay_days);
+                            if ($target->order_id != 0) {
+                                $this->CI->load->model('loan/contract_model');
+                                $contract = $this->CI->contract_model->get($target->contract_id);
+                                if ($contract->format_id == 3) {
+                                    $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
+                                }
+                            } else {
+                                $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
+                            }
 							$total_remaining_principal 	+= $value['remaining_principal'];
 						}
 						
