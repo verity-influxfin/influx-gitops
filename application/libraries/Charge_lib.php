@@ -672,7 +672,15 @@ class Charge_lib
 				}else{
 					if($user_to_info){
 						foreach($user_to_info as $investment_id => $value){
-							$delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'],$delay_days);
+                            if ($target->order_id != 0) {
+                                $this->CI->load->model('loan/contract_model');
+                                $contract = $this->CI->contract_model->get($target->contract_id);
+                                if ($contract->format_id == 3) {
+                                    $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
+                                }
+                            } else {
+                                $delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
+                            }
 							$this->CI->transaction_model->update_by(
 								[
 									'source' 		=> SOURCE_AR_DELAYINTEREST,
