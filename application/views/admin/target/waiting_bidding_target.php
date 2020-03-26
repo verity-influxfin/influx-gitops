@@ -42,8 +42,8 @@
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信用等級</th>
-                                            <th>學校名稱</th>
-                                            <th>學校科系</th>
+                                            <th>公司/學校</th>
+                                            <th>科系</th>
                                             <th>申請金額</th>
                                             <th>核准金額</th>
 											<th>年化利率</th>
@@ -74,8 +74,8 @@
 												</a>
 											</td>
 											<td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
-											<td><?=isset($school_list[$value->user_id]["school_name"])?$school_list[$value->user_id]["school_name"]:'' ?></td>
-                                            <td><?=isset($school_list[$value->user_id]["school_department"])?$school_list[$value->user_id]["school_department"]:'' ?></td>
+                                            <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
+                                            <td><?=isset($value->school_department)?$value->school_department:'' ?></td>
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?></td>
