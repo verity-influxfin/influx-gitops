@@ -159,8 +159,7 @@ class Certification extends MY_Admin_Controller {
 						alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
 					}
 
-					if(isset($page_data['content']['programming_language']) && is_string($page_data["content"]["programming_language"])){
-						$page_data['content']['programming_language'] = json_decode($page_data["content"]["programming_language"], true);
+					if(isset($page_data['content']['programming_language'])){
 						$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
 						$set_lang_level =['入門','參與開發','獨立執行'];
 						foreach($page_data['content']['programming_language'] as $lang_list => $lang){
@@ -544,7 +543,10 @@ class Certification extends MY_Admin_Controller {
 				}
 
 				$allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
-				if (in_array($target->product_id, $allow_fast_verify_product) && $target->sub_product_id != STAGE_CER_TARGET) {
+				if (in_array($target->product_id, $allow_fast_verify_product)
+					&& $target->sub_product_id != STAGE_CER_TARGET
+					&& $target->sub_status != 8
+				) {
 					$targetData = json_decode($target->target_data);
 					$faceDetect = isset($targetData->autoVerifyLog)
 						? count($targetData->autoVerifyLog) >= 2
