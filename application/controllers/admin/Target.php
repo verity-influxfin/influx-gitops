@@ -1301,32 +1301,41 @@ class Target extends MY_Admin_Controller {
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
 		$list 						= $this->target_model->get_many_by(['status'=>3]);
-		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
+        $tmp  = [];
 		if($list){
 			$this->load->model('log/Log_targetschange_model');
-			foreach($list as $key => $value){
-				$user_list[] 	= $value->user_id;
-				$target_change	= $this->Log_targetschange_model->get_by(array(
+            $this->load->model('user/user_meta_model');
+            foreach($list as $key => $value){
+                $user_list[] 	= $value->user_id;
+                $target_change	= $this->Log_targetschange_model->get_by(array(
 					'target_id'		=> $value->id,
 					'status'		=> 3,
 				));
-				if($target_change){
-					$list[$key]->bidding_date = $target_change->created_at;
-				}
-			}
+                if($target_change){
+                    $list[$key]->bidding_date = $target_change->created_at;
+                }
+                if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
+                    $get_meta = $this->user_meta_model->get_many_by([
+                        'meta_key' => ['school_name', 'school_department','job_company'],
+                        'user_id' => $value->user_id,
+                    ]);
+                    if ($get_meta) {
+                        foreach ($get_meta as $skey => $svalue) {
+                            $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
+                            $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
+                            $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
+                        }
+                    }
+                }
+                if(isset($tmp[$value->user_id]['school']['school_name'])){
+                    $list[$key]->school_name       = $tmp[$value->user_id]['school']['school_name'];
+                    $list[$key]->school_department = $tmp[$value->user_id]['school']['school_department'];
+                }
 
-			$this->load->model('user/user_meta_model');
-			$users_school 	= $this->user_meta_model->get_many_by([
-				'meta_key' 	=> ['school_name','school_department'],
-				'user_id' 	=> $user_list,
-			]);
-			if($users_school){
-				foreach($users_school as $key => $value){
-					$school_list[$value->user_id][$value->meta_key] = $value->meta_value;
-				}
-			}
+                isset($tmp[$value->user_id]['company'])?$list[$key]->company=$tmp[$value->user_id]['company']:'';
+            }
 		}
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
@@ -1334,7 +1343,6 @@ class Target extends MY_Admin_Controller {
         $page_data['sub_product_list'] = $this->config->item('sub_product_list');
         $page_data['list'] 				= $list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
-		$page_data['school_list'] 		= $school_list;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
