@@ -2244,7 +2244,10 @@ class Product extends REST_Controller {
         $this->target_lib->signing_target($target->id, $param, $user_id);
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
-        if (in_array($product['id'], $allow_fast_verify_product) && $target->sub_product_id != STAGE_CER_TARGET && $bank_account->verify == 1) {
+        if (in_array($product['id'], $allow_fast_verify_product)
+            && $target->sub_product_id != STAGE_CER_TARGET
+            && $target->sub_status != 8
+            && $bank_account->verify == 1) {
             $targetData = json_decode($target->target_data);
             $faceDetect = isset($targetData->autoVerifyLog)
                 ? count($targetData->autoVerifyLog) >= 2
