@@ -47,6 +47,9 @@
                       + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
                       $("#verdict_list").prepend(html);
                       requestVerdictCount();
+                      if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
+                        setTimeout("window.location.reload()",5000);
+                      }
                       return;
                   }
               },
@@ -132,6 +135,7 @@
 
                       if (response.status.code == 200) {
                           alert('爬蟲執行請求成功送出');
+                          location.reload();
                               return;
                       }
                   },
