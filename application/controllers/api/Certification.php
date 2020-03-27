@@ -231,6 +231,14 @@ class Certification extends REST_Controller {
 			
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
+
+				$this->load->library('scraper/judicial_yuan_lib.php');
+	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
+				    $input['name'],
+				    $content['id_card_place'],
+				    $user_id
+				);
+
 				$this->load->library('Sendemail');
 				$investor_status = $investor?"出借端":"借款端";
 				$this->sendemail->admin_notification("新的一筆實名認證 ".$investor_status."會員ID:".$user_id,"有新的一筆實名認證 ".$investor_status."會員ID:".$user_id);
