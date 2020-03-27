@@ -509,43 +509,46 @@ class Target extends REST_Controller {
                         $cer['certification_id'] = null;
                         $cer['updated_at'] = null;
                     } else {
-                        $description = '';
+                        $description = false;
                         $contents = json_decode($cur_cer[$value]->content);
                         if( $value == 1){
-                            $description .= '發證地點：' . $contents->id_card_place
-                                . '發證時間：' . $contents->id_card_date;
+                            $description .= '發證地點：' . $contents->id_card_place . '
+發證時間：' . $contents->id_card_date;
                         } elseif( $value == 2){
-                            isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) . '\n' : '';
-                            $description .= '學門：' . $contents->major
-                                . '\n系所：' . $contents->department
-                                . '\n學制：' . $this->config->item('school_system')[$contents->system];
-                        } elseif ($value == 4){
+                            isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) : '';
+                            $description .= '
+學門：' . $contents->major. '
+系所：' . $contents->department . '
+學制：' . $this->config->item('school_system')[$contents->system];
+                        } elseif ($value == 4 && isset($contents->type)){
                             if($contents->type == 'instagram'){
-                                $description .= 'Instagram'  . '\n'
-                                    . '貼文：' . $contents->info->counts->media
-                                    . '\n追蹤者：' . $contents->info->counts->followed_by
-                                    . '\n追蹤中：' . $contents->info->counts->follows;
+                                $description .= 'Instagram' . '
+貼文：' . $contents->info->counts->media . '
+追蹤者：' . $contents->info->counts->followed_by . '
+追蹤中：' . $contents->info->counts->follows;
                             }
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
-                        }elseif ($value == 7){
+                        } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
                             $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense) / 12);
                             $description = '平均月收入：'
-                                . $financial_input . '\n平均月支出：' . $financial_output;
+                                . $financial_input . '
+平均月支出：' . $financial_output;
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
                         } elseif ($value == 9){
                             $description = '信用評分：' . $contents->credit_rate;
                         } elseif ($value == 10){
-                            isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] . '\n' : '';
-                            isset($contents->job_seniority) ? $description .= '此公司工作期間：' . $this->config->item('seniority_range')[$contents->job_seniority] : '';
+                            isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] : '';
+                            isset($contents->job_seniority) ? $description .= '
+此公司工作期間：' . $this->config->item('seniority_range')[$contents->job_seniority] : '';
                         }
                         $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
                         $cer['certification_id'] = intval($cur_cer[$value]->id);
                         $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
-                        $cer['description'] = $description;
+                        $description ? $cer['description'] = $description : '';
                     }
                     unset($cer['optional']);
                     $certification_list[] = $cer;
