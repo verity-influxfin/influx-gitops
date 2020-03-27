@@ -253,7 +253,7 @@
 													if(isset($value->certification) && $value->certification[$k]["user_status"]!==null){
 														$certification_id 	= $value->certification[$k]["certification_id"];
                                                         $sys_check = $value->certification[$k]["sys_check"]===0?" btn-circle":" ";
-                                                        $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[IDCARD,DEBITCARD,EMERGENCY,EMAIL])?'danger':'success');
+                                                        $status      = ($value->certification[$k]['expire_time']<=time()&&!in_array($v['id'],[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])?'danger':'success');
                                                         $expire_time = date( "Y/m/d", $value->certification[$k]['expire_time']);
 														if($k==3){
 															switch($value->certification[$k]["user_status"]){

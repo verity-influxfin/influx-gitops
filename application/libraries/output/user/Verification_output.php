@@ -61,7 +61,7 @@ class Verification_output
 			"expired" => $verification["expire_time"] < time()
 						 && !in_array(
 						 	$verification["certification_id"],
-							[IDCARD,DEBITCARD,EMERGENCY,EMAIL]
+							[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]
 						 )
 		];
 

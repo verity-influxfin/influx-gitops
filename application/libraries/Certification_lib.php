@@ -15,17 +15,17 @@ class Certification_lib{
 		$this->certification = $this->CI->config->item('certifications');
     }
 
-	public function get_certification_info($user_id,$certification_id,$investor=0,$set_fail=false){
+	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
 		if($user_id && $certification_id){
 			$param = array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
-				'status !='			=> 2,
 			);
+            !$get_fail ? $param['status !='] = 2 : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
-			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])){
+			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
                     return false;
                 }
 			    else{
@@ -1034,7 +1034,7 @@ class Certification_lib{
 
 
 
-    public function get_status($user_id,$investor=0,$company=0,$set_fail=false,$target=false){
+    public function get_status($user_id,$investor=0,$company=0,$get_fail=false,$target=false){
 		if($user_id){
 			$certification = array();
 			if($company){
@@ -1108,7 +1108,7 @@ class Certification_lib{
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-                $user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
+                $user_certification = $this->get_certification_info($user_id,$key,$investor,$get_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
@@ -1277,9 +1277,9 @@ class Certification_lib{
             ]);
             if ($certification) {
                 foreach ($certification as $key => $value) {
-                    if ($investor == 0 && !in_array($value->certification_id, [IDCARD, DEBITCARD, EMERGENCY, EMAIL])
+                    if ($investor == 0 && !in_array($value->certification_id, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL])
                         && $value->expire_time <= time()
-                    || in_array($value->certification_id, [INVESTIGATION, JOB])
+                    || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
                         && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)) {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }
