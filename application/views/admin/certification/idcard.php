@@ -97,7 +97,6 @@
                           list_foot = '>' + case_list.name +'</td><td>' + case_list.count + '</td></tr>';
                           if(case_list.name =='本票裁定' || case_list.name =='支付命令' || case_list.name =='消債之前置協商認可事件' || case_list.name =='詐欺' || case_list.name =='侵佔'){
                                   list = list_head + list_style + list_foot;
-                                  //console.log(list);
                                 }else{
                                   list = list_head + list_foot;
                                 }
