@@ -520,7 +520,7 @@ class Target extends REST_Controller {
 學門：' . $contents->major. '
 系所：' . $contents->department . '
 學制：' . $this->config->item('school_system')[$contents->system];
-                        } elseif ($value == 4){
+                        } elseif ($value == 4 && isset($contents->type)){
                             if($contents->type == 'instagram'){
                                 $description .= 'Instagram' . '
 貼文：' . $contents->info->counts->media . '
