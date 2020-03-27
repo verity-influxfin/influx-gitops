@@ -34,7 +34,7 @@
                   }
 
                   if (response.status.code == 204) {
-                      html = '<tr><td>狀態</td><td>not begin</td></tr>';
+                      html = '<tr><td>狀態</td><td>請求未被收到</td></tr>';
                       $('#verdict_list').prepend(html);
                       $('.run-scraper-tr').show();
                       return;

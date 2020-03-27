@@ -7,7 +7,7 @@ class Judicial_yuan_lib
     {
         $this->CI = &get_instance();
         $judicialYuanServerPort = '9998';
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
+        $this->scraperUrl = 'http://127.0.0.1:10000/scraper/api/v1.0/';//"http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
     }
 
     public function mappingAddressAndScraperAddress($address)
@@ -24,6 +24,19 @@ class Judicial_yuan_lib
         }
 
         return $address;
+    }
+
+    public function mappingStatusToChinese($status)
+    {
+        $statusName = [
+          'finished' => '爬蟲執行完成', 'requested' => '爬蟲尚未開始', 'started' => '爬蟲正在執行中', 'fail' => '爬蟲執行失敗'
+        ];
+
+        if( isset($statusName[$status]) ){
+          return $statusName[$status];
+        }
+
+        return $status;
     }
 
     public function requestJudicialYuanVerdicts($name, $address, $reference)
@@ -56,6 +69,8 @@ class Judicial_yuan_lib
       $result = curl_get($url);
 
       $response = json_decode($result, true);
+
+      $response['response']['status'] = $this->mappingStatusToChinese($response['response']['status']);
 
       return $response;
     }
