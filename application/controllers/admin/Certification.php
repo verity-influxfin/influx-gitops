@@ -935,7 +935,7 @@ class Certification extends MY_Admin_Controller {
 		public function verdict(){
 			$input = $this->input->get(NULL, TRUE);
 			$name = isset($input['name']) ? $input['name'] : '';
-			$address = isset($input['address']) ? substr($input['address'],1,-7) : '';
+			$address = isset($input['address']) ?  $input['address']: '';
 			$user_id = isset($input['user_id']) ? $input['user_id'] : '';
 
 			$this->load->library('output/json_output');

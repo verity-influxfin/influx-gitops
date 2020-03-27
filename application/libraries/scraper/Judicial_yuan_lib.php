@@ -47,7 +47,7 @@ class Judicial_yuan_lib
 
         $url = $this->scraperUrl  . "verdicts";
 
-        $data = ["query" => $name, "location" => $this->mappingAddressAndScraperAddress($address), "reference" => $reference];
+        $data = ["query" => $name, "location" => $this->mappingAddressAndScraperAddress(substr($address,1,-7)), "reference" => $reference];
 
         $result = curl_get($url, $data);
         $response = json_decode($result);
