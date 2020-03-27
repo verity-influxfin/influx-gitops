@@ -345,6 +345,8 @@ class Target_lib
                                 } else {
                                     $param['sub_status'] = 9;
                                 }
+                                $curTargetData = json_decode($target->target_data);
+                                $curTargetData && !$targetData ? $targetData = $curTargetData : '';
                                 !$targetData ? $targetData = new stdClass() : '';
                                 $targetData->credit_level = $credit['level'];
                                 $param['target_data'] = json_encode($targetData);
