@@ -35,7 +35,7 @@
 
                   if (response.status.code == 204) {
                       html = '<tr><td>狀態</td><td>請求未被收到</td></tr>';
-                      $('#verdict_list').prepend(html);
+                      $('#verdict_list').html(html);
                       $('.run-scraper-tr').show();
                       return;
                   }
@@ -45,10 +45,13 @@
 
                       html = '<tr><td>名字</td><td>'+ data_arry.query +'</td></tr><tr><td>戶籍地</td><td>'+ data_arry.location +'</td></tr><tr><td>狀態</td><td>'
                       + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
-                      $("#verdict_list").prepend(html);
-                      requestVerdictCount();
+                      $("#verdict_list").html(html);
+
                       if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
-                        setTimeout("window.location.reload()",5000);
+                        setTimeout(function() { requestVerdictStatuses()}, 5000 );
+                      }
+                      if(data_arry.status=='爬蟲執行完成'){
+                        requestVerdictCount();
                       }
                       return;
                   }
@@ -135,7 +138,7 @@
 
                       if (response.status.code == 200) {
                           alert('爬蟲執行請求成功送出');
-                          location.reload();
+                          setTimeout(requestVerdictStatuses(),5000);
                               return;
                       }
                   },
