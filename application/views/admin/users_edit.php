@@ -251,9 +251,9 @@
 													</td>
 													<td>
 														<?
-																$status        = ($value['expire_time'] <= time()&&!in_array($key,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])? 'danger' : 'success');
+																$status        = ($value['expire_time'] <= time()&&!in_array($key,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])? 'danger' : 'success');
 																$expire_time   = date("Y/m/d", $value['expire_time']);
-																$expire_status = $value['expire_time'] <= time()&&!in_array($key,[IDCARD,DEBITCARD,EMERGENCY,EMAIL]) ? (' (' . $expire_time . ')') : '';
+																$expire_status = $value['expire_time'] <= time()&&!in_array($key,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]) ? (' (' . $expire_time . ')') : '';
 
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {

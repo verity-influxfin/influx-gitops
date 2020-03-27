@@ -108,7 +108,7 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor,$company);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company);
 		$list				= array();
 		if(!empty($certification_list)){
 			$list = $certification_list;
