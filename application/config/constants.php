@@ -160,16 +160,16 @@ defined('CERTIFICATION_STUDENTID_EXIST') 	OR define('CERTIFICATION_STUDENTID_EXI
 defined('CERTIFICATION_STUDENTEMAIL_EXIST') OR define('CERTIFICATION_STUDENTEMAIL_EXIST', 511);
 
 //Certification
-defined('IDCARD')        OR define('IDCARD'            , 1);
-defined('STUDENT')       OR define('STUDENT'           , 2);
-defined('DEBITCARD')     OR define('DEBITCARD'         , 3);
-defined('SOCIAL')        OR define('SOCIAL'            , 4);
-defined('EMERGENCY')     OR define('EMERGENCY'         , 5);
-defined('EMAIL')         OR define('EMAIL'             , 6);
-defined('FINANCIAL')     OR define('FINANCIAL'         , 7);
-defined('DIPLOMA')       OR define('DIPLOMA'           , 8);
-defined('INVESTIGATION') OR define('INVESTIGATION'     , 9);
-defined('JOB')           OR define('JOB'               , 10);
+defined('CERTIFICATION_IDCARD')        OR define('CERTIFICATION_IDCARD'            , 1);
+defined('CERTIFICATION_STUDENT')       OR define('CERTIFICATION_STUDENT'           , 2);
+defined('CERTIFICATION_DEBITCARD')     OR define('CERTIFICATION_DEBITCARD'         , 3);
+defined('CERTIFICATION_SOCIAL')        OR define('CERTIFICATION_SOCIAL'            , 4);
+defined('CERTIFICATION_EMERGENCY')     OR define('CERTIFICATION_EMERGENCY'         , 5);
+defined('CERTIFICATION_EMAIL')         OR define('CERTIFICATION_EMAIL'             , 6);
+defined('CERTIFICATION_FINANCIAL')     OR define('CERTIFICATION_FINANCIAL'         , 7);
+defined('CERTIFICATION_DIPLOMA')       OR define('CERTIFICATION_DIPLOMA'           , 8);
+defined('CERTIFICATION_INVESTIGATION') OR define('CERTIFICATION_INVESTIGATION'     , 9);
+defined('CERTIFICATION_JOB')           OR define('CERTIFICATION_JOB'               , 10);
 
 //Target
 defined('TARGET_WAITING_APPROVE') OR define('TARGET_WAITING_APPROVE', 0);

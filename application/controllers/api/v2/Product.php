@@ -1708,7 +1708,7 @@ class Product extends REST_Controller {
                     $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($order->total),$target, get_entering_date(),$product['type']);
 
                     $this->load->library('contract_lib');
-                    $contract = $this->contract_lib->sign_contract('order',[
+                    $contract = $this->contract_lib->sign_contract('order_200325',[
                         $order->company_user_id,
                         $user_id,
                         implode(' , ',$items),
@@ -2244,7 +2244,10 @@ class Product extends REST_Controller {
         $this->target_lib->signing_target($target->id, $param, $user_id);
 
         $allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
-        if (in_array($product['id'], $allow_fast_verify_product) && $target->sub_product_id != STAGE_CER_TARGET) {
+        if (in_array($product['id'], $allow_fast_verify_product)
+            && $target->sub_product_id != STAGE_CER_TARGET
+            && $target->sub_status != 8
+            && $bank_account->verify == 1) {
             $targetData = json_decode($target->target_data);
             $faceDetect = isset($targetData->autoVerifyLog)
                 ? count($targetData->autoVerifyLog) >= 2

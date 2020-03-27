@@ -108,7 +108,7 @@ class Certification extends REST_Controller {
 		$investor 			= $this->user_info->investor;
 		$company 			= $this->user_info->company;
         $incharge           = $this->user_info->incharge;
-		$certification_list	= $this->certification_lib->get_status($user_id,$investor,$company);
+        $certification_list = $this->certification_lib->get_status($user_id, $investor, $company);
 		$list				= array();
 		if(!empty($certification_list)){
 			$list = $certification_list;
@@ -1356,7 +1356,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => 0,
+                        'status' => [0 ,3],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1385,7 +1385,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => 0,
+                        'status' => [0 ,3],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {

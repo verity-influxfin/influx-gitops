@@ -15,17 +15,17 @@ class Certification_lib{
 		$this->certification = $this->CI->config->item('certifications');
     }
 
-	public function get_certification_info($user_id,$certification_id,$investor=0,$set_fail=false){
+	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
 		if($user_id && $certification_id){
 			$param = array(
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
-				'status !='			=> 2,
 			);
+            !$get_fail ? $param['status !='] = 2 : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
-			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[IDCARD,DEBITCARD,EMERGENCY,EMAIL])){
+			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
                     return false;
                 }
 			    else{
@@ -74,11 +74,13 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+				$param = [
+                    'sys_check' => ($sys_check==true?1:0),
+                ];
 				if (in_array($id, [9, 10])) {
-					$this->CI->user_certification_model->update($info->id,array(
-						'expire_time'	=> strtotime("+1 months", time()),
-					));
+				    $param['expire_time'] = strtotime("+1 months", time() );
 				}
+                $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -334,22 +336,20 @@ class Certification_lib{
 
             $remark['error'] = $msg;
             $remark['OCR']   = $ocr;
-
+            $param = [
+                'status'	    => 3,
+                'remark'	    => json_encode($remark),
+                'content'	    => json_encode($content),
+                'sys_check'     => 1,
+            ];
             if($remark['error']==''&&$done){
-                $this->CI->user_certification_model->update($info->id,array(
+                $param = [
                     'remark'	    => json_encode($remark),
                     'content'	    => json_encode($content),
-                    'sys_check'     => 1,
-                ));
-                $this->set_success($info->id);
-            }else{
-                $this->CI->user_certification_model->update($info->id,array(
-                    'status'	    => 3,
-                    'remark'	    => json_encode($remark),
-                    'content'	    => json_encode($content),
-                    'sys_check'     => 1,
-                ));
+                ];
+                $this->set_success($info->id ,true);
             }
+            $this->CI->user_certification_model->update($info->id,$param);
             return true;
         }
         return false;
@@ -386,7 +386,7 @@ class Certification_lib{
             $is_fb_name = isset($content->facebook->name);
             if($media >= 10 && $followed_by >= 10 && $is_fb_email && $is_fb_name){
                 $status = 1;
-                $this->set_success($info->id);
+                $this->set_success($info->id, true);
             }
             $this->CI->user_certification_model->update($info->id,array(
                 'status'	=> $status,
@@ -417,7 +417,7 @@ class Certification_lib{
                             $this->set_failed($info->id,'與註冊電話相同',true);
                         }
 					    else{
-                            $this->set_success($info->id);
+                            $this->set_success($info->id, true);
                         }
 					}
                     $this->CI->user_certification_model->update($info->id,array(
@@ -473,7 +473,7 @@ class Certification_lib{
 						'sys_check' => 1,
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
 					));
-					$this->set_success($info->id,1);
+					$this->set_success($info->id,true);
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status
 					));
@@ -541,7 +541,7 @@ class Certification_lib{
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
-						$this->set_success($info->id,1);
+						$this->set_success($info->id,true);
 						break;
 					case 'failure':
 						$status = 2;
@@ -1034,7 +1034,7 @@ class Certification_lib{
 
 
 
-    public function get_status($user_id,$investor=0,$company=0,$set_fail=false,$target=false){
+    public function get_status($user_id,$investor=0,$company=0,$get_fail=false,$target=false){
 		if($user_id){
 			$certification = array();
 			if($company){
@@ -1108,7 +1108,7 @@ class Certification_lib{
 
 			$certification_list = [];
 			foreach($certification as $key => $value){
-                $user_certification = $this->get_certification_info($user_id,$key,$investor,$set_fail);
+                $user_certification = $this->get_certification_info($user_id,$key,$investor,$get_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
@@ -1277,9 +1277,9 @@ class Certification_lib{
             ]);
             if ($certification) {
                 foreach ($certification as $key => $value) {
-                    if ($investor == 0 && !in_array($value->certification_id, [IDCARD, DEBITCARD, EMERGENCY, EMAIL])
+                    if ($investor == 0 && !in_array($value->certification_id, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL])
                         && $value->expire_time <= time()
-                    || in_array($value->certification_id, [INVESTIGATION, JOB])
+                    || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
                         && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)) {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }
@@ -1297,6 +1297,58 @@ class Certification_lib{
         return $company;
     }
 
+    public function papago_facedetact_report($limit = 10)
+    {
+        $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
+            'certification_id' => 1,
+            'remark like' => '%face":[%',
+            'remark not like' => '%face":[]%',
+            'remark like' => '%faceplus":[%',
+            'remark not like' => '%faceplus":[]%',
+        ]);
+        $list = [];
+        foreach ($certification_list as $key => $value) {
+            $person_compare = [];
+            $content = json_decode($value->content, true);
+            $remark = json_decode($value->remark, true);
+            $user_id = $value->user_id;
+            $cer_id = $value->id;
+            $this->CI->load->library('Papago_lib');
+            $person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
+            $front_face = $this->CI->papago_lib->detect($content['front_image'], $user_id, $cer_id);
+            $person_count = count($person_face['faces']);
+            $front_count = count($front_face['faces']);
+            foreach ($person_face['faces'] as $token) {
+                if(isset($token['face_token'])){
+                    $compare_res = $this->CI->papago_lib->compare([$token['face_token'], $front_face['faces'][0]['face_token']], $user_id, $cer_id);
+                    $person_compare[] = isset($compare_res['confidence']) ? $compare_res['confidence'] * 100 : '0';
+                }
+            }
+            $ocount_person_count = $remark['face_count']['person_count'];
+            $ocount_front_count = $remark['face_count']['front_count'];
+            $azure_face1 = isset($remark['face'][0]) ? $remark['face'][0] : 'n/a';
+            $azure_face2 = isset($remark['face'][1]) ? $remark['face'][1] : 'n/a';
+            $faceplus_face1 = isset($remark['faceplus'][0]) ? $remark['faceplus'][0] : 'n/a';
+            $faceplus_face2 = isset($remark['faceplus'][1]) ? $remark['faceplus'][1] : 'n/a';
+            $face8_face1 = isset($person_compare[0]) ? $person_compare[0] : 'n/a';
+            $face8_face2 = isset($person_compare[1]) ? $person_compare[1] : 'n/a';
+            $list[] = [
+                $user_id,
+                $content['id_card_date'],
+                $ocount_person_count . '/' . $ocount_front_count,
+                $azure_face1,
+                $azure_face2,
+                $ocount_person_count . '/' . $ocount_front_count,
+                $faceplus_face1,
+                $faceplus_face2,
+                $person_count . '/' . $front_count,
+                $face8_face1,
+                $face8_face2,
+            ];
+        }
+        return $list;
+    }
+  
     public function veify_signing_face($user_id, $url = false)
     {
         if ($url) {

@@ -654,7 +654,7 @@ $name 您好，
 		$etitle 		= "【認證】聯合徵信申請";
 		$econtent 	= "親愛的用戶( 使用者編號 $user_id )，
 您好！感謝您申請普匯inFlux".$descri."聯合徵信認證，
-請將您申請完之徵信報告；以附件形式回覆此封mail，
+請將您申請完之《徵信報告》，以附件形式回覆此封mail，
 系統收到您的來信後會直接更新驗證內容，
 請進入普匯inFlux確認您的認證狀態。";
 		$this->CI->load->library('Sendemail');
@@ -678,7 +678,7 @@ $name 您好，
         $etitle 		= "【認證】工作認證申請";
         $econtent 	= "親愛的用戶( 使用者編號 $user_id )，
 您好！感謝您申請普匯inFlux工作認證，
-請將您申請完之徵信報告；以附件形式回覆此封mail，
+請將您申請完之《勞保異動明細》，以附件形式回覆此封mail，
 系統收到您的來信後會直接更新驗證內容，
 請進入普匯inFlux確認您的認證狀態。";
         $this->CI->load->library('Sendemail');
@@ -716,8 +716,7 @@ $name 您好，
         $investor == 0 ? $param['status'] = 1 : '';
         $investor == 1 ? $param['investor_status'] = 1 : '';
         if ($investor == 2) {
-            $param['status'] = 1;
-            $param['investor_status'] = 1;
+            $param['email !='] = '';
         }
 
         if ($school) {
