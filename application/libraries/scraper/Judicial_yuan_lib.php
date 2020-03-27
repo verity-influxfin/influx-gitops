@@ -63,14 +63,18 @@ class Judicial_yuan_lib
       if(!$reference){
         return;
       }
-
+      $response = [];
       $url = $this->scraperUrl  . "verdicts/{$reference}/statuses";
 
       $result = curl_get($url);
 
-      $response = json_decode($result, true);
+      if($result){
+        $response = json_decode($result, true);
+      }
 
-      $response['response']['status'] = $this->mappingStatusToChinese($response['response']['status']);
+      if(isset($response['response']['status'])){
+        $response['response']['status'] = $this->mappingStatusToChinese($response['response']['status']);
+      }
 
       return $response;
     }
@@ -79,7 +83,7 @@ class Judicial_yuan_lib
       if(!$name){
         return;
       }
-
+      $response = [];
       $url = $this->scraperUrl  . "verdicts/{$name}/count";
 
       $result = curl_get($url);

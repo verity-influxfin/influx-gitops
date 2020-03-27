@@ -35,7 +35,7 @@
 
                   if (response.status.code == 204) {
                       html = '<tr><td>狀態</td><td>請求未被收到</td></tr>';
-                      $('#verdict_list').prepend(html);
+                      $('#verdict_list').html(html);
                       $('.run-scraper-tr').show();
                       return;
                   }
@@ -45,8 +45,14 @@
 
                       html = '<tr><td>名字</td><td>'+ data_arry.query +'</td></tr><tr><td>戶籍地</td><td>'+ data_arry.location +'</td></tr><tr><td>狀態</td><td>'
                       + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
-                      $("#verdict_list").prepend(html);
-                      requestVerdictCount();
+                      $("#verdict_list").html(html);
+
+                      if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
+                        setTimeout(function() { requestVerdictStatuses()}, 5000 );
+                      }
+                      if(data_arry.status=='爬蟲執行完成'){
+                        requestVerdictCount();
+                      }
                       return;
                   }
               },
@@ -91,7 +97,6 @@
                           list_foot = '>' + case_list.name +'</td><td>' + case_list.count + '</td></tr>';
                           if(case_list.name =='本票裁定' || case_list.name =='支付命令' || case_list.name =='消債之前置協商認可事件' || case_list.name =='詐欺' || case_list.name =='侵佔'){
                                   list = list_head + list_style + list_foot;
-                                  //console.log(list);
                                 }else{
                                   list = list_head + list_foot;
                                 }
@@ -132,6 +137,7 @@
 
                       if (response.status.code == 200) {
                           alert('爬蟲執行請求成功送出');
+                          setTimeout(requestVerdictStatuses(),5000);
                               return;
                       }
                   },
