@@ -899,7 +899,7 @@ class Certification extends MY_Admin_Controller {
 				$this->json_output->setStatusCode(204)->send();
 			}
 
-			$response = ["verdict_statuses" => json_decode(json_encode($verdict_statuses), true)];
+			$response = ["verdict_statuses" => $response, true)];
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
@@ -927,7 +927,7 @@ class Certification extends MY_Admin_Controller {
 				$this->json_output->setStatusCode(204)->send();
 			}
 
-			$response = ["verdict_count" => json_decode(json_encode($verdict_count), true)];
+			$response = ["verdict_count" => $response, true)];
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();
 		}
