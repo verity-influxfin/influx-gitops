@@ -875,5 +875,83 @@ class Certification extends MY_Admin_Controller {
 
         $this->json_output->setStatusCode(200)->send();
     }
+
+		public function verdict_statuses(){
+			$input = $this->input->get(NULL, TRUE);
+			$reference = isset($input['user_id']) ? $input['user_id'] : '';
+
+			$this->load->library('output/json_output');
+
+			if(!$reference){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$this->load->library('scraper/judicial_yuan_lib.php');
+			$verdict_statuses = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($reference);
+
+			if(!$verdict_statuses){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$response = json_decode(json_encode($verdict_statuses), true);
+
+			if($response['status']=='204'){
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$response = ["verdict_statuses" => json_decode(json_encode($verdict_statuses), true)];
+
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		public function verdict_count(){
+			$input = $this->input->get(NULL, TRUE);
+			$name = isset($input['name']) ? $input['name'] : '';
+
+			$this->load->library('output/json_output');
+
+			if(!$name){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$this->load->library('scraper/judicial_yuan_lib.php');
+			$verdict_count = $this->judicial_yuan_lib->requestJudicialYuanVerdictsCount(urlencode($name));
+
+			if(!$verdict_count){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$response = json_decode(json_encode($verdict_count), true);
+
+			if($response['status']=='204'){
+				$this->json_output->setStatusCode(204)->send();
+			}
+
+			$response = ["verdict_count" => json_decode(json_encode($verdict_count), true)];
+
+			$this->json_output->setStatusCode(200)->setResponse($response)->send();
+		}
+
+		public function verdict(){
+			$input = $this->input->get(NULL, TRUE);
+			$name = isset($input['name']) ? $input['name'] : '';
+			$address = isset($input['address']) ? substr($input['address'],1,-7) : '';
+			$user_id = isset($input['user_id']) ? $input['user_id'] : '';
+
+			$this->load->library('output/json_output');
+
+			if(!$name || !$address || !$user_id){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$this->load->library('scraper/judicial_yuan_lib.php');
+			$scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($name, $address, $user_id);
+
+			if(!$scraper_response){
+				$this->json_output->setStatusCode(400)->send();
+			}
+
+			$this->json_output->setStatusCode(200)->send();
+		}
 }
 ?>

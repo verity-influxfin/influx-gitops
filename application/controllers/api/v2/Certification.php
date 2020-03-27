@@ -430,7 +430,7 @@ class Certification extends REST_Controller {
 				$this->load->library('scraper/judicial_yuan_lib.php');
 	      $this->judicial_yuan_lib->requestJudicialYuanVerdicts(
 				    $input['name'],
-				    $input['address'],
+				    $content['id_card_place'],
 				    $user_id
 				);
 
