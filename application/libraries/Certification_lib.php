@@ -74,11 +74,13 @@ class Certification_lib{
 				$info->content 	= json_decode($info->content,true);
 				$certification 	= $this->certification[$info->certification_id];
 				$method			= $certification['alias'].'_success';
+				$param = [
+                    'sys_check' => ($sys_check==true?1:0),
+                ];
 				if (in_array($id, [9, 10])) {
-					$this->CI->user_certification_model->update($info->id,array(
-						'expire_time'	=> strtotime("+1 months", time()),
-					));
+				    $param['expire_time'] = strtotime("+1 months", time() );
 				}
+                $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
 					if($rs){
@@ -334,22 +336,20 @@ class Certification_lib{
 
             $remark['error'] = $msg;
             $remark['OCR']   = $ocr;
-
+            $param = [
+                'status'	    => 3,
+                'remark'	    => json_encode($remark),
+                'content'	    => json_encode($content),
+                'sys_check'     => 1,
+            ];
             if($remark['error']==''&&$done){
-                $this->CI->user_certification_model->update($info->id,array(
+                $param = [
                     'remark'	    => json_encode($remark),
                     'content'	    => json_encode($content),
-                    'sys_check'     => 1,
-                ));
-                $this->set_success($info->id);
-            }else{
-                $this->CI->user_certification_model->update($info->id,array(
-                    'status'	    => 3,
-                    'remark'	    => json_encode($remark),
-                    'content'	    => json_encode($content),
-                    'sys_check'     => 1,
-                ));
+                ];
+                $this->set_success($info->id ,true);
             }
+            $this->CI->user_certification_model->update($info->id,$param);
             return true;
         }
         return false;
@@ -386,7 +386,7 @@ class Certification_lib{
             $is_fb_name = isset($content->facebook->name);
             if($media >= 10 && $followed_by >= 10 && $is_fb_email && $is_fb_name){
                 $status = 1;
-                $this->set_success($info->id);
+                $this->set_success($info->id, true);
             }
             $this->CI->user_certification_model->update($info->id,array(
                 'status'	=> $status,
@@ -417,7 +417,7 @@ class Certification_lib{
                             $this->set_failed($info->id,'與註冊電話相同',true);
                         }
 					    else{
-                            $this->set_success($info->id);
+                            $this->set_success($info->id, true);
                         }
 					}
                     $this->CI->user_certification_model->update($info->id,array(
@@ -473,7 +473,7 @@ class Certification_lib{
 						'sys_check' => 1,
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
 					));
-					$this->set_success($info->id,1);
+					$this->set_success($info->id,true);
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status
 					));
@@ -541,7 +541,7 @@ class Certification_lib{
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
-						$this->set_success($info->id,1);
+						$this->set_success($info->id,true);
 						break;
 					case 'failure':
 						$status = 2;

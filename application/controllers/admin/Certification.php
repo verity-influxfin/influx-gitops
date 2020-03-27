@@ -375,7 +375,10 @@ class Certification extends MY_Admin_Controller {
 						}else if($post['status']=='2'){
 							$rs = $this->certification_lib->set_failed($post['id'],$fail);
 						}else{
-							$rs = $this->user_certification_model->update($post['id'],array('status'=>intval($post['status'])));
+							$rs = $this->user_certification_model->update($post['id'],array(
+								'status' => intval($post['status']),
+								'sys_check' => 0,
+							));
 						}
 					}
 
