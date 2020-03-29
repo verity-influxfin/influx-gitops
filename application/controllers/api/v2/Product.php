@@ -307,6 +307,7 @@ class Product extends REST_Controller {
                         'name'         => $visul_id_des[$id]['name'],
                         'icon'         => $visul_id_des[$id]['icon'],
                         'description'  => $visul_id_des[$id]['description'],
+                        'url' => $visul_id_des[$id]['url'],
                         'status'       => $visul_id_des[$id]['status'],
                     ];
                 }

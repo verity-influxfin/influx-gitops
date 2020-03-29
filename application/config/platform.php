@@ -336,6 +336,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'N2' => [
@@ -343,6 +344,7 @@ $config['visul_id_des'] = [
         'description' => '最新熱門手機選擇最多元',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'N3' => [
@@ -350,6 +352,7 @@ $config['visul_id_des'] = [
         'description' => '買進口車好方便',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'N4' => [
@@ -357,6 +360,7 @@ $config['visul_id_des'] = [
         'description' => '創業資金免煩惱',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'D1' => [
@@ -364,6 +368,7 @@ $config['visul_id_des'] = [
         'description' => '幫您貸車進來',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
+        'url' => '',
         'status' => 1
     ],
     'LS1' => [
@@ -371,6 +376,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'LF1' => [
@@ -378,6 +384,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'NS1' => [
@@ -385,6 +392,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'NS2' => [
@@ -392,6 +400,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'NS3' => [
@@ -399,6 +408,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
         'status' => 1
     ],
     'DS1' => [
@@ -406,6 +416,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>幫您貸車進來</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_1.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_1.jpg',
+        'url' => '',
         'status' => 1
     ],
     'DS2' => [
@@ -413,6 +424,7 @@ $config['visul_id_des'] = [
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
+        'url' => '',
         'status' => 1
     ],
     'NS1P1' => [
