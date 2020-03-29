@@ -1531,10 +1531,10 @@ class Product extends REST_Controller {
         $instalment     = $content['instalment'];//分期數
         $store_id       = $content['store_id'];  //店家ID
         $item_id		= $content['item_id'];   //商品ID
-        $nickname =  isset($content['nickname'])?$content['nickname']:'';  //暱稱
+        $nickname =  isset($input['nickname'])?$input['nickname']:'';  //暱稱
 
-        $item_count		= isset($content['item_count'])&&$content['item_count']<2?$content['item_count']:1;//商品數量
-        $delivery       = isset($content['delivery'])&&$content['delivery']<2?$content['delivery']:0;  //0:線下 1:線上
+        $item_count		= isset($input['item_count'])&&$input['item_count']<2?$input['item_count']:1;//商品數量
+        $delivery       = isset($input['delivery'])&&$input['delivery']<2?$input['delivery']:0;  //0:線下 1:線上
 
         //檢驗產品規格
         $product_list 	= $this->config->item('product_list');
@@ -1584,12 +1584,12 @@ class Product extends REST_Controller {
                 'item_id'        => $item_id,
                 'item_count'     => $item_count,
                 'instalment'     => $instalment,
-                'interest_rate'  => $interest_rate,
                 'delivery'       => $delivery,
                 'name'           => $user_name,
-                'nickname'       => $nickname,
                 'phone'          => $phone,
                 'address'        => $address,
+                'nickname'       => $nickname,
+                'selling_type' => $cooperation -> type,
             ],$user_id);
             if(isset($result->result) && $result->result == 'SUCCESS'){
                 $item_name = $result->data->product_name.
