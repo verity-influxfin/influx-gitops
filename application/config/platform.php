@@ -999,3 +999,5 @@ $config['target_delay_range'] = [
 ];
 
 $config['allow_fast_verify_product'] = [1, 3];
+
+$config['allow_changeRate_product'] = [1, 3];

@@ -1166,10 +1166,77 @@ class Product extends REST_Controller {
                 }
             }
 
+            $this->load->model('loan/investment_model');
+            $this->load->model('log/log_targetschange_model');
+            $this->load->model('log/log_investmentschange_model');
+            $history = [];
+            $biddingAmount = 0;
+            $cancel_inv = [];
+            $cancel_inv_amount = [];
+            $targets_start = $this->log_targetschange_model->order_by('created_at', 'desc')->get_by([
+                'target_id' => $target->id,
+                'status' => 3
+            ])->created_at;
+            $targets_end = $target->expire_time;
+            $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
+            $x = strval(round(($targets_end - $targets_start) / 60 / 60));
+            $x_unit = '時';
+            $x_limit = 1;
+            $y = '100';
+            $y_unit = '%';
+            $y_limit = 10;
+            for ($i = 1; $i <= $x; $i++) {
+                $history[$i] = 0;
+            }
+
+            $investments = $this->investment_model->get_many_by([
+                'target_id' => $target->id,
+                'status' => [0, 1 ,8]
+            ]);
+            foreach ($investments as $inv_key => $inv_val) {
+                if ($inv_val->status == 8) {
+                    $cancel_inv[] = $inv_val->id;
+                    $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
+                }
+                $at = ceil((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                $biddingAmount += $inv_val->amount;
+                $history[$at] = $biddingAmount;
+            }
+
+            $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
+                'investment_id' => $cancel_inv,
+                'status' => 8
+            ]);
+            if($cancel_inv_time){
+                foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
+                    $at = ceil(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                    $biddingAmount -= $cancel_inv_amount[$cancel_inv_time_val->investment_id];
+                    $history[$at] = $biddingAmount;
+                }
+            }
+
+            $lastBidding = 0;
+            foreach ($history as $history_key => $history_val) {
+                $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+            }
+
+            $biddingHistory = [
+                'startBidding' => $targets_start,
+                'endBidding' => $targets_end,
+                'currenIndex' => $currentIndex,
+                'history' => $history,
+                'x' => $x,
+                'x_unit' => $x_unit,
+                'x_limit' => $x_limit,
+                'y' => $y,
+                'y_unit' => $y_unit,
+                'y_limit' => $y_limit,
+            ];
+
             $reason = $target->reason;
             $json_reason = json_decode($reason);
-            if(isset($json_reason->reason)){
-                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            if (isset($json_reason->reason)) {
+                $reason = $json_reason->reason . ' - ' . $json_reason->reason_description;
             }
 
             $data = [
@@ -1187,7 +1254,7 @@ class Product extends REST_Controller {
                 'interest_rate' 	    => floatval($target->interest_rate),
                 'instalment' 		    => intval($target->instalment),
                 'repayment' 		    => intval($target->repayment),
-                'reason' 			    => $target->reason,
+                'reason' 			    => $reason,
                 'remark' 			    => $target->remark,
                 'delay' 			    => intval($target->delay),
                 'delay_days' 		    => intval($target->delay_days),
@@ -1198,6 +1265,7 @@ class Product extends REST_Controller {
                 'credit'			    => $credit,
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
+                'biddingHistory' => $biddingHistory,
             ];
 
             $this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -1268,6 +1336,50 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
         }
         $this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
+    }
+
+
+    public function changerate_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        $fields = ['id', 'rate'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            } else {
+                $param[$field] = intval($input[$field]);
+            }
+        }
+
+        $target = $this->target_model->get($param['id']);
+        if (!empty($target)) {
+            $allow_changeRate_product = $this->config->item('allow_changeRate_product');
+            if (in_array($target->product_id, $allow_changeRate_product)
+                && $target->sub_product_id != STAGE_CER_TARGET
+                && $target->sub_status != 8
+            ) {
+                if ($target->user_id != $user_id) {
+                    $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION));
+                }
+
+                if ($target->status == 3) {
+//                    $investments = $this->investment_model->get_many_by([
+//                        'target_id' => $target->id,
+//                        'status' => [0, 1]
+//                    ]);
+//                    foreach ($investments as $inv_key => $inv_val) {
+//                        $rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
+//                    }
+//                    if ($rs) {
+//                        $this->response(array('result' => 'SUCCESS'));
+//                    }
+                }
+            }
+            $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
+        }
+        $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST));
     }
 
 
