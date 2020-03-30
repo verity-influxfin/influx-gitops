@@ -1242,7 +1242,6 @@ class Product extends REST_Controller {
                 }
 //            }
 
-            $isSupportRateAdjust = in_array($target->product_id, $this->config->item('allow_changeRate_product')) ? true : false;
 
             $reason = $target->reason;
             $json_reason = json_decode($reason);
@@ -1277,8 +1276,9 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
-                'isSupportRateAdjust' => $isSupportRateAdjust,
             ];
+
+            in_array($target->product_id, $this->config->item('allow_changeRate_product')) && $target->status == 3 ? $data['isSupportRateAdjust'] = true : '';
 
             $this->response(array('result' => 'SUCCESS','data' => $data ));
         }
@@ -1361,7 +1361,7 @@ class Product extends REST_Controller {
             if (empty($input[$field])) {
                 $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
             } else {
-                $param[$field] = intval($input[$field]);
+                $param[$field] = $input[$field];
             }
         }
 
@@ -1378,7 +1378,8 @@ class Product extends REST_Controller {
                 ? $product = $this->trans_sub_product($product, $sub_product_id)
                 : false;
 
-            $param['rate'] <= $target->interest_rate && $param['rate'] <= $product['interest_rate_e']
+            $new_rate = floatval($param['rate']);
+            $new_rate <= $target->interest_rate && $new_rate <= $product['interest_rate_e']
                 ? $this->response(array('result' => 'ERROR', 'error' => PRODUCT_RATE_ERROR))
                 : false;
 
@@ -1403,24 +1404,21 @@ class Product extends REST_Controller {
                     'target_id' => $target->id,
                     'status' => [0, 1]
                 ]);
-                $rs = false;
                 foreach ($investments as $inv_key => $inv_val) {
-                    $rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
+                    $this->target_lib->cancel_investment($target, $inv_val, $user_id);
                 }
-                if ($rs) {
-                    $target->status = 2;
-                    $this->load->library('Contract_lib');
-                    $contract_id = $this->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $param['rate'], '']);
-                    $launch_times = intval($target->launch_times) + 1;
-                    $params = [
-                        'interest_rate' => $param['rate'],
-                        'contract_id' => $contract_id,
-                        'script_status' => 0,
-                        'launch_times' => $launch_times,
-                    ];
-                    $this->target_lib->target_verify_success($target, 0, $params, $user_id);
-                    $this->response(array('result' => 'SUCCESS'));
-                }
+                $target->status = 2;
+                $this->load->library('Contract_lib');
+                $contract_id = $this->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $new_rate, '']);
+                $launch_times = intval($target->launch_times) + 1;
+                $params = [
+                    'interest_rate' => $new_rate,
+                    'contract_id' => $contract_id,
+                    'script_status' => 0,
+                    'launch_times' => $launch_times,
+                ];
+                $this->target_lib->target_verify_success($target, 0, $params, $user_id);
+                $this->response(array('result' => 'SUCCESS'));
             }
             $this->target_model->update($target->id, ['script_status' => 0]);
             $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
