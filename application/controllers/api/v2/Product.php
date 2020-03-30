@@ -1387,30 +1387,36 @@ class Product extends REST_Controller {
                 && $target->sub_product_id != STAGE_CER_TARGET
                 && in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
                 && $target->script_status == 0
-                && $target->expire_time <= time()
+                && $target->expire_time >= time()
             ) {
                 $this->target_model->update($target->id, [
                     'status' => 2,
                     'script_status' => 99
                 ]);
+
+
                 $this->load->model('loan/investment_model');
                 $investments = $this->investment_model->get_many_by([
                     'target_id' => $target->id,
                     'status' => [0, 1]
                 ]);
+                $rs = false;
                 foreach ($investments as $inv_key => $inv_val) {
-                    //$rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
-                    $rs = true;
+                    $rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
                 }
                 if ($rs) {
-                    $contract_id = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $param['rate'], '']);
+                    $this->load->library('Contract_lib');
+                    $contract_id = $this->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $param['rate'], '']);
+                    $launch_times = intval($target->launch_times) + 1;
                     $params = [
                         'interest_rate' => $param['rate'],
                         'contract_id' => $contract_id,
-                        'script_status' => 0
+                        'script_status' => 0,
+                        'launch_times' => $launch_times,
                     ];
-                    $this->target_model->update($target->id, $params);
-                    $this->target_lib->insert_change_log($target->id, $params, $user_id);
+                    $target->status = 2;
+                    $this->load->library('target_lib');
+                    $this->target_lib->target_verify_success($target, 0, $params, $user_id);
                     $this->response(array('result' => 'SUCCESS'));
                 }
             }

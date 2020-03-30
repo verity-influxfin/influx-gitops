@@ -424,14 +424,14 @@ class Target_lib
         return false;
     }
 
-    public function target_verify_success($target = [], $admin_id = 0, $param = [])
+    public function target_verify_success($target = [], $admin_id = 0, $param = [], $user_id = 0)
     {
         if (!empty($target) && $target->status == 2) {
             $param['status'] = 3;
-            $param['launch_times'] = 1;
+            $param['launch_times'] = isset($param['launch_times']) ? $param['launch_times'] : 1;
             $target->sub_status != 8 ? $param['expire_time'] = strtotime('+2 days', time()) : '';
             $this->CI->target_model->update($target->id, $param);
-            $this->insert_change_log($target->id, $param, 0, $admin_id);
+            $this->insert_change_log($target->id, $param, $user_id, $admin_id);
             $this->CI->notification_lib->target_verify_success($target);
             return true;
         }
@@ -1423,7 +1423,7 @@ class Target_lib
                 'change_user' => $user_id,
                 'change_admin' => $admin_id
             ];
-            $fields = ['delay', 'status', 'loan_status', 'sub_status'];
+            $fields = ['interest_rate', 'delay', 'status', 'loan_status', 'sub_status'];
             foreach ($fields as $field) {
                 if (isset($update_param[$field])) {
                     $param[$field] = $update_param[$field];
