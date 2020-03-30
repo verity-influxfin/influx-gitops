@@ -1391,12 +1391,13 @@ class Product extends REST_Controller {
                 && $target->script_status == 0
                 && $target->expire_time >= time()
             ) {
-                $this->target_model->update($target->id, [
+                $update_data = [
                     'status' => 2,
                     'script_status' => 99
-                ]);
-
-
+                ];
+                $this->target_model->update($target->id, $update_data);
+                $this->load->library('target_lib');
+                $this->target_lib->insert_change_log($target->id, $update_data, $user_id);
                 $this->load->model('loan/investment_model');
                 $investments = $this->investment_model->get_many_by([
                     'target_id' => $target->id,
@@ -1407,6 +1408,7 @@ class Product extends REST_Controller {
                     $rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
                 }
                 if ($rs) {
+                    $target->status = 2;
                     $this->load->library('Contract_lib');
                     $contract_id = $this->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $param['rate'], '']);
                     $launch_times = intval($target->launch_times) + 1;
@@ -1416,8 +1418,6 @@ class Product extends REST_Controller {
                         'script_status' => 0,
                         'launch_times' => $launch_times,
                     ];
-                    $target->status = 2;
-                    $this->load->library('target_lib');
                     $this->target_lib->target_verify_success($target, 0, $params, $user_id);
                     $this->response(array('result' => 'SUCCESS'));
                 }
