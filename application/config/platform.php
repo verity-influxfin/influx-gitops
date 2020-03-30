@@ -375,7 +375,7 @@ $config['visul_id_des'] = [
         'name' => '學生貸',
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -383,7 +383,7 @@ $config['visul_id_des'] = [
         'name' => '上班族貸',
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -391,7 +391,7 @@ $config['visul_id_des'] = [
         'name' => '資訊工程師專案',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'url' => '',
         'status' => 1
     ],

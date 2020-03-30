@@ -16534,7 +16534,7 @@ define({
         },{
             "type": "post",
             "url": "/v2/product/changerate",
-            "title": "借款方 調升利率",
+            "title": "借款方 調升利息",
             "name": "PostProductChangeRate",
             "version": "0.2.0",
             "group": "Product",
