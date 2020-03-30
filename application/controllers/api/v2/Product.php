@@ -1190,6 +1190,7 @@ class Product extends REST_Controller {
                     }
 
                     $investments = $this->investment_model->get_many_by([
+                        'created_at >=' => $targets_start,
                         'target_id' => $target->id,
                         'status' => [0, 1 ,8]
                     ]);
@@ -1228,8 +1229,8 @@ class Product extends REST_Controller {
                     }
 
                     $biddingHistory = [
-                        'startBidding' => $targets_start,
-                        'endBidding' => $targets_end,
+                        'startBidding' => date("Y/m/d H:i:s",$targets_start),
+                        'endBidding' =>  date("Y/m/d H:i:s",$targets_end),
                         'currenIndex' => $currentIndex,
                         'history' => $history,
                         'x' => $x,
