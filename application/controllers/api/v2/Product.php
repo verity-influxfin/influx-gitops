@@ -301,7 +301,7 @@ class Product extends REST_Controller {
             $total_list = [];
             $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id){
-                if(in_array($id,$allow_visul_list)){
+//                if(in_array($id,$allow_visul_list)){
                     $total_list[] = [
                         'visul'        => $id,
                         'name'         => $visul_id_des[$id]['name'],
@@ -310,7 +310,7 @@ class Product extends REST_Controller {
                         'url' => $visul_id_des[$id]['url'],
                         'status'       => $visul_id_des[$id]['status'],
                     ];
-                }
+//                }
             }
             $parm2 = array(
                 'total_list' 					=> $total_list,
@@ -1176,69 +1176,72 @@ class Product extends REST_Controller {
                 $biddingAmount = 0;
                 $cancel_inv = [];
                 $cancel_inv_amount = [];
-                $targets_start = $this->log_targetschange_model->order_by('created_at', 'desc')->get_by([
-                    'target_id' => $target->id,
-                    'status' => 3
-                ])->created_at;
                 $targets_end = $target->expire_time;
+                $targets_start = strtotime('-2 days', $target->expire_time);
                 $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
-                $x = strval(round(($targets_end - $targets_start) / 60 / 60));
-                $x_unit = '時';
-                $x_limit = 1;
-                $y = '100';
-                $y_unit = '%';
-                $y_limit = 10;
-                for ($i = 1; $i <= $x; $i++) {
-                    $history[$i] = 0;
-                }
-
-                $investments = $this->investment_model->get_many_by([
-                    'target_id' => $target->id,
-                    'status' => [0, 1 ,8]
-                ]);
-                foreach ($investments as $inv_key => $inv_val) {
-                    if ($inv_val->status == 8) {
-                        $cancel_inv[] = $inv_val->id;
-                        $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
+//                if(!$currentIndex > 90){
+                    $x = strval(round(($targets_end - $targets_start) / 60 / 60));
+                    $x_unit = '時';
+                    $x_limit = 1;
+                    $y = '100';
+                    $y_unit = '%';
+                    $y_limit = 10;
+                    for ($i = 1; $i <= $x; $i++) {
+                        $history[$i] = 0;
                     }
-                    $at = ceil((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
-                    $biddingAmount += $inv_val->amount;
-                    $history[$at] = $biddingAmount;
-                }
 
-                $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
-                    'investment_id' => $cancel_inv,
-                    'status' => 8
-                ]);
-                if($cancel_inv_time){
-                    foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
-                        $at = ceil(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
-                        $biddingAmount -= $cancel_inv_amount[$cancel_inv_time_val->investment_id];
-                        $history[$at] = $biddingAmount;
+                    $investments = $this->investment_model->get_many_by([
+                        'target_id' => $target->id,
+                        'status' => [0, 1 ,8]
+                    ]);
+                    if($investments){
+                        foreach ($investments as $inv_key => $inv_val) {
+                            if ($inv_val->status == 8) {
+                                $cancel_inv[] = $inv_val->id;
+                                $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
+                            }
+                            $at = ceil((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                            $biddingAmount += $inv_val->amount;
+                            $history[$at] = $biddingAmount;
+                        }
                     }
-                }
 
-                $lastBidding = 0;
-                foreach ($history as $history_key => $history_val) {
-                    $lastBidding = $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
-                    if($history_key >= $currentIndex){
-                        break;
+                    if(count($cancel_inv) > 0){
+                        $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
+                            'investment_id' => $cancel_inv,
+                            'status' => 8
+                        ]);
+                        if($cancel_inv_time){
+                            foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
+                                $at = ceil(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                                $biddingAmount -= $cancel_inv_amount[$cancel_inv_time_val->investment_id];
+                                $history[$at] = $biddingAmount;
+                            }
+                        }
                     }
-                }
 
-                $biddingHistory = [
-                    'startBidding' => $targets_start,
-                    'endBidding' => $targets_end,
-                    'currenIndex' => $currentIndex,
-                    'history' => $history,
-                    'x' => $x,
-                    'x_unit' => $x_unit,
-                    'x_limit' => $x_limit,
-                    'y' => $y,
-                    'y_unit' => $y_unit,
-                    'y_limit' => $y_limit,
-                ];
-            }
+                    $lastBidding = 0;
+                    foreach ($history as $history_key => $history_val) {
+                        $lastBidding = $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+                        if($history_key >= $currentIndex){
+                            break;
+                        }
+                    }
+
+                    $biddingHistory = [
+                        'startBidding' => $targets_start,
+                        'endBidding' => $targets_end,
+                        'currenIndex' => $currentIndex,
+                        'history' => $history,
+                        'x' => $x,
+                        'x_unit' => $x_unit,
+                        'x_limit' => $x_limit,
+                        'y' => $y,
+                        'y_unit' => $y_unit,
+                        'y_limit' => $y_limit,
+                    ];
+                }
+//            }
 
             $reason = $target->reason;
             $json_reason = json_decode($reason);
@@ -1362,7 +1365,6 @@ class Product extends REST_Controller {
 
         $target = $this->target_model->get($param['id']);
         if (!empty($target)) {
-            $this->target_model->update($target->id, ['script_status' => 99]);
             $target->user_id != $user_id
                 ? $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION))
                 : false;
@@ -1385,8 +1387,12 @@ class Product extends REST_Controller {
                 && $target->sub_product_id != STAGE_CER_TARGET
                 && in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
                 && $target->script_status == 0
+                && $target->expire_time <= time()
             ) {
-
+                $this->target_model->update($target->id, [
+                    'status' => 2,
+                    'script_status' => 99
+                ]);
                 $this->load->model('loan/investment_model');
                 $investments = $this->investment_model->get_many_by([
                     'target_id' => $target->id,
@@ -1394,10 +1400,19 @@ class Product extends REST_Controller {
                 ]);
                 foreach ($investments as $inv_key => $inv_val) {
                     //$rs = $this->target_lib->cancel_investment($target, $inv_val, $user_id);
+                    $rs = true;
                 }
-//                if ($rs) {
+                if ($rs) {
+                    $contract_id = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $param['rate'], '']);
+                    $params = [
+                        'interest_rate' => $param['rate'],
+                        'contract_id' => $contract_id,
+                        'script_status' => 0
+                    ];
+                    $this->target_model->update($target->id, $params);
+                    $this->target_lib->insert_change_log($target->id, $params, $user_id);
                     $this->response(array('result' => 'SUCCESS'));
-//                }
+                }
             }
             $this->target_model->update($target->id, ['script_status' => 0]);
             $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
