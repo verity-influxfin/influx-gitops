@@ -10861,6 +10861,83 @@ define({
                             "optional": false,
                             "field": "amortization_schedule.total.total_payment",
                             "description": "<p>加總</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory",
+                            "description": "<p>投標紀錄</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.startBidding",
+                            "description": "<p>上架時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.endBidding",
+                            "description": "<p>預計下嫁時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.currenIndex",
+                            "description": "<p>目前時間(hr)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.history",
+                            "description": "<p>投標紀錄(key:hr，value:%)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.x",
+                            "description": "<p>X軸總刻度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.x_unit",
+                            "description": "<p>X軸單位</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.x_limit",
+                            "description": "<p>X軸刻度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.y",
+                            "description": "<p>Y軸總刻度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.y_unit",
+                            "description": "<p>Y軸單位</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "biddingHistory.y_limit",
+                            "description": "<p>Y軸刻度</p>"
                         }
                     ]
                 },
@@ -10868,179 +10945,264 @@ define({
                     {
                         "title": "SUCCESS",
                         "content": "{\n" +
-                            "  \"result\": \"SUCCESS\",\n" +
-                            "  \"data\": {\n" +
-                            "    \"id\": 8788,\n" +
-                            "    \"target_no\": \"STI2019060889753\",\n" +
-                            "    \"product_id\": 2,\n" +
-                            "    \"user_id\": 12820,\n" +
-                            "    \"order_id\": 10,\n" +
-                            "    \"order_info\": {\n" +
-                            "      \"order_no\": \"1-2019060816305027903\",\n" +
-                            "      \"company\": {\n" +
-                            "        \"company_id\": 0,\n" +
-                            "        \"company\": \"全聯實業股份有限公司\",\n" +
-                            "        \"tax_id\": 16740494,\n" +
-                            "        \"company_phone\": \"0225079990\",\n" +
-                            "        \"company_address\": \"台北市南京東路四段111號\"\n" +
-                            "      },\n" +
-                            "      \"merchant_order_no\": \"CPA1906080449583\",\n" +
-                            "      \"item_info\": [\n" +
-                            "        {\n" +
-                            "          \"brand\": \"LG\",\n" +
-                            "          \"name\": \"LG V30 \",\n" +
-                            "          \"spec\": \"-\",\n" +
-                            "          \"price\": \"15800\",\n" +
-                            "          \"image\": \"http:\\/\\/img.eprice.com.tw\\/img\\/mobile\\/5736\\/big.png\"\n" +
-                            "        }\n" +
-                            "      ],\n" +
-                            "      \"item_name\": [\n" +
-                            "        \"LG V30 \"\n" +
-                            "      ],\n" +
-                            "      \"item_count\": [\n" +
-                            "        1\n" +
-                            "      ],\n" +
-                            "      \"delivery\": 1,\n" +
-                            "      \"status\": 1,\n" +
-                            "      \"created_at\": 1559982650\n" +
-                            "    },\n" +
-                            "    \"amount\": 16000,\n" +
-                            "    \"loan_amount\": 16000,\n" +
-                            "    \"platform_fee\": 500,\n" +
-                            "    \"interest_rate\": 18,\n" +
-                            "    \"instalment\": 3,\n" +
-                            "    \"repayment\": 1,\n" +
-                            "    \"reason\": \"分期:LG V30 \",\n" +
-                            "    \"remark\": \"\",\n" +
-                            "    \"delay\": 0,\n" +
-                            "    \"delay_days\": 0,\n" +
-                            "    \"status\": 23,\n" +
-                            "    \"sub_status\": 0,\n" +
-                            "    \"created_at\": 1559982650,\n" +
-                            "    \"contract\": \"分期付款買賣契約書\\n立契約書人\\n出賣人：20445（簡稱甲方）\\n買受人：12820（簡稱乙方）\\n\\n乙方向甲方以分期付款方式購買乙方指定手機（下稱標的手機），並簽訂本「分期付款買賣契約書」（下稱本契約），業經乙方經合理天數詳細審閱本契約所有條款，且已充份理解契約內容後，同意與甲方共同遵守約定條款如下:\\n第一條\\t標的手機買賣暨分期付款約定\\n（一）\\t標的手機規格及數量：LG V30  x 1\\n（二）\\t買賣總價：16580\\n（三）\\t分期金額、期數及每期應繳金額：17323、3、5694、\\n第二條\\t標的手機之交付\\n（一）\\t乙方對前開標的手機同意承買，於本契約成立後，甲方仍保有標的手機之實質所有權，乙方僅取得標的手機之占有，並不因標的手機之交付而取得所有權。於全部分期價款及本契約約定未完全履行清償前，乙方應依善良管理人注意義務為先行保管、占有使用，不得擅自將標的手機遷移、讓與、移轉、質押、典當或其他處分，違反本條款將依刑法詐欺罪或侵占罪，追究相關刑事責任。\\n（二）\\t為確認乙方就標的手機未為前項之遷移、讓與、移轉、質押、典當或其他處分行為，甲方於乙方逾期清償或違約時，有權要求乙方證明標的手機尚在乙方占有中，乙方不得拒絕。\\n（三）\\t乙方於收受標的手機時應即驗收，發現瑕疪時應即通知甲方，如乙方怠為此通知者，視為承認所受領之物。標的手機之危險自乙方占有時起，\u7531乙方自行承擔。\\n第三條\\t應收帳款暨權利轉讓\\n（一）\\t乙方同意甲方不另書面通知即得將請求分期價款之權利及依本契約約定所有之其他一切權利及利益轉讓第三人，轉讓方式包括但不限於透過第三人普匯金融科技股份有限公司（下稱普匯公司）所營個人借貸媒合服務平台（下稱借貸平台）轉讓與任意第三人受讓，乙方絕無異議。\\n（二）\\t乙方理解並同意分期付款價款應依約定繳付予帳款受讓人或收買人之指定繳款帳戶。乙方對上開分期價款與撥款日期悉數承認，絕不以乙方與甲方間之法律關係存在與否，或其他任何紛爭等事由對抗帳款受讓人或帳款收買人。\\n（三）\\t乙方與甲方同意帳款受讓人得將請求乙方支付分期價款之權利，讓與帳款收買人，乙方仍受本契約之約束，茲確認已接受讓與之通知，且同意不得以其對甲方之任何債權向帳款受讓人及其指定人或帳款收買人主張抵銷。關於因契約之所生之消費性商品瑕疵擔保、保固、保證、售後服務或其他契約上之責任，仍應由甲方負責；帳款受讓人及其指定人或帳款收買人就商品標的物無任何明示或默示之承諾或保證，乙方應向甲方請求履行此等責任與義務。\\n（四）\\t於甲方透過第三人普匯公司所營借貸平台轉讓本契約債權時，乙方同意第三人普匯公司得揭露經隱蔽部分內容之乙方姓名及身分證字號等個人資料與受讓債權之第三方，並得登載於借貸平台上供本契約債權之受讓人查詢。當乙方逾清償期日仍未清償債務者，乙方同意普匯公司得揭露未經隱蔽之乙方姓名及身分證字號與本契約債權\u4e4b受讓人。\\n（五）\\t乙方瞭解帳款受讓人及其指定人、帳款收買人或普匯公司，均非商品、服務之進口人、出售人或經銷人，與甲方無任何代理、合夥、經銷關係，相關商品、服務之瑕疵擔保、保固、保證、售後服務或其他契約上之責任，概由甲方負責。\\n第四條\\t違約責任\\n（一）\\t乙方應按本契約前開約定所列日期及金額，分期支付所列之分期付款價款，乙方未按期支付期付款之任一期逾期繳款時，應自逾期之日按年利率百分之二十計付遲延利息，並喪失期限利益，全部分期債務視為到期，乙方應一次清償該筆未償分期餘額、利息、違約金或相關費用等總債權。\\n（二）\\t乙方發生任何逾期清償或違反本契約情事時，除應加計給付前項所規定之遲延利息外，並同意支付依分期餘額百分之十計算之懲罰性違約金。\\n（三）\\t乙方如有延遲付款、退票、銀行拒往、信用貶落、不履行或怠於履行本契約之任一義務及規定；因其他債務關係而受假扣押、假處分、終局執行或其他公權力處分；進行重整、合併、清算、解散等程序或受破產宣告；死亡、失蹤或發生繼承而其繼承人聲明限定或拋棄繼承；於本契約由乙方交由甲方之任何文件(含所填載之顧客申購契約書)中有不實之陳述或說明之情事之一者，除甲方、帳款受讓人及其指定人或帳款收買人得依法律或契約約定行使權利外，所有未到期分期價款視為提前全部到期，應即清償，甲方或其權利受讓人亦得逕行向乙方取回標的手機。\\n（四）\\t乙方在本契約有效期間內發生任何逾期清償或違約情事時，同意甲方、帳款受讓人及其指定人或帳款收買人或其他催收公司代為處理相關催收事宜，乙方與甲方同意如逾期未清償本契約項下任何債務時，帳款受讓人或收買人得將本契約項下之相關權益，包括但\u4e0d限於乙方未付之分期餘額、利息及違約金等債權及相關擔保權益，相關書面資料包括但不限於本契約與分期有關之任何文件轉讓予帳款受讓人或其指定人。\\n第五條\\t送達\\n乙方因名稱、組織、代表人及通知地址(營業所)等之變更或其他不關影響權益之變更，應立即以書面將變更事項通知甲方、帳款受讓人及其指定人或帳款收買人，如未通知，甲方、帳款受讓人及其指定人或帳款收買人得將有關文書向本契約所載或其知悉之最後地址投郵寄送後，經通常之郵遞期間即視為已合法送達，另乙方如未為通知致生糾葛或因而造成甲方、帳款受讓人及其指定人或帳款收買人損害時，概由乙方負責。\\n第六條\\t個人資料蒐集、處理及利用之同意\\n乙方同意甲方、帳款受讓人及其指定人或帳款收買人對乙方之徵信、授信及其他達成授信及催收等所取得之資料，提供予甲方、帳款受讓人及其指定人或帳款收買人得蒐集電腦處理及利用本人個人資料。乙方另同意甲方、帳款受讓人及其指定人或帳款收買人得將其基本資料、帳務資料、信用資料、投資資料、保險資料等個人資料，提供揭露予所屬關係企業，供各該公司蒐集、電腦處理及為共同行銷利用，或提供予受甲方、帳款受讓人及其指定人或帳款收買人委任代為處理事務之人。\\n第七條\\t其他約款\\n（一）\\t因本契約發生之爭訟時，雙方同意以台灣台北地方法院(包括其簡易庭)為第一審管轄法院，並適用中華民國法律。\\n（二）\\t乙方同意應受普匯公司所營網路平台之所有條款內容拘束，內容包含但不限於使用者條款、債權讓與條款、隱私權政策等條款，且普匯公司保有解釋及變更之權利。\\n（三）\\t本契約一式二份，由雙方各執乙份為憑。\\n\\n 中華民國 108 年 06 月 12 日\",\n" +
-                            "    \"credit\": {\n" +
-                            "      \"level\": 7,\n" +
-                            "      \"points\": 630,\n" +
-                            "      \"amount\": 27000,\n" +
-                            "      \"created_at\": 1560088999\n" +
-                            "    },\n" +
-                            "    \"certification\": [\n" +
-                            "      {\n" +
-                            "        \"id\": 1,\n" +
-                            "        \"alias\": \"idcard\",\n" +
-                            "        \"name\": \"實\u540d認證\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"驗證個人身份資訊\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11430,\n" +
-                            "        \"updated_at\": 1553795034\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 2,\n" +
-                            "        \"alias\": \"student\",\n" +
-                            "        \"name\": \"學生身份認證\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"驗證學生身份\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11453,\n" +
-                            "        \"updated_at\": 1553815012\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 3,\n" +
-                            "        \"alias\": \"debitcard\",\n" +
-                            "        \"name\": \"金融帳號認證\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"驗證個人金融帳號\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11407,\n" +
-                            "        \"updated_at\": 1553750450\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 4,\n" +
-                            "        \"alias\": \"social\",\n" +
-                            "        \"name\": \"社交認證\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"個人社交帳號認證\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11451,\n" +
-                            "        \"updated_at\": 1553819560\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 5,\n" +
-                            "        \"alias\": \"emergency\",\n" +
-                            "        \"name\": \"緊急聯絡人\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"設定緊急連絡人資訊\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11454,\n" +
-                            "        \"updated_at\": 1553819660\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 6,\n" +
-                            "        \"alias\": \"email\",\n" +
-                            "        \"name\": \"常用電子信箱\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"驗證常用E-Mail位址\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11392,\n" +
-                            "        \"updated_at\": 1553706982\n" +
-                            "      },\n" +
-                            "      {\n" +
-                            "        \"id\": 7,\n" +
-                            "        \"alias\": \"financial\",\n" +
-                            "        \"name\": \"財務訊息認證\",\n" +
-                            "        \"status\": 1,\n" +
-                            "        \"description\": \"提供財務訊息資訊\",\n" +
-                            "        \"user_status\": 1,\n" +
-                            "        \"certification_id\": 11394,\n" +
-                            "        \"updated_at\": 1553707117\n" +
-                            "      }\n" +
-                            "    ],\n" +
-                            "    \"amortization_schedule\": {\n" +
-                            "      \"amount\": 16580,\n" +
-                            "      \"instalment\": 3,\n" +
-                            "      \"rate\": 18,\n" +
-                            "      \"date\": \"2019-06-12\",\n" +
-                            "      \"total_payment\": 5694,\n" +
-                            "      \"leap_year\": false,\n" +
-                            "      \"year_days\": 365,\n" +
-                            "      \"XIRR\": 19.470000000000002,\n" +
-                            "      \"schedule\": {\n" +
-                            "        \"1\": {\n" +
-                            "          \"instalment\": 1,\n" +
-                            "          \"repayment_date\": \"2019-08-10\",\n" +
-                            "          \"days\": 59,\n" +
-                            "          \"remaining_principal\": 16580,\n" +
-                            "          \"principal\": 5212,\n" +
-                            "          \"interest\": 482,\n" +
-                            "          \"total_payment\": 5694\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"id\": 18732,\n" +
+                            "        \"target_no\": \"STN2020032919625\",\n" +
+                            "        \"product_name\": \"學生貸\",\n" +
+                            "        \"product_id\": 1,\n" +
+                            "        \"user_id\": 12820,\n" +
+                            "        \"order_id\": 0,\n" +
+                            "        \"order_info\": [],\n" +
+                            "        \"targetDatas\": [],\n" +
+                            "        \"amount\": 50000,\n" +
+                            "        \"loan_amount\": 25000,\n" +
+                            "        \"platform_fee\": 750,\n" +
+                            "        \"interest_rate\": 14,\n" +
+                            "        \"instalment\": 6,\n" +
+                            "        \"repayment\": 1,\n" +
+                            "        \"reason\": \"ola - balala\",\n" +
+                            "        \"remark\": \",整案退回\",\n" +
+                            "        \"delay\": 0,\n" +
+                            "        \"delay_days\": 0,\n" +
+                            "        \"status\": 3,\n" +
+                            "        \"sub_status\": 0,\n" +
+                            "        \"created_at\": 1585463765,\n" +
+                            "        \"contract\": \"借貸契約 \\r\\n立契約書人 \\r\\n貸款人使用者編號：（簡稱甲方） \\r\\n借款人使用者編號：12820（簡稱乙方） \\r\\n立契約書人雙方均同意本消費借貸契約係由普匯金融科技股份有限公司下稱「普匯公司」所媒合，雙方並同意以電子方式勾選同意時，即成立本契約之預約，款項交付時並符合本契約其他約定時，本契約即生效。如有本契約未約定之事項，概以立契約書人雙方與普匯公司間之服務條款為準。 \\r\\n茲因乙方向甲方借款新台幣 25000 元整（下稱「借貸本金」）。雙方約定條件如左： \\r\\n第1條 借款及還款方式：\\r\\n1. 雙方同意利息之計算採年金法，貸款期間之全部借貸本金與利息平均分攤於每一期償付，並以固定貸款利率計算每期之平均攤還率。 \\r\\n2. 本契約之利息自撥款日起算，並按當期實際日數按日計算利息。 \\r\\n3. 第一次清償日為每月10日，每一期從當月11日計算到下月10日，第一期不足一個月者則延至次月才為還款日。（例如1/2借則第一期還款日為2/10，1/15 借則第一期還款日為3/10） \\r\\n4. 每期應還本息金額之平均攤還率計算公式： {[(1＋月利率)＾期數]×月利率}÷{[(1＋月利率)＾期數]－1} (公式中：月利率 ＝ 年利率／12) \\r\\n5. 每期應還本金與利息試算： \\r\\n（1）平均每期應還本息金額＝借貸本金×每期應還本息金額之平均攤還率 \\r\\n（2）每期應付利息金額＝本金餘額×X年利率X每期當期天數/365（逢閏年時則為366日） \\r\\n（3）每期應還本金金額＝平均每期應還本息金額－每期應付利息金額 \\r\\n（4）本金餘額將於最後一期全部納入計算完畢。 \\r\\n6. 本契約之約定年利率為 14 ％，每月應還本息金額為新台幣  元。 \\r\\n第2條 契約生效條款 \\r\\n1. 甲方應於以電子方式同意本契約時48小時內匯款至普匯公司提供之代收代付帳戶，本契約始生效力。 \\r\\n2. 如乙方申請之同一債權組合中，其他貸款人未匯款或無法全部結標，則本契約亦不生效力，甲乙雙方間之借貸契約不生效力。 \\r\\n3. 乙方如係於普匯公司申請債權轉換（即展延）而簽訂本契約者，乙方同意甲方得匯款至普匯公司提供之其他第三人代收代付帳戶以清償乙方之既有債務，視為乙方受領借貸本金，本契約即為生效。 \\r\\n第3條 加速條款 \\r\\n1. 乙方如有下列情形之一時，無須由普匯公司或甲方事先通知或催告，普匯公司或甲方得隨時對乙方收回部分借款、縮短借款期限，或視為全部到期: \\r\\n（1）任何一宗債務不依約清償者。 \\r\\n（2）依破產法聲請和解，依消費者債務清理條例聲請更生、清算、前置協商、前置調整、和解、聲請宣告破產、經票據交換所通知拒絕往來、停止營業，清理債務者。 \\r\\n（3）依約定負有提供擔保之義務而不提供者。 \\r\\n（4）因債務人死亡而其繼承人聲明為拋棄繼承者。 \\r\\n（5）因刑事而受沒收主要財產之宣告，或受沒入、徵收其主要財產之行政處分，或因犯罪嫌疑被羈押或經起訴者。 \\r\\n2. 乙方如有下列情形之一時，由普匯公司或甲方事先定合理期間(七日)，發出通知或催告後，始生收回部分借款、縮短借款期限，或視為全部到期之效力: \\r\\n（1）乙方對甲方所負債務，其實際資金用途與普匯公司或甲方核定或約定用途不符者。 \\r\\n（2）受強制執行或假扣押、假處分或其他保全處分，致本公司或甲方有不能完全受償之虞者。 \\r\\n第4條 遲延還款 \\r\\n1. 清償期日之末日如為星期假日、國定假日或其他如天災、地變等不可抗力因素導致政府公告停止上班日，則順延至下一工作天。 \\r\\n2. 雙方同意得訂逾清償期日7天內(含)為寬限期，如乙方於寬限期內繳清所積欠之本息及相關應付費用，即無須繳納遲延利息。 \\r\\n3. 乙方逾越前項寬限期未清償借款者，同意終止原應付利息之計算方式，即應按日以未清償部分本金乘以0.1％計算延滯利息至本金即延滯利息均向甲方清償完畢止。 \\r\\n4. 甲方除本契約約定利息及延滯息，不得對乙方請求違約金。 \\r\\n第5條 債權轉讓 \\r\\n乙方同意甲方或普匯公司得以電子方式通知或其他法定方式，將本契約債權之全部或一部轉讓予第三人，乙方絕無異議。\\r\\n第6條 提前清償 \\r\\n乙方如提前清償借貸本金，仍應給付已發生但未到期之利息予甲方，未到期之利息無庸給付，甲方並無異議且不得再行對乙方請求違約金。 \\r\\n第7條 管轄及其他 \\r\\n有關本契約涉訴時，甲、乙雙方同意以台灣台北地方法院為管轄法院，並以中華民國法律為準據法。\\n 中華民國 109 年 03 月 29 日\",\n" +
+                            "        \"credit\": {\n" +
+                            "            \"id\": 3897,\n" +
+                            "            \"level\": 9,\n" +
+                            "            \"points\": 180,\n" +
+                            "            \"amount\": 25000,\n" +
+                            "            \"created_at\": 1585299002,\n" +
+                            "            \"expire_time\": 1601196602\n" +
                             "        },\n" +
-                            "        \"2\": {\n" +
-                            "          \"instalment\": 2,\n" +
-                            "          \"repayment_date\": \"2019-09-10\",\n" +
-                            "          \"days\": 31,\n" +
-                            "          \"remaining_principal\": 11368,\n" +
-                            "          \"principal\": 5520,\n" +
-                            "          \"interest\": 174,\n" +
-                            "          \"total_payment\": 5694\n" +
+                            "        \"certification\": [\n" +
+                            "            {\n" +
+                            "                \"id\": 1,\n" +
+                            "                \"alias\": \"idcard\",\n" +
+                            "                \"name\": \"實名認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11430,\n" +
+                            "                \"updated_at\": 1578382982,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 2,\n" +
+                            "                \"alias\": \"student\",\n" +
+                            "                \"name\": \"學生身份認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證學生身份\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 18454,\n" +
+                            "                \"updated_at\": 1579601827,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 3,\n" +
+                            "                \"alias\": \"debitcard\",\n" +
+                            "                \"name\": \"金融帳號認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11407,\n" +
+                            "                \"updated_at\": 1553750450,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 4,\n" +
+                            "                \"alias\": \"social\",\n" +
+                            "                \"name\": \"社交認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"個人社交帳號認證\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11451,\n" +
+                            "                \"updated_at\": 1571026433,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 5,\n" +
+                            "                \"alias\": \"emergency\",\n" +
+                            "                \"name\": \"緊急聯絡人\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11454,\n" +
+                            "                \"updated_at\": 1585141682,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 6,\n" +
+                            "                \"alias\": \"email\",\n" +
+                            "                \"name\": \"常用電子信箱\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11392,\n" +
+                            "                \"updated_at\": 1570615143,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 7,\n" +
+                            "                \"alias\": \"financial\",\n" +
+                            "                \"name\": \"財務訊息認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 11394,\n" +
+                            "                \"updated_at\": 1571026449,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            }\n" +
+                            "        ],\n" +
+                            "        \"amortization_schedule\": {\n" +
+                            "            \"amount\": 25000,\n" +
+                            "            \"instalment\": 6,\n" +
+                            "            \"rate\": 14,\n" +
+                            "            \"date\": \"2020-03-30\",\n" +
+                            "            \"total_payment\": 4339,\n" +
+                            "            \"leap_year\": false,\n" +
+                            "            \"year_days\": 365,\n" +
+                            "            \"XIRR\": 14.92,\n" +
+                            "            \"schedule\": {\n" +
+                            "                \"1\": {\n" +
+                            "                    \"instalment\": 1,\n" +
+                            "                    \"repayment_date\": \"2020-05-10\",\n" +
+                            "                    \"days\": 41,\n" +
+                            "                    \"remaining_principal\": 25000,\n" +
+                            "                    \"principal\": 3946,\n" +
+                            "                    \"interest\": 393,\n" +
+                            "                    \"total_payment\": 4339\n" +
+                            "                },\n" +
+                            "                \"2\": {\n" +
+                            "                    \"instalment\": 2,\n" +
+                            "                    \"repayment_date\": \"2020-06-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 21054,\n" +
+                            "                    \"principal\": 4089,\n" +
+                            "                    \"interest\": 250,\n" +
+                            "                    \"total_payment\": 4339\n" +
+                            "                },\n" +
+                            "                \"3\": {\n" +
+                            "                    \"instalment\": 3,\n" +
+                            "                    \"repayment_date\": \"2020-07-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 16965,\n" +
+                            "                    \"principal\": 4144,\n" +
+                            "                    \"interest\": 195,\n" +
+                            "                    \"total_payment\": 4339\n" +
+                            "                },\n" +
+                            "                \"4\": {\n" +
+                            "                    \"instalment\": 4,\n" +
+                            "                    \"repayment_date\": \"2020-08-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 12821,\n" +
+                            "                    \"principal\": 4187,\n" +
+                            "                    \"interest\": 152,\n" +
+                            "                    \"total_payment\": 4339\n" +
+                            "                },\n" +
+                            "                \"5\": {\n" +
+                            "                    \"instalment\": 5,\n" +
+                            "                    \"repayment_date\": \"2020-09-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 8634,\n" +
+                            "                    \"principal\": 4236,\n" +
+                            "                    \"interest\": 103,\n" +
+                            "                    \"total_payment\": 4339\n" +
+                            "                },\n" +
+                            "                \"6\": {\n" +
+                            "                    \"instalment\": 6,\n" +
+                            "                    \"repayment_date\": \"2020-10-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 4398,\n" +
+                            "                    \"principal\": 4398,\n" +
+                            "                    \"interest\": 51,\n" +
+                            "                    \"total_payment\": 4449\n" +
+                            "                }\n" +
+                            "            },\n" +
+                            "            \"total\": {\n" +
+                            "                \"principal\": 25000,\n" +
+                            "                \"interest\": 1144,\n" +
+                            "                \"total_payment\": 26144\n" +
+                            "            }\n" +
                             "        },\n" +
-                            "        \"3\": {\n" +
-                            "          \"instalment\": 3,\n" +
-                            "          \"repayment_date\": \"2019-10-10\",\n" +
-                            "          \"days\": 30,\n" +
-                            "          \"remaining_principal\": 5848,\n" +
-                            "          \"principal\": 5848,\n" +
-                            "          \"interest\": 87,\n" +
-                            "          \"total_payment\": 5935\n" +
+                            "        \"biddingHistory\": {\n" +
+                            "            \"startBidding\": \"1585495887\",\n" +
+                            "            \"endBidding\": \"1585668686\",\n" +
+                            "            \"currenIndex\": \"12\",\n" +
+                            "            \"history\": {\n" +
+                            "                \"1\": 24,\n" +
+                            "                \"2\": 56,\n" +
+                            "                \"3\": 52,\n" +
+                            "                \"4\": 52,\n" +
+                            "                \"5\": 52,\n" +
+                            "                \"6\": 52,\n" +
+                            "                \"7\": 52,\n" +
+                            "                \"8\": 52,\n" +
+                            "                \"9\": 52,\n" +
+                            "                \"10\": 52,\n" +
+                            "                \"11\": 52,\n" +
+                            "                \"12\": 52,\n" +
+                            "                \"13\": 0,\n" +
+                            "                \"14\": 0,\n" +
+                            "                \"15\": 0,\n" +
+                            "                \"16\": 0,\n" +
+                            "                \"17\": 0,\n" +
+                            "                \"18\": 0,\n" +
+                            "                \"19\": 0,\n" +
+                            "                \"20\": 0,\n" +
+                            "                \"21\": 0,\n" +
+                            "                \"22\": 0,\n" +
+                            "                \"23\": 0,\n" +
+                            "                \"24\": 0,\n" +
+                            "                \"25\": 0,\n" +
+                            "                \"26\": 0,\n" +
+                            "                \"27\": 0,\n" +
+                            "                \"28\": 0,\n" +
+                            "                \"29\": 0,\n" +
+                            "                \"30\": 0,\n" +
+                            "                \"31\": 0,\n" +
+                            "                \"32\": 0,\n" +
+                            "                \"33\": 0,\n" +
+                            "                \"34\": 0,\n" +
+                            "                \"35\": 0,\n" +
+                            "                \"36\": 0,\n" +
+                            "                \"37\": 0,\n" +
+                            "                \"38\": 0,\n" +
+                            "                \"39\": 0,\n" +
+                            "                \"40\": 0,\n" +
+                            "                \"41\": 0,\n" +
+                            "                \"42\": 0,\n" +
+                            "                \"43\": 0,\n" +
+                            "                \"44\": 0,\n" +
+                            "                \"45\": 0,\n" +
+                            "                \"46\": 0,\n" +
+                            "                \"47\": 0,\n" +
+                            "                \"48\": 0\n" +
+                            "            },\n" +
+                            "            \"x\": \"48\",\n" +
+                            "            \"x_unit\": \"時\",\n" +
+                            "            \"x_limit\": 1,\n" +
+                            "            \"y\": \"100\",\n" +
+                            "            \"y_unit\": \"%\",\n" +
+                            "            \"y_limit\": 10\n" +
                             "        }\n" +
-                            "      },\n" +
-                            "      \"total\": {\n" +
-                            "        \"principal\": 16580,\n" +
-                            "        \"interest\": 743,\n" +
-                            "        \"total_payment\": 17323\n" +
-                            "      }\n" +
                             "    }\n" +
-                            "  }\n" +
                             "}",
                         "type": "Object"
                     }
@@ -16365,6 +16527,143 @@ define({
                     {
                         "title": "410",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"410\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },{
+            "type": "post",
+            "url": "/v2/product/changerate",
+            "title": "借款方 調升利率",
+            "name": "PostProductChangeRate",
+            "version": "0.2.0",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "rate",
+                            "description": "<p>利率 (+X ~ maxRate 20)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/changerate"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>此申請不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "405",
+                            "description": "<p>對此申請無權限</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "description": "<p>目前狀態無法完成此動作</p>",
+                            "field": "407"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "description": "<p>低於現有或高於最高利率</p>",
+                            "field": "414"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "405",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"405\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "407",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"407\"\n}",
                         "type": "Object"
                     }
                 ]

@@ -1217,7 +1217,10 @@ class Product extends REST_Controller {
 
             $lastBidding = 0;
             foreach ($history as $history_key => $history_val) {
-                $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+                $lastBidding = $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+                if($history_key >= $currentIndex){
+                    break;
+                }
             }
 
             $biddingHistory = [
@@ -1355,16 +1358,30 @@ class Product extends REST_Controller {
 
         $target = $this->target_model->get($param['id']);
         if (!empty($target)) {
+            $this->target_model->update($target->id, ['script_status' => 99]);
+            $target->user_id != $user_id
+                ? $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION))
+                : false;
+
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            $this->is_sub_product($product, $sub_product_id)
+                ? $product = $this->trans_sub_product($product, $sub_product_id)
+                : false;
+
+            $param['rate'] <= $target->interest_rate && $param['rate'] <= $product['interest_rate_e']
+                ? $this->response(array('result' => 'ERROR', 'error' => PRODUCT_RATE_ERROR))
+                : false;
+
+
             $allow_changeRate_product = $this->config->item('allow_changeRate_product');
             if (in_array($target->product_id, $allow_changeRate_product)
+                && $target->status == 3
                 && $target->sub_product_id != STAGE_CER_TARGET
-                && $target->sub_status != 8
+                && in_array($target->sub_status ,[TARGET_SUBSTATUS_NORNAL ,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
+                && $target->script_status == 0
             ) {
-                if ($target->user_id != $user_id) {
-                    $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION));
-                }
-
-                if ($target->status == 3) {
 //                    $investments = $this->investment_model->get_many_by([
 //                        'target_id' => $target->id,
 //                        'status' => [0, 1]
@@ -1375,8 +1392,9 @@ class Product extends REST_Controller {
 //                    if ($rs) {
 //                        $this->response(array('result' => 'SUCCESS'));
 //                    }
-                }
+                $this->target_model->update($target->id, ['script_status' => 0]);
             }
+            $this->target_model->update($target->id, ['script_status' => 0]);
             $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
         }
         $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST));
