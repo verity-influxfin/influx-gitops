@@ -1005,7 +1005,6 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-
             if($target->user_id != $user_id){
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
@@ -1243,6 +1242,8 @@ class Product extends REST_Controller {
                 }
 //            }
 
+            $isSupportRateAdjust = in_array($target->product_id, $this->config->item('allow_changeRate_product')) ? true : false;
+
             $reason = $target->reason;
             $json_reason = json_decode($reason);
             if (isset($json_reason->reason)) {
@@ -1276,6 +1277,7 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
+                'isSupportRateAdjust' => $isSupportRateAdjust,
             ];
 
             $this->response(array('result' => 'SUCCESS','data' => $data ));
