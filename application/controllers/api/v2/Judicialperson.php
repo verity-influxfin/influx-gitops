@@ -867,7 +867,7 @@ class Judicialperson extends REST_Controller {
                 'business_model'        => $business['business_model'],
                 'selling_type'          => $business['selling_type'],
 				'cooperation'			=> 2,
-                'cooperation_contact'	=> $business['cooperation_contact'],
+                'cooperation_contact'	=> isset($business['cooperation_contact']) ? $business['cooperation_contact'] : '',
 				'cooperation_address'   => $business['cooperation_address'],
                 'cooperation_phone'	    => $business['cooperation_phone'],
 				'cooperation_content'	=> json_encode($content),
