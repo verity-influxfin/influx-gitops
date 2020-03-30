@@ -334,7 +334,7 @@ $config['visul_id_des'] = [
     'N1' => [
         'name' => '信用貸款',
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12-20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_loan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
@@ -342,7 +342,7 @@ $config['visul_id_des'] = [
     'N2' => [
         'name' => '手機無卡分期專案',
         'description' => '最新熱門手機選擇最多元',
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_phoneloan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
@@ -350,7 +350,7 @@ $config['visul_id_des'] = [
     'N3' => [
         'name' => '外匯車貸',
         'description' => '買進口車好方便',
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/app_asset/marketing_res/marketing_app_phoneloan.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
@@ -373,7 +373,7 @@ $config['visul_id_des'] = [
     ],
     'LS1' => [
         'name' => '學生貸',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度12萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>資金小幫手生活超easy</span><br><span style=\'font-size:14px;color:#4a4a4a\'>全台大學生與碩博士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'url' => '',
@@ -381,7 +381,7 @@ $config['visul_id_des'] = [
     ],
     'LF1' => [
         'name' => '上班族貸',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>全線上申請，無人打擾</span><br><span style=\'font-size:14px;color:white\'>最高額度20萬元<br>3-24期，償還期限選擇多元<br>最低利率5%</span>',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>隨時online照顧您的需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',
@@ -765,7 +765,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['N1', 'N2', 'NS1', 'LS1', 'LF1'],
+    'nature' => ['N1', 'N2', 'N3'],
     'company' => ['DS2'],
 ];
 
