@@ -790,7 +790,12 @@ class Judicialperson extends REST_Controller {
             }
         }
 
-        $fields 	= ['cooperation_address','cooperation_contact','cooperation_phone'];
+        $fields 	= ['cooperation_address','cooperation_phone'];
+        if($this->user_info->company == 0){
+            array_push($fields, 'cooperation_contact');
+        }elseif(isset($input['cooperation_contact'])){
+            $business['cooperation_contact'] = $input['cooperation_contact'];
+        }
         foreach ($fields as $field) {
             if (!isset($input[$field]) && !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
