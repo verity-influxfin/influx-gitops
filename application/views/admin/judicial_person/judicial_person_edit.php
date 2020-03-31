@@ -35,9 +35,9 @@
 							</div>
 							<div class="form-group">
 								<label>法人 User ID</label>
-								<a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->company_user_id) ?>">
-									<p><?= isset($data->company_user_id) ? $data->company_user_id : "" ?></p>
-								</a>
+								<? echo $data->company_user_id !=0 ? '<a class="fancyframe" href="' . admin_url('User/display?id=' . $data->company_user_id) . '"' : '' ?>
+									<p><? echo $data->company_user_id != 0 ? $data->company_user_id . '</a>' : "尚未開通"  ?></p>
+
 							</div>
 							<div class="form-group">
 								<label>統一編號</label>
