@@ -52,6 +52,10 @@
                       }
                       if(data_arry.status=='爬蟲執行完成'){
                         requestVerdictCount();
+                        if(new Date($.now()-604800000) > data_date){
+                          $('#run-scraper-btn').text('重新執行爬蟲');
+                          $('.run-scraper-tr').show();
+                        }
                       }
                       return;
                   }
@@ -242,6 +246,8 @@
                                   </tr>
                                 </thead>
                                 <tbody id="verdict_list">
+                                </tbody>
+                                <tbody>
                                   <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
                                 </tbody>
                               </table>
