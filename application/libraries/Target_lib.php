@@ -818,6 +818,76 @@ class Target_lib
         return $schedule;
     }
 
+    public function goToNext($date, $forceToNext = false) {
+        $day = substr($date, -2);
+        $allNumber = explode("-", $date);
+        if (!$allNumber || count($allNumber) < 3) {
+            return $date;
+        }
+        if ($day > 10 || $day == 10 && $forceToNext) {
+            $allNumber[2] = '10';
+            if ($allNumber[1] == '12') {
+                $allNumber[1] = '01';
+                $allNumber[0]++;
+            } else {
+                $allNumber[1]++;
+            }
+            if (strlen($allNumber[1]) == 1) {
+                $allNumber[1] = '0' . $allNumber[1];
+            }
+        } elseif ($day < 10) {
+            $allNumber[2] = '10';
+        }
+        $date = $allNumber[0] . '-' . $allNumber[1] . '-' . $allNumber[2];
+        return $date;
+    }
+
+    private function goToMostRecent($date)
+    {
+        $day = substr($date, -2);
+        $allNumber = explode("-", $date);
+        if (!$allNumber || count($allNumber) < 3) {
+            return $date;
+        }
+        if ($day > 10) {
+            $allNumber[2] = '10';
+        } elseif ($day < 10) {
+            $allNumber[2] = '10';
+            if ($allNumber[1] == '01') {
+                $allNumber[1] = '12';
+                $allNumber[0]--;
+            } else {
+                $allNumber[1]--;
+            }
+            if (strlen($allNumber[1]) == 1) {
+                $allNumber[1] = '0' . $allNumber[1];
+            }
+        }
+        $date = $allNumber[0] . '-' . $allNumber[1] . '-' . $allNumber[2];
+        return $date;
+    }
+
+    public function measureMonthGaps($startAt, $endAt)
+    {
+        if ($startAt > $endAt) {
+            $temp = $startAt;
+            $startAt = $endAt;
+            $endAt = $temp;
+        }
+
+        $startTime = explode("-", $startAt);
+        $endTime = explode("-", $endAt);
+        $yearDiff = $endTime[0] - $startTime[0];
+        if ($startTime[1] > $endTime[1]) {
+            $monthDiff = 12 - $startTime[1] + $endTime[1];
+            $yearDiff--;
+        } else {
+            $monthDiff = $endTime[1] - $startTime[1];
+        }
+
+        return $yearDiff * 12 + $monthDiff;
+    }
+
     private function init_amortization_row($numInstalment, $limitDate)
     {
         return [
@@ -827,6 +897,8 @@ class Target_lib
             'interest' => 0,//利息
             'principal' => 0,//本金
             'delay_interest' => 0,//應收延滯息
+            'delay_occurred_at' => 0,
+            'delay_principal_return_at' => 0,//逾期清償發生時間
             'days' => 0,//本期天數
             'damage' => 0,//違約金,
             'prepayment_allowance' => 0,//提前補償
@@ -846,7 +918,86 @@ class Target_lib
         ];
     }
 
-    public function get_investment_amortization_table_v2($target = [], $investment = [], $full = false)
+    public function processOverdueDetails(
+        $target,
+        $overdueAmortizationRows,
+        $overdueStartedAt,
+        $lastRepaymentAt
+    ) {
+        //principal and overdue interest should be kept in following interval unless the target ends
+        $remainingPrincipal = 0;
+        $remainingInterest = 0;
+        $remainingDamage = 0;
+        $overdueRemainingInterest = 0;
+        $numInstalment = $target->instalment;
+        $startedAt = $overdueAmortizationRows[0]['repayment_date'];
+        $overdueOccurredAt = '';
+        $mostRecentPaymentAt = $this->goToMostRecent(date('Y-m-d', time()));
+
+        if (!$startedAt) {
+            return $overdueAmortizationRows;
+        }
+
+        $mongthDiff = $this->measureMonthGaps($startedAt, $lastRepaymentAt);
+        $smallestInstalment = 0;
+        $largestInstalment = 200;
+        for ($i = 1; $i <= $largestInstalment; $i++) {
+            if (isset($overdueAmortizationRows[$i])) {
+                continue;
+            }
+            $smallestInstalment = $i;
+        }
+        $mongthDiff += $i;
+        for ($i = 1; $i <= $mongthDiff; $i++) {
+            if (isset($overdueAmortizationRows[$i])) {
+                $row = $overdueAmortizationRows[$i];
+            } else {
+                //amortization schedule not always started with one for some users
+                if (!isset($overdueAmortizationRows[$i-1])) {
+                    continue;
+                }
+                $row = $this->init_amortization_row($i, '');
+                $row['repayment_date'] = $this->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
+            }
+            if ($overdueStartedAt == $i) {
+                $remainingPrincipal = $row['principal'];
+                $remainingInterest = $row['interest'];
+                $remainingDamage = $row['damage'];
+            }
+
+            if ($i > $overdueStartedAt) {
+                $row['principal'] = $remainingPrincipal;
+                $row['interest'] = $remainingInterest;
+                $row['damage'] = $remainingDamage;
+                $row['delay_interest'] = round($remainingPrincipal * 0.001 * get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']));
+                if ($row['r_interest'] > 0) {
+                    $remainingInterest = $row['interest'] - $row['r_interest'];
+                }
+                $overdueAmortizationRows[$i] = $row;
+                if ($row['r_principal'] > 0) {
+                    $remainingPrincipal = $row['principal'] - $row['r_principal'];
+                    $overduePrincipalReturnAt = $row['delay_principal_return_at'];
+                }
+                if ($row['r_damages'] > 0) {
+                    $remainingPrincipal = $row['damage'] - $row['r_damages'];
+                }
+
+                if ($remainingPrincipal == 0) {
+                    if ($row['principal'] != 0 || $row['r_principal'] != 0) {
+                        $overdueAmortizationRows[$i]['delay_interest'] = round($row['principal'] * 0.001 * get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overduePrincipalReturnAt));
+                    }
+                    break;
+                }
+                if ($overdueAmortizationRows[$i]['repayment_date'] >= $lastRepaymentAt) {
+                    break;
+                }
+            }
+        }
+
+        return $overdueAmortizationRows;
+    }
+
+    public function get_investment_amortization_table_v2($target = [], $investment = [], $lastRepaymentAt = '')
     {
         $xirrDates = [$target->loan_date];
         $xirrValue = [$investment->loan_amount * (-1)];
@@ -863,7 +1014,7 @@ class Target_lib
 
         $overdueSchedule = $normalSchedule;
 
-        $investmentId = $full ? [$investment->id, 0] : $investment->id;
+        $investmentId = $investment->id;
         $transactions = $this->CI->transaction_model->get_many_by([
             'investment_id' => [0, $investmentId],
             'target_id' => $target->id,
@@ -876,16 +1027,28 @@ class Target_lib
 
         $limitDate = '';
         $overdueAt = null;
+        $overdueStartedAt = -1;
         $normalRepaymentPrincipal = 0;
         $overdueRepaymentPrincipal = 0;
         $normalAmortizationRows = [];
         $overdueAmortizationRows = [];
+        $sourcesForSystem = [
+            SOURCE_PREPAYMENT_DAMAGE,
+            SOURCE_AR_DAMAGE,
+            SOURCE_DAMAGE,
+            SOURCE_FEES,
+            SOURCE_SUBLOAN_FEE
+        ];
         foreach ($transactions as $key => $value) {
             if ($value->source == SOURCE_AR_DELAYINTEREST) {
                 $overdueAt = $value->limit_date;
+                $overdueStartedAt = $value->instalment_no;
             }
 
-            if ($value->investment_id == 0 && $value->source != SOURCE_PREPAYMENT_DAMAGE) {
+            if (
+                $value->investment_id == 0
+                && !in_array($value->source, $sourcesForSystem)
+            ) {
                 continue;
             }
 
@@ -897,15 +1060,15 @@ class Target_lib
         }
 
         if (!isset($normalAmortizationRows[0])) {
-            $normalAmortizationRows[0] = $this->init_amortization_row($value->instalment_no, $limitDate);
+            $normalAmortizationRows[0] = $this->init_amortization_row(0, $limitDate);
         }
         if (!isset($overdueAmortizationRows[0])) {
-            $overdueAmortizationRows[0] = $this->init_amortization_row($value->instalment_no, $limitDate);
+            $overdueAmortizationRows[0] = $this->init_amortization_row(0, $limitDate);
         }
 
         $amount = 0;
         foreach ($transactions as $key => $value) {
-            if ($value->investment_id == 0 && $value->source != SOURCE_PREPAYMENT_DAMAGE) {
+            if ($value->investment_id == 0 && !in_array($value->source, $sourcesForSystem)) {
                 continue;
             }
             $source = $value->source;
@@ -927,13 +1090,52 @@ class Target_lib
             }
             if (!isset($rows[$currentInstalment])) continue;
             if ($source == SOURCE_PRINCIPAL) {
-                $rows[$currentInstalment]['r_principal'] += $value->amount;
+                if ($overdueAt && $overdueStartedAt <= $currentInstalment && substr($value->entering_date, -2) != '10') {
+                    $nextInstalment = $currentInstalment+1;
+                    if (!isset($rows[$nextInstalment])) {
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                    }
+                    $rows[$nextInstalment]['r_principal'] += $value->amount;
+                    $rows[$nextInstalment]['delay_principal_return_at'] = $value->entering_date;
+                    $rows[$nextInstalment]['repayment'] += $value->amount;
+                } else {
+                    $rows[$currentInstalment]['r_principal'] += $value->amount;
+                    $rows[$currentInstalment]['repayment'] += $value->amount;
+                }
             }elseif ($source == SOURCE_INTEREST) {
-                $rows[$currentInstalment]['r_interest'] += $value->amount;
-            }elseif ($source == SOURCE_FEES) {
-                $rows[$currentInstalment]['r_fees'] += $value->amount;
+                if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                    $nextInstalment = $currentInstalment+1;
+                    if (!isset($rows[$nextInstalment])) {
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                    }
+                    $rows[$nextInstalment]['r_interest'] += $value->amount;
+                    $rows[$nextInstalment]['repayment'] += $value->amount;
+                } else {
+                    $rows[$currentInstalment]['r_interest'] += $value->amount;
+                    $rows[$currentInstalment]['repayment'] += $value->amount;
+                }
+            }elseif ($source == SOURCE_FEES && $value->user_from != $target->user_id) {
+                if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                    $nextInstalment = $currentInstalment+1;
+                    if (!isset($rows[$nextInstalment])) {
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                    }
+                    $rows[$nextInstalment]['r_fees'] += $value->amount;
+                } else {
+                    $rows[$currentInstalment]['r_fees'] += $value->amount;
+                }
             }elseif ($source == SOURCE_DELAYINTEREST){
-                $rows[$currentInstalment]['r_delayinterest'] += $value->amount;
+                if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                    $nextInstalment = $currentInstalment+1;
+                    if (!isset($rows[$nextInstalment])) {
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                    }
+                    $rows[$nextInstalment]['r_delayinterest'] += $value->amount;
+                    $rows[$nextInstalment]['repayment'] += $value->amount;
+                } else {
+                    $rows[$currentInstalment]['r_delayinterest'] += $value->amount;
+                    $rows[$currentInstalment]['repayment'] += $value->amount;
+                }
             }elseif ($source == SOURCE_PREPAYMENT_ALLOWANCE){
                 $rows[$currentInstalment]['r_prepayment_allowance'] += $value->amount;
             }elseif ($source == SOURCE_DAMAGE){
@@ -961,14 +1163,16 @@ class Target_lib
                     $rows[$currentInstalment]['prepayment_damage'] += $value->amount;
                     break;
                 case SOURCE_AR_DELAYINTEREST:
-                    $rows[$currentInstalment]['delay_interest'] += $value->amount;
-                    break;
-                case SOURCE_PRINCIPAL:
-                case SOURCE_DELAYINTEREST:
-                case SOURCE_INTEREST:
-                    $rows[$currentInstalment]['repayment'] += $value->amount;
-                    if ($source == SOURCE_PRINCIPAL) {
-                        $repaymentPrincipal += $value->amount;
+                    if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                        $nextInstalment = $currentInstalment+1;
+                        if (!isset($rows[$nextInstalment])) {
+                            $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                        }
+                        $rows[$nextInstalment]['delay_interest'] += $value->amount;
+                        $rows[$nextInstalment]['delay_occurred_at'] = $value->entering_date;
+                    } elseif ($overdueAt) {
+                        $rows[$currentInstalment]['delay_interest'] += $value->amount;
+                        $rows[$currentInstalment]['delay_occurred_at'] = $value->entering_date;
                     }
                     break;
                 case SOURCE_AR_FEES:
@@ -977,14 +1181,11 @@ class Target_lib
                 default:
                     break;
             }
-            !isset($rows[$currentInstalment]['interest'])?$rows[$currentInstalment]['interest'] = 0 : '';
-            !isset($rows[$currentInstalment]['principal'])?$rows[$currentInstalment]['principal'] = 0 : '';
-            !isset($rows[$currentInstalment]['delay_interest'])?$rows[$currentInstalment]['delay_interest'] = 0 : '';
-            $rows[$currentInstalment]['total_payment'] =
-                $rows[$currentInstalment]['interest'] +
-                $rows[$currentInstalment]['principal'] +
-                $rows[$currentInstalment]['delay_interest'];
         }
+
+        ksort($normalAmortizationRows);
+        ksort($overdueAmortizationRows);
+        $overdueAmortizationRows = $this->processOverdueDetails($target, $overdueAmortizationRows, $overdueStartedAt, $lastRepaymentAt);
 
         $oldDate = $target->loan_date;
         $total = intval($investment->loan_amount);
@@ -993,21 +1194,20 @@ class Target_lib
             'status' => 10,
             'new_investment' => $investment->id
         ]);
+
         if ($transfer) {
             $total = intval($transfer->principal);
         }
 
-        $normalSchedule['remaining_principal'] = $total - $normalRepaymentPrincipal - $overdueRepaymentPrincipal;
-        $overdueSchedule['remaining_principal'] = $overdueRepaymentPrincipal;
-
-        ksort($normalAmortizationRows);
-        ksort($overdueAmortizationRows);
+        if ($overdueStartedAt > 0) {
+            $normalAmortizationRows[$overdueStartedAt] = $this->init_amortization_row(0, $normalAmortizationRows[$overdueStartedAt]['repayment_date']);
+        }
 
         foreach ($normalAmortizationRows as $key => $value) {
             $normalAmortizationRows[$key]['days'] = isset($value['repayment_date'])?get_range_days($oldDate, $value['repayment_date']):null;
-            $normalAmortizationRows[$key]['remaining_principal'] = $total;
             $oldDate = isset($value['repayment_date'])?$value['repayment_date']:null;
-            $total = $total - (isset($value['principal'])?$value['principal']:0);
+            $total -= $normalAmortizationRows[$key]['r_principal'];
+            $normalAmortizationRows[$key]['remaining_principal'] = $total;
 
             $normalSchedule['total_payment'] += $value['total_payment'];
             $xirrDates[] = isset($value['repayment_date'])?$value['repayment_date']:null;
@@ -1016,7 +1216,8 @@ class Target_lib
 
         foreach ($overdueAmortizationRows as $key => $value) {
             $overdueAmortizationRows[$key]['days'] = isset($value['repayment_date'])?get_range_days($oldDate, $value['repayment_date']):null;
-            $overdueAmortizationRows[$key]['remaining_principal'] += $value['principal'];
+            $overdueAmortizationRows[$key]['remaining_principal'] += $value['principal'] - $value['r_principal'];
+
             $oldDate = isset($value['repayment_date'])?$value['repayment_date']:null;
 
             $overdueSchedule['total_payment'] += $value['total_payment'];

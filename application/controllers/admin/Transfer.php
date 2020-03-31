@@ -358,14 +358,6 @@ class Transfer extends MY_Admin_Controller
 
         $this->load->library('report/accounts/profit_and_loss_account');
         $profitAndLossAccount = $this->profit_and_loss_account->generateTotalReport($ids);
-        if (!$profitAndLossAccount['normal'] && !$profitAndLossAccount['overdue']) {
-            header('Content-type:application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
-            $html = $this->profit_and_loss_account->getTableHeader();
-            $html .= $this->profit_and_loss_account->getEndingTable();
-            echo $html;
-            return;
-        }
 
         $this->profit_and_loss_account->toExcel($profitAndLossAccount);
     }

@@ -2,18 +2,43 @@
 
 class Profit_and_loss_account
 {
-    public function generateTotalReport($investementIds)
+    public function __construct()
     {
-        $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($ids);
+        $this->CI = &get_instance();
+        $this->CI->load->model('investment_model');
+        $this->CI->load->model('target_model');
+        $this->CI->load->library('target_lib');
+        $this->CI->load->model('transaction/transaction_model');
+        $this->investment_model = $this->CI->investment_model;
+        $this->target_model = $this->CI->target_model;
+        $this->target_lib = $this->CI->target_lib;
+        $this->transaction_model = $this->CI->transaction_model;
+    }
+
+    public function getLastRepayment($investmentIds)
+    {
+        $lastTransaction = $this->transaction_model->order_by('limit_date', 'DESC')->limit(1)->get_by(['investment_id' => $investmentIds, 'status' => [1]]);
+
+        $lastRepaymentAt = $lastTransaction->entering_date > $lastTransaction->limit_date
+                         ? $lastTransaction->entering_date
+                         : $lastTransaction->limit_date;
+        return $this->target_lib->goToNext($lastRepaymentAt);
+    }
+
+    public function generateTotalReport($investmentIds)
+    {
+        $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($investmentIds);
 
         $rows = ['normal' => [], 'overdue' => []];
         if (!$investments) {
             return [];
         }
 
+        $lastRepaymentAt = $this->getLastRepayment($investmentIds);
+
         foreach ($investments as $key => $value) {
             $target = $this->target_model->get($value->target_id);
-            $amortizationTables = $this->target_lib->get_investment_amortization_table_v2($target, $value);
+            $amortizationTables = $this->target_lib->get_investment_amortization_table_v2($target, $value, $lastRepaymentAt);
             if (
                 !$amortizationTables
                 || !isset($amortizationTables['normal'])
@@ -26,12 +51,14 @@ class Profit_and_loss_account
                 $isPrepayment = true;
             }
             foreach ($amortizationTables as $key => $value) {
-                $currentRows = $rvalue['rows'];
+                $currentRows = $value['rows'];
                 if ($isPrepayment && $key == 'normal') {
                     $key = 'prepayment';
                 }
 
                 foreach ($currentRows as $k => $v) {
+                    if ($v['instalment'] == 0) continue;
+
                     if (!$v['repayment_date']) {
                         continue;
                     }
@@ -69,12 +96,13 @@ class Profit_and_loss_account
                 }
             }
         }
+
         return $rows;
     }
 
     public function getTableHeader($tableName)
     {
-        return "<table>{$tableName}<thead><tr><th>還款日</th><th>本金金額</th><th>本金餘額</th><th>當期利息</th><th>本息合計</th><th>違約金</th><th>延滯息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+        return "<table>{$tableName}<thead><tr><th>還款日</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
     }
 
     public function getEndingTable()
@@ -82,19 +110,30 @@ class Profit_and_loss_account
         return '</tbody></table>';
     }
 
-    public function toExcel()
+    public function getSupportedTables()
+    {
+        return [
+            'normal' => '正常案',
+            'overdue' => '逾期案',
+            'prepayment' => '提前清償',
+        ];
+    }
+
+    public function toExcel($rows)
     {
         header('Content-type:application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
-        foreach (['normal', 'overdue', 'prepayment'] as $type) {
-            if ($type == 'normal') {
-                $tableName = '正常案';
-            } elseif ($type == 'overdue') {
-                $tableName = '逾期案';
-            } else {
-                $tableName = '提前清償';
+        $tables = $this->getSupportedTables();
+        foreach ($tables as $type => $tableName) {
+            $html = $this->getTableHeader($tableName);
+
+            if (!isset($rows[$type]) || !$rows[$type]) {
+                $html .= $this->getEndingTable();
+                echo $html;
+                echo "<br><br>";
+                continue;
             }
-            $html = $this->getTableHeader();
+
             ksort($rows[$type]);
             foreach ($rows[$type] as $key => $value) {
                 if ($type != 'prepayment' && substr($key, -2) == '10' || $type == 'prepayment') {
@@ -104,11 +143,11 @@ class Profit_and_loss_account
                     $html .= '<tr>';
                     $html .= '<td>' . $key . '</td>';
                     $html .= '<td>' . $value['principal'] . '</td>';
-                    $html .= '<td>' . $value['remaining_principal'] . '</td>';
                     $html .= '<td>' . $value['interest'] . '</td>';
                     $html .= '<td>' . ($value['principal'] + $value['interest']) . '</td>';
+                    $html .= '<td>' . $value['remaining_principal'] . '</td>';
                     $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
-                    $html .= '<td>' . $value['r_delayinterest'] . '</td>';
+                    $html .= '<td>' . $value['delay_interest'] . '</td>';
                     $html .= '<td>' . $total . '</td>';
                     $html .= '<td>' . $value['r_fees'] . '</td>';
                     if ($type == 'prepayment') {
@@ -120,8 +159,10 @@ class Profit_and_loss_account
                     $html .= '</tr>';
                 }
             }
+
             $html .= $this->getEndingTable();
             echo $html;
+            echo "<br><br>";
         }
     }
 }
