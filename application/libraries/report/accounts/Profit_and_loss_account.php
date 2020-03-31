@@ -102,7 +102,7 @@ class Profit_and_loss_account
 
     public function getTableHeader($tableName)
     {
-        return "<table>{$tableName}<thead><tr><th>還款日</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+        return "<table>{$tableName}<thead><tr><th>還款日</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
     }
 
     public function getEndingTable()
@@ -148,6 +148,8 @@ class Profit_and_loss_account
                     $html .= '<td>' . $value['remaining_principal'] . '</td>';
                     $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
                     $html .= '<td>' . $value['delay_interest'] . '</td>';
+                    $html .= '<td>' . $value['r_principal'] . '</td>';
+                    $html .= '<td>' . $value['r_interest'] . '</td>';
                     $html .= '<td>' . $total . '</td>';
                     $html .= '<td>' . $value['r_fees'] . '</td>';
                     if ($type == 'prepayment') {
