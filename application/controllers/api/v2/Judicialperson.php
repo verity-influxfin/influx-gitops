@@ -942,8 +942,10 @@ class Judicialperson extends REST_Controller {
                 $cooperation= $this->cooperation_model->get_by(array(
                     'company_user_id' 	 => $company_user_id,
                 ));
-                $data['cooperation_id']  = $cooperation -> cooperation_id;
-                $data['cooperation_key'] = $cooperation -> cooperation_key;
+                if($cooperation){
+                    $data['cooperation_id']  = $cooperation -> cooperation_id;
+                    $data['cooperation_key'] = $cooperation -> cooperation_key;
+                }
 		    }
 		}else{
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));

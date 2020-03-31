@@ -65,7 +65,7 @@
                                 <label>銷售類別</label>
                                 <p class="form-control-static"><?=isset($data->selling_type)?$selling_type[$data->selling_type]:"" ?></p>
                                 <?
-                                if($data->no_taishin){
+                                if($data->no_taishin && $selling_type[$data->selling_type] == 2){
                                     echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger create" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
                                 }
                                 ?>
@@ -78,6 +78,8 @@
                                 <label>統一編號</label>
                                 <p class="form-control-static"><?= isset($data->tax_id) ? $data->tax_id : "" ?></p>
                             </div>
+                            <?
+                                if($data->no_taishin && $selling_type[$data->selling_type] == 2){?>
                             <div class="form-group">
                                 <label>信用評估表</label><br />
                                 <? $company_user_id = isset($data->company_user_id)?$data->company_user_id:"";
@@ -89,7 +91,9 @@
                                     echo '<a target="_blank" class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?id=').$data->cerCreditJudicial->id.'">檢閱</a>';
                                 }
                                 ?>
-                            </div>
+                        </div>
+                        <?}
+                        ?>
                             <div class="form-group">
                                 <label>備註</label>
                                 <p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
