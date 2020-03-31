@@ -35,7 +35,16 @@ class Judicialperson_lib{
 					{
 						echo '請先上傳法人或請負責人上傳對保影片';die();
 					}
-					$media=json_encode($judicial_person_data);
+
+                    unset(
+                        $judicial_person_data['transaction_password'],
+                        $judicial_person_data['bank_code'],
+                        $judicial_person_data['branch_code'],
+                        $judicial_person_data['bank_account'],
+                        $judicial_person_data['email'],
+                        $judicial_person_data['bankbook_images']
+                    );
+					$media = json_encode($judicial_person_data);
 
 					$user_param = [
 						'name'				   => $judicial_person->company,
