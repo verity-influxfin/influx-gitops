@@ -930,7 +930,6 @@ class Target_lib
         $remainingPrincipal = 0;
         $remainingInterest = 0;
         $remainingDamage = 0;
-        $overdueRemainingInterest = 0;
         $numInstalment = $target->instalment;
         $startedAt = $overdueAmortizationRows[0]['repayment_date'];
         $overdueOccurredAt = '';
@@ -971,23 +970,30 @@ class Target_lib
                 $row['principal'] = $remainingPrincipal;
                 $row['interest'] = $remainingInterest;
                 $row['damage'] = $remainingDamage;
-                $row['delay_interest'] = round($remainingPrincipal * 0.001 * get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']));
+                $delayDays = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']);
+                $delayInterest = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDays);
+                $row['delay_interest'] = $delayInterest + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
                 if ($row['r_interest'] > 0) {
                     $remainingInterest = $row['interest'] - $row['r_interest'];
                 }
                 $overdueAmortizationRows[$i] = $row;
                 if ($row['r_principal'] > 0) {
-                    $remainingPrincipal = $row['principal'] - $row['r_principal'];
                     $overduePrincipalReturnAt = $row['delay_principal_return_at'];
+                    $delayDaysBeforeReturn = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overduePrincipalReturnAt);
+                    $delayInterestBeforeReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysBeforeReturn);
+
+                    $remainingPrincipal = $row['principal'] - $row['r_principal'];
+
+                    $delayDaysAfterReturn = get_range_days($overduePrincipalReturnAt, $row['repayment_date']);
+                    $delayInterestAfterReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysAfterReturn);
+
+                    $overdueAmortizationRows[$i]['delay_interest'] = $delayInterestBeforeReturn + $delayInterestAfterReturn + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
                 }
                 if ($row['r_damages'] > 0) {
                     $remainingPrincipal = $row['damage'] - $row['r_damages'];
                 }
 
                 if ($remainingPrincipal == 0) {
-                    if ($row['principal'] != 0 || $row['r_principal'] != 0) {
-                        $overdueAmortizationRows[$i]['delay_interest'] = round($row['principal'] * 0.001 * get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overduePrincipalReturnAt));
-                    }
                     break;
                 }
                 if ($overdueAmortizationRows[$i]['repayment_date'] >= $lastRepaymentAt) {
