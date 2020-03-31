@@ -278,7 +278,7 @@ class Judicialperson extends MY_Admin_Controller {
             if (!empty($post['id'])) {
                 $info = $this->judicial_person_model->get($post['id']);
                 if ($info) {
-					if($post['create_taishin'] == 1){
+					if(isset($post['create_taishin']) && $post['create_taishin'] == 1){
 						if($info->cooperation!=1){
 							$data['msg'] = '經銷商未開通';
 						}
@@ -302,8 +302,8 @@ class Judicialperson extends MY_Admin_Controller {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
 						$data['msg'] = $rs?'變更成功':'變更失敗';
 					}
-					$data['redirect'] = base_url('admin/Judicialperson/cooperation_edit?id='.$post['id']);
-					print(json_encode($data));
+					alert($data['msg'], admin_url('judicialperson/cooperation_edit?id='.$post['id']));
+					//print(json_encode($data));
 					return true;
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));

@@ -25,6 +25,7 @@
                     var res = JSON.parse(e);
                     alert(res.msg);
                     window.location.href = res.redirect;
+
                 }
             });
         }
