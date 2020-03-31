@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Judicialperson extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed');
+	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed','media_upload');
 	
 	public function __construct() {
 		parent::__construct();
@@ -248,6 +248,13 @@ class Judicialperson extends MY_Admin_Controller {
 						'user_id' => $info->user_id,
 						'status' => 1,
 					];
+
+					$this->load->model('user/user_bankaccount_model');
+					$user_bankaccount 	= $this->user_bankaccount_model->get_by($where);
+					if($user_bankaccount){
+						$page_data['bankaccount_id'] = $user_bankaccount->id;
+					}
+
 					$page_data['bankbook_image'] = $this->user_bankaccount_model->get_by($where);
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);

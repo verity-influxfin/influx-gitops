@@ -770,6 +770,7 @@ class Judicialperson extends REST_Controller {
 		$input 	= $this->input->post(NULL, TRUE);
         $user_id = $from_judicialApply?(isset($from_judicialApply['user_id'])?$from_judicialApply['user_id']:''):$this->user_info->id;
         $judicial_person= true;
+        $content = [];
         if(!$from_judicialApply){
             $this->not_incharge();
 
@@ -779,6 +780,7 @@ class Judicialperson extends REST_Controller {
             if($judicial_person && $judicial_person->cooperation != 0){
                 $this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
             }
+            $content = json_decode($judicial_person->cooperation_content);
         }
 
         $fields 	= ['business_model','selling_type'];
@@ -819,7 +821,6 @@ class Judicialperson extends REST_Controller {
             array_push($file_fields,'store_sign_image');
         }
 
-        $content = [];
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
         $passbook_image? $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image:'';
 

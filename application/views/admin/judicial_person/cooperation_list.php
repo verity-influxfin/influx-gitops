@@ -114,11 +114,13 @@
                                             <td><?=isset($value->company)?$value->company:"" ?></td>
                                             <td><?=isset($value->user_name)?$value->user_name:"" ?></td>
                                             <td><? $company_user_id = isset($value->company_user_id)?$value->company_user_id:"";
-                                                if(!$value->cerCreditJudicial || $value->cerCreditJudicial->status == 0){
-                                                    echo '<button class="btn btn-danger" style="width: 80px;" onclick="build(\''.$company_user_id.$sellingType.'\')">填寫</button>';
-                                                }
-                                                else{
-                                                    echo '<a target="_blank" class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?id=').$value->cerCreditJudicial->id.'">檢閱</a>';
+                                                if($value->selling_type == 2){
+                                                    if(!$value->cerCreditJudicial || $value->cerCreditJudicial->status == 0){
+                                                        echo '<button class="btn btn-danger" style="width: 80px;" onclick="build(\''.$company_user_id.$sellingType.'\')">填寫</button>';
+                                                    }
+                                                    else{
+                                                        echo '<a target="_blank" class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?id=').$value->cerCreditJudicial->id.'">檢閱</a>';
+                                                    }
                                                 }
                                                 ?></td>
                                             <td><?=isset($value->remark)?$value->remark:"" ?>
