@@ -99,11 +99,6 @@
                     </table>
                     <form action="<?= admin_url('transfer/amortization_schedule') ?>" method="post"
                           style="display: inline-block">
-                        <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
-                        <input id="assets_schedule" type="hidden" name="ids"/>
-                    </form>
-                    <form action="<?= admin_url('transfer/amortization_schedule') ?>" method="post"
-                          style="display: inline-block">
                         <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>
                         <input id="amortization_schedule" type="hidden" name="ids"/>
                     </form>
