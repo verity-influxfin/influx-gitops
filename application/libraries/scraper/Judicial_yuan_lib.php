@@ -92,4 +92,20 @@ class Judicial_yuan_lib
 
       return $response;
     }
+
+    public function requestJudicialYuanVerdictsCase($name, $case, $page){
+      if(!$name || !$case || !$page){
+        return;
+      }
+      $response = [];
+      $url = $this->scraperUrl  . "verdicts/{$name}/case?case={$case}&page={$page}";
+
+      $result = curl_get($url);
+
+      if($result){
+          $response = json_decode($result, true);
+      }
+
+      return $response;
+    }
 }
