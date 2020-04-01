@@ -34,9 +34,8 @@
 								<p class="form-control-static"><?= isset($data->user_name) ? $data->user_name : "" ?></p>
 							</div>
 							<div class="form-group">
-								<label>法人 User ID</label>
-								<? echo $data->company_user_id !=0 ? '<a class="fancyframe" href="' . admin_url('User/display?id=' . $data->company_user_id) . '"' : '' ?>
-									<p><? echo $data->company_user_id != 0 ? $data->company_user_id . '</a>' : "尚未開通"  ?></p>
+								<label>法人 User ID</label><p>
+								<? echo $data->cooperation == 1 ? '<a class="fancyframe" href="' . admin_url('User/display?id=' . $data->company_user_id) . '"</a>' : '尚未開通經銷商' ?></p>
 
 							</div>
 							<div class="form-group">
@@ -71,15 +70,16 @@
                             <? } ?>
                             <div class="form-group">
                                 <label>營運模式</label>
-                                <p class="form-control-static"><?= isset($data->business_model)
+                                <p class="form-control-static"><?echo
+                                    $data->cooperation == 1
                                         ? $data->business_model == 0
                                             ? '線下'
                                             : '線上'
-                                        : "" ?></p>
+                                        : "尚未開通經銷商" ?></p>
                             </div>
                             <div class="form-group">
                                 <label>商品類型</label>
-                                <p class="form-control-static"><?= isset($data->selling_type) ? $this->config->item('selling_type')[$data->selling_type] : "" ?></p>
+                                <p class="form-control-static"><? echo $data->cooperation == 1 ? $this->config->item('selling_type')[$data->selling_type] : "尚未開通經銷商" ?></p>
                             </div>
 							<div class="form-group">
 								<label>備註</label>
@@ -442,10 +442,17 @@
 										<div class="form-group">
 											<label for="disabledSelect">存摺封面</label>
 											<? if (isset($bankaccount_id)) { ?>
-												<a href="../certification/user_bankaccount_edit?id=<?= isset($bankaccount_id) ? $bankaccount_id : "" ?>" target="_blank">金融帳號頁面</a>
-											<? } else {
-												echo "未上傳";
-											} ?>
+												<a href="../certification/user_bankaccount_edit?id=<?= isset($bankaccount_id) ? $bankaccount_id : "" ?>" target="_blank">金融帳號認證頁面</a>
+											<? }
+											if (isset($bankbook)) {
+												foreach ($bankbook as $key => $value) {
+											?>
+													<a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+														<img src="<?= $value ? $value : "" ?>" style='width:100%;max-width:300px'>
+													</a>
+											<?
+												}
+											}?>
 										</div>
 									</div>
 								</div>
