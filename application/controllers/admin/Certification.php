@@ -1074,7 +1074,7 @@ class Certification extends MY_Admin_Controller {
 		if($input['count']>10){
 			$total_page = number_format($input['count']/10, 0);
 			if($input['count']%10 >0){
-				$total_page = $total_page+1;
+				$total_page = $total_page++;
 			}
 		}else{
 			$total_page = 1;

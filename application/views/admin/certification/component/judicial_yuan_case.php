@@ -46,7 +46,7 @@
             </a>
           </li>
           <?php
-            if(isset($case_info)){
+            if($case_info){
               $active_li = $case_info['page'];
               if($case_info['total_page'] <= 10){
                 for($i=1; $i<=$case_info['total_page']; $i++){
@@ -95,7 +95,7 @@
             </a>
           </li>
           <?php
-            if(isset($case_info)){
+            if($case_info){
               $active_li = $case_info['page'];
               if($case_info['total_page'] <= 10){
                 for($i=1; $i<=$case_info['total_page']; $i++){
