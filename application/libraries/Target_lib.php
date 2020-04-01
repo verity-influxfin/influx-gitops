@@ -1536,7 +1536,7 @@ class Target_lib
                         if ($value->status != '1' || $value->sub_product_id == STAGE_CER_TARGET) {
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
-                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, true, $value);
+                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
