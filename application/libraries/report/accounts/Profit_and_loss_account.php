@@ -17,7 +17,7 @@ class Profit_and_loss_account
 
     public function getLastRepayment($investmentIds)
     {
-        $lastTransaction = $this->transaction_model->order_by('limit_date', 'DESC')->limit(1)->get_by(['investment_id' => $investmentIds, 'status' => [1]]);
+        $lastTransaction = $this->transaction_model->order_by('limit_date', 'DESC')->limit(1)->get_by(['investment_id' => $investmentIds, 'status' => [1, 2]]);
 
         $lastRepaymentAt = $lastTransaction->entering_date > $lastTransaction->limit_date
                          ? $lastTransaction->entering_date
@@ -52,15 +52,29 @@ class Profit_and_loss_account
             }
             foreach ($amortizationTables as $key => $value) {
                 $currentRows = $value['rows'];
-                if ($isPrepayment && $key == 'normal') {
-                    $key = 'prepayment';
-                }
 
                 foreach ($currentRows as $k => $v) {
                     if ($v['instalment'] == 0) continue;
 
                     if (!$v['repayment_date']) {
                         continue;
+                    }
+
+                    if (
+                        $isPrepayment
+                        && $key == 'normal'
+                        && (
+                            $v["interest"] > $v["r_interest"]
+                            || $v["prepayment_allowance"] > 0
+                            || $v["prepayment_damage"] > 0
+                        )
+                    ) {
+                        if ($v["remaining_principal"] == 0) {
+                            $key = 'prepayment';
+                        } else {
+                            //the prepayment is not associated with current investor as the loan was transfered to other
+                            $v["prepayment_damage"] = 0;
+                        }
                     }
                     if (!isset($rows[$key][$v['repayment_date']])) {
                         $rows[$key][$v['repayment_date']] = array(
