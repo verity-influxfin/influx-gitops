@@ -14,7 +14,8 @@ class Certification extends MY_Admin_Controller {
 		'user_bankaccount_failed',
 		'user_bankaccount_success',
 		'difficult_word_add',
-		'difficult_word_edit'
+		'difficult_word_edit',
+		'judicial_yuan_case'
 	);
 	public $certification;
 	public $certification_name_list;
@@ -1057,6 +1058,40 @@ class Certification extends MY_Admin_Controller {
 			'multi_target' => $sub_product['multi_target'],
 			'status' => $sub_product['status'],
 		);
+	}
+	public function judicial_yuan_case(){
+		$page_data 	= array('type'=>'list','list'=>array());
+		$input 		= $this->input->get(NULL, TRUE);
+		$list		= array();
+		$where		= array();
+		$fields 	= ['user_id','certification_id','status'];
+		foreach ($fields as $field) {
+			if (isset($input[$field])&&$input[$field]!='') {
+				$where[$field] = $input[$field];
+			}
+		}
+
+		if($input['count']>10){
+			$total_page = number_format($input['count']/10, 0);
+			if($input['count']%10 >0){
+				$total_page = $total_page++;
+			}
+		}else{
+			$total_page = 1;
+		}
+
+		$this->load->library('scraper/judicial_yuan_lib.php');
+		$page_data['list'] = $this->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($input['name']), urlencode($input['case']), $input['page']);
+		$page_data['case_info']['count'] = $input['count'];
+		$page_data['case_info']['name'] = $input['name'];
+		$page_data['case_info']['case'] = $input['case'];
+		$page_data['case_info']['page'] = $input['page'];
+		$page_data['case_info']['total_page'] = $total_page;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/certification/component/judicial_yuan_case',$page_data);
+		$this->load->view('admin/_footer');
 	}
 }
 ?>

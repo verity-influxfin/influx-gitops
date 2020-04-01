@@ -98,7 +98,7 @@
                         case_list.forEach(function(case_list){
                           list_head = '<tr><td ';
                           list_style = 'style="color:red;"';
-                          list_foot = '>' + case_list.name +'</td><td>' + case_list.count + '</td></tr>';
+                          list_foot = '>' + case_list.name +'</td><td><a target="_blank" href="judicial_yuan_case?name=<?=isset($content['name'])?$content['name']:"" ?>&case='+ case_list.name +'&page=1&count='+ case_list.count +'"  >' + case_list.count + '</a></td></tr>';
                           if(case_list.name =='本票裁定' || case_list.name =='支付命令' || case_list.name =='消債之前置協商認可事件' || case_list.name =='詐欺' || case_list.name =='侵佔'){
                                   list = list_head + list_style + list_foot;
                                 }else{
