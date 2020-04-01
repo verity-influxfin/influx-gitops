@@ -770,6 +770,7 @@ class Judicialperson extends REST_Controller {
 		$input 	= $this->input->post(NULL, TRUE);
         $user_id = $from_judicialApply?(isset($from_judicialApply['user_id'])?$from_judicialApply['user_id']:''):$this->user_info->id;
         $judicial_person= true;
+        $content = [];
         if(!$from_judicialApply){
             $this->not_incharge();
 
@@ -779,6 +780,7 @@ class Judicialperson extends REST_Controller {
             if($judicial_person && $judicial_person->cooperation != 0){
                 $this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
             }
+            $content = json_decode($judicial_person->cooperation_content);
         }
 
         $fields 	= ['business_model','selling_type'];
@@ -790,7 +792,12 @@ class Judicialperson extends REST_Controller {
             }
         }
 
-        $fields 	= ['cooperation_address','cooperation_contact','cooperation_phone'];
+        $fields 	= ['cooperation_address','cooperation_phone'];
+        if($this->user_info->company == 0){
+            array_push($fields, 'cooperation_contact');
+        }elseif(isset($input['cooperation_contact'])){
+            $business['cooperation_contact'] = $input['cooperation_contact'];
+        }
         foreach ($fields as $field) {
             if (!isset($input[$field]) && !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -816,7 +823,12 @@ class Judicialperson extends REST_Controller {
 
         $content = [];
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
-        $passbook_image? $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image:'';
+        if($passbook_image){
+            $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image;
+        }else{
+            $content['passbook_image'] = $judicial_person->cooperation_content;
+            isset($input['passbook_image']) ? $content['passbook_dealer_image'] = $input['passbook_image'] : '';
+        }
 
         //上傳檔案欄位
         foreach ($file_fields as $field) {
@@ -862,7 +874,7 @@ class Judicialperson extends REST_Controller {
                 'business_model'        => $business['business_model'],
                 'selling_type'          => $business['selling_type'],
 				'cooperation'			=> 2,
-                'cooperation_contact'	=> $business['cooperation_contact'],
+                'cooperation_contact'	=> isset($business['cooperation_contact']) ? $business['cooperation_contact'] : '',
 				'cooperation_address'   => $business['cooperation_address'],
                 'cooperation_phone'	    => $business['cooperation_phone'],
 				'cooperation_content'	=> json_encode($content),
@@ -937,8 +949,10 @@ class Judicialperson extends REST_Controller {
                 $cooperation= $this->cooperation_model->get_by(array(
                     'company_user_id' 	 => $company_user_id,
                 ));
-                $data['cooperation_id']  = $cooperation -> cooperation_id;
-                $data['cooperation_key'] = $cooperation -> cooperation_key;
+                if($cooperation){
+                    $data['cooperation_id']  = $cooperation -> cooperation_id;
+                    $data['cooperation_key'] = $cooperation -> cooperation_key;
+                }
 		    }
 		}else{
 			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));

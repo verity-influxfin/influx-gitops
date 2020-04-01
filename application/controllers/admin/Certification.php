@@ -90,101 +90,99 @@ class Certification extends MY_Admin_Controller {
 			}
 			if($id||$cid){
 				$info = $this->user_certification_model->get($id);
-				if($info||$cid){
+				if($info){
 					$certification = $this->certification[$info->certification_id];
 					$page_data['certification_list'] = $this->certification_name_list;
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
-
-					if($info->certification_id==2) {
-						//加入SIP網址++
-						$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
-						$school_data = json_decode($school_data, true);
-						$school = $page_data['content']['school'];
-						$sipURL = isset($school_data[$school]['sipURL']) ? $school_data[$school]['sipURL'] : '';
-						$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
-						//加入SIP網址--
-
-					}elseif ($info->certification_id == 9) {
-						if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
-							$this->joint_credits();
-							return;
-						}
-					}
-					elseif($info->certification_id==10){
-						if(isset(json_decode($info->content)->pdf_file)) {
-							$this->job_credits();
-							return;
-						}
-						$page_data['employee_range'] 		= $this->config->item('employee_range');
-						$page_data['position_name']			= $this->config->item('position_name');
-						$page_data['seniority_range'] 		= $this->config->item('seniority_range');
-						$page_data['industry_name'] 		= $this->config->item('industry_name');
-						$page_data['job_type_name'] 		= $this->config->item('job_type_name');
-						if (isset($page_data['content']['job_title'])){
-							$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
-							$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
-						}
-					}elseif($cid == 1006 || $info->certification_id==1006){
-						$selltype = isset($get['selltype'])?$get['selltype']:0;
-						$user_id = isset($get['user_id'])?$get['user_id']:0;
-						$new = true;
-						if($info){
-							$user_id = $info->user_id;
-							$cid = $info->certification_id;
-							$this->load->model('user/judicial_person_model');
-							$list = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
-							$list?$selltype=$list->selling_type:'';
-							$new = false;
-						}
-						$this->config->load('credit');
-						$creditJudicial = $this->config->item('creditJudicial');
-						if(isset($creditJudicial[$selltype])){
-							$certification = $this->certification[$cid];
-							$page_data['user_id'] = $user_id;
-							$page_data['selltype'] = $selltype;
-							$page_data['selling_type'] = $this->config->item('selling_type')[$selltype];
-							$page_data['cid'] = $cid;
-							$page_data['data'] = $info;
-							$page_data['content'] = isset($info->content)?json_decode($info->content,true):false;
-							$page_data['creditJudicialConfig'] = $creditJudicial[$selltype];
-							$page_data['certification_list'] = $this->certification_name_list;
-							$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
-
-							$this->load->view('admin/_header');
-							$this->load->view('admin/_title',$this->menu);
-							$this->load->view('admin/certification/'.$certification['alias'],$page_data);
-							$this->load->view('admin/_footer');
-							return true;
-						}
-						alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
-					}
-
-					if(isset($page_data['content']['programming_language'])){
-						$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
-						$set_lang_level =['入門','參與開發','獨立執行'];
-						foreach($page_data['content']['programming_language'] as $lang_list => $lang){
-							$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
-							$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
-						}
-						$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
-						$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
-					}
-
-					$page_data['id'] 					= $id;
-					$page_data['remark'] 				= json_decode($info->remark,true);
-					$page_data['status_list'] 			= $this->user_certification_model->status_list;
-					$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
-					$page_data['school_system'] 		= $this->config->item('school_system');
-					$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
-					$page_data['from'] 					= $from;
-					$this->load->view('admin/_header');
-					$this->load->view('admin/_title', $this->menu);
-					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
-					$this->load->view('admin/_footer');
-				} else {
-					alert('ERROR , id is not exist', $back_url);
 				}
+				if($cid == 1006 || $info->certification_id==1006){
+					$selltype = isset($get['selltype'])?$get['selltype']:0;
+					$user_id = isset($get['user_id'])?$get['user_id']:0;
+					$new = true;
+					if($info){
+						$user_id = $info->user_id;
+						$cid = $info->certification_id;
+						$this->load->model('user/judicial_person_model');
+						$list = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+						$list?$selltype=$list->selling_type:'';
+						$new = false;
+					}
+					$this->config->load('credit');
+					$creditJudicial = $this->config->item('creditJudicial');
+					if(isset($creditJudicial[$selltype])){
+						$certification = $this->certification[$cid];
+						$page_data['user_id'] = $user_id;
+						$page_data['selltype'] = $selltype;
+						$page_data['selling_type'] = $this->config->item('selling_type')[$selltype];
+						$page_data['cid'] = $cid;
+						$page_data['data'] = $info;
+						$page_data['content'] = isset($info->content)?json_decode($info->content,true):false;
+						$page_data['creditJudicialConfig'] = $creditJudicial[$selltype];
+						$page_data['certification_list'] = $this->certification_name_list;
+						$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
+
+						$this->load->view('admin/_header');
+						$this->load->view('admin/_title',$this->menu);
+						$this->load->view('admin/certification/'.$certification['alias'],$page_data);
+						$this->load->view('admin/_footer');
+						return true;
+					}
+					alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
+				}
+				elseif($info->certification_id==2) {
+					//加入SIP網址++
+					$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
+					$school_data = json_decode($school_data, true);
+					$school = $page_data['content']['school'];
+					$sipURL = isset($school_data[$school]['sipURL']) ? $school_data[$school]['sipURL'] : '';
+					$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
+					//加入SIP網址--
+
+				}elseif ($info->certification_id == 9) {
+					if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
+						$this->joint_credits();
+						return;
+					}
+				}
+				elseif($info->certification_id==10){
+					if(isset(json_decode($info->content)->pdf_file)) {
+						$this->job_credits();
+						return;
+					}
+					$page_data['employee_range'] 		= $this->config->item('employee_range');
+					$page_data['position_name']			= $this->config->item('position_name');
+					$page_data['seniority_range'] 		= $this->config->item('seniority_range');
+					$page_data['industry_name'] 		= $this->config->item('industry_name');
+					$page_data['job_type_name'] 		= $this->config->item('job_type_name');
+					if (isset($page_data['content']['job_title'])){
+						$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
+						$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
+					}
+				}
+
+				if(isset($page_data['content']['programming_language'])){
+					$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
+					$set_lang_level =['入門','參與開發','獨立執行'];
+					foreach($page_data['content']['programming_language'] as $lang_list => $lang){
+						$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
+						$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+					}
+					$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
+					$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
+				}
+
+				$page_data['id'] 					= $id;
+				$page_data['remark'] 				= json_decode($info->remark,true);
+				$page_data['status_list'] 			= $this->user_certification_model->status_list;
+				$page_data['investor_list'] 		= $this->user_certification_model->investor_list;
+				$page_data['school_system'] 		= $this->config->item('school_system');
+				$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
+				$page_data['from'] 					= $from;
+				$this->load->view('admin/_header');
+				$this->load->view('admin/_title', $this->menu);
+				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
+				$this->load->view('admin/_footer');
 			} else {
 				alert('ERROR , id is not exist', $back_url);
 			}

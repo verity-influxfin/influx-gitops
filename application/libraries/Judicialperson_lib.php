@@ -31,11 +31,26 @@ class Judicialperson_lib{
                     $bank_account         = $judicial_person_data['bank_account'];
                     $email                = $judicial_person_data['email'];
 					$bankbook_images      = urldecode($judicial_person_data['bankbook_images']);
+                    $businesstax = false;
 					if(empty($judicial_person_data['judi_admin_video'])|| empty($judicial_person_data['judi_user_video']))
 					{
 						echo '請先上傳法人或請負責人上傳對保影片';die();
 					}
-					$media=json_encode($judicial_person_data);
+
+					if(isset($judicial_person_data['businesstax'])){
+                        $businesstax = $judicial_person_data['businesstax'];
+                        unset($judicial_person_data['businesstax']);
+                    }
+
+                    unset(
+                        $judicial_person_data['transaction_password'],
+                        $judicial_person_data['bank_code'],
+                        $judicial_person_data['branch_code'],
+                        $judicial_person_data['bank_account'],
+                        $judicial_person_data['email'],
+                        $judicial_person_data['bankbook_images']
+                    );
+					$media = json_encode($judicial_person_data);
 
 					$user_param = [
 						'name'				   => $judicial_person->company,
@@ -87,6 +102,30 @@ class Judicialperson_lib{
                             'status'            => 1,
                         ];
                         $insert = $this->CI->user_certification_model->insert($param);
+
+                        $params = [];
+                        if($businesstax){
+                            $params[] = [
+                                'user_id' => $user_id,
+                                'certification_id' => 1000,
+                                'investor' => 1,
+                                'expire_time' => strtotime('+2 months'),
+                                'content' => $businesstax,
+                                'status' => 0,
+                            ];
+                        }
+
+                        $enterprise_registration['governmentauthorities_image'] = json_decode($judicial_person->enterprise_registration ,true)['enterprise_registration_image'];
+                        $params[] = [
+                            'user_id' => $user_id,
+                            'certification_id' => 1007,
+                            'investor' => 1,
+                            'expire_time' => strtotime('+1 years'),
+                            'content' => json_encode($enterprise_registration),
+                            'status' => 0,
+                        ];
+                        $this->CI->user_certification_model->insert_many($params);
+
                         //建立金融帳號
                         $bankaccount_info = [
                             'user_id'               => $user_id,
@@ -99,7 +138,6 @@ class Judicialperson_lib{
                             'verify'                => 1,
                         ];
                         $this->CI->user_bankaccount_model->insert($bankaccount_info);
-
                         $this->CI->judicial_person_model->update($person_id, [
                             'status' 			=> 1,
                             'company_user_id'	=> $user_id,

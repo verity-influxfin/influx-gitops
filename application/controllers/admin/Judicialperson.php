@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Judicialperson extends MY_Admin_Controller {
 	
-	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed');
+	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed','media_upload');
 	
 	public function __construct() {
 		parent::__construct();
@@ -54,7 +54,7 @@ class Judicialperson extends MY_Admin_Controller {
 		if (!empty($post)) {
 			$media	= $this->s3_upload->media($_FILES, 'media', $post['user_id'], 'confirmation_for_judicial_person');
 			if ($media === false) {
-				alert('檔案上傳失敗，請洽工程師', 'index?status=0');
+				alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
 			} else {
 				$sign_video = json_decode($this->judicial_person_model->get($post['id'])->sign_video,true);
 				if (empty($sign_video)) {
@@ -69,11 +69,11 @@ class Judicialperson extends MY_Admin_Controller {
 					'sign_video' 			=> json_encode($sign_video)
 				]);
 				($res)?
-					alert('檔案上傳成功', 'index?status=0')
-					:alert('檔案上傳失敗，請洽工程師', 'index?status=0');
+					alert('檔案上傳成功', 'edit?id='.$post['id'])
+					:alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
 			}
 		} else {
-			alert('檔案上傳失敗，請洽工程師', 'index?status=0');
+			alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
 		}
 	}
 	public function edit(){
@@ -97,6 +97,10 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['shareholders'] = $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['data']         = $info;
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
+					$sign_video_content = json_decode($info->sign_video);
+                    isset($sign_video_content->bankbook_images)
+						? $page_data['bankbook'] = json_decode(urldecode($sign_video_content->bankbook_images))->bankbook_image
+						: '';
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
 					$page_data['name_list']    = $this->admin_model->get_name_list();
 
@@ -121,10 +125,10 @@ class Judicialperson extends MY_Admin_Controller {
                     $this->load->view('admin/judicial_person/judicial_person_edit', $page_data);
                     $this->load->view('admin/_footer');
                 } else {
-                    alert('查無此ID', admin_url('index?status=0'));
+                    alert('查無此ID', admin_url('edit?id='.$post['id']));
                 }
             } else {
-                alert('查無此ID', admin_url('index?status=0'));
+                alert('查無此ID', admin_url('edit?id='.$post['id']));
             }
         }else {
 			if (!empty($post['id'])) {
@@ -138,17 +142,17 @@ class Judicialperson extends MY_Admin_Controller {
 					}
 
 					if ($rs === true) {
-						alert('更新成功', 'index?status=0');
+						alert('更新成功', 'edit?id='.$post['id']);
 					} else {
-						alert('更新失敗，請洽工程師', 'index?status=0');
+						alert('更新失敗，請洽工程師', 'edit?id='.$post['id']);
 					}
 				} else if ($info && (empty($media_data) || !isset($media_data['judi_admin_video']) || !isset($media_data['judi_user_video']))) {
-					alert('請先上傳法人或請負責人上傳對保影片', 'index?status=0');
+					alert('請先上傳法人或請負責人上傳對保影片', 'edit?id='.$post['id']);
 				} else {
-					alert('查無此ID', admin_url('index?status=0'));
+					alert('查無此ID', admin_url('edit?id='.$post['id']));
 				}
 			} else {
-				alert('查無此ID', admin_url('index?status=0'));
+				alert('查無此ID', admin_url('edit?id='.$post['id']));
 			}
         }
 	}
@@ -248,6 +252,13 @@ class Judicialperson extends MY_Admin_Controller {
 						'user_id' => $info->user_id,
 						'status' => 1,
 					];
+
+					$this->load->model('user/user_bankaccount_model');
+					$user_bankaccount 	= $this->user_bankaccount_model->get_by($where);
+					if($user_bankaccount){
+						$page_data['bankaccount_id'] = $user_bankaccount->id;
+					}
+
 					$page_data['bankbook_image'] = $this->user_bankaccount_model->get_by($where);
                     $page_data['company_data'] 	= $this->gcis_lib->account_info($info->tax_id);
                     $page_data['shareholders'] 	= $this->gcis_lib->get_shareholders($info->tax_id);
@@ -271,7 +282,7 @@ class Judicialperson extends MY_Admin_Controller {
             if (!empty($post['id'])) {
                 $info = $this->judicial_person_model->get($post['id']);
                 if ($info) {
-					if($post['create_taishin'] == 1){
+					if(isset($post['create_taishin']) && $post['create_taishin'] == 1){
 						if($info->cooperation!=1){
 							$data['msg'] = '經銷商未開通';
 						}
@@ -295,8 +306,8 @@ class Judicialperson extends MY_Admin_Controller {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
 						$data['msg'] = $rs?'變更成功':'變更失敗';
 					}
-					$data['redirect'] = base_url('admin/Judicialperson/cooperation_edit?id='.$post['id']);
-					print(json_encode($data));
+					alert($data['msg'], admin_url('judicialperson/cooperation_edit?id='.$post['id']));
+					//print(json_encode($data));
 					return true;
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));

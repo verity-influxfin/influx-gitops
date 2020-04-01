@@ -25,6 +25,7 @@
                     var res = JSON.parse(e);
                     alert(res.msg);
                     window.location.href = res.redirect;
+
                 }
             });
         }
@@ -65,7 +66,7 @@
                                 <label>銷售類別</label>
                                 <p class="form-control-static"><?=isset($data->selling_type)?$selling_type[$data->selling_type]:"" ?></p>
                                 <?
-                                if($data->no_taishin){
+                                if($data->no_taishin && $selling_type[$data->selling_type] == 2){
                                     echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger create" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
                                 }
                                 ?>
@@ -78,6 +79,8 @@
                                 <label>統一編號</label>
                                 <p class="form-control-static"><?= isset($data->tax_id) ? $data->tax_id : "" ?></p>
                             </div>
+                            <?
+                                if($data->no_taishin && $selling_type[$data->selling_type] == 2){?>
                             <div class="form-group">
                                 <label>信用評估表</label><br />
                                 <? $company_user_id = isset($data->company_user_id)?$data->company_user_id:"";
@@ -89,7 +92,9 @@
                                     echo '<a target="_blank" class="btn btn-info" style="width: 80px;" href="'.admin_url('certification/user_certification_edit?id=').$data->cerCreditJudicial->id.'">檢閱</a>';
                                 }
                                 ?>
-                            </div>
+                        </div>
+                        <?}
+                        ?>
                             <div class="form-group">
                                 <label>備註</label>
                                 <p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
@@ -270,31 +275,58 @@
 													<img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
 												</a>
 											<? } ?>
-									<? } ?>	
-                                    </div>
+									<? } ?>
+                                <? } ?>
+                                <? if(isset($content['store_lease_image'])){ ?>
                                     <div class="form-group">
-                                        <label for="disabledSelect">銀行流水帳正面</label>
+                                        <label for="disabledSelect">租約照片(外匯車經銷商)</label>
+                                        <a href="<?=isset($content['store_lease_image'])?$content['store_lease_image']:""?>" data-fancybox="images">
+                                            <img src="<?=isset($content['store_lease_image'])?$content['store_lease_image']:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    </div>
+                                <? } ?>
+                                <? if(isset($content['store_sign_image'])){ ?>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">招牌照片(外匯車經銷商)</label>
+                                        <a href="<?=isset($content['store_sign_image'])?$content['store_sign_image']:""?>" data-fancybox="images">
+                                            <img src="<?=isset($content['store_sign_image'])?$content['store_sign_image']:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    </div>
+                                <? } ?>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳內頁</label>
+                                        <? if(isset($content['passbook_image'])){
+                                            foreach($content['passbook_image'] as $key => $value){ ?>
+                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                            </a>
+                                        <? }} ?>
+                                    </div>
+                                <? if(isset($content['front_image'])){ ?>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳正面(經銷商選填)</label>
                                         <a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
                                             <img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
                                         </a>
                                     </div>
+                                    <? } ?>
+                                <? if(isset($content['passbook_dealer_image'])){ ?>
+                                        <div class="form-group">
+                                        <label for="disabledSelect">銀行流水帳內頁(經銷商選填)</label>
+                                    <? foreach($content['passbook_dealer_image'] as $key => $value){ ?>
+                                        <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                            <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
+                                        </a>
+                                    <? } ?>
                                     <div class="form-group">
-                                        <label for="disabledSelect">銀行流水帳內頁</label>
-                                        <? foreach($content['passbook_image'] as $key => $value){ ?>
-                                            <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
-                                                <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
-                                            </a>
-                                        <? } ?>
-                                    </div>
-                                    <div class="form-group">
-									   <? if($content['bankbook_image']!=0){ ?>
-											<label for="disabledSelect">存摺封面</label>
-											<? foreach($content['bankbook_image'] as $key => $value){ ?>
-												<a href="<?=isset($value)?$value:""?>" data-fancybox="images">
-													<img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
-												</a>
-											<? } ?>
-									<? } ?>
+                                        <div class="form-group">
+                                            <label for="disabledSelect">存摺封面</label>
+                                            <? if (isset($bankaccount_id)) { ?>
+                                                <a href="../certification/user_bankaccount_edit?id=<?= isset($bankaccount_id) ? $bankaccount_id : "" ?>" target="_blank">金融帳號頁面</a>
+                                            <? } else {
+                                                echo "未上傳";
+                                            } ?>
+                                        </div>
                                         <? if(isset($content['form_401_image'])){ ?>
                                             <div class="form-group">
                                                 <label for="disabledSelect">401表格</label>
