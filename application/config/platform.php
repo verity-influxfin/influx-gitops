@@ -21,6 +21,7 @@ $config['admin_menu'] = [
         'parent_name' => '債權管理',
         'index' => '全部列表',
         'assets_list' => '資產列表(全部列表v2)',
+        'obligations' => '全部列表(v3)',
         'waiting_transfer' => '債轉待收購',
         'waiting_transfer_success' => '債轉待放款',
     ],

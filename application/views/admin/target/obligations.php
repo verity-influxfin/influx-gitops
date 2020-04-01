@@ -9,7 +9,6 @@
     <script type="text/javascript">
         function showChang() {
             var user_id = $('#user_id').val();
-            var delay = $('#delay :selected').val();
             var target_no = $('#target_no').val();
             var status = $('#status :selected').val();
             var dateRange = '&sdate=' + $('#sdate').val() + '&edate=' + $('#edate').val();
@@ -18,7 +17,7 @@
                     top.location = './obligations?all=all' + dateRange;
                 }
             } else {
-                top.location = './obligations?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no + '&delay=' + delay + dateRange;
+                top.location = './obligations?status=' + status + '&user_id=' + user_id + '&target_no=' + target_no + dateRange;
             }
         }
 
@@ -76,15 +75,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>逾期：</td>
-                            <td>
-                                <select id="delay">
-                                    <option value=''>請選擇</option>
-                                    <? foreach ($delay_list as $key => $value) { ?>
-                                        <option value="<?= $key ?>" <?= isset($_GET['delay']) && $_GET['delay'] != '' && intval($_GET['delay']) == intval($key) ? "selected" : '' ?>><?= $value ?></option>
-                                    <? } ?>
-                                </select>
-                            </td>
+                            <td></td>
+                            <td></td>
                             <td>狀態：</td>
                             <td>
                                 <select id="status">
