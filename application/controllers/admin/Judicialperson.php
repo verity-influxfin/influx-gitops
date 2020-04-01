@@ -54,7 +54,7 @@ class Judicialperson extends MY_Admin_Controller {
 		if (!empty($post)) {
 			$media	= $this->s3_upload->media($_FILES, 'media', $post['user_id'], 'confirmation_for_judicial_person');
 			if ($media === false) {
-				alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
+				alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 			} else {
 				$sign_video = json_decode($this->judicial_person_model->get($post['id'])->sign_video,true);
 				if (empty($sign_video)) {
@@ -69,11 +69,11 @@ class Judicialperson extends MY_Admin_Controller {
 					'sign_video' 			=> json_encode($sign_video)
 				]);
 				($res)?
-					alert('檔案上傳成功', 'edit?id='.$post['id'])
-					:alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
+					alert('檔案上傳成功', 'index?status=0')
+					:alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 			}
 		} else {
-			alert('檔案上傳失敗，請洽工程師', 'edit?id='.$post['id']);
+			alert('檔案上傳失敗，請洽工程師', 'index?status=0');
 		}
 	}
 	public function edit(){
@@ -97,10 +97,6 @@ class Judicialperson extends MY_Admin_Controller {
                     $page_data['shareholders'] = $this->gcis_lib->get_shareholders($info->tax_id);
                     $page_data['data']         = $info;
                     $page_data['content'] 	   = json_decode($info->enterprise_registration,true);
-					$sign_video_content = json_decode($info->sign_video);
-                    isset($sign_video_content->bankbook_images)
-						? $page_data['bankbook'] = json_decode(urldecode($sign_video_content->bankbook_images))->bankbook_image
-						: '';
                     $page_data['status_list']  = $this->judicial_person_model->status_list;
 					$page_data['name_list']    = $this->admin_model->get_name_list();
 
@@ -142,17 +138,17 @@ class Judicialperson extends MY_Admin_Controller {
 					}
 
 					if ($rs === true) {
-						alert('更新成功', 'edit?id='.$post['id']);
+						alert('更新成功', 'index?status=0');
 					} else {
-						alert('更新失敗，請洽工程師', 'edit?id='.$post['id']);
+						alert('更新失敗，請洽工程師', 'index?status=0');
 					}
 				} else if ($info && (empty($media_data) || !isset($media_data['judi_admin_video']) || !isset($media_data['judi_user_video']))) {
-					alert('請先上傳法人或請負責人上傳對保影片', 'edit?id='.$post['id']);
+					alert('請先上傳法人或請負責人上傳對保影片', 'index?status=0');
 				} else {
-					alert('查無此ID', admin_url('edit?id='.$post['id']));
+					alert('查無此ID', admin_url('index?status=0'));
 				}
 			} else {
-				alert('查無此ID', admin_url('edit?id='.$post['id']));
+				alert('查無此ID', admin_url('index?status=0'));
 			}
         }
 	}
