@@ -961,7 +961,7 @@ class Target_lib
                 $row['repayment_date'] = $this->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
             }
             if ($overdueStartedAt == $i) {
-                $remainingPrincipal = $row['principal'];
+                $remainingPrincipal = $row['principal'] - $row['r_principal'];
                 $remainingInterest = $row['interest'];
                 $remainingDamage = $row['damage'];
             }
