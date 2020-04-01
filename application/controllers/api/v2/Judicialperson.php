@@ -816,12 +816,7 @@ class Judicialperson extends REST_Controller {
 
         $content = [];
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
-        if($passbook_image){
-            $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image;
-        }else{
-            $content['passbook_image'] = $judicial_person->cooperation_content;
-            isset($input['passbook_image']) ? $content['passbook_dealer_image'] = $input['passbook_image'] : '';
-        }
+        $passbook_image? $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image:'';
 
         //上傳檔案欄位
         foreach ($file_fields as $field) {
