@@ -765,7 +765,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['N1', 'N2', 'N3'],
+    'nature' => ['NS1','N1', 'N2', 'N3'],
     'company' => ['DS2'],
 ];
 
