@@ -84,6 +84,7 @@ define({
     "GetProductOrder",
     "PostProductOrderApply",
     "PostProductOrderSigning",
+    "PostProductChangeRate",
     "Repayment",
     "GetRepaymentDashboard",
     "GetRepaymentList",

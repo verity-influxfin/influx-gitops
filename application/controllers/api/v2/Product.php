@@ -254,8 +254,8 @@ class Product extends REST_Controller {
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
+                        $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
-                            $sub_product_info = [];
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
@@ -281,7 +281,7 @@ class Product extends REST_Controller {
                                             }
                                             $sub_product_list[$t4]['identity'][$idekey]['target'] = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
                                         }
-                                        $sub_product_info[] = $sub_product_list[$t4];
+                                        isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
                                     }
                                 }
                             }
@@ -301,15 +301,16 @@ class Product extends REST_Controller {
             $total_list = [];
             $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id){
-                if(in_array($id,$allow_visul_list)){
+//                if(in_array($id,$allow_visul_list)){
                     $total_list[] = [
                         'visul'        => $id,
                         'name'         => $visul_id_des[$id]['name'],
                         'icon'         => $visul_id_des[$id]['icon'],
                         'description'  => $visul_id_des[$id]['description'],
+                        'url' => $visul_id_des[$id]['url'],
                         'status'       => $visul_id_des[$id]['status'],
                     ];
-                }
+//                }
             }
             $parm2 = array(
                 'total_list' 					=> $total_list,
@@ -1004,7 +1005,6 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-
             if($target->user_id != $user_id){
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
@@ -1166,10 +1166,88 @@ class Product extends REST_Controller {
                 }
             }
 
+            $biddingHistory = [];
+            if ($target->status == 3){
+                $this->load->model('loan/investment_model');
+                $this->load->model('log/log_targetschange_model');
+                $this->load->model('log/log_investmentschange_model');
+                $history = [];
+                $biddingAmount = 0;
+                $cancel_inv = [];
+                $cancel_inv_amount = [];
+                $targets_end = $target->expire_time;
+                $targets_start = strtotime('-2 days', $target->expire_time);
+                $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
+//                if(!$currentIndex > 90){
+                    $x = strval(round(($targets_end - $targets_start) / 60 / 60));
+                    $x_unit = '時';
+                    $x_limit = 1;
+                    $y = '100';
+                    $y_unit = '%';
+                    $y_limit = 10;
+                    for ($i = 1; $i <= $x; $i++) {
+                        $history[$i] = 0;
+                    }
+
+                    $investments = $this->investment_model->get_many_by([
+                        'created_at >=' => $targets_start,
+                        'target_id' => $target->id,
+                        'status' => [0, 1 ,8]
+                    ]);
+                    if($investments){
+                        foreach ($investments as $inv_key => $inv_val) {
+                            if ($inv_val->status == 8) {
+                                $cancel_inv[] = $inv_val->id;
+                                $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
+                            }
+                            $at = ceil((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                            $biddingAmount += $inv_val->amount;
+                            $history[$at] = $biddingAmount;
+                        }
+                    }
+
+                    if(count($cancel_inv) > 0){
+                        $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
+                            'investment_id' => $cancel_inv,
+                            'status' => 8
+                        ]);
+                        if($cancel_inv_time){
+                            foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
+                                $at = ceil(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                                $biddingAmount -= $cancel_inv_amount[$cancel_inv_time_val->investment_id];
+                                $history[$at] = $biddingAmount;
+                            }
+                        }
+                    }
+
+                    $lastBidding = 0;
+                    foreach ($history as $history_key => $history_val) {
+                        $lastBidding = $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+                        if($history_key >= $currentIndex){
+                            break;
+                        }
+                    }
+
+                    $biddingHistory = [
+                        'startBidding' => date("Y/m/d H:i:s",$targets_start),
+                        'endBidding' =>  date("Y/m/d H:i:s",$targets_end),
+                        'currenIndex' => $currentIndex,
+                        'history' => $history,
+                        'x' => $x,
+                        'x_unit' => $x_unit,
+                        'x_limit' => $x_limit,
+                        'y' => $y,
+                        'y_unit' => $y_unit,
+                        'y_limit' => $y_limit,
+                    ];
+                }
+//            }
+
+
             $reason = $target->reason;
             $json_reason = json_decode($reason);
-            if(isset($json_reason->reason)){
-                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            if (isset($json_reason->reason)) {
+                $reason = $json_reason->reason . ' - ' . $json_reason->reason_description;
             }
 
             $data = [
@@ -1187,7 +1265,7 @@ class Product extends REST_Controller {
                 'interest_rate' 	    => floatval($target->interest_rate),
                 'instalment' 		    => intval($target->instalment),
                 'repayment' 		    => intval($target->repayment),
-                'reason' 			    => $target->reason,
+                'reason' 			    => $reason,
                 'remark' 			    => $target->remark,
                 'delay' 			    => intval($target->delay),
                 'delay_days' 		    => intval($target->delay_days),
@@ -1198,7 +1276,10 @@ class Product extends REST_Controller {
                 'credit'			    => $credit,
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
+                'biddingHistory' => $biddingHistory,
             ];
+
+            in_array($target->product_id, $this->config->item('allow_changeRate_product')) && $target->status == 3 ? $data['isSupportRateAdjust'] = true : '';
 
             $this->response(array('result' => 'SUCCESS','data' => $data ));
         }
@@ -1268,6 +1349,82 @@ class Product extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
         }
         $this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
+    }
+
+
+    public function changerate_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        $fields = ['id', 'rate'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+            } else {
+                $param[$field] = $input[$field];
+            }
+        }
+
+        $target = $this->target_model->get($param['id']);
+        if (!empty($target)) {
+            $target->user_id != $user_id
+                ? $this->response(array('result' => 'ERROR', 'error' => APPLY_NO_PERMISSION))
+                : false;
+
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            $this->is_sub_product($product, $sub_product_id)
+                ? $product = $this->trans_sub_product($product, $sub_product_id)
+                : false;
+
+            $new_rate = floatval($param['rate']);
+            $new_rate <= $target->interest_rate && $new_rate <= $product['interest_rate_e']
+                ? $this->response(array('result' => 'ERROR', 'error' => PRODUCT_RATE_ERROR))
+                : false;
+
+
+            $allow_changeRate_product = $this->config->item('allow_changeRate_product');
+            if (in_array($target->product_id, $allow_changeRate_product)
+                && $target->status == 3
+                && $target->sub_product_id != STAGE_CER_TARGET
+                && in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
+                && $target->script_status == 0
+                && $target->expire_time >= time()
+            ) {
+                $update_data = [
+                    'status' => 2,
+                    'script_status' => 99
+                ];
+                $this->target_model->update($target->id, $update_data);
+                $this->load->library('target_lib');
+                $this->target_lib->insert_change_log($target->id, $update_data, $user_id);
+                $this->load->model('loan/investment_model');
+                $investments = $this->investment_model->get_many_by([
+                    'target_id' => $target->id,
+                    'status' => [0, 1]
+                ]);
+                foreach ($investments as $inv_key => $inv_val) {
+                    $this->target_lib->cancel_investment($target, $inv_val, $user_id);
+                }
+                $target->status = 2;
+                $this->load->library('Contract_lib');
+                $contract_id = $this->contract_lib->sign_contract('lend', ['', $user_id, $target->loan_amount, $new_rate, '']);
+                $launch_times = intval($target->launch_times) + 1;
+                $params = [
+                    'interest_rate' => $new_rate,
+                    'contract_id' => $contract_id,
+                    'script_status' => 0,
+                    'launch_times' => $launch_times,
+                ];
+                $this->target_lib->target_verify_success($target, 0, $params, $user_id);
+                $this->response(array('result' => 'SUCCESS'));
+            }
+            $this->target_model->update($target->id, ['script_status' => 0]);
+            $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
+        }
+        $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST));
     }
 
 
