@@ -539,7 +539,11 @@ class Target extends REST_Controller {
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
                         } elseif ($value == 9){
-                            $description = '信用評分：' . $contents->credit_rate;
+                            if(isset($contents->result->messages)){
+                                foreach ($contents->result->messages as $creditValue){
+                                    $creditValue->stage == 'credit_scores' ? $description .= $creditValue->message : '';
+                                }
+                            }
                         } elseif ($value == 10){
                             isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] : '';
                             isset($contents->job_seniority) ? $description .= '
