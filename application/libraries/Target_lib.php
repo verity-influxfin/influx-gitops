@@ -1544,7 +1544,7 @@ class Target_lib
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [2, 8, 9, 10]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
-                                            $finish_stage_cer[] = $certification['id'] == 10 ? 'A' : $certification['id'];
+                                            $finish_stage_cer[] = $certification['id'];
                                         } else {
                                             $finish = false;
                                         }
@@ -1561,21 +1561,24 @@ class Target_lib
                                 }
                             }
 
+                            if (count($finish_stage_cer) != 0) {
+                                asort($finish_stage_cer);
+                                $implode = implode('', $finish_stage_cer);
+                                if($implode == '10'){
+                                    $finish = false;
+                                }elseif ($implode == '2' || $implode == '8910') {
+                                    $stage_cer = 1;
+                                } elseif ($implode == '89') {
+                                    $stage_cer = 2;
+                                } elseif ($implode == '9') {
+                                    $stage_cer = 3;
+                                } elseif ($implode == '8') {
+                                    $stage_cer = 4;
+                                }
+                            }
                             if ($finish) {
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
-                                if (count($finish_stage_cer) != 0) {
-                                    $implode = implode('', $finish_stage_cer);
-                                    if ($implode == '2' || $implode == '89A') {
-                                        $stage_cer = 1;
-                                    } elseif ($implode == '89') {
-                                        $stage_cer = 2;
-                                    } elseif ($implode == '9') {
-                                        $stage_cer = 3;
-                                    } elseif ($implode == '8') {
-                                        $stage_cer = 4;
-                                    }
-                                }
                                 $count++;
                                 $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status);
                             } else {
