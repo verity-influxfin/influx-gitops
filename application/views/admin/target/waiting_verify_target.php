@@ -92,7 +92,7 @@
 												<? if($value->bankaccount_verify==0){ ?>
                                                     <button class="btn btn-info"  onclick="window.location.href='<?=admin_url('certification/user_bankaccount_list?verify=2')."?id=".$value->id ?>'">待金融驗證</button>
                                                 <? }else{ ?>
-                                                    <button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?>class="btn  <?=$value->order_id==0?"btn-success":"btn-info" ?>" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批<?=isset($value->order_id)&&$value->order_id!=0?'出貨':'上架' ?></button>
+                                                    <button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?>class="btn  <?=$value->order_id==0?"btn-success":"btn-info" ?>" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批上架</button>
                                                 <? } ?>
                                                     <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
                                                 <?=isset($sub_list[$value->sub_status])?($value->sub_status==9?'('.$sub_list[$value->sub_status].')':''):'' ?>
