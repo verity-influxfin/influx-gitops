@@ -441,19 +441,19 @@ class Target_lib
     public function target_verify_failed($target = [], $admin_id = 0, $remark = '審批不通過')
     {
         if (!empty($target)) {
-            $remark = !empty($target->remark) ? $target->remark . ', ' . $remark : $remark;
-            $param = [
-                'loan_amount' => 0,
-                'status' => 9,
-                'sub_status' => 0,
-                'remark' => $remark,
-            ];
-            $this->CI->target_model->update($target->id, $param);
-            $this->insert_change_log($target->id, $param, 0, $admin_id);
-            $this->CI->notification_lib->target_verify_failed($target->user_id, 0, $remark);
             if ($target->order_id != 0) {
-                $this->CI->load->model('transaction/order_model');
-                $this->CI->order_model->update($target->order_id, ['status' => 0]);
+                $this->order_fail($target ,$admin_id ,$remark);
+            }else{
+                $remark = !empty($target->remark) ? $target->remark . ', ' . $remark : $remark;
+                $param = [
+                    'loan_amount' => 0,
+                    'status' => 9,
+                    'sub_status' => 0,
+                    'remark' => $remark,
+                ];
+                $this->CI->target_model->update($target->id, $param);
+                $this->insert_change_log($target->id, $param, 0, $admin_id);
+                $this->CI->notification_lib->target_verify_failed($target->user_id, 0, $remark);
             }
         }
         return false;
@@ -483,12 +483,10 @@ class Target_lib
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, 0, $admin_id);
             $this->CI->notification_lib->target_verify_failed($target->user_id, 0, $remark);
-            if ($target->order_id != 0) {
-                $this->CI->load->model('transaction/order_model');
-                $this->CI->order_model->update($target->order_id, ['status' => 9]);
-                $user_info = $this->CI->user_model->get($target->user_id);
-                $this->cancel_target($target, $target->user_id, $user_info->phone);
-            }
+            $this->CI->load->model('transaction/order_model');
+            $this->CI->order_model->update($target->order_id, ['status' => 9]);
+            $user_info = $this->CI->user_model->get($target->user_id);
+            $this->cancel_target($target, $target->user_id, $user_info->phone);
         }
         return false;
     }

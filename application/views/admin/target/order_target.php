@@ -60,7 +60,7 @@
                                         <td><?
                                             if(isset($value->status)){
                                                 if($value->sub_status==5){
-                                                    echo '待廠商出貨 (分期)';
+                                                    echo '待廠商上架 (分期)';
                                                 }elseif($value->sub_status==9){
                                                     echo '待二審 (分期)';
                                                 }
