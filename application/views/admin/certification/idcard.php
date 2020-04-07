@@ -293,7 +293,7 @@
                                             echo '</p>';
                                         }
                                         if(isset($remark["face8"])){
-                                            echo '<p class="form-control-static">照片比對結果(Face8)：';
+                                            echo '<p class="form-control-static">Face8 比對結果：';
                                             echo '<br />-> 人臉數量：' . $remark["face8"]['count'][0] .' / '. $remark["face8"]['count'][1];
                                             echo '<br />-> 分數：' . $remark["face8"]['score'][0] . ($remark["face8"]['score'][0] != 'n/a' ? '%' :'') .' / '. $remark["face8"]['score'][1] .($remark["face8"]['score'][1] != 'n/a' ? '%' :'');
                                             echo '</p>';
