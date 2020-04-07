@@ -1228,10 +1228,11 @@ class User extends REST_Controller {
 			]);
 
         $this->load->model('user/user_meta_model');
-        $my_line_id  = $this->user_meta_model->get_by([
+        $rs  = $this->user_meta_model->get_by([
 			'user_id'  => $user_id,
 			'meta_key'  => 'line_access_token'
-			])->meta_value;
+			]);
+        $my_line_id  = $rs ? $rs->meta_value : '';
         $this->load->library('game_lib');
 		// if (!empty($my_line_id) && isset($my_detail->promote_code)) {
 		// 	$promote_code=$my_detail->promote_code;
