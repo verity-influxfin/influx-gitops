@@ -871,7 +871,7 @@ class Repayment extends REST_Controller {
 				$this->response(['result' => 'ERROR','error' => APPLY_NO_PERMISSION]);
 			}
 
-            if(!in_array($target->sub_status,[0,8])){
+            if(!in_array($target->sub_status,[0,8,10])){
                 $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
             }
 			

@@ -1185,7 +1185,7 @@ class Product extends REST_Controller {
                     $y = '100';
                     $y_unit = '%';
                     $y_limit = 10;
-                    for ($i = 1; $i <= $x; $i++) {
+                    for ($i = 0; $i < $x; $i++) {
                         $history[$i] = 0;
                     }
 
