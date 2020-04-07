@@ -1134,7 +1134,7 @@ class User extends REST_Controller {
 		}
 
         $image = array();
-		if($input['image']){
+		if(isset($input['image'])){
             $image_ids = explode(',', $input['image']);
             if (count($image_ids) > 5) {
                 $image_ids = array_slice($image_ids, 0, 5);
