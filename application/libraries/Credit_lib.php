@@ -252,25 +252,25 @@ class Credit_lib{
             $param['points'] = intval($total);
         }
 
-		$param['level'] 	= $this->get_credit_level($total,$product_id);
-		if(isset($this->credit['credit_amount_'.$product_id])){
-			foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
-				if($param['points']>=$value['start'] && $param['points']<=$value['end']){
-				    $salary = isset($data['job_salary'])?intval($data['job_salary']):0;
-					$param['amount'] = $salary*$value['rate'];
-                    if($stage_cer!=0){
-                        if($stage_cer == 3){
-                            $param['amount'] = $salary*0.9*1;
-                        }elseif($stage_cer == 4) {
-                            $param['amount'] = $salary*0.9*2;
-                        }else{
-                            $param['amount'] = $stage_cer==1?3000:5000;
+        $param['level'] = $this->get_credit_level($total, $product_id);
+        if (isset($this->credit['credit_amount_' . $product_id])) {
+            foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
+                if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
+                    $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
+                    $param['amount'] = $salary * $value['rate'];
+                    if ($stage_cer != 0) {
+                        if ($stage_cer == 3) {
+                            $param['amount'] = $salary * ($value['rate'] >= 1 ? 1 : $value['rate']);
+                        } elseif ($stage_cer == 4) {
+                            $param['amount'] = $salary * ($value['rate'] >= 2 ? 2 : $value['rate']);
+                        } else {
+                            $param['amount'] = $stage_cer == 1 ? 3000 : 5000;
                         }
                     }
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
         $param['amount'] = $param['amount'] > 200000 ? 200000 : $param['amount'];
         if($stage_cer != 0) {
             $expire_time = strtotime('+1 days', $time);
