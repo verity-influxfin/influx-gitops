@@ -210,7 +210,7 @@ class Transfer extends REST_Controller {
                 $product_name = $product['name'];
                 if($this->is_sub_product($product,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_id);
-                    $product_name .= ' / ' . $product['name'];
+                    $product_name = $product['name'];
                 }
                 $user_info 	= $this->user_model->get($target->user_id);
                 $user		= [];
@@ -461,7 +461,7 @@ class Transfer extends REST_Controller {
             $product_name = $product['name'];
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
-                $product_name .= ' / ' . $product['name'];
+                $product_name = $product['name'];
             }
 			$user_info 		= $this->user_model->get($target->user_id);
 			$user			= [];

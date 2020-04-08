@@ -426,7 +426,7 @@ class Recoveries extends REST_Controller
                 $product_name = $product['name'];
                 if ($this->is_sub_product($product, $sub_product_id)) {
                     $product = $this->trans_sub_product($product, $sub_product_id);
-                    $product_name .= ' / ' . $product['name'];
+                    $product_name = $product['name'];
                 }
                 $target = array(
                     'id' => intval($target_info->id),
@@ -890,7 +890,7 @@ class Recoveries extends REST_Controller
             $product_name = $product['name'];
             if ($this->is_sub_product($product, $sub_product_id)) {
                 $product = $this->trans_sub_product($product, $sub_product_id);
-                $product_name .= ' / ' . $product['name'];
+                $product_name = $product['name'];
             }
 
             $targetDatas = [];
