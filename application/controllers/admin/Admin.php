@@ -4,14 +4,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Admin extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array('add','edit','role_add','role_edit');
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('log/log_adminlogin_model');
  	}
-	
+
 	public function index(){
 		$page_data 	= array();
 		$where		= array('status'=>1);
@@ -29,18 +29,21 @@ class Admin extends MY_Admin_Controller {
 			$page_data['status_list'] 	= $this->admin_model->status_list;
 			$page_data['role_name'] = $this->role_model->get_name_list();
 		}
-		
+
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/admins_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
-	public function login(){
 
+	public function login(){
 		$post = $this->input->post(NULL, TRUE);
-		if(empty($post)){
+		$already_login_admin_info = check_admin();
+		if ($already_login_admin_info && $already_login_admin_info->status == 1) {
+			redirect(admin_url('AdminDashboard/'), 'refresh');
+			die();
+		}else if(empty($post)){
 			$cookie = get_cookie(COOKIES_LOGIN_ADMIN);
 			$cookie = AUTHORIZATION::getAdminCookieInfoByToken($cookie);
 			$cookie	= $cookie?$cookie:'';
@@ -52,17 +55,18 @@ class Admin extends MY_Admin_Controller {
                         'value'  => AUTHORIZATION::generateAdminCookieToken($post),
                         'expire' => COOKIE_EXPIRE,
                 );
-				
+
 				set_cookie($cookie);
 			}else{
 				delete_cookie(COOKIES_LOGIN_ADMIN);
 			}
-			
-			$admin_info = $this->admin_model->get_by('email', $post['email']);	
+
+			$admin_info = $this->admin_model->get_by('email', $post['email']);
+
 			if(!$admin_info){
-				$admin_info = $this->admin_model->get_by('account', $post['email']);	
+				$admin_info = $this->admin_model->get_by('account', $post['email']);
 			}
-			
+
 			if($admin_info && $admin_info->status==1){
 				if(sha1($post['password'])==$admin_info->password){
 					$admin_token = AUTHORIZATION::generateAdminToken($admin_info);
@@ -82,12 +86,12 @@ class Admin extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
 	public function logout(){
 		admin_logout();
 		redirect(admin_url('admin/login'), 'refresh');
 	}
-	
+
 	public function add(){
 		$role_name 	= $this->role_model->get_name_list();
 		$page_data 	= array('type'=>'add','role_name'=>$role_name);
@@ -113,7 +117,7 @@ class Admin extends MY_Admin_Controller {
 					$data[$field] = $post[$field];
 				}
 			}
-			
+
 			$data['creator_id'] 	= $this->login_info->id;
 			$data['my_promote_code']= $this->get_promote_code();
 			$rs = $this->admin_model->insert($data);
@@ -124,13 +128,13 @@ class Admin extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
 	public function edit(){
 		$role_name 	= $this->role_model->get_name_list();
 		$page_data 	= array('type'=>'edit','role_name'=>$role_name);
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
+
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
 			if($id){
@@ -161,7 +165,7 @@ class Admin extends MY_Admin_Controller {
 				if(isset($data['password']) && empty($data['password'])){
 					unset($data['password']);
 				}
-				
+
 				$rs = $this->admin_model->update($post['id'],$data);
 				if($rs===true){
 					alert('更新成功',admin_url('admin/index'));
@@ -172,9 +176,9 @@ class Admin extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('admin/index'));
 			}
 		}
-		
+
 	}
-	
+
 	public function role_list(){
 		$page_data 	= array();
 		$list 		= $this->role_model->get_all();
@@ -189,7 +193,7 @@ class Admin extends MY_Admin_Controller {
 		$this->load->view('admin/roles_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function role_add(){
 		$status_list 	= $this->role_model->status_list;
 		$admin_menu = $this->config->item('admin_menu');
@@ -237,7 +241,7 @@ class Admin extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
 	public function role_edit(){
 		$status_list 	= $this->role_model->status_list;
 		$admin_menu = $this->config->item('admin_menu');
@@ -251,7 +255,7 @@ class Admin extends MY_Admin_Controller {
 		);
 		$post 		= $this->input->post(NULL, TRUE);
 		$get 		= $this->input->get(NULL, TRUE);
-		
+
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
 			if($id){
@@ -277,7 +281,7 @@ class Admin extends MY_Admin_Controller {
 						$data[$field] = $post[$field];
 					}
 				}
-				
+
 				$permission = array();
 				foreach($admin_menu as $key => $value){
 					$r = isset($post['permission'][$key]['r'])&&$post['permission'][$key]['r']?1:0;
@@ -299,9 +303,9 @@ class Admin extends MY_Admin_Controller {
 				alert('ERROR , id is not exist',admin_url('admin/role_list'));
 			}
 		}
-		
+
 	}
-	
+
 	private function get_promote_code(){
 		$code 	= 'SALES'.make_promote_code();
 		$result = $this->admin_model->get_by('my_promote_code',$code);
