@@ -344,6 +344,7 @@ class Target_lib
                                     }
                                 } else {
                                     $param['sub_status'] = 9;
+                                    $msg = false;
                                 }
                                 $curTargetData = json_decode($target->target_data);
                                 $curTargetData && !$targetData ? $targetData = $curTargetData : '';
