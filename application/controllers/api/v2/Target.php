@@ -135,7 +135,7 @@ class Target extends REST_Controller {
                     $product_name = $product['name'];
                     if($this->is_sub_product($product,$sub_product_id)){
                         $product = $this->trans_sub_product($product,$sub_product_id);
-                        $product_name .= ' / ' . $product['name'];
+                        $product_name = $product['name'];
                     }
 
                     $age = get_age($user_info->birthday);
@@ -400,7 +400,7 @@ class Target extends REST_Controller {
             $product_name = $product['name'];
             if($this->is_sub_product($product,$sub_product_id)){
                 $product = $this->trans_sub_product($product,$sub_product_id);
-                    $product_name .= ' / ' . $product['name'];
+                    $product_name = $product['name'];
             }
 
             $target->investor = 1;
@@ -1271,7 +1271,7 @@ class Target extends REST_Controller {
 
                 if($this->is_sub_product($product,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_id);
-                    $product_name .= ' / ' . $product['name'];
+                    $product_name = $product['name'];
                 }
                 if ($product_list[$target_info->product_id]['identity'] == 1) {
                     $user_meta = $this->user_meta_model->get_by(['user_id' => $target_info->user_id, 'meta_key' => 'school_name']);
