@@ -125,11 +125,11 @@
                                 <th>案號 <a href="javascript:void(0)" onclick="checked_all();" class="btn">全選</a></th>
                                 <th>投資人 ID</th>
                                 <th>借款人 ID</th>
-                                <th>債權金額</th>
-                                <th>案件總額</th>
+                                <th>債權總額</th>
+                                <th>投資金額</th>
                                 <th>剩餘本金</th>
                                 <th>信用等級</th>
-                                <th>學校名稱</th>
+                                <th>學校/公司</th>
                                 <th>學校科系</th>
                                 <th>年化利率</th>
                                 <th>期數</th>
@@ -158,8 +158,8 @@
                                         </td>
                                         <td><?= isset($value->user_id) ? $value->user_id : "" ?></td>
                                         <td><?= isset($target->user_id) ? $target->user_id : "" ?></td>
-                                        <td><?= isset($value->loan_amount) && $value->loan_amount ? $value->loan_amount : "" ?></td>
                                         <td><?= isset($target->loan_amount) && $target->loan_amount ? $target->loan_amount : "" ?></td>
+                                        <td><?= isset($value->loan_amount) && $value->loan_amount ? $value->loan_amount : "" ?></td>
                                         <td><?= isset($value->amortization_table) && $value->amortization_table ? $value->amortization_table["remaining_principal"] : "" ?></td>
                                         <td><?= isset($target->credit_level) && $target->credit_level ? $target->credit_level : "" ?></td>
                                         <td><?= isset($school_list[$target->user_id]["school_name"]) ? $school_list[$target->user_id]["school_name"] : "" ?></td>
