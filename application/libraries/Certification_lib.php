@@ -794,7 +794,11 @@ class Certification_lib{
                 $data['financial_creditcard'] = $content['creditcard_image'];
             }
             if(isset($content['passbook_image'])){
-                $data['financial_passbook'] = $content['passbook_image'];
+                $data['financial_passbook'] = $content['passbook_image'][0];
+            }
+
+            if(isset($content['bill_phone_image'])){
+                $data['financial_bill_phone'] = $content['bill_phone_image'][0];
             }
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
