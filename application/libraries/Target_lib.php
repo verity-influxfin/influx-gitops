@@ -11,6 +11,7 @@ class Target_lib
         $this->CI = &get_instance();
         $this->CI->load->model('transaction/transaction_model');
         $this->CI->load->library('Notification_lib');
+        $this->CI->load->library('utility/payment_time_utility');
     }
 
     //新增target
@@ -820,76 +821,6 @@ class Target_lib
         return $schedule;
     }
 
-    public function goToNext($date, $forceToNext = false) {
-        $day = substr($date, -2);
-        $allNumber = explode("-", $date);
-        if (!$allNumber || count($allNumber) < 3) {
-            return $date;
-        }
-        if ($day > 10 || $day == 10 && $forceToNext) {
-            $allNumber[2] = '10';
-            if ($allNumber[1] == '12') {
-                $allNumber[1] = '01';
-                $allNumber[0]++;
-            } else {
-                $allNumber[1]++;
-            }
-            if (strlen($allNumber[1]) == 1) {
-                $allNumber[1] = '0' . $allNumber[1];
-            }
-        } elseif ($day < 10) {
-            $allNumber[2] = '10';
-        }
-        $date = $allNumber[0] . '-' . $allNumber[1] . '-' . $allNumber[2];
-        return $date;
-    }
-
-    private function goToMostRecent($date)
-    {
-        $day = substr($date, -2);
-        $allNumber = explode("-", $date);
-        if (!$allNumber || count($allNumber) < 3) {
-            return $date;
-        }
-        if ($day > 10) {
-            $allNumber[2] = '10';
-        } elseif ($day < 10) {
-            $allNumber[2] = '10';
-            if ($allNumber[1] == '01') {
-                $allNumber[1] = '12';
-                $allNumber[0]--;
-            } else {
-                $allNumber[1]--;
-            }
-            if (strlen($allNumber[1]) == 1) {
-                $allNumber[1] = '0' . $allNumber[1];
-            }
-        }
-        $date = $allNumber[0] . '-' . $allNumber[1] . '-' . $allNumber[2];
-        return $date;
-    }
-
-    public function measureMonthGaps($startAt, $endAt)
-    {
-        if ($startAt > $endAt) {
-            $temp = $startAt;
-            $startAt = $endAt;
-            $endAt = $temp;
-        }
-
-        $startTime = explode("-", $startAt);
-        $endTime = explode("-", $endAt);
-        $yearDiff = $endTime[0] - $startTime[0];
-        if ($startTime[1] > $endTime[1]) {
-            $monthDiff = 12 - $startTime[1] + $endTime[1];
-            $yearDiff--;
-        } else {
-            $monthDiff = $endTime[1] - $startTime[1];
-        }
-
-        return $yearDiff * 12 + $monthDiff;
-    }
-
     private function init_amortization_row($numInstalment, $limitDate)
     {
         return [
@@ -933,13 +864,13 @@ class Target_lib
         $numInstalment = $target->instalment;
         $startedAt = $overdueAmortizationRows[0]['repayment_date'];
         $overdueOccurredAt = '';
-        $mostRecentPaymentAt = $this->goToMostRecent(date('Y-m-d', time()));
+        $mostRecentPaymentAt = $this->CI->payment_time_utility->goToMostRecent(date('Y-m-d', time()));
 
         if (!$startedAt) {
             return $overdueAmortizationRows;
         }
 
-        $mongthDiff = $this->measureMonthGaps($startedAt, $lastRepaymentAt);
+        $mongthDiff = $this->CI->payment_time_utility->measureMonthGaps($startedAt, $lastRepaymentAt);
         $smallestInstalment = 0;
         $largestInstalment = 200;
         for ($i = 1; $i <= $largestInstalment; $i++) {
@@ -958,7 +889,7 @@ class Target_lib
                     continue;
                 }
                 $row = $this->init_amortization_row($i, '');
-                $row['repayment_date'] = $this->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
+                $row['repayment_date'] = $this->CI->payment_time_utility->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
             }
             if ($overdueStartedAt == $i) {
                 $remainingPrincipal = $row['principal'] - $row['r_principal'];
@@ -1101,7 +1032,7 @@ class Target_lib
                 if ($overdueAt && $overdueStartedAt <= $currentInstalment && substr($value->entering_date, -2) != '10') {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
-                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                     }
                     $rows[$nextInstalment]['r_principal'] += $value->amount;
                     $rows[$nextInstalment]['delay_principal_return_at'] = $value->entering_date;
@@ -1114,7 +1045,7 @@ class Target_lib
                 if ($overdueAt && substr($value->entering_date, -2) != '10') {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
-                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                     }
                     $rows[$nextInstalment]['r_interest'] += $value->amount;
                     $rows[$nextInstalment]['repayment'] += $value->amount;
@@ -1126,7 +1057,7 @@ class Target_lib
                 if ($overdueAt && substr($value->entering_date, -2) != '10') {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
-                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                     }
                     $rows[$nextInstalment]['r_fees'] += $value->amount;
                 } else {
@@ -1136,7 +1067,7 @@ class Target_lib
                 if ($overdueAt && substr($value->entering_date, -2) != '10') {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
-                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                        $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                     }
                     $rows[$nextInstalment]['r_delayinterest'] += $value->amount;
                     $rows[$nextInstalment]['repayment'] += $value->amount;
@@ -1174,7 +1105,7 @@ class Target_lib
                     if ($overdueAt && substr($value->entering_date, -2) != '10') {
                         $nextInstalment = $currentInstalment+1;
                         if (!isset($rows[$nextInstalment])) {
-                            $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->goToNext($value->entering_date));
+                            $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                         }
                         $rows[$nextInstalment]['delay_interest'] += $value->amount;
                         $rows[$nextInstalment]['delay_occurred_at'] = $value->entering_date;
