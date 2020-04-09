@@ -1261,8 +1261,8 @@ class Certification extends REST_Controller {
 			}
 
 			//上傳檔案欄位
-			$file_fields 	= ['creditcard_image','passbook_image'];
-			foreach ($file_fields as $field) {
+			$file_field 	= ['creditcard_image'];
+			foreach ($file_field as $field) {
 				$image_id = !empty($input[$field])!=null?intval($input[$field]):null;
 				if (!$image_id) {
 					//$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -1279,6 +1279,25 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
+
+            $file_fields 	= ['passbook_image','bill_phone_image'];
+			foreach ($file_fields as $fieldS) {
+                $image_ids = explode(',', $input[$fieldS]);
+                if (count($image_ids) > 3) {
+                    $image_ids = array_slice($image_ids, 0, 3);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id' => $image_ids,
+                    'user_id' => $user_id,
+                ]);
+
+                if ($list && count($list) == count($image_ids)) {
+                    $content[$fieldS] = [];
+                    foreach ($list as $k => $v) {
+                        $content[$fieldS][] = $v->url;
+                    }
+                }
+            }
 
 			$param		= array(
 				'user_id'			=> $user_id,

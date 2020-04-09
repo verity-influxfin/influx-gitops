@@ -5587,7 +5587,14 @@ define({
                             "type": "Number",
                             "optional": true,
                             "field": "passbook_image",
-                            "description": "<p>存摺內頁照 ( 圖片ID )</p>"
+                            "description": "<p>存摺內頁照  ( 圖片IDs 以逗號隔開，最多3張)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "bill_phone_image",
+                            "description": "<p>電話帳單  ( 圖片IDs 以逗號隔開，最多3張)</p>"
                         }
                     ]
                 }

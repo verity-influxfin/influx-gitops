@@ -104,10 +104,27 @@
 										</div>
 										<div class="form-group">
 											<label for="disabledSelect">存摺內頁照</label><br>
-											<a href="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" data-fancybox="images">
-												<img src="<?=isset($content['passbook_image'])?$content['passbook_image']:""?>" style='width:30%;max-width:400px'>
-											</a>
+                                            <?
+                                            !is_array($content['passbook_image']) ? $content['passbook_image'] = [$content['passbook_image']] : '';
+                                            foreach ($content['passbook_image'] as $key => $value) { ?>
+                                                <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                    <img src="<?=isset($value)?$value:""?>" style='width:30%;max-width:400px'>
+                                                </a>
+                                            <? } ?>
 										</div>
+
+                                        <? if(isset($content['bill_phone_image'])){ ?>
+                                            <div class="form-group">
+                                                <label for="disabledSelect">電話帳單</label><br>
+                                                <?
+                                                !is_array($content['bill_phone_image']) ? $content['bill_phone_image'] = [$content['bill_phone_image']] : '';
+                                                foreach ($content['bill_phone_image'] as $key => $value) { ?>
+                                                    <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
+                                                        <img src="<?=isset($value)?$value:""?>" style='width:30%;max-width:400px'>
+                                                    </a>
+                                                <? } ?>
+                                            </div>
+                                        <? } ?>
 									</fieldset>
 								</div>
                             </div>
