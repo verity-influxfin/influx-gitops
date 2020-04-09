@@ -257,8 +257,10 @@ class Credit_lib{
                     if ($stage_cer != 0) {
                         if ($stage_cer == 3) {
                             $param['amount'] = $salary * ($value['rate'] >= 1 ? 1 : $value['rate']);
+                            $value['rate'] == 0 ? $param['amount'] = 5000 : '';
                         } elseif ($stage_cer == 4) {
                             $param['amount'] = $salary * ($value['rate'] >= 2 ? 2 : $value['rate']);
+                            $value['rate'] == 0 ? $param['amount'] = 5000 : '';
                         } else {
                             $param['amount'] = $stage_cer == 1 ? 3000 : 5000;
                         }
@@ -311,15 +313,11 @@ class Credit_lib{
         foreach($info as $key => $value){
             $data[$value->meta_key] = $value->meta_value;
         }
-        $this->CI->load->model('user/judicial_person_model');
-        $judicial_person = $this->CI->judicial_person_model->get_by([
-            'company_user_id' => $user_id
-        ]);
-        $selltype = $judicial_person->selling_type;
+
         $this->CI->config->load('credit',TRUE);
         $creditJudicial = $this->CI->config->item('credit')['creditJudicial'];
-        if(isset($creditJudicial[$selltype]) && $data['creditJudicial_status'] == 1){
-            foreach ($creditJudicial[$selltype] as $key => $value) {
+        if(isset($creditJudicial[2]) && $data['creditJudicial_status'] == 1){
+            foreach ($creditJudicial[2] as $key => $value) {
                 $bonus = 0;
                 $score = 0;
                 if($value['selctType'] == 'select' && isset($data[$key])){
