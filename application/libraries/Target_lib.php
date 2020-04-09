@@ -1571,6 +1571,8 @@ class Target_lib
                                     $stage_cer = 3;
                                 } elseif ($implode == '8') {
                                     $stage_cer = 4;
+                                }else{
+                                    $finish = false;
                                 }
                             }
                             if ($finish) {
