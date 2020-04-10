@@ -9,10 +9,12 @@ class Profit_and_loss_account
         $this->CI->load->model('target_model');
         $this->CI->load->library('target_lib');
         $this->CI->load->model('transaction/transaction_model');
+        $this->CI->load->library('utility/payment_time_utility');
         $this->investment_model = $this->CI->investment_model;
         $this->target_model = $this->CI->target_model;
         $this->target_lib = $this->CI->target_lib;
         $this->transaction_model = $this->CI->transaction_model;
+        $this->payment_time_utility = $this->CI->payment_time_utility;
     }
 
     public function getLastRepayment($investmentIds)
@@ -22,7 +24,7 @@ class Profit_and_loss_account
         $lastRepaymentAt = $lastTransaction->entering_date > $lastTransaction->limit_date
                          ? $lastTransaction->entering_date
                          : $lastTransaction->limit_date;
-        return $this->target_lib->goToNext($lastRepaymentAt);
+        return $this->payment_time_utility->goToNext($lastRepaymentAt);
     }
 
     public function generateTotalReport($investmentIds)

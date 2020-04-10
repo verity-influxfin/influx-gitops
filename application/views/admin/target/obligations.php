@@ -27,7 +27,7 @@
         }
 
         function check_checked() {
-            var ids = "", ctr = $('#amortization_schedule,#assets_schedule').parent().find('.btn');
+            var ids = "", ctr = $('#amortization_schedule,#assets_export').parent().find('.btn');
             $('.investment:checked').each(function () {
 
                 if (ids == "") {
@@ -38,7 +38,7 @@
             });
 
             if (ids != "") {
-                $('#assets_schedule').val(ids);
+                $('#assets_export').val(ids);
                 $('#amortization_schedule').val(ids);
                 ctr.prop('disabled', false);
             } else {
@@ -97,6 +97,11 @@
                             </td>
                         </tr>
                     </table>
+                    <form action="<?= admin_url('transfer/assets_export') ?>" method="post"
+                          style="display: inline-block">
+                        <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
+                        <input id="assets_export" type="hidden" name="ids"/>
+                    </form>
                     <form action="<?= admin_url('transfer/amortization_schedule') ?>" method="post"
                           style="display: inline-block">
                         <input type="submit" class="btn btn-primary float-right" value="本金餘額攤還表" disabled/>

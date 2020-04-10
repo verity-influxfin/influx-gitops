@@ -67,8 +67,19 @@ class Transfer extends MY_Admin_Controller
                 }
             }
 
+            $chunkSize = 500;
             if (isset($where['target_id']) || isset($where['user_id'])) {
-                $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                $targetIds = $where["target_id"];
+                $targetCount = count($where['target_id']);
+                $list = [];
+                $rounds = intval($targetCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($targetIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where['target_id'] = $currentChunks;
+                    $currentResult = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                    $list = array_merge($list, $currentResult);
+                }
             }
 
             if ($list) {
@@ -94,17 +105,38 @@ class Transfer extends MY_Admin_Controller
                 }
 
                 $this->load->model('user/user_meta_model');
-                $users_school = $this->user_meta_model->get_many_by(array(
-                    'meta_key' => array('school_name', 'school_department'),
-                    'user_id' => $user_list,
-                ));
-                if ($users_school) {
-                    foreach ($users_school as $key => $value) {
-                        $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+
+                $userIds = $user_list;
+                $userCount = count($userIds);
+                $school_list = [];
+                $rounds = intval($userCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($userIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $users_school = $this->user_meta_model->get_many_by(array(
+                        'meta_key' => array('school_name', 'school_department'),
+                        'user_id' => $currentChunks,
+                    ));
+                    if ($users_school) {
+                        foreach ($users_school as $key => $value) {
+                            $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+                        }
                     }
                 }
 
-                $transfer_list = $this->transfer_model->get_many_by(array('investment_id' => $ids));
+
+                $totalIds = $ids;
+                $investmentCount = count($totalIds);
+                $transfer_list = [];
+                $rounds = intval($investmentCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($totalIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where = ['investment_id' => $currentChunks];
+                    $currentTransfers = $this->transfer_model->get_many_by($where);
+                    $transfer_list = array_merge($transfer_list, $currentTransfers);
+                }
+
                 if ($transfer_list) {
                     foreach ($transfer_list as $key => $value) {
                         $transfers[$value->investment_id] = $value;
@@ -193,33 +225,96 @@ class Transfer extends MY_Admin_Controller
 
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=assets_' . date('Ymd') . '.xls');
-            $html = '<table><thead><tr><th>案號</th><th>投資人 ID</th><th>借款人 ID</th><th>債權金額</th><th>案件總額</th><th>剩餘本金</th>
-					<th>信用等級</th><th>學校名稱</th><th>學校科系</th><th>年化利率</th><th>期數</th>
-					<th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>債權狀態</th>
-					<th>債轉時間</th><th>案件狀態</th></tr></thead><tbody>';
+            $html = '<table>
+                        <thead>
+                            <tr>
+                                <th>產品名稱</th>
+                                <th>案號</th>
+                                <th>借款人 ID</th>
+                                <th>投資人 ID</th>
+                                <th>債權總額</th>
+                                <th>投資金額</th>
+                                <th>剩餘本金</th>
+                                <th>核准信評</th>
+                                <th>學校/公司</th>
+                                <th>科系</th>
+                                <th>利率</th>
+                                <th>放款期間</th>
+                                <th>還款方式</th>
+                                <th>放款日期</th>
+                                <th>債權狀態</th>
+                                <th>案件狀態</th>
+                                <th>逾期天數</th>
+                                <th>逾期資產</th>
+                                <th>調降信評</th>
+                            </tr>
+                        </thead>
+                    <tbody>';
 
             if (isset($list) && !empty($list)) {
-
+                $products = $this->config->item('product_list');
+                $this->load->library('utility/payment_time_utility');
                 foreach ($list as $key => $value) {
                     $target = $targets[$value->target_id];
+                    $schoolName = '';
+                    $schoolDepartment = '';
+                    if (isset($school_list[$target->user_id])) {
+                        $schoolName = $school_list[$target->user_id]["school_name"];
+                        $schoolDepartment = $school_list[$target->user_id]["school_department"];
+                    }
+
+                    $delayDays = 0;
+                    $targetCurrentStatus = '正常還款';
+                    if ($target->status == 10) {
+                        $targetCurrentStatus = '到期結案';
+                    } elseif ($target->sub_status == 4) {
+                        $targetCurrentStatus = '提早清償';
+                    } elseif ($target->delay_days > 7) {
+                        $delayDays = $target->delay_days;
+                        $targetCurrentStatus = '逾期中';
+                    }
+
+                    $targetOverdueCategory = '';
+                    $currentTime = time();
+                    $currentDate = date('Y-m-d', $currentTime);
+                    $thisMonthPaymentDate = $this->payment_time_utility->goToPrevious($currentDate);
+                    $diffBetweenNowAndPaymentDate = get_range_days(strtotime($thisMonthPaymentDate), $currentTime);
+                    if ($delayDays > 7) {
+                        $delayDaysToLastPaymentDate = $delayDays - $diffBetweenNowAndPaymentDate;
+                        $overdueMonths = $delayDaysToLastPaymentDate /= 30;
+                        if ($overdueMonths < 2) {
+                            $targetOverdueCategory = '關注資產(M1)';
+                        } elseif ($overdueMonths < 3) {
+                            $targetOverdueCategory = '次級資產(M2)';
+                        } elseif ($overdueMonths < 4) {
+                            $targetOverdueCategory = '可疑資產(M3)';
+                        } else {
+                            $targetOverdueCategory = '不良資產(>M3)';
+                        }
+                    } elseif ($delayDays > 0) {
+                        $targetOverdueCategory = '觀察資產（D7）';
+                    }
+
                     $html .= '<tr>';
+                    $html .= '<td>' . $products[$target->product_id]['name'] . '</td>';
                     $html .= '<td>' . $target->target_no . '</td>';
-                    $html .= '<td>' . $value->user_id . '</td>';
                     $html .= '<td>' . $target->user_id . '</td>';
-                    $html .= '<td>' . $value->loan_amount . '</td>';
+                    $html .= '<td>' . $value->user_id . '</td>';
                     $html .= '<td>' . $target->loan_amount . '</td>';
+                    $html .= '<td>' . $value->loan_amount . '</td>';
                     $html .= '<td>' . $value->amortization_table["remaining_principal"] . '</td>';
                     $html .= '<td>' . $target->credit_level . '</td>';
-                    $html .= '<td>' . $school_list[$target->user_id]["school_name"] . '</td>';
-                    $html .= '<td>' . $school_list[$target->user_id]["school_department"] . '</td>';
+                    $html .= '<td>' . $schoolName . '</td>';
+                    $html .= '<td>' . $schoolDepartment . '</td>';
                     $html .= '<td>' . $target->interest_rate . '</td>';
                     $html .= '<td>' . $target->instalment . '</td>';
                     $html .= '<td>' . $repayment_type[$target->repayment] . '</td>';
                     $html .= '<td>' . $target->loan_date . '</td>';
-                    $html .= '<td>' . $delay_list[$target->delay] . '</td>';
                     $html .= '<td>' . ($value->transfer_status == 2 ? $this->investment_model->transfer_status_list[$value->transfer_status] : $this->investment_model->status_list[$value->status]) . '</td>';
-                    $html .= '<td>' . ($value->transfer_status == 2 && isset($transfers[$value->id]->transfer_date) ? $transfers[$value->id]->transfer_date : "") . '</td>';
-                    $html .= '<td>' . (isset($status_list[$target->status]) ? $status_list[$target->status] : "") . '</td>';
+                    $html .= '<td>' . $targetCurrentStatus . '</td>';
+                    $html .= '<td>' . $delayDays . '</td>';
+                    $html .= '<td>' . $targetOverdueCategory . '</td>';
+                    $html .= '<td>' . 'n/a' . '<td>';
                     $html .= '</tr>';
                 }
             }
@@ -279,8 +374,19 @@ class Transfer extends MY_Admin_Controller
                 }
             }
 
+            $chunkSize = 500;
             if (isset($where['target_id']) || isset($where['user_id'])) {
-                $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                $targetIds = $where["target_id"];
+                $targetCount = count($where['target_id']);
+                $list = [];
+                $rounds = intval($targetCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($targetIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where['target_id'] = $currentChunks;
+                    $currentResult = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                    $list = array_merge($list, $currentResult);
+                }
             }
 
             if ($list) {
@@ -306,17 +412,38 @@ class Transfer extends MY_Admin_Controller
                 }
 
                 $this->load->model('user/user_meta_model');
-                $users_school = $this->user_meta_model->get_many_by(array(
-                    'meta_key' => array('school_name', 'school_department'),
-                    'user_id' => $user_list,
-                ));
-                if ($users_school) {
-                    foreach ($users_school as $key => $value) {
-                        $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+
+                $userIds = $user_list;
+                $userCount = count($userIds);
+                $school_list = [];
+                $rounds = intval($userCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($userIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $users_school = $this->user_meta_model->get_many_by(array(
+                        'meta_key' => array('school_name', 'school_department'),
+                        'user_id' => $currentChunks,
+                    ));
+                    if ($users_school) {
+                        foreach ($users_school as $key => $value) {
+                            $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+                        }
                     }
                 }
 
-                $transfer_list = $this->transfer_model->get_many_by(array('investment_id' => $ids));
+
+                $totalIds = $ids;
+                $investmentCount = count($totalIds);
+                $transfer_list = [];
+                $rounds = intval($investmentCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($totalIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where = ['investment_id' => $currentChunks];
+                    $currentTransfers = $this->transfer_model->get_many_by($where);
+                    $transfer_list = array_merge($transfer_list, $currentTransfers);
+                }
+
                 if ($transfer_list) {
                     foreach ($transfer_list as $key => $value) {
                         $transfers[$value->investment_id] = $value;
