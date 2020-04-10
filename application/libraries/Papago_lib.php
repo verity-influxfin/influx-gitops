@@ -20,6 +20,7 @@ class Papago_lib
         $data = [
             'image_base64' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents($url)),
             'min_face_size' => 48,
+            'return_attributes' => 'liveness',
         ];
         $result = $this->papago_curl($api_url, $data);
         $this->log_event('detect', $user_id, $cer_id, $result, $url);
