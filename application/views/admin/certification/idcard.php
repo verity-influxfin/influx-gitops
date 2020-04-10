@@ -267,7 +267,7 @@
                             </div>
                             <div class="form-group">
                                 <label>審核狀態</label>
-                                <p class="form-control-static"><?=isset($data->sys_check)&&$data->sys_check==0?"人工":"系統"?></p>
+                                <p class="form-control-static"><?=$data->status==0?'尚未檢核':($data->sys_check==0?"人工":"系統")?></p>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -294,8 +294,8 @@
                                         }
                                         if(isset($remark["face8"])){
                                             echo '<p class="form-control-static">Face8 比對結果：';
-                                            echo '<br />-> 人臉數量：' . $remark["face8"]['count'][0] .' / '. $remark["face8"]['count'][1];
-                                            echo '<br />-> 分數：' . $remark["face8"]['score'][0] . ($remark["face8"]['score'][0] != 'n/a' ? '%' :'') .' / '. $remark["face8"]['score'][1] .($remark["face8"]['score'][1] != 'n/a' ? '%' :'');
+                                            echo '<br />人臉數量：' . $remark["face8"]['count'][0] .' / '. $remark["face8"]['count'][1];
+                                            echo '<br />分數：' . $remark["face8"]['score'][0] .' / '. $remark["face8"]['score'][1];
                                             echo '</p>';
                                         }
                                     }

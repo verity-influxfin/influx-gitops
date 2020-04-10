@@ -1192,7 +1192,7 @@ class Product extends REST_Controller {
                     $investments = $this->investment_model->get_many_by([
                         'created_at >=' => $targets_start,
                         'target_id' => $target->id,
-                        'status' => [0, 1 ,8]
+                        'status' => [1 ,8]
                     ]);
                     if($investments){
                         foreach ($investments as $inv_key => $inv_val) {
@@ -1206,6 +1206,7 @@ class Product extends REST_Controller {
                         }
                     }
 
+                    $dhistory = [];
                     if(count($cancel_inv) > 0){
                         $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
                             'investment_id' => $cancel_inv,
@@ -1213,16 +1214,16 @@ class Product extends REST_Controller {
                         ]);
                         if($cancel_inv_time){
                             foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
-                                $at = ceil(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
-                                $biddingAmount -= $cancel_inv_amount[$cancel_inv_time_val->investment_id];
-                                $history[$at] = $biddingAmount;
+                                $at = ($cancel_inv_time_val->created_at - $targets_start) / 60 / 60;
+                                $dhistory[$at] = $cancel_inv_amount[$cancel_inv_time_val->investment_id];
                             }
                         }
                     }
 
                     $lastBidding = 0;
                     foreach ($history as $history_key => $history_val) {
-                        $lastBidding = $history[$history_key] = $history_val != 0 ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
+                        $lastBidding -= (isset($dhistory[$history_key]) ? abs($dhistory[$history_key]) : 0);
+                        $lastBidding = $history[$history_key] = $history_val != 0 || isset($dhistory[$history_key]) ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
                         if($history_key >= $currentIndex){
                             break;
                         }

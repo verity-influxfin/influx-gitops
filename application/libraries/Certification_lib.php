@@ -337,19 +337,26 @@ class Certification_lib{
             $this->CI->load->library('Papago_lib');
             $face8_person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
             $face8_front_face = $this->CI->papago_lib->detect($content['front_image'], $user_id, $cer_id);
-            $person_count = count($face8_person_face['faces']);
-            $front_count = count($face8_front_face['faces']);
-            foreach ($face8_person_face['faces'] as $token) {
+            $face8_person_count = count($face8_person_face['faces']);
+            $face8_front_count = count($face8_front_face['faces']);
+            foreach ($face8_person_face['faces'] as $tkey =>$token) {
                 if (isset($token['face_token'])) {
                     $face8_compare_res = $this->CI->papago_lib->compare([$token['face_token'], $face8_front_face['faces'][0]['face_token']], $user_id, $cer_id);
-                    $face8_compare_res[] = isset($face8_compare_res['confidence']) ? $face8_compare_res['confidence'] * 100 : '0';
+                    $compares[] = $face8_compare_res['confidence'];
                 }
             }
-            $face8_face1 = isset($face8_compare_res[0]) ? $face8_compare_res[0] : 'n/a';
-            $face8_face2 = isset($face8_compare_res[1]) ? $face8_compare_res[1] : 'n/a';
+            $face8_face1 = isset($compares[0]) ? $compares[0] : 'n/a';
+            $face8_face2 = isset($compares[1]) ? $compares[1] : 'n/a';
             $remark['face8'] = [
-                'count' => [$person_count, $front_count],
+                'count' => [$face8_person_count, $face8_front_count],
                 'score' => [$face8_face1, $face8_face2],
+                'liveness' => [
+                    [
+                        $face8_person_face['faces'][0]['attributes']['liveness']['value'],
+                        $face8_person_face['faces'][1]['attributes']['liveness']['value']
+                    ],
+                    $face8_front_face['faces'][0]['attributes']['liveness']['value']
+                ],
             ];
 
             $remark['error'] = $msg;
@@ -1377,7 +1384,12 @@ class Certification_lib{
             $msg = '';
             $remark = [];
             $idcard_cer = $this->get_certification_info($user_id, 1, 0);
-            if ($idcard_cer && $idcard_cer->status == 1) {
+            $student_cer = $this->get_certification_info($user_id, 2, 0);
+            $diploma_cer = $this->get_certification_info($user_id, 8, 0);
+            if ($idcard_cer && $idcard_cer->status == 1
+                && !preg_match('/\(自填\)/', $student_cer->content['school'])
+                && !preg_match('/\(自填\)/', $diploma_cer->content['school'])
+            ) {
                 $cer_id = $idcard_cer->id;
                 $this->CI->load->library('Azure_lib');
                 $idcard_cer_face = $this->CI->azure_lib->detect($idcard_cer->content['person_image'], $user_id, $cer_id);
