@@ -67,8 +67,19 @@ class Transfer extends MY_Admin_Controller
                 }
             }
 
+            $chunkSize = 500;
             if (isset($where['target_id']) || isset($where['user_id'])) {
-                $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                $targetIds = $where["target_id"];
+                $targetCount = count($where['target_id']);
+                $list = [];
+                $rounds = intval($targetCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($targetIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where['target_id'] = $currentChunks;
+                    $currentResult = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                    $list = array_merge($list, $currentResult);
+                }
             }
 
             if ($list) {
@@ -94,17 +105,38 @@ class Transfer extends MY_Admin_Controller
                 }
 
                 $this->load->model('user/user_meta_model');
-                $users_school = $this->user_meta_model->get_many_by(array(
-                    'meta_key' => array('school_name', 'school_department'),
-                    'user_id' => $user_list,
-                ));
-                if ($users_school) {
-                    foreach ($users_school as $key => $value) {
-                        $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+
+                $userIds = $user_list;
+                $userCount = count($userIds);
+                $school_list = [];
+                $rounds = intval($userCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($userIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $users_school = $this->user_meta_model->get_many_by(array(
+                        'meta_key' => array('school_name', 'school_department'),
+                        'user_id' => $currentChunks,
+                    ));
+                    if ($users_school) {
+                        foreach ($users_school as $key => $value) {
+                            $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+                        }
                     }
                 }
 
-                $transfer_list = $this->transfer_model->get_many_by(array('investment_id' => $ids));
+
+                $totalIds = $ids;
+                $investmentCount = count($totalIds);
+                $transfer_list = [];
+                $rounds = intval($investmentCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($totalIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where = ['investment_id' => $currentChunks];
+                    $currentTransfers = $this->transfer_model->get_many_by($where);
+                    $transfer_list = array_merge($transfer_list, $currentTransfers);
+                }
+
                 if ($transfer_list) {
                     foreach ($transfer_list as $key => $value) {
                         $transfers[$value->investment_id] = $value;
@@ -339,8 +371,19 @@ class Transfer extends MY_Admin_Controller
                 }
             }
 
+            $chunkSize = 500;
             if (isset($where['target_id']) || isset($where['user_id'])) {
-                $list = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                $targetIds = $where["target_id"];
+                $targetCount = count($where['target_id']);
+                $list = [];
+                $rounds = intval($targetCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($targetIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where['target_id'] = $currentChunks;
+                    $currentResult = $this->investment_model->order_by('target_id', 'ASC')->get_many_by($where);
+                    $list = array_merge($list, $currentResult);
+                }
             }
 
             if ($list) {
@@ -366,17 +409,38 @@ class Transfer extends MY_Admin_Controller
                 }
 
                 $this->load->model('user/user_meta_model');
-                $users_school = $this->user_meta_model->get_many_by(array(
-                    'meta_key' => array('school_name', 'school_department'),
-                    'user_id' => $user_list,
-                ));
-                if ($users_school) {
-                    foreach ($users_school as $key => $value) {
-                        $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+
+                $userIds = $user_list;
+                $userCount = count($userIds);
+                $school_list = [];
+                $rounds = intval($userCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($userIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $users_school = $this->user_meta_model->get_many_by(array(
+                        'meta_key' => array('school_name', 'school_department'),
+                        'user_id' => $currentChunks,
+                    ));
+                    if ($users_school) {
+                        foreach ($users_school as $key => $value) {
+                            $school_list[$value->user_id][$value->meta_key] = $value->meta_value;
+                        }
                     }
                 }
 
-                $transfer_list = $this->transfer_model->get_many_by(array('investment_id' => $ids));
+
+                $totalIds = $ids;
+                $investmentCount = count($totalIds);
+                $transfer_list = [];
+                $rounds = intval($investmentCount / $chunkSize) + 1;
+                for ($i = 1; $i <= $rounds; $i++) {
+                    $currentChunks = array_slice($totalIds, ($i - 1) * $chunkSize, $chunkSize);
+                    if (!$currentChunks) continue;
+                    $where = ['investment_id' => $currentChunks];
+                    $currentTransfers = $this->transfer_model->get_many_by($where);
+                    $transfer_list = array_merge($transfer_list, $currentTransfers);
+                }
+
                 if ($transfer_list) {
                     foreach ($transfer_list as $key => $value) {
                         $transfers[$value->investment_id] = $value;
