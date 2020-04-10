@@ -242,6 +242,7 @@ class Transfer extends MY_Admin_Controller
                                 <th>放款期間</th>
                                 <th>還款方式</th>
                                 <th>放款日期</th>
+                                <th>債權狀態</th>
                                 <th>案件狀態</th>
                                 <th>逾期天數</th>
                                 <th>逾期資產</th>
@@ -293,6 +294,7 @@ class Transfer extends MY_Admin_Controller
                     } elseif ($delayDays > 0) {
                         $targetOverdueCategory = '觀察資產（D7）';
                     }
+
                     $html .= '<tr>';
                     $html .= '<td>' . $products[$target->product_id]['name'] . '</td>';
                     $html .= '<td>' . $target->target_no . '</td>';
@@ -308,6 +310,7 @@ class Transfer extends MY_Admin_Controller
                     $html .= '<td>' . $target->instalment . '</td>';
                     $html .= '<td>' . $repayment_type[$target->repayment] . '</td>';
                     $html .= '<td>' . $target->loan_date . '</td>';
+                    $html .= '<td>' . ($value->transfer_status == 2 ? $this->investment_model->transfer_status_list[$value->transfer_status] : $this->investment_model->status_list[$value->status]) . '</td>';
                     $html .= '<td>' . $targetCurrentStatus . '</td>';
                     $html .= '<td>' . $delayDays . '</td>';
                     $html .= '<td>' . $targetOverdueCategory . '</td>';
