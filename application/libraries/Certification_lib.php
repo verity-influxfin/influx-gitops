@@ -1384,7 +1384,12 @@ class Certification_lib{
             $msg = '';
             $remark = [];
             $idcard_cer = $this->get_certification_info($user_id, 1, 0);
-            if ($idcard_cer && $idcard_cer->status == 1) {
+            $student_cer = $this->get_certification_info($user_id, 2, 0);
+            $diploma_cer = $this->get_certification_info($user_id, 8, 0);
+            if ($idcard_cer && $idcard_cer->status == 1
+                && !preg_match('/\(自填\)/', $student_cer->content['school'])
+                && !preg_match('/\(自填\)/', $diploma_cer->content['school'])
+            ) {
                 $cer_id = $idcard_cer->id;
                 $this->CI->load->library('Azure_lib');
                 $idcard_cer_face = $this->CI->azure_lib->detect($idcard_cer->content['person_image'], $user_id, $cer_id);
