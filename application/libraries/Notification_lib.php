@@ -705,7 +705,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false )
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false, $years, $sex)
     {
         $user_list = [];
         $user_ids = false;
@@ -717,6 +717,18 @@ $name 您好，
         $investor == 1 ? $param['investor_status'] = 1 : '';
         if ($investor == 2) {
             $param['email !='] = '';
+        }
+
+        if ($years) {
+            $years = explode('to', $years);
+            $form_years = (isset($years[1]) ? date('Y', strtotime('-' . ($years[1]-1) . ' year', time())) : date('Y', strtotime('-' . ($years[0]-1) . ' year', time()))) . '-01-01';
+            $to_years = date('Y', strtotime('-' . ($years[0]-1) . ' year', time())) . '-12-31';
+            $param['birthday >='] = strval($form_years);
+            $param['birthday <='] = strval($to_years);
+        }
+
+        if ($sex) {
+            $param['sex'] = $sex;
         }
 
         if ($school) {
