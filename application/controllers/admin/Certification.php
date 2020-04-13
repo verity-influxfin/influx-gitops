@@ -1023,6 +1023,24 @@ class Certification extends MY_Admin_Controller {
 		$this->phpspreadsheet_lib->excel($file_name, $contents, '本金餘額攤還表', '各期金額', $descri, $this->login_info->id, true, false, false, $mergeTitle);
 	}
 
+	public function get_social_report()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		$limit = isset($get['limit']) ? $get['limit'] : 10;
+		$this->load->library('Certification_lib');
+		$cell = $this->certification_lib->get_social_report($limit);
+		$this->load->library('Phpspreadsheet_lib');
+		$sheetTItle = ['user_id', '性別', '貼文總數', '用戶粉絲人數', '用戶追蹤中人數', '貼文1_時間', '貼文1_內文', '貼文1_按讚數', '貼文2_時間', '貼文2_內文', '貼文2_按讚數', '貼文3_時間', '貼文3_內文', '貼文3_按讚數', '貼文4_時間', '貼文4_內文', '貼文4_按讚數', '貼文5_時間', '貼文5_內文', '貼文5_按讚數', '貼文6_時間', '貼文6_內文', '貼文6_按讚數', '貼文7_時間', '貼文7_內文', '貼文7_按讚數', '貼文8_時間', '貼文8_內文', '貼文8_按讚數', '貼文9_時間', '貼文9_內文', '貼文9_按讚數', '貼文10_時間', '貼文10_內文', '貼文10_按讚數'];
+		$contents[] = [
+			'sheet' => '社交認證',
+			'title' => $sheetTItle,
+			'content' => $cell,
+		];
+		$file_name = date("YmdHis", time()) . '_Certificatuin_analysis';
+		$descri = '普匯inFlux 後台管理者 ' . $this->login_info->id . ' [ 認證分析報告 ]';
+		$this->phpspreadsheet_lib->excel($file_name, $contents, '認證分析報告', '內部分析使用', $descri, $this->login_info->id, true);
+	}
+
 	private function is_sub_product($product,$sub_product_id){
 		$sub_product_list = $this->config->item('sub_product_list');
 		return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id,$product['sub_product']);
