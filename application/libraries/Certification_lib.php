@@ -1462,7 +1462,7 @@ class Certification_lib{
                         array_push($metas, date("Y/m/d H:i:s",$contentValue->created_time));
                         array_push($metas, $contentValue->text);
                         array_push($metas, $contentValue->likes);
-                        if($contentKey > 9){
+                        if($contentKey == 9){
                             break;
                         }
                     }
