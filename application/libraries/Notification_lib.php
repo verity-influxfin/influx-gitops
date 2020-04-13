@@ -705,7 +705,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false, $years, $sex)
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false, $years, $sex, $app, $mail)
     {
         $user_list = [];
         $user_ids = false;
@@ -752,21 +752,25 @@ $name 您好，
 
         if (count($user_list) > 0) {
             foreach ($user_list as $key => $value) {
-                $param = array(
-                    "user_id" => $value->id,
-                    "title" => $title,
-                    "content" => $this->remove_emoji($content),
-                );
-                if($investor == 0 || $investor == 2 ){
-                    $param['investor'] = 0;
-                    $this->CI->user_notification_model->insert($param);
+                if($app){
+                    $param = array(
+                        "user_id" => $value->id,
+                        "title" => $title,
+                        "content" => $this->remove_emoji($content),
+                    );
+                    if($investor == 0 || $investor == 2 ){
+                        $param['investor'] = 0;
+                        $this->CI->user_notification_model->insert($param);
+                    }
+                    if($investor == 1 || $investor == 2 ){
+                        $param['investor'] = 1;
+                        $this->CI->user_notification_model->insert($param);
+                    }
                 }
-                if($investor == 1 || $investor == 2 ){
-                    $param['investor'] = 1;
-                    $this->CI->user_notification_model->insert($param);
+                if($mail){
+                    $this->CI->load->library('Sendemail');
+                    $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $url);
                 }
-                $this->CI->load->library('Sendemail');
-                $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $url);
                 $count++;
             }
             $this->CI->load->library('parser');
