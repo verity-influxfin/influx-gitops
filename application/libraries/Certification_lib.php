@@ -1445,38 +1445,40 @@ class Certification_lib{
     }
 
     public function get_social_report($limit = 10){
-        $certification_list = $this->CI->user_certification_model->limit($limit)->order_by('updated_at', 'desc')->get_many_by([
+        $certification_list = $this->CI->user_certification_model->order_by('user_id', 'desc')->get_many_by([
             'certification_id' => 4,
             'status' => 1,
             'content not like' => '%instagram\":\"\"}%',
-        ]);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ]);
         $list = [];
+        $users = [];
         $this->CI->load->model('user/user_model');
         foreach ($certification_list as $key => $value) {
-            $content = json_decode($value->content);
-            if(isset($content->instagram->counts) && $content->instagram->counts->media >= 10){
-                $user_info 	= $this->CI->user_model->get($value->user_id);
-                if($user_info && count($content->instagram->meta) >= 10){
-                    $metas = [];
-                    foreach ($content->instagram->meta as $contentKey => $contentValue) {
-                        array_push($metas, date("Y/m/d H:i:s",$contentValue->created_time));
-                        array_push($metas, $contentValue->text);
-                        array_push($metas, $contentValue->likes);
-                        if($contentKey == 9){
-                            break;
+            if(!in_array($value->user_id, $users)){
+                $users[] = $value->user_id;
+                $content = json_decode($value->content);
+                $ig = isset($content->instagram->counts) ? 'instagram' : 'info';
+                if(isset($content->$ig->counts) && $content->$ig->counts->media >= 10){
+                    $user_info 	= $this->CI->user_model->get($value->user_id);
+                    if($user_info && count($content->$ig->meta) >= 10){
+                        $metas = [];
+                        foreach ($content->$ig->meta as $contentKey => $contentValue) {
+                            array_push($metas, date("Y/m/d H:i:s",$contentValue->created_time));
+                            array_push($metas, $contentValue->text);
+                            array_push($metas, $contentValue->likes);
                         }
+                        $list[] = array_merge([
+                            $value->user_id,
+                            ($user_info->sex == 'M' ? '男' : '女'),
+                            $content->$ig->counts->media,
+                            $content->$ig->counts->followed_by,
+                            $content->$ig->counts->follows,
+                        ],$metas);
                     }
-                    $list[] = array_merge([
-                        $value->user_id,
-                        ($user_info->sex == 'M' ? '男' : '女'),
-                        $content->instagram->counts->media,
-                        $content->instagram->counts->followed_by,
-                        $content->instagram->counts->follows,
-                    ],$metas);
                 }
             }
             if(count($list) >= $limit){
-                continue;
+                break;
             }
         }
         return $list;
