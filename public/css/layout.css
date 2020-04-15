@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+.page-footer {
+  background-color: #353535;
+  width: 100%;
+  color: #bfbfbf;
+  font-family: Arial, "\5FAE\8EDF\6B63\9ED1\9AD4", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 15px;
+  cursor: default;
+}
+
+.page-footer .row {
+  margin: 0px !important;
+}
+
+.page-footer .google-map-iframe {
+  border: 0px;
+  width: 395px;
+  height: 222px;
+}
+
+.page-footer .horizontal-line {
+  width: 100%;
+  border-top: 1px solid #7a7a7a;
+}
+
+.page-footer .list-row,
+.page-footer .contact-row,
+.page-footer .map-row {
+  color: #ffffff;
+}
+
+.page-footer .list-row .list-column {
+  padding: 0px;
+  list-style-type: none;
+  float: left;
+  width: 50%;
+}
+
+.page-footer .list-row .list-column li {
+  font-size: 16px;
+  padding: 10px 0px;
+  cursor: pointer;
+}
+
+.page-footer .list-row .list-column li i {
+  margin-right: 5px;
+}
+
+.page-footer .contact-row .contact-item {
+  padding-top: 1rem;
+}
+
+.page-footer .contact-row .contact-item i {
+  margin-right: 15px;
+}
+
+.page-footer .icon-warpper {
+  text-align: end;
+}
+
+.page-footer .icon-warpper .quick-link {
+  padding: 0.2em;
+  font-size: 33px;
+  color: #ffffff;
+}
+
+.page-footer .icon-warpper .quick-link:hover,
+.page-footer .icon-warpper .quick-link:active,
+.page-footer .icon-warpper .quick-link:focus {
+  color: #ffffff;
+}
+
+.page-footer .footer-content {
+  padding: 15px 30px;
+}
+
+.page-footer .footer-content .title {
+  font-size: 24px;
+  font-weight: 900;
+}
+
