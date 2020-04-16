@@ -567,6 +567,7 @@ class Target extends REST_Controller {
 				'loan_amount' 		=> intval($target->loan_amount),
 				'credit_level' 		=> intval($target->credit_level),
 				'interest_rate' 	=> floatval($target->interest_rate),
+				'original_interest_rate' 	=> (isset($targetData->original_interest_rate) ? $targetData->original_interest_rate : null),
 				'reason'		=> $reason,
 				'remark' 			=> $target->remark,
 				'targetDatas' => $targetDatas,

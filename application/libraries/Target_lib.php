@@ -358,6 +358,7 @@ class Target_lib
                                 $curTargetData && !$targetData ? $targetData = $curTargetData : '';
                                 !$targetData ? $targetData = new stdClass() : '';
                                 $targetData->credit_level = $credit['level'];
+                                $targetData->original_interest_rate = $interest_rate;
                                 $param['target_data'] = json_encode($targetData);
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
