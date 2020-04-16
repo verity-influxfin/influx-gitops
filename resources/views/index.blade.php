@@ -18,22 +18,41 @@
         <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
 
         <!-- local -->
-        <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/all.css') }}">
 
         <!-- package -->
         <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
 
         <!-- local -->
-        <script type="text/javascript" src="{{ asset('js/layout.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
     </head>
     <body>
         <div id="web_index">
-            <div class="page-header">header</div>
-            <div class="content-wrapper">body</div>
+            <nav class="page-header navbar navbar-expand-lg">
+                <div class="web-logo"><a href="{{ asset('/') }}"><img src=" {{ asset('image/logo.png') }}" class="img-fluid"></a></div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="menu">
+                    <ul class="navbar-nav ml-auto"> 
+                        <li v-for="item in menuList" class="nav-item dropdown">
+                            <a v-if="item.subMenu.length === 0" class="nav-link" href="#">${item.title}</a>
+                            <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">${item.title}</a>
+                            <ul class="dropdown-menu" v-if="item.subMenu.length !== 0">
+                                <li v-for="subItem in item.subMenu" :class="[(!subItem.isActive ? 'coming-soon' : '')]"><router-link :class="['dropdown-item']" :to="subItem.href">${subItem.name}${!subItem.isActive ? '(coming soon)' : ''}</router-link></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="content-wrapper">
+                <router-view></router-view>
+            </div>
             <div class="page-footer">
                 <div class="row footer-content">
                     <div class="col-lg col-md col-sm">
@@ -67,11 +86,20 @@
                         <p>「會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡」<br>Copyright ©2018 普匯金融科技股份有限公司</p>
                     </div>
                     <div class="icon-warpper col-lg-6 col-md-6 col-sm-6">
-                        <a class="quick-link" target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></>
+                        <a class="quick-link" target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
                         <a class="quick-link" target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
                         <a class="quick-link" target="_blank" href="https://www.instagram.com/influxfin/"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
+            </div>
+            <div class="afc_popup hidden-phone" ref="afc_popup">
+                <div><img src="{{ asset('image/message_icon.png') }}" class="img-fluid" @click="display"></div>
+                <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="#"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
+            </div>
+            <div class="afc_popup hidden-desktop">
+                <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
             </div>
         </div>
     </body>

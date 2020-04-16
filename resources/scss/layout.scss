@@ -1,8 +1,56 @@
 .page-header{
-    
+    font-family: Arial,"微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
+    box-shadow: 0px 0px 5px 0px #404040;
+    background-color: #f9f9f9;
+
+    .web-logo{
+        width: 227px;
+        height: 76px;
+        margin: 0px 30px;
+    }
+
+    .nav-item{
+        a{
+            color:#7a7a7a;
+            font-weight: 900;
+            &:hover{
+                color:#000000
+            }
+        }
+    }
+
+    .dropdown-menu{
+        li{
+            &:hover{
+                background-color: #55595C;
+
+            }
+        }
+    }
+
+    .coming-soon{
+        background-color: #55595C;
+
+        a{
+            color: #000000;
+
+            &:hover,&:active,&:focus{
+                color: #000000;
+                background-color: #55595C;
+            }
+        }
+    }
+
+    @media (max-width: 767px) {
+        .web-logo{
+            margin: 0px;
+        }
+    }
 }
 
-$font-white:#ffffff;
+.content-wrapper{
+    width: 100%;
+}
 
 .page-footer{
     background-color: #353535;
@@ -20,7 +68,7 @@ $font-white:#ffffff;
 
     .google-map-iframe{
         border: 0px;
-        width: 395px;
+        width: 100%;
         height: 222px;
     }
 
@@ -30,7 +78,7 @@ $font-white:#ffffff;
     }
 
     .list-row,.contact-row,.map-row{
-        color:$font-white;
+        color:#ffffff;
     }
     
     .list-row{
@@ -67,10 +115,10 @@ $font-white:#ffffff;
         .quick-link{
             padding: 0.2em;
             font-size: 33px;
-            color:$font-white;
+            color:#ffffff;
 
             &:hover,&:active,&:focus{
-                color:$font-white;
+                color:#ffffff;
             }
         }
     }
@@ -82,5 +130,42 @@ $font-white:#ffffff;
             font-size: 24px;
             font-weight: 900;
         }
+    }
+
+    @media (max-width: 767px) {
+        .footer-content{
+            padding: 15px 0px;
+        }
+
+        .icon-warpper{
+            text-align: center;
+        }
+    }
+}
+
+.afc_popup{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    div{
+        margin-bottom: 10px;
+    }
+}
+
+.hidden-phone{
+    display: none;
+}
+.hidden-desktop{
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .hidden-phone{
+        display: block;
+    }
+    .hidden-desktop{
+        display: none;
     }
 }
