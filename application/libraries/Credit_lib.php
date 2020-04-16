@@ -248,7 +248,7 @@ class Credit_lib{
         $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
         $param['points'] = intval($total);
 
-        $param['level'] = $this->get_credit_level($total, $product_id);
+        $param['level'] = $this->get_credit_level($total, $product_id, $stage_cer);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
@@ -550,8 +550,8 @@ class Credit_lib{
 		return false;
 	}
 
-	public function  get_credit_level($points=0,$product_id=0){
-		if(intval($points)>0 && $product_id){
+	public function  get_credit_level($points=0,$product_id=0, $stage_cer = false){
+		if((intval($points)>0 || $stage_cer) && $product_id ){
 			if(isset($this->credit['credit_level_'.$product_id])){
 				foreach($this->credit['credit_level_'.$product_id] as $level => $value){
 					if($points >= $value['start'] && $points <= $value['end']){
