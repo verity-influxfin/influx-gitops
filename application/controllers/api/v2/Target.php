@@ -516,16 +516,20 @@ class Target extends REST_Controller {
                         } elseif( $value == 2){
                             isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) : '';
                             $description .= '學門：' . $contents->major. '<br>系所：' . $contents->department . '<br>學制：' . $this->config->item('school_system')[$contents->system];
+                        } elseif ($value == 3){
+                            $description = '已驗證個人金融帳號';
                         } elseif ($value == 4 && isset($contents->type)){
                             if($contents->type == 'instagram'){
                                 $description .= 'Instagram' . '<br>貼文：' . $contents->info->counts->media . '<br>追蹤者：' . $contents->info->counts->followed_by . '<br>追蹤中：' . $contents->info->counts->follows;
                             }
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
+                        } elseif ($value == 6){
+                            $description = '已驗證常用電子信箱';
                         } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
                             $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
-                            $description = '(自填)<br>平均月收入：'. $financial_input . '<br>平均月支出：' . $financial_output;
+                            $description = '(自填) 平均月收入：'. $financial_input . '<br>(自填) 平均月支出：' . $financial_output;
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
