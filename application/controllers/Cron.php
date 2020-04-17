@@ -310,7 +310,8 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
-	public function EDM(){
+    public function EDM()
+    {
         $input = $this->input->get();
         $user_id = isset($input['user_id']) ? $input['user_id'] : 0;
         $title = $input['title'];
@@ -324,7 +325,19 @@ class Cron extends CI_Controller {
         $app = isset($input['app']) && $input['app'] != '' ? $input['app'] : false;
         $mail = isset($input['mail']) && $input['mail'] != '' ? $input['mail'] : false;
         $this->load->library('Notification_lib');
-        $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail);
+
+        $start_time = time();
+        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail);
+        $num = $count ? intval($count) : 0;
+        $end_time = time();
+        $data = [
+            'script_name' => 'EDM',
+            'num' => $num,
+            'parameter' => json_encode([$user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail]),
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
     }
 
 	public function notice_msg(){
