@@ -777,6 +777,8 @@ $name 您好，
             echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM), TRUE);
         }
         echo '已發送 ' . $count . ' 位使用者';
+        return $count;
+
     }
 
     public function notice_msg($user_id, $title, $content, $investor = 0 ,$type)
@@ -822,6 +824,7 @@ $name 您好，
             echo $content = $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type , "mail_event"=> $mail_event),TRUE);
         }
         echo '已發送 ' . $count . ' 位使用者';
+        return $count;
     }
 
     function remove_emoji($text)
