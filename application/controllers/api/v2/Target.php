@@ -524,7 +524,7 @@ class Target extends REST_Controller {
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
-                            $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense) / 12);
+                            $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
                             $description = '平均月收入：'. $financial_input . '<br>平均月支出：' . $financial_output;
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
