@@ -525,7 +525,7 @@ class Target extends REST_Controller {
                         } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
                             $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
-                            $description = '平均月收入：'. $financial_input . '<br>平均月支出：' . $financial_output;
+                            $description = '(自填)<br>平均月收入：'. $financial_input . '<br>平均月支出：' . $financial_output;
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
