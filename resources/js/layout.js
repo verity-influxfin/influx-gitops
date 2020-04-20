@@ -6,8 +6,17 @@ $(function(){
     const router = new VueRouter({
         'routes':[
             { path: '/index', component:index},
-            { path: '/foo', component: { template: '<div>foo</div>' } },
-            { path: '/bar', component: { template: '<div>bar</div>' } }
+            { path: '/collegeLoan', component: { template: '<div>collegeLoan</div>' } },
+            { path: '/FreshGraduateLoan', component: { template: '<div>FreshGraduateLoan</div>' } },
+            { path: '/MobileLoan', component: { template: '<div>Mobile Loan</div>' } },
+            { path: '/EngineerLoan', component: { template: '<div>EngineerLoan</div>' } },
+            { path: '/invest', component: { template: '<div>invest</div>' } },
+            { path: '/transfer', component: { template: '<div>transfer</div>' } },
+            { path: '/company', component: { template: '<div>company</div>' } },
+            { path: '/news', component: { template: '<div>news</div>' } },
+            { path: '/blog', component: { template: '<div>blog</div>' } },
+            { path: '/vlog', component: { template: '<div>vlog</div>' } },
+            { path: '/qa', component: { template: '<div>qa</div>' } },
         ]
     });
     
@@ -22,38 +31,38 @@ $(function(){
                 {
                     'title':'我要借款',
                     'subMenu':[
-                        {'name':'上班族貸款','href':'/foo','isActive':true},
-                        {'name':'學生貸款','href':'/bar','isActive':true},
-                        {'name':'資訊工程師專案','href':'#','isActive':true},
-                        {'name':'外匯車貸','href':'#','isActive':false},
-                        {'name':'新創企業主貸','href':'#','isActive':false}
+                        {'name':'上班族貸款','href':'/FreshGraduateLoan','isActive':true},
+                        {'name':'學生貸款','href':'/CollegeLoan','isActive':true},
+                        {'name':'資訊工程師專案','href':'/EngineerLoan','isActive':true},
+                        {'name':'外匯車貸','href':'','isActive':false},
+                        {'name':'新創企業主貸','href':'','isActive':false}
                     ]
                 },
                 {
                     'title':'我要投資',
                     'subMenu':[
-                        {'name':'債權投資','href':'#','isActive':true},
-                        {'name':'債權轉讓','href':'#','isActive':true}
+                        {'name':'債權投資','href':'/invest','isActive':true},
+                        {'name':'債權轉讓','href':'/transfer','isActive':true}
                     ]
                 },
                 {
                     'title':'分期付款超市',
                     'subMenu':[
-                        {'name':'手機分期','href':'#','isActive':true}
+                        {'name':'手機分期','href':'/MobileLoan','isActive':true}
                     ]
                 },
                 {
                     'title':'關於我們',
                     'subMenu':[
-                        {'name':'公司介紹','href':'#','isActive':true},
-                        {'name':'最新消息','href':'#','isActive':true},
+                        {'name':'公司介紹','href':'/company','isActive':true},
+                        {'name':'最新消息','href':'/news','isActive':true},
                     ]
                 },
                 {
                     'title':'小學堂金融科技',
                     'subMenu':[
-                        {'name':'小學堂','href':'#','isActive':true},
-                        {'name':'小學影音','href':'#','isActive':true},
+                        {'name':'小學堂','href':'/blog','isActive':true},
+                        {'name':'小學影音','href':'/vlog','isActive':true},
                     ]
                 },
                 {
@@ -68,6 +77,7 @@ $(function(){
         },
         mounted(){
             timeLineMax.to(this.$refs.afc_popup, {y: -210});
+            AOS.init();
         },
         watch:{
         },

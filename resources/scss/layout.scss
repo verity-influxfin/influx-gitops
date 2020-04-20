@@ -1,3 +1,7 @@
+body{
+    cursor: default;
+}
+
 .page-header{
     font-family: Arial,"微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     box-shadow: 0px 0px 5px 0px #404040;
@@ -49,6 +53,7 @@
 }
 
 .content-wrapper{
+    font-family: Arial,"微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     width: 100%;
 }
 
@@ -169,3 +174,5 @@
         display: none;
     }
 }
+
+@import 'index'

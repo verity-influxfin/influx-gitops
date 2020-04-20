@@ -16,6 +16,8 @@
         <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
         <link rel="stylesheet" href="{{ asset('css/package/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/package/slick.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
 
         <!-- local -->
         <link rel="stylesheet" href="{{ asset('css/all.css') }}">
@@ -25,8 +27,10 @@
         <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
 
         <!-- local -->
         <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
@@ -41,7 +45,7 @@
                 <div class="collapse navbar-collapse" id="menu">
                     <ul class="navbar-nav ml-auto"> 
                         <li v-for="item in menuList" class="nav-item dropdown">
-                            <a v-if="item.subMenu.length === 0" class="nav-link" href="#">${item.title}</a>
+                            <router-link v-if="item.subMenu.length === 0"  :class="['nav-link']" :to="'/qa'">${item.title}</router-link>
                             <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">${item.title}</a>
                             <ul class="dropdown-menu" v-if="item.subMenu.length !== 0">
                                 <li v-for="subItem in item.subMenu" :class="[(!subItem.isActive ? 'coming-soon' : '')]"><router-link :class="['dropdown-item']" :to="subItem.href">${subItem.name}${!subItem.isActive ? '(coming soon)' : ''}</router-link></li>
