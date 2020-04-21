@@ -55,8 +55,9 @@ class Labor_insurance_lib_file4 extends TestCase
 				[
 					"stage" => "download_time",
 					"status" => "failure",
-					"message" => "",
-					"rejected_message" => "勞保異動明細非一個月內"
+					"message" => "勞保異動明細非一個月內",
+					"rejected_message" => $this->labor_insurance_lib::REJECT_DUE_TO_OUTDATED_REPORT
+
 				]
 			]
 		];

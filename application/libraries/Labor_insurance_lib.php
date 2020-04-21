@@ -12,6 +12,12 @@ class Labor_insurance_lib
     const HIGH_WAGE = 50000;
     const HIGH_WAGE_FOR_TOP_COMPANY = 40000;
 
+    const REJECT_DUE_TO_OUTDATED_REPORT = "請您提供近一個月內最新的勞工保險異動明細資料。";
+    const REJECT_DUE_TO_IDENTITY_NOT_MATCH = "請您提供本人近一個月內最新的勞工保險異動明細資料。";
+    const REJECT_DUE_TO_REPORT_NOT_COMPLETE = "請提供歷年勞工保險異動明細資料。";
+    const REJECT_DUE_TO_UNEMPLOYMENT = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+    const REJECT_DUR_TO_CONSTRAINT_NOT_PASSED = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+
     public function __construct()
     {
         $this->CI = &get_instance();
@@ -62,7 +68,8 @@ class Labor_insurance_lib
         }
 
         $message["status"] = self::FAILURE;
-        $message["rejected_message"] = "上傳文件錯誤";
+        $message["message"] = "上傳文件錯誤";
+        $message["rejected_message"] = self::REJECT_DUE_TO_OUTDATED_REPORT;
         $result["messages"][] = $message;
     }
 
@@ -94,7 +101,8 @@ class Labor_insurance_lib
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
-            $message["rejected_message"] = "勞保異動明細非一個月內";
+            $message["message"] = "勞保異動明細非一個月內";
+            $message["rejected_message"] = self::REJECT_DUE_TO_OUTDATED_REPORT;
             $result["messages"][] = $message;
             return;
         }
@@ -109,7 +117,7 @@ class Labor_insurance_lib
         $message = [
             "stage" => "time_matches",
             "status" => self::PENDING,
-            "message" => "無法辨識日期"
+            "message" => ["無法辨識日期"]
         ];
 
         $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "查詢日期起訖：", "【");
@@ -132,8 +140,8 @@ class Labor_insurance_lib
 
         if (count($searchTimeArray[0]) == 2) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "起始日非空白";
-            $message["rejected_message"] = "勞保異動明細非歷年";
+            $message["message"] = ["起始日非空白", "勞保異動明細非歷年"];
+            $message["rejected_message"] = self::REJECT_DUE_TO_REPORT_NOT_COMPLETE;
             $result["messages"][] = $message;
             return;
         }
@@ -144,8 +152,8 @@ class Labor_insurance_lib
 
         if ($downloadTime != $searchTime) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "查詢時間與下載時間不一致";
-            $message["rejected_message"] = "勞保異動明細非歷年";
+            $message["message"] = ["查詢時間與下載時間不一致", "勞保異動明細非歷年"];
+            $message["rejected_message"] = self::REJECT_DUE_TO_REPORT_NOT_COMPLETE;
             $result["messages"][] = $message;
             return;
         }
@@ -279,7 +287,7 @@ class Labor_insurance_lib
 
         $message["status"] = self::FAILURE;
         $message["message"] = "勞保異動明細非本人";
-        $message["rejected_message"] = "請您提供本人近一個月內最新的勞工保險異動明細資料";
+        $message["rejected_message"] = self::REJECT_DUE_TO_IDENTITY_NOT_MATCH;
         $result["messages"][] = $message;
     }
 
@@ -293,7 +301,7 @@ class Labor_insurance_lib
         if (!$rows) {
             $message['status'] = self::FAILURE;
             $message["message"] = "未加保勞保";
-            $message["rejected_message"] = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $message["rejected_message"] = self::REJECT_DUE_TO_UNEMPLOYMENT;
             $result["messages"][] = $message;
             return;
         }
@@ -320,7 +328,7 @@ class Labor_insurance_lib
 
         $message['status'] = self::FAILURE;
         $message["message"] = "未加保勞保";
-        $message["rejected_message"] = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+        $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
         $result["messages"][] = $message;
     }
 
@@ -491,6 +499,7 @@ class Labor_insurance_lib
         if (!$enrolledInsurance) {
             $message["status"] = self::FAILURE;
             $message["message"] = "未發現任何仍在加保中的公司名稱";
+            $message["rejected_message"] = self::REJECT_DUE_TO_UNEMPLOYMENT;
             $result["messages"][] = $message;
             return;
         }
@@ -498,7 +507,7 @@ class Labor_insurance_lib
         if (isset($enrolledInsurance["comment"]) && strpos($enrolledInsurance['comment'], "不適用就業保險") !== false) {
             $message["status"] = self::FAILURE;
             $message["message"] = "不符合平台規範";
-            $message["rejected_message"] = "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             $result["messages"][] = $message;
             return;
         }
@@ -509,7 +518,7 @@ class Labor_insurance_lib
                 "公司 : " . $enrolledInsurance["name"],
                 "不符合平台規範"
             ];
-            $message["rejected_message"] = "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             $result["messages"][] = $message;
             return;
         }
@@ -592,6 +601,7 @@ class Labor_insurance_lib
         if (!$currentJobRecords) {
             $message["status"] = self::FAILURE;
             $message["message"] = "無";
+            $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             $result["messages"][] = $message;
             return;
         }
@@ -639,6 +649,7 @@ class Labor_insurance_lib
         if (!$firstJobEnrolledAt) {
             $message["status"] = self::FAILURE;
             $message["message"] = "無";
+            $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             $result["messages"][] = $message;
             return;
         }
@@ -684,7 +695,7 @@ class Labor_insurance_lib
         if (!$currentJob || !$totalJob || !isset($currentJob['data']) || !isset($currentJob['data'])) {
             $message['status'] = self::FAILURE;
             $message['message'] = "投保年資不足";
-            $message['rejected_message'] = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+            $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             $result['messages'][] = $message;
             return;
         }
@@ -705,7 +716,7 @@ class Labor_insurance_lib
             if ($totalEnrollment < 12 && $currentEnrollment < 4) {
                 $message['status'] = self::FAILURE;
                 $message['message'] = "投保年資不足";
-                $message['rejected_message'] = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
+                $message["rejected_message"] = self::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
             }
             if ($totalEnrollment < 12 && $currentEnrollment >= 4) {
                 $message['status'] = self::PENDING;

@@ -26,8 +26,8 @@ class Labor_insurance_lib_file2 extends TestCase
 				[
 					"stage" => "correctness",
 					"status" => "failure",
-					"message" => "",
-					"rejected_message" => "上傳文件錯誤"
+					"message" => "上傳文件錯誤",
+					"rejected_message" => $this->labor_insurance_lib::REJECT_DUE_TO_OUTDATED_REPORT
 				]
 			]
 		];
@@ -66,7 +66,7 @@ class Labor_insurance_lib_file2 extends TestCase
 				[
 					"stage" => "time_matches",
 		            "status" => "pending",
-		            "message" => "無法辨識日期"
+		            "message" => ["無法辨識日期"]
 				]
 			]
 		];
@@ -120,7 +120,7 @@ class Labor_insurance_lib_file2 extends TestCase
 					"stage" => "insurance_enrollment",
 					"status" => "failure",
 					"message" => "未加保勞保",
-					"rejected_message" => "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。",
+					"rejected_message" => $this->labor_insurance_lib::REJECT_DUE_TO_UNEMPLOYMENT,
 				]
 			]
 		];
@@ -140,7 +140,8 @@ class Labor_insurance_lib_file2 extends TestCase
 				[
 					"stage" => "company",
 					"status" => "failure",
-					"message" => "未發現任何仍在加保中的公司名稱"
+					"message" => "未發現任何仍在加保中的公司名稱",
+                    "rejected_message" => $this->labor_insurance_lib::REJECT_DUE_TO_UNEMPLOYMENT
 				]
 			]
 		];
@@ -199,7 +200,8 @@ class Labor_insurance_lib_file2 extends TestCase
 				[
 					"stage" => "current_job",
 					"status" => "failure",
-					"message" => "無"
+					"message" => "無",
+                    "rejected_message" => $this->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED
 				]
 			]
 		];
@@ -220,7 +222,8 @@ class Labor_insurance_lib_file2 extends TestCase
 				[
 					"stage" => "total_job",
 					"status" => "failure",
-					"message" => "無"
+					"message" => "無",
+                    "rejected_message" => $this->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED
 				]
 			]
 		];
@@ -239,7 +242,7 @@ class Labor_insurance_lib_file2 extends TestCase
 			'stage' => 'job',
 			'status' => 'failure',
 			'message' => '投保年資不足',
-			'rejected_message' => '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。'
+			'rejected_message' => $this->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED
 		];
 		$certificationModel = $this->getMockBuilder('user_model')
 								   ->disableOriginalConstructor()

@@ -37,8 +37,8 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 				[
 					"stage" => "time_matches",
 					"status" => "failure",
-					"message" => "起始日非空白",
-					"rejected_message" => "勞保異動明細非歷年"
+					"message" => ["起始日非空白", "勞保異動明細非歷年"],
+					"rejected_message" => $this->labor_insurance_lib::REJECT_DUE_TO_REPORT_NOT_COMPLETE
 				]
 			]
 		];
@@ -217,7 +217,7 @@ class Labor_insurance_lib_partial_file1 extends TestCase
 					"stage" => "company",
 					"status" => "failure",
 					"message" => "不符合平台規範",
-					"rejected_message" => "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。",
+					"rejected_message" => $this->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED,
 				]
 			]
 		];

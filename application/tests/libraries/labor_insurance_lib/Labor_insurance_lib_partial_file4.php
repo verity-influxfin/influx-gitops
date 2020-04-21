@@ -27,14 +27,13 @@ class Labor_insurance_lib_partial_file4 extends TestCase
                     "stage" => "company",
                     "status" => "failure",
                     "message" => "不符合平台規範",
-                    "rejected_message" => "經平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。"
+                    "rejected_message" => $this->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED
                 ]
             ]
         ];
         $result = ["status" => "pending", "messages" => []];
 
         $this->labor_insurance_lib->processMostRecentCompanyName(42775, $this->rows, $result);
-
         $this->assertEquals($expectedResult, $result);
     }
 
