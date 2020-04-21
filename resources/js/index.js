@@ -1,4 +1,6 @@
-
+import schoolComponent from './component/schoolComponent.vue';
+import experienceComponent from './component/experienceComponent.vue';
+import joinComponent from './component/joinComponent.vue';
 
 export default {
     template: `
@@ -18,24 +20,7 @@ export default {
                     <p>解決社會大眾生活急需</p>
                 </div>
             </div>
-            <div class="experience-wrapper">
-                <h2>用戶心得分享</h2>
-                <div class="experience-slick" ref="experience_slick" data-aos="zoom-in">
-                    <div v-for="item in userFeedback" class="slick-item">
-                        <div class="slick-title">
-                            <img :src="item.imageSrc">
-                            <div>
-                                <p>{{item.name}}</p>
-                                <span>{{item.unit}}</span>
-                            </div>
-                        </div>
-                        <div class="slick-content">
-                            <div></div>
-                            <p>{{item.memo}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <experience ref="experience" title="用戶心得分享"></experience>
             <div class="service-items-wrapper" data-aos="flip-left" data-aos-duration="1000">
                 <div class="service-slick" ref="service_slick">
                     <div v-for="item in services" class="slick-item">
@@ -90,21 +75,7 @@ export default {
                     </div>
                 </div>
             </div>
-            <div class="share-wrapper">
-                <h2>普匯生活分享</h2>
-                <div class="share-content" data-aos="fade-left">
-                    <div v-for="item in eventShare" class="content-row">
-                        <iframe :src="item.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <div>
-                            <p>【普匯小學堂】</p>
-                            <p>{{item.title}}</p>
-                            <br>
-                            <span>{{item.detail}}</span><br>
-                            <a :href="item.link" class="btn btn-danger">閱讀更多</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <school ref="school" title="普匯生活分享"></school>
             <div class="news-wrapper">
                 <h2>普匯最新消息</h2>
                 <div class="news-slick" ref="news_slick">
@@ -116,17 +87,14 @@ export default {
                     </div>
                 </div>
             </div>
-            <div class="join-wrapper">
-                <img src="./image/child_banner.jpg">
-                <h2>準備好完成夢想了嗎？</h2>
-                <p>加入普匯完成你的目標吧！</p>
-                <div class="btn-wrapper">
-                    <a class="btn btn-loan" href="https://event.influxfin.com/R/url?p=webbanner" target="_blank">立即借款</a>
-                    <a class="btn btn-invest" href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank">立即投資</a>
-                <div>
-            </div>
+            <join href="./image/child_banner.jpg" :isShowAll="true"></join>
         </div>
     `,
+    components:{
+        'school':schoolComponent,
+        'experience':experienceComponent,
+        'join':joinComponent
+    },
     data:() => ({
         description : '普匯．你的手機ATM',
         timeLineMax:'',
@@ -135,39 +103,6 @@ export default {
             {"imageSrc":"./image/dossal2.png"},
             {"imageSrc":"./image/dossal3.png"},
             {"imageSrc":"./image/dossal4.png"}
-        ],
-        userFeedback:[
-            {
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            },{
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            },{
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            },{
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            },{
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            },{
-                'name':'羅同學',
-                'unit':'國立台灣大學',
-                'memo':'為了睡覺',
-                'imageSrc':'./image/message_icon.png'
-            }
         ],
         cases:[
             {
@@ -191,29 +126,6 @@ export default {
                 "imageSrc":"https://www.influxfin.com/wp-content/uploads/2020/04/小學堂.jpg",
                 "link":"#"
             }
-        ],
-        eventShare:[
-            {
-                'title':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },
         ],
         news:[
             {
@@ -288,6 +200,9 @@ export default {
         this.typing();
         this.interval();
         this.createSlick();
+        $(this.$refs.school.$refs.share_content).attr('data-aos','fade-left');
+        $(this.$refs.experience.$refs.experience_slick).attr('data-aos','zoom-in');
+        AOS.init();
     },
     methods:{
         typing(){
@@ -310,29 +225,6 @@ export default {
             $(this.$refs.service_slick).slick({
                 infinite: true,
                 slidesToShow: 6,
-                slidesToScroll: 1,
-                autoplay: true,
-                dots:true,
-                dotsClass:'slick-custom-dots',
-                customPaging(slider, i) {
-                    return '<i class="fas fa-circle"></i>';
-                },
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
-                responsive: [
-                  {
-                    breakpoint: 767,
-                    settings: {
-                      slidesToShow: 1,
-                      slidesToScroll: 1
-                    }
-                  }
-                ]
-            });
-
-            $(this.$refs.experience_slick).slick({
-                infinite: true,
-                slidesToShow: 4,
                 slidesToScroll: 1,
                 autoplay: true,
                 dots:true,

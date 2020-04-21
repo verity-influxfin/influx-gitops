@@ -1,15 +1,16 @@
 import index from "./index.js";
+import collegeLoan from "./collegeLoan.js";
 
 $(function(){
-    const timeLineMax = new TimelineMax({paused: true, reversed: true});
+    const timeLineMax = new TimelineMax({paused: true, reversed: true}); 
 
     const router = new VueRouter({
         'routes':[
-            { path: '/index', component:index},
-            { path: '/collegeLoan', component: { template: '<div>collegeLoan</div>' } },
-            { path: '/FreshGraduateLoan', component: { template: '<div>FreshGraduateLoan</div>' } },
-            { path: '/MobileLoan', component: { template: '<div>Mobile Loan</div>' } },
-            { path: '/EngineerLoan', component: { template: '<div>EngineerLoan</div>' } },
+            { path: '/index', component:index },
+            { path: '/collegeLoan', component: collegeLoan },
+            { path: '/freshGraduateLoan', component: { template: '<div>FreshGraduateLoan</div>' } },
+            { path: '/mobileLoan', component: { template: '<div>Mobile Loan</div>' } },
+            { path: '/engineerLoan', component: { template: '<div>EngineerLoan</div>' } },
             { path: '/invest', component: { template: '<div>invest</div>' } },
             { path: '/transfer', component: { template: '<div>transfer</div>' } },
             { path: '/company', component: { template: '<div>company</div>' } },
@@ -31,9 +32,9 @@ $(function(){
                 {
                     'title':'我要借款',
                     'subMenu':[
-                        {'name':'上班族貸款','href':'/FreshGraduateLoan','isActive':true},
-                        {'name':'學生貸款','href':'/CollegeLoan','isActive':true},
-                        {'name':'資訊工程師專案','href':'/EngineerLoan','isActive':true},
+                        {'name':'上班族貸款','href':'/freshGraduateLoan','isActive':true},
+                        {'name':'學生貸款','href':'/collegeLoan','isActive':true},
+                        {'name':'資訊工程師專案','href':'/engineerLoan','isActive':true},
                         {'name':'外匯車貸','href':'','isActive':false},
                         {'name':'新創企業主貸','href':'','isActive':false}
                     ]
@@ -48,7 +49,7 @@ $(function(){
                 {
                     'title':'分期付款超市',
                     'subMenu':[
-                        {'name':'手機分期','href':'/MobileLoan','isActive':true}
+                        {'name':'手機分期','href':'/mobileLoan','isActive':true}
                     ]
                 },
                 {
