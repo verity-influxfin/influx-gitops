@@ -571,14 +571,21 @@ class Certification_lib{
 					case 'failure':
 						$status = 2;
 						$content=json_decode($info->content,true);
-						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
+                        $rejectMessage = $this->CI->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
+                        foreach ($res["messages"] as $message) {
+                            if (isset($message['rejected_message'])) {
+                                $rejectMessage = $message['rejected_message'];
+                                break;
+                            }
+                        }
+
 						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status, 
+							'status' => $status,
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
-						$this->set_failed($info->id, '經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。', true);
+						$this->set_failed($info->id, $rejectMessage, true);
 						break;
 				}
 				return true;
@@ -1377,7 +1384,7 @@ class Certification_lib{
         }
         return $list;
     }
-  
+
     public function veify_signing_face($user_id, $url = false)
     {
         if ($url) {
