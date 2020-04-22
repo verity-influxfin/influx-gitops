@@ -354,6 +354,7 @@ class Cron extends CI_Controller {
         $current = new stdClass(); 
         $current->status = 'no_data';
         $current->offset = '0';
+        $current->updated_at = date('Y-m-d H:i:s');
 
         file_put_contents('reScraper.txt', json_encode($current));
       }
@@ -365,19 +366,25 @@ class Cron extends CI_Controller {
       $this->load->model('user/user_model');
       $meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], $current->offset, 1);
 
-      if(! empty($meta)){
-        $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
-        $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
-        $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
+      $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
+      $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
+      $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
+      $worker_time = isset($scraper_response['response']['updatedAt'])?date('Y-m-d H:i:s',strtotime('-2 hours', $scraper_response['response']['updatedAt'])):'';
 
-        if($scraper_response['status'] =='204'){
-          $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->id);
+      if($current->status == '爬蟲執行完成' || (isset($worker_time) && $current->updated_at < $worker_time) || (isset($scraper_response['status']) && $scraper_response['status']=='204') ){
+        if($current->status == '爬蟲執行完成' || (isset($worker_time) && $current->updated_at < $worker_time)){
+          $current->offset++;
         }
-        $current->offset++;
-        $current->status = 'no_data';
 
-      }else{
-        $current->status = '全部完成';
+        $meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], $current->offset, 1);
+
+        if(! empty($meta)){
+          $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->id);
+          $current->status = 'no_data';
+        }else{
+          $current->status = '全部完成';
+        }
+
       }
 
       $current->updated_at = date('Y-m-d H:i:s');
