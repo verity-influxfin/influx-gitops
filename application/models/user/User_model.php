@@ -90,8 +90,26 @@ class User_model extends MY_Model
 
 		$this->db->limit($limit, $offset);
 
-		$query = $this->db->get();
+			$query = $this->db->get();
 
-		return $query->result();
-	}
+			return $query->result();
+		}
+
+		public function getUsersBy($criteria, $column_not_null=[], $offset = 0, $limit = 1){
+			$this->db->select('*')
+					 ->from('p2p_user.users as user');
+			 if (isset($criteria['certification_id'])) {
+						 $this->db->join('p2p_user.user_certification as certification', 'user.id = certification.user_id')
+						 ->where('certification.certification_id', $criteria['certification_id'])
+						 ->where('certification.status =', 1);
+				}
+				if(! empty($column_not_null)){
+					foreach($column_not_null as $value){
+						$this->db->where('user.'.$value.' != ', '');
+					}
+				}
+				$this->db->limit($limit, $offset);
+				$query = $this->db->get();
+			return $query->result();
+		}
 }
