@@ -9,7 +9,7 @@ class Judicial_yuan_lib
         $judicialYuanServerPort = '9998';
         $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
         if(isset($params['ip'])){
-          $this->scraperUrl = "http://:{$params['ip']}/scraper/api/v1.0/";
+          $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
         }
     }
 
