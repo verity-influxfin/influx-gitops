@@ -370,7 +370,7 @@ class Cron extends CI_Controller {
         $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
         $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
 
-        if($scraper_response['statusCode'] =='204'){
+        if($scraper_response['status'] =='204'){
           $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->id);
         }
         $current->offset++;
