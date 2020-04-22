@@ -337,5 +337,52 @@ class Cron extends CI_Controller {
         $this->load->library('Notification_lib');
         $this->notification_lib->notice_msg($user_id, $title, $content, $investor, $type);
     }
+    public function rescraper_file(){
+
+  		if(! file_exists('reScraper.txt')){
+  			fopen("reScraper.txt", "w");
+  		}
+      $current = json_decode(file_get_contents('reScraper.txt'));
+
+      if(!$current || ! isset($current->name) || ! isset($current->status) || ! isset($current->id_card_place) || ! isset($current->updated_at) || ! isset($current->id) ){
+       $this->load->model('user/user_model');
+    		$meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], 0, 1);
+        $current->status = 'no_data';
+        $current->id = $meta['0']->id;
+        $current->name = $meta['0']->name;
+        $current->id_card_place = $meta['0']->id_card_place;
+        $current->updated_at = 'no_data';
+        $current->count = '0';
+        $current->offset = '0';
+      }
+
+      if( $current->status != '爬蟲執行完成' && $current->count < '2'){
+        $this->load->library('scraper/judicial_yuan_lib.php');
+        $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($current->id);
+        $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
+        $current->updatedAt = isset($scraper_response['response']['updatedAt'])?$scraper_response['response']['updatedAt']:'no_data';
+
+        if($scraper_response['status'] !='爬蟲執行完成'){
+          $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($current->name, $current->id_card_place, $current->id);
+          $current->count += '1';
+        }
+      }
+
+      if( $current->status == '爬蟲執行完成' || $current->count >= '2'){
+        $current->offset += '1';
+        $current->status = 'no_data';
+        $current->updatedAt = 'no_data';
+        $current->count = '0';
+      }
+
+      $this->load->model('user/user_model');
+      $meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], $current->offset, 1);
+      $current->id = $meta['0']->id;
+      $current->name = $meta['0']->name;
+      $current->id_card_place = $meta['0']->id_card_place;
+
+      file_put_contents('reScraper.txt', json_encode($current));
+      echo'ok';
+  	}
 }
 
