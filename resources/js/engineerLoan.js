@@ -8,7 +8,7 @@ export default {
     template:`
         <div class="engineer-wrapper">
             <banner :data="this.getBannerData()"  :isShowLoan="true"></banner>
-            <div class="engineer-slick" ref="engineer_slick">
+            <div class="engineer-slick" ref="engineer_slick" data-aos="zoom-in">
                 <div v-for="item in dossales" class="slick-item">
                     <img :src="item.imageSrc" class="img-fluid">
                 </div>

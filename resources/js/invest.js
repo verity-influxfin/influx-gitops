@@ -1,4 +1,3 @@
-
 import bannerComponent from './component/bannerComponent.vue';
 import joinComponent from './component/joinComponent.vue';
 import qaComponent from './component/qaComponent.vue';
@@ -8,7 +7,7 @@ export default {
     template:`
         <div class="invest-wrapper">
             <banner :data="this.getBannerData()" :isShowInvest="true"></banner>
-            <div class="compare-wrapper">
+            <div class="compare-wrapper" data-aos="zoom-in">
                 <img src="./image/invest_web.png" class="img-fluid desktop">
                 <div class="invest-slick mobile" ref="invest_slick">
                     <div v-for="imgSrc in this.investCategory" class="slick-item">
