@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="loan-footer">
-            <p>{{this.$props.data.description}}</p>
+            <p v-html="this.$props.data.description"></p>
         </div>
     </div>
 </template>

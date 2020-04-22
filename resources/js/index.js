@@ -1,4 +1,4 @@
-import schoolComponent from './component/schoolComponent.vue';
+import videoShareComponent from './component/videoShareComponent.vue';
 import experienceComponent from './component/experienceComponent.vue';
 import joinComponent from './component/joinComponent.vue';
 
@@ -75,7 +75,7 @@ export default {
                     </div>
                 </div>
             </div>
-            <school ref="school" title="普匯生活分享"></school>
+            <videoShare ref="videoShare" title="普匯生活分享" :data="this.videoData"></videoShare>
             <div class="news-wrapper">
                 <h2>普匯最新消息</h2>
                 <div class="news-slick" ref="news_slick">
@@ -91,13 +91,40 @@ export default {
         </div>
     `,
     components:{
-        'school':schoolComponent,
+        'videoShare':videoShareComponent,
         'experience':experienceComponent,
         'join':joinComponent
     },
     data:() => ({
         description : '普匯．你的手機ATM',
         timeLineMax:'',
+        videoData:[
+            {
+                'title':"【普匯小學堂】",
+                'subTitle':'普匯公司介紹',
+                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                'href':'#'
+            },{
+                'title':"【普匯小學堂】",
+                'subTitle':'普匯公司介紹',
+                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                'href':'#'
+            },{
+                'title':"【普匯小學堂】",
+                'subTitle':'普匯公司介紹',
+                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                'href':'#'
+            },{
+                'title':"【普匯小學堂】",
+                'subTitle':'普匯公司介紹',
+                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                'href':'#'
+            },
+        ],
         dossales:[
             {"imageSrc":"./image/dossal1.png"},
             {"imageSrc":"./image/dossal2.png"},
@@ -195,12 +222,13 @@ export default {
         },
     },
     created(){
+        console.log('index');
     },
     mounted(){
         this.typing();
         this.interval();
         this.createSlick();
-        $(this.$refs.school.$refs.share_content).attr('data-aos','fade-left');
+        $(this.$refs.videoShare.$refs.share_content).attr('data-aos','fade-left');
         $(this.$refs.experience.$refs.experience_slick).attr('data-aos','zoom-in');
         AOS.init();
     },
