@@ -4,6 +4,7 @@ import freshGraduateLoan from "./freshGraduateLoan.js";
 import engineerLoan from "./engineerLoan.js";
 import invest from "./invest.js";
 import transfer from "./transfer.js";
+import mobileLoan from "./mobileLoan.js";
 
 $(function(){
     const timeLineMax = new TimelineMax({paused: true, reversed: true}); 
@@ -13,7 +14,7 @@ $(function(){
             { path: '/index', component:index },
             { path: '/collegeLoan', component: collegeLoan },
             { path: '/freshGraduateLoan', component: freshGraduateLoan },
-            { path: '/mobileLoan', component: { template: '<div>Mobile Loan</div>' } },
+            { path: '/mobileLoan', component: mobileLoan },
             { path: '/engineerLoan', component: engineerLoan },
             { path: '/invest', component: invest },
             { path: '/transfer', component: transfer },
@@ -25,7 +26,7 @@ $(function(){
         ]
     });
     
-    router.replace({path:'/transfer'});
+    router.replace({path:'/mobileLoan'});
 
     const vue = new Vue({
         el:'#web_index',
