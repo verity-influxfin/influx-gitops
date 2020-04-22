@@ -1,13 +1,13 @@
 <template>
     <div class="qa-wrapper">
-        <h2>常見問題</h2>
-        <div class="qa-accordion" id="qa_content">
+        <h2>{{this.$props.title}}</h2>
+        <div class="qa-accordion" :id="'qa_content' + (category ? category:'' )">
             <div class="card" v-for="(item,index) in this.$props.data" :key="index">
-                <div class="card-header" data-toggle="collapse" :data-target="'#collapse'+index" aria-expanded="true">
+                <div class="card-header" data-toggle="collapse" :data-target="'#collapse' + (category ? category:'' ) + index" aria-expanded="true">
                     <span class="accicon"><i class="fas fa-angle-down rotate-icon"></i></span>
                     <span class="title">Q{{index+1}}：{{item.title}}</span>
                 </div>
-                <div :id="'collapse'+index" class="collapse" data-parent="#qa_content">
+                <div :id="'collapse' + (category ? category:'' ) + index" class="collapse" :data-parent="'#qa_content' + (category ? category:'' )">
                     <div class="card-body">
                         <div>A{{index+1}}：<br><p v-html="item.content"></p></div>
                         <img v-for="(src,index) in item.imgSrc" :src="src" :key="index" :width="1/item.imgSrc.length*75+'%'">
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="qa-link">
+        <div v-if="!this.$props.hideLink" class="qa-link">
             <router-link class="btn btn-primary" to="/qa">更多詳細問題請參考Q&A</router-link>
         </div>
     </div>
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-    props:['filter','data']
+    props:['filter','data','title','hideLink','category']
 }
 </script>
 

@@ -16,7 +16,7 @@ export default {
                 </div>
             </div>
             <join href="./image/child_banner.jpg" :isShowInvest="true"  subTitle="加入普匯完成你的財富目標吧！"></join>
-            <qa :data="this.getQaData()"></qa>
+            <qa :data="this.getQaData()" title="常見問題"></qa>
             <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.getVideoData()"></videoShare>
         </div>
     `,

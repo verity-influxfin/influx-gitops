@@ -25,7 +25,7 @@ export default {
                     </div>
                 </div>
             </div>
-            <qa :data="this.getQaData()"></qa>
+            <qa :data="this.getQaData()" title="常見問題"></qa>
             <div class="transfer-footer">
                 <h2>投資理財大補帖</h2>
                 <div class="info-slick" ref="info_slick" data-aos="flip-down">

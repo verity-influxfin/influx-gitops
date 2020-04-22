@@ -14,7 +14,7 @@ export default {
             </div>
             <applyDescribe :data="this.getApplydata()" ref="apply"></applyDescribe>
             <join href="./image/child_banner.jpg" :isShowLoan="true"></join>
-            <qa :data="this.getQaData()"></qa>
+            <qa :data="this.getQaData()" title="常見問題"></qa>
             <videoShare ref="videoShare" title="借款人怎麼說？" :data="this.videoData"></videoShare>
         </div>
     `,
