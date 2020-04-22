@@ -3,11 +3,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Judicial_yuan_lib
 {
-    function __construct()
+    function __construct($params=[])
     {
         $this->CI = &get_instance();
         $judicialYuanServerPort = '9998';
         $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/";
+        if(isset($params['ip'])){
+          $this->scraperUrl = "http://:{$params['ip']}/scraper/api/v1.0/";
+        }
     }
 
     public function mappingAddressAndScraperAddress($address)
