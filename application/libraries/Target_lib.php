@@ -836,6 +836,7 @@ class Target_lib
             'delay_interest' => 0,//應收延滯息
             'delay_occurred_at' => 0,
             'delay_principal_return_at' => 0,//逾期清償發生時間
+            'delay_interest_return_at' => 0,
             'days' => 0,//本期天數
             'damage' => 0,//違約金,
             'prepayment_allowance' => 0,//提前補償
@@ -882,7 +883,13 @@ class Target_lib
                 continue;
             }
             $smallestInstalment = $i;
+            if (!isset($overdueAmortizationRows[$i-1])) {
+                continue;
+            }
+            $overdueAmortizationRows[$i] = $this->init_amortization_row($i, '');
+            $overdueAmortizationRows[$i]['repayment_date'] = $this->CI->payment_time_utility->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
         }
+
         $mongthDiff += $i;
         for ($i = 1; $i <= $mongthDiff; $i++) {
             if (isset($overdueAmortizationRows[$i])) {
@@ -892,9 +899,8 @@ class Target_lib
                 if (!isset($overdueAmortizationRows[$i-1])) {
                     continue;
                 }
-                $row = $this->init_amortization_row($i, '');
-                $row['repayment_date'] = $this->CI->payment_time_utility->goToNext($overdueAmortizationRows[$i-1]['repayment_date'], true);
             }
+
             if ($overdueStartedAt == $i) {
                 $remainingPrincipal = $row['principal'] - $row['r_principal'];
                 $remainingInterest = $row['interest'];
@@ -908,11 +914,34 @@ class Target_lib
                 $delayDays = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']);
                 $delayInterest = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDays);
                 $row['delay_interest'] = $delayInterest + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
+
                 if ($row['r_interest'] > 0) {
                     $remainingInterest = $row['interest'] - $row['r_interest'];
                 }
                 $overdueAmortizationRows[$i] = $row;
                 if ($row['r_principal'] > 0) {
+                    if ($row['delay_principal_return_at']) {
+                        $repaymentDiffFromNow = $this->CI->payment_time_utility->measureMonthGaps($overdueAmortizationRows[$i]["repayment_date"], $row['delay_principal_return_at']);
+                        if ($repaymentDiffFromNow > 1) {
+                            $futureInstalment = $repaymentDiffFromNow + $i - 1;
+                            $row['instalment'] = $futureInstalment;
+                            $originalRepaymentDate = $overdueAmortizationRows[$futureInstalment]['repayment_date'];
+                            $overdueAmortizationRows[$futureInstalment] = $row;
+                            $overdueAmortizationRows[$futureInstalment]['repayment_date'] = $originalRepaymentDate;
+                            $overdueAmortizationRows[$i]['delay_interest'] = 0;
+                            $overdueAmortizationRows[$i]['damage'] = 0;
+                            $overdueAmortizationRows[$i]['r_fees'] = 0;
+                            $overdueAmortizationRows[$i]['r_interest'] = 0;
+                            $overdueAmortizationRows[$i]['r_damage'] = 0;
+                            $overdueAmortizationRows[$i]['r_principal'] = 0;
+                            $overdueAmortizationRows[$i]['r_delayinterest'] = 0;
+                            $delayDaysBeforeReturn = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overdueAmortizationRows[$i]['repayment_date']);
+                            $delayInterestAfterReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysBeforeReturn);
+                            $overdueAmortizationRows[$i]['delay_interest'] = $delayInterestAfterReturn;
+                            continue;
+                        }
+                    }
+
                     $overduePrincipalReturnAt = $row['delay_principal_return_at'];
                     $delayDaysBeforeReturn = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overduePrincipalReturnAt);
                     $delayInterestBeforeReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysBeforeReturn);
@@ -922,7 +951,11 @@ class Target_lib
                     $delayDaysAfterReturn = get_range_days($overduePrincipalReturnAt, $row['repayment_date']);
                     $delayInterestAfterReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysAfterReturn);
 
-                    $overdueAmortizationRows[$i]['delay_interest'] = $delayInterestBeforeReturn + $delayInterestAfterReturn + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
+                    if ($overdueAmortizationRows[$i]['principal'] - $overdueAmortizationRows[$i]['r_principal'] == 0) {
+                        $overdueAmortizationRows[$i]['delay_interest'] = $overdueAmortizationRows[$i]['r_delayinterest'];
+                    } else {
+                        $overdueAmortizationRows[$i]['delay_interest'] = $delayInterestBeforeReturn + $delayInterestAfterReturn + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
+                    }
                 }
                 if ($row['r_damages'] > 0) {
                     $remainingPrincipal = $row['damage'] - $row['r_damages'];
@@ -1033,7 +1066,7 @@ class Target_lib
             }
             if (!isset($rows[$currentInstalment])) continue;
             if ($source == SOURCE_PRINCIPAL) {
-                if ($overdueAt && $overdueStartedAt <= $currentInstalment && substr($value->entering_date, -2) != '10') {
+                if ($overdueAt && $overdueStartedAt <= $currentInstalment) {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
                         $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
@@ -1046,7 +1079,7 @@ class Target_lib
                     $rows[$currentInstalment]['repayment'] += $value->amount;
                 }
             }elseif ($source == SOURCE_INTEREST) {
-                if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                if ($overdueAt) {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
                         $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
@@ -1068,11 +1101,12 @@ class Target_lib
                     $rows[$currentInstalment]['r_fees'] += $value->amount;
                 }
             }elseif ($source == SOURCE_DELAYINTEREST){
-                if ($overdueAt && substr($value->entering_date, -2) != '10') {
+                if ($overdueAt) {
                     $nextInstalment = $currentInstalment+1;
                     if (!isset($rows[$nextInstalment])) {
                         $rows[$nextInstalment] = $this->init_amortization_row($nextInstalment, $this->CI->payment_time_utility->goToNext($value->entering_date));
                     }
+                    $rows[$nextInstalment]['delay_interest_return_at'] = $value->entering_date;
                     $rows[$nextInstalment]['r_delayinterest'] += $value->amount;
                     $rows[$nextInstalment]['repayment'] += $value->amount;
                 } else {
