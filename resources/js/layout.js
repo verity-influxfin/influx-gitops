@@ -1,6 +1,7 @@
 import index from "./index.js";
 import collegeLoan from "./collegeLoan.js";
 import freshGraduateLoan from "./freshGraduateLoan.js";
+import engineerLoan from "./engineerLoan.js";
 
 $(function(){
     const timeLineMax = new TimelineMax({paused: true, reversed: true}); 
@@ -11,7 +12,7 @@ $(function(){
             { path: '/collegeLoan', component: collegeLoan },
             { path: '/freshGraduateLoan', component: freshGraduateLoan },
             { path: '/mobileLoan', component: { template: '<div>Mobile Loan</div>' } },
-            { path: '/engineerLoan', component: { template: '<div>EngineerLoan</div>' } },
+            { path: '/engineerLoan', component: engineerLoan },
             { path: '/invest', component: { template: '<div>invest</div>' } },
             { path: '/transfer', component: { template: '<div>transfer</div>' } },
             { path: '/company', component: { template: '<div>company</div>' } },

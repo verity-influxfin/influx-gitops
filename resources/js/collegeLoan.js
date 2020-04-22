@@ -7,7 +7,7 @@ import qaComponent from './component/qaComponent.vue';
 
 export default {
     template:`
-        <div>
+        <div class="college-wrapper">
             <banner :data="this.getBannerData()"></banner>
             <experience ref="experience" title="聽聽大家怎麼說"></experience>
             <applyDescribe :data="this.getApplydata()" ref="apply"></applyDescribe>

@@ -10,7 +10,7 @@
                 <div v-for="(item,index) in this.$props.data.requiredDocuments" class="slick-item" :key="index">
                     <img :src="item.imgSrc">
                     <p>{{item.text}}</p>
-                    <div v-if="item.memo">{{item.memo}}</div>
+                    <div v-if="item.memo" v-html="item.memo"></div>
                 </div>    
             </div>
         </div>

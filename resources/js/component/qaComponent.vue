@@ -10,7 +10,7 @@
                 <div :id="'collapse'+index" class="collapse" data-parent="#qa_content">
                     <div class="card-body">
                         <div>A{{index+1}}：<br><p v-html="item.content"></p></div>
-                        <img v-for="(src,index) in item.imgSrc" :src="src" :key="index" class="img-fluid">
+                        <img v-for="(src,index) in item.imgSrc" :src="src" :key="index" :width="1/item.imgSrc.length*75+'%'">
                     </div>
                 </div>
             </div>

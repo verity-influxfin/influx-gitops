@@ -79,7 +79,7 @@ export default {
                 padding: 10px 25px;
                 color:#ffffff;
                 opacity: 0.8;
-                width: 100%;
+                width: 200px;
                 background-color: #ffeb01;
                 font-size: 19px;
 
