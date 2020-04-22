@@ -1,6 +1,6 @@
 <template>
     <div class="share-wrapper">
-        <h2>{{this.$props.title}}</h2>
+        <h2 v-html="this.$props.title"></h2>
         <div class="share-content" ref="share_content">
             <div v-for="(item,index) in this.$props.data" class="content-row" :key="index">
                 <iframe :src="item.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -7,7 +7,7 @@ import qaComponent from './component/qaComponent.vue';
 export default {
     template:`
         <div class="freshGraduate-wrapper">
-            <banner :data="this.getBannerData()"></banner>
+            <banner :data="this.getBannerData()"  :isShowLoan="true"></banner>
             <div class="img-wrapper">
                 <img src="./image/worker_web.jpg" class="img-fluid desktop">
                 <img src="./image/worker_mobile.jpg" class="img-fluid mobile">

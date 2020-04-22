@@ -8,7 +8,8 @@
             <img :src="this.$props.data.bannerHref">
             <div class="banner-content">
                 <p v-for="(text,index) in this.$props.data.info" :key="index">{{text}}</p>
-                <a class="btn btn-loan" href="https://event.influxfin.com/R/url?p=webbanner" target="_blank">{{this.$props.data.btnText}}</a>
+                <a v-if="this.$props.isShowLoan" class="btn btn-loan" href="https://event.influxfin.com/R/url?p=webbanner" target="_blank">{{this.$props.data.btnText}}</a>
+                <a v-if="this.$props.isShowInvest" class="btn btn-loan" href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank">{{this.$props.data.btnText}}</a>
             </div>
         </div>
         <div class="loan-footer">
@@ -19,7 +20,7 @@
 
 <script>
 export default {
-    props:['data']
+    props:['data','isShowLoan','isShowInvest']
 }
 </script>
 

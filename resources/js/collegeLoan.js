@@ -8,12 +8,12 @@ import qaComponent from './component/qaComponent.vue';
 export default {
     template:`
         <div class="college-wrapper">
-            <banner :data="this.getBannerData()"></banner>
+            <banner :data="this.getBannerData()" :isShowLoan="true"></banner>
             <experience ref="experience" title="聽聽大家怎麼說"></experience>
             <applyDescribe :data="this.getApplydata()" ref="apply"></applyDescribe>
-            <join href="./image/child_banner.jpg" :isShowLoan="true"></join>
+            <join href="./image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的目標吧！"></join>
             <qa :data="this.getQaData()"></qa>
-            <videoShare ref="videoShare" title="Follow普匯小學堂<br>增進科普金融知識" :data="this.videoData"></videoShare>
+            <videoShare ref="videoShare" title="Follow普匯小學堂<br>增進科普金融知識" :data="this.getVideoData()"></videoShare>
         </div>
     `,
     components:{
@@ -24,35 +24,6 @@ export default {
         'applyDescribe':applyDescribeComponent,
         'qa':qaComponent
     },
-    data:()=>({
-        videoData:[
-            {
-                'title':"【普匯小學堂】",
-                'subTitle':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':"【普匯小學堂】",
-                'subTitle':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':"【普匯小學堂】",
-                'subTitle':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },{
-                'title':"【普匯小學堂】",
-                'subTitle':'普匯公司介紹',
-                'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
-                'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
-                'href':'#'
-            },
-        ],
-    }),
     created(){
         console.log('college');
     },
@@ -116,6 +87,35 @@ export default {
                     title:'非中華民國國民或境外學校可以申請嗎？',
                     content:'目前尚未開放非中華民國國民及境外學校學生申請。',
                     imgSrc:[]
+                },
+            ]
+        ),
+        getVideoData:()=>(
+            [
+                {
+                    'title':"【普匯小學堂】",
+                    'subTitle':'普匯公司介紹',
+                    'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                    'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                    'href':'#'
+                },{
+                    'title':"【普匯小學堂】",
+                    'subTitle':'普匯公司介紹',
+                    'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                    'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                    'href':'#'
+                },{
+                    'title':"【普匯小學堂】",
+                    'subTitle':'普匯公司介紹',
+                    'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                    'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                    'href':'#'
+                },{
+                    'title':"【普匯小學堂】",
+                    'subTitle':'普匯公司介紹',
+                    'detail':'這回就讓我們帶您一起來了解普匯到底在做什麼吧!!',
+                    'videoLink':'https://www.youtube.com/embed/sTqyd5mkjdI',
+                    'href':'#'
                 },
             ]
         )

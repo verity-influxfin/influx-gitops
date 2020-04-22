@@ -7,7 +7,7 @@ import qaComponent from './component/qaComponent.vue';
 export default {
     template:`
         <div class="engineer-wrapper">
-            <banner :data="this.getBannerData()"></banner>
+            <banner :data="this.getBannerData()"  :isShowLoan="true"></banner>
             <div class="engineer-slick" ref="engineer_slick">
                 <div v-for="item in dossales" class="slick-item">
                     <img :src="item.imageSrc" class="img-fluid">
@@ -31,34 +31,7 @@ export default {
             {"imageSrc":"./image/engineer_slick2.png"},
             {"imageSrc":"./image/dossal3.png"},
             {"imageSrc":"./image/dossal4.png"}
-        ],
-        videoData:[
-            {
-                'title':"【借款人專訪】",
-                'subTitle':'公部門　陳先生',
-                'detail':'整個貸款辦理過程都很快速，對於整個流程都很滿意。',
-                'videoLink':'https://www.youtube.com/embed/VTJB7c1fS-4',
-                'href':'#'
-            },{
-                'title':"【借款人專訪】",
-                'subTitle':'公部門　陳先生',
-                'detail':'整個貸款辦理過程都很快速，對於整個流程都很滿意。',
-                'videoLink':'https://www.youtube.com/embed/VTJB7c1fS-4',
-                'href':'#'
-            },{
-                'title':"【借款人專訪】",
-                'subTitle':'公部門　陳先生',
-                'detail':'整個貸款辦理過程都很快速，對於整個流程都很滿意。',
-                'videoLink':'https://www.youtube.com/embed/VTJB7c1fS-4',
-                'href':'#'
-            },{
-                'title':"【借款人專訪】",
-                'subTitle':'公部門　陳先生',
-                'detail':'整個貸款辦理過程都很快速，對於整個流程都很滿意。',
-                'videoLink':'https://www.youtube.com/embed/VTJB7c1fS-4',
-                'href':'#'
-            },
-        ],
+        ]
     }),
     created(){
         console.log('engineerLoan');
