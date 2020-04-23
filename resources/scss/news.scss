@@ -1,0 +1,41 @@
+.news-page-wrapper{
+    padding: 30px;
+    overflow: auto;
+
+    h1{
+        font-weight: bolder;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .news-content{
+        width: 75%;
+        overflow: auto;
+        margin: 0px auto;
+
+        .card{
+            margin: 10px;
+            width: 48%;
+            padding: 20px;
+            float: left;
+        }
+
+        .gray{
+            color:#9a9a9a
+        }
+
+        .btn-info{
+            width: fit-content;
+        }
+    }
+
+    @media (max-width:767px) {
+        .news-content{
+            width: 100%;
+
+            .card{
+                width: 96%;
+            }
+        }
+    }
+}

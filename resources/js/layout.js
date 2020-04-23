@@ -7,6 +7,7 @@ import transfer from "./transfer.js";
 import mobileLoan from "./mobileLoan.js";
 import qa from "./qa.js";
 import company from "./company.js";
+import news from "./news.js";
 
 $(function(){
     const timeLineMax = new TimelineMax({paused: true, reversed: true}); 
@@ -21,14 +22,14 @@ $(function(){
             { path: '/invest', component: invest },
             { path: '/transfer', component: transfer },
             { path: '/company', component: company },
-            { path: '/news', component: { template: '<div>news</div>' } },
+            { path: '/news', component: news },
             { path: '/blog', component: { template: '<div>blog</div>' } },
             { path: '/vlog', component: { template: '<div>vlog</div>' } },
             { path: '/qa', component: qa },
         ]
     });
     
-    router.replace({path:'/company'});
+    router.replace({path:'/index'});
 
     const vue = new Vue({
         el:'#web_index',
