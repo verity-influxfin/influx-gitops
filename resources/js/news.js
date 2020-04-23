@@ -5,8 +5,8 @@ export default {
             <div class="news-content">
                 <div v-for="(item,index) in this.news" class="card" :key="index">
                     <img :src="item.imgSrc" class="img-fluid">
-                    <span></span>
-                    <p><span class="gray">Posted by </span>inFlux 普匯金融科技2020-04-01<span class="gray"> Comments:</span></p>
+                    <span>{{item.subTitle}}</span>
+                    <p><span class="gray">Posted by </span>{{item.author}}<span class="gray"> Comments:</span></p>
                     <p class="gray">{{item.content}}…</p>
                     <router-link class="btn btn-info" to="#">Read More</router-link>
                 </div>

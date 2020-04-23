@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="{{ asset('css/package/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/package/slick.css') }}">
         <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
 
         <!-- local -->
         <link rel="stylesheet" href="{{ asset('css/all.css') }}">
@@ -31,6 +32,7 @@
         <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
 
         <!-- local -->
         <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>

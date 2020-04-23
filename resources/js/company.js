@@ -208,6 +208,9 @@ export default {
             },
         ]
     }),
+    created(){
+        console.log('company');
+    },
     mounted() {
         this.createSlick();
         this.timeline();

@@ -71,6 +71,9 @@ export default {
             }]
         }
     }),
+    created(){
+        console.log('qa');
+    },
     methods:{
         getQaData(filter){
             return this.qaData[filter];
