@@ -65,7 +65,7 @@ export default {
         getBannerData:()=>({
             title:"債權投資",
             bgHref:"./image/child_banner.jpg",
-            bannerHref:"./image/engineer_loan_banner.png",
+            bannerHref:"./image/invest_banner.png",
             info:['小額分散','穩定報酬首選','1,000元開始投資','創造你的被動收入'],
             description:"年化報酬率5~20% 穩定獲利低風險",
             btnText:"立即投資"

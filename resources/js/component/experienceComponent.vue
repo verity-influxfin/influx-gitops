@@ -63,27 +63,27 @@
         methods:{
             createSlick(){
                  $(this.$refs.experience_slick).slick({
-                infinite: true,
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                autoplay: true,
-                dots:true,
-                dotsClass:'slick-custom-dots',
-                customPaging(slider, i) {
-                    return '<i class="fas fa-circle"></i>';
-                },
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
-                responsive: [
-                  {
-                    breakpoint: 767,
-                    settings: {
-                      slidesToShow: 1,
-                      slidesToScroll: 1
-                    }
-                  }
-                ]
-            });
+                    infinite: true,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    dots:true,
+                    dotsClass:'slick-custom-dots',
+                    customPaging(slider, i) {
+                        return '<i class="fas fa-circle"></i>';
+                    },
+                    prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
+                    nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
+                    responsive: [
+                        {
+                            breakpoint: 767,
+                            settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
             }
         }
     };

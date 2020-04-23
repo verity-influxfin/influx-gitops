@@ -1,6 +1,6 @@
 export default {
     template:`
-        <div class="mobile-warpper">
+        <div class="mobile-wrapper">
             <div class="mobile-header">
                 <div class="header-title">
                     <img src="./image/child_banner.jpg">
