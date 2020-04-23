@@ -1028,6 +1028,13 @@ class Target_lib
                 continue;
             }
 
+            if (
+                isset($normalAmortizationRows[$value->instalment_no])
+                || isset($overdueAmortizationRows[$value->instalment_no])
+            ) {
+                continue;
+            }
+
             if ($value->instalment_no && $value->source == SOURCE_AR_PRINCIPAL) {
                 $limitDate = $value->limit_date ? $value->limit_date : $limitDate;
                 $normalAmortizationRows[$value->instalment_no] = $this->init_amortization_row($value->instalment_no, $limitDate);
@@ -1040,6 +1047,66 @@ class Target_lib
         }
         if (!isset($overdueAmortizationRows[0])) {
             $overdueAmortizationRows[0] = $this->init_amortization_row(0, $limitDate);
+        }
+
+        $this->CI->load->model('loan/transfer_model');
+        $transferOut = $this->CI->transfer_model->get_by([
+            'status' => 10,
+            'investment_id' => $investment->id
+        ]);
+
+        //correct some prepayment instalment numbers as those are incorrect
+        if ($target->sub_status == 4 && !$transferOut) {
+            //prepayment is alwasy created in the end of the transaction
+            usort($transactions, function($a, $b) {
+                return strcmp($a->created_at, $b->created_at);
+            });
+
+            $toBeModified = [];
+            $lastOperation = end($transactions);
+            $lastModifiedAt = $lastOperation->created_at;
+            $numTransactions = count($transactions);
+            for ($i = $numTransactions - 1; $i >= 0; $i--) {
+                //random number that prepayment transaction should be created in very short amount of time
+                //as the creation not used the same varaible
+                if (abs($transactions[$i]->created_at - $lastModifiedAt) > 2) {
+                    break;
+                }
+                $toBeModified[$transactions[$i]->id] = $transactions[$i];
+            }
+
+            //take the latest instalment and associated transaction
+            $largestInstalmentNo = 0;
+            $trancWithlargetest = null;
+            for ($i = 0; $i < $numTransactions; $i++) {
+                if ($transactions[$i]->instalment_no <= $largestInstalmentNo) {
+                    continue;
+                }
+                $largestInstalmentNo = $transactions[$i]->instalment_no;
+                if ($transactions[$i]->limit_date) {
+                    $trancWithlargetest = $transactions[$i];
+                }
+            }
+
+            //modify the prepayment transaction instalment if it is incorrect
+            $lastLimitDate = null;
+            $correctInstalment = $largestInstalmentNo;
+            if ($lastOperation->instalment_no <= $largestInstalmentNo) {
+                for ($i = 0; $i < $numTransactions; $i++) {
+                    $transactionId = $transactions[$i]->id;
+                    if (!isset($toBeModified[$transactionId])) {
+                        continue;
+                    }
+                    if ($correctInstalment == $largestInstalmentNo && $trancWithlargetest->limit_date < $transactions[$i]->entering_date) {
+                        $correctInstalment = $largestInstalmentNo + 1;
+                    }
+                    $transactions[$i]->instalment_no = $correctInstalment;
+                    if ($transactions[$i]->limit_date) $lastLimitDate = $transactions[$i]->limit_date;
+                }
+            }
+            if ($correctInstalment > $largestInstalmentNo) {
+                $normalAmortizationRows[$largestInstalmentNo + 1] = $this->init_amortization_row($largestInstalmentNo+1, $lastLimitDate);
+            }
         }
 
         $amount = 0;
@@ -1166,6 +1233,7 @@ class Target_lib
 
         $oldDate = $target->loan_date;
         $total = intval($investment->loan_amount);
+
         $this->CI->load->model('loan/transfer_model');
         $transfer = $this->CI->transfer_model->get_by([
             'status' => 10,
