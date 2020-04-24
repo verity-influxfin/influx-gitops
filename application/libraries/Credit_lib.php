@@ -369,14 +369,16 @@ class Credit_lib{
 				}
 			}
 
-			if(!empty($school_info)){
-				$point = $school_info['points'];
-				if($school_system==1){
-					$point += $school_info['national']==1?300:200;
-				}else if($school_system==2){
-					$point += 400;
-				}
-			}
+            if(!empty($school_info)){
+                $point = $school_info['points'];
+                if($school_system == 0){
+                    $point += 100;
+                }else if($school_system==1){
+                    $point += 400;
+                }else if($school_system==2){
+                    $point += 500;
+                }
+            }
 
 			if(!empty($school_major)){
 				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
