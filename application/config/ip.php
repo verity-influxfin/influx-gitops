@@ -8,7 +8,6 @@ if(ENVIRONMENT=="development"){
 	$config['access_ip_list']	= array(
 		'114.34.172.44',
 		'13.112.224.83',
+        '52.194.4.73',
 	);
-} 
-
-
+}

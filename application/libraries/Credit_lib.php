@@ -286,7 +286,7 @@ class Credit_lib{
 			return $param;
 		}
 
-        if($credit['level'] == 10 && $time < $credit['expire_time']){
+        if($sub_product_id == STAGE_CER_TARGET && $time < $credit['expire_time']){
             $rs 		= $this->CI->credit_model->update($credit['id'],$param);
             return $rs;
         }

@@ -331,10 +331,10 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == 10;
                                 $newStatus = false;
                                 $this->CI->load->library('Certification_lib');
-                                $student_cer = $this->CI->certification_lib->get_certification_info($value->user_id, 2, 0);
-                                $diploma_cer = $this->CI->certification_lib->get_certification_info($value->user_id, 8, 0);
+                                $student_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 2, 0);
+                                $diploma_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 8, 0);
                                 $self = ($student_cer ? preg_match('/\(自填\)/', $student_cer->content['school']) : false)
-                                    || ($diploma_cer ? preg_match('/\(自填\)/', $diploma_cer->content[$student_cer.'school']) : false)
+                                    || ($diploma_cer ? preg_match('/\(自填\)/', $diploma_cer->content['school']) : false)
                                     ? true : false;
 
                                 if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self) {
