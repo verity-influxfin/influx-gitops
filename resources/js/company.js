@@ -45,7 +45,7 @@ export default {
             </div>
             <div class="company-background media-content">
                 <h3>媒體報導支持</h3>
-                <div class="media-slick" ref="media_slick">
+                <div class="media-slick" ref="media_slick" data-aos="zoom-in">
                     <div v-for="(item,index) in media" class="slick-item" :key="index">
                         <a :href="item.link" target="_blank"><img :src="item.imageSrc"></a>
                         <p>{{item.title}}</p>
@@ -214,6 +214,7 @@ export default {
     mounted() {
         this.createSlick();
         this.timeline();
+        AOS.init();
     },
     methods: {
         createSlick() {

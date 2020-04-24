@@ -8,7 +8,7 @@ export default {
     template:`
         <div class="freshGraduate-wrapper">
             <banner :data="this.getBannerData()"  :isShowLoan="true"></banner>
-            <div class="img-wrapper">
+            <div class="img-wrapper" data-aos="flip-up">
                 <img src="./image/worker_web.jpg" class="img-fluid desktop">
                 <img src="./image/worker_mobile.jpg" class="img-fluid mobile">
             </div>
