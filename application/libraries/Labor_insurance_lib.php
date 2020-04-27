@@ -48,8 +48,16 @@ class Labor_insurance_lib
         $this->processApplicantHavingGreatJob($isTopCompany, $salary, $result);
         $this->processApplicantHavingGreatSalary($salary, $result);
         $this->aggregate($result);
+        $this->checkIfEmpty($text, $result);
 
         return $result;
+    }
+
+    public function checkIfEmpty($text, &$result)
+    {
+        if ($this->CI->regex->isEmpty($text)) {
+            $result["status"] = "pending";
+        }
     }
 
     public function processDocumentCorrectness($text, &$result)
@@ -892,6 +900,7 @@ class Labor_insurance_lib
                 $result["status"] = "pending";
             }
         }
+
         return $result;
     }
 

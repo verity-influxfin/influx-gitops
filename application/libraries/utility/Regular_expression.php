@@ -4,6 +4,7 @@ class Regular_expression
 {
 	const LINE_BREAK = "(\r\n|\r|\n)*";
 	const SPACES = "[\s\r\n]+";
+	const DIGITS = '[0-9]+';
 
 	public function findPatternInBetween(string $text, string $start, string $end)
 	{
@@ -24,5 +25,15 @@ class Regular_expression
 		$spaces = self::SPACES;
 		$text = trim($text);
 		return preg_replace("/$spaces/", " ", $text);
+	}
+
+	public function containDigit(string $text)
+	{
+		$digits = self::DIGITS;
+		preg_match("/{$digits}/", $text, $match);
+		if ($match) {
+			return true;
+		}
+		return false;
 	}
 }
