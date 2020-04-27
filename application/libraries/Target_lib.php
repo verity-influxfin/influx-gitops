@@ -270,8 +270,23 @@ class Target_lib
                 }
             }
             if ($credit) {
+                $self = false;
+                $self_national = false;
                 $interest_rate = $credit['rate'];
-                if ($interest_rate) {
+                $this->CI->load->library('Certification_lib');
+                $student_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 2, 0);
+                $diploma_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 8, 0);
+                if($student_cer){
+                    if(preg_match('/\(自填\)/', $student_cer->content['school'])){
+                        preg_match('/國立/', $student_cer->content['school']) ? $self_national = true : $self = true;
+                    }
+                }
+                if ($diploma_cer && !$self){
+                    if(preg_match('/\(自填\)/', $diploma_cer->content['school'])){
+                        preg_match('/國立/', $diploma_cer->content['school']) ? $self_national = true : $self = true;
+                    }
+                }
+                if ($interest_rate && !$self) {
                     $used_amount = 0;
                     $other_used_amount = 0;
                     $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($user_id);
@@ -331,13 +346,7 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == 10;
                                 $newStatus = false;
                                 $this->CI->load->library('Certification_lib');
-                                $student_cer = $this->CI->certification_lib->get_certification_info($value->user_id, 2, 0);
-                                $diploma_cer = $this->CI->certification_lib->get_certification_info($value->user_id, 8, 0);
-                                $self = ($student_cer ? preg_match('/\(自填\)/', $student_cer->content['school']) : false)
-                                    || ($diploma_cer ? preg_match('/\(自填\)/', $diploma_cer->content[$student_cer.'school']) : false)
-                                    ? true : false;
-
-                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self) {
+                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
                                     $param['status'] = 1;
                                     $renew ? $param['sub_status'] = 10 : '';
                                     $remark
@@ -417,7 +426,7 @@ class Target_lib
 
     private function approve_target_fail($user_id, $target, $maxAmountAlarm = false)
     {
-        $remark = '信用不足' . ($maxAmountAlarm ? '(多產品總額度超過歸戶)' : '');
+        $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務' . ($maxAmountAlarm ? '.' : '。');
         $param = [
             'loan_amount' => 0,
             'status' => '9',
