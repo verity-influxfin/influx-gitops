@@ -1,0 +1,90 @@
+{
+    "college": {
+        "title": "誰可以申請普匯學生貸呢??",
+        "subTitle": "年滿20歲,大學以上在校生",
+        "requiredDocuments": [
+            {
+                "imgSrc": "./image/identity.png",
+                "text": "身分證件",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/account.png",
+                "text": "金融帳號",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/social_media.png",
+                "text": "常用社群",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/education.png",
+                "text": "學生身分",
+                "memo": ""
+            }
+        ]
+    },
+    "engineer": {
+        "title": "誰可以申請資訊工程師專案呢？",
+        "subTitle": "年滿20歲相關系所大學以上在校生,或相關職業工程師",
+        "requiredDocuments": [
+            {
+                "imgSrc": "./image/identity.png",
+                "text": "身分證件",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/account.png",
+                "text": "金融帳號",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/social_media.png",
+                "text": "常用社群",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/education.png",
+                "text": "學歷證明",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/license.png",
+                "text": "工程師專業證照",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/extra.png",
+                "text": "上班族需另提供",
+                "memo": "1.聯徵報告<br>2.工作證明"
+            }
+        ]
+    },
+    "freshgraduate": {
+        "title": "誰可以申請普匯上班族信貸呢？",
+        "subTitle": "年滿20歲，即可申貸",
+        "requiredDocuments": [
+            {
+                "imgSrc": "./image/identity.png",
+                "text": "身分證件",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/social_media.png",
+                "text": "常用社群",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/employment.png",
+                "text": "工作證明",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./image/account.png",
+                "text": "金融帳號",
+                "memo": ""
+            }
+        ]
+    }
+}

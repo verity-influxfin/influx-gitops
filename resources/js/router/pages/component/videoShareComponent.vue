@@ -9,7 +9,7 @@
                     <p>{{item.subTitle}}</p>
                     <br>
                     <span>{{item.detail}}</span><br>
-                    <a v-bind:href="item.link" class="btn btn-danger">閱讀更多</a>
+                    <router-link :to="item.link" class="btn btn-danger">閱讀更多</router-link>
                 </div>
             </div>
         </div>

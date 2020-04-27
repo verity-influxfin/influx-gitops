@@ -1,4 +1,4 @@
-import qaComponent from './component/qaComponent.vue';
+import qaComponent from './component/qaComponent';
 
 export default {
     template:`
@@ -25,16 +25,16 @@ export default {
                     </div>
                 </div>
             </div>
-            <qa :data="this.getQaData()" title="常見問題"></qa>
+            <qa :data="this.qaData" title="常見問題"></qa>
             <div class="transfer-footer">
                 <h2>投資理財大補帖</h2>
-                <div class="info-slick" ref="info_slick" data-aos="flip-left">
-                    <div v-for="(item,index) in this.articles" class="content-row" :key="index">
+                <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
+                    <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
                         <img :src="item.imgSrc">
                         <p>【普匯觀點】</p>
                         <p>{{item.title}}</p>
                         <br>
-                        <a :href="item.link" class="btn btn-danger">觀看大補帖</a>
+                        <router-link :to="item.link" class="btn btn-danger">觀看大補帖</ㄐ>
                     </div>
                 </div>
             </div>
@@ -44,43 +44,56 @@ export default {
         'qa':qaComponent
     },
     data:()=>({
+        qaData:[],
         transferFlow:['./image/transfer_flow1.png','./image/transfer_flow2.png','./image/transfer_flow3.png','./image/transfer_flow4.png','./image/transfer_flow5.png','./image/transfer_flow6.png'],
-        articles:[
-            {
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },{
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },{
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },{
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },{
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },{
-                'title':'年輕人也要投資理財–提早享受退休人生',
-                'link':'#',
-                'imgSrc':'./image/thumbnail.jpg'
-            },
-        ]
+        investTonic:[]
     }),
     created(){
+        this.getQaData();
+        this.getInvestTonicData();
         console.log('transfer');
     },
     mounted(){
         this.createSlick();
         AOS.init();
     },
+    watch:{
+        investTonic(){
+            this.$nextTick(()=>{
+                $(this.$refs.investTonic_slick).slick('refresh');
+                $(this.$refs.investTonic_slick).slick('slickSetOption', 'slidesToShow', 3);
+            });
+        }
+    },
     methods:{
+        getInvestTonicData(){
+            const $this = this;
+            $.ajax({
+                url:'getInvestTonicData',
+                type:'POST',
+                dataType:'json',
+                success(data){
+                    data.forEach((item,key)=>{
+                        data[key].link = `/articlepage/investtonic${item.id}`;
+                    });
+                    $this.investTonic = data;
+                }
+            });
+        },
+        getQaData(){
+            const $this = this;
+            $.ajax({
+                url:'getQaData',
+                type:'POST',
+                data:{
+                    filter:'freshgraduate'
+                },
+                dataType:'json',
+                success(data){
+                    $this.qaData = data;
+                }
+            });
+        },
         createSlick(){
             $(this.$refs.transfer_slick).slick({
                 infinite: true,
@@ -105,11 +118,11 @@ export default {
                 ]
             });
 
-            $(this.$refs.info_slick).slick({
+            $(this.$refs.investTonic_slick).slick({
                 infinite: true,
                 slidesToShow: 3,
                 slidesToScroll: 1,
-                // autoplay: true,
+                autoplay: true,
                 prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
                 nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
@@ -122,23 +135,6 @@ export default {
                     }
                 ]
             });
-        },
-        getQaData:()=>(
-            [
-                {
-                    title:'什麼是債權轉讓？',
-                    content:'當您需將手上債權變現時，可使用債權轉讓功能，將手上債權拋轉上架 供其他投資人認購，提早回流資金，自由運用。',
-                    imgSrc:[]
-                },{
-                    title:'債權已經逾期，還能夠轉讓嗎？',
-                    content:'可以的，無論是正常還款中，或是逾期的債權，都可以做轉讓喔。可選擇折價轉讓，快速資金回流。',
-                    imgSrc:[]
-                },{
-                    title:'債權轉讓可以轉讓給指定的投資人嗎？如何同時轉讓多筆債權？',
-                    content:'可以的，您可以選擇批次轉讓之打包功能，並設定密碼，提供予特定投資人進行轉讓。',
-                    imgSrc:[]
-                }
-            ]
-        ),
+        }
     }
 }

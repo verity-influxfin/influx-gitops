@@ -2,7 +2,7 @@
     <div class="experience-wrapper">
         <h2>{{this.$props.title}}</h2>
         <div class="experience-slick" ref="experience_slick">
-            <div v-for="(item,index) in userFeedback" class="slick-item" :key="index">
+            <div v-for="(item,index) in this.$props.data" class="slick-item" :key="index">
                 <div class="slick-title">
                     <img :src="item.imageSrc">
                     <div>
@@ -21,49 +21,20 @@
 
 <script>
     export default {
-        props:['title'],
-        data:()=>({
-            userFeedback:[
-                {
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                },{
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                },{
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                },{
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                },{
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                },{
-                    'name':'羅同學',
-                    'unit':'國立台灣大學',
-                    'memo':'為了睡覺',
-                    'imageSrc':'./image/message_icon.png'
-                }
-            ]
-        }),
-        mounted(){
-            this.createSlick();
+        props:['title','data'],
+        watch:{
+            data(){
+                this.$nextTick(()=>{
+                    $(this.$refs.experience_slick).slick('refresh');
+                    $(this.$refs.experience_slick).slick('slickSetOption', 'slidesToShow', 4);
+                });
+            }
         },
         methods:{
             createSlick(){
                  $(this.$refs.experience_slick).slick({
                     infinite: true,
+                    mobileFirst: true,
                     slidesToShow: 4,
                     slidesToScroll: 1,
                     autoplay: true,

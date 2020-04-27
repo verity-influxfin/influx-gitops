@@ -20,9 +20,6 @@
 <script>
 export default {
     props:['data'],
-    mounted(){
-        this.createSlick();
-    },
     methods:{
         createSlick(){
             let $this = this;

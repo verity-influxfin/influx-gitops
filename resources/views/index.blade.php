@@ -9,6 +9,7 @@
         <meta http-equiv="expires" content="0" />
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>inFlux普匯金融科技</title>
         <link rel="icon" href="{{ asset('image/site_icon.png') }}">
 
@@ -24,12 +25,14 @@
         <link rel="stylesheet" href="{{ asset('css/all.css') }}">
 
         <!-- package -->
+        <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
@@ -40,7 +43,7 @@
     <body>
         <div id="web_index">
             <nav class="page-header navbar navbar-expand-lg">
-                <div class="web-logo"><a href="{{ asset('/') }}"><img src=" {{ asset('image/logo.png') }}" class="img-fluid"></a></div>
+                <div class="web-logo"><router-link to="/index"><img src=" {{ asset('image/logo.png') }}" class="img-fluid"></router-link></div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
                 </button>

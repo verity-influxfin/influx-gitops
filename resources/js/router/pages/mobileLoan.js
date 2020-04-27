@@ -13,10 +13,10 @@ export default {
                 </div>
             </div>
             <div class="mobile-content">
-                <div v-for="index in 12" :key="index">
-                    <img :src="'./image/mobile'+(index%3+1)+'.png'" class="img-fluid">
+                <div v-for="(item,index) in this.mobileData" :key="index">
+                    <img :src="item.imageSrc" class="img-fluid">
                     <h3>ASUS Zenfone Max pro 2019</h3>
-                    <p>空機價＄{{index*1000}}</p>
+                    <p>空機價＄{{item.price}}</p>
                     <a class="btn btn-loan" href="https://event.influxfin.com/R/url?p=webbanner" target="_blank">立即申請分期</a>
                 </div>
             </div>
@@ -27,7 +27,24 @@ export default {
             </div>
         </div>
     `,
+    data:()=>({
+        mobileData:[]
+    }),
     created(){
+        this.getMobileData();
         console.log('mobileLoan');
-    }
+    },
+    methods:{
+        getMobileData(){
+            const $this = this;
+            $.ajax({
+                url:'getMobileData',
+                type:'POST',
+                dataType:'json',
+                success(data){
+                    $this.mobileData = data;
+                }
+            });
+        }
+    },
 }

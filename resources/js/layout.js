@@ -1,99 +1,63 @@
-import index from "./index.js";
-import collegeLoan from "./collegeLoan.js";
-import freshGraduateLoan from "./freshGraduateLoan.js";
-import engineerLoan from "./engineerLoan.js";
-import invest from "./invest.js";
-import transfer from "./transfer.js";
-import mobileLoan from "./mobileLoan.js";
-import qa from "./qa.js";
-import company from "./company.js";
-import news from "./news.js";
-import blog from "./blog.js";
-import video from "./vlog.js";
+//vuex store
+import state from './store/state';
+import getters from './store/getters';
+import actions from './store/actions';
+import mutations from './store/mutations';
+//vue router
+import routers from './router/router';
 
-$(function(){
-    const timeLineMax = new TimelineMax({paused: true, reversed: true}); 
+$(function () {
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
+    const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
     const router = new VueRouter({
-        'routes':[
-            { path: '/index', component:index },
-            { path: '/collegeLoan', component: collegeLoan },
-            { path: '/freshGraduateLoan', component: freshGraduateLoan },
-            { path: '/mobileLoan', component: mobileLoan },
-            { path: '/engineerLoan', component: engineerLoan },
-            { path: '/invest', component: invest },
-            { path: '/transfer', component: transfer },
-            { path: '/company', component: company },
-            { path: '/news', component: news },
-            { path: '/blog', component: blog },
-            { path: '/vlog', component: video },
-            { path: '/qa', component: qa },
-        ]
+        routes: routers
     });
     
-    router.replace({path:'/index'});
+    router.replace({path: '/index'});
+
+    const store = new Vuex.Store({
+        state,
+        getters,
+        actions,
+        mutations
+    });
 
     const vue = new Vue({
-        el:'#web_index',
+        el: '#web_index',
+        store,
         delimiters: ['${', '}'],
         router,
-        data:{
-            menuList:[
-                {
-                    'title':'我要借款',
-                    'subMenu':[
-                        {'name':'上班族貸款','href':'/freshGraduateLoan','isActive':true},
-                        {'name':'學生貸款','href':'/collegeLoan','isActive':true},
-                        {'name':'資訊工程師專案','href':'/engineerLoan','isActive':true},
-                        {'name':'外匯車貸','href':'','isActive':false},
-                        {'name':'新創企業主貸','href':'','isActive':false}
-                    ]
-                },
-                {
-                    'title':'我要投資',
-                    'subMenu':[
-                        {'name':'債權投資','href':'/invest','isActive':true},
-                        {'name':'債權轉讓','href':'/transfer','isActive':true}
-                    ]
-                },
-                {
-                    'title':'分期付款超市',
-                    'subMenu':[
-                        {'name':'手機分期','href':'/mobileLoan','isActive':true}
-                    ]
-                },
-                {
-                    'title':'關於我們',
-                    'subMenu':[
-                        {'name':'公司介紹','href':'/company','isActive':true},
-                        {'name':'最新消息','href':'/news','isActive':true},
-                    ]
-                },
-                {
-                    'title':'小學堂金融科技',
-                    'subMenu':[
-                        {'name':'小學堂','href':'/blog','isActive':true},
-                        {'name':'小學影音','href':'/vlog','isActive':true},
-                    ]
-                },
-                {
-                    'title':'常見問題',
-                    'subMenu':[]
-                },
-            ],
-            infoList:['學生貸款','債權投資','債權轉讓','公司介紹','活動資訊','inFlux 小學堂','會員專訪'],
-            actionList:['徵才服務','校園大使','社團合作','商行合作','企業合作','使用者條款','隱私條款政策','借款人服務條款']
+        data: {
+            menuList: [],
+            infoList: [],
+            actionList: []
         },
-        created(){
+        created() {
+            this.getListData();
+            console.log('page done');
         },
-        mounted(){
-            timeLineMax.to(this.$refs.afc_popup, {y: -210});
+        mounted() {
+            timeLineMax.to(this.$refs.afc_popup, { y: -210 });
             AOS.init();
         },
-        watch:{
-        },
-        methods:{
-            display(){
+        methods: {
+            getListData(){
+                let $this = this;
+
+                $.ajax({
+                    url:'getListData',
+                    type:'POST',
+                    dataType:'json',
+                    success(data){
+                        $this.menuList = data.menuList;
+                        $this.infoList = data.infoList;
+                        $this.actionList = data.actionList;
+                    }
+                });
+            },
+            display() {
                 if (timeLineMax.reversed()) {
                     timeLineMax.play();
                 } else {
