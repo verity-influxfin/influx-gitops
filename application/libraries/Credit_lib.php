@@ -106,17 +106,15 @@ class Credit_lib{
                                 'user_id' => $user_id,
                                 'certification_id' => 4,
                             ]);
-                            if($last_social_cer_list){
-                                if(count($last_social_cer_list) >= 2){
-                                    foreach ($last_social_cer_list as $lastIgKey => $lastIgValue ){
-                                        if($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0){
-                                            $all_contents = json_decode($lastIgValue->content);
-                                            $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
-                                            $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '' ;
-                                            break;
-                                        }
-                                    }
-                                }
+                            if (is_array($last_social_cer_list) && count($last_social_cer_list) >= 2){
+				foreach ($last_social_cer_list as $lastIgKey => $lastIgValue ){
+				    if($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0){
+					    $all_contents = json_decode($lastIgValue->content);
+					    $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
+					    $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '' ;
+					    break;
+				    }
+				}
                             }
                         }
                     }
