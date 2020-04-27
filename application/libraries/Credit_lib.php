@@ -76,6 +76,50 @@ class Credit_lib{
 	    if($stage_cer == 0) {
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
+            $this->CI->load->model('user/user_certification_model');
+            $user_certification_list = $this->CI->user_certification_model->get_many_by([
+                'user_id' => $user_id,
+                'status' => 1,
+            ]);
+
+            $transcript = false;
+            if ($user_certification_list) {
+                foreach ($user_certification_list as $key => $value) {
+                    $data = json_decode($value->content);
+                    if($value->certification_id == 2){
+                        if(isset($data->transcript_image)){
+                            !empty($data->transcript_image) ? $transcript = true : '';
+                        }
+                    }elseif($value->certification_id == 4){
+                        if(isset($data->instagram->meta)){
+                            $three_month_ago = strtotime("-3 months", time());
+                            if(count($data->instagram->meta) >= 10){
+                                $three_month_ago < $data->instagram->meta[9]->created_time ? $total += 100 : '';
+                            }
+                            foreach ($data->instagram->meta as $igKey => $igValue ){
+                                if(preg_match_all('/'.$this->CI->config->item('social_patten').'/',$igValue->text)){
+                                    $total += 200;
+                                    break;
+                                }
+                            }
+                            $last_social_cer_list = $this->CI->user_certification_model->order_by('created_at','desc')->get_many_by([
+                                'user_id' => $user_id,
+                                'certification_id' => 4,
+                            ]);
+                            if (is_array($last_social_cer_list) && count($last_social_cer_list) >= 2){
+				foreach ($last_social_cer_list as $lastIgKey => $lastIgValue ){
+				    if($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0){
+					    $all_contents = json_decode($lastIgValue->content);
+					    $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
+					    $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '' ;
+					    break;
+				    }
+				}
+                            }
+                        }
+                    }
+                }
+            }
             $data = [];
             foreach ($info as $key => $value) {
                 $data[$value->meta_key] = $value->meta_value;
@@ -100,28 +144,42 @@ class Credit_lib{
 
             //財務證明
             if (isset($data['financial_status']) && !empty($data['financial_status'])) {
-                $total += 50;
-                if (!empty($data['financial_creditcard']) || !empty($data['financial_passbook'])) {
+                $total += 100;
+                if (isset($data['financial_passbook']) && !empty($data['financial_passbook'])) {
+                    $total += 150;
+                }
+                if (isset($data['financial_bill_phone']) && !empty($data['financial_bill_phone'])) {
+                    $total += 150;
+                }
+                if (isset($data['financial_creditcard']) && !empty($data['financial_creditcard'])) {
                     $total += 50;
-                    if (!empty($data['financial_creditcard'])) {
-                        $total += 50;
-                    }
-                    if (!empty($data['financial_passbook'])) {
-                        $total += 50;
-                    }
                 }
             }
 
-            if (isset($data['social_status']) && !empty($data['social_status'])) {
+            if (isset($data['line_access_token']) && !empty($data['line_access_token'])) {
                 $total += 50;
+            }
+
+            //聯徵
+            if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
+                if (isset($data['investigation_times'])) {
+                    $total += round($this->get_investigation_times_point(intval($data['investigation_times']))/3);
+                }
+
+                if (isset($data['investigation_credit_rate'])) {
+                    $total += round($this->get_investigation_rate_point(intval($data['investigation_credit_rate']))/3);
+                }
+
+                if (isset($data['investigation_months'])) {
+                    $total += round($this->get_investigation_months_point(intval($data['investigation_months']))/3);
+                }
             }
 
             //SIP
             //if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
             //$total += 150;
             //}
-            //成績單
-            if (isset($data['transcript_front']) && !empty($data['transcript_front'])) {
+            if (isset($data['transcript_front']) && !empty($data['transcript_front']) || $transcript) {
                 $total += 100;
             }
             //緊急聯絡人
@@ -133,7 +191,7 @@ class Credit_lib{
                 $total += $approvalExtra->getExtraPoints();
             }
 
-            $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
+            $total = $user_info->sex == 'M' ? round($total * 0.95) : $total;
             $param['points'] = intval($total);
 
         }
@@ -369,14 +427,16 @@ class Credit_lib{
 				}
 			}
 
-			if(!empty($school_info)){
-				$point = $school_info['points'];
-				if($school_system==1){
-					$point += $school_info['national']==1?300:200;
-				}else if($school_system==2){
-					$point += 400;
-				}
-			}
+            if(!empty($school_info)){
+                $point = $school_info['points'];
+                if($school_system == 0){
+                    $point += 100;
+                }else if($school_system==1){
+                    $point += 400;
+                }else if($school_system==2){
+                    $point += 500;
+                }
+            }
 
 			if(!empty($school_major)){
 				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;

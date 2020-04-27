@@ -730,8 +730,9 @@ class Certification_lib{
                 'student_game_work_level'=> $content['game_work_level'],
                 'student_pro_level'      => $content['pro_level'],
             );
-            isset($content['graduate_date'])?$data['graduate_date']=$content['graduate_date']:'';
-            isset($content['programming_language'])?$data['student_programming_language']=$content['programming_language']:'';
+			isset($content['graduate_date']) ? $data['graduate_date'] = $content['graduate_date'] : '';
+            isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';
+            isset($content['transcript_image']) ? $data['transcript_front'] = $content['transcript_image'][0] : '';
 
             $rs = $this->user_meta_progress($data,$info);
             if($rs){
