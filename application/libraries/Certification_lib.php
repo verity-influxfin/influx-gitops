@@ -531,9 +531,11 @@ class Certification_lib{
 		if($user_certification==false || $user_certification->status!=1){
 			return false;
 		}
+
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
 			: $url;
+
 			if ($info && $info->certification_id == 10 && !empty($url) && $info->status == 0) {
 				$this->CI->load->library('Labor_insurance_lib');
 				$result = [
@@ -581,7 +583,6 @@ class Certification_lib{
 
 						$content['result']=$res;
 						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status,
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
