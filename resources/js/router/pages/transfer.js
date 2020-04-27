@@ -86,7 +86,7 @@ export default {
                 url:'getQaData',
                 type:'POST',
                 data:{
-                    filter:'freshgraduate'
+                    filter:'transfer'
                 },
                 dataType:'json',
                 success(data){
