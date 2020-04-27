@@ -39,4 +39,9 @@ class Labor_insurance_regex extends Regular_expression
     {
         return preg_replace('/,/', '', $salaryWithCommas);
     }
+
+    public function isEmpty($text)
+    {
+        return !$this->isLaborInsuranceApplication($text) && !$this->containDigit($text);
+    }
 }
