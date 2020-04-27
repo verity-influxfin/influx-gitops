@@ -346,7 +346,7 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == 10;
                                 $newStatus = false;
                                 $this->CI->load->library('Certification_lib');
-                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
+                              if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
                                     $param['status'] = 1;
                                     $renew ? $param['sub_status'] = 10 : '';
                                     $remark
