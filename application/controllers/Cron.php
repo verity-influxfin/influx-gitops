@@ -382,10 +382,10 @@ class Cron extends CI_Controller {
       $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
       $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
       $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
-      $worker_time = isset($scraper_response['response']['updatedAt'])?date('Y-m-d H:i:s',strtotime('-2 hours', $scraper_response['response']['updatedAt'])):'';
+      $worker_time = isset($scraper_response['response']['updatedAt'])?date('Y-m-d H:i:s',strtotime('+2 hours', $scraper_response['response']['updatedAt'])):'';
 
       if($current->status == '爬蟲執行完成' || (isset($worker_time) && $current->updated_at < $worker_time) || (isset($scraper_response['status']) && $scraper_response['status']=='204') ){
-        if($current->status == '爬蟲執行完成' || (isset($worker_time) && $current->updated_at < $worker_time)){
+        if($current->status == '爬蟲執行完成' || (isset($worker_time) && $current->updated_at > $worker_time)){
           $current->offset++;
         }
 
