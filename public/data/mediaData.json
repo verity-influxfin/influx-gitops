@@ -1,35 +1,42 @@
 [
     {
+        "id":"news1",
         "title": "普匯金融科技 CEO：觀念、態度、努力 決定你的人生",
         "imageSrc": "./image/media1.png",
         "link": "https://news.cnyes.com/news/id/4267004"
     },
     {
+        "id":"news2",
         "title": "小資金實現大夢想　InFlux普匯P2P借貸平台實現3小時核貸、1小時放款",
         "imageSrc": "./image/media2.png",
         "link": "https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv"
     },
     {
+        "id":"news3",
         "title": "關注台灣年輕族群　InFlux普匯推出有溫度的P2P借貸平台",
         "imageSrc": "./image/media3.png",
         "link": "http://n.yam.com/Article/20180803346949"
     },
     {
+        "id":"news4",
         "title": "金融科技創新園區9家廠商加入 企業實驗室首波六大主題公布",
         "imageSrc": "./image/media4.png",
         "link": "https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html"
     },
     {
+        "id":"news5",
         "title": "金融科技創新園區 六大企業實驗室出爐！",
         "imageSrc": "./image/media5.png",
         "link": "https://m.ctee.com.tw/livenews/aj/a95645002019042615564198"
     },
     {
+        "id":"news6",
         "title": "AI自動核貸無人化融資平台　打造金融科技新型態",
         "imageSrc": "./image/media6.png",
         "link": "https://www.nownews.com/news/20180807/2798010/"
     },
     {
+        "id":"news7",
         "title": "金融科技創新園區9家廠商加入 企業實驗室首波六大主題公布",
         "imageSrc": "./image/media7.png",
         "link": "https://www.wealth.com.tw/home/articles/20567"

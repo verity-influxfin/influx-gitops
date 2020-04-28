@@ -238,6 +238,37 @@
             }
         }
     }
+
+    .modal-dialog{
+        .modal-icon{
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 33px;
+            color: #464646;
+            cursor: pointer;
+            z-index: 1;
+
+            i{
+                background: white;
+                border-radius: 50%;
+            }
+        }
+
+        .report-title{
+            font-weight: bolder;
+        }
+        .report-datetime{
+            color: #919191;
+        }
+        .report-contert{
+            color: #606060;
+        }
+        
+        @media (min-width:567px) {
+            max-width: 800px;
+        }
+    }
 }
 
 @import 'timeLine';

@@ -14,8 +14,14 @@ $(function () {
     const router = new VueRouter({
         routes: routers
     });
-    
-    router.replace({path: '/index'});
+
+    router.beforeEach((to, from, next) => {
+        if(to.path ==="/"){
+            next('/index');
+        }else{
+            next();
+        }
+    })
 
     const store = new Vuex.Store({
         state,
@@ -35,6 +41,10 @@ $(function () {
             actionList: []
         },
         created() {
+            this.$store.dispatch('getExperiencesData');
+            this.$store.dispatch('getKnowledgeData');
+            this.$store.dispatch('getNewsData');
+            this.$store.dispatch('getSharesData',{category:'share'});
             this.getListData();
             console.log('page done');
         },

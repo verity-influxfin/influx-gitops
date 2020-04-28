@@ -116,4 +116,11 @@ class Controller extends BaseController
 
         return response()->json($data);
     }
+
+    public function getReportData(Request $request){
+        $input = $request->all();
+        $data = json_decode(file_get_contents('data/reportData.json'),true);
+
+        return response()->json($data[$input['filter']]);
+    }
 }

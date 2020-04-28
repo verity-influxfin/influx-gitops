@@ -127,10 +127,6 @@ export default {
         },
     },
     created() {
-        this.$store.dispatch('getExperiencesData');
-        this.$store.dispatch('getKnowledgeData');
-        this.$store.dispatch('getNewsData');
-        this.$store.dispatch('getSharesData',{category:'share'});
         this.getServiceData();
         console.log('index');
     },
@@ -139,6 +135,8 @@ export default {
         this.interval();
         this.createSlick();
         this.$refs.experience.createSlick();
+        $(this.$refs.experience.$refs.experience_slick).slick('refresh');
+        $(this.$refs.experience.$refs.experience_slick).slick('slickSetOption', 'slidesToShow', 4);
         $(this.$refs.videoShare.$refs.share_content).attr('data-aos', 'fade-left');
         $(this.$refs.experience.$refs.experience_slick).attr('data-aos', 'zoom-in');
         AOS.init();

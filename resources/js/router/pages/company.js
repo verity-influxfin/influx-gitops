@@ -48,7 +48,7 @@ export default {
                 <div class="media-slick" ref="media_slick" data-aos="zoom-in">
                     <div v-for="(item,index) in media" class="slick-item" :key="index">
                         <a :href="item.link" target="_blank"><img :src="item.imageSrc"></a>
-                        <p>{{item.title}}</p>
+                        <p @click="openModel(item.id)">{{item.title}}</p>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,18 @@ export default {
                         <p>{{item.subTitle}}</p>
                         <hr>
                         <p v-html="item.text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" ref="newsModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-icon" data-dismiss="modal"><i class="far fa-times-circle"></i></div>
+                        <div class="modal-body">
+                            <h4 class="report-title">{{this.reportData.title}}</h4>
+                            <p calss="report-date">{{this.reportData.datetime}}</p>
+                            <div class="report-contert" v-html="this.reportData.content"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,7 +107,8 @@ export default {
         ],
         media: [],
         partner: [],
-        milestone:[]
+        milestone:[],
+        reportData:{}
     }),
     created(){
         this.getMilestoneData();
@@ -105,7 +118,6 @@ export default {
     },
     mounted() {
         this.createSlick();
-        this.timeline();
         AOS.init();
     },
     watch:{
@@ -113,6 +125,11 @@ export default {
             this.$nextTick(()=>{
                 $(this.$refs.media_slick).slick('refresh');
                 $(this.$refs.media_slick).slick('slickSetOption', 'slidesToShow', 5);
+            });
+        },
+        milestone(){
+            this.$nextTick(()=>{
+                this.timeline();
             });
         }
     },
@@ -208,6 +225,21 @@ export default {
                     }
                 });
             });
+        },
+        openModel(id){
+            const $this = this;
+            $.ajax({
+                url:'getReportData',
+                type:'POST',
+                dataType:'json',
+                data:{
+                    filter:id
+                },
+                success(data){
+                    $this.reportData = data;
+                }
+            });
+            $(this.$refs.newsModal).modal('show');
         }
     }
 }

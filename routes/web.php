@@ -46,3 +46,5 @@ Route::post('/getBannerData', 'Controller@getBannerData');
 Route::post('/getApplydata', 'Controller@getApplydata');
 
 Route::post('/getInvestTonicData', 'Controller@getInvestTonicData');
+
+Route::post('/getReportData', 'Controller@getReportData');

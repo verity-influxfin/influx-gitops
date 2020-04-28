@@ -4,7 +4,7 @@ export default {
             <h1>最新消息</h1>
             <div class="news-content">
                 <div v-for="(item,index) in this.news" class="card" :key="index">
-                    <img :src="item.imageSrc" class="img-fluid">
+                    <router-link :to="item.link"><img :src="item.imageSrc" class="img-fluid"></router-link>
                     <span>{{item.title}}</span>
                     <p><span class="gray">Posted by </span>{{item.author}}<span class="gray"> Comments:</span></p>
                     <p class="gray">{{item.content}}…</p>
