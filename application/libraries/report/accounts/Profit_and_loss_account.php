@@ -17,6 +17,15 @@ class Profit_and_loss_account
         $this->payment_time_utility = $this->CI->payment_time_utility;
     }
 
+    public function getInitialInvestmentAt($investmentIds)
+    {
+        $investment = $this->transaction_model->get_by(['investment_id' => $investmentIds, 'source' => 11, 'status' => [1,2]]);
+        if ($investment) {
+            return date('Y-m-d', $investment->created_at);
+        }
+        return '';
+    }
+
     public function getLastRepayment($investmentIds)
     {
         $lastTransaction = $this->transaction_model->order_by('limit_date', 'DESC')->limit(1)->get_by(['investment_id' => $investmentIds, 'status' => [1, 2]]);
@@ -31,11 +40,12 @@ class Profit_and_loss_account
     {
         $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($investmentIds);
 
-        $rows = ['normal' => [], 'overdue' => []];
+        $rows = ['normal' => [], 'overdue' => [], 'prepayment' => []];
         if (!$investments) {
             return [];
         }
 
+        $initialInvestmentAt = $this->getInitialInvestmentAt($investmentIds);
         $lastRepaymentAt = $this->getLastRepayment($investmentIds);
 
         foreach ($investments as $key => $value) {
@@ -78,22 +88,20 @@ class Profit_and_loss_account
                             $v["prepayment_damage"] = 0;
                         }
                     }
+                    if (!$rows[$key] && $key != "prepayment") {
+                        $rows[$key][$initialInvestmentAt] = $this->initRow();
+                        $currentMonth = $initialInvestmentAt;
+                        while ($currentMonth < $v['repayment_date']) {
+                            $nextMonth = $this->payment_time_utility->goToNext($currentMonth, true);
+                            $rows[$key][$nextMonth] = $this->initRow();
+                            $currentMonth = $nextMonth;
+                        }
+                    }
+                    if ($key == 'overdue' && $v['repayment_date'] > date('Y-m-d')) {
+                        continue;
+                    }
                     if (!isset($rows[$key][$v['repayment_date']])) {
-                        $rows[$key][$v['repayment_date']] = array(
-                            'remaining_principal' => 0,
-                            'principal' => 0,
-                            'r_principal' => 0,
-                            'interest' => 0,
-                            'r_interest' => 0,
-                            'damage' => 0,
-                            'prepayment_allowance' => 0,
-                            'prepayment_damage' => 0,
-                            'delay_interest' => 0,
-                            'ar_fees' => 0,
-                            'r_fees' => 0,
-                            'r_delayinterest' => 0,
-                            'repayment' => 0,
-                        );
+                        $rows[$key][$v['repayment_date']] = $this->initRow();
                     }
 
                     $rows[$key][$v['repayment_date']]['remaining_principal'] += $v['remaining_principal'];
@@ -116,9 +124,31 @@ class Profit_and_loss_account
         return $rows;
     }
 
+    private function initRow()
+    {
+        return [
+            'remaining_principal' => 0,
+            'principal' => 0,
+            'r_principal' => 0,
+            'interest' => 0,
+            'r_interest' => 0,
+            'damage' => 0,
+            'prepayment_allowance' => 0,
+            'prepayment_damage' => 0,
+            'delay_interest' => 0,
+            'ar_fees' => 0,
+            'r_fees' => 0,
+            'r_delayinterest' => 0,
+            'repayment' => 0,
+        ];
+    }
+
     public function getTableHeader($tableName)
     {
-        return "<table>{$tableName}<thead><tr><th>還款日</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+        if ($tableName == '逾期案') {
+            return "<table>{$tableName}<thead><tr><th>日期</th><th>尚欠本金</th><th>尚欠利息</th><th>尚欠本息</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+        }
+        return "<table>{$tableName}<thead><tr><th>日期</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
     }
 
     public function getEndingTable()
@@ -151,36 +181,90 @@ class Profit_and_loss_account
             }
 
             ksort($rows[$type]);
-            foreach ($rows[$type] as $key => $value) {
-                if ($type != 'prepayment' && substr($key, -2) == '10' || $type == 'prepayment') {
-                    $total = $value['r_principal'] + $value['r_interest'];
-                    $r_fee = $value['r_fees'];
-                    $profit = $value['repayment'] - $r_fee;
-                    $html .= '<tr>';
-                    $html .= '<td>' . $key . '</td>';
-                    $html .= '<td>' . $value['principal'] . '</td>';
-                    $html .= '<td>' . $value['interest'] . '</td>';
-                    $html .= '<td>' . ($value['principal'] + $value['interest']) . '</td>';
-                    $html .= '<td>' . $value['remaining_principal'] . '</td>';
-                    $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
-                    $html .= '<td>' . $value['delay_interest'] . '</td>';
-                    $html .= '<td>' . $value['r_principal'] . '</td>';
-                    $html .= '<td>' . $value['r_interest'] . '</td>';
-                    $html .= '<td>' . $total . '</td>';
-                    $html .= '<td>' . $value['r_fees'] . '</td>';
-                    if ($type == 'prepayment') {
-                        $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
-                    } else {
-                        $html .= '<td>0</td>';
-                    }
-                    $html .= '<td>' . $profit . '</td>';
-                    $html .= '</tr>';
-                }
+            $reportType = $type;
+            if ($type == 'prepayment') {
+                $reportType = 'normal';
             }
+            $reportType = ucfirst($reportType);
+            $functionName = "to{$reportType}";
+            $html = $this->$functionName($html, $rows, $type);
 
             $html .= $this->getEndingTable();
             echo $html;
             echo "<br><br>";
         }
+    }
+
+    private function toNormal($html, $rows, $type)
+    {
+        $isFirst = true;
+        foreach ($rows[$type] as $key => $value) {
+            if (
+                $type != 'prepayment' && substr($key, -2) == '10'
+                || $type == 'prepayment'
+                || $isFirst
+            ) {
+                $total = $value['r_principal'] + $value['r_interest'];
+                $r_fee = $value['r_fees'];
+                $profit = $value['repayment'] - $r_fee;
+                $html .= '<tr>';
+                $html .= '<td>' . $key . '</td>';
+                $html .= '<td>' . $value['principal'] . '</td>';
+                $html .= '<td>' . $value['interest'] . '</td>';
+                $html .= '<td>' . ($value['principal'] + $value['interest']) . '</td>';
+                $html .= '<td>' . $value['remaining_principal'] . '</td>';
+                $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
+                $html .= '<td>' . $value['delay_interest'] . '</td>';
+                $html .= '<td>' . $value['r_principal'] . '</td>';
+                $html .= '<td>' . $value['r_interest'] . '</td>';
+                $html .= '<td>' . $total . '</td>';
+                $html .= '<td>' . $value['r_fees'] . '</td>';
+                if ($type == 'prepayment') {
+                    $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
+                } else {
+                    $html .= '<td>0</td>';
+                }
+                $html .= '<td>' . $profit . '</td>';
+                $html .= '</tr>';
+            }
+            $isFirst = false;
+        }
+        return $html;
+    }
+
+    private function toOverdue($html, $rows, $type)
+    {
+        $isFirst = true;
+        foreach ($rows[$type] as $key => $value) {
+            if (
+                $type != 'prepayment' && substr($key, -2) == '10'
+                || $type == 'prepayment'
+                || $isFirst
+            ) {
+                $total = $value['r_principal'] + $value['r_interest'];
+                $r_fee = $value['r_fees'];
+                $profit = $value['repayment'] - $r_fee;
+                $html .= '<tr>';
+                $html .= '<td>' . $key . '</td>';
+                $html .= '<td>' . $value['principal'] . '</td>';
+                $html .= '<td>' . $value['interest'] . '</td>';
+                $html .= '<td>' . ($value['principal'] + $value['interest']) . '</td>';
+                $html .= '<td>' . ($value['damage'] + $value['prepayment_damage']) . '</td>';
+                $html .= '<td>' . $value['delay_interest'] . '</td>';
+                $html .= '<td>' . $value['r_principal'] . '</td>';
+                $html .= '<td>' . $value['r_interest'] . '</td>';
+                $html .= '<td>' . $total . '</td>';
+                $html .= '<td>' . $value['r_fees'] . '</td>';
+                if ($type == 'prepayment') {
+                    $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
+                } else {
+                    $html .= '<td>0</td>';
+                }
+                $html .= '<td>' . $profit . '</td>';
+                $html .= '</tr>';
+                $isFirst = false;
+            }
+        }
+        return $html;
     }
 }
