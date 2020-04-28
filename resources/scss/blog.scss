@@ -1,0 +1,44 @@
+.blog-wrapper{
+    padding: 30px;
+    overflow: auto;
+
+    .blog-content{
+        width: 75%;
+        overflow: auto;
+        margin: 0px auto;
+
+        .card{
+            margin: 10px;
+            width: 48%;
+            padding: 20px;
+            float: left;
+        }
+
+        .gray{
+            color:#9a9a9a
+        }
+
+        a{    
+            color: green;
+            
+            &:hover{
+                text-decoration: none;
+            }
+        }
+    }
+
+    .pagination{
+        margin: 0px auto;
+        width: fit-content;
+    }
+
+    @media (max-width:767px) {
+        .blog-content{
+            width: 100%;
+
+            .card{
+                width: 96%;
+            }
+        }
+    }
+}

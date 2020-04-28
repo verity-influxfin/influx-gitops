@@ -1,0 +1,33 @@
+.freshGraduate-wrapper{
+    .loan-banner{
+        @media (min-width: 767px) {
+            img{
+                bottom: -95% !important;
+                width: 110%;
+            }
+        }
+    
+        @media (max-width: 767px){
+            img {
+                left: -46% !important;
+            }
+        }
+    }
+    
+    .img-wrapper{
+        width: 100%;
+        padding: 0px 5%;
+    
+        @media (max-width:767px) {
+            .desktop{
+                display: none;
+            }
+        }
+    
+        @media (min-width:767px) {
+            .mobile{
+                display: none;
+            }
+        }
+    }
+}

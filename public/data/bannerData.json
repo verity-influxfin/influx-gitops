@@ -1,0 +1,51 @@
+{
+    "college": {
+        "title": "學生貸款",
+        "bgHref": "./image/child_banner.jpg",
+        "bannerHref": "./image/college_loan_banner.png",
+        "info": [
+            "Dcard 熱搜",
+            "大學生最愛",
+            "線上借貸平台"
+        ],
+        "description": "投資人運用普匯平台24小時不間斷支援同學們生活急需與達成夢想",
+        "btnText": "立即借款"
+    },
+    "engineer": {
+        "title": "資訊工程師專案",
+        "bgHref": "./image/child_banner.jpg",
+        "bannerHref": "./image/engineer_loan_banner.png",
+        "info": [
+            "if(“普匯理財 ”= =true)",
+            "“缺錢 ”=false",
+            "編譯你的程式，也編譯你的財務狀況"
+        ],
+        "description": "免出門 不需排隊 全線上申請<br>3分鐘上傳資料 30分鐘AI審核<br>年化利率最低5%起 最高額度20萬",
+        "btnText": "立即借款"
+    },
+    "freshgraduate": {
+        "title": "上班族信貸",
+        "bgHref": "./image/child_banner.jpg",
+        "bannerHref": "./image/worker_loan_banner.png",
+        "info": [
+            "憑勞保",
+            "免聯徵",
+            "速送速審"
+        ],
+        "description": "最高額度20萬<br>最低年化利率5%起<br>自由選擇3-24期<br>最快一小時到帳",
+        "btnText": "試算可貸額度"
+    },
+    "invest": {
+        "title": "債權投資",
+        "bgHref": "./image/child_banner.jpg",
+        "bannerHref": "./image/invest_banner.png",
+        "info": [
+            "小額分散",
+            "穩定報酬首選",
+            "1,000元開始投資",
+            "創造你的被動收入"
+        ],
+        "description": "年化報酬率5~20% 穩定獲利低風險",
+        "btnText": "立即投資"
+    }
+}

@@ -1,0 +1,136 @@
+%position{ 
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.transfer-wrapper{
+    .transfer-header{
+        .header-title{
+            @extend %position;
+            height: 160px;
+    
+            img{
+                position: absolute;
+                height: 210%;
+            }
+            
+            .title{
+                position: absolute;
+                top:50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                color: #ffffff;
+                font-weight: bolder;
+                font-size: 33px;
+            }
+        }
+
+        .header-img{
+            text-align: center;
+
+            @media (min-width:767px) {
+                padding: 10px;
+                img{
+                    width: 80%;
+                }
+            }
+        }
+    
+        .header-footer{
+            @extend %position;
+            background-color: #F7F7F7;
+            height: 200px;
+            text-align: center;
+            padding-top: 40px;
+            font-weight: bolder;
+
+            h2{
+                font-weight: bolder;
+            }
+    
+            @media (max-width: 767px) {
+                height: 150px;
+            }
+        }
+    }
+
+    .transfer-slick{
+        padding: 50px 0px;
+
+        @extend %slick-style;
+
+        .slick-item{
+            margin: 0px 10px;
+            cursor: default;
+        }
+
+        .slick-list{
+            width: 100%;
+        }
+        
+        @media (min-width: 767px) {
+            .slick-custom-dots{
+                display: none;
+            }
+        }
+    }
+
+    .investTonic-slick{
+        @extend %slick-style;
+
+        .slick-item{
+            margin: 0px 10px;
+            cursor: default;
+        }
+
+        .slick-list{
+            width: 100%;
+            margin: 0px auto;
+
+            .slick-slide{
+                padding: 14px;
+            }
+        }
+
+        @media (min-width: 767px) {
+            width: 75%;
+            margin: 0px auto;
+            .slick-list{
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .arrow-left{
+                left: 0;
+            }
+            .arrow-right{
+                right:0;
+            }
+        }
+    }
+
+    .transfer-footer{
+        padding: 20px;
+
+        h2{
+            padding-top: 50px;
+            text-align: center;
+            font-weight: bolder;
+        }
+    }
+
+
+    @media (max-width:767px) {
+        .desktop{
+            display: none;
+        }
+    }
+
+    @media (min-width: 767px) {
+        .mobile{
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+[
+    {
+        "title": "學生貸",
+        "eTitle": "College Loan",
+        "imageSrc": "./image/student_loan.jpg",
+        "isActive": true,
+        "link": "/CollegeLoan"
+    },
+    {
+        "title": "上班族貸",
+        "eTitle": "Fresh Graduate Loan",
+        "imageSrc": "./image/worker_loan.jpg",
+        "isActive": true,
+        "link": "/FreshGraduateLoan"
+    },
+    {
+        "title": "手機貸",
+        "eTitle": "Mobile Loan",
+        "imageSrc": "./image/phone_loan.jpg",
+        "isActive": true,
+        "link": "/MobileLoan"
+    },
+    {
+        "title": "工程師貸",
+        "eTitle": "Engineer Loan",
+        "imageSrc": "./image/rd_loan.jpg",
+        "isActive": true,
+        "link": "/EngineerLoan"
+    },
+    {
+        "title": "外匯車貸",
+        "eTitle": "Imported Car Loan",
+        "imageSrc": "./image/car_loan.jpg",
+        "isActive": false,
+        "link": ""
+    },
+    {
+        "title": "新創企業貸",
+        "eTitle": "Star-up Loan",
+        "imageSrc": "./image/creation_loan.jpg",
+        "isActive": false,
+        "link": ""
+    }
+]

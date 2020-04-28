@@ -1,0 +1,274 @@
+.company-wrapper{
+    .company-header{
+        .header-title{
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 160px;
+    
+            img{
+                position: absolute;
+                height: 210%;
+            }
+            
+            .title{
+                position: absolute;
+                top:50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                color: #ffffff;
+                font-weight: bolder;
+                font-size: 33px;
+            }
+        }
+
+        .header-banner{
+            overflow: hidden;
+            position: relative;
+            height: 445px;
+
+            img{
+                width: 100%;
+                position: absolute;
+                top: -53%;
+            }
+
+            div{
+                position: absolute;
+                color: #ffffff;
+                text-shadow: 0 0 14px black;
+                font-weight: bolder;
+                top: 50%;
+                transform: translateY(-50%);
+                margin: 0px 10%;
+
+                p{
+                    font-size: 24px;
+                }
+
+                h2{
+                    font-weight: bolder;
+                }
+            }
+
+            @media (max-width:767px) {
+                img{
+                    width: auto;
+                    top: -16%;
+                    left: -100%;
+                }
+            }
+        }
+
+        .header-footer{
+            background-color: #f7f7f7;
+            padding: 30px 20%;
+
+            h5{
+                font-size: 1.5rem;
+                font-weight: bolder;
+                margin-bottom: 25px;
+            }
+
+            p{
+                font-size: 18px;
+                text-align: justify;
+            }
+
+            @media (max-width:767px) {
+                padding: 30px 20px;
+            }
+        }
+    }
+
+    .company-background{
+        padding-top: 60px;
+        background-color: #f7f7f7;
+        h3{
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+    }
+
+    .company-content{
+        .regulation-slick{
+            h5{
+                text-align: center;
+                font-weight: bolder;
+                font-size: 1.5rem;
+            }
+
+            .slick-item{
+                margin: 0px 10px;
+            }
+            
+            .slick-list{
+                width: 90%;
+                margin: 0px auto;
+            }
+
+            .slick-arrow{
+                position: absolute;
+                top: 50%;
+                transform: translatey(-50%);
+                font-size: 23px;
+                z-index: 1;
+                cursor: pointer;
+            }
+
+            .arrow-left{
+                left:20px;
+            }
+            
+            .arrow-right{
+                right:20px;
+            }
+
+            .slick-custom-dots{
+                position: absolute;
+                padding: 15px 0px;
+                text-align: center;
+                color: #a0a0a0;
+                display: flex;
+                list-style-type: none;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 13px;
+
+                li{
+                    margin: 0px 3px;
+                }
+
+                .slick-active{
+                    color: #000000;
+                }
+            }
+        }
+    }
+
+    .media-content{
+        .media-slick{
+            h5{
+                text-align: center;
+                font-weight: bolder;
+                font-size: 1.5rem;
+            }
+
+            .slick-item{
+                margin: 0px 10px;
+            }
+            
+            .slick-list{
+                width: 90%;
+                margin: 0px auto;
+            }
+
+            .slick-arrow{
+                position: absolute;
+                top: 50%;
+                transform: translatey(-50%);
+                font-size: 23px;
+                z-index: 1;
+                cursor: pointer;
+            }
+
+            .arrow-left{
+                left:20px;
+            }
+            
+            .arrow-right{
+                right:20px;
+            }
+
+            .slick-custom-dots{
+                position: absolute;
+                padding: 15px 0px;
+                text-align: center;
+                color: #a0a0a0;
+                display: flex;
+                list-style-type: none;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 13px;
+
+                li{
+                    margin: 0px 3px;
+                }
+
+                .slick-active{
+                    color: #000000;
+                }
+            }
+        }
+    }
+
+    .partner-content{
+        .block{
+            width: 70%;
+            margin: 0px auto;
+            border-top: 1px solid #000000;
+            padding: 35px 0px;
+            overflow: auto;
+
+            .partner-photo{
+                float: left;
+                max-width: 346px;
+                box-shadow: 0 0 5px black;
+                margin: 22px;
+            }
+
+            .partner-card{
+                display: flow-root;
+                margin: 22px;
+                padding: 25px;
+                hr{
+                    border-top: 1px solid #7d7d7d;
+                }
+
+                p{
+                    color:#b1b1b1;
+                }
+            }
+        }
+
+        @media (max-width:767px) {
+            .block{
+                width: 95%;
+            }
+        }
+    }
+
+    .modal-dialog{
+        .modal-icon{
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 33px;
+            color: #464646;
+            cursor: pointer;
+            z-index: 1;
+
+            i{
+                background: white;
+                border-radius: 50%;
+            }
+        }
+
+        .report-title{
+            font-weight: bolder;
+        }
+        .report-datetime{
+            color: #919191;
+        }
+        .report-contert{
+            color: #606060;
+        }
+        
+        @media (min-width:567px) {
+            max-width: 800px;
+        }
+    }
+}
+
+@import 'timeLine';
