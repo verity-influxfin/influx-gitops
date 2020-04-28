@@ -42,7 +42,7 @@ export default {
         this.getApplydata();
         this.getBannerData();
         this.getQaData();
-        console.log('college');
+        $('title').text(`學生貸款 - ${$('title').text()}`);
     },
     mounted(){
         this.$refs.experience.createSlick();

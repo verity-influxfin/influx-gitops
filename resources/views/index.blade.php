@@ -105,9 +105,11 @@
                 <div><img src="{{ asset('image/message_icon.png') }}" class="img-fluid" @click="display"></div>
                 <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
                 <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
-                <div><a target="_blank" href="#"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
             </div>
-            <div class="afc_popup hidden-desktop">
+            <div class="afc_popup hidden-desktop" style="bottom: 150px;">
+                <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
                 <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
             </div>
         </div>

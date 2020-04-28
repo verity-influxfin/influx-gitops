@@ -19,6 +19,7 @@ $(function () {
         if(to.path ==="/"){
             next('/index');
         }else{
+            $(window).scrollTop('0');
             next();
         }
     })

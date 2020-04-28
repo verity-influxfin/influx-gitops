@@ -30,7 +30,7 @@ export default {
     }),
     created() {
         this.getQaData();
-        console.log('qa');
+        $('title').text(`常見問題 - inFlux普匯金融科技`);
     },
     methods: {
         getQaData() {

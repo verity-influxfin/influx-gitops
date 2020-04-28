@@ -32,7 +32,7 @@ export default {
     }),
     created() {
         this.getMobileData();
-        console.log('mobileLoan');
+        $('title').text(`手機分期 - inFlux普匯金融科技`);
     },
     methods: {
         getMobileData() {

@@ -40,7 +40,7 @@ export default {
         this.getApplydata();
         this.getBannerData();
         this.getQaData();
-        console.log('engineerLoan');
+        $('title').text(`工程師專案 - inFlux普匯金融科技`);
     },
     mounted() {
         this.createSlick();

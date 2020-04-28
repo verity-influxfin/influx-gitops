@@ -51,7 +51,7 @@ export default {
     created() {
         this.getQaData();
         this.getInvestTonicData();
-        console.log('transfer');
+        $('title').text(`債權轉讓 - inFlux普匯金融科技`);
     },
     mounted() {
         this.createSlick();

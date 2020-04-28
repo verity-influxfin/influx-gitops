@@ -128,7 +128,7 @@ export default {
     },
     created() {
         this.getServiceData();
-        console.log('index');
+        $('title').text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
         this.typing();

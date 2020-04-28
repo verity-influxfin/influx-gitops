@@ -22,7 +22,7 @@ export default {
         }
     },
     created(){
-        console.log('blog');
+        $('title').text(`influx 小學堂 - inFlux普匯金融科技`);
     },
     mounted(){
         this.$nextTick(()=>{

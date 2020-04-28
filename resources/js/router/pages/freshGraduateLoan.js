@@ -40,7 +40,7 @@ export default {
         this.getApplydata();
         this.getBannerData();
         this.getQaData();
-        console.log('workerLoan');
+        $('title').text(`上班族貸款 - inFlux普匯金融科技`);
     },
     mounted() {
         $(this.$refs.apply.$refs.apply_slick).attr('data-aos', 'fade-up');

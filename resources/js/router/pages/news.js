@@ -17,5 +17,8 @@ export default {
         news() {
             return this.$store.getters.NewsData;
         },
+    },
+    created(){
+        $('title').text(`最新消息 - inFlux普匯金融科技`);
     }
 }

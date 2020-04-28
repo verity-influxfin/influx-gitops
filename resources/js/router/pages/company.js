@@ -114,7 +114,7 @@ export default {
         this.getMilestoneData();
         this.getMediaData();
         this.getPartnerData();
-        console.log('company');
+        $('title').text(`公司介紹 - inFlux普匯金融科技`);
     },
     mounted() {
         this.createSlick();
