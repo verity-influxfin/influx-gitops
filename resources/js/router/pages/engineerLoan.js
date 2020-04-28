@@ -5,7 +5,7 @@ import applyDescribeComponent from './component/applyDescribeComponent';
 import qaComponent from './component/qaComponent';
 
 export default {
-    template:`
+    template: `
         <div class="engineer-wrapper">
             <banner :data="this.bannerData"  :isShowLoan="true"></banner>
             <div class="engineer-slick" ref="engineer_slick" data-aos="zoom-in">
@@ -18,101 +18,101 @@ export default {
             <qa :data="this.qaData" title="常見問題"></qa>
         </div>
     `,
-    components:{
-        'videoShare':videoShareComponent,
-        'banner':bannerComponent,
-        'join':joinComponent,
-        'applyDescribe':applyDescribeComponent,
-        'qa':qaComponent
+    components: {
+        'videoShare': videoShareComponent,
+        'banner': bannerComponent,
+        'join': joinComponent,
+        'applyDescribe': applyDescribeComponent,
+        'qa': qaComponent
     },
-    data:()=>({
-        qaData:[],
-        bannerData:{},
-        applyData:{},
-        dossales:[
-            {"imageSrc":"./image/dossal1.png"},
-            {"imageSrc":"./image/engineer_slick2.png"},
-            {"imageSrc":"./image/dossal3.png"},
-            {"imageSrc":"./image/dossal4.png"}
+    data: () => ({
+        qaData: [],
+        bannerData: {},
+        applyData: {},
+        dossales: [
+            { "imageSrc": "./image/dossal1.png" },
+            { "imageSrc": "./image/engineer_slick2.png" },
+            { "imageSrc": "./image/dossal3.png" },
+            { "imageSrc": "./image/dossal4.png" }
         ]
     }),
-    created(){
+    created() {
         this.getApplydata();
         this.getBannerData();
         this.getQaData();
         console.log('engineerLoan');
     },
-    mounted(){
+    mounted() {
         this.createSlick();
-        $(this.$refs.apply.$refs.apply_slick).attr('data-aos','fade-up');
+        $(this.$refs.apply.$refs.apply_slick).attr('data-aos', 'fade-up');
         AOS.init();
     },
-    methods:{
-        getBannerData(){
+    methods: {
+        getBannerData() {
             const $this = this;
             $.ajax({
-                url:'getBannerData',
-                type:'POST',
-                dataType:'json',
-                data:{
-                    filter:'engineer'
+                url: 'getBannerData',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    filter: 'engineer'
                 },
-                success(data){
+                success(data) {
                     $this.bannerData = data;
                 }
             });
         },
-        getApplydata(){
+        getApplydata() {
             const $this = this;
             $.ajax({
-                url:'getApplydata',
-                type:'POST',
-                dataType:'json',
-                data:{
-                    filter:'engineer'
+                url: 'getApplydata',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    filter: 'engineer'
                 },
-                success(data){
+                success(data) {
                     $this.applyData = data;
-                    $this.$nextTick(()=>{
+                    $this.$nextTick(() => {
                         $this.$refs.apply.createSlick();
                     });
                 }
             });
         },
-        getQaData(){
+        getQaData() {
             const $this = this;
             $.ajax({
-                url:'getQaData',
-                type:'POST',
-                data:{
-                    filter:'engineer'
+                url: 'getQaData',
+                type: 'POST',
+                data: {
+                    filter: 'engineer'
                 },
-                dataType:'json',
-                success(data){
+                dataType: 'json',
+                success(data) {
                     $this.qaData = data;
                 }
             });
         },
-        createSlick(){
+        createSlick() {
             $(this.$refs.engineer_slick).slick({
                 infinite: true,
                 slidesToShow: 4,
                 slidesToScroll: 1,
                 autoplay: true,
-                dots:true,
-                dotsClass:'slick-custom-dots',
+                dots: true,
+                dotsClass: 'slick-custom-dots',
                 customPaging(slider, i) {
                     return '<i class="fas fa-circle"></i>';
                 },
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
+                nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
                     }
                 ]
             });

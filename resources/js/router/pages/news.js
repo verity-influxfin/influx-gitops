@@ -1,5 +1,5 @@
 export default {
-    template:`
+    template: `
         <div class="news-page-wrapper">
             <h1>最新消息</h1>
             <div class="news-content">
@@ -14,7 +14,7 @@ export default {
         </div>
     `,
     computed: {
-        news(){
+        news() {
             return this.$store.getters.NewsData;
         },
     }

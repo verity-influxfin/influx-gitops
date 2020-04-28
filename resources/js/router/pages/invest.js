@@ -4,7 +4,7 @@ import qaComponent from './component/qaComponent';
 import videoShareComponent from './component/videoShareComponent';
 
 export default {
-    template:`
+    template: `
         <div class="invest-wrapper">
             <banner :data="this.bannerData" :isShowInvest="true"></banner>
             <div class="compare-wrapper" data-aos="zoom-in">
@@ -20,81 +20,81 @@ export default {
             <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.shares"></videoShare>
         </div>
     `,
-    components:{
-        'videoShare':videoShareComponent,
-        'banner':bannerComponent,
-        'join':joinComponent,
-        'qa':qaComponent
+    components: {
+        'videoShare': videoShareComponent,
+        'banner': bannerComponent,
+        'join': joinComponent,
+        'qa': qaComponent
     },
-    data:()=>({
-        qaData:[],
-        bannerData:{},
-        investCategory:['./image/invest_puhey.png','./image/invest_fund.png','./image/invest_stock.png']
+    data: () => ({
+        qaData: [],
+        bannerData: {},
+        investCategory: ['./image/invest_puhey.png', './image/invest_fund.png', './image/invest_stock.png']
     }),
     computed: {
-        shares(){
+        shares() {
             return this.$store.getters.SharesData;
         }
     },
-    created(){
-        this.$store.dispatch('getSharesData',{category:'invest'});
+    created() {
+        this.$store.dispatch('getSharesData', { category: 'invest' });
         this.getBannerData();
         console.log('invest');
     },
-    mounted(){
+    mounted() {
         this.createSlick();
-        $(this.$refs.videoShare.$refs.share_content).attr('data-aos','fade-left');
+        $(this.$refs.videoShare.$refs.share_content).attr('data-aos', 'fade-left');
         AOS.init();
     },
-    methods:{
-        createSlick(){
+    methods: {
+        createSlick() {
             $(this.$refs.invest_slick).slick({
                 infinite: true,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 autoplay: true,
-                dots:true,
-                dotsClass:'slick-custom-dots',
+                dots: true,
+                dotsClass: 'slick-custom-dots',
                 customPaging(slider, i) {
                     return '<i class="fas fa-circle"></i>';
                 },
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
+                nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
                     }
                 ]
             });
         },
-        getBannerData(){
+        getBannerData() {
             const $this = this;
             $.ajax({
-                url:'getBannerData',
-                type:'POST',
-                dataType:'json',
-                data:{
-                    filter:'invest'
+                url: 'getBannerData',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    filter: 'invest'
                 },
-                success(data){
+                success(data) {
                     $this.bannerData = data;
                 }
             });
         },
-        getQaData(){
+        getQaData() {
             const $this = this;
             $.ajax({
-                url:'getQaData',
-                type:'POST',
-                data:{
-                    filter:'invest'
+                url: 'getQaData',
+                type: 'POST',
+                data: {
+                    filter: 'invest'
                 },
-                dataType:'json',
-                success(data){
+                dataType: 'json',
+                success(data) {
                     $this.qaData = data;
                 }
             });

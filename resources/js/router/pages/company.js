@@ -237,9 +237,11 @@ export default {
                 },
                 success(data){
                     $this.reportData = data;
+                    $this.$nextTick(()=>{
+                        $(this.$refs.newsModal).modal('show');
+                    });
                 }
             });
-            $(this.$refs.newsModal).modal('show');
         }
     }
 }

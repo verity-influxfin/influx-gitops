@@ -1,7 +1,7 @@
 import qaComponent from './component/qaComponent';
 
 export default {
-    template:`
+    template: `
         <div class="transfer-wrapper">
             <div class="transfer-header">
                 <div class="header-title">
@@ -40,80 +40,80 @@ export default {
             </div>
         </div>
     `,
-    components:{
-        'qa':qaComponent
+    components: {
+        'qa': qaComponent
     },
-    data:()=>({
-        qaData:[],
-        transferFlow:['./image/transfer_flow1.png','./image/transfer_flow2.png','./image/transfer_flow3.png','./image/transfer_flow4.png','./image/transfer_flow5.png','./image/transfer_flow6.png'],
-        investTonic:[]
+    data: () => ({
+        qaData: [],
+        transferFlow: ['./image/transfer_flow1.png', './image/transfer_flow2.png', './image/transfer_flow3.png', './image/transfer_flow4.png', './image/transfer_flow5.png', './image/transfer_flow6.png'],
+        investTonic: []
     }),
-    created(){
+    created() {
         this.getQaData();
         this.getInvestTonicData();
         console.log('transfer');
     },
-    mounted(){
+    mounted() {
         this.createSlick();
         AOS.init();
     },
-    watch:{
-        investTonic(){
-            this.$nextTick(()=>{
+    watch: {
+        investTonic() {
+            this.$nextTick(() => {
                 $(this.$refs.investTonic_slick).slick('refresh');
                 $(this.$refs.investTonic_slick).slick('slickSetOption', 'slidesToShow', 3);
             });
         }
     },
-    methods:{
-        getInvestTonicData(){
+    methods: {
+        getInvestTonicData() {
             const $this = this;
             $.ajax({
-                url:'getInvestTonicData',
-                type:'POST',
-                dataType:'json',
-                success(data){
-                    data.forEach((item,key)=>{
+                url: 'getInvestTonicData',
+                type: 'POST',
+                dataType: 'json',
+                success(data) {
+                    data.forEach((item, key) => {
                         data[key].link = `/articlepage/investtonic${item.id}`;
                     });
                     $this.investTonic = data;
                 }
             });
         },
-        getQaData(){
+        getQaData() {
             const $this = this;
             $.ajax({
-                url:'getQaData',
-                type:'POST',
-                data:{
-                    filter:'transfer'
+                url: 'getQaData',
+                type: 'POST',
+                data: {
+                    filter: 'transfer'
                 },
-                dataType:'json',
-                success(data){
+                dataType: 'json',
+                success(data) {
                     $this.qaData = data;
                 }
             });
         },
-        createSlick(){
+        createSlick() {
             $(this.$refs.transfer_slick).slick({
                 infinite: true,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 autoplay: true,
-                dots:true,
-                dotsClass:'slick-custom-dots',
+                dots: true,
+                dotsClass: 'slick-custom-dots',
                 customPaging(slider, i) {
                     return '<i class="fas fa-circle"></i>';
                 },
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
+                nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
                     }
                 ]
             });
@@ -123,15 +123,15 @@ export default {
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 autoplay: true,
-                prevArrow:'<i class="fas fa-chevron-left arrow-left"></i>',
-                nextArrow:'<i class="fas fa-chevron-right arrow-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
+                nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
+                        breakpoint: 767,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
                     }
                 ]
             });

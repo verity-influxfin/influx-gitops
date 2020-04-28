@@ -113,16 +113,16 @@ export default {
             let l10nEN = new Intl.NumberFormat("en-US");
             return l10nEN.format(this.data);
         },
-        experiences(){
+        experiences() {
             return this.$store.getters.ExperiencesData;
         },
-        shares(){
+        shares() {
             return this.$store.getters.SharesData;
         },
-        knowledge(){
+        knowledge() {
             return this.$store.getters.KnowledgeData;
         },
-        news(){
+        news() {
             return this.$store.getters.NewsData;
         },
     },
@@ -141,28 +141,28 @@ export default {
         $(this.$refs.experience.$refs.experience_slick).attr('data-aos', 'zoom-in');
         AOS.init();
     },
-    watch:{
-        news(){
-            this.$nextTick(()=>{
+    watch: {
+        news() {
+            this.$nextTick(() => {
                 $(this.$refs.news_slick).slick('refresh');
                 $(this.$refs.news_slick).slick('slickSetOption', 'slidesToShow', 3);
             });
         },
-        services(){
-            this.$nextTick(()=>{
+        services() {
+            this.$nextTick(() => {
                 $(this.$refs.service_slick).slick('refresh');
                 $(this.$refs.service_slick).slick('slickSetOption', 'slidesToShow', 6);
             });
         }
     },
     methods: {
-        getServiceData(){
+        getServiceData() {
             const $this = this;
             $.ajax({
-                url:'getServiceData',
-                type:'POST',
-                dataType:'json',
-                success(data){
+                url: 'getServiceData',
+                type: 'POST',
+                dataType: 'json',
+                success(data) {
                     $this.services = data;
                 }
             });
