@@ -466,6 +466,7 @@ class Certification_lib{
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
 			: $url;
+
 		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
 			$this->CI->load->library('Joint_credit_lib');
 			$return_type=json_decode($info->content)->return_type;
@@ -506,7 +507,7 @@ class Certification_lib{
 				case 'failure':
 					$status = 2;
 					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status, 'sys_check' => 1,
+						'sys_check' => 1,
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
 					$this->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
@@ -546,6 +547,7 @@ class Certification_lib{
 				$pdf    = $parser->parseFile($url);
 				$text = $pdf->getText();
 				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
+
 				switch ($res['status']) {
 					case 'pending': //轉人工
 						$status = 3;
