@@ -275,15 +275,9 @@ class Target_lib
                 $interest_rate = $credit['rate'];
                 $this->CI->load->library('Certification_lib');
                 $student_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 2, 0);
-                $diploma_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 8, 0);
                 if($student_cer){
                     if(preg_match('/\(自填\)/', $student_cer->content['school'])){
                         preg_match('/國立/', $student_cer->content['school']) ? $self_national = true : $self = true;
-                    }
-                }
-                if ($diploma_cer && !$self){
-                    if(preg_match('/\(自填\)/', $diploma_cer->content['school'])){
-                        preg_match('/國立/', $diploma_cer->content['school']) ? $self_national = true : $self = true;
                     }
                 }
                 if ($interest_rate && !$self) {
