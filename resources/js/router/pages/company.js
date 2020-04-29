@@ -117,14 +117,13 @@ export default {
         $('title').text(`公司介紹 - inFlux普匯金融科技`);
     },
     mounted() {
-        this.createSlick();
+        this.createRegulationSlick();
         AOS.init();
     },
     watch:{
         media(){
             this.$nextTick(()=>{
-                $(this.$refs.media_slick).slick('refresh');
-                $(this.$refs.media_slick).slick('slickSetOption', 'slidesToShow', 5);
+                this.createMediaSlick();
             });
         },
         milestone(){
@@ -167,7 +166,7 @@ export default {
                 }
             });
         },
-        createSlick() {
+        createRegulationSlick(){
             $(this.$refs.regulation_slick).slick({
                 infinite: true,
                 slidesToShow: 5,
@@ -190,7 +189,8 @@ export default {
                     }
                 ]
             });
-
+        },
+        createMediaSlick() {
             $(this.$refs.media_slick).slick({
                 infinite: true,
                 slidesToShow: 5,
@@ -238,7 +238,7 @@ export default {
                 success(data){
                     $this.reportData = data;
                     $this.$nextTick(()=>{
-                        $(this.$refs.newsModal).modal('show');
+                        $($this.$refs.newsModal).modal('show');
                     });
                 }
             });

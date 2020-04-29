@@ -22,19 +22,10 @@
 <script>
     export default {
         props:['title','data'],
-        watch:{
-            data(){
-                this.$nextTick(()=>{
-                    $(this.$refs.experience_slick).slick('refresh');
-                    $(this.$refs.experience_slick).slick('slickSetOption', 'slidesToShow', 4);
-                });
-            }
-        },
         methods:{
             createSlick(){
                  $(this.$refs.experience_slick).slick({
                     infinite: true,
-                    mobileFirst: true,
                     slidesToShow: 4,
                     slidesToScroll: 1,
                     autoplay: true,

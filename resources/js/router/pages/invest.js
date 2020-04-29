@@ -38,6 +38,7 @@ export default {
     },
     created() {
         this.$store.dispatch('getSharesData', { category: 'invest' });
+        this.getQaData();
         this.getBannerData();
         $('title').text(`債權投資 - inFlux普匯金融科技`);
     },

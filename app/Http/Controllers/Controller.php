@@ -14,16 +14,19 @@ class Controller extends BaseController
 
     public function getListData(Request $request){
         $data = json_decode(file_get_contents('data/listData.json'),true);
+
         return response()->json($data);
     }
 
     public function getExperiencesData(Request $request){
         $data = json_decode(file_get_contents('data/experiencesData.json'),true);
+
         return response()->json($data);
     }
 
     public function getKnowledgeData(Request $request){
         $data = json_decode(file_get_contents('data/knowledgeData.json'),true);
+
         return response()->json($data);
     }
 
@@ -51,21 +54,25 @@ class Controller extends BaseController
 
     public function getInterviewData(Request $request){
         $data = json_decode(file_get_contents('data/data.json'),true);
+
         return response()->json($data);
     }
 
     public function getNewsData(Request $request){
         $data = json_decode(file_get_contents('data/newsData.json'),true);
+
         return response()->json($data);
     }
 
     public function getServiceData(Request $request){
         $data = json_decode(file_get_contents('data/serviceData.json'),true);
+        
         return response()->json($data);
     }
 
     public function getQaData(Request $request){
         $input = $request->all();
+
         $data = json_decode(file_get_contents('data/qaData.json'),true);
 
         return response()->json($data[$input['filter']]);
@@ -119,8 +126,27 @@ class Controller extends BaseController
 
     public function getReportData(Request $request){
         $input = $request->all();
+
         $data = json_decode(file_get_contents('data/reportData.json'),true);
 
         return response()->json($data[$input['filter']]);
+    }
+
+    public function getArticleData(Request $request){
+        $input = $request->all();
+
+        @list($type,$id) = explode('-',$input['filter']);
+
+        $data = json_decode(file_get_contents('data/articleData.json'),true);
+
+        return response()->json($data[$type][$id]);
+    }
+
+    public function getVideoPage(Request $request){
+        $input = $request->all();
+
+        $data = json_decode(file_get_contents('data/articleData.json'),true);
+
+        return response()->json($data['video'][$input['filter']]);
     }
 }

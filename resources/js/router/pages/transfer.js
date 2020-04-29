@@ -54,14 +54,13 @@ export default {
         $('title').text(`債權轉讓 - inFlux普匯金融科技`);
     },
     mounted() {
-        this.createSlick();
+        this.createTransferSlick();
         AOS.init();
     },
     watch: {
         investTonic() {
             this.$nextTick(() => {
-                $(this.$refs.investTonic_slick).slick('refresh');
-                $(this.$refs.investTonic_slick).slick('slickSetOption', 'slidesToShow', 3);
+                this.createInvestTonicSlick();
             });
         }
     },
@@ -74,7 +73,7 @@ export default {
                 dataType: 'json',
                 success(data) {
                     data.forEach((item, key) => {
-                        data[key].link = `/articlepage/investtonic${item.id}`;
+                        data[key].link = `/articlepage/investtonic-${item.id}`;
                     });
                     $this.investTonic = data;
                 }
@@ -94,7 +93,7 @@ export default {
                 }
             });
         },
-        createSlick() {
+        createTransferSlick() {
             $(this.$refs.transfer_slick).slick({
                 infinite: true,
                 slidesToShow: 3,
@@ -117,7 +116,8 @@ export default {
                     }
                 ]
             });
-
+        },
+        createInvestTonicSlick(){
             $(this.$refs.investTonic_slick).slick({
                 infinite: true,
                 slidesToShow: 3,

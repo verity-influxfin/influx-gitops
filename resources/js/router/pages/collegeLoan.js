@@ -38,6 +38,7 @@ export default {
         }
     },
     created(){
+        this.$store.dispatch('getExperiencesData');
         this.$store.dispatch('getSharesData',{category:'share'});
         this.getApplydata();
         this.getBannerData();
@@ -45,19 +46,15 @@ export default {
         $('title').text(`學生貸款 - ${$('title').text()}`);
     },
     mounted(){
-        this.$refs.experience.createSlick();
-        $(this.$refs.experience.$refs.experience_slick).slick('refresh');
-        $(this.$refs.experience.$refs.experience_slick).slick('slickSetOption', 'slidesToShow', 4);
         $(this.$refs.videoShare.$refs.share_content).attr('data-aos','fade-left');
         $(this.$refs.experience.$refs.experience_slick).attr('data-aos','zoom-in');
         $(this.$refs.apply.$refs.apply_slick).attr('data-aos','fade-up');
         AOS.init();
     },
-    watch:{
-        services(){
-            this.$nextTick(()=>{
-                $(this.$refs.service_slick).slick('refresh');
-                $(this.$refs.service_slick).slick('slickSetOption', 'slidesToShow', 6);
+    watch: {
+        experiences(){
+            this.$nextTick(() => {
+                this.$refs.experience.createSlick();
             });
         }
     },

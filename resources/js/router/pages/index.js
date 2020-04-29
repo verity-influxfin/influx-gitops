@@ -127,31 +127,35 @@ export default {
         },
     },
     created() {
+        this.$store.dispatch('getExperiencesData');
+        this.$store.dispatch('getKnowledgeData');
+        this.$store.dispatch('getNewsData');
+        this.$store.dispatch('getSharesData',{category:'share'});
         this.getServiceData();
         $('title').text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
         this.typing();
         this.interval();
-        this.createSlick();
-        this.$refs.experience.createSlick();
-        $(this.$refs.experience.$refs.experience_slick).slick('refresh');
-        $(this.$refs.experience.$refs.experience_slick).slick('slickSetOption', 'slidesToShow', 4);
+        this.createProfessionSlick();
         $(this.$refs.videoShare.$refs.share_content).attr('data-aos', 'fade-left');
         $(this.$refs.experience.$refs.experience_slick).attr('data-aos', 'zoom-in');
         AOS.init();
     },
     watch: {
+        experiences(){
+            this.$nextTick(() => {
+                this.$refs.experience.createSlick();
+            });
+        },
         news() {
             this.$nextTick(() => {
-                $(this.$refs.news_slick).slick('refresh');
-                $(this.$refs.news_slick).slick('slickSetOption', 'slidesToShow', 3);
+                this.createNewsSlick();
             });
         },
         services() {
             this.$nextTick(() => {
-                $(this.$refs.service_slick).slick('refresh');
-                $(this.$refs.service_slick).slick('slickSetOption', 'slidesToShow', 6);
+                this.createServiceSlick();
             });
         }
     },
@@ -183,7 +187,7 @@ export default {
                 this.typing();
             }, 5000);
         },
-        createSlick() {
+        createServiceSlick() {
             $(this.$refs.service_slick).slick({
                 infinite: true,
                 slidesToShow: 6,
@@ -206,7 +210,8 @@ export default {
                     }
                 ]
             });
-
+        },
+        createNewsSlick() {
             $(this.$refs.news_slick).slick({
                 infinite: true,
                 slidesToShow: 3,
@@ -229,7 +234,8 @@ export default {
                     }
                 ]
             });
-
+        },
+        createProfessionSlick() {
             $(this.$refs.profession_slick).slick({
                 infinite: true,
                 slidesToShow: 4,

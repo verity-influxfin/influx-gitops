@@ -29,6 +29,11 @@
         }
     }
 
+    .pagination{
+        margin: 0px auto;
+        width: fit-content;
+    }
+
     @media (max-width:767px) {
         .news-content{
             width: 100%;
