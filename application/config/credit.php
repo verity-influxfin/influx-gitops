@@ -193,7 +193,7 @@ $config['credit_amount_1'] = [
     ['start' => 221, 'end' => 240, 'amount' =>  17000 ],
     ['start' => 201, 'end' => 220, 'amount' =>  16000 ],
     ['start' => 101, 'end' => 200, 'amount' =>  15000 ],
-    ['start' => 0, 'end' => 100, 'amount' => 0]
+    ['start' => 0, 'end' => 100, 'amount' => 3000]
 
 ];
 
