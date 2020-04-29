@@ -1,5 +1,5 @@
 export default {
-    template:`
+    template: `
         <div class="mobile-wrapper">
             <div class="mobile-header">
                 <div class="header-title">
@@ -27,21 +27,21 @@ export default {
             </div>
         </div>
     `,
-    data:()=>({
-        mobileData:[]
+    data: () => ({
+        mobileData: []
     }),
-    created(){
+    created() {
         this.getMobileData();
-        console.log('mobileLoan');
+        $('title').text(`手機分期 - inFlux普匯金融科技`);
     },
-    methods:{
-        getMobileData(){
+    methods: {
+        getMobileData() {
             const $this = this;
             $.ajax({
-                url:'getMobileData',
-                type:'POST',
-                dataType:'json',
-                success(data){
+                url: 'getMobileData',
+                type: 'POST',
+                dataType: 'json',
+                success(data) {
                     $this.mobileData = data;
                 }
             });

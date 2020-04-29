@@ -19,6 +19,7 @@ $(function () {
         if(to.path ==="/"){
             next('/index');
         }else{
+            $(window).scrollTop('0');
             next();
         }
     })
@@ -41,12 +42,7 @@ $(function () {
             actionList: []
         },
         created() {
-            this.$store.dispatch('getExperiencesData');
-            this.$store.dispatch('getKnowledgeData');
-            this.$store.dispatch('getNewsData');
-            this.$store.dispatch('getSharesData',{category:'share'});
             this.getListData();
-            console.log('page done');
         },
         mounted() {
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });

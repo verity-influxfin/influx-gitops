@@ -4,7 +4,7 @@ export default {
     },
     mutationKnowledgeData(state,data){
         data.forEach((item,key)=>{
-            data[key].link = `/articlepage/knowledge${item.id}`;
+            data[key].link = `/articlepage/knowledge-${item.id}`;
         });
         state.knowledge = data;
     },
@@ -19,7 +19,7 @@ export default {
     },
     mutationNewsData(state,data){
         data.forEach((item,key)=>{
-            data[key].link = `/articlepage/news${item.id}`;
+            data[key].link = `/articlepage/news-${item.id}`;
         });
         state.news = data;
     }

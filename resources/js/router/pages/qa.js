@@ -1,7 +1,7 @@
 import qaComponent from './component/qaComponent';
 
 export default {
-    template:`
+    template: `
         <div class="qaPage-wrapper" id="qaPage">
             <div class="qaPage-header">
                 <div class="header-title">
@@ -22,27 +22,27 @@ export default {
             <a class="back-top" href="#qaPage"><i class="fas fa-arrow-left"></i></a>
         </div>
     `,
-    components:{
-        'qa':qaComponent
+    components: {
+        'qa': qaComponent
     },
-    data:()=>({
-        qaData:{}
+    data: () => ({
+        qaData: {}
     }),
-    created(){
+    created() {
         this.getQaData();
-        console.log('qa');
+        $('title').text(`常見問題 - inFlux普匯金融科技`);
     },
-    methods:{
-        getQaData(){
+    methods: {
+        getQaData() {
             const $this = this;
             $.ajax({
-                url:'getQaData',
-                type:'POST',
-                data:{
-                    filter:'qa'
+                url: 'getQaData',
+                type: 'POST',
+                data: {
+                    filter: 'qa'
                 },
-                dataType:'json',
-                success(data){
+                dataType: 'json',
+                success(data) {
                     $this.qaData = data;
                 }
             });

@@ -5,7 +5,7 @@ import applyDescribeComponent from './component/applyDescribeComponent';
 import qaComponent from './component/qaComponent';
 
 export default {
-    template:`
+    template: `
         <div class="freshGraduate-wrapper">
             <banner :data="this.bannerData"  :isShowLoan="true"></banner>
             <div class="img-wrapper" data-aos="flip-up">
@@ -18,77 +18,77 @@ export default {
             <videoShare ref="videoShare" title="借款人怎麼說？" :data="this.shares"></videoShare>
         </div>
     `,
-    components:{
-        'videoShare':videoShareComponent,
-        'banner':bannerComponent,
-        'join':joinComponent,
-        'applyDescribe':applyDescribeComponent,
-        'qa':qaComponent
+    components: {
+        'videoShare': videoShareComponent,
+        'banner': bannerComponent,
+        'join': joinComponent,
+        'applyDescribe': applyDescribeComponent,
+        'qa': qaComponent
     },
-    data:()=>({
-        qaData:[],
-        bannerData:{},
-        applyData:{}
+    data: () => ({
+        qaData: [],
+        bannerData: {},
+        applyData: {}
     }),
     computed: {
-        shares(){
+        shares() {
             return this.$store.getters.SharesData;
         }
     },
-    created(){
-        this.$store.dispatch('getSharesData',{category:'loan'});
+    created() {
+        this.$store.dispatch('getSharesData', { category: 'loan' });
         this.getApplydata();
         this.getBannerData();
         this.getQaData();
-        console.log('workerLoan');
+        $('title').text(`上班族貸款 - inFlux普匯金融科技`);
     },
-    mounted(){
-        $(this.$refs.apply.$refs.apply_slick).attr('data-aos','fade-up');
-        $(this.$refs.videoShare.$refs.share_content).attr('data-aos','fade-left');
+    mounted() {
+        $(this.$refs.apply.$refs.apply_slick).attr('data-aos', 'fade-up');
+        $(this.$refs.videoShare.$refs.share_content).attr('data-aos', 'fade-left');
         AOS.init();
     },
-    methods:{
-        getBannerData(){
+    methods: {
+        getBannerData() {
             const $this = this;
             $.ajax({
-                url:'getBannerData',
-                type:'POST',
-                dataType:'json',
-                data:{
-                    filter:'freshgraduate'
+                url: 'getBannerData',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    filter: 'freshgraduate'
                 },
-                success(data){
+                success(data) {
                     $this.bannerData = data;
                 }
             });
         },
-        getApplydata(){
+        getApplydata() {
             const $this = this;
             $.ajax({
-                url:'getApplydata',
-                type:'POST',
-                dataType:'json',
-                data:{
-                    filter:'freshgraduate'
+                url: 'getApplydata',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    filter: 'freshgraduate'
                 },
-                success(data){
+                success(data) {
                     $this.applyData = data;
-                    $this.$nextTick(()=>{
+                    $this.$nextTick(() => {
                         $this.$refs.apply.createSlick();
                     });
                 }
             });
         },
-        getQaData(){
+        getQaData() {
             const $this = this;
             $.ajax({
-                url:'getQaData',
-                type:'POST',
-                data:{
-                    filter:'freshgraduate'
+                url: 'getQaData',
+                type: 'POST',
+                data: {
+                    filter: 'freshgraduate'
                 },
-                dataType:'json',
-                success(data){
+                dataType: 'json',
+                success(data) {
                     $this.qaData = data;
                 }
             });

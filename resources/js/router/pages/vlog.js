@@ -29,7 +29,7 @@ export default {
     },
     created(){
         this.refresh();
-        console.log('vlog');
+        $('title').text(`影音分享 - inFlux普匯金融科技`);
     },
     methods:{
         refresh(){

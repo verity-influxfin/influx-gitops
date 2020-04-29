@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +10,7 @@
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta property=”fb:app_id” content=”2194926914163491”>
         <title>inFlux普匯金融科技</title>
         <link rel="icon" href="{{ asset('image/site_icon.png') }}">
 
@@ -39,6 +40,17 @@
 
         <!-- local -->
         <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
+
+        <script>
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=2194926914163491";
+                fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk')
+            );
+        </script>
     </head>
     <body>
         <div id="web_index">
@@ -105,9 +117,11 @@
                 <div><img src="{{ asset('image/message_icon.png') }}" class="img-fluid" @click="display"></div>
                 <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
                 <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
-                <div><a target="_blank" href="#"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
             </div>
-            <div class="afc_popup hidden-desktop">
+            <div class="afc_popup hidden-desktop" style="bottom: 150px;">
+                <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
+                <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
                 <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
             </div>
         </div>
