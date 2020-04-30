@@ -12,6 +12,9 @@ import blog from "./pages/blog";
 import vlog from "./pages/vlog";
 import videoPage from './pages/videoPage';
 import articlePage from './pages/articlePage';
+import userTerms from './pages/userTerms';
+import privacyTerms from './pages/privacyTerms';
+import loanerTerms from './pages/loanerTerms';
 
 let routers = [
     { path: '/index', component: index },
@@ -28,6 +31,9 @@ let routers = [
     { path: '/qa', component: qa },
     { path: '/videopage/:id', component: videoPage },
     { path: '/articlepage/:id', component: articlePage },
+    { path: '/userTerms', component: userTerms },
+    { path: '/privacyTerms', component: privacyTerms },
+    { path: '/loanerTerms', component: loanerTerms },
 ];
 
 export default routers;

@@ -78,6 +78,8 @@
 
     .investTonic-slick{
         @extend %slick-style;
+        width: 75%;
+        margin: 0px auto;
 
         .slick-item{
             margin: 0px 10px;
@@ -93,11 +95,12 @@
             }
         }
 
-        @media (min-width: 767px) {
-            width: 75%;
-            margin: 0px auto;
-            .slick-list{
-                width: 90%;
+        @media (max-width: 1023px) {
+            .arrow-left{
+                left: -20px;
+            }
+            .arrow-right{
+                right:-20px;
             }
         }
 

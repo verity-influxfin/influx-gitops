@@ -34,6 +34,7 @@
 
         .share-content{
             display: flex;
+            width: 100%;
 
             .content-row{
                 width: 25%;
@@ -65,7 +66,7 @@
             }
         }
 
-        @media (max-width:767px) {
+        @media (max-width:1023px) {
             h2{
                 font-size: 26px;
             }
@@ -76,6 +77,10 @@
                 .content-row{
                     width: 100%;
                     margin: 0px;
+
+                    iframe{
+                        height: 400px;
+                    }
                 }
             }
         }

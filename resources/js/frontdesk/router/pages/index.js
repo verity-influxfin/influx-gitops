@@ -6,7 +6,7 @@ export default {
     template: `
         <div>
             <div class="banner">
-                <img src="./image/banner.jpg" class="img-responsive">
+                <img src="./image/banner.jpg" class="banner-img">
                 <div class="cover"></div>
                 <p class="heading-title">我們成功幫助了{{count}}筆交易</p>
                 <p class="heading-description" ref="description"></p>
@@ -202,6 +202,13 @@ export default {
                 nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
+                        breakpoint: 1023,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
                         breakpoint: 767,
                         settings: {
                             slidesToShow: 1,
@@ -226,7 +233,7 @@ export default {
                 nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
-                        breakpoint: 767,
+                        breakpoint: 1023,
                         settings: {
                             slidesToShow: 1,
                             slidesToScroll: 1

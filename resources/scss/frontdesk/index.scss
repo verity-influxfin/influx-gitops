@@ -1,36 +1,36 @@
 %make-center {
     position: absolute;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     color: #ffffff;
 }
 
-%headler-btn{
+%headler-btn {
     border-radius: 30px;
     font-weight: 600;
     padding: 10px 25px;
-    color:#ffffff;
+    color: #ffffff;
     opacity: 0.8;
 
-    &:hover{
-        background-color:#ff6a00;
+    &:hover {
+        background-color: #ff6a00;
     }
 }
 
-%wrapper-title{
+%wrapper-title {
     text-align: center;
     padding: 20px 0px;
     font-weight: bolder;
 }
 
-%slick-style{
-    .slick-list{
+%slick-style {
+    .slick-list {
         width: 90%;
         margin: 0px auto;
         cursor: all-scroll;
     }
 
-    .slick-arrow{
+    .slick-arrow {
         position: absolute;
         top: 50%;
         transform: translatey(-50%);
@@ -39,15 +39,15 @@
         cursor: pointer;
     }
 
-    .arrow-left{
-        left:20px;
-    }
-    
-    .arrow-right{
-        right:20px;
+    .arrow-left {
+        left: 20px;
     }
 
-    .slick-custom-dots{
+    .arrow-right {
+        right: 20px;
+    }
+
+    .slick-custom-dots {
         position: absolute;
         padding: 15px 0px;
         text-align: center;
@@ -58,35 +58,36 @@
         transform: translateX(-50%);
         font-size: 13px;
 
-        li{
+        li {
             margin: 0px 3px;
         }
 
-        .slick-active{
+        .slick-active {
             color: #000000;
         }
     }
 }
-  
-.banner{
+
+.banner {
     position: relative;
     overflow: hidden;
+    height: 670 * 0.9px;
 
-    .img-responsive{
-        height:670*0.9px ;
+    .banner-img {
+        height: 670 * 0.9px;
     }
 
-    .cover{
+    .cover {
         position: absolute;
-        top:0px;
-        left:0px;
+        top: 0px;
+        left: 0px;
         width: 100%;
-        height:670*0.9px;
+        height: 670 * 0.9px;
         background-color: #00000021;
     }
 
-    .heading-title{
-         @extend %make-center;
+    .heading-title {
+        @extend %make-center;
         top: 22%;
         font-size: 42px;
         font-weight: 700;
@@ -94,7 +95,7 @@
         width: fit-content;
     }
 
-    .heading-description{
+    .heading-description {
         @extend %make-center;
         top: 40%;
         font-size: 30px;
@@ -102,24 +103,24 @@
         width: fit-content;
     }
 
-    .heading-container{
+    .heading-container {
         @extend %make-center;
         width: fit-content;
         top: 58%;
 
-        .btn-loan{
+        .btn-loan {
             @extend %headler-btn;
             background-color: #ffeb01;
             margin-right: 60px;
         }
 
-        .btn-invest{
+        .btn-invest {
             @extend %headler-btn;
             background-color: #0419b2;
         }
     }
 
-    .heading-info{
+    .heading-info {
         @extend %make-center;
         top: 85%;
         text-align: center;
@@ -130,43 +131,45 @@
         color: #e0e0e0;
     }
 
-    
-        
     @media (max-width: 767px) {
-        .heading-title{
+        .banner-img {
+            position: absolute;
+            left: -71%;
+        }
+
+        .heading-title {
             font-size: 25px;
         }
 
-        .heading-description{
+        .heading-description {
             font-size: 23px;
-            top:34%;
+            top: 34%;
         }
-        .heading-container{
+        .heading-container {
             top: 52%;
         }
-        .heading-info{
+        .heading-info {
             top: 78%;
         }
     }
-
 }
 
-.service-items-wrapper{
+.service-items-wrapper {
     width: 100%;
     margin: 50px 0px;
     min-height: 377px;
     overflow: hidden;
 
-    .service-slick{
+    .service-slick {
         @extend %slick-style;
 
-        .slick-item{
+        .slick-item {
             position: relative;
             img {
-                width:228px;
+                width: 228px;
             }
 
-            div{
+            div {
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -176,29 +179,29 @@
                 color: #ffffff;
             }
         }
-        
+
         @media (min-width: 767px) {
-            .slick-custom-dots{
+            .slick-custom-dots {
                 display: none;
             }
         }
 
         @media (max-width: 767px) {
-            .slick-item{
+            .slick-item {
                 img {
-                    margin:0px auto;
+                    margin: 0px auto;
                 }
             }
         }
     }
 }
 
-.profession-wrapper{
+.profession-wrapper {
     margin-top: 50px;
     overflow: hidden;
 
-    .profession-title{
-        background-color: #002E58;
+    .profession-title {
+        background-color: #002e58;
         color: #ffffff;
         margin: 55px auto;
         padding: 20px 60px;
@@ -206,32 +209,32 @@
         border-bottom-right-radius: 24px;
         text-align: center;
 
-        p{
+        p {
             font-size: 22px;
             font-weight: 700;
         }
 
-        span{
+        span {
             font-size: 18px;
         }
     }
 
-    .profession-content{
+    .profession-content {
         display: flex;
 
-        div{
+        div {
             text-align: center;
             box-shadow: 0 0 5px #293e5d;
             padding: 10px 50px;
             margin: 0px 50px;
 
-            img{
-                max-width:81%;
+            img {
+                max-width: 81%;
                 height: auto;
             }
 
-            p{
-                color: #002E58;
+            p {
+                color: #002e58;
                 font-size: 19px;
                 text-align: center;
                 font-weight: 700;
@@ -239,112 +242,124 @@
         }
     }
 
-    .profession-footer{
-
-        .profession-slick{
+    .profession-footer {
+        .profession-slick {
             padding: 50px 0px;
 
             @extend %slick-style;
 
-            .slick-item{
+            .slick-item {
                 margin: 0px 10px;
                 cursor: default;
             }
-    
-            .slick-list{
+
+            .slick-list {
                 width: 100%;
             }
-            
+
             @media (min-width: 767px) {
-                .slick-custom-dots{
+                .slick-custom-dots {
                     display: none;
+                }
+            }
+
+            @media (max-width: 1023px) {
+                .slick-item {
+                    margin: 0px 3px;
                 }
             }
         }
     }
 
     @media (max-width: 767px) {
-        .profession-title{
+        .profession-title {
             padding: 20px 15px;
         }
 
-        .profession-content{
+        .profession-content {
             display: block;
 
-            div{
+            div {
                 margin: 25px 10px;
             }
         }
 
-        .profession-footer{
-            .profession-slick{
+        .profession-footer {
+            .profession-slick {
                 display: block;
+            }
+        }
+    }
+
+    @media (max-width: 1023px) {
+        .profession-content {
+            div {
+                margin: 10px;
             }
         }
     }
 }
 
-.message-wrapper{
+.message-wrapper {
     overflow: hidden;
 
-    h2{
-        @extend %wrapper-title
+    h2 {
+        @extend %wrapper-title;
     }
 
-    .message-content{
+    .message-content {
         display: flex;
 
-        .content-row{
+        .content-row {
             width: 25%;
             margin: 10px;
-            background: #F7F7F7;
+            background: #f7f7f7;
 
-            div{
+            div {
                 padding: 15px;
                 text-align: justify;
 
-                a{
-                    color:#ffffff;
+                a {
+                    color: #ffffff;
                     margin-top: 10px;
                 }
             }
         }
     }
 
-    @media (max-width:767px) {
-        h2{
+    @media (max-width: 1023px) {
+        h2 {
             font-size: 26px;
         }
 
-        .message-content{
+        .message-content {
             display: block;
 
-            .content-row{
+            .content-row {
                 width: 100%;
             }
         }
     }
 }
 
-.news-wrapper{
+.news-wrapper {
     width: 100%;
     margin: 50px 0px;
     min-height: 400px;
     overflow: hidden;
 
-    h2{
-        @extend %wrapper-title
-    } 
+    h2 {
+        @extend %wrapper-title;
+    }
 
-    .news-slick{
-
-        .slick-item{
+    .news-slick {
+        .slick-item {
             margin: 0px 15px;
 
-            a{
-                color:#000000;
+            a {
+                color: #000000;
                 font-weight: bolder;
-                &:hover{
+                &:hover {
                     text-decoration: none;
                 }
             }

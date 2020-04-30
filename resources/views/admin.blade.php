@@ -34,6 +34,6 @@
         <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
     </head>
     <body>
-        Hello World
+        施工中...
     </body>
 </html>

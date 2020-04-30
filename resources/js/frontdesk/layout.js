@@ -69,6 +69,9 @@ $(function () {
                 } else {
                     timeLineMax.reverse();
                 }
+            },
+            backtotop(){
+                $(window).scrollTop('0');
             }
         }
     });

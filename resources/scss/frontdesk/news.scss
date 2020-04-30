@@ -34,6 +34,16 @@
         width: fit-content;
     }
 
+    @media (max-width:1023px) {
+        .news-content{
+            width: 95%;
+
+            .card{
+                width: 46%;
+            }
+        }
+    }
+
     @media (max-width:767px) {
         .news-content{
             width: 100%;

@@ -20,6 +20,18 @@
                 display: none;
             }
         }
+        
+        @media (max-width: 1023px) {
+            .slick-item {
+                margin: 0px 3px;
+            }
+        }
+    }
+
+    @media (max-width:1023px){
+        .loan-banner img{
+            left: -56%;
+        }
     }
 
     @media (max-width:767px) {

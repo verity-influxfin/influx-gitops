@@ -30,7 +30,7 @@ export default {
                 <h2>投資理財大補帖</h2>
                 <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
                     <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
-                        <img :src="item.imgSrc">
+                        <img :src="item.imgSrc" class="img-fluid">
                         <p>【普匯觀點】</p>
                         <p>{{item.title}}</p>
                         <br>
@@ -126,6 +126,13 @@ export default {
                 prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
                 nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
+                    {
+                        breakpoint: 1023,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1
+                        }
+                    },
                     {
                         breakpoint: 767,
                         settings: {

@@ -1,15 +1,28 @@
 .freshGraduate-wrapper{
     .loan-banner{
-        @media (min-width: 767px) {
-            img{
-                bottom: -95% !important;
-                width: 110%;
+        img{
+            bottom: -95%;
+            width: 110%;
+        }
+
+        @media (max-width: 1024px) {
+            img {
+                bottom: -45%;
             }
         }
     
+        @media (max-width: 1023px){
+            img {
+                left: 0%;
+                bottom: -10%;
+            }
+        }
+
         @media (max-width: 767px){
             img {
-                left: -46% !important;
+                left: -49%;
+                bottom: -10%;
+                width: auto;
             }
         }
     }

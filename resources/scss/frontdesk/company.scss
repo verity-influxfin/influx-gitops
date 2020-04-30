@@ -51,6 +51,13 @@
                 }
             }
 
+            @media (max-width:1023px) {
+                img{
+                    width: auto;
+                    top: 0%;
+                }
+            }
+
             @media (max-width:767px) {
                 img{
                     width: auto;
@@ -232,7 +239,7 @@
             }
         }
 
-        @media (max-width:767px) {
+        @media (max-width:1023px) {
             .block{
                 width: 95%;
             }

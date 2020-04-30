@@ -83,10 +83,12 @@
                     <div class="col-lg col-md col-sm list-row">
                         <p class="title">選單列表</p>
                         <ul class="list-column">
-                            <li v-for="item in infoList"><i class="fas fa-check"></i>${item}</li>
+                            <li v-for="item in infoList"><i class="fas fa-check"></i><router-link :to="item.href">${item.text}</router-link></li>
                         </ul>
                         <ul class="list-column">
-                            <li v-for="item in actionList"><i class="fas fa-check"></i>${item}</li>
+                            <li v-for="item in actionList">
+                                <i class="fas fa-check"></i><router-link :to="item.href">${item.text}</router-link>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-lg col-md col-sm contact-row">
@@ -124,6 +126,7 @@
                 <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
                 <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
             </div>
+            <a class="back-top" @click="backtotop"><i class="fas fa-arrow-left"></i></a>
         </div>
     </body>
 </html>

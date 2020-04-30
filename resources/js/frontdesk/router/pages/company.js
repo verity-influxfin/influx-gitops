@@ -181,6 +181,13 @@ export default {
                 nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
                 responsive: [
                     {
+                        breakpoint: 1023,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
                         breakpoint: 767,
                         settings: {
                             slidesToShow: 1,
@@ -199,6 +206,13 @@ export default {
                 prevArrow: '',
                 nextArrow: '',
                 responsive: [
+                    {
+                        breakpoint: 1023,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
                     {
                         breakpoint: 767,
                         settings: {

@@ -91,6 +91,12 @@ export default {
                 font-size: 23px;
             }
         }
+
+        @media (max-width: 1023px) {
+            .qa-accordion{
+                width: 90%;
+            }
+        }
         
         @media (max-width: 767px) {
             .qa-accordion{

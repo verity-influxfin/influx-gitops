@@ -2,7 +2,7 @@ import qaComponent from './component/qaComponent';
 
 export default {
     template: `
-        <div class="qaPage-wrapper" id="qaPage">
+        <div class="qaPage-wrapper">
             <div class="qaPage-header">
                 <div class="header-title">
                     <img src="./image/child_banner.jpg">
@@ -19,7 +19,6 @@ export default {
                 <div id="invest"><qa :data="this.qaData.investData" category="invest" title="投資常見問題" :hideLink="true"></qa></div>
                 <div id="afterLoanData"><qa :data="this.qaData.afterLoanData" category="afterLoanData" title="貸後常見問題" :hideLink="true"></qa></div>
             </div>
-            <a class="back-top" href="#qaPage"><i class="fas fa-arrow-left"></i></a>
         </div>
     `,
     components: {

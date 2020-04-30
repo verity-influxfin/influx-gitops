@@ -52,6 +52,13 @@
             }
         }
 
+        @media (max-width:1023px) {
+            div{
+                width: 45%;
+                padding: 0px;
+            }
+        }
+
         @media (max-width:767px) {
             div{
                 width: 94%;
