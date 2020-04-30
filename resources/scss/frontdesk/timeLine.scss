@@ -110,8 +110,8 @@ html * {
         height: 60px;
         margin-left: -13px;
         /* Force Hardware Acceleration in WebKit */
-        -webkit-transform: translateZ(0);
-        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        backface-visibility: hidden;
     }
     .cd-timeline-img.is-hidden {
         visibility: hidden;

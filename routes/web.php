@@ -52,3 +52,11 @@ Route::post('/getReportData', 'Controller@getReportData');
 Route::post('/getArticleData', 'Controller@getArticleData');
 
 Route::post('/getVideoPage', 'Controller@getVideoPage');
+
+
+// backstage
+
+
+Route::get('/web-admin', function () {
+    return view('admin');
+});

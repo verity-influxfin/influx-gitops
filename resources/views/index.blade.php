@@ -23,7 +23,7 @@
         <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
 
         <!-- local -->
-        <link rel="stylesheet" href="{{ asset('css/all.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/web.css') }}">
 
         <!-- package -->
         <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
