@@ -6,7 +6,7 @@ import mutations from './store/mutations';
 //vue router
 import routers from './router/router';
 
-$(function () {
+$(() => {
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
     const timeLineMax = new TimelineMax({ paused: true, reversed: true });

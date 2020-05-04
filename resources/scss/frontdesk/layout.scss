@@ -182,7 +182,7 @@ body{
     font-size: 25px;
     border-radius: 30px;
     z-index: 1;
-    color: #00bd77 !important;
+    color: #000000 !important;
     box-shadow: 0 0 12px black;
     cursor: pointer;
 }
@@ -197,17 +197,5 @@ body{
     }
 }
 
-@import 'index';
-@import 'collegeLoan';
-@import 'freshGraduateLoan';
-@import 'engineerLoan';
-@import 'invest';
-@import 'transfer';
-@import 'mobileLoan';
-@import 'qa';
-@import 'company';
-@import 'news';
-@import 'blog';
-@import 'vlog';
 @import 'contentPage';
 @import 'terms';
