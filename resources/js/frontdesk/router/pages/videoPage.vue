@@ -19,7 +19,7 @@
       :href="this.link"
       num_posts="10"
       notify="true"
-      :width="(window.outerWidth*0.99).toFixed(0)"
+      :width="(this.Width*0.99).toFixed(0)"
     ></fb:comments>
     <shareBtn :link="this.link"></shareBtn>
   </div>
@@ -33,6 +33,7 @@ export default {
     shareBtn: shareBtnComponent
   },
   data: () => ({
+    width: window.outerWidth,
     link: window.location.toString().replace("#", "%23"),
     videoTitle: "",
     videoImg: "",

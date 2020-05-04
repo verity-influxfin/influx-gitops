@@ -20,9 +20,6 @@ import applyDescribeComponent from "./component/applyDescribeComponent";
 import qaComponent from "./component/qaComponent";
 
 export default {
-  template: `
-        
-    `,
   components: {
     videoShare: videoShareComponent,
     banner: bannerComponent,
