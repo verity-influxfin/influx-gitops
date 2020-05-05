@@ -1607,9 +1607,7 @@ class Target_lib
                             if (count($finish_stage_cer) != 0) {
                                 asort($finish_stage_cer);
                                 $implode = implode('', $finish_stage_cer);
-                                if ($implode == '2' || $implode == '8910' || $implode == '10') {
-                                    $stage_cer = 1;
-                                } elseif ($implode == '89') {
+                                if ($implode == '89') {
                                     $stage_cer = 2;
                                 } elseif ($implode == '9') {
                                     $stage_cer = 3;
