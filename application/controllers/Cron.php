@@ -377,7 +377,7 @@ class Cron extends CI_Controller {
       }
 
       $this->load->model('user/user_model');
-      $meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], $current->offset, 1);
+      $meta = $this->user_model->getUsersBy(['certification_id'=>1], [], $current->offset, 1);
 
       $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
       $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
@@ -389,7 +389,7 @@ class Cron extends CI_Controller {
           $current->offset++;
         }
 
-        $meta = $this->user_model->getUsersBy(['certification_id'=>5], ['name', 'id_card_place'], $current->offset, 1);
+        $meta = $this->user_model->getUsersBy(['certification_id'=>1], [], $current->offset, 1);
 
         if(! empty($meta)){
           $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->id);
