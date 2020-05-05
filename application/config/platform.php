@@ -104,7 +104,7 @@ $config['admin_menu'] = [
 if (ENVIRONMENT == 'development') {
     $config['admin_email'] = ['news@influxfin.com', 'brian@influxfin.com'];
 } else {
-    $config['admin_email'] = ['yaomu@influxfin.com', 'lc@influxfin.com'];//,'mori2.tw@gmail.com','rogerkuo@influxfin.com'
+    $config['admin_email'] = ['yaomu@influxfin.com'];
 }
 
 //期數
