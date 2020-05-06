@@ -1708,6 +1708,7 @@ class Target extends MY_Admin_Controller {
                 "id" => (int) $target->id,
                 "product_id" => (int) $target->product_id,
                 "target_no" => $target->target_no,
+                "user_id" => $target->user_id,
                 "loan_amnt" => (int) $target->amount,
                 "funded_amnt" => (int) $target->loan_amount,
                 "term" => (int) $target->instalment,
