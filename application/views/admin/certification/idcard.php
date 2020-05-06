@@ -279,25 +279,44 @@
                                     if(isset($remark["error"]) && $remark["error"]){
                                         echo '<p style="color:red;" class="form-control-static">錯誤：<br />'.$remark["error"].'</p>';
                                     }
-                                    if($remark["face"] && is_array($remark["face"])){
-                                        echo '<p class="form-control-static">照片比對結果(Sys1)：';
-                                        foreach($remark["face"] as $key => $value){
-                                            echo $value."% ";
+
+                                    echo '<p class="form-control-static">Azure 面孔比對結果：';
+                                    echo '<br />持證自拍照：' . $remark["face8"]['count'][0] . ' 人臉';
+                                    echo '<br />身分證正面照：' . $remark["face8"]['count'][1] . ' 人臉';
+                                    if(isset($remark["face"]) && count($remark["face"]) >= 2) {
+                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][0] . "% 並可能" . ($remark["face_flag"][0] ? '為本人' : '非本人');
+                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][1] . "% 並可能" . ($remark["face_flag"][1] ? '為本人' : '非本人');
+                                        echo '</p>';
+                                    }
+
+                                    if(isset($remark["faceplus"]) && count($remark["faceplus"])>0){
+                                        echo '<p class="form-control-static">Face++ 面孔比對結果：';
+                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["faceplus"][0];
+                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["faceplus"][1];
+                                        echo '</p>';
+                                    }
+
+                                    if(isset($remark["face8"])){
+                                        function confidence($confidence){
+                                            $rs = '低 ( 1/1000 )';
+                                            if($confidence >= 0.52){
+                                                $rs = '高 ( 1/100000 )';
+                                            }elseif($confidence >= 0.46){
+                                                $rs = '中 ( 1/10000 )';
+                                            }
+                                            return $rs;
+                                        }
+                                        function liveness($value){
+                                            return $value>=0.97?'活體':'非活體';
+                                        }
+                                        echo '<p class="form-control-static">Face8 面孔比對結果：';
+                                        echo '<br />持證自拍照：' . $remark["face8"]['count'][0] . ' 人臉 ' . ($remark["face8"]['count'][0] >=2 ? ' ( 臉1 ' . liveness($remark["face8"]['liveness'][0][0]) . ' / 臉2 ' . liveness($remark["face8"]['liveness'][0][1]) . ' )' : '');
+                                        echo '<br />身分證正面照：' . $remark["face8"]['count'][1] . ' 人臉 ' .($remark["face8"]['count'][1] > 0 ? ' ( ' . liveness($remark["face8"]['liveness'][0][1]). ' )' : '');
+                                        if($remark["face8"]['count'][0] >=2){
+                                            echo '<br />「身分證正面照」與「持證自拍者」相似度：' . confidence($remark["face8"]['score'][0]);
+                                            echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . confidence($remark["face8"]['score'][1]);
                                         }
                                         echo '</p>';
-                                        if(isset($remark["faceplus"])&&count($remark["faceplus"])>0){
-                                            echo '<p class="form-control-static">照片比對結果(Sys2)：';
-                                            foreach($remark["faceplus"] as $key => $value){
-                                                echo $value."% ";
-                                            }
-                                            echo '</p>';
-                                        }
-                                        if(isset($remark["face8"])){
-                                            echo '<p class="form-control-static">Face8 比對結果：';
-                                            echo '<br />人臉數量：' . $remark["face8"]['count'][0] .' / '. $remark["face8"]['count'][1];
-                                            echo '<br />分數：' . $remark["face8"]['score'][0] .' / '. $remark["face8"]['score'][1];
-                                            echo '</p>';
-                                        }
                                     }
                                 }
                                 ?>
@@ -377,7 +396,7 @@
                                     </table>
                                 </div>
                                 <div class="form-group">
-                                    <label for="disabledSelect">本人照</label><br>
+                                    <label for="disabledSelect">持證自拍照</label><br>
                                     <table>
                                         <tr>
                                             <td rowspan="2">
