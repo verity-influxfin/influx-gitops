@@ -1,3 +1,6 @@
+<?php
+print_r(empty($list['response']['verdicts']));
+?>
 <script>
   var page = <?=isset($case_info['page'])?$case_info['page']:'' ?>;
   var count = <?=isset($case_info['count'])?$case_info['count']:'' ?>;
@@ -19,7 +22,7 @@
     }else{
       $('#next').attr("href", '?name='+ name +'&case='+ case_name +'&page='+ next +'&count='+count);
     }
-    if(<?isset($list['response']['verdicts'])?1:0 ?>){
+    if(<?php print_r(! empty($list['response']['verdicts'])?1:0); ?>){
       $('.case-page-list').show();
     }
   });
