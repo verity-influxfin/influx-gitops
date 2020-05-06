@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
     function check_fail() {
         var status = $('#status :selected').val();
         if (status == 2) {
@@ -7,6 +7,153 @@
             $('#fail_div').hide();
         }
     }
+
+    function requestVerdictStatuses() {
+          var data = {
+              'user_id' : '<?=isset($data->company_user_id)?$data->company_user_id:"" ?>',
+          }
+
+          var url = '/admin/certification/verdict_statuses';
+
+          $.ajax({
+              type: "GET",
+              url: url,
+              data: data,
+              success: function(response) {
+                  if (!response) {
+                      alert('爬蟲狀態請求未成功送出');
+                      return;
+                  }
+                  if (response.status.code == 400) {
+                      // alert('參數錯誤，爬蟲狀態請求未成功送出');
+                      return;
+                  }
+
+                  if (response.status.code == 204) {
+                      html = '<tr><td>狀態</td><td>請求未被收到</td></tr>';
+                      $('#verdict_list').html(html);
+                      $('.run-scraper-tr').show();
+                      return;
+                  }
+                  if (response.status.code == 200) {
+                      var data_arry = response.response.verdict_statuses.response;
+                      var data_date = new Date( data_arry.updatedAt * 1000);
+
+                      html = '<tr><td>名字</td><td>'+ data_arry.query +'</td></tr><tr><td>戶籍地</td><td>'+ data_arry.location +'</td></tr><tr><td>狀態</td><td>'
+                      + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
+                      $("#verdict_list").html(html);
+
+                      if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
+                        setTimeout(function() { requestVerdictStatuses()}, 5000 );
+                      }
+                      if(data_arry.status=='爬蟲執行完成'){
+                        requestVerdictCount();
+                        if(new Date($.now()-604800000) > data_date){
+                          $('#run-scraper-btn').text('重新執行爬蟲');
+                          $('.run-scraper-tr').show();
+                        }
+                      }
+                      return;
+                  }
+              },
+              error: function() {
+                  alert('爬蟲狀態請求未成功送出');
+              }
+          });
+      }
+
+      function requestVerdictCount() {
+        consol.log(1);
+            var data = {
+                'name' : '<?=isset($data->company)?$data->company:"" ?>',
+            }
+
+            var url = '/admin/certification/verdict_count';
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: data,
+                success: function(response) {
+                    if (!response) {
+                        alert('案件資訊請求未成功送出');
+                        return;
+                    }
+                    if (response.status.code == 400) {
+                        alert('參數錯誤，案件資訊請求未成功送出');
+                        return;
+                    }
+
+                    if (response.status.code == 204) {
+                      html = '<tr><td colspan="2" style="text-align: -webkit-center;">無案件資料</td></tr>';
+                        $("#case_list").html(html);
+                        return;
+                    }
+
+                    if (response.status.code == 200) {
+                        var case_list = response.response.verdict_count.response.verdict_count;
+                        case_list.forEach(function(case_list){
+                          list_head = '<tr><td ';
+                          list_style = 'style="color:red;"';
+                          list_foot = '>' + case_list.name +'</td><td><a target="_blank" href="/admin/Certification/judicial_yuan_case?name=<?=isset($data->company)?$data->company:"" ?>&case='+ case_list.name +'&page=1&count='+ case_list.count +'"  >' + case_list.count + '</a></td></tr>';
+                          if(case_list.name =='本票裁定' || case_list.name =='支付命令' || case_list.name =='消債之前置協商認可事件' || case_list.name =='詐欺' || case_list.name =='侵佔'){
+                                  list = list_head + list_style + list_foot;
+                                }else{
+                                  list = list_head + list_foot;
+                                }
+                                $("#case_list").prepend(list);
+                            return;
+
+                        });
+                    }
+                },
+                error: function() {
+                    alert('案件資訊請求未成功送出');
+                }
+            });
+        }
+
+        function requestVerdict() {
+              var data = {
+                  'name' : '<?=isset($data->company)?$data->company:"" ?>',
+                  'address' : '<?=isset($content['id_card_place'])?$content['id_card_place']:"新北市"?>',
+                  'user_id' : '<?=isset($data->company_user_id)?$data->company_user_id:"" ?>',
+              }
+
+              var url = '/admin/certification/verdict';
+
+              $.ajax({
+                  type: "GET",
+                  url: url,
+                  data: data,
+                  success: function(response) {
+                      if (!response) {
+                          alert('爬蟲執行請求未成功送出');
+                          return;
+                      }
+                      if (response.status.code == 400) {
+                          alert('參數錯誤，爬蟲執行請求未成功送出');
+                          return;
+                      }
+
+                      if (response.status.code == 200) {
+                          alert('爬蟲執行請求成功送出');
+                          setTimeout(requestVerdictStatuses(),5000);
+                              return;
+                      }
+                  },
+                  error: function() {
+                      alert('爬蟲執行請求未成功送出');
+                  }
+              });
+          }
+    $(document).ready(function(){
+      requestVerdictStatuses();
+      $( '#run-scraper-btn' ).click(function() {
+        requestVerdict();
+        $( ".run-scraper-tr" ).hide();
+      });
+    });
 </script>
 
 <div id="page-wrapper">
@@ -423,6 +570,42 @@
 											</table>
 										<? } ?>
 									</div>
+<? if( $data->company_user_id == '34'||$data->company_user_id == '118') {?>
+
+
+
+
+
+                                    <? }else {?>
+    <div class="form-group">
+        <label>爬蟲資訊</label>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
+            </tr>
+            </thead>
+            <tbody id="verdict_list">
+            </tbody>
+            <tbody>
+            <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <label>案件資訊</label>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">裁判案由</th><th scope="col">總數</th>
+            </tr>
+            </thead>
+            <tbody id="case_list">
+            </tbody>
+        </table>
+    </div>
+                                    <? }?>
 									<div class="col-lg-6">
 										<h1>圖片</h1>
 										<div class="form-group">

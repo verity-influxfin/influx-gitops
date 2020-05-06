@@ -117,6 +117,7 @@ class Judicialperson extends MY_Admin_Controller {
 					}
 
 					$media_data =json_decode($info->sign_video,true);
+					$page_data['jid'] = $get['id'];
 					$page_data['media_list'] = $media_data;
                     $page_data['company_type'] = $this->config->item('company_type');
                     $this->load->view('admin/_header');
