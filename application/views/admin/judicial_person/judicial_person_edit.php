@@ -570,13 +570,39 @@
 											</table>
 										<? } ?>
 									</div>
-<? if( $data->company_user_id == '34'||$data->company_user_id == '118') {?>
-
+                                    <? if( $data->company_user_id == '46177'||$data->company_user_id == '118') {?>
+                                        <div class="form-group">
+                                            <label>案件資訊</label>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">裁判案由</th><th scope="col">總數</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="case_list"><tr><td style="color:red;">本票裁定</td><td><a target="_blank" href="">1</a></td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>爬蟲資訊資訊</label>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="verdict_list"><tr><td>名字</td><td>東元資融股份有限公司</td></tr><tr><td>戶籍地</td><td>新北</td></tr><tr><td>狀態</td><td>爬蟲執行完成</td></tr><tr><td>最後更新時間</td><td>Wed May 06 2020 09:55:02 GMT+0800 (台北標準時間)</td></tr></tbody>
+                                                <tbody>
+                                                <tr class="run-scraper-tr" style="display:none;"><td colspan="2" style="text-align: -webkit-center;"><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
 
 
 
 
                                     <? }else {?>
+
     <div class="form-group">
         <label>爬蟲資訊</label>
         <table class="table table-bordered">
