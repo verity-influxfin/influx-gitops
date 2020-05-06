@@ -583,7 +583,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        10:03
                                         <div class="form-group">
                                             <label>爬蟲資訊資訊</label>
                                             <table class="table table-bordered">
