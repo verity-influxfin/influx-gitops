@@ -570,7 +570,7 @@
 											</table>
 										<? } ?>
 									</div>
-                                    <? if( $data->company_user_id == '46177'||$data->company_user_id == '118') {?>
+                                    <? if( $data->company_user_id == '46177') {?>
                                         <div class="form-group">
                                             <label>案件資訊</label>
                                             <table class="table table-bordered">
@@ -579,7 +579,7 @@
                                                     <th scope="col">裁判案由</th><th scope="col">總數</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="case_list"><tr><td style="color:red;">本票裁定</td><td><a target="_blank" href="">1</a></td></tr>
+                                                <tbody id="case_list"><tr><td style="color:red;">本票裁定</td><td><a target="_blank" href="https://stage-api.influxfin.com/admin/certification/judicial_yuan_case?name=%E6%9D%B1%E5%85%83%E8%B3%87%E8%9E%8D%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&case=%E6%9C%AC%E7%A5%A8%E8%A3%81%E5%AE%9A&page=1&count=1&cer=y">1</a></td></tr>
                                                 </tbody>
                                             </table>
                                         </div>
