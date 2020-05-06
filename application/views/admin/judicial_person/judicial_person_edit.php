@@ -25,7 +25,7 @@
                       return;
                   }
                   if (response.status.code == 400) {
-                      // alert('參數錯誤，爬蟲狀態請求未成功送出');
+                      alert('參數錯誤，爬蟲狀態請求未成功送出');
                       return;
                   }
 
@@ -63,7 +63,6 @@
       }
 
       function requestVerdictCount() {
-        consol.log(1);
             var data = {
                 'name' : '<?=isset($data->company)?$data->company:"" ?>',
             }
@@ -570,68 +569,36 @@
 											</table>
 										<? } ?>
 									</div>
-                                    <? if( $data->company_user_id == '46177') {?>
-                                        <div class="form-group">
-                                            <label>案件資訊</label>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th scope="col">裁判案由</th><th scope="col">總數</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="case_list"><tr><td style="color:red;">本票裁定</td><td><a target="_blank" href="https://stage-api.influxfin.com/admin/certification/judicial_yuan_case?name=%E6%9D%B1%E5%85%83%E8%B3%87%E8%9E%8D%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&case=%E6%9C%AC%E7%A5%A8%E8%A3%81%E5%AE%9A&page=1&count=1&cer=y">1</a></td></tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>爬蟲資訊資訊</label>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="verdict_list"><tr><td>名字</td><td>東元資融股份有限公司</td></tr><tr><td>戶籍地</td><td>新北</td></tr><tr><td>狀態</td><td>爬蟲執行完成</td></tr><tr><td>最後更新時間</td><td>Wed May 06 2020 09:55:02 GMT+0800 (台北標準時間)</td></tr></tbody>
-                                                <tbody>
-                                                <tr class="run-scraper-tr" style="display:none;"><td colspan="2" style="text-align: -webkit-center;"><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
 
+                  <div class="form-group">
+                    <label>爬蟲資訊資訊</label>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
+                        </tr>
+                      </thead>
+                      <tbody id="verdict_list">
+                      </tbody>
+                      <tbody>
+                        <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
 
+                  <div class="form-group">
+                      <label>案件資訊</label>
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">裁判案由</th><th scope="col">總數</th>
+                          </tr>
+                        </thead>
+                        <tbody id="case_list">
+                        </tbody>
+                      </table>
+                  </div>
 
-
-                                    <? }else {?>
-
-    <div class="form-group">
-        <label>爬蟲資訊</label>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
-            </tr>
-            </thead>
-            <tbody id="verdict_list">
-            </tbody>
-            <tbody>
-            <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="form-group">
-        <label>案件資訊</label>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th scope="col">裁判案由</th><th scope="col">總數</th>
-            </tr>
-            </thead>
-            <tbody id="case_list">
-            </tbody>
-        </table>
-    </div>
-                                    <? }?>
 									<div class="col-lg-6">
 										<h1>圖片</h1>
 										<div class="form-group">
