@@ -25,7 +25,7 @@
                       return;
                   }
                   if (response.status.code == 400) {
-                      alert('參數錯誤，爬蟲狀態請求未成功送出');
+                      // alert('參數錯誤，爬蟲狀態請求未成功送出');
                       return;
                   }
 
@@ -63,6 +63,7 @@
       }
 
       function requestVerdictCount() {
+        consol.log(1);
             var data = {
                 'name' : '<?=isset($data->company)?$data->company:"" ?>',
             }
@@ -569,36 +570,42 @@
 											</table>
 										<? } ?>
 									</div>
+<? if( $data->company_user_id == '34'||$data->company_user_id == '118') {?>
 
-                  <div class="form-group">
-                    <label>爬蟲資訊資訊</label>
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
-                        </tr>
-                      </thead>
-                      <tbody id="verdict_list">
-                      </tbody>
-                      <tbody>
-                        <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
-                      </tbody>
-                    </table>
-                  </div>
 
-                  <div class="form-group">
-                      <label>案件資訊</label>
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th scope="col">裁判案由</th><th scope="col">總數</th>
-                          </tr>
-                        </thead>
-                        <tbody id="case_list">
-                        </tbody>
-                      </table>
-                  </div>
 
+
+
+                                    <? }else {?>
+    <div class="form-group">
+        <label>爬蟲資訊</label>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">資訊名稱</th><th scope="col">相關資訊</th>
+            </tr>
+            </thead>
+            <tbody id="verdict_list">
+            </tbody>
+            <tbody>
+            <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <label>案件資訊</label>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">裁判案由</th><th scope="col">總數</th>
+            </tr>
+            </thead>
+            <tbody id="case_list">
+            </tbody>
+        </table>
+    </div>
+                                    <? }?>
 									<div class="col-lg-6">
 										<h1>圖片</h1>
 										<div class="form-group">
