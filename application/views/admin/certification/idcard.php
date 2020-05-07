@@ -281,8 +281,8 @@
                                     }
 
                                     echo '<p class="form-control-static">Azure 面孔比對結果：';
-                                    echo '<br />持證自拍照：' . $remark["face8"]['count'][0] . ' 人臉';
-                                    echo '<br />身分證正面照：' . $remark["face8"]['count'][1] . ' 人臉';
+                                    echo '<br />持證自拍照：' . $remark["face_count"]['person_count'] . ' 人臉';
+                                    echo '<br />身分證正面照：' . $remark["face_count"]['front_count'] . ' 人臉';
                                     if(isset($remark["face"]) && count($remark["face"]) >= 2) {
                                         echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][0] . "% 並可能" . ($remark["face_flag"][0] ? '為本人' : '非本人');
                                         echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][1] . "% 並可能" . ($remark["face_flag"][1] ? '為本人' : '非本人');
