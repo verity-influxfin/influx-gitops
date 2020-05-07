@@ -67,7 +67,11 @@ class Faceplusplus_lib{
 			if($rs && isset($rs["image_id"]) && count($rs["faces"])>0){
 				$token 	= array();
 				foreach($rs["faces"] as $key => $value){
-					$token[] = $value["face_token"];
+                    $token[] = [
+					    $value["face_token"],
+					    $value['attributes']['gender'],
+					    $value['attributes']['age'],
+                    ];
 				}
 
 				return $token;

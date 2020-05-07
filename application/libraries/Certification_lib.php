@@ -206,6 +206,7 @@ class Certification_lib{
                 'face'			    => [],
                 'face_flag'		    => [],
                 'faceplus'		    => [],
+                'faceplus_data' => [],
                 'face_count'	        => array(
                     'person_count'	=> $person_count,
                     'front_count'	=> $front_count
@@ -292,7 +293,7 @@ class Certification_lib{
 
                 $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
                 $remark['face_flag']  = [$person_compare[0]['isIdentical'],$person_compare[1]['isIdentical']];
-                if($remark['face'][0]  < 65 || $remark['face'][1]  < 80){
+//                if($remark['face'][0]  < 65 || $remark['face'][1]  < 80){
                     $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id,$cer_id);
                     $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id,$cer_id);
                     $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
@@ -316,18 +317,23 @@ class Certification_lib{
                     }
                     if($fperson_count ==2 && $ffront_count == 1 ){
                         foreach($person_token as $token){
-                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token,$front_token[0],$info->user_id,$cer_id);
+                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token[0],$front_token[0][0],$info->user_id,$cer_id);
+                            $faceplus_data[] = [
+                                'gender' => $token[1],
+                                'age' => $token[2],
+                            ];
                         }
                         sort($answer);
                         $remark['faceplus'] = $answer;
+                        $remark['faceplus_data'] = $faceplus_data;
                         if($answer[0]<65 || $answer[1]<80){
-                            $msg .= 'Sys2人臉比對分數不足';
+                            $msg .= 'Face++人臉比對分數不足';
                         }
                     }
                     else{
-                        $msg .= 'Sys2人臉數量不足';
+                        $msg .= 'Face++人臉數量不足';
                     }
-                }
+//                }
                 $done = true;
             }
             else{
@@ -340,7 +346,7 @@ class Certification_lib{
             $face8_person_count = count($face8_person_face['faces']);
             $face8_front_count = count($face8_front_face['faces']);
             foreach ($face8_person_face['faces'] as $tkey =>$token) {
-                if (isset($token['face_token'])) {
+                if (isset($token['face_token']) && count($face8_front_face['faces']) > 0) {
                     $face8_compare_res = $this->CI->papago_lib->compare([$token['face_token'], $face8_front_face['faces'][0]['face_token']], $user_id, $cer_id);
                     $compares[] = $face8_compare_res['confidence'];
                 }
@@ -352,10 +358,10 @@ class Certification_lib{
                 'score' => [$face8_face1, $face8_face2],
                 'liveness' => [
                     [
-                        $face8_person_face['faces'][0]['attributes']['liveness']['value'],
-                        $face8_person_face['faces'][1]['attributes']['liveness']['value']
+                        ($face8_person_count > 0 ? $face8_person_face['faces'][0]['attributes']['liveness']['value'] : 'n/a'),
+                        ($face8_person_count > 1 ? $face8_person_face['faces'][1]['attributes']['liveness']['value'] : 'n/a')
                     ],
-                    $face8_front_face['faces'][0]['attributes']['liveness']['value']
+                    ($face8_front_count > 0 ? $face8_front_face['faces'][0]['attributes']['liveness']['value'] : 'n/a')
                 ],
             ];
 
