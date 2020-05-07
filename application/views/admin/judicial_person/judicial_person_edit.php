@@ -115,7 +115,7 @@
         function requestVerdict() {
               var data = {
                   'name' : '<?=isset($data->company)?$data->company:"" ?>',
-                  'address' : '<?=isset($content['id_card_place'])?$content['id_card_place']:"新北市"?>',
+                  'address' : '<?=isset($company_data['Company_Location'])?$company_data['Company_Location']:""?>',
                   'user_id' : '<?=isset($data->company_user_id)?$data->company_user_id:"" ?>',
               }
 

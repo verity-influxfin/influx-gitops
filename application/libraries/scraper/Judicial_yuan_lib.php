@@ -26,6 +26,14 @@ class Judicial_yuan_lib
           return $reference[$address];
         }
 
+        if(strlen($address) > 20 && (strpos($address,'市')|| strpos($address,'縣')) ){
+          if(strpos($address,'市')){
+            return substr($address, 0, strpos($address,'市'));
+          }
+          if(strpos($address,'縣')){
+            return substr($address, 0, strpos($address,'縣'));
+          }
+        }
         return $address;
     }
 
@@ -52,8 +60,10 @@ class Judicial_yuan_lib
 
         $pos = strpos($address, '(');
         if($pos){
-          $address = $this->mappingAddressAndScraperAddress(substr($address,1,-7));
+          $address = substr($address,1,-7);
         }
+
+        $address = $this->mappingAddressAndScraperAddress($address);
 
         $data = ["query" => $name, "location" => $address, "reference" => $reference];
 
