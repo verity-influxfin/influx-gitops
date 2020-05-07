@@ -1,5 +1,5 @@
 export default {
-    async getExperiencesData({ commit }){
+    getExperiencesData({ commit }){
         $.ajax({
             url:'getExperiencesData',
             type:'POST',
@@ -9,7 +9,7 @@ export default {
             }
         });
     },
-    async getKnowledgeData({ commit }){
+    getKnowledgeData({ commit }){
         $.ajax({
             url:'getKnowledgeData',
             type:'POST',
@@ -19,7 +19,7 @@ export default {
             }
         });
     },
-    async getSharesData({ commit },params){
+    getSharesData({ commit },params){
         $.ajax({
             url:'getSharesData',
             type:'POST',
@@ -32,7 +32,7 @@ export default {
             }
         });
     },
-    async getInterviewData({ commit }){
+    getInterviewData({ commit }){
         $.ajax({
             url:'getInterviewData',
             type:'POST',
@@ -42,7 +42,7 @@ export default {
             }
         });
     },
-    async getNewsData({ commit }){
+    getNewsData({ commit }){
         $.ajax({
             url:'getNewsData',
             type:'POST',

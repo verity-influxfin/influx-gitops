@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,10 +54,24 @@ Route::post('/getArticleData', 'Controller@getArticleData');
 
 Route::post('/getVideoPage', 'Controller@getVideoPage');
 
+Route::post('/getTerms', 'Accountcontroller@getTerms');
+
+Route::post('/doLogin', 'Accountcontroller@doLogin');
+
+Route::post('/getCaptcha', 'Accountcontroller@getCaptcha');
+
+Route::post('/resetPassword', 'Accountcontroller@resetPassword');
+
+Route::post('/doRegister', 'Accountcontroller@doRegister');
+
 
 // backstage
 
 
 Route::get('/web-admin', function () {
-    return view('admin');
+    if(Session::get('account')){
+        return view('admin');
+    }else{
+        return view('login');
+    }
 });

@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getVideoPage() {
-      const $this = this;
+      let $this = this;
 
       $.ajax({
         url: "getVideoPage",

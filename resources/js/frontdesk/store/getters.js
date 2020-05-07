@@ -13,5 +13,8 @@ export default {
     },
     NewsData(state,data){
         return state.news;
+    },
+    UserData(state,data){
+        return state.userData;
     }
 }

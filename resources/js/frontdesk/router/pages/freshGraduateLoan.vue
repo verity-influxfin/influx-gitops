@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     getBannerData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getBannerData",
         type: "POST",
@@ -65,7 +65,7 @@ export default {
       });
     },
     getApplydata() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getApplydata",
         type: "POST",
@@ -82,7 +82,7 @@ export default {
       });
     },
     getQaData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getQaData",
         type: "POST",

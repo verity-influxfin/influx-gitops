@@ -15,6 +15,8 @@ import articlePage from './pages/articlePage';
 import userTerms from './pages/userTerms';
 import privacyTerms from './pages/privacyTerms';
 import loanerTerms from './pages/loanerTerms';
+import register from './pages/register';
+import myInvestment from './pages/myInvestment';
 
 let routers = [
     { path: '/index', component: index },
@@ -34,6 +36,8 @@ let routers = [
     { path: '/userTerms', component: userTerms },
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
+    { path: '/register', component: register },
+    { path: '/myinvestment', component: myInvestment }
 ];
 
 export default routers;

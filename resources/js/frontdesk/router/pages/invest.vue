@@ -79,7 +79,7 @@ export default {
       });
     },
     getBannerData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getBannerData",
         type: "POST",
@@ -93,7 +93,7 @@ export default {
       });
     },
     getQaData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getQaData",
         type: "POST",

@@ -22,5 +22,8 @@ export default {
             data[key].link = `/articlepage/news-${item.id}`;
         });
         state.news = data;
+    },
+    mutationUserData(state,data){
+        state.userData = data;
     }
 }

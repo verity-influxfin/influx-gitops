@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     getInvestTonicData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getInvestTonicData",
         type: "POST",
@@ -89,7 +89,7 @@ export default {
       });
     },
     getQaData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getQaData",
         type: "POST",

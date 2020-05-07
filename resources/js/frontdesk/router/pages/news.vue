@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     pagination() {
-      const $this = this;
+      let $this = this;
       $this.$nextTick(() => {
         $($this.$refs.pagination).pagination({
           dataSource: $this.news,

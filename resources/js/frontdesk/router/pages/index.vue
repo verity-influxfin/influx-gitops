@@ -192,7 +192,7 @@ export default {
   },
   methods: {
     getServiceData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getServiceData",
         type: "POST",

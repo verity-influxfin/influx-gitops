@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     getArticleData() {
-      const $this = this;
+      let $this = this;
 
       $.ajax({
         url: "getArticleData",

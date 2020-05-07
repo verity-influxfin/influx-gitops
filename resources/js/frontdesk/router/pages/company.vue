@@ -156,7 +156,7 @@ export default {
   },
   methods: {
     getMilestoneData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getMilestoneData",
         type: "POST",
@@ -167,7 +167,7 @@ export default {
       });
     },
     getMediaData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getMediaData",
         type: "POST",
@@ -178,7 +178,7 @@ export default {
       });
     },
     getPartnerData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getPartnerData",
         type: "POST",
@@ -277,7 +277,7 @@ export default {
       });
     },
     openModel(id) {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getReportData",
         type: "POST",

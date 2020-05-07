@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getQaData() {
-      const $this = this;
+      let $this = this;
       $.ajax({
         url: "getQaData",
         type: "POST",
