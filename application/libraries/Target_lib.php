@@ -350,7 +350,7 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                    if($target->contract_id == null){
+                                    if($target->contract_id == null || $target->loan_amount != $loan_amount){
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }
                                 } else {
