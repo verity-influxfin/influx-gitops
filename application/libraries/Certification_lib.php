@@ -449,6 +449,7 @@ class Certification_lib{
                         }
 					    else{
                             $this->set_success($info->id, true);
+                            $status = 1;
                         }
 					}
                     $this->CI->user_certification_model->update($info->id,array(
