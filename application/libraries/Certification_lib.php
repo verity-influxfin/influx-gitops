@@ -510,7 +510,8 @@ class Certification_lib{
 						'sys_check' => 1,
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
-					$this->set_failed($info->id,'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。',true);
+					$msg = isset($res['message']) ? $res['message']:'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。';
+					$this->set_failed($info->id,$msg,true);
 					break;
 			}
 			return true;

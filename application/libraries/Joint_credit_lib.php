@@ -1066,7 +1066,7 @@ class Joint_credit_lib{
 	}
 
 	public function check_report_expirations($text, &$result){
-		$message = ["stage" => "report_expirations", "status" => "failure", "message" => ""];
+		$message = ["stage" => "report_expirations", "status" => "failure", "message" => "需為31日內申請"];
 		$date = $this->get_credit_date($text);
 		$dateArray = explode("/", $date);
 		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
