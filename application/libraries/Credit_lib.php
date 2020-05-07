@@ -91,30 +91,30 @@ class Credit_lib{
                             !empty($data->transcript_image) ? $transcript = true : '';
                         }
                     }elseif($value->certification_id == 4){
-                        if(isset($data->instagram->meta)){
+                        if (isset($data->instagram->meta)) {
                             $three_month_ago = strtotime("-3 months", time());
-                            if(count($data->instagram->meta) >= 10){
+                            if (count($data->instagram->meta) >= 10) {
                                 $three_month_ago < $data->instagram->meta[9]->created_time ? $total += 100 : '';
                             }
-                            foreach ($data->instagram->meta as $igKey => $igValue ){
-                                if(preg_match_all('/'.$this->CI->config->item('social_patten').'/',$igValue->text)){
+                            foreach ($data->instagram->meta as $igKey => $igValue) {
+                                if (preg_match_all('/' . $this->CI->config->item('social_patten') . '/', $igValue->text)) {
                                     $total += 200;
                                     break;
                                 }
                             }
-                            $last_social_cer_list = $this->CI->user_certification_model->order_by('created_at','desc')->get_many_by([
+                            $last_social_cer_list = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
                                 'user_id' => $user_id,
                                 'certification_id' => 4,
                             ]);
-                            if (is_array($last_social_cer_list) && count($last_social_cer_list) >= 2){
-				foreach ($last_social_cer_list as $lastIgKey => $lastIgValue ){
-				    if($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0){
-					    $all_contents = json_decode($lastIgValue->content);
-					    $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
-					    $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '' ;
-					    break;
-				    }
-				}
+                            if (is_array($last_social_cer_list) && count($last_social_cer_list) >= 2) {
+                                foreach ($last_social_cer_list as $lastIgKey => $lastIgValue) {
+                                    if ($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0) {
+                                        $all_contents = json_decode($lastIgValue->content);
+                                        $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
+                                        $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '';
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

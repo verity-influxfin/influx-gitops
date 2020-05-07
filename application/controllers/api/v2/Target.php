@@ -518,10 +518,9 @@ class Target extends REST_Controller {
                             $description .= '學門：' . $contents->major. '<br>系所：' . $contents->department . '<br>學制：' . $this->config->item('school_system')[$contents->system];
                         } elseif ($value == 3){
                             $description = '已驗證個人金融帳號';
-                        } elseif ($value == 4 && isset($contents->type)){
-                            if($contents->type == 'instagram'){
-                                $description .= 'Instagram' . '<br>貼文：' . $contents->info->counts->media . '<br>追蹤者：' . $contents->info->counts->followed_by . '<br>追蹤中：' . $contents->info->counts->follows;
-                            }
+                        } elseif ($value == 4){
+                            $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
+                            $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 6){
