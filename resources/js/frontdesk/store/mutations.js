@@ -3,24 +3,27 @@ export default {
         state.experiences = data;
     },
     mutationKnowledgeData(state,data){
-        data.forEach((item,key)=>{
-            data[key].link = `/articlepage/knowledge-${item.id}`;
+        $.each(data,(index,row)=>{
+            data[index].link = `/articlepage/knowledge-${row.id}`;
         });
+
         state.knowledge = data;
     },
     mutationSharesData(state,data){
-        data.forEach((item,key)=>{
-            data[key].link = `/vlog/${item.category}`;
+        $.each(data,(index,row)=>{
+            data[index].link = `/vlog/${row.category}`;
         });
+        
         state.shares = data;
     },
     mutationInterviewData(state,data){
         state.interview = data;
     },
     mutationNewsData(state,data){
-        data.forEach((item,key)=>{
-            data[key].link = `/articlepage/news-${item.id}`;
+        $.each(data,(index,row)=>{
+            data[index].link = `/articlepage/news-${row.id}`;
         });
+
         state.news = data;
     },
     mutationUserData(state,data){

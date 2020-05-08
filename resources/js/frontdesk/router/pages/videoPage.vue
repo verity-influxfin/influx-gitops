@@ -59,7 +59,7 @@ export default {
           FB.XFBML.parse();
           $this.videoTitle = data.title;
           $this.videoImg = data.imageSrc;
-          $this.videoLink = data.videoSrc;
+          $this.videoLink = data.videoLink;
           $this.videoHtml = data.content;
         }
       });

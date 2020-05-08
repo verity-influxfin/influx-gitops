@@ -33,7 +33,15 @@ export default {
   }),
   computed: {
     experiences() {
-      return this.$store.getters.ExperiencesData;
+      let $this = this;
+      let data = [];
+      $.each($this.$store.getters.ExperiencesData, (index, row) => {
+        if (row.type === 'college') {
+          data.push(row);
+        }
+      });
+
+      return data;
     },
     shares() {
       return this.$store.getters.SharesData;

@@ -27,8 +27,8 @@
       <h2>投資理財大補帖</h2>
       <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
         <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
-          <img :src="item.imgSrc" class="img-fluid" />
-          <p>【普匯觀點】</p>
+          <img :src="item.imageSrc" class="img-fluid" />
+          <p>{{item.type}}</p>
           <p>{{item.title}}</p>
           <br />
           <router-link :to="item.link" class="btn btn-danger">觀看大補帖</router-link>
@@ -81,8 +81,8 @@ export default {
         type: "POST",
         dataType: "json",
         success(data) {
-          data.forEach((item, key) => {
-            data[key].link = `/articlepage/investtonic-${item.id}`;
+          $.each(data, (index, row) => {
+            data[index].link = `/articlepage/investtonic-${row.id}`;
           });
           $this.investTonic = data;
         }
@@ -157,7 +157,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import './scss/slick';
+@import "./scss/slick";
 
 %position {
   width: 100%;

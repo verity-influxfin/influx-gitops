@@ -92,9 +92,9 @@
           </router-link>
           <div>
             <p>{{item.title}}</p>
-            <span>{{item.detail}}</span>
+            <span>{{item.content}}</span>
             <br />
-            <router-link :to="item.link" class="btn btn-danger">閱讀更多</router-link>
+            <router-link :to="item.link" class="btn btn-primary">閱讀更多</router-link>
           </div>
         </div>
       </div>
@@ -151,7 +151,11 @@ export default {
       return this.$store.getters.SharesData;
     },
     knowledge() {
-      return this.$store.getters.KnowledgeData;
+      let $this = this;
+      $.each($this.$store.getters.KnowledgeData,(index,row)=>{
+        $this.$store.getters.KnowledgeData[index].content = `${row.content.replace(/<[^>]*>/g, '').substr(0,100)}...`;
+      });
+      return $this.$store.getters.KnowledgeData;
     },
     news() {
       return this.$store.getters.NewsData;

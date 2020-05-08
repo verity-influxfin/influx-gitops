@@ -18,26 +18,20 @@ class Controller extends BaseController
         return response()->json($data);
     }
 
-    public function getExperiencesData(Request $request){
-        $data = json_decode(file_get_contents('data/experiencesData.json'),true);
-
-        return response()->json($data);
-    }
-
     public function getKnowledgeData(Request $request){
-        $data = json_decode(file_get_contents('data/knowledgeData.json'),true);
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
 
-        return response()->json($data);
+        return response()->json($data['knowledge']);
     }
 
     public function getSharesData(Request $request){
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/shareData.json'),true);
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
 
         $result = [];
 
-        foreach($data as $key => $row){
+        foreach($data['video'] as $key => $row){
             if($input['filter'] === 'other'){
                 if($row['category'] !=='share'){
                     $result[] = $row;
@@ -52,14 +46,44 @@ class Controller extends BaseController
         return response()->json($result);
     }
 
+    public function getNewsData(Request $request){
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
+
+        return response()->json($data['news']);
+    }
+
+    public function getInvestTonicData(Request $request){
+        $data = json_decode(file_get_contents('data/articleData.json'),true);
+
+        return response()->json($data['investtonic']);
+    }
+
+    public function getArticleData(Request $request){
+        $input = $request->all();
+
+        @list($type,$id) = explode('-',$input['filter']);
+
+        $data = json_decode(file_get_contents('data/articleData.json'),true);
+
+        return response()->json($data[$type][$id-1]);
+    }
+
+    public function getVideoPage(Request $request){
+        $input = $request->all();
+
+        $data = json_decode(file_get_contents('data/articleData.json'),true);
+
+        return response()->json($data['video'][$input['filter']-1]);
+    }
+
     public function getInterviewData(Request $request){
         $data = json_decode(file_get_contents('data/data.json'),true);
 
         return response()->json($data);
     }
 
-    public function getNewsData(Request $request){
-        $data = json_decode(file_get_contents('data/newsData.json'),true);
+    public function getExperiencesData(Request $request){
+        $data = json_decode(file_get_contents('data/experiencesData.json'),true);
 
         return response()->json($data);
     }
@@ -118,35 +142,4 @@ class Controller extends BaseController
         return response()->json($data[$input['filter']]);
     }
 
-    public function getInvestTonicData(Request $request){
-        $data = json_decode(file_get_contents('data/investTonicData.json'),true);
-
-        return response()->json($data);
-    }
-
-    public function getReportData(Request $request){
-        $input = $request->all();
-
-        $data = json_decode(file_get_contents('data/reportData.json'),true);
-
-        return response()->json($data[$input['filter']]);
-    }
-
-    public function getArticleData(Request $request){
-        $input = $request->all();
-
-        @list($type,$id) = explode('-',$input['filter']);
-
-        $data = json_decode(file_get_contents('data/articleData.json'),true);
-
-        return response()->json($data[$type][$id]);
-    }
-
-    public function getVideoPage(Request $request){
-        $input = $request->all();
-
-        $data = json_decode(file_get_contents('data/articleData.json'),true);
-
-        return response()->json($data['video'][$input['filter']]);
-    }
 }

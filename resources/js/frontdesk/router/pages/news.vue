@@ -3,8 +3,8 @@
     <h1>最新消息</h1>
     <div class="news-content">
       <div v-for="(item,index) in this.news" class="card" :key="index">
-        <router-link :to="item.link">
-          <img :src="item.imageSrc" class="img-fluid" />
+        <router-link :to="item.link" style="text-align: center;">
+          <img :src="item.imageSrc" class="img-custom" />
         </router-link>
         <span>{{item.title}}</span>
         <p>
@@ -24,7 +24,13 @@
 export default {
   computed: {
     news() {
-      return this.$store.getters.NewsData;
+      let $this = this;
+      $.each($this.$store.getters.NewsData, (index, row) => {
+        $this.$store.getters.NewsData[index].content = `${row.content
+          .replace(/<[^>]*>/g, "")
+          .substr(0, 10)}...`;
+      });
+      return $this.$store.getters.NewsData;
     }
   },
   created() {
@@ -80,6 +86,11 @@ export default {
     width: 75%;
     overflow: auto;
     margin: 0px auto;
+
+    .img-custom {
+      height: 300px;
+      max-width: 100%;
+    }
 
     .card {
       margin: 10px;

@@ -190,6 +190,18 @@ $(() => {
                     }
                 });
             },
+            logout() {
+                let $this = this;
+                $.ajax({
+                    url: 'logout',
+                    type: 'POST',
+                    dataType: 'json',
+                    success() {
+                        $this.$store.commit('mutationUserData', {});
+                        location.reload();
+                    }
+                });
+            },
             setAccount() {
                 this.isRememberAccount = !this.isRememberAccount;
                 if (this.isRememberAccount) {
@@ -254,10 +266,6 @@ $(() => {
                     }
                 });
             },
-            logout() {
-                this.$store.commit('mutationUserData', {});
-                location.reload();
-            },
             reciprocal() {
                 this.counter--;
                 if (this.counter === 0) {
@@ -269,6 +277,16 @@ $(() => {
             }
         }
     });
+
+    $('.back-top').fadeOut();
+    $(document).scroll(function() {
+        var y = $(this).scrollTop();
+        if (y > 800) {
+          $('.back-top').fadeIn();
+        } else {
+          $('.back-top').fadeOut();
+        }
+      });
 });
 
 

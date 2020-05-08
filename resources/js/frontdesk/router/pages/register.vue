@@ -138,6 +138,7 @@ export default {
   }),
   created() {
     this.isRegisterSuccess = false;
+    $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
   mounted() {
     $(".page-header").hide();
@@ -350,7 +351,7 @@ export default {
     .dialog-footer {
       text-align: center;
       margin: 10px 0px;
-      
+
       %basic {
         border-radius: 50px;
         width: 60%;

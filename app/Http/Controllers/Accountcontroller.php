@@ -53,6 +53,8 @@ class Accountcontroller extends BaseController
         $data = json_decode($curlScrapedPage, true);
 
         if ($data['result'] === "SUCCESS") {
+            session(['token' => $data['data']['token']]);
+
             $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
 
             $data = json_decode($curlScrapedPage, true);
@@ -60,6 +62,12 @@ class Accountcontroller extends BaseController
         } else {
             return response()->json($data, 400);
         }
+    }
+    public function logout(Request $request)
+    {
+        $request->session()->forget('token');
+
+        return response()->json('sucess');
     }
 
     public function getCaptcha(Request $request)

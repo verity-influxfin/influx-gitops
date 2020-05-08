@@ -12,7 +12,13 @@ export default {
   }),
   computed: {
     knowledge() {
-      return this.$store.getters.KnowledgeData;
+      let $this = this;
+      $.each($this.$store.getters.KnowledgeData, (index, row) => {
+        $this.$store.getters.KnowledgeData[
+          index
+        ].content = `${row.content.replace(/<[^>]*>/g, "").substr(0, 100)}...`;
+      });
+      return $this.$store.getters.KnowledgeData;
     }
   },
   created() {
@@ -24,9 +30,6 @@ export default {
       this.pagination();
     }
   },
-  mounted() {
-    this.pagination();
-  },
   methods: {
     pagination() {
       let $this = this;
@@ -37,10 +40,10 @@ export default {
             data.forEach((item, index) => {
               $this.pageHtml += `
                                 <div class="card">
-                                    <img src="${item.imageSrc}" class="img-fluid">
+                                    <img src="${item.imageSrc}" class="img-custom">
                                     <h5>${item.title}</h5>
                                     <span>${item.date}</span>
-                                    <p class="gray">${item.detail}</p>
+                                    <p class="gray">${item.content}</p>
                                     <a href="#${item.link}">閱讀更多》</a>
                                 </div>
                             `;
@@ -68,6 +71,11 @@ export default {
       width: 48%;
       padding: 20px;
       float: left;
+
+      .img-custom {
+        height: 300px;
+        max-width: 100%;
+      }
     }
 
     .gray {

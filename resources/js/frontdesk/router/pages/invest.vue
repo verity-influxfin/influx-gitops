@@ -9,6 +9,15 @@
         </div>
       </div>
     </div>
+    <div class="explanation-wrapper">
+      <div class="explanation-banner">
+        <p>如何開始投資呢??</p>
+      </div>
+      <div class="explanation-img">
+        <img class="hidden-desktop" :src="'./image/how_to_invest_desktop.png'" />
+        <img class="hidden-phone" :src="'./image/how_to_invest_mobile.png'" />
+      </div>
+    </div>
     <join href="./image/child_banner.jpg" :isShowInvest="true" subTitle="加入普匯完成你的財富目標吧！"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
     <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.shares"></videoShare>
@@ -111,7 +120,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import './scss/slick';
+@import "./scss/slick";
 
 .invest-wrapper {
   width: 100%;
@@ -121,6 +130,28 @@ export default {
 
     .desktop {
       padding: 0px 10%;
+    }
+  }
+
+  .explanation-wrapper {
+    .explanation-banner {
+      background-color: #f7f7f7;
+      height: 200px;
+      text-align: center;
+      position: relative;
+      p {
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 29px;
+        font-weight: bolder;
+        position: inherit;
+      }
+    }
+
+    .explanation-img {
+      padding: 10px;
+      margin: 0px auto;
+      width: fit-content;
     }
   }
 

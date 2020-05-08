@@ -54,9 +54,15 @@ Route::post('/getArticleData', 'Controller@getArticleData');
 
 Route::post('/getVideoPage', 'Controller@getVideoPage');
 
+
+//Account
+
+
 Route::post('/getTerms', 'Accountcontroller@getTerms');
 
 Route::post('/doLogin', 'Accountcontroller@doLogin');
+
+Route::post('/logout', 'Accountcontroller@logout');
 
 Route::post('/getCaptcha', 'Accountcontroller@getCaptcha');
 

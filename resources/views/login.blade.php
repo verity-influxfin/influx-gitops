@@ -10,7 +10,7 @@
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>後臺系統 - inFlux普匯金融科技</title>
+        <title>登入 - inFlux普匯金融科技</title>
         <link rel="icon" href="{{ asset('image/site_icon.png') }}">
 
         <!-- package -->
@@ -34,8 +34,9 @@
         <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
     </head>
     <body>
-        <div id="web_admin">
-            施工中...
+        <div id="login">
+            登入...
+            <button class="btn btn-info" @click="login">登入</button>
         </div>
     </body>
 </html>

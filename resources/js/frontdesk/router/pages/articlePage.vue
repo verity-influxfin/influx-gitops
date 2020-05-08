@@ -8,13 +8,13 @@
       <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
     </div>
     <fb:comments
-      v-if="$route.params.id.indexOf('knowledge') !== -1"
+      v-if="$route.params.id.indexOf('news') === -1"
       :href="this.link"
       num_posts="10"
       notify="true"
       :width="(this.width*0.99).toFixed(0)"
     ></fb:comments>
-    <shareBtn v-if="$route.params.id.indexOf('knowledge') !== -1" :link="this.link"></shareBtn>
+    <shareBtn v-if="$route.params.id.indexOf('news') === -1" :link="this.link"></shareBtn>
   </div>
 </template>
 

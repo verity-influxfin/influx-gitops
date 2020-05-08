@@ -21,7 +21,7 @@
       <h3>我們堅持</h3>
       <div class="regulation-slick" ref="regulation_slick">
         <div v-for="(item,index) in regulations" class="slick-item" :key="index">
-          <img :src="item.imageSrc"/>
+          <img :src="item.imageSrc" />
           <h5>{{item.title}}</h5>
           <p>{{item.text}}</p>
         </div>
@@ -45,9 +45,9 @@
       <div class="media-slick" ref="media_slick" data-aos="zoom-in">
         <div v-for="(item,index) in media" class="slick-item" :key="index">
           <a :href="item.link" target="_blank">
-            <img :src="item.imageSrc"/>
+            <img :src="item.imageSrc" />
           </a>
-          <p @click="openModel(item.id)">{{item.title}}</p>
+          <p @click="openModel(item)">{{item.title}}</p>
         </div>
       </div>
     </div>
@@ -177,6 +177,12 @@ export default {
         }
       });
     },
+    openModel(data) {
+      this.reportData = data;
+      this.$nextTick(() => {
+        $(this.$refs.newsModal).modal("show");
+      });
+    },
     getPartnerData() {
       let $this = this;
       $.ajax({
@@ -275,30 +281,13 @@ export default {
           }
         });
       });
-    },
-    openModel(id) {
-      let $this = this;
-      $.ajax({
-        url: "getReportData",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: id
-        },
-        success(data) {
-          $this.reportData = data;
-          $this.$nextTick(() => {
-            $($this.$refs.newsModal).modal("show");
-          });
-        }
-      });
     }
   }
 };
 </script>
 
 <style lang="scss">
-@import './scss/slick';
+@import "./scss/slick";
 
 .company-wrapper {
   .company-header {
