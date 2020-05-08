@@ -746,19 +746,28 @@ class Certification extends MY_Admin_Controller {
 			$user = $this->user_model->get($certification->user_id);
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->model('user/user_meta_model');
-            $salary             = $this->user_meta_model->get_by([
-                'user_id'   => $certification->user_id,
-                'meta_key'  => ['job_salary']
-            ]);
+
+			$salary             = $this->user_meta_model->get_by([
+				'user_id'   => $certification->user_id,
+				'meta_key'  => ['job_salary']
+			]);
 
 			$job_credits = json_decode($certification->content);
-			$job_credits->job_salary=$salary->meta_value;
 			$certification->content = $job_credits;
+			$certification->content->industry = $this->config->item('industry_name')[$certification->content->industry];
+			$certification->content->seniority = $this->config->item('seniority_range')[$certification->content->seniority];
+			$certification->content->employee = $this->config->item('employee_range')[$certification->content->employee];
+			$certification->content->position = $this->config->item('position_name')[$certification->content->position];
+			$certification->content->type = $this->config->item('job_type_name')[$certification->content->type];
+
+			$job_credits->job_salary = $salary->meta_value;
 			$this->load->library('output/user/job_credit_output', ["data" => $job_credits->result, "certification" => $certification]);
 			$response = [
 				"user" => $this->user_output->toOne(),
 				"job_credits" => $this->job_credit_output->toOne(),
 				"statuses" => $this->user_certification_model->status_list,
+				"remark" => json_decode($certification->remark)->fail,
+				"fail_msg" => $this->config->item('certifications_msg')[10],
 			];
 
 			$this->json_output->setStatusCode(200)->setResponse($response)->send();

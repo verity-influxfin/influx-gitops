@@ -7,6 +7,15 @@ class JobCredit
 		this.setMessages(jobCredit);
 		this.setLicenseStatus(jobCredit);
 		this.setProLevel(jobCredit);
+		this.setTax_id(jobCredit);
+		this.setCompany(jobCredit);
+		this.setIndustry(jobCredit);
+		this.setJob_title(jobCredit);
+		this.setEmployee(jobCredit);
+		this.setPosition(jobCredit);
+		this.setType(jobCredit);
+		this.setSeniority(jobCredit);
+		this.setJob_seniority(jobCredit);
 		this.setSalary(jobCredit);
 		this.setIncomeProveImages(jobCredit);
 		this.setAuxiliaryImages(jobCredit);
@@ -16,6 +25,42 @@ class JobCredit
 	setLicenseStatus(jobCredit) {
         if (!jobCredit.license_status) this.licenseStatus= "";
 		this.licenseStatus = jobCredit.license_status;
+	}
+	setTax_id(jobCredit) {
+        if (!jobCredit.tax_id) this.tax_id= "";
+		this.tax_id = jobCredit.tax_id;
+	}
+	setCompany(jobCredit) {
+        if (!jobCredit.company) this.company= "";
+		this.company = jobCredit.company;
+	}
+	setIndustry(jobCredit) {
+        if (!jobCredit.industry) this.industry= "";
+		this.industry = jobCredit.industry;
+	}
+	setJob_title(jobCredit) {
+        if (!jobCredit.job_title) this.job_title= "";
+		this.job_title = jobCredit.job_title;
+	}
+	setEmployee(jobCredit) {
+        if (!jobCredit.employee) this.employee= "";
+		this.employee = jobCredit.employee;
+	}
+	setPosition(jobCredit) {
+        if (!jobCredit.position) this.position= "";
+		this.position = jobCredit.position;
+	}
+	setType(jobCredit) {
+        if (!jobCredit.type) this.type= "";
+		this.type = jobCredit.type;
+	}
+	setSeniority(jobCredit) {
+        if (!jobCredit.seniority) this.seniority= "";
+		this.seniority = jobCredit.seniority;
+	}
+	setJob_seniority(jobCredit) {
+        if (!jobCredit.job_seniority) this.job_seniority= "";
+		this.job_seniority = jobCredit.job_seniority;
 	}
 	setSalary(jobCredit) {
         if (!jobCredit.salary) this.salary= "";

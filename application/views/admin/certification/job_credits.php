@@ -33,8 +33,7 @@
 								<div class="col-lg-4">
 									<a id="job-credit-file">勞保檔案</a>
 								</div>
-							</div>
-							</br>
+							</div><br/>
                             <div id="container">
 								<table  id="images" class="table table-bordered">
                                     <th class="center-text table-field" width="30%">項目</th>
@@ -50,22 +49,38 @@
 									<th class="center-text table-field" width="30%">退件訊息</th>
 								</tr>
 							</table>
-							<div class="center-text">
-								<form id="salary-change" class="align-form container" action="/admin/Certification/user_certification_edit">
+							<div>
+                                <div>統一編號: <span id="tax_id"></span></div>
+                                <div>公司: <span id="company"></span></div>
+                                <div>公司類型: <span id="industry"></span></div>
+                                <div>工作職稱: <span id="job_title"></span></div>
+                                <div>企業規模: <span id="employee"></span></div>
+                                <div>職位: <span id="position"></span></div>
+                                <div>職務性質: <span id="type"></span></div>
+                                <div>畢業以來的工作期間: <span id="seniority"></span></div>
+                                <div>此公司工作期間: <span id="job_seniority"></span></div>
+                                <form id="salary-change" class="align-form container" action="/admin/Certification/user_certification_edit">
 									<span>修改自填月薪: </span>
 									<input id="salary"></input>
 									<button type="submit" class="btn btn-primary">修改自填月薪</button>
 								</form>
 							</div>
-							<div class="center-text">
+							<div>
 								<form id="verification-change" class="align-form container" action="/admin/Certification/user_certification_edit">
-									<span>審核: </span>
-									<select id="verification"></select>
-									<span>專業證書加分 (最高6級)</span>
-									<select id="license_status"></select>
-									<span>專家調整 (最高5級)</span>
-									<select id="pro_level"></select>
-									<button type="submit" class="btn btn-primary">送出</button>
+                                    <span>專業證書加分 (最高6級)</span>
+                                    <select id="license_status"></select>
+
+                                    <span>專家調整 (最高5級)</span>
+                                    <select id="pro_level"></select>
+                                    <br/>
+                                    <br/>
+                                    <span>審核: </span>
+                                    <select id="verification"></select>
+                                    <select id="failMsg" style="display: none;"></select>
+                                    <input id="fail" type="text" value="" style="background-color: white !important;width: 100px;display: none;height: 20px;" placeholder="輸入其它說明">
+                                    <br/>
+                                    <br/>
+                                    <button type="submit" class="btn btn-primary">送出</button>
 									</form>
 							</div>
 						</div>
@@ -106,15 +121,17 @@
 					return;
 				}
 				fillDropDownMenu(response.response.statuses);
+                fillFailMsg(response.response.fail_msg);
 				fillLicenseStatusMenu();
-				fillProLevelMenu();
-				var jobCredits = new JobCredit(response.response.job_credits);
-				fillJobCredits(jobCredits);
-				fillJobCreditFile(jobCredits);
-				var user = new User(response.response.user);
-				fillUser(user);
-				fillExtraImages(jobCredits);
-			},
+                fillProLevelMenu();
+                var jobCredits = new JobCredit(response.response.job_credits);
+                fillJobCredits(jobCredits);
+                fillJobCreditFile(jobCredits);
+                var user = new User(response.response.user);
+                fillUser(user);
+                fillExtraImages(jobCredits);
+                response.response.job_credits.status == 'failure' ? $('#failMsg').hide() : '';
+            },
 			error: function(error) {
 				alert('資料載入失敗。請重新整理。');
 			}
@@ -162,11 +179,13 @@
 			var status = $("#verification").val();
 			var license_status = $("#license_status").val();
 			var pro_level = $("#pro_level").val();
+			var fail = $("#fail").val();
 			var data = {
 				'id': certificationId,
 				'status': status,
 				'license_status':license_status,
 				'pro_level':pro_level,
+				'fail':fail,
 			}
 			$.ajax({
 				type: "POST",
@@ -181,8 +200,20 @@
 			});
 		});
 
+        $(document).off("change", "select#verification").on("change", "select#verification", function () {
+            if ($(this).find(':selected').val() == 2) {
+                $('#failMsg').show();
+            } else {
+                $('#failMsg').hide();
+            }
+        });
+
+        $(document).off("change", "select#failMsg").on("change", "select#failMsg", function () {
+            $(this).find(':selected').attr('value') == 'other' ? $('#fail').show() : $('#fail').hide();
+        });
+
 		function fillJobCreditFile(jobCredit) {
-			if (!jobCredit.file) return;
+            if (!jobCredit.file) return;
 			$("#job-credit-file").attr("href", jobCredit.file);
 			$("#job-credit-file").attr("target", "_blank");
 		}
@@ -199,6 +230,14 @@
 				$("#verification").append(option);
 			}
 		}
+
+        function fillFailMsg(failMsg) {
+            for (var i = 0; i < failMsg.length; i++) {
+                var option = new Option(failMsg[i], i);
+                $("#failMsg").append(option);
+            }
+            $("#failMsg").append(new Option('其它', 'other'));
+        }
 
 		function fillLicenseStatusMenu() {
 			for (var i = 0; i < 7; i++) {
@@ -223,9 +262,18 @@
 			} else if (jobCredits.status == "待人工驗證") {
 				$("#verification").val(3).change();
 			}
-			$("#salary").val(jobCredits.salary).change();
 			$("#license_status").val(jobCredits.licenseStatus).change();
 			$("#pro_level").val(jobCredits.proLevel).change();
+            $("#tax_id").text(jobCredits.tax_id);
+            $("#company").text(jobCredits.company);
+            $("#industry").text(jobCredits.industry);
+            $("#job_title").text(jobCredits.job_title);
+            $("#employee").text(jobCredits.employee);
+            $("#position").text(jobCredits.position);
+            $("#type").text(jobCredits.type);
+            $("#seniority").text(jobCredits.seniority);
+            $("#job_seniority").text(jobCredits.job_seniority);
+            $("#salary").val(jobCredits.salary).change();
 			for (var i = 0; i < jobCredits.messages.length; i++) {
 				var message = jobCredits.messages[i];
 
