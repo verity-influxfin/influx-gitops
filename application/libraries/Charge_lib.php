@@ -516,15 +516,31 @@ class Charge_lib
 				}
 				
 				$delay_days	= get_range_days($last_date,$date);
-				if( $delay_days > 0 && $amount > 0){
+                if( $delay_days > 0 && $amount > 0){
+                    $total = 0;
+                    $remaining_principal = 0;
+                    $delay_interest = 0;
+                    $transaction = $this->CI->transaction_model->order_by('limit_date', 'asc')->get_many_by([
+                        'target_id' => $target->id,
+                        'source' => 11,
+                        'status' => 1
+                    ]);
+                    if ($transaction) {
+                        foreach ($transaction as $key => $value) {
+                            $remaining_principal += $value->amount;
+                        }
+                        $delay_interest = $this->CI->financial_lib->get_delay_interest($remaining_principal, 8);
+                        $liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($remaining_principal,$target->damage_rate);
+                        $total = $remaining_principal + $delay_interest + $liquidated_damages;
+                    }
                     $this->CI->load->library('Notification_lib');
                     $this->CI->load->library('sms_lib');
-					if(in_array($delay_days,[1,2,3])){
-						$this->CI->notification_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
-						$this->CI->sms_lib->notice_delay_target($target->user_id,$amount,$target->target_no);
-					}else if(in_array($delay_days,[4,5,6,7])){
-                        $this->CI->notification_lib->notice_delay_target_lv2($target->user_id,$amount,$target->target_no);
-                        $this->CI->sms_lib->notice_delay_target_lv2($target->user_id,$amount,$target->target_no);
+                    if (in_array($delay_days, [1, 2, 3, 4, 5])) {
+                        $this->CI->notification_lib->notice_delay_target($target->user_id, $amount, $target->target_no);
+                        $this->CI->sms_lib->notice_delay_target($target->user_id, $amount, $target->target_no);
+                    } else if (in_array($delay_days, [6, 7])) {
+                        $this->CI->notification_lib->notice_delay_target_lv2($target->user_id, $amount, $target->target_no, $total, $delay_interest);
+                        $this->CI->sms_lib->notice_delay_target_lv2($target->user_id, $amount, $target->target_no, $total, $delay_interest);
                     }
 
 					$update_data = [

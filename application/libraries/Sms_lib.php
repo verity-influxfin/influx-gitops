@@ -90,21 +90,23 @@ class Sms_lib {
 			$user_info 	= $this->CI->user_model->get($user_id);
 			if($user_info){
 				$phone 		= $user_info->phone;
-				$content 	= "親愛的用戶：
-您好！您在普匯inFlux申請的借款 $target_no ，本期應還款 $amount 元已逾期，請珍惜您的信用，及時安排還款，如已還款，請忽略本訊息。";
+                $content 	= "親愛的用戶：
+善意提醒，您的借款 $target_no ，本期應還款 $amount 元已逾期，請立即繳款，逾寬限期需立即全額還款。";
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
 		}				
 		return false;
 	}
 
-    public function notice_delay_target_lv2($user_id,$amount=0,$target_no=""){
+    public function notice_delay_target_lv2($user_id,$amount=0,$target_no="", $total, $delay_interest){
         if(!empty($user_id)){
             $user_info 	= $this->CI->user_model->get($user_id);
             if($user_info){
                 $phone 		= $user_info->phone;
                 $content 	= "親愛的用戶：
-善意提醒，您的借款 $target_no ，本期應還款 $amount 元已逾期，請立即繳款，逾寬限期需立即全額還款。";
+您的借款 $target_no 已經逾期,本期應還款 $amount 元,請立即繳款,逾寬限期需立即全額還款,18號當日總還款金額為 $total 元,每天增加 $delay_interest 元延滯息,不得再使用普匯借貸服務。
+
+若有還款問題請加入「普匯，你的手機ATM。」(LINE ID: @influxfin) 與我們聯繫，珍惜信用，如期償還，避免法律催收及公告，影響未來銀行借貸。";
                 return $this->send('target_notice',$user_id,$phone,$content);
             }
         }
