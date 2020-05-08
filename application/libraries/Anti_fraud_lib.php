@@ -89,7 +89,7 @@ class Anti_fraud_lib{
         $currentUser = $this->CI->user_model->get($userId);
         $introducer = [];
         if ($currentUser->promote_code) {
-            $introducer =$this->CI->user_model->get_by(['promote_code' => $currentUser->promote_code]);
+            $introducer = $this->CI->user_model->get_by(['my_promote_code' => $currentUser->promote_code]);
         }
 
         if (
