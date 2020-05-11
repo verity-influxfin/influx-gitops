@@ -708,6 +708,15 @@ class Target_lib
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, 0, $admin_id);
             $this->CI->notification_lib->target_cancel_bidding($target->user_id, 0, $remark);
+
+            $this->CI->load->model('loan/investment_model');
+            $investments = $this->CI->investment_model->get_many_by([
+                'target_id' => $target->id,
+                'status' => [0, 1]
+            ]);
+            foreach ($investments as $inv_key => $inv_val) {
+                $this->cancel_investment($target, $inv_val, 0, $admin_id);
+            }
         }
         return false;
     }
