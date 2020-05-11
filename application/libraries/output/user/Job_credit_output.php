@@ -54,6 +54,66 @@ class Job_credit_output
             $output["pro_level"] = 0;
         }
 
+        if (isset($this->certification->content->industry)) {
+			$output["industry"] = $this->certification->content->industry;
+        } else {
+			$output["industry"] = 0;
+        }
+
+        if (isset($this->certification->content->company)) {
+			$output["company"] = $this->certification->content->company;
+        } else {
+			$output["company"] = 0;
+        }
+
+        if (isset($this->certification->content->tax_id)) {
+			$output["tax_id"] = $this->certification->content->tax_id;
+        } else {
+			$output["tax_id"] = 0;
+        }
+
+        if (isset($this->certification->content->industry)) {
+			$output["industry"] = $this->certification->content->industry;
+        } else {
+			$output["industry"] = 0;
+        }
+
+        if (isset($this->certification->content->job_title)) {
+			$output["job_title"] = $this->certification->content->job_title;
+        } else {
+			$output["job_title"] = '未填';
+        }
+
+        if (isset($this->certification->content->employee)) {
+			$output["employee"] = $this->certification->content->employee;
+        } else {
+			$output["employee"] = 0;
+        }
+
+        if (isset($this->certification->content->position)) {
+			$output["position"] = $this->certification->content->position;
+        } else {
+			$output["position"] = 0;
+        }
+
+        if (isset($this->certification->content->type)) {
+			$output["type"] = $this->certification->content->type;
+        } else {
+			$output["type"] = 0;
+        }
+
+        if (isset($this->certification->content->seniority)) {
+			$output["seniority"] = $this->certification->content->seniority;
+        } else {
+			$output["seniority"] = 0;
+        }
+
+        if (isset($this->certification->content->job_seniority)) {
+			$output["job_seniority"] = $this->certification->content->job_seniority;
+        } else {
+			$output["job_seniority"] = 0;
+        }
+
         if (isset($this->certification->content->salary)) {
 			$output["salary"] = $this->certification->content->salary;
         } else {
