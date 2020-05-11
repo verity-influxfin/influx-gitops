@@ -56,7 +56,7 @@ class Instagram_lib{
 	public function get_media($access_token=""){
 		if(!empty($access_token)){
 			$list	= array();
-			$url 	= $this->graph_api_url."users/self/media/recent/?count=30&access_token=".$access_token;
+			$url 	= $this->graph_api_url."users/self/media/recent/?access_token=".$access_token;
 			$rs 	= curl_get($url);
 			$rs		= json_decode($rs,TRUE);
 			if(isset($rs["meta"]["code"]) && $rs["meta"]["code"]=="200"){
