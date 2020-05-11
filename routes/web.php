@@ -82,6 +82,6 @@ Route::get('/web-admin', function () {
     }
 });
 
-Route::post('/web-admin/baklogin', 'Backendcontroller@login');
+Route::post('/baklogin', 'Backendcontroller@login');
 
-Route::post('/web-admin/baklogout', 'Backendcontroller@logout');
+Route::post('/baklogout', 'Backendcontroller@logout');
