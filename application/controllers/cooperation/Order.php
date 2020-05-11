@@ -240,7 +240,7 @@ class Order extends REST_Controller {
 
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
 			$product_info 	= $product_list[$input['product_id']];
-			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
+			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount'], $product_list['charge_platform']);
 			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				$list = [];
@@ -408,7 +408,7 @@ class Order extends REST_Controller {
 		
 		if(isset($product_list[$input['product_id']]) && $product_list[$input['product_id']]['type']==2){
 			$product_info 	= $product_list[$input['product_id']];
-			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
+			$platform_fees 	= $this->CI->financial_lib->get_platform_fee2($input['amount'], $product_list['charge_platform']);
 			$input['amount'] += $platform_fees;
 			if($input['amount'] >= $product_info['loan_range_s'] && $input['amount'] <= $product_info['loan_range_e']){
 				if(in_array($input['instalment'],$product_info['instalment'])){
@@ -544,7 +544,7 @@ class Order extends REST_Controller {
 			$this->response(['result' => 'ERROR','error' =>'OrderExists'],REST_Controller::HTTP_CONFLICT);//409 單號存在
 		}
 		
-		$content['platform_fee'] 	= $this->CI->financial_lib->get_platform_fee2($input['amount']);
+		$content['platform_fee'] 	= $this->CI->financial_lib->get_platform_fee2($input['amount'], $product_info['charge_platform']);
 		$content['total'] 			= $total + $content['platform_fee'];
 		$content['company_user_id'] = $this->cooperation_info->company_user_id;
 		$content['order_no'] 		= $this->get_order_no();
@@ -814,7 +814,7 @@ class Order extends REST_Controller {
                     $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
                 }
 
-                $platform_fee = $this->financial_lib->get_platform_fee2($quotes);
+                $platform_fee = $this->financial_lib->get_platform_fee2($quotes, $product_info['charge_platform']);
                 $transfer_fee = $this->financial_lib->get_transfer_fee($quotes + $platform_fee);
                 $total = $quotes + $platform_fee + $transfer_fee;
 

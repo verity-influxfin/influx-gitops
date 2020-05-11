@@ -82,7 +82,8 @@ class Subloan_lib{
 							$data['delay_interest_payable'];
 				$data['sub_loan_fees'] 	= intval(round( $data['remaining_principal'] * SUB_LOAN_FEES / 100 ,0));
 				$total += $data['sub_loan_fees'];
-				$data['platform_fees'] 	= $this->CI->financial_lib->get_platform_fee2($total);
+                $product_list = $this->CI->config->item('product_list');
+				$data['platform_fees'] 	= $this->CI->financial_lib->get_platform_fee2($total, $product_list['charge_platform']);
 				$total 					+= $data['platform_fees'];
 				$data['total']			= $total;
 				return $data;
