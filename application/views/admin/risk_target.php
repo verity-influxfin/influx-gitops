@@ -218,7 +218,7 @@
 											</td>
                                             <td><?
                                                 $productId = isset($value->product_id) ? $value->product_id : 1;
-                                                $subproductId = isset($sub_product_list[$subproductId]) ? $value->sub_product_id : 0;
+                                                $subproductId = isset($sub_product_list[$value->sub_product_id]) ? $value->sub_product_id : 0;
                                                 echo isset($product_list[$productId])?$product_list[$productId]['name']:'' ?><? echo $subproductId!=0?' / '.$sub_product_list[$subproductId]['identity'][$product_list[$productId]['identity']]['name']:''
                                                 ?></td>
 											<td>
