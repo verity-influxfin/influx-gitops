@@ -3,7 +3,7 @@
         <h2>{{this.$props.title}}</h2>
         <div class="qa-accordion" :id="'qa_content' + (category ? category:'' )">
             <div class="card" v-for="(item,index) in this.$props.data" :key="index">
-                <div class="card-header" data-toggle="collapse" :data-target="'#collapse' + (category ? category:'' ) + index" aria-expanded="true">
+                <div class="card-header collapsed" data-toggle="collapse" :data-target="'#collapse' + (category ? category:'' ) + index" aria-expanded="true">
                     <span class="accicon"><i class="fas fa-angle-down rotate-icon"></i></span>
                     <span class="title">Q{{index+1}}：{{item.title}}</span>
                 </div>

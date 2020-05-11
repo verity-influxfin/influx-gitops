@@ -75,9 +75,13 @@ Route::post('/doRegister', 'Accountcontroller@doRegister');
 
 
 Route::get('/web-admin', function () {
-    if(Session::get('account')){
-        return view('admin');
+    if(Session::get('isLogin')){
+        return view('admin',Session::all());
     }else{
         return view('login');
     }
 });
+
+Route::post('/web-admin/baklogin', 'Backendcontroller@login');
+
+Route::post('/web-admin/baklogout', 'Backendcontroller@logout');

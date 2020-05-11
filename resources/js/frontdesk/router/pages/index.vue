@@ -44,7 +44,7 @@
         <span>為什麼選擇普匯金融科技?</span>
       </div>
       <div class="profession-content">
-        <div>
+        <div class="profession-item">
           <img
             :src="'./image/best1.png'"
             class="img-fluid"
@@ -54,7 +54,7 @@
           <p>最專業的金融專家</p>
           <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
         </div>
-        <div>
+        <div class="profession-item">
           <img
             :src="'./image/best2.png'"
             class="img-fluid"
@@ -64,7 +64,7 @@
           <p>最先進的AI科技系統</p>
           <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
         </div>
-        <div>
+        <div class="profession-item">
           <img
             :src="'./image/best3.png'"
             class="img-fluid"
@@ -152,8 +152,10 @@ export default {
     },
     knowledge() {
       let $this = this;
-      $.each($this.$store.getters.KnowledgeData,(index,row)=>{
-        $this.$store.getters.KnowledgeData[index].content = `${row.content.replace(/<[^>]*>/g, '').substr(0,100)}...`;
+      $.each($this.$store.getters.KnowledgeData, (index, row) => {
+        $this.$store.getters.KnowledgeData[
+          index
+        ].content = `${row.content.replace(/<[^>]*>/g, "").substr(0, 100)}...`;
       });
       return $this.$store.getters.KnowledgeData;
     },
@@ -314,7 +316,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import './scss/slick';
+@import "./scss/slick";
 
 .banner {
   position: relative;
@@ -470,7 +472,7 @@ export default {
   .profession-content {
     display: flex;
 
-    div {
+    .profession-item {
       text-align: center;
       box-shadow: 0 0 5px #293e5d;
       padding: 10px 50px;

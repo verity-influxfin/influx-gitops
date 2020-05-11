@@ -107,7 +107,7 @@
             <router-view></router-view>
         </div>
         <div class="page-footer">
-            <div class="row footer-content">
+            <div class="row footer-content" ref="footer_slick">
                 <div class="col-lg col-md col-sm">
                     <p class="title"><img src=" {{ asset('image/footer_logo.png') }} " class="img-fluid"></p>
                     <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化，說聲Hey～普匯！</p>

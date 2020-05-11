@@ -89,6 +89,7 @@ $(() => {
             this.getListData();
         },
         mounted() {
+            this.createFooterSlick();
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
             AOS.init();
         },
@@ -121,6 +122,32 @@ $(() => {
                         $this.actionList = data.actionList;
                     }
                 });
+            },
+            createFooterSlick(){
+                $(this.$refs.footer_slick).slick({
+                    infinite: true,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    prevArrow: '<i></i>',
+                    nextArrow: '<i></i>',
+                    responsive: [
+                      {
+                        breakpoint: 1023,
+                        settings: {
+                          slidesToShow: 2,
+                          slidesToScroll: 1
+                        }
+                      },
+                      {
+                        breakpoint: 767,
+                        settings: {
+                          slidesToShow: 1,
+                          slidesToScroll: 1
+                        }
+                      }
+                    ]
+                  });
             },
             display() {
                 if (timeLineMax.reversed()) {
@@ -182,7 +209,13 @@ $(() => {
                     },
                     error(e) {
                         if (e.responseJSON.message) {
-                            $this.message = e.responseJSON.message;
+                            let messages = [];
+                            $.each(e.responseJSON.errors, (key, item) => {
+                                item.forEach((message, k) => {
+                                    messages.push(message);
+                                });
+                            });
+                            $this.pwdMessage = messages.join('、');
                         } else {
                             $this.message = `${$this.$store.state.loginErrorCode[e.responseJSON.error]}
                                          ${e.responseJSON.data ? `剩餘錯誤次數(${e.responseJSON.data.remind_count})` : ''}`;
