@@ -1763,7 +1763,7 @@ class Product extends REST_Controller {
                 $total             = 0;
                 //建立主系統訂單
                 if($product_price > 0){
-                    $platform_fee = $this->financial_lib->get_platform_fee2($product_price);
+                    $platform_fee = $this->financial_lib->get_platform_fee2($product_price, $product['charge_platform']);
                     $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
                     $total        = $amount + $platform_fee + $transfer_fee;
                 }
@@ -2211,7 +2211,7 @@ class Product extends REST_Controller {
             $total             = 0;
             //建立主系統訂單
             if($product_price > 0 && $designate){
-                $platform_fee = $this->financial_lib->get_platform_fee2($product_price);
+                $platform_fee = $this->financial_lib->get_platform_fee2($product_price, $product['charge_platform']);
                 $transfer_fee = $this->financial_lib->get_transfer_fee( $product_price + $platform_fee);
                 $total        = $amount + $platform_fee + $transfer_fee;
             }

@@ -422,17 +422,19 @@ class Financial_lib{
 		return 0;
 	}
 
-    public function get_platform_fee($price=0){
-        if($price){
-            $platform_fee = intval(round($price/100*PLATFORM_FEES,0));
+    public function get_platform_fee($price = 0, $platform_fees = PLATFORM_FEES)
+    {
+        if ($price) {
+            $platform_fee = intval(round($price / 100 * $platform_fees, 0));
             return $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
         }
         return 0;
     }
 
-    public function get_platform_fee2($price=0){
-        if($price){
-            $platform_fee = intval(round( $price * PLATFORM_FEES / (100-PLATFORM_FEES) ,0));
+    public function get_platform_fee2($price = 0, $platform_fees = PLATFORM_FEES)
+    {
+        if ($price) {
+            $platform_fee = intval(round($price * $platform_fees / (100 - PLATFORM_FEES), 0));
             return $platform_fee > PLATFORM_FEES_MIN ? $platform_fee : PLATFORM_FEES_MIN;
         }
         return 0;

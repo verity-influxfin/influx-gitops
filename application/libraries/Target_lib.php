@@ -328,7 +328,7 @@ class Target_lib
 
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if ($product_info['type'] == 1 || $subloan_status) {
-                                $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount);
+                                $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                 $param = [
                                     'sub_product_id' => $sub_product_id,
                                     'loan_amount' => $loan_amount,
