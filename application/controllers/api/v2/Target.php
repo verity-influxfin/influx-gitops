@@ -177,8 +177,8 @@ class Target extends REST_Controller {
                     );
 
                     $targetDatas = [];
+                    $targetData = json_decode($value->target_data);
                     if($product['visul_id'] == 'DS2P1'){
-                        $targetData = json_decode($value->target_data);
                         $targetDatas = [
                             'brand' => $targetData->brand,
                             'name' => $targetData->name,
@@ -234,6 +234,7 @@ class Target extends REST_Controller {
 					'reason' 			=> $reason,
 					'targetDatas' => $targetDatas,
 					'isTargetOpaque' => $sub_product_id==9999?true:false,
+					'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $value->interest_rate ? true : false),
 					'status' 			=> intval($value->status),
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
@@ -579,7 +580,8 @@ class Target extends REST_Controller {
 				'expire_time' 		=> intval($target->expire_time),
 				'invested' 			=> intval($target->invested),
                 'isTargetOpaque' => $sub_product_id==9999?true:false,
-				'status' 			=> intval($target->status),
+                'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target->interest_rate ? true : false),
+                'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
 				'created_at' 		=> intval($target->created_at),
 				'contract' 			=> $contract,
