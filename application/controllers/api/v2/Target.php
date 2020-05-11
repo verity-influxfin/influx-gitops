@@ -216,29 +216,32 @@ class Target extends REST_Controller {
                     $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                 }
 
-				$list[] = array(
-					'id' 				=> intval($value->id),
-					'target_no' 		=> $value->target_no,
+                $param = [
+                    'id' 				=> intval($value->id),
+                    'target_no' 		=> $value->target_no,
                     'product_name' => $product_name,
-					'product_id' 		=> intval($value->product_id),
-					'sub_product_id' => intval($value->sub_product_id),
-					'credit_level' 		=> intval($value->credit_level),
-					'user_id' 			=> intval($value->user_id),
-					'user' 				=> $user,
-					'loan_amount' 		=> intval($value->loan_amount),
-					'interest_rate' 	=> floatval($value->interest_rate),
-					'instalment' 		=> intval($value->instalment),
-					'repayment' 		=> intval($value->repayment),
-					'expire_time' 		=> intval($value->expire_time),
-					'invested' 			=> intval($value->invested),
-					'reason' 			=> $reason,
-					'targetDatas' => $targetDatas,
-					'isTargetOpaque' => $sub_product_id==9999?true:false,
-					'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $value->interest_rate ? true : false),
-					'status' 			=> intval($value->status),
-					'sub_status' 		=> intval($value->sub_status),
-					'created_at' 		=> intval($value->created_at),
-				);
+                    'product_id' 		=> intval($value->product_id),
+                    'sub_product_id' => intval($value->sub_product_id),
+                    'credit_level' 		=> intval($value->credit_level),
+                    'user_id' 			=> intval($value->user_id),
+                    'user' 				=> $user,
+                    'loan_amount' 		=> intval($value->loan_amount),
+                    'interest_rate' 	=> floatval($value->interest_rate),
+                    'instalment' 		=> intval($value->instalment),
+                    'repayment' 		=> intval($value->repayment),
+                    'expire_time' 		=> intval($value->expire_time),
+                    'invested' 			=> intval($value->invested),
+                    'reason' 			=> $reason,
+                    'targetDatas' => $targetDatas,
+                    'isTargetOpaque' => $sub_product_id==9999?true:false,
+                    'status' 			=> intval($value->status),
+                    'sub_status' 		=> intval($value->sub_status),
+                    'created_at' 		=> intval($value->created_at),
+                ];
+
+                isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $value->interest_rate ? $param['is_rate_increase'] = true : '';
+
+				$list[] = $param;
 			}
 		}
 
