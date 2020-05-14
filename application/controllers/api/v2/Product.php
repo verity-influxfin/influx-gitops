@@ -781,7 +781,7 @@ class Product extends REST_Controller {
         $list				       = [];
         if(!empty($targets)){
             foreach($targets as $key => $value){
-                $product = $product_list[$value->product_id];
+                $product = isset($product_list[$value->product_id]) ? $product_list[$value->product_id] : $product_list[1];
                 $sub_product_id = $value->sub_product_id;
                 $product_name = $product['name'];
                 if($this->is_sub_product($product,$sub_product_id)){
@@ -1013,7 +1013,7 @@ class Product extends REST_Controller {
             $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
 
             $product_list = $this->config->item('product_list');
-            $product = $product_list[$target->product_id];
+            $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
             $product_name = $product['name'];
             $sub_product_id = $target->sub_product_id;
             if($this->is_sub_product($product,$sub_product_id)){

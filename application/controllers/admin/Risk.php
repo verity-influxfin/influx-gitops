@@ -24,20 +24,22 @@ class Risk extends MY_Admin_Controller {
 		$input 						= $this->input->get(NULL, TRUE);
 		$list 						= array();
 		$user_list 					= array();
+		$cer_list 					= array();
 		$user_investor_list 		= array();
 		$certification_investor_list = array();
+        $company = isset($input['company']) ? true : false;
 
 		$target_status = [0,1,2,21,22,30,31,32];
 		$cer_parm = [
             'status'	=> array(0,1,3),
         ];
 
-        isset($input['investor']) ? $cer_parm['investor'] = $input['investor'] : '';
+        $cer_parm['investor'] = isset($input['investor']) ? $input['investor'] : 0;
 
 		$user_certification_list	= $this->user_certification_model->get_many_by($cer_parm);
 		if($user_certification_list){
 			foreach($user_certification_list as $key => $value){
-				if($value->investor){
+				if( $cer_parm['investor'] == 1){
 					$user_investor_list[$value->user_id] = $value->user_id;
 				}else{
 					$user_list[$value->user_id] = $value->user_id;
@@ -79,7 +81,9 @@ class Risk extends MY_Admin_Controller {
         if($list){
 			ksort($list);
 			foreach($list as $key => $value){
-				$list[$key]->certification = $this->certification_lib->get_last_status($value->user_id,0,0,$value);
+                $status = $company ? $value : false;
+                !isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, 0, 0, $status) : '';
+                $list[$key]->certification = $cer_list[$value->user_id];
 				if(isset($list[$key]->certification[3]['certification_id'])){
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_certification_id'	=> $list[$key]->certification[3]['certification_id'],
