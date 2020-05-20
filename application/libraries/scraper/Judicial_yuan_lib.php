@@ -60,7 +60,7 @@ class Judicial_yuan_lib
 
         $pos = strpos($address, '(');
         if($pos){
-          $address = substr($address,1,-7);
+          $address = substr($address,0,-8);
         }
 
         $address = $this->mappingAddressAndScraperAddress($address);
