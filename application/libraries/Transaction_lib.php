@@ -940,7 +940,7 @@ class Transaction_lib{
                                                     $user_info[$transfer_investments->user_id]->id_number
                                                 );
                                                 //crate amortization
-                                                $xlsxs = $this->transfer_amortization($invest_list,$invest_target,$target->delay,$investment->user_id,$transfer_investments->user_id,$target);
+                                                $xlsxs = $this->transfer_amortization($invest_list,$invest_target,$target->delay_days,$investment->user_id,$transfer_investments->user_id,$target);
 
                                                 $attach = array_merge($attach,$xlsxs);
                                                 $this->CI->notification_lib->transfer_success($investment->user_id, 1, 0, $target_no, $amount, $transfer_investments->user_id, $date,$attach);
@@ -1148,7 +1148,7 @@ class Transaction_lib{
 		return false;
 	}
 
-    private function transfer_amortization($invest_list,$invest_target,$delay_target=0,$investments,$transfer_investments,$target){
+    public function transfer_amortization($invest_list,$invest_target,$delay_days=0,$investments,$transfer_investments,$target){
         $xlsxs = false;
         $this->CI->load->library('target_lib');
         $product_list = $this->CI->config->item('product_list');
@@ -1160,7 +1160,7 @@ class Transaction_lib{
             $sum      = [3,6];
             $sheetTItle = ['案號','應還日期','逾期天數','本金餘額','應收利息','應收延滯息','違約金'];
             $normal_title = ['日期','應收本金','應收利息','合計','當期本金餘額'];
-            if($delay_target==0){
+            if($delay_days <= 7){
                 $sheetTItle=$normal_title;
                 foreach ($value as $key => $investment){
                     $get_investment = $this->CI->investment_model->order_by('target_id','ASC')->get_many($investment);
@@ -1171,7 +1171,7 @@ class Transaction_lib{
             }
 
             $total_investments = $this->CI->investment_model->order_by('target_id','ASC')->get_many($value);
-            $all_investment_amortization = $this->get_investment_amortization($total_investments,$delay_target,$invest_target,$target);
+            $all_investment_amortization = $this->get_investment_amortization($total_investments,$delay_days,$invest_target,$target);
             foreach ($all_investment_amortization as $sheets => $sheetDatas) {
                 $array = array_values($sheetDatas);
                 array_unshift($array,$sheets);
@@ -1205,7 +1205,7 @@ class Transaction_lib{
         return $xlsxs;
     }
 
-    private function get_investment_amortization($investments,$delay_target=0,$target_nos='',$target=''){
+    private function get_investment_amortization($investments,$delay_days = 0,$target_nos='',$target=''){
         $list= [];
         foreach($investments as $key => $value){
             $i=1;
@@ -1214,7 +1214,7 @@ class Transaction_lib{
             if($amortization_table && !empty($amortization_table['list'])){
                 foreach($amortization_table['list'] as $k => $v){
                     if(!isset($list[$v['repayment_date']])){
-                        if($delay_target==0){
+                        if($delay_days <= 7){
                             $list[$v['repayment_date']] = array(
                                 'principal'	=> 0,
                                 'interest'	=> 0,
@@ -1223,7 +1223,7 @@ class Transaction_lib{
                             );
                         }
                     }
-                    if($delay_target==1){
+                    if($delay_days > 7){
                         if(count($amortization_table['list'])==$i){
                             $target_no = $target_nos[$value->id];
                             $list[$target_no]['repayment_date']      = $v['repayment_date'];
