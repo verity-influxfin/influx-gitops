@@ -67,6 +67,13 @@ let notificationRow = Vue.extend({
 });
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
+      next("/index");
+    } else {
+      next();
+    }
+  },
   data: () => ({
     unreadCount: 0,
     notifications: []
@@ -92,7 +99,7 @@ export default {
           });
         })
         .catch(error => {
-          console.log("發生錯誤，請稍後再試");
+          console.log("getNotification 發生錯誤，請稍後再試");
         });
     },
     pagination() {

@@ -17,8 +17,6 @@ $(() => {
         });
     };
 
-    let authoritypage = ["/myinvestment", "/membercentre", "/notification", "/myrepayment"];
-
     const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
     const router = new VueRouter({
@@ -28,12 +26,6 @@ $(() => {
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
             next('/index');
-        } else if (authoritypage.indexOf(to.path) !== -1) {
-            if (sessionStorage.length === 0 || sessionStorage.getItem("flag") === 'logout') {
-                vue.openLoginModal('請登入');
-            } else {
-                next();
-            }
         } else {
             $(".page-header").show();
             $(".page-footer").show();
@@ -80,7 +72,7 @@ $(() => {
             counter: 180,
             loginTime: 0,
             currentTime: 0,
-            altered:false
+            altered: false
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
@@ -116,7 +108,7 @@ $(() => {
                         this.actionList = res.data.actionList;
                     })
                     .catch((error) => {
-                        console.error(error);
+                        console.error('getListData 發生錯誤，請稍後再試');
                     });
             },
             createFooterSlick() {
@@ -182,7 +174,7 @@ $(() => {
                 let phone = this.account;
                 let password = this.password;
 
-                let params = { phone, password };
+                let params = { phone, password, 'investor': 0 };
 
                 if (this.isCompany) {
                     let tax_id = this.businessNum;
@@ -195,13 +187,12 @@ $(() => {
                         if (this.$router.history.pending) {
                             $(this.$refs.loginForm).modal("hide");
                             this.$router.replace(this.$router.history.pending.path);
-                        } else {
-                            location.reload();
                         }
+
+                        location.reload();
                     })
                     .catch((error) => {
                         let errorsData = error.response.data;
-                        console.log(errorsData);
                         if (errorsData.message) {
                             let messages = [];
                             $.each(errorsData.errors, (key, item) => {

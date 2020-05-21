@@ -40,48 +40,54 @@
       </div>
       <div v-else>
         <div class="info-card" v-for="(item,index) in installment" :key="index">
-          <div class="circle">
-            <circle-progress
-              key="animation-model"
-              :width="circleWidth"
-              radius="6"
-              barColor="#ffbe5c"
-              duration="1000"
-              delay="20"
-              timeFunction="cubic-bezier(0.99, 0.01, 0.22, 0.94)"
-              backgroundColor="#ffdeab"
-              :progress="progress(item)"
-              :isAnimation="true"
-              :isRound="true"
-            ></circle-progress>
-            <div class="period">
-              {{item.repayment}}&nbsp;/&nbsp;{{item.instalment}}
-              <br />期
-            </div>
-          </div>
-          <div class="head-title">
-            <p class="detail">
-              {{item.product_name}}
-              <br />
-              {{item.target_no}}
-            </p>
-            <div style="color: #797979;">
-              <div>
-                本期還款日期
-                <span class="float-right">{{item.next_repayment.date}}</span>
-              </div>
-              <div>
-                本期還款金額
-                <span class="float-right">${{format(item.next_repayment.amount)}}</span>
+          <div style="display: flex;">
+            <div class="circle">
+              <circle-progress
+                key="animation-model"
+                :width="circleWidth"
+                radius="6"
+                barColor="#ffbe5c"
+                duration="1000"
+                delay="20"
+                timeFunction="cubic-bezier(0.99, 0.01, 0.22, 0.94)"
+                backgroundColor="#ffdeab"
+                :progress="progress(item)"
+                :isAnimation="true"
+                :isRound="true"
+              ></circle-progress>
+              <div class="period">
+                {{item.next_repayment.instalment}}&nbsp;/&nbsp;{{item.instalment}}
+                <br />期
               </div>
             </div>
-            <detailBtn :data="item" :left="true" @sendinfo="getInfo(item.id,item.status)"></detailBtn>
-            <a
-              class="btn btn-secondary btn-sm float-right"
-              target="_blank"
-              href="https://line.me/R/ti/p/%40kvd1654s"
-            >聯繫克服</a>
+            <div class="head-title">
+              <p class="detail">
+                {{item.product_name}}
+                <br />
+                {{item.target_no}}
+              </p>
+              <div style="color: #797979;">
+                <div>
+                  本期還款日期
+                  <span class="float-right">{{item.next_repayment.date}}</span>
+                </div>
+                <div>
+                  本期還款金額
+                  <span
+                    class="float-right"
+                    :style="{'color':item.delay_days >0 ? 'red' : ''}"
+                  >${{format(item.next_repayment.amount)}}</span>
+                </div>
+              </div>
+              <detailBtn :data="item" :left="true" @sendinfo="getInfo(item.id,item.status)"></detailBtn>
+              <a
+                class="btn btn-secondary btn-sm float-right"
+                target="_blank"
+                href="https://line.me/R/ti/p/%40kvd1654s"
+              >聯繫克服</a>
+            </div>
           </div>
+          <div class="delay-memo" v-if="item.delay_days >0">您已逾期，請至APP全額清償或申請產品轉換</div>
         </div>
       </div>
     </div>
@@ -140,20 +146,77 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            <div class="detail-banner">
-              <span>本金餘額</span>
+            <div :class="['detail-banner', {'delay' : isDelay}]">
+              <span>{{deatilTitle}}</span>
               <span class="amount">{{format(remainingPrincipal)}}</span>
               <span>$</span>
             </div>
             <div class="detail-title">
               <label>{{productName}}</label>
-              <span>{{statusText}}</span>
+              <span :class="{'delay' : isDelay}">{{statusText}}</span>
             </div>
             <div class="detail-subtitle">
               <label>案件編號</label>
               <span>{{targetId}}</span>
             </div>
-            <div class="detail-info">
+            <div class="delay-info" v-if="isDelay">
+              <div class="delay-row">
+                <div class="card-item">
+                  <label>當期還款日</label>
+                  <br />
+                  <span class="delay">{{nextRepaymentDate}}</span>
+                </div>
+                <div class="card-item">
+                  <label>逾期日數</label>
+                  <br />
+                  <span class="delay">{{delayDays}}日</span>
+                </div>
+              </div>
+              <div class="delay-row">
+                <div class="card-item">
+                  <label>逾期本金</label>
+                  <br />
+                  <span>{{format(loanAmount)}}</span>
+                </div>
+                <div class="card-item">
+                  <label>逾期利息</label>
+                  <br />
+                  <span>{{format(interest)}}</span>
+                </div>
+              </div>
+              <div class="delay-row">
+                <div class="card-item">
+                  <label>逾期違約金</label>
+                  <br />
+                  <span class="delay">{{format(liquidatedDamages)}}</span>
+                </div>
+                <div class="card-item">
+                  <label>逾期延滯息</label>
+                  <br />
+                  <span class="delay">{{format(delayInterest)}}</span>
+                </div>
+              </div>
+              <div class="delay-row">
+                <div class="card-item">
+                  <label>案件還款行</label>
+                  <br />
+                  <span>({{vBankCode}}){{vBankName}}</span>
+                </div>
+                <div class="card-item">
+                  <label>案件還款分行</label>
+                  <br />
+                  <span>({{vBranchCode}}){{vBranchName}}</span>
+                </div>
+              </div>
+              <div class="delay-row">
+                <div class="card-item">
+                  <label>案件還款帳號</label>
+                  <span>{{vAccount}}</span>
+                </div>
+                <div class="card-item"></div>
+              </div>
+            </div>
+            <div class="detail-info" v-else>
               <div class="card-item">
                 <label>本期還款日</label>
                 <br />
@@ -216,7 +279,8 @@
                 </div>
                 <div class="row2">
                   <p style="color:orange">${{format(item.total_payment)}}</p>
-                  <span>
+                  <span v-if="isDelay">逾期清償</span>
+                  <span v-else>
                     含利息
                     <span style="color:lightblue">${{format(item.interest)}}</span>
                   </span>
@@ -243,13 +307,20 @@ import detailBtn from "./component/detailBtnComponent";
 import scrollingTable from "./component/scrollingTableComponent";
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
+      next("/index");
+    } else {
+      next();
+    }
+  },
   components: {
     circleProgress,
     detailBtn,
     scrollingTable
   },
   data: () => ({
-    circleWidth : $(window.document).outerWidth() < 1023 ? 90 : 120,
+    circleWidth: $(window.document).outerWidth() < 1023 ? 90 : 120,
     detailData: {},
     repaymentDeatilRow: [],
     passbook: [],
@@ -257,6 +328,7 @@ export default {
       start: new Date(),
       end: new Date()
     },
+    deatilTitle: "",
     productName: "",
     targetId: "",
     nextRepaymentDate: "",
@@ -266,7 +338,17 @@ export default {
     instalment: "",
     nextRepaymentAmount: 0,
     loanAmount: 0,
-    remainingPrincipal: 0
+    remainingPrincipal: 0,
+    isDelay: false,
+    delayDays: "",
+    interest: "",
+    liquidatedDamages: "",
+    delayInterest: "",
+    vBankName: "",
+    vBankCOde: "",
+    vBranchName: "",
+    vBranchCode: "",
+    vAccount: ""
   }),
   computed: {
     repaymentNumber() {
@@ -345,13 +427,17 @@ export default {
             this.showDetail(res.data.data);
           })
           .catch(error => {
-            console.log("發生錯誤，請稍後在試");
+            console.log("getDetail 發生錯誤，請稍後在試");
           });
       }
     },
     showDetail(data) {
       this.detailData = data;
-      this.remainingPrincipal = data.amortization_schedule.remaining_principal;
+      this.isDelay = data.delay_days > 0 ? true : false;
+      this.deatilTitle = this.isDelay ? "逾期總額" : "本金餘額";
+      this.remainingPrincipal = this.isDelay
+        ? data.amortization_schedule.total_payment
+        : data.amortization_schedule.remaining_principal;
       this.nextRepaymentAmount = data.next_repayment.amount;
       this.loanAmount = data.loan_amount;
       this.productName = data.product_name;
@@ -361,6 +447,19 @@ export default {
       this.endDate = data.amortization_schedule.end_date;
       this.repayment = data.next_repayment.instalment;
       this.instalment = data.instalment;
+
+      this.delayDays = data.delay_days;
+      this.interest = data.next_repayment.interest;
+      this.liquidatedDamages = data.next_repayment.liquidated_damages;
+      this.delayInterest = data.next_repayment.delay_interest;
+
+      if (data.targetDatas.virtual_account) {
+        this.vBankCode = data.targetDatas.virtual_account.bank_code;
+        this.vBankName = data.targetDatas.virtual_account.bank_name;
+        this.vBranchCode = data.targetDatas.virtual_account.branch_code;
+        this.vBranchName = data.targetDatas.virtual_account.branch_name;
+        this.vAccount = data.targetDatas.virtual_account.virtual_account;
+      }
       $(this.$refs.detailModal).modal("show");
     },
     open() {
@@ -512,13 +611,13 @@ export default {
         if (0 == delay_interest) {
           return `<span style="color:#4A90E2;">待還款</span>`;
         } else {
-          return `<span style="color:#7ED321;">逾期未還</span>`;
+          return `<span style="color:#FF575F;">逾期未還</span>`;
         }
       } else if (repayment === total_payment) {
         if (0 == delay_interest) {
-          return `<span style="color:#FF575F;">已還款</span>`;
+          return `<span style="color:#7ED321;">已還款</span>`;
         } else {
-          return `<span style="color:#4A4A4A;">逾期未還</span>`;
+          return `<span style="color:#4A4A4A;">逾期清償</span>`;
         }
       }
     },
@@ -560,7 +659,7 @@ export default {
           });
         })
         .catch(error => {
-          console.log("發生錯誤，請稍後在試");
+          console.log("getTansactionDetails 發生錯誤，請稍後在試");
         });
     }
   }
@@ -714,6 +813,11 @@ export default {
       }
     }
 
+    .detail-banner.delay {
+      background: #ff4b4b;
+      box-shadow: 0 0 4px #ff0000;
+    }
+
     .detail-title {
       label {
         font-size: 20px;
@@ -724,6 +828,10 @@ export default {
       span {
         float: right;
         color: #9c9c9c;
+      }
+
+      .delay {
+        color: #ff6b6b;
       }
     }
 
@@ -764,6 +872,36 @@ export default {
 
       span {
         float: right;
+      }
+    }
+
+    .delay-info {
+      background: #ffd9d9;
+      border-radius: 5px;
+      padding: 5px;
+      margin-bottom: 10px;
+
+      .delay-row {
+        display: flex;
+
+        .card-item {
+          width: 100%;
+          text-align: center;
+
+          label {
+            color: #656565;
+          }
+
+          span {
+            color: #1a2cff;
+            font-size: 20px;
+            font-weight: bolder;
+
+            &.delay {
+              color: #ff1a1a !important;
+            }
+          }
+        }
       }
     }
   }
@@ -819,20 +957,22 @@ export default {
       margin: 5px;
     }
 
-    .accound-card,.repayment-card,.detail-card{
+    .accound-card,
+    .repayment-card,
+    .detail-card {
       width: 97%;
     }
 
-    .charts-modal{
-       .repayment-detail-item{
-          .row1{
-            padding-left: 0px;
-          }
-       }
+    .charts-modal {
+      .repayment-detail-item {
+        .row1 {
+          padding-left: 0px;
+        }
+      }
     }
 
-    .detail-card{
-      .remark{
+    .detail-card {
+      .remark {
         width: 135px;
         min-width: 135px;
         max-width: 135px;

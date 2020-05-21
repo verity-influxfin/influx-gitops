@@ -94,7 +94,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link invest-link" to="/myinvestment">投資專區</router-link>
+                        <a class="nav-link invest-link" v-if="!flag || flag === 'logout'"@click="openLoginModal('請登入')">投資專區</a>
+                        <router-link class="nav-link invest-link" to="/myinvestment"  v-else>投資專區</router-link>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <p class="nav-link" href="#" @click="openLoginModal('')">登入</p>

@@ -94,7 +94,7 @@ export default {
           this.bannerData = res.data;
         })
         .catch(error => {
-          console.error(error);
+          console.error("getBannerData 發生錯誤，請稍後再試");
         });
     },
     getQaData() {

@@ -27,7 +27,6 @@
                 this.timeLineMax = new TimelineMax({paused: true, reversed: true});
                 this.timeLineMax.to($event.target, {scale:1.2});
                 this.timeLineMax.play();
-                console.log($event);
             },
             recovery($event){
                 this.timeLineMax.reverse();

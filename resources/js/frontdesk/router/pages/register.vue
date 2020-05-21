@@ -194,7 +194,7 @@ export default {
           $(this.$refs.termsForm).modal("show");
         })
         .catch(error => {
-          console.log(error);
+          console.log("getTerms 發生錯誤，請稍後再試");
         });
     },
     doRegister() {

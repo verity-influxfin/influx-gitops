@@ -7,7 +7,6 @@
         background: #ffffff;
         margin: 10px 5px;
         float: left;
-        display: flex;
         width: 390px;
 
         .circle {
@@ -24,6 +23,12 @@
                 font-size: 22px;
                 color: #797979;
             }
+        }
+
+        .delay-memo {
+            border-left: 2px solid red;
+            margin: 5px 15px;
+            padding: 0px 10px;
         }
     }
 
@@ -66,7 +71,7 @@
             .circle {
                 height: 175px;
 
-                .period{
+                .period {
                     font-size: 16px;
                 }
             }

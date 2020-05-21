@@ -21,9 +21,9 @@ export default {
       if (blueList.indexOf(this.$props.data.status) !== -1) {
         return "btn-primary";
       } else if (this.$props.data.status === 5) {
-        if (this.$props.delay > 7) {
+        if (7 <= this.$props.data.delay_days ) {
           return "btn-danger";
-        } else if (this.$props.data.delay > 0) {
+        } else if ( 0 < this.$props.data.delay_days && this.$props.data.delay_days < 7) {
           return "btn-warning";
         } else {
           return "btn-primary";
@@ -40,7 +40,7 @@ export default {
         return "icon_arrow_deepblue.svg";
       } else if (errorList.indexOf(this.$props.data.status) !== -1) {
         return "icon_error.svg";
-      } else if (this.$props.data.status === 5 && this.$props.data.delay > 0) {
+      } else if (this.$props.data.status === 5 && this.$props.data.delay_days > 0) {
         return "icon_warning_white.svg";
       } else {
         return "icon_ok.svg";
@@ -63,8 +63,8 @@ export default {
         9: "申請失敗",
         10: "已結案"
       };
-      if (this.$props.data.status === 5 && this.$props.data.delay > 0) {
-        return `已逾期${this.$props.data.delay}日`;
+      if (this.$props.data.status === 5 && this.$props.data.delay_days > 0) {
+        return `已逾期${this.$props.data.delay_days}日`;
       } else if (
         this.$props.data.status === 10 &&
         this.$props.data.sub_status === 2

@@ -34,8 +34,8 @@
           <p>通知</p>
         </router-link>
         <router-link class="menu-item" to="/myrepayment">
-           <img :src="'./image/icon_moneyback.svg'" class="img-fluid" />
-           <p>帳戶資訊</p>
+          <img :src="'./image/icon_moneyback.svg'" class="img-fluid" />
+          <p>帳戶資訊</p>
         </router-link>
         <!-- <router-link class="menu-item" to="/repayment">
           <img :src="'./image/icon_moneyback.svg'" class="img-fluid" />
@@ -44,7 +44,7 @@
         <router-link class="menu-item" to="/detail">
           <img :src="'./image/icon_getmoney.svg'" class="img-fluid" />
           <p>帳戶提領</p>
-        </router-link> -->
+        </router-link>-->
       </div>
     </div>
     <div class="main-content">
@@ -55,8 +55,15 @@
 
 <script>
 export default {
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
+      next("/index");
+    } else {
+      next();
+    }
+  },
   data: () => ({
-    myRepayment:{},
+    myRepayment: {},
     userId: "",
     userName: "",
     userPic: "",
@@ -88,12 +95,12 @@ export default {
   },
   created() {
     this.$store.dispatch("getRepaymentList");
-    this.$router.push('/notification');
+    this.$router.push("/notification");
     let userData = JSON.parse(sessionStorage.getItem("userData"));
-    
+
     this.userId = userData.id;
     this.userName = userData.name;
-    this.userPic = userData.picture ? userData.picture : './image/mug_shot.svg';
+    this.userPic = userData.picture ? userData.picture : "./image/mug_shot.svg";
 
     this.getMyRepayment();
 
@@ -114,7 +121,7 @@ export default {
     }
   },
   methods: {
-    format(data){
+    format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
@@ -122,7 +129,7 @@ export default {
       axios
         .get("getMyRepayment")
         .then(res => {
-          this.myRepayment =  res.data.data;
+          this.myRepayment = res.data.data;
           this.funds = res.data.data.funds.total;
           this.frozen = res.data.data.funds.frozen;
           this.principal = res.data.data.accounts_payable.principal;
@@ -130,7 +137,7 @@ export default {
           this.repaymentDate = res.data.data.next_repayment.date;
         })
         .catch(error => {
-          console.error('發生錯誤請稍後再試');
+          console.error("getMyRepayment 發生錯誤，請稍後再試");
         });
     }
   }
@@ -269,7 +276,7 @@ export default {
         box-shadow: none !important;
       }
     }
-    
+
     .main-content {
       padding: 0px;
     }
