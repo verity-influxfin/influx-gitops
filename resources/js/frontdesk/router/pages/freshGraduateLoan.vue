@@ -51,48 +51,21 @@ export default {
   },
   methods: {
     getBannerData() {
-      let $this = this;
-      $.ajax({
-        url: "getBannerData",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: "freshgraduate"
-        },
-        success(data) {
-          $this.bannerData = data;
-        }
+      axios.post("getBannerData", { filter: "freshgraduate" }).then(res => {
+        this.bannerData = res.data;
       });
     },
     getApplydata() {
-      let $this = this;
-      $.ajax({
-        url: "getApplydata",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: "freshgraduate"
-        },
-        success(data) {
-          $this.applyData = data;
-          $this.$nextTick(() => {
-            $this.$refs.apply.createSlick();
-          });
-        }
+      axios.post("getApplydata", { filter: "freshgraduate" }).then(res => {
+        this.applyData = res.data;
+        this.$nextTick(() => {
+          this.$refs.apply.createSlick();
+        });
       });
     },
     getQaData() {
-      let $this = this;
-      $.ajax({
-        url: "getQaData",
-        type: "POST",
-        data: {
-          filter: "freshgraduate"
-        },
-        dataType: "json",
-        success(data) {
-          $this.qaData = data;
-        }
+      axios.post("getQaData", { filter: "freshgraduate" }).then(res => {
+        this.qaData = res.data;
       });
     }
   }

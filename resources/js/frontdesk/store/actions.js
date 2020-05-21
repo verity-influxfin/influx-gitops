@@ -1,55 +1,50 @@
 export default {
-    getExperiencesData({ commit }){
-        $.ajax({
-            url:'getExperiencesData',
-            type:'POST',
-            dataType:'json',
-            success(data){
-                commit('mutationExperiencesData',data);
-            }
-        });
+    async getExperiencesData({ commit }){
+        try{
+            let res = await axios.post('getExperiencesData');
+            commit('mutationExperiencesData',res.data);
+        } catch(error){
+            console.error('getExperiencesData 發生錯誤');
+        }
     },
-    getKnowledgeData({ commit }){
-        $.ajax({
-            url:'getKnowledgeData',
-            type:'POST',
-            dataType:'json',
-            success(data){
-                commit('mutationKnowledgeData',data);
-            }
-        });
+    async getKnowledgeData({ commit }){
+        try{
+            let res = await axios.post('getKnowledgeData');
+            commit('mutationKnowledgeData',res.data);
+        } catch(error){
+            console.error('getKnowledgeData 發生錯誤');
+        }
     },
-    getSharesData({ commit },params){
-        $.ajax({
-            url:'getSharesData',
-            type:'POST',
-            dataType:'json',
-            data:{
-                filter:params.category
-            },
-            success(data){
-                commit('mutationSharesData',data);
-            }
-        });
+    async getSharesData({ commit },params){
+        try{
+            let res = await axios.post('getSharesData',{filter:params.category});
+            commit('mutationSharesData',res.data);
+        } catch(error){
+            console.error('getSharesData 發生錯誤');
+        }
     },
-    getInterviewData({ commit }){
-        $.ajax({
-            url:'getInterviewData',
-            type:'POST',
-            dataType:'json',
-            success(data){
-                commit('mutationInterviewData',data);
-            }
-        });
+    async getInterviewData({ commit }){
+        try{
+            let res = await axios.post('getInterviewData');
+            commit('mutationInterviewData',res.data);
+        } catch(error){
+            console.error('getInterviewData 發生錯誤');
+        }
     },
-    getNewsData({ commit }){
-        $.ajax({
-            url:'getNewsData',
-            type:'POST',
-            dataType:'json',
-            success(data){
-                commit('mutationNewsData',data);
-            }
-        });
+    async getNewsData({ commit }){
+        try{
+            let res = await axios.post('getNewsData');
+            commit('mutationNewsData',res.data);
+        } catch(error){
+            console.error('getNewsData 發生錯誤');
+        }
+    },
+    async getRepaymentList({ commit }){
+        try{
+            let res = await axios.post('getRepaymentList');
+            commit('mutationRepaymentData',res.data);
+        } catch(error){
+            console.error('getRepaymentList 發生錯誤');
+        }
     }
 }

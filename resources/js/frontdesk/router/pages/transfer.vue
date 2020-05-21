@@ -75,31 +75,17 @@ export default {
   },
   methods: {
     getInvestTonicData() {
-      let $this = this;
-      $.ajax({
-        url: "getInvestTonicData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $.each(data, (index, row) => {
-            data[index].link = `/articlepage/investtonic-${row.id}`;
-          });
-          $this.investTonic = data;
-        }
+      axios.post("getInvestTonicData").then(res => {
+        let data = res.data;
+        $.each(data, (index, row) => {
+          data[index].link = `/articlepage/investtonic-${row.id}`;
+        });
+        this.investTonic = data;
       });
     },
     getQaData() {
-      let $this = this;
-      $.ajax({
-        url: "getQaData",
-        type: "POST",
-        data: {
-          filter: "transfer"
-        },
-        dataType: "json",
-        success(data) {
-          $this.qaData = data;
-        }
+      axios.post("getQaData",{filter: "transfer"}).then(res => {
+          this.qaData = res.data;
       });
     },
     createTransferSlick() {

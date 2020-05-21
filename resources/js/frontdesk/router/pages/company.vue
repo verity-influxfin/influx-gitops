@@ -156,25 +156,13 @@ export default {
   },
   methods: {
     getMilestoneData() {
-      let $this = this;
-      $.ajax({
-        url: "getMilestoneData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $this.milestone = data;
-        }
+      axios.post("getMilestoneData").then(res => {
+        this.milestone = res.data;
       });
     },
     getMediaData() {
-      let $this = this;
-      $.ajax({
-        url: "getMediaData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $this.media = data;
-        }
+      axios.post("getMediaData").then(res => {
+        this.media = res.data;
       });
     },
     openModel(data) {
@@ -184,14 +172,8 @@ export default {
       });
     },
     getPartnerData() {
-      let $this = this;
-      $.ajax({
-        url: "getPartnerData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $this.partner = data;
-        }
+      axios.post("getPartnerData").then(res => {
+        this.partner = res.data;
       });
     },
     createRegulationSlick() {

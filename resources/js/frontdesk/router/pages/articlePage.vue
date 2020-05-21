@@ -38,22 +38,14 @@ export default {
   },
   methods: {
     getArticleData() {
-      let $this = this;
-
-      $.ajax({
-        url: "getArticleData",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: $this.$route.params.id
-        },
-        success(data) {
+      axios
+        .post("getArticleData", { filter: this.$route.params.id })
+        .then(res => {
           FB.XFBML.parse();
-          $this.articleTitle = data.title;
-          $this.articleImg = data.imageSrc;
-          $this.articleHtml = data.content;
-        }
-      });
+          this.articleTitle = res.data.title;
+          this.articleImg = res.data.imageSrc;
+          this.articleHtml = res.data.content;
+        });
     }
   }
 };

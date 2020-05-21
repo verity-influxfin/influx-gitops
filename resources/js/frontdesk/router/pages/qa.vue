@@ -46,17 +46,8 @@ export default {
   },
   methods: {
     getQaData() {
-      let $this = this;
-      $.ajax({
-        url: "getQaData",
-        type: "POST",
-        data: {
-          filter: "qa"
-        },
-        dataType: "json",
-        success(data) {
-          $this.qaData = data;
-        }
+      axios.post("getQaData",{filter: "qa"}).then(res => {
+        this.qaData = res.data;
       });
     }
   }

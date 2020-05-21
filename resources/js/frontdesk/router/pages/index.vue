@@ -198,14 +198,8 @@ export default {
   },
   methods: {
     getServiceData() {
-      let $this = this;
-      $.ajax({
-        url: "getServiceData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $this.services = data;
-        }
+      axios.post("getServiceData").then(res => {
+        this.services = res.data;
       });
     },
     typing() {

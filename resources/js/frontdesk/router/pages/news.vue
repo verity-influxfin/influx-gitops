@@ -1,8 +1,8 @@
 <template>
   <div class="news-page-wrapper">
     <h1>最新消息</h1>
-    <div class="news-content">
-      <div v-for="(item,index) in this.news" class="card" :key="index">
+    <ul class="news-content">
+      <li v-for="(item,index) in this.news" class="card" :key="index">
         <router-link :to="item.link" style="text-align: center;">
           <img :src="item.imageSrc" class="img-custom" />
         </router-link>
@@ -14,8 +14,8 @@
         </p>
         <p class="gray">{{item.content}}…</p>
         <router-link class="btn btn-info" :to="item.link">Read More</router-link>
-      </div>
-    </div>
+      </li>
+    </ul>
     <div class="pagination" ref="pagination"></div>
   </div>
 </template>
@@ -86,6 +86,7 @@ export default {
     width: 75%;
     overflow: auto;
     margin: 0px auto;
+    padding: 0px;
 
     .img-custom {
       height: 300px;

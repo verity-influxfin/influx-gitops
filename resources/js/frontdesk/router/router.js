@@ -17,8 +17,12 @@ import privacyTerms from './pages/privacyTerms';
 import loanerTerms from './pages/loanerTerms';
 import register from './pages/register';
 import myInvestment from './pages/myInvestment';
+import memberCentre from './pages/memberCentre';
+import notification from './pages/notification';
+import myrepayment from './pages/myrepayment';
 
 let routers = [
+    { path: '*', redirect: '/index' },
     { path: '/index', component: index },
     { path: '/collegeLoan', component: collegeLoan },
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
@@ -29,7 +33,7 @@ let routers = [
     { path: '/company', component: company },
     { path: '/news', component: news },
     { path: '/blog', component: blog },
-    { path: '/vlog/:category', component: vlog},
+    { path: '/vlog/:category', component: vlog },
     { path: '/qa', component: qa },
     { path: '/videopage/:id', component: videoPage },
     { path: '/articlepage/:id', component: articlePage },
@@ -37,7 +41,13 @@ let routers = [
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
     { path: '/register', component: register },
-    { path: '/myinvestment', component: myInvestment }
+    { path: '/myinvestment', component: myInvestment },
+    {
+        path: '/membercentre', component: memberCentre, children: [
+            { path: '/notification', component: notification },
+            { path: '/myrepayment', component: myrepayment }
+        ]
+    }
 ];
 
 export default routers;

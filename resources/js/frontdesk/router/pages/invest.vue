@@ -88,31 +88,18 @@ export default {
       });
     },
     getBannerData() {
-      let $this = this;
-      $.ajax({
-        url: "getBannerData",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: "invest"
-        },
-        success(data) {
-          $this.bannerData = data;
-        }
-      });
+      axios
+        .post("getBannerData", { filter: "invest" })
+        .then(res => {
+          this.bannerData = res.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     getQaData() {
-      let $this = this;
-      $.ajax({
-        url: "getQaData",
-        type: "POST",
-        data: {
-          filter: "invest"
-        },
-        dataType: "json",
-        success(data) {
-          $this.qaData = data;
-        }
+      axios.post("getQaData", { filter: "invest" }).then(res => {
+        this.qaData = res.data;
       });
     }
   }

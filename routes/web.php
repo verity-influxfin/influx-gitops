@@ -71,6 +71,24 @@ Route::post('/resetPassword', 'Accountcontroller@resetPassword');
 Route::post('/doRegister', 'Accountcontroller@doRegister');
 
 
+//Membercentre
+
+
+Route::get('/getMyRepayment', 'Membercentrecontroller@getMyRepayment');
+
+Route::post('/getNotification', 'Membercentrecontroller@getNotification');
+
+Route::post('/getRepaymentList', 'Membercentrecontroller@getRepaymentList');
+
+Route::post('/getDetail', 'Membercentrecontroller@getDetail');
+
+Route::post('/getTansactionDetails', 'Membercentrecontroller@getTansactionDetails');
+
+Route::post('/read', 'Membercentrecontroller@read');
+
+Route::get('/allRead', 'Membercentrecontroller@allRead');
+
+
 // backstage
 
 

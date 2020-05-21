@@ -42,14 +42,8 @@ export default {
   },
   methods: {
     getMobileData() {
-      const $this = this;
-      $.ajax({
-        url: "getMobileData",
-        type: "POST",
-        dataType: "json",
-        success(data) {
-          $this.mobileData = data;
-        }
+      axios.post("getMobileData").then(res => {
+        this.mobileData = res.data;
       });
     }
   }

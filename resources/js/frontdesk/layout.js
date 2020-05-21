@@ -7,17 +7,17 @@ import mutations from './store/mutations';
 import routers from './router/router';
 
 $(() => {
-    const localStoragePlugin = store => {
+    const sessionStoragePlugin = store => {
         store.subscribe((mutation, { userData }) => {
             if (mutation.type === "mutationUserData") {
-                localStorage.clear();
-                localStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
-                localStorage.setItem("userData", JSON.stringify(userData));
+                sessionStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
+                sessionStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
+                sessionStorage.setItem("userData", JSON.stringify(userData));
             }
         });
     };
 
-    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+    let authoritypage = ["/myinvestment", "/membercentre", "/notification", "/myrepayment"];
 
     const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
@@ -28,13 +28,9 @@ $(() => {
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
             next('/index');
-        } else if (to.path === "/myinvestment") {
-            if (localStorage.getItem("flag") === 'logout') {
-                if (from.path === "/") {
-                    next('/index');
-                } else {
-                    vue.openLoginModal('請登入');
-                }
+        } else if (authoritypage.indexOf(to.path) !== -1) {
+            if (sessionStorage.length === 0 || sessionStorage.getItem("flag") === 'logout') {
+                vue.openLoginModal('請登入');
             } else {
                 next();
             }
@@ -42,7 +38,6 @@ $(() => {
             $(".page-header").show();
             $(".page-footer").show();
             $(".back-top").show();
-            $(".afc_popup").show();
 
             $(window).scrollTop(0);
             next();
@@ -54,7 +49,7 @@ $(() => {
         getters,
         actions,
         mutations,
-        plugins: [localStoragePlugin]
+        plugins: [sessionStoragePlugin]
     });
 
     const vue = new Vue({
@@ -79,13 +74,17 @@ $(() => {
             code: '',
             message: '',
             pwdMessage: '',
-            flag: localStorage.getItem("flag"),
-            userName: '',
+            flag: sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '',
+            userData: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
             timer: null,
-            counter: 180
+            counter: 180,
+            loginTime: 0,
+            currentTime: 0,
+            altered:false
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
+            this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
         },
         mounted() {
@@ -96,7 +95,7 @@ $(() => {
         watch: {
             '$store.state.userData'() {
                 this.flag = localStorage.getItem("flag");
-                this.userName = JSON.parse(localStorage.getItem("userData")).name;
+                this.userData = JSON.parse(localStorage.getItem("userData"));
             },
             phone() {
                 this.phone = this.phone.replace(/[^\d]/g, '');
@@ -110,20 +109,17 @@ $(() => {
         },
         methods: {
             getListData() {
-                let $this = this;
-
-                $.ajax({
-                    url: 'getListData',
-                    type: 'POST',
-                    dataType: 'json',
-                    success(data) {
-                        $this.menuList = data.menuList;
-                        $this.infoList = data.infoList;
-                        $this.actionList = data.actionList;
-                    }
-                });
+                axios.post('getListData')
+                    .then((res) => {
+                        this.menuList = res.data.menuList;
+                        this.infoList = res.data.infoList;
+                        this.actionList = res.data.actionList;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             },
-            createFooterSlick(){
+            createFooterSlick() {
                 $(this.$refs.footer_slick).slick({
                     infinite: true,
                     slidesToShow: 4,
@@ -132,22 +128,22 @@ $(() => {
                     prevArrow: '<i></i>',
                     nextArrow: '<i></i>',
                     responsive: [
-                      {
-                        breakpoint: 1023,
-                        settings: {
-                          slidesToShow: 2,
-                          slidesToScroll: 1
+                        {
+                            breakpoint: 1023,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 767,
+                            settings: {
+                                slidesToShow: 1,
+                                slidesToScroll: 1
+                            }
                         }
-                      },
-                      {
-                        breakpoint: 767,
-                        settings: {
-                          slidesToShow: 1,
-                          slidesToScroll: 1
-                        }
-                      }
                     ]
-                  });
+                });
             },
             display() {
                 if (timeLineMax.reversed()) {
@@ -175,64 +171,55 @@ $(() => {
                 this.isReset = !this.isReset;
             },
             doLogin() {
-                let $this = this;
-
-                if ($this.isRememberAccount) {
-                    $cookies.set('account', $this.account);
+                if (this.isRememberAccount) {
+                    $cookies.set('account', this.account);
+                    $cookies.set('businessNum', this.businessNum);
                 } else {
                     $cookies.remove('account');
+                    $cookies.remove('businessNum');
                 }
 
-                let phone = $this.account;
-                let password = $this.password;
+                let phone = this.account;
+                let password = this.password;
 
                 let params = { phone, password };
 
-                if ($this.isCompany) {
-                    let tax_id = $this.businessNum;
+                if (this.isCompany) {
+                    let tax_id = this.businessNum;
                     Object.assign(params, { tax_id });
                 }
 
-                $.ajax({
-                    url: 'doLogin',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: params,
-                    success(data) {
-                        $this.$store.commit('mutationUserData', data);
-                        if ($this.$router.history.pending) {
-                            $($this.$refs.loginForm).modal("hide");
-                            $this.$router.replace($this.$router.history.pending.path);
+                axios.post('doLogin', params)
+                    .then((res) => {
+                        this.$store.commit('mutationUserData', res.data);
+                        if (this.$router.history.pending) {
+                            $(this.$refs.loginForm).modal("hide");
+                            this.$router.replace(this.$router.history.pending.path);
                         } else {
                             location.reload();
                         }
-                    },
-                    error(e) {
-                        if (e.responseJSON.message) {
+                    })
+                    .catch((error) => {
+                        let errorsData = error.response.data;
+                        console.log(errorsData);
+                        if (errorsData.message) {
                             let messages = [];
-                            $.each(e.responseJSON.errors, (key, item) => {
+                            $.each(errorsData.errors, (key, item) => {
                                 item.forEach((message, k) => {
                                     messages.push(message);
                                 });
                             });
-                            $this.pwdMessage = messages.join('、');
+                            this.message = messages.join('、');
                         } else {
-                            $this.message = `${$this.$store.state.loginErrorCode[e.responseJSON.error]}
-                                         ${e.responseJSON.data ? `剩餘錯誤次數(${e.responseJSON.data.remind_count})` : ''}`;
+                            this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
+                                                     ${errorsData.data ? `剩餘錯誤次數(${errorsData.data.remind_count})` : ''}`;
                         }
-                    }
-                });
+                    });
             },
             logout() {
-                let $this = this;
-                $.ajax({
-                    url: 'logout',
-                    type: 'POST',
-                    dataType: 'json',
-                    success() {
-                        $this.$store.commit('mutationUserData', {});
-                        location.reload();
-                    }
+                axios.post('logout').then((res) => {
+                    this.$store.commit('mutationUserData', {});
+                    location.reload();
                 });
             },
             setAccount() {
@@ -244,60 +231,51 @@ $(() => {
                 }
             },
             getCaptcha(type) {
-                let $this = this;
-                let phone = $this.phone;
+                let phone = this.phone;
 
                 if (!phone) {
-                    $this.pwdMessage = '請輸入手機';
+                    this.pwdMessage = '請輸入手機';
                     return;
                 }
 
-                $this.counter = 180;
+                this.counter = 180;
 
-                $.ajax({
-                    url: 'getCaptcha',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { phone, type },
-                    success() {
-                        $this.IsSended = true;
-                        $this.timer = setInterval(() => { $this.reciprocal() }, 1000);
-                    },
-                    error(e) {
-                        $this.pwdMessage = `${$this.$store.state.smsErrorCode[e.responseJSON.error]}`;
-                    }
-                });
+                axios.post('getCaptcha', { phone, type })
+                    .then((res) => {
+                        this.IsSended = true;
+                        this.timer = setInterval(() => { $this.reciprocal() }, 1000);
+                    })
+                    .catch((error) => {
+                        let errorsData = error.response.data;
+                        this.pwdMessage = `${$this.$store.state.smsErrorCode[errorsData.error]}`;
+                    });
             },
             submit() {
-                let $this = this;
-                let phone = $this.phone;
-                let new_password = $this.newPassword;
-                let new_password_confirmation = $this.confirmPassword;
-                let code = $this.code;
+                let phone = this.phone;
+                let new_password = this.newPassword;
+                let new_password_confirmation = this.confirmPassword;
+                let code = this.code;
 
-                $.ajax({
-                    url: 'resetPassword',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { phone, new_password, new_password_confirmation, code },
-                    success() {
+                axios.post('resetPassword', { phone, new_password, new_password_confirmation, code })
+                    .then((res) => {
                         alert('修改成功，請以新密碼登入');
                         location.reload();
-                    },
-                    error(e) {
-                        if (e.responseJSON.message) {
+                    })
+                    .catch((error) => {
+                        let errorsData = error.response.data;
+
+                        if (errorsData.message) {
                             let messages = [];
-                            $.each(e.responseJSON.errors, (key, item) => {
+                            $.each(errorsData.errors, (key, item) => {
                                 item.forEach((message, k) => {
                                     messages.push(message);
                                 });
                             });
-                            $this.pwdMessage = messages.join('、');
+                            this.pwdMessage = messages.join('、');
                         } else {
-                            $this.pwdMessage = `${$this.$store.state.pwdErrorCode[e.responseJSON.error]}`;
+                            this.pwdMessage = `${$this.$store.state.pwdErrorCode[errorsData.error]}`;
                         }
-                    }
-                });
+                    });
             },
             reciprocal() {
                 this.counter--;
@@ -307,31 +285,29 @@ $(() => {
                     alert('驗證碼失效，請重新申請');
                     location.reload();
                 }
+            },
+            clicked() {
+                if (sessionStorage.getItem('flag') === 'login') {
+                    this.currentTime = new Date().getTime();
+                    let passTime = this.currentTime - sessionStorage.getItem('loginTime');
+
+                    if (passTime >= 30 * 60 * 1000 && !this.altered) {
+                        this.altered = true;
+                        this.logout();
+                        alert('連線逾時，請重新登入');
+                    }
+                }
             }
         }
     });
 
     $('.back-top').fadeOut();
-    $(document).scroll(function() {
+    $(document).scroll(function () {
         var y = $(this).scrollTop();
         if (y > 800) {
-          $('.back-top').fadeIn();
+            $('.back-top').fadeIn();
         } else {
-          $('.back-top').fadeOut();
+            $('.back-top').fadeOut();
         }
-      });
+    });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

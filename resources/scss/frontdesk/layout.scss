@@ -6,6 +6,7 @@ body {
     font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     box-shadow: 0px 0px 5px 0px #404040;
     background-color: #f9f9f9;
+    z-index: 1;
 
     .web-logo {
         width: 227px;
@@ -16,6 +17,7 @@ body {
     .nav-item {
         a,
         p {
+            white-space: nowrap;
             color: #7a7a7a;
             font-weight: 900;
             margin: 0px;
@@ -50,8 +52,9 @@ body {
     }
 
     .invest-link {
-        background: #a4aafd;
+        background: linear-gradient(180deg, #004eff, #007eff);
         color: #ffffff !important;
+        border-radius: 4px;
     }
 
     @media (max-width: 767px) {
@@ -173,6 +176,7 @@ body {
     right: 10px;
     width: 60px;
     height: 60px;
+    z-index: 3;
     div {
         margin-bottom: 10px;
     }
@@ -182,13 +186,6 @@ body {
     .modal-dialog {
         top: 40%;
         transform: translate(0%, -50%);
-    }
-
-    .message {
-        text-align: center;
-        color: red;
-        font-weight: bolder;
-        margin-top: 20px;
     }
 }
 
@@ -365,7 +362,7 @@ body {
         }
     }
 
-    .tip{
+    .tip {
         position: absolute;
         bottom: -17px;
         right: 36px;
@@ -395,6 +392,11 @@ body {
     z-index: 10;
     color: #ffffffb5 !important;
     cursor: pointer;
+}
+
+.alert-danger{
+    font-weight: bolder;
+    text-align: center;
 }
 
 .hidden-phone {
@@ -446,3 +448,4 @@ body {
 @import "contentPage";
 @import "terms";
 @import "inputStyle";
+@import "detail";

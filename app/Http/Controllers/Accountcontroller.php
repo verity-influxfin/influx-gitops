@@ -41,7 +41,7 @@ class Accountcontroller extends BaseController
         $this->validate($request, [
             'tax_id' => 'sometimes|required|digits:8',
             'phone' => 'required|digits:10',
-            'password' => 'required|alpha_dash|min:6|max:50'
+            'password' => 'required|string|min:6|max:50'
         ], [
             'tax_id.required' => '請輸入統編',
             'phone.required' => '請輸入帳號',
@@ -65,9 +65,15 @@ class Accountcontroller extends BaseController
             Session::put('token',$data['data']['token']);
 
             $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
-
             $data = json_decode($curlScrapedPage, true);
-            return response()->json($data['data'], 200);
+
+            Session::put('userData',$data['data']);
+
+            return response()->json([
+                'id' => $data['data']['id'],
+                'name' => $data['data']['name'],
+                'picture' => $data['data']['picture']
+            ], 200);
         } else {
             return response()->json($data, 400);
         }
@@ -75,6 +81,7 @@ class Accountcontroller extends BaseController
     public function logout(Request $request)
     {
         Session::forget('token');
+        Session::forget('userData');
 
         return response()->json('sucess');
     }

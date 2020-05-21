@@ -33,12 +33,17 @@
     <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
 
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
@@ -69,7 +74,7 @@
 </head>
 
 <body>
-    <div id="web_index">
+    <div id="web_index" @mousemove="clicked">
         <nav class="page-header navbar navbar-expand-lg">
             <div class="web-logo">
                 <router-link to="/index"><img src=" {{ asset('image/logo.png') }}" class="img-fluid"></router-link>
@@ -88,17 +93,25 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link invest-link" to="/myinvestment">投資專區</router-link>
+                    </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <p class="nav-link" href="#" @click="openLoginModal('')">登入</p>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <router-link class="nav-link" to="/register">註冊</router-link>
                     </li>
-                    <li class="nav-item" v-if="flag === 'login'" style="display:flex;">
-                        <p class="nav-link" @click="logout">登出</p>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link invest-link" to="/myinvestment">投資專區</router-link>
+                    <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 ${userData.name}</a>
+                        <ul class="dropdown-menu" style="min-width: 5rem;">
+                            <li>
+                                <router-link class="dropdown-item" to="/membercentre">會員中心</router-link>
+                            </li>
+                            <li v-if="flag === 'login'">
+                                <p class="dropdown-item" @click="logout">登出</p>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -202,7 +215,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="message" v-if="pwdMessage">${pwdMessage}</div>
+                    <div class="alert alert-danger" v-if="pwdMessage">${pwdMessage}</div>
                     <div class="modal-footer">
                         <div v-if="(phone && newPassword && confirmPassword && code) ? false : true" class="btn btn-disable">送出</div>
                         <button type="button" v-else class="btn btn-submit" @click="submit">送出</button>
@@ -239,7 +252,7 @@
                             <button type="button" :class="['btn','btn-password']" @click="switchForm">忘記密碼?</button>
                         </div>
                     </div>
-                    <div class="message" v-if="message">${message}</div>
+                    <div class="alert alert-danger" v-if="message">${message}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
                     </div>

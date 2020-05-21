@@ -1,0 +1,80 @@
+.repayment-card {
+    overflow: auto;
+    position: relative;
+    .info-card {
+        border-radius: 15px;
+        box-shadow: 0 0 9px #001756;
+        background: #ffffff;
+        margin: 10px 5px;
+        float: left;
+        display: flex;
+        width: 390px;
+
+        .circle {
+            position: relative;
+            margin: 0px auto;
+            width: fit-content;
+
+            .period {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                font-size: 22px;
+                color: #797979;
+            }
+        }
+    }
+
+    .head-title {
+        margin: 10px 10px 10px 0px;
+        overflow: auto;
+        padding: 8px;
+        background: #dfe4ff;
+        border-radius: 6px;
+        width: 245px;
+
+        .detail {
+            color: #000a82;
+            font-weight: bolder;
+        }
+    }
+
+    .no-data {
+        display: grid;
+        width: 45%;
+        margin: 0px auto;
+
+        img {
+            opacity: 0.5;
+        }
+
+        a {
+            text-align: center;
+            color: #000000;
+            font-weight: bolder;
+            font-size: 22px;
+            margin-top: 15px;
+        }
+    }
+
+    @media screen and (max-width: 1023px) {
+        .info-card {
+            width: 97%;
+
+            .circle {
+                height: 175px;
+
+                .period{
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .head-title {
+            width: 69%;
+            margin: 10px 10px 10px 0px;
+        }
+    }
+}

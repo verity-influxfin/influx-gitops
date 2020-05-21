@@ -16,5 +16,8 @@ export default {
     },
     UserData(state,data){
         return state.userData;
+    },
+    ApplyList(state,data){
+        return state.applyList;
     }
 }

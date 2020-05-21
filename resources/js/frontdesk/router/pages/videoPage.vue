@@ -46,23 +46,15 @@ export default {
   },
   methods: {
     getVideoPage() {
-      let $this = this;
-
-      $.ajax({
-        url: "getVideoPage",
-        type: "POST",
-        dataType: "json",
-        data: {
-          filter: $this.$route.params.id
-        },
-        success(data) {
+      axios
+        .post("getVideoPage", { filter: this.$route.params.id })
+        .then(res => {
           FB.XFBML.parse();
-          $this.videoTitle = data.title;
-          $this.videoImg = data.imageSrc;
-          $this.videoLink = data.videoLink;
-          $this.videoHtml = data.content;
-        }
-      });
+          this.videoTitle = res.data.title;
+          this.videoImg = res.data.imageSrc;
+          this.videoLink = res.data.videoLink;
+          this.videoHtml = res.data.content;
+        });
     }
   }
 };

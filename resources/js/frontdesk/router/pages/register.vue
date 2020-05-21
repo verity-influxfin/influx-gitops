@@ -166,43 +166,36 @@ export default {
 
       $this.counter = 180;
 
-      $.ajax({
-        url: "getCaptcha",
-        type: "POST",
-        dataType: "json",
-        data: { phone, type },
-        success() {
-          $this.IsSended = true;
-          $this.timer = setInterval(() => {
+      axios
+        .post("getCaptcha", { phone, type })
+        .then(res => {
+          this.IsSended = true;
+          this.timer = setInterval(() => {
             $this.reciprocal();
           }, 1000);
-        },
-        error(e) {
-          $this.message = `${
-            $this.$store.state.smsErrorCode[e.responseJSON.error]
+        })
+        .catch(error => {
+          let errorsData = error.response.data;
+          this.pwdMessage = `${
+            $this.$store.state.smsErrorCode[errorsData.error]
           }`;
-        }
-      });
+        });
     },
     getTerms(termsType) {
       let $this = this;
 
-      $.ajax({
-        url: "getTerms",
-        type: "POST",
-        dataType: "json",
-        data: { termsType },
-        success(msg) {
-          let { content, name } = msg.data;
-          $this.termsContent = content;
-          $this.termsTitle = name;
+      axios
+        .post("getTerms", { termsType })
+        .then(res => {
+          let { content, name } = res.data.data;
+          this.termsContent = content;
+          this.termsTitle = name;
 
-          $($this.$refs.termsForm).modal("show");
-        },
-        error(e) {
-          console.log(e);
-        }
-      });
+          $(this.$refs.termsForm).modal("show");
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     doRegister() {
       let $this = this;
@@ -212,18 +205,16 @@ export default {
       let password_confirmation = $this.confirmPassword;
       let code = $this.code;
 
-      $.ajax({
-        url: "doRegister",
-        type: "POST",
-        dataType: "json",
-        data: { phone, password, password_confirmation, code },
-        success(msg) {
-          $this.isRegisterSuccess = true;
-        },
-        error(e) {
-          if (e.responseJSON.message) {
+      axios
+        .post("doRegister", { phone, password, password_confirmation, code })
+        .then(res => {
+          this.isRegisterSuccess = true;
+        })
+        .catch(error => {
+          let errorsData = error.response.data;
+          if (errorsData.message) {
             let messages = [];
-            $.each(e.responseJSON.errors, (key, item) => {
+            $.each(errorsData.errors, (key, item) => {
               item.forEach((message, k) => {
                 messages.push(message);
               });
@@ -231,11 +222,10 @@ export default {
             $this.message = messages.join("、");
           } else {
             $this.message = `${
-              $this.$store.state.pwdErrorCode[e.responseJSON.error]
+              $this.$store.state.pwdErrorCode[errorsData.error]
             }`;
           }
-        }
-      });
+        });
     },
     reciprocal() {
       this.counter--;

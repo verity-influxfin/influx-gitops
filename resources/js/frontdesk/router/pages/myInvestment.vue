@@ -5,7 +5,6 @@
 <script>
 export default {
   created() {
-    this.getData();
     $("title").text(`投資專區 - inFlux普匯金融科技`);
   },
 };

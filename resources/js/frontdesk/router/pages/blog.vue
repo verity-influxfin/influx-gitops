@@ -1,6 +1,6 @@
 <template>
   <div class="blog-wrapper">
-    <div class="blog-content" v-html="this.pageHtml"></div>
+    <ul class="blog-content" v-html="this.pageHtml"></ul>
     <div class="pagination" ref="pagination"></div>
   </div>
 </template>
@@ -39,13 +39,13 @@ export default {
           callback(data, pagination) {
             data.forEach((item, index) => {
               $this.pageHtml += `
-                                <div class="card">
+                                <li class="card">
                                     <img src="${item.imageSrc}" class="img-custom">
                                     <h5>${item.title}</h5>
                                     <span>${item.date}</span>
                                     <p class="gray">${item.content}</p>
                                     <a href="#${item.link}">閱讀更多》</a>
-                                </div>
+                                </li>
                             `;
             });
           }
@@ -65,6 +65,7 @@ export default {
     width: 75%;
     overflow: auto;
     margin: 0px auto;
+    padding: 0px;
 
     .card {
       margin: 10px;
