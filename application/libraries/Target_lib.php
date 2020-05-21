@@ -1266,7 +1266,7 @@ class Target_lib
         foreach ($normalAmortizationRows as $key => $value) {
             $normalAmortizationRows[$key]['days'] = isset($value['repayment_date'])?get_range_days($oldDate, $value['repayment_date']):null;
             $oldDate = isset($value['repayment_date'])?$value['repayment_date']:null;
-            $total -= $normalAmortizationRows[$key]['r_principal'];
+            $total -= $normalAmortizationRows[$key]['principal'];
             $normalAmortizationRows[$key]['remaining_principal'] = $total;
 
             $normalSchedule['total_payment'] += $value['total_payment'];
