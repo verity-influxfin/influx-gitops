@@ -31,10 +31,10 @@
     <div class="company-background">
       <h3>我們的成就</h3>
       <div id="cd-timeline" class="cd-container">
-        <div v-for="(item,index) in this.milestone" class="cd-timeline-block" :key="index">
+        <div v-for="(item,index) in milestone" class="cd-timeline-block" :key="index">
           <div class="cd-timeline-img cd-icon" v-html="item.dateTime"></div>
           <div class="cd-timeline-content">
-            <h2>{{item.title}}</h2>
+            <h2 v-html="item.title"></h2>
             <p>{{item.content}}</p>
           </div>
         </div>
@@ -79,9 +79,9 @@
             <i class="far fa-times-circle"></i>
           </div>
           <div class="modal-body">
-            <h4 class="report-title">{{this.reportData.title}}</h4>
-            <p calss="report-date">{{this.reportData.datetime}}</p>
-            <div class="report-contert" v-html="this.reportData.content"></div>
+            <h4 class="report-title" v-html="reportData.title"></h4>
+            <p calss="report-date">{{reportData.datetime}}</p>
+            <div class="report-contert" v-html="reportData.content"></div>
           </div>
         </div>
       </div>

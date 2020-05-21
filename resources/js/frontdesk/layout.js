@@ -146,6 +146,7 @@ $(() => {
             },
             backtotop() {
                 $(window).scrollTop('0');
+                AOS.refresh();
             },
             openLoginModal(message) {
                 this.message = message;
@@ -294,6 +295,7 @@ $(() => {
 
     $('.back-top').fadeOut();
     $(document).scroll(function () {
+        AOS.refresh();
         var y = $(this).scrollTop();
         if (y > 800) {
             $('.back-top').fadeIn();

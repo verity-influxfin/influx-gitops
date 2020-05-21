@@ -4,28 +4,28 @@
         "eTitle": "College Loan",
         "imageSrc": "./image/student_loan.jpg",
         "isActive": true,
-        "link": "/CollegeLoan"
+        "link": "/collegeLoan"
     },
     {
         "title": "上班族貸",
         "eTitle": "Fresh Graduate Loan",
         "imageSrc": "./image/worker_loan.jpg",
         "isActive": true,
-        "link": "/FreshGraduateLoan"
+        "link": "/freshGraduateLoan"
     },
     {
         "title": "手機貸",
         "eTitle": "Mobile Loan",
         "imageSrc": "./image/phone_loan.jpg",
         "isActive": true,
-        "link": "/MobileLoan"
+        "link": "/mobileLoan"
     },
     {
         "title": "工程師貸",
         "eTitle": "Engineer Loan",
         "imageSrc": "./image/rd_loan.jpg",
         "isActive": true,
-        "link": "/EngineerLoan"
+        "link": "/engineerLoan"
     },
     {
         "title": "外匯車貸",
