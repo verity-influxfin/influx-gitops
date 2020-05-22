@@ -251,13 +251,13 @@ class Certification_lib{
                 //身分證背面
                 $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別|父\p{Han}{1,6}母','父|母|役別|\\n',$rawData['back_image'],1);
                 mb_strlen($ocr['father'])==6?$ocr['father']=mb_substr($ocr['father'],0,3):null;
-                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別','父|母|役別|\\n|'.$ocr['father'],$rawData['back_image'],1);
-                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生','配偶|出生|\\n',$rawData['back_image'],1);
+                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別|母\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','父|母|役別|配偶|\\n|'.$ocr['father'],$rawData['back_image'],1);
+                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生','配偶|出生|役別|\\n',$rawData['back_image'],1);
                 $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','役別|配偶|\\n',$rawData['back_image'],1);
                 $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,3}\\n{0,1}\p{Han}{1,3}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
                 $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
                 $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
-                $ocr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?'.$ocr['gnumber'].')','址|\\n|'.$ocr['gnumber'],$rawData['back_image'],1);
+                $ocr['address']          = $this->CI->compare_lib->dataExtraction('('.$ocr['born'].'生地|址)(.*?'.$ocr['gnumber'].')','住|址|生地|\\n|'.$ocr['gnumber'],$rawData['back_image'],1);
                 $check_item = ['father','mother','born','gnumber','address'];
                 foreach($check_item as $k => $v){
                     if($ocr[$v] == false){
