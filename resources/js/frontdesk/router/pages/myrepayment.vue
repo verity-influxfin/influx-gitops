@@ -35,7 +35,7 @@
 
     <div class="repayment-card">
       <div v-if="installment.length === 0" class="no-data">
-        <img :src="'./image/empty.svg'" class="img-fluid" />
+        <img :src="'./Image/empty.svg'" class="img-fluid" />
         <a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q">請往APP了解更多 >></a>
       </div>
       <div v-else>
@@ -114,7 +114,7 @@
       </div>
       <div class="no-passbook-table" v-if="passbook.length ===0">
         <div class="no-passbook">
-          <img :src="'./image/no_passbook.svg'" class="img-fluid" />
+          <img :src="'./Image/no_passbook.svg'" class="img-fluid" />
         </div>
       </div>
       <div class="passbook-table" v-else>

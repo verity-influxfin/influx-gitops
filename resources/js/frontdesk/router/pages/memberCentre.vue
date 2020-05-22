@@ -30,19 +30,19 @@
       </div>
       <div class="menu-card">
         <router-link class="menu-item" to="/notification">
-          <img :src="'./image/icon_account.svg'" class="img-fluid" />
+          <img :src="'./Image/icon_account.svg'" class="img-fluid" />
           <p>通知</p>
         </router-link>
         <router-link class="menu-item" to="/myrepayment">
-          <img :src="'./image/icon_moneyback.svg'" class="img-fluid" />
+          <img :src="'./Image/icon_moneyback.svg'" class="img-fluid" />
           <p>帳戶資訊</p>
         </router-link>
         <!-- <router-link class="menu-item" to="/repayment">
-          <img :src="'./image/icon_moneyback.svg'" class="img-fluid" />
+          <img :src="'./Image/icon_moneyback.svg'" class="img-fluid" />
           <p>我的還款</p>
         </router-link>
         <router-link class="menu-item" to="/detail">
-          <img :src="'./image/icon_getmoney.svg'" class="img-fluid" />
+          <img :src="'./Image/icon_getmoney.svg'" class="img-fluid" />
           <p>帳戶提領</p>
         </router-link>-->
       </div>
@@ -100,7 +100,7 @@ export default {
 
     this.userId = userData.id;
     this.userName = userData.name;
-    this.userPic = userData.picture ? userData.picture : "./image/mug_shot.svg";
+    this.userPic = userData.picture ? userData.picture : "./Image/mug_shot.svg";
 
     this.getMyRepayment();
 

@@ -1,8 +1,8 @@
 {
     "college": {
         "title": "學生貸款",
-        "bgHref": "./image/child_banner.jpg",
-        "bannerHref": "./image/college_loan_banner.png",
+        "bgHref": "./Image/child_banner.jpg",
+        "bannerHref": "./Image/college_loan_banner.png",
         "info": [
             "Dcard 熱搜",
             "大學生最愛",
@@ -13,8 +13,8 @@
     },
     "engineer": {
         "title": "資訊工程師專案",
-        "bgHref": "./image/child_banner.jpg",
-        "bannerHref": "./image/engineer_loan_banner.png",
+        "bgHref": "./Image/child_banner.jpg",
+        "bannerHref": "./Image/engineer_loan_banner.png",
         "info": [
             "if(“普匯理財 ”= =true)",
             "“缺錢 ”=false",
@@ -25,8 +25,8 @@
     },
     "freshgraduate": {
         "title": "上班族信貸",
-        "bgHref": "./image/child_banner.jpg",
-        "bannerHref": "./image/worker_loan_banner.png",
+        "bgHref": "./Image/child_banner.jpg",
+        "bannerHref": "./Image/worker_loan_banner.png",
         "info": [
             "憑勞保",
             "免聯徵",
@@ -37,8 +37,8 @@
     },
     "invest": {
         "title": "債權投資",
-        "bgHref": "./image/child_banner.jpg",
-        "bannerHref": "./image/invest_banner.png",
+        "bgHref": "./Image/child_banner.jpg",
+        "bannerHref": "./Image/invest_banner.png",
         "info": [
             "小額分散",
             "穩定報酬首選",

@@ -3,7 +3,7 @@
     <banner :data="this.bannerData" :isShowLoan="true"></banner>
     <experience ref="experience" title="聽聽大家怎麼說" :data="this.experiences"></experience>
     <applyDescribe :data="this.applyData" ref="apply"></applyDescribe>
-    <join href="./image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的目標吧！"></join>
+    <join href="./Image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的目標吧！"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
     <videoShare ref="videoShare" title="Follow普匯小學堂<br>增進科普金融知識" :data="this.shares"></videoShare>
   </div>

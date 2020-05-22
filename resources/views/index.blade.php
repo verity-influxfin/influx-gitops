@@ -225,7 +225,7 @@
                 <div v-if="!isReset" id="loginModal" class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" @click="clearInterval(timer);">✕</button>
-                        <div class="login-logo"><img src="./image/logo_puhey.svg" class="img-fluid"></div>
+                        <div class="login-logo"><img src="./Image/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">

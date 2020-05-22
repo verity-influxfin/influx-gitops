@@ -2,11 +2,11 @@
   <div class="freshGraduate-wrapper">
     <banner :data="this.bannerData" :isShowLoan="true"></banner>
     <div class="img-wrapper" data-aos="flip-up">
-      <img :src="'./image/worker_web.jpg'" class="img-fluid desktop" />
-      <img :src="'./image/worker_mobile.jpg'" class="img-fluid mobile" />
+      <img :src="'./Image/worker_web.jpg'" class="img-fluid desktop" />
+      <img :src="'./Image/worker_mobile.jpg'" class="img-fluid mobile" />
     </div>
     <applyDescribe :data="this.applyData" ref="apply"></applyDescribe>
-    <join href="./image/child_banner.jpg" :isShowLoan="true"></join>
+    <join href="./Image/child_banner.jpg" :isShowLoan="true"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
     <videoShare ref="videoShare" title="借款人怎麼說？" :data="this.shares"></videoShare>
   </div>

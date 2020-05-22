@@ -2,7 +2,7 @@
   <div class="invest-wrapper">
     <banner :data="this.bannerData" :isShowInvest="true"></banner>
     <div class="compare-wrapper" data-aos="zoom-in">
-      <img :src="'./image/invest_web.png'" class="img-fluid desktop" />
+      <img :src="'./Image/invest_web.png'" class="img-fluid desktop" />
       <div class="invest-slick mobile" ref="invest_slick">
         <div v-for="(imgSrc,index) in this.investCategory" class="slick-item" :key="index">
           <img :src="imgSrc" class="img-fluid" />
@@ -14,11 +14,11 @@
         <p>如何開始投資呢??</p>
       </div>
       <div class="explanation-img">
-        <img class="hidden-desktop" :src="'./image/how_to_invest_desktop.png'" />
-        <img class="hidden-phone" :src="'./image/how_to_invest_mobile.png'" />
+        <img class="hidden-desktop" :src="'./Image/how_to_invest_desktop.png'" />
+        <img class="hidden-phone" :src="'./Image/how_to_invest_mobile.png'" />
       </div>
     </div>
-    <join href="./image/child_banner.jpg" :isShowInvest="true" subTitle="加入普匯完成你的財富目標吧！"></join>
+    <join href="./Image/child_banner.jpg" :isShowInvest="true" subTitle="加入普匯完成你的財富目標吧！"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
     <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.shares"></videoShare>
   </div>
@@ -41,9 +41,9 @@ export default {
     qaData: [],
     bannerData: {},
     investCategory: [
-      "./image/invest_puhey.png",
-      "./image/invest_fund.png",
-      "./image/invest_stock.png"
+      "./Image/invest_puhey.png",
+      "./Image/invest_fund.png",
+      "./Image/invest_stock.png"
     ]
   }),
   computed: {

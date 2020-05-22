@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="banner">
-      <img :src="'./image/banner.jpg'" class="banner-img" />
+      <img :src="'./Image/banner.jpg'" class="banner-img" />
       <div class="cover"></div>
       <p class="heading-title">我們成功幫助了{{count}}筆交易</p>
       <p class="heading-description" ref="description"></p>
@@ -46,7 +46,7 @@
       <div class="profession-content">
         <div class="profession-item">
           <img
-            :src="'./image/best1.png'"
+            :src="'./Image/best1.png'"
             class="img-fluid"
             @mouseover="transform($event)"
             @mouseleave="recovery($event)"
@@ -56,7 +56,7 @@
         </div>
         <div class="profession-item">
           <img
-            :src="'./image/best2.png'"
+            :src="'./Image/best2.png'"
             class="img-fluid"
             @mouseover="transform($event)"
             @mouseleave="recovery($event)"
@@ -66,7 +66,7 @@
         </div>
         <div class="profession-item">
           <img
-            :src="'./image/best3.png'"
+            :src="'./Image/best3.png'"
             class="img-fluid"
             @mouseover="transform($event)"
             @mouseleave="recovery($event)"
@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <join href="./image/child_banner.jpg" :isShowAll="true"></join>
+    <join href="./Image/child_banner.jpg" :isShowAll="true"></join>
   </div>
 </template>
 
@@ -130,10 +130,10 @@ export default {
     description: "普匯．你的手機ATM",
     timeLineMax: "",
     dossales: [
-      { imageSrc: "./image/dossal1.png" },
-      { imageSrc: "./image/dossal2.png" },
-      { imageSrc: "./image/dossal3.png" },
-      { imageSrc: "./image/dossal4.png" }
+      { imageSrc: "./Image/dossal1.png" },
+      { imageSrc: "./Image/dossal2.png" },
+      { imageSrc: "./Image/dossal3.png" },
+      { imageSrc: "./Image/dossal4.png" }
     ],
     services: [],
     textIndex: 0,

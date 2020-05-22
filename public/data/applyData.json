@@ -4,22 +4,22 @@
         "subTitle": "年滿20歲,大學以上在校生",
         "requiredDocuments": [
             {
-                "imgSrc": "./image/identity.png",
+                "imgSrc": "./Image/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/account.png",
+                "imgSrc": "./Image/account.png",
                 "text": "金融帳號",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/social_media.png",
+                "imgSrc": "./Image/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/education.png",
+                "imgSrc": "./Image/education.png",
                 "text": "學生身分",
                 "memo": ""
             }
@@ -30,32 +30,32 @@
         "subTitle": "年滿20歲相關系所大學以上在校生,或相關職業工程師",
         "requiredDocuments": [
             {
-                "imgSrc": "./image/identity.png",
+                "imgSrc": "./Image/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/account.png",
+                "imgSrc": "./Image/account.png",
                 "text": "金融帳號",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/social_media.png",
+                "imgSrc": "./Image/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/education.png",
+                "imgSrc": "./Image/education.png",
                 "text": "學歷證明",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/license.png",
+                "imgSrc": "./Image/license.png",
                 "text": "工程師專業證照",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/extra.png",
+                "imgSrc": "./Image/extra.png",
                 "text": "上班族需另提供",
                 "memo": "1.聯徵報告<br>2.工作證明"
             }
@@ -66,22 +66,22 @@
         "subTitle": "年滿20歲，即可申貸",
         "requiredDocuments": [
             {
-                "imgSrc": "./image/identity.png",
+                "imgSrc": "./Image/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/social_media.png",
+                "imgSrc": "./Image/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/employment.png",
+                "imgSrc": "./Image/employment.png",
                 "text": "工作證明",
                 "memo": ""
             },
             {
-                "imgSrc": "./image/account.png",
+                "imgSrc": "./Image/account.png",
                 "text": "金融帳號",
                 "memo": ""
             }

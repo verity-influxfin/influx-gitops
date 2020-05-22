@@ -2,11 +2,11 @@
   <div class="company-wrapper">
     <div class="company-header">
       <div class="header-title">
-        <img :src="'./image/child_banner.jpg'" />
+        <img :src="'./Image/child_banner.jpg'" />
         <div class="title">公司介紹</div>
       </div>
       <div class="header-banner">
-        <img :src="'./image/company_banner.png'" />
+        <img :src="'./Image/company_banner.png'" />
         <div>
           <p>關於普匯</p>
           <h3>普匯相信每個年輕人，我們致力幫助他們完成人生的夢想</h3>
@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <join href="./image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的財富目標吧！"></join>
+    <join href="./Image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的財富目標吧！"></join>
     <div class="company-background">
       <h3>我們的成就</h3>
       <div id="cd-timeline" class="cd-container">
@@ -102,29 +102,29 @@ export default {
         title: "簡單",
         text:
           "直覺化UIUX介面設計，讓操作使用更簡單便利，第一次開啟使用就能上手",
-        imageSrc: "./image/company_icon1.png"
+        imageSrc: "./Image/company_icon1.png"
       },
       {
         title: "快速",
         text:
           "全程手機線上申請，AI系統24小時不間斷驗證，提升作業速度與效率，加快用戶取得資金",
-        imageSrc: "./image/company_icon2.png"
+        imageSrc: "./Image/company_icon2.png"
       },
       {
         title: "安全",
         text: "使用 Amazon Web Services雲端服務平台，個資絕不外洩",
-        imageSrc: "./image/company_icon3.png"
+        imageSrc: "./Image/company_icon3.png"
       },
       {
         title: "隱私",
         text:
           "全程無人系統驗證操作，從申請到取得款項，資訊完全不外洩，保障投資人與借款人各資隱密與隱私",
-        imageSrc: "./image/company_icon4.png"
+        imageSrc: "./Image/company_icon4.png"
       },
       {
         title: "低風險高報酬",
         text: "小額分散、分期還款、降低風險、複利效果，創造最高報酬",
-        imageSrc: "./image/company_icon5.png"
+        imageSrc: "./Image/company_icon5.png"
       }
     ],
     media: [],

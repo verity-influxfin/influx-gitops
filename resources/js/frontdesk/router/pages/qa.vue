@@ -2,7 +2,7 @@
   <div class="qaPage-wrapper">
     <div class="qaPage-header">
       <div class="header-title">
-        <img :src="'./image/child_banner.jpg'" />
+        <img :src="'./Image/child_banner.jpg'" />
         <div class="title">常見問題</div>
         <div class="qa-btn-row">
           <a href="#loan">借款常見問題</a>

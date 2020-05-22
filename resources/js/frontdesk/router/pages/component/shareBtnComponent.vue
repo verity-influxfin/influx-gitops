@@ -1,11 +1,11 @@
 <template>
     <div class="share-btn-wrapper">
         <div class="add-to">
-            <div @click="addToFB"><img :src="'./image/facebook.svg'" class="img-fluid"></div>
-            <div @click="addToMessenger" class="postion tiny-color"><img :src="'./image/messenger.svg'" class="img-fluid"></div>
-            <div @click="addToLINE"><img :src="'./image/line.png'" class="img-fluid"></div>
-            <div @click="addToMail" class="postion heavy-color"><img :src="'./image/mail.svg'" class="img-fluid"></div>
-            <div @click="showCopyinput" class="postion heavy-color"><img :src="'./image/link.svg'" class="img-fluid"></div>
+            <div @click="addToFB"><img :src="'./Image/facebook.svg'" class="img-fluid"></div>
+            <div @click="addToMessenger" class="postion tiny-color"><img :src="'./Image/messenger.svg'" class="img-fluid"></div>
+            <div @click="addToLINE"><img :src="'./Image/line.png'" class="img-fluid"></div>
+            <div @click="addToMail" class="postion heavy-color"><img :src="'./Image/mail.svg'" class="img-fluid"></div>
+            <div @click="showCopyinput" class="postion heavy-color"><img :src="'./Image/link.svg'" class="img-fluid"></div>
         </div>
         <div class="share">
             <div @click="fbShare"><i class="fab fa-facebook-square"></i></div>
@@ -17,7 +17,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="input-group">
-                        <span class="input-group-addon heavy-color"><img :src="'./image/link.svg'" class="img-fluid"></span>
+                        <span class="input-group-addon heavy-color"><img :src="'./Image/link.svg'" class="img-fluid"></span>
                         <input type="text" class="form-control" v-model="this.copyLink" @click="copy()">
                     </div>
                     <div v-if="this.isCopyed" class="copyed"><i class="fas fa-check-circle"></i></div>
