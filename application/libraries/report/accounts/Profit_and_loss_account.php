@@ -100,7 +100,7 @@ class Profit_and_loss_account
                     }
 
                     $odate = $ndate = $date = $amortizationTables['normal']['date'];
-                    if(date('d', strtotime($date)) != 10){
+                    if(isset($amortizationTables['normal']['date']) && date('d', strtotime($date)) != 10){
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
                         $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
