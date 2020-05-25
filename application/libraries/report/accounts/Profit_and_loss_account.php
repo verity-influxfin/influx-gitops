@@ -62,6 +62,7 @@ class Profit_and_loss_account
             if (in_array($target->sub_status, [4])) {
                 $isPrepayment = true;
             }
+            $set = false;
             foreach ($amortizationTables as $key => $value) {
                 $currentRows = $value['rows'];
 
@@ -97,6 +98,18 @@ class Profit_and_loss_account
                             $currentMonth = $nextMonth;
                         }
                     }
+
+                    if( !$set && isset($amortizationTables['normal']['date'])
+                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
+                    {
+                        $odate = $ndate = $amortizationTables['normal']['date'];
+                        $ym = date('Y-m', strtotime($odate));
+                        $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
+                        $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
+                        $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
+                        $set = true;
+                    }
+
                     if ($key == 'overdue' && $v['repayment_date'] > date('Y-m-d')) {
                         continue;
                     }
