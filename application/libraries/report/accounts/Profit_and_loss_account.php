@@ -99,18 +99,15 @@ class Profit_and_loss_account
                         }
                     }
 
-                    $odate = $ndate = $date = $amortizationTables['normal']['date'];
-                    if(isset($amortizationTables['normal']['date']) && date('d', strtotime($date)) != 10){
+                    if( !$set && isset($amortizationTables['normal']['date'])
+                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
+                    {
+                        $odate = $ndate = $amortizationTables['normal']['date'];
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
                         $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
-                        if (!isset($rows[$key][$v['repayment_date']])) {
-                            $rows[$key][$ndate]['remaining_principal'] = $amortizationTables['normal']['amount'];
-                        }
-                        elseif(!$set && isset($rows[$key][$v['repayment_date']])){
-                            $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
-                            $set = true;
-                        }
+                        $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
+                        $set = true;
                     }
 
                     if ($key == 'overdue' && $v['repayment_date'] > date('Y-m-d')) {
