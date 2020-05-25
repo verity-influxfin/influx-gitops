@@ -280,6 +280,7 @@ export default {
       height: 160px;
 
       img {
+        min-width: 100%;
         position: absolute;
         height: 210%;
       }

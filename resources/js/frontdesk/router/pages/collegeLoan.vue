@@ -95,7 +95,6 @@ export default {
 @media (max-width: 1023px) {
   .college-wrapper {
     .loan-banner img {
-      width: 100%;
       bottom: 1%;
     }
   }

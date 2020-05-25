@@ -75,8 +75,7 @@
                 display: block;
 
                 .content-row{
-                    width: 100%;
-                    margin: 0px;
+                    width: 95%;
 
                     iframe{
                         height: 400px;

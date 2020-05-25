@@ -39,14 +39,14 @@ export default {
           callback(data, pagination) {
             data.forEach((item, index) => {
               $this.pageHtml += `
-                                <li class="card">
-                                    <img src="${item.imageSrc}" class="img-custom">
-                                    <h5>${item.title}</h5>
-                                    <span>${item.date}</span>
-                                    <p class="gray">${item.content}</p>
-                                    <a href="#${item.link}">閱讀更多》</a>
-                                </li>
-                            `;
+                <li class="card">
+                    <img src="${item.imageSrc}" class="img-custom">
+                    <h5>${item.title}</h5>
+                    <span>${item.date}</span>
+                    <p class="gray">${item.content}</p>
+                    <a href="#${item.link}">閱讀更多》</a>
+                </li>
+              `;
             });
           }
         });

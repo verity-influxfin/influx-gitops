@@ -53,7 +53,7 @@ class Controller extends BaseController
     }
 
     public function getInvestTonicData(Request $request){
-        $data = json_decode(file_get_contents('data/articleData.json'),true);
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
 
         return response()->json($data['investtonic']);
     }
@@ -63,7 +63,7 @@ class Controller extends BaseController
 
         @list($type,$id) = explode('-',$input['filter']);
 
-        $data = json_decode(file_get_contents('data/articleData.json'),true);
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
 
         return response()->json($data[$type][$id-1]);
     }
@@ -71,7 +71,7 @@ class Controller extends BaseController
     public function getVideoPage(Request $request){
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/articleData.json'),true);
+        $data = json_decode(file_get_contents('data/articledata.json'),true);
 
         return response()->json($data['video'][$input['filter']-1]);
     }

@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getQaData() {
-      axios.post("getQaData",{filter: "qa"}).then(res => {
+      axios.post("getQaData", { filter: "qa" }).then(res => {
         this.qaData = res.data;
       });
     }
@@ -64,6 +64,7 @@ export default {
       height: 210px;
 
       img {
+        min-width: 100%;
         position: absolute;
         height: 210%;
       }

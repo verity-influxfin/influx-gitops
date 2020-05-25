@@ -158,6 +158,7 @@ export default {
       height: 160px;
 
       img {
+        min-width: 100%;
         position: absolute;
         height: 210%;
       }
@@ -199,6 +200,12 @@ export default {
       @media (max-width: 767px) {
         height: 150px;
       }
+    }
+  }
+
+  .transfer-content{
+    img{
+      min-width: 100%;
     }
   }
 

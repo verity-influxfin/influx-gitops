@@ -318,6 +318,7 @@ export default {
   height: 670 * 0.9px;
 
   .banner-img {
+    min-width: 100%;
     height: 670 * 0.9px;
   }
 
@@ -580,7 +581,7 @@ export default {
       display: block;
 
       .content-row {
-        width: 100%;
+        width: 95%;
       }
     }
   }

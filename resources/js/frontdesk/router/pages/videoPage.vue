@@ -19,7 +19,7 @@
       :href="this.link"
       num_posts="10"
       notify="true"
-      :width="(this.Width*0.99).toFixed(0)"
+      :width="(this.width*0.99).toFixed(0)"
     ></fb:comments>
     <shareBtn :link="this.link"></shareBtn>
   </div>

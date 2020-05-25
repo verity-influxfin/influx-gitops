@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="banner-text">優良店家推薦</div>
-    <div>
+    <div class="mobile-footer">
       <img :src="'./Image/mobile_banner_web.jpg'" class="img-fluid desktop" />
       <img :src="'./Image/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
     </div>
@@ -60,6 +60,7 @@ export default {
       height: 160px;
 
       img {
+        min-width: 100%;
         position: absolute;
         height: 210%;
       }
@@ -127,6 +128,12 @@ export default {
     text-align: center;
     padding: 30px 0px;
     background-color: #f7f7f7;
+  }
+
+  .mobile-footer{
+    img{
+      min-width: 100%;
+    }
   }
 
   @media (max-width: 767px) {

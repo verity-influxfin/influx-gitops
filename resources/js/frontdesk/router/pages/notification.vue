@@ -28,7 +28,8 @@ let notificationRow = Vue.extend({
   template: `
     <li class="notification-row">
       <div class="notification title collapsed" @click="read(item.id,item.status,index)" data-toggle="collapse" :data-target="'#collapse'+item.id" aria-expanded="true">   
-        <i :class="getIcon(item.status)"></i>
+        <i v-if="item.status == 1" class="fas fa-circle"></i>
+        <i v-else></i>
         <p>{{item.title}}</p>
         <span>{{dateToString(parseInt(item.created_at + "000"))}}</span>
       </div>
@@ -53,13 +54,11 @@ let notificationRow = Vue.extend({
 
       return `${date_item.year}/${date_item.month}/${date_item.day} ${date_item.hour}:${date_item.min}:${date_item.sec}`;
     },
-    getIcon(status) {
-      return status == 1 ? "fas fa-circle" : "";
-    },
     read(id, status, index) {
       if (status == 1) {
         axios.post("read", { id }).then(res => {
-          this.$props.vm.getNotification();
+          this.$props.vm.unreadCount --;
+          this.$props.vm.notifications[index].status = 2;
         });
       }
     }
@@ -88,6 +87,7 @@ export default {
   },
   methods: {
     getNotification() {
+      this.unreadCount = 0;
       axios
         .post("getNotification")
         .then(res => {
