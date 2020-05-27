@@ -374,13 +374,16 @@ class Cron extends CI_Controller {
 
       if(isset($current->status)&& $current->status=='全部完成'){
         exit;
+      }elseif(isset($current->status)&& $current->status=='no_data'){
+          $current->offset++;
       }
 
       $this->load->model('user/user_model');
-      $meta = $this->user_model->getUsersBy(['certification_id'=>1], [], $current->offset, 1);
+      $meta = $this->user_model->getUsersBy(['certification_id'=>1], ['name', 'id_card_place'], $current->offset, 1);
 
       $this->load->library('scraper/judicial_yuan_lib.php',['ip'=>$ip]);
-      $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->id);
+      $current->userId = $meta['0']->user_id;
+      $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($meta['0']->user_id);
       $current->status = isset($scraper_response['response']['status'])?$scraper_response['response']['status']:'no_data';
       $worker_time = isset($scraper_response['response']['updatedAt'])?date('Y-m-d H:i:s',strtotime('+2 hours', $scraper_response['response']['updatedAt'])):'';
 
@@ -389,10 +392,10 @@ class Cron extends CI_Controller {
           $current->offset++;
         }
 
-        $meta = $this->user_model->getUsersBy(['certification_id'=>1], [], $current->offset, 1);
+        $meta = $this->user_model->getUsersBy(['certification_id'=>1], ['name', 'id_card_place'], $current->offset, 1);
 
         if(! empty($meta)){
-          $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->id);
+          $scraper_response = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($meta['0']->name, $meta['0']->id_card_place, $meta['0']->user_id);
           $current->status = 'no_data';
         }else{
           $current->status = '全部完成';
