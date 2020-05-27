@@ -926,9 +926,12 @@ class Target_lib
                 $row['principal'] = $remainingPrincipal;
                 $row['interest'] = $remainingInterest;
                 $row['damage'] = $remainingDamage;
-                $delayDays = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']);
+//                $delayDays = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $row['repayment_date']);
+//                $delayInterest = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDays);
+//                $row['delay_interest'] = $delayInterest + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
+                $delayDays = get_range_days($startedAt, $row['repayment_date']);
                 $delayInterest = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDays);
-                $row['delay_interest'] = $delayInterest + $overdueAmortizationRows[$i-1]['delay_interest'] - $overdueAmortizationRows[$i-1]['r_delayinterest'];
+                $row['delay_interest'] = $delayInterest - $overdueAmortizationRows[$i-1]['r_delayinterest'];
 
                 if ($row['r_interest'] > 0) {
                     $remainingInterest = $row['interest'] - $row['r_interest'];
@@ -977,9 +980,6 @@ class Target_lib
                 }
 
                 if ($remainingPrincipal == 0) {
-                    break;
-                }
-                if ($overdueAmortizationRows[$i]['repayment_date'] >= $lastRepaymentAt) {
                     break;
                 }
             }
