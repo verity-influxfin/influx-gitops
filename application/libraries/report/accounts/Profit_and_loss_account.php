@@ -99,7 +99,7 @@ class Profit_and_loss_account
                         }
                     }
 
-                    if( !$set && isset($amortizationTables['normal']['date'])
+                    if( !$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
                         && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
                     {
                         $odate = $ndate = $amortizationTables['normal']['date'];
