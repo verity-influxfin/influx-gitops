@@ -74,6 +74,9 @@
 </head>
 
 <body>
+    <noscript>
+        please turn on your jacascript
+    </noscript>
     <div id="web_index" @mousemove="clicked">
         <nav class="page-header navbar navbar-expand-lg">
             <div class="web-logo">
@@ -93,10 +96,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link invest-link" v-if="!flag || flag === 'logout'"@click="openLoginModal('請登入')">投資專區</a>
-                        <router-link class="nav-link invest-link" to="/myinvestment"  v-else>投資專區</router-link>
-                    </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <p class="nav-link" href="#" @click="openLoginModal('')">登入</p>
                     </li>
@@ -106,8 +105,11 @@
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 ${userData.name}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
-                            <li>
-                                <router-link class="dropdown-item" to="/membercentre">會員中心</router-link>
+                            <li v-if="isInvestor == 0">
+                                <router-link class="dropdown-item loan-link" to="/myloan">借款端</router-link>
+                            </li>
+                            <li v-else>
+                                <router-link class="dropdown-item invest-link" to="/myinvestment">投資專區</router-link>
                             </li>
                             <li v-if="flag === 'login'">
                                 <p class="dropdown-item" @click="logout">登出</p>
@@ -243,6 +245,13 @@
                         <div class="input-group">
                             <span class="input-group-addon label-text">密碼：</span>
                             <input type="password" class="form-control label-input" placeholder="請輸入密碼" v-model="password" maxlength="50">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon label-text"></span>
+                            <div class="radio-custom">
+                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款端</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor"><span class="outside"><span class="inside"></span></span>投資端</label>
+                            </div>
                         </div>
                         <div class="input-group">
                             <div class="chiller_cb">

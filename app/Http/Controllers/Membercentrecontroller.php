@@ -33,7 +33,7 @@ class Membercentrecontroller extends BaseController
     {
         $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'repayment/list" -H "' . "request_token:" . Session::get('token') . '"');
         $data = json_decode($curlScrapedPage, true);
-        
+
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
 
@@ -51,14 +51,20 @@ class Membercentrecontroller extends BaseController
             'id' => 'required|numeric',
         ]);
 
-        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'repayment/info/'.$request->post('id').'" -H "' . "request_token:" . Session::get('token') . '"');
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'repayment/info/' . $request->post('id') . '" -H "' . "request_token:" . Session::get('token') . '"');
         $data = json_decode($curlScrapedPage, true);
 
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
     public function getTansactionDetails(Request $request)
     {
-        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'repayment/passbook" -H "' . "request_token:" . Session::get('token') . '"');
+        $this->validate($request, [
+            'isInvest' => 'required|boolean',
+        ]);
+
+        $function = $request->post('isInvest') ? 'recoveries' : 'repayment';
+
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . $function . '/passbook" -H "' . "request_token:" . Session::get('token') . '"');
         $data = json_decode($curlScrapedPage, true);
 
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
@@ -75,6 +81,42 @@ class Membercentrecontroller extends BaseController
     public function allRead(Request $request)
     {
         $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'notification/readall" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function getMyInvestment(Request $request)
+    {
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'recoveries/dashboard" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function getRecoveriesList(Request $request)
+    {
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'recoveries/list" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function getRecoveriesFinished(Request $request)
+    {
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'recoveries/finish" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+    public function getRecoveriesInfo(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric',
+        ]);
+
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'recoveries/info/' . $request->post('id') . '" -H "' . "request_token:" . Session::get('token') . '"');
         $data = json_decode($curlScrapedPage, true);
 
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);

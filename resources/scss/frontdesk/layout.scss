@@ -52,7 +52,13 @@ body {
     }
 
     .invest-link {
-        background: linear-gradient(180deg, #004eff, #007eff);
+        background: linear-gradient(180deg, #007eff, #0e00e4);
+        color: #ffffff !important;
+        border-radius: 4px;
+    }
+
+    .loan-link {
+        background: linear-gradient(180deg, #ffeb00, #ffbc00);
         color: #ffffff !important;
         border-radius: 4px;
     }

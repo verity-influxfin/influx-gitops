@@ -88,6 +88,13 @@ Route::post('/read', 'Membercentrecontroller@read');
 
 Route::get('/allRead', 'Membercentrecontroller@allRead');
 
+Route::get('/getMyInvestment', 'Membercentrecontroller@getMyInvestment');
+
+Route::post('/getRecoveriesList', 'Membercentrecontroller@getRecoveriesList');
+
+Route::post('/getRecoveriesFinished', 'Membercentrecontroller@getRecoveriesFinished');
+
+Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
 // backstage
 

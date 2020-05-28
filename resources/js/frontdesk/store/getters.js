@@ -19,5 +19,8 @@ export default {
     },
     ApplyList(state,data){
         return state.applyList;
+    },
+    InvestAccountData(state,data){
+        return state.investAccountData;
     }
 }

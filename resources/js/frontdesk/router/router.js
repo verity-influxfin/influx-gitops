@@ -17,7 +17,10 @@ import privacyTerms from './pages/privacyTerms';
 import loanerTerms from './pages/loanerTerms';
 import register from './pages/register';
 import myInvestment from './pages/myInvestment';
-import memberCentre from './pages/memberCentre';
+import debt from './pages/debt';
+import closedcase from './pages/closedcase';
+import detail from './pages/detail';
+import myLoan from './pages/myLoan';
 import notification from './pages/notification';
 import myrepayment from './pages/myrepayment';
 
@@ -41,11 +44,18 @@ let routers = [
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
     { path: '/register', component: register },
-    { path: '/myinvestment', component: myInvestment },
     {
-        path: '/membercentre', component: memberCentre, children: [
-            { path: '/notification', component: notification },
+        path: '/myloan', component: myLoan, children: [
+            { path: '/loannotification', component: notification },
             { path: '/myrepayment', component: myrepayment }
+        ]
+    },
+    {
+        path: '/myinvestment', component: myInvestment, children: [
+            { path: '/investnotification', component: notification },
+            { path: '/debt', component: debt },
+            { path: '/closedcase', component: closedcase },
+            { path: '/detail', component: detail }
         ]
     }
 ];

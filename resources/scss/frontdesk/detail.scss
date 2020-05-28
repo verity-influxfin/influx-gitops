@@ -3,8 +3,8 @@
     position: relative;
     .info-card {
         border-radius: 15px;
-        box-shadow: 0 0 9px #001756;
-        background: #ffffff;
+        box-shadow: 0 0 9px #000000;
+        background: #545454;
         margin: 10px 5px;
         float: left;
         width: 390px;
@@ -21,7 +21,7 @@
                 transform: translate(-50%, -50%);
                 text-align: center;
                 font-size: 22px;
-                color: #797979;
+                color: #ffffff;
             }
         }
 
@@ -36,7 +36,7 @@
         margin: 10px 10px 10px 0px;
         overflow: auto;
         padding: 8px;
-        background: #dfe4ff;
+        background: #ffffff;
         border-radius: 6px;
         width: 245px;
 

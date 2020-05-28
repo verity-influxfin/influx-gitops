@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="banner">
-      <img :src="'./Image/banner.jpg'" class="banner-img" />
+      <img :src="'./Image/index-banner.jpg'" class="banner-img" />
       <div class="cover"></div>
       <p class="heading-title">我們成功幫助了{{count}}筆交易</p>
       <p class="heading-description" ref="description"></p>

@@ -46,11 +46,11 @@
                 key="animation-model"
                 :width="circleWidth"
                 radius="6"
-                barColor="#ffbe5c"
+                barColor="#ff6767"
                 duration="1000"
                 delay="20"
                 timeFunction="cubic-bezier(0.99, 0.01, 0.22, 0.94)"
-                backgroundColor="#ffdeab"
+                backgroundColor="#ffffff"
                 :progress="progress(item)"
                 :isAnimation="true"
                 :isRound="true"
@@ -91,50 +91,7 @@
         </div>
       </div>
     </div>
-
-    <div class="detail-card">
-      <div class="input-group">
-        <v-date-picker
-          mode="range"
-          v-model="range"
-          style="width: 65%;"
-          :popover="{ visibility: 'click' }"
-        />
-        <button class="btn btn-custom" type="button" @click="search('range')">
-          <i class="fas fa-search"></i>
-        </button>
-
-        <button
-          class="btn btn-info btn-sm btn-rel"
-          type="button"
-          style="left: -13px;"
-          @click="search('month')"
-        >本月</button>
-        <button class="btn btn-primary btn-sm btn-rel" type="button" @click="search('all')">全部</button>
-      </div>
-      <div class="no-passbook-table" v-if="passbook.length ===0">
-        <div class="no-passbook">
-          <img :src="'./Image/no_passbook.svg'" class="img-fluid" />
-        </div>
-      </div>
-      <div class="passbook-table" v-else>
-        <scrollingTable :syncHeaderScroll="false" :scrollHorizontal="false">
-          <template slot="thead">
-            <tr class="header-center">
-              <th class="remark">科目</th>
-              <th class="amount">現金流量</th>
-              <th class="bank_amount">虛擬帳戶餘額</th>
-            </tr>
-          </template>
-          <template slot="tbody">
-            <tr v-for="(item,index) in passbook" :key="index">
-              <td v-for="(text,colIndex) in item" :class="colIndex" v-html="text" :key="colIndex"></td>
-            </tr>
-          </template>
-        </scrollingTable>
-      </div>
-    </div>
-
+    <statement :list="list" @searchDteail="search" />
     <div
       ref="detailModal"
       class="detail-modal modal fade"
@@ -142,76 +99,79 @@
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
+      data-backdrop="static"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog" v-if="Object.keys(detailData).length !== 0">
         <div class="modal-content">
           <div class="modal-body">
             <div :class="['detail-banner', {'delay' : isDelay}]">
-              <span>{{deatilTitle}}</span>
-              <span class="amount">{{format(remainingPrincipal)}}</span>
+              <span>{{isDelay ? "逾期總額" : "本金餘額"}}</span>
+              <span
+                class="amount"
+              >{{format(isDelay ? detailData.amortization_schedule.total_payment : detailData.amortization_schedule.remaining_principal)}}</span>
               <span>$</span>
             </div>
             <div class="detail-title">
-              <label>{{productName}}</label>
+              <label>{{detailData.product_name}}</label>
               <span :class="{'delay' : isDelay}">{{statusText}}</span>
             </div>
             <div class="detail-subtitle">
               <label>案件編號</label>
-              <span>{{targetId}}</span>
+              <span>{{detailData.target_no}}</span>
             </div>
             <div class="delay-info" v-if="isDelay">
               <div class="delay-row">
                 <div class="card-item">
                   <label>當期還款日</label>
                   <br />
-                  <span class="delay">{{nextRepaymentDate}}</span>
+                  <span class="delay">{{detailData.next_repayment.date}}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期日數</label>
                   <br />
-                  <span class="delay">{{delayDays}}日</span>
+                  <span class="delay">{{detailData.delay_days}}日</span>
                 </div>
               </div>
               <div class="delay-row">
                 <div class="card-item">
                   <label>逾期本金</label>
                   <br />
-                  <span>{{format(loanAmount)}}</span>
+                  <span>{{format(detailData.loan_amount)}}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期利息</label>
                   <br />
-                  <span>{{format(interest)}}</span>
+                  <span>{{format(detailData.next_repayment.interest)}}</span>
                 </div>
               </div>
               <div class="delay-row">
                 <div class="card-item">
                   <label>逾期違約金</label>
                   <br />
-                  <span class="delay">{{format(liquidatedDamages)}}</span>
+                  <span class="delay">{{format(detailData.next_repayment.liquidated_damages)}}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期延滯息</label>
                   <br />
-                  <span class="delay">{{format(delayInterest)}}</span>
+                  <span class="delay">{{format(detailData.next_repayment.delay_interest)}}</span>
                 </div>
               </div>
-              <div class="delay-row">
+              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
                 <div class="card-item">
                   <label>案件還款行</label>
                   <br />
-                  <span>({{vBankCode}}){{vBankName}}</span>
+                  <span>({{detailData.targetDatas.virtual_account.bank_code}}){{detailData.targetDatas.virtual_account.bank_name}}</span>
                 </div>
                 <div class="card-item">
                   <label>案件還款分行</label>
                   <br />
-                  <span>({{vBranchCode}}){{vBranchName}}</span>
+                  <span>({{detailData.targetDatas.virtual_account.branch_code}}){{detailData.targetDatas.virtual_account.branch_name}}</span>
                 </div>
               </div>
-              <div class="delay-row">
+              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
                 <div class="card-item">
                   <label>案件還款帳號</label>
-                  <span>{{vAccount}}</span>
+                  <span>{{detailData.targetDatas.virtual_account.virtual_account}}</span>
                 </div>
                 <div class="card-item"></div>
               </div>
@@ -220,12 +180,12 @@
               <div class="card-item">
                 <label>本期還款日</label>
                 <br />
-                <span>{{nextRepaymentDate}}</span>
+                <span>{{detailData.next_repayment.date}}</span>
               </div>
               <div class="card-item">
                 <label>本期還款金額</label>
                 <br />
-                <span>{{format(nextRepaymentAmount)}}$</span>
+                <span>{{format(detailData.next_repayment.amount)}}$</span>
               </div>
             </div>
             <div class="detail-row">
@@ -234,25 +194,25 @@
             </div>
             <div class="detail-row">
               <label>借款總額</label>
-              <span>{{format(loanAmount)}}</span>
+              <span>{{format(detailData.loan_amount)}}</span>
             </div>
             <div class="detail-row">
               <label>借款期間</label>
-              <span>{{startDate}} - {{endDate}}</span>
+              <span>{{detailData.amortization_schedule.date}} - {{detailData.amortization_schedule.end_date}}</span>
             </div>
             <div class="detail-row">
               <label>帳期</label>
-              <span>{{repayment}}/{{instalment}}期</span>
+              <span>{{detailData.next_repayment.instalment}}/{{detailData.instalment}}期</span>
             </div>
           </div>
           <div class="modal-footer" style="display:block;">
             <button class="btn btn-info float-left" @click="open">查看還款明細</button>
-            <button class="btn btn-primary" style="float: right;" data-dismiss="modal">確認</button>
+            <button class="btn btn-primary float-right" @click="closeModal($refs.detailModal)">確認</button>
           </div>
         </div>
       </div>
     </div>
-
+             
     <div
       ref="openModal"
       class="charts-modal modal fade"
@@ -260,8 +220,9 @@
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
+      data-backdrop="static"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog" v-if="Object.keys(detailData).length !== 0">
         <div class="modal-content">
           <div class="modal-body">
             <div class="charts-container">
@@ -275,7 +236,7 @@
               >
                 <div class="row1">
                   <p>{{item.repayment_date}}</p>
-                  <span>第{{item.instalment}}/{{instalment}}期</span>
+                  <span>第{{item.instalment}}/{{detailData.instalment}}期</span>
                 </div>
                 <div class="row2">
                   <p style="color:orange">${{format(item.total_payment)}}</p>
@@ -293,7 +254,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success" data-dismiss="modal">確認</button>
+            <button class="btn btn-success" style="width:100%" @click="closeModal($refs.openModal)">確認</button>
           </div>
         </div>
       </div>
@@ -304,7 +265,7 @@
 <script>
 import circleProgress from "./component/circleProgressComponent";
 import detailBtn from "./component/detailBtnComponent";
-import scrollingTable from "./component/scrollingTableComponent";
+import statement from "./component/statementComponent";
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -315,40 +276,16 @@ export default {
     }
   },
   components: {
-    circleProgress,
+    statement,
     detailBtn,
-    scrollingTable
+    circleProgress
   },
   data: () => ({
     circleWidth: $(window.document).outerWidth() < 1023 ? 90 : 120,
     detailData: {},
     repaymentDeatilRow: [],
-    passbook: [],
-    range: {
-      start: new Date(),
-      end: new Date()
-    },
-    deatilTitle: "",
-    productName: "",
-    targetId: "",
-    nextRepaymentDate: "",
-    startDate: "",
-    endDate: "",
-    repayment: "",
-    instalment: "",
-    nextRepaymentAmount: 0,
-    loanAmount: 0,
-    remainingPrincipal: 0,
+    list: [],
     isDelay: false,
-    delayDays: "",
-    interest: "",
-    liquidatedDamages: "",
-    delayInterest: "",
-    vBankName: "",
-    vBankCOde: "",
-    vBranchName: "",
-    vBranchCode: "",
-    vAccount: ""
   }),
   computed: {
     repaymentNumber() {
@@ -433,33 +370,8 @@ export default {
     },
     showDetail(data) {
       this.detailData = data;
-      this.isDelay = data.delay_days > 0 ? true : false;
-      this.deatilTitle = this.isDelay ? "逾期總額" : "本金餘額";
-      this.remainingPrincipal = this.isDelay
-        ? data.amortization_schedule.total_payment
-        : data.amortization_schedule.remaining_principal;
-      this.nextRepaymentAmount = data.next_repayment.amount;
-      this.loanAmount = data.loan_amount;
-      this.productName = data.product_name;
-      this.targetId = data.target_no;
-      this.nextRepaymentDate = data.next_repayment.date;
-      this.startDate = data.amortization_schedule.date;
-      this.endDate = data.amortization_schedule.end_date;
-      this.repayment = data.next_repayment.instalment;
-      this.instalment = data.instalment;
+      this.isDelay = this.detailData.delay_days > 0 ? true : false;
 
-      this.delayDays = data.delay_days;
-      this.interest = data.next_repayment.interest;
-      this.liquidatedDamages = data.next_repayment.liquidated_damages;
-      this.delayInterest = data.next_repayment.delay_interest;
-
-      if (data.targetDatas.virtual_account) {
-        this.vBankCode = data.targetDatas.virtual_account.bank_code;
-        this.vBankName = data.targetDatas.virtual_account.bank_name;
-        this.vBranchCode = data.targetDatas.virtual_account.branch_code;
-        this.vBranchName = data.targetDatas.virtual_account.branch_name;
-        this.vAccount = data.targetDatas.virtual_account.virtual_account;
-      }
       $(this.$refs.detailModal).modal("show");
     },
     open() {
@@ -623,44 +535,21 @@ export default {
     },
     search(type) {
       let $this = this;
-
-      let date = new Date();
-
-      if (type === "month") {
-        $this.range.start = new Date(date.getFullYear(), date.getMonth(), 1);
-        $this.range.end = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate()
-        );
-      }
-
-      $this.passbook = [];
-
       axios
-        .post("getTansactionDetails")
+        .post("getTansactionDetails", { isInvest: false })
         .then(res => {
-          res.data.data.list.forEach((row, index) => {
-            $this.passbook.push({
-              remark: `${row.remark}<br>${row.tx_datetime.substr(2)}`,
-              amount: `<span style="color:${
-                row.amount > 0 ? "#5192E5" : "#FF4758"
-              }">${$this.format(row.amount)}</span>`,
-              bank_amount: $this.format(row.bank_amount)
-            });
-            if (type !== "all") {
-              if (
-                row.created_at + "000" >= $this.range.end.getTime() ||
-                $this.range.start.getTime() >= row.created_at + "000"
-              ) {
-                $this.passbook.splice(-1, 1);
-              }
-            }
-          });
+          $this.list = res.data.data.list;
         })
         .catch(error => {
           console.log("getTansactionDetails 發生錯誤，請稍後在試");
         });
+    },
+    closeModal($el) {
+      $($el).modal("hide");
+
+      setTimeout(() => {
+        $("body").addClass("modal-open");
+      }, 500);
     }
   }
 };
@@ -954,12 +843,7 @@ export default {
     display: block;
 
     %back {
-      margin: 5px;
-    }
-
-    .accound-card,
-    .repayment-card,
-    .detail-card {
+      margin: 15px auto;
       width: 97%;
     }
 

@@ -46,5 +46,13 @@ export default {
         } catch(error){
             console.error('getRepaymentList 發生錯誤');
         }
+    },
+    async getMyInvestment({ commit }){
+        try{
+            let res = await axios.get('getMyInvestment');
+            commit('mutationInvestmentData',res.data);
+        } catch(error){
+            console.error('getMyInvestment 發生錯誤');
+        }
     }
 }

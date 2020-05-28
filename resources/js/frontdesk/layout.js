@@ -56,7 +56,9 @@ $(() => {
             isCompany: false,
             isRememberAccount: $cookies.get('account') ? true : false,
             isReset: false,
-            IsSended: false,
+            isSended: false,
+            isInvestor : sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0",
+            altered: false,
             businessNum: '',
             account: '',
             password: '',
@@ -66,13 +68,13 @@ $(() => {
             code: '',
             message: '',
             pwdMessage: '',
+            investor:'0',
             flag: sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '',
             userData: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0,
-            altered: false
+            currentTime: 0
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
@@ -160,7 +162,7 @@ $(() => {
             switchForm() {
                 clearInterval(this.timer);
                 this.counter = 180;
-                this.IsSended = false;
+                this.isSended = false;
                 this.isReset = !this.isReset;
             },
             doLogin() {
@@ -174,8 +176,9 @@ $(() => {
 
                 let phone = this.account;
                 let password = this.password;
+                let investor = this.investor;
 
-                let params = { phone, password, 'investor': 0 };
+                let params = { phone, password, investor};
 
                 if (this.isCompany) {
                     let tax_id = this.businessNum;
@@ -234,7 +237,7 @@ $(() => {
 
                 axios.post('getCaptcha', { phone, type })
                     .then((res) => {
-                        this.IsSended = true;
+                        this.isSended = true;
                         this.timer = setInterval(() => { $this.reciprocal() }, 1000);
                     })
                     .catch((error) => {

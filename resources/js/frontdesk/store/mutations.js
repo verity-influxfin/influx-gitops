@@ -55,5 +55,8 @@ export default {
         done = done.reverse();
 
         state.applyList = { applying, installment, done };
+    },
+    mutationInvestmentData(state,data){
+        state.investAccountData = data.data;
     }
 }

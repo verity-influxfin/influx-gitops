@@ -1,9 +1,3 @@
-body {
-    height: 100vh;
-    padding: 0;
-    margin: 0;
-}
-
 .bg {
     height: 100%;
     display: flex;
@@ -86,4 +80,75 @@ body {
     transform: rotate(35deg);
     bottom: 0.35rem;
     left: 0.2rem;
+}
+
+//radio
+
+.radio-custom{
+    display: contents;
+
+    label {
+        display: inline-block;
+        position: relative;
+        padding-left: 23px;
+        cursor: pointer;
+        width: 30%;
+        margin: 0px;
+        line-height: 29px;
+    }
+
+    input {
+        height: 1px;
+        width: 1px;
+        opacity: 0;
+    }
+
+    .outside {
+        display: inline-block;
+        position: absolute;
+        left: 0%;
+        top: 50%;
+        margin-top: -10px;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #003cab;
+        border-radius: 50%;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        background: none;
+    }
+
+    .inside {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        display: inline-block;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        background: #003cab;
+        left: 3px;
+        top: 3px;
+        -webkit-transform: scale(0, 0);
+        transform: scale(0, 0);
+    }
+    .no-transforms .inside {
+        left: auto;
+        top: auto;
+        width: 0;
+        height: 0;
+    }
+
+    input:checked + .outside .inside {
+        -webkit-animation: radio-select 0.1s linear;
+        animation: radio-select 0.1s linear;
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+    .no-transforms input:checked + .outside .inside {
+        width: 10px;
+        height: 10px;
+    }
 }

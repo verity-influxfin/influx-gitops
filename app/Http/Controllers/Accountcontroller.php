@@ -41,7 +41,8 @@ class Accountcontroller extends BaseController
         $this->validate($request, [
             'tax_id' => 'sometimes|required|digits:8',
             'phone' => 'required|digits:10',
-            'password' => 'required|string|min:6|max:50'
+            'password' => 'required|string|min:6|max:50',
+            'investor' => 'required|boolean',
         ], [
             'tax_id.required' => '請輸入統編',
             'phone.required' => '請輸入帳號',
@@ -53,7 +54,7 @@ class Accountcontroller extends BaseController
         ]);
 
         $input = $request->all();
-
+        
         $params = http_build_query($input);
 
         $function = array_key_exists('tax_id', $input) ? 'judicialperson' : 'user';
@@ -68,11 +69,13 @@ class Accountcontroller extends BaseController
             $data = json_decode($curlScrapedPage, true);
 
             Session::put('userData',$data['data']);
+            Session::put('investor',$input['investor']);
 
             return response()->json([
                 'id' => $data['data']['id'],
                 'name' => $data['data']['name'],
-                'picture' => $data['data']['picture']
+                'picture' => $data['data']['picture'],
+                'investor' => $input['investor']
             ], 200);
         } else {
             return response()->json($data, 400);

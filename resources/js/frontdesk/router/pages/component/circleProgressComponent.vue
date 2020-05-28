@@ -10,7 +10,7 @@
         :r="(width-radius)/2-10"
         :cy="width/2"
         :cx="width/2"
-        :stroke-width="12"
+        :stroke-width="6"
         :stroke="backgroundColor"
         fill="none"
       />
@@ -20,7 +20,7 @@
         :cy="width/2"
         :cx="width/2"
         :stroke="barColor"
-        :stroke-width="12"
+        :stroke-width="6"
         :stroke-linecap="isRound ? 'round' : 'square'"
         :stroke-dasharray="(width-radius)*3.14"
         :stroke-dashoffset="isAnimation ? (width-radius) * 3.14 : (width - radius) * 3.14 * (100 - progress) / 100"

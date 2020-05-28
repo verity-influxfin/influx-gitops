@@ -1,0 +1,99 @@
+.membercentre-wrapper {
+    .member-menu {
+      overflow: auto;
+      position: relative;
+      display: flex;
+      padding: 20px;
+  
+      %block {
+        margin-right: 10px;
+        padding: 10px;
+        width: fit-content;
+        box-shadow: 0 0 5px #848484;
+        border-radius: 10px;
+        background: #efefef;
+      }
+  
+      .info-card {
+        @extend %block;
+  
+        .picture {
+          float: left;
+          width: 100px;
+          border-radius: 50%;
+          overflow: auto;
+        }
+  
+        .userInfo {
+          display: grid;
+          padding-left: 20px;
+  
+          p {
+            line-height: 50px;
+            margin: 0px;
+            font-weight: bolder;
+            font-size: 20px;
+          }
+  
+          span {
+            line-height: 50px;
+            margin: 0px;
+            font-weight: bolder;
+          }
+        }
+      }
+  
+      .menu-card {
+        @extend %block;
+        border: none;
+        overflow: auto;
+        max-width: 850px;
+  
+        .menu-item {
+          cursor: pointer;
+          float: left;
+          width: 100px;
+          text-align: -webkit-center;
+          background: #ffffff;
+          box-shadow: 0 0 2px #7d7d7d;
+          border-radius: 10px;
+          margin: 10px;
+          color: black;
+  
+          &:hover {
+            background: #b3d9ff;
+            text-decoration: none;
+          }
+  
+          img {
+            width: 72px;
+          }
+  
+          p {
+            margin-bottom: 0px;
+          }
+        }
+      }
+    }
+  
+    .main-content {
+      padding: 0px 20px 20px 20px;
+    }
+  
+    @media screen and (max-width: 1023px) {
+      .member-menu {
+        display: block;
+        padding: 0px;
+  
+        %block {
+          width: 95%;
+          margin: 15px auto;
+          border-radius: 5px;
+        }
+      }
+  
+      .main-content {
+        padding: 0px;
+      }
+    }
+  }

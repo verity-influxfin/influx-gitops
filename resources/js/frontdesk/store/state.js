@@ -6,6 +6,7 @@ export default {
     news: [],
     userData: {},
     applyList:{},
+    investAccountData:{},
     loginErrorCode: {
         302: "會員不存在",
         304: "密碼錯誤",
