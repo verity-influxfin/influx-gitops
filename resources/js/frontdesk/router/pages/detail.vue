@@ -273,7 +273,6 @@ export default {
     }
 
     .pieChart-container {
-      overflow: auto;
       @extend %bg;
 
       .pie-chart {
@@ -313,6 +312,50 @@ export default {
     display: none;
     top: 0;
     left: 0;
+  }
+
+  @media screen and(max-width:767px) {
+    .assets-card {
+      .pieChart-container {
+        .pie-chart {
+          width: 310px !important;
+          height: 310px;
+        }
+      }
+
+      .income-table {
+        width: 93%;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1023px) {
+    display: block;
+
+    .assets-card {
+      width: 95%;
+      display: block;
+      margin: 0px 10px 10px 10px;
+
+      .pieChart-container {
+        .pie-chart {
+          width: 690px;
+        }
+      }
+
+      .income-table {
+        width: 97%;
+
+        .table-col {
+          width: 100%;
+        }
+      }
+    }
+
+    .income-detail-card {
+      margin: 0px 10px 10px 10px;
+      width: 96%;
+    }
   }
 }
 </style>

@@ -169,5 +169,11 @@ export default {
       border-bottom: 1px solid #b7b7b7;
     }
   }
+
+    @media screen and (max-width:1023px){
+    .borrow-card{
+      width:95% !important;
+    }
+  }
 }
 </style>

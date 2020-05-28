@@ -256,11 +256,6 @@ export default {
         overflow: auto;
 
         .header-title {
-          .gap {
-            margin: 0px 20px;
-            float: left;
-          }
-
           .count {
             color: #ffa500;
             text-decoration: underline;
@@ -336,6 +331,51 @@ export default {
       font-size: 20px;
       font-weight: bolder;
       color: #ff1212;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .no-data {
+      width: auto;
+
+      a {
+        font-size: 16px;
+      }
+    }
+    #accordion {
+      .header-title {
+        display: flex;
+
+        .item1 {
+          width: 75px;
+        }
+      }
+
+      .group-row {
+        .item1 {
+          width: 70px;
+        }
+
+        .item2{
+          width: 40px;
+        }
+      }
+
+      .gap {
+        margin: 0px;
+      }
+
+      .item1 {
+        width: 100px;
+      }
+
+      .item2 {
+        width: 50px;
+      }
+
+      .item3 {
+        width: 150px;
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="invest-modal modal fade"
+      class="invest-modal modal"
       ref="investModal"
       tabindex="-1"
       role="dialog"
@@ -12,7 +12,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            <button type="button" class="btn btn-close" style="color: #ffb100;" data-dismiss="modal">
+            <button
+              type="button"
+              class="btn btn-close"
+              style="color: #ffb100;"
+              data-dismiss="modal"
+            >
               <i class="far fa-times-circle"></i>
             </button>
             <div class="filter-space">
@@ -71,7 +76,11 @@
                     </div>
                   </div>
                 </transition>
-                <button class="btn btn-showdetail btn-sm" v-if="$props.showDetailBtn" @click="send(item.id)">查看詳情</button>
+                <button
+                  class="btn btn-showdetail btn-sm"
+                  v-if="$props.showDetailBtn"
+                  @click="send(item.id)"
+                >查看詳情</button>
                 <div style="height:38px">
                   <div class="transfer" v-if="item.transfer_status == 1">
                     <img
@@ -90,7 +99,7 @@
     </div>
 
     <div
-      class="invert-item-detail-modal modal fade"
+      class="invert-item-detail-modal modal"
       ref="detailModal"
       tabindex="-1"
       role="dialog"
@@ -361,7 +370,7 @@
 
 <script>
 export default {
-  props: ["detailData", "category", "investCaseInfo","showDetailBtn"],
+  props: ["detailData", "category", "investCaseInfo", "showDetailBtn"],
   data: () => ({
     orderBy: "loan_date",
     contractTitle: "",
@@ -625,7 +634,6 @@ export default {
       .invert-deatil-card {
         padding: 10px;
         margin: 10px;
-        width: 25%;
         border-radius: 17px;
         box-shadow: 0 0 7px #315eff;
         background: #ffffff;
@@ -687,6 +695,18 @@ export default {
             background: $color;
             color: #ffffff;
           }
+        }
+      }
+      
+      @media screen and(max-width:1023px) {
+        .invert-deatil-card {
+          width: 46%;
+        }
+      }
+
+      @media screen and(max-width:767px) {
+        .invert-deatil-card {
+          width: 94%;
         }
       }
     }
@@ -815,6 +835,16 @@ export default {
       width: 60%;
       text-align: center;
       line-height: 64px;
+    }
+
+    @media screen and(max-width:767px) {
+      div {
+        padding: 0px 5px;
+      }
+
+      .col2 {
+        width: 70%;
+      }
     }
   }
 

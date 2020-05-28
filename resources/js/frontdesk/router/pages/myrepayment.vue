@@ -207,15 +207,15 @@
           </div>
           <div class="modal-footer" style="display:block;">
             <button class="btn btn-info float-left" @click="open">查看還款明細</button>
-            <button class="btn btn-primary float-right" @click="closeModal($refs.detailModal)">確認</button>
+            <button class="btn btn-primary float-right" data-dismiss="modal">確認</button>
           </div>
         </div>
       </div>
     </div>
-             
+
     <div
       ref="openModal"
-      class="charts-modal modal fade"
+      class="charts-modal modal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
@@ -254,7 +254,11 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success" style="width:100%" @click="closeModal($refs.openModal)">確認</button>
+            <button
+              class="btn btn-success"
+              style="width:100%"
+              @click="closeModal($refs.openModal)"
+            >確認</button>
           </div>
         </div>
       </div>
@@ -285,7 +289,7 @@ export default {
     detailData: {},
     repaymentDeatilRow: [],
     list: [],
-    isDelay: false,
+    isDelay: false
   }),
   computed: {
     repaymentNumber() {
@@ -861,6 +865,11 @@ export default {
         min-width: 135px;
         max-width: 135px;
       }
+    }
+
+    .income-detail-card {
+      margin: 0px 10px 10px 10px;
+      width: 96%;
     }
   }
 }
