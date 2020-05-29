@@ -50,7 +50,6 @@ class Charge_lib
 					$user_to[$value->investment_id]['amount'] += $value->amount;
 				}
 			}
-
 			if($amount>0){
 				$virtual_account = $this->CI->virtual_account_model->get_by([
 					'status'		=> 1,
@@ -722,6 +721,7 @@ class Charge_lib
                                 [
                                     'source' 		=> SOURCE_AR_FEES,
                                     'investment_id' => $value['investment_id'],
+                                    'status' => 1,
                                 ],
                                 [
                                     'amount' => $ar_fee
