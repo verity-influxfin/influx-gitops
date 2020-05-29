@@ -94,7 +94,7 @@
     <statement :list="list" @searchDteail="search" />
     <div
       ref="detailModal"
-      class="detail-modal modal fade"
+      class="detail-modal modal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
