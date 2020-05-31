@@ -588,7 +588,7 @@ class Charge_lib
 				$instalment				= 1;
 				$limit_date				= '';
 				foreach($transaction as $key => $value){
-                    if(!isset($user_to_info[$value->investment_id])){
+                    if(in_array($value->source, [SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST]) && !isset($user_to_info[$value->investment_id])) {
                         $user_to_info[$value->investment_id] 	= [
                             'user_to'				=> $value->user_to,
                             'bank_account_to'		=> $value->bank_account_to,
