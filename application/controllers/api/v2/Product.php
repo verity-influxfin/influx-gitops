@@ -2055,6 +2055,23 @@ class Product extends REST_Controller {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
             }
         }
+
+        $this->load->library('scraper/judicial_yuan_lib.php');
+        $verdictsStatuses = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($param['user_id']);
+        if(isset($verdictsStatuses['status'])){
+            if($verdictsStatuses['status'] == 204){
+                $this->load->model('user/user_model');
+                $user_info = $this->user_model->get_by([
+                    "id"		=> $param['user_id'],
+                    "name !="	=> '',
+                    "id_card_place !="	=> '',
+                ]);
+                if($user_info){
+                    $this->judicial_yuan_lib->requestJudicialYuanVerdicts($user_info->name, $user_info->address, $user_info->id);
+                }
+            }
+        }
+
         isset($input['reason'])?$param['reason'] = $input['reason']:'';
         if(isset($input['reason_description'])&&!empty($input['reason_description'])){
             $build = [
