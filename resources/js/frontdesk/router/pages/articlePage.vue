@@ -33,7 +33,6 @@ export default {
     articleHtml: ""
   }),
   created() {
-    $("title").text(`${this.$route.params.id} - inFlux普匯金融科技`);
     this.getArticleData();
   },
   methods: {
@@ -41,9 +40,10 @@ export default {
       axios
         .post("getArticleData", { filter: this.$route.params.id })
         .then(res => {
+          $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
           FB.XFBML.parse();
           this.articleTitle = res.data.post_title;
-          this.articleImg = res.data.media_link ? res.data.media_link : '';
+          this.articleImg = res.data.media_link ? res.data.media_link : "";
           this.articleHtml = res.data.post_content;
         });
     }

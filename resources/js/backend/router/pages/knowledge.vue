@@ -1,5 +1,5 @@
 <template>
-  <div class="bk-video-wrapper">
+  <div class="bk-knowledge-wrapper">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -51,11 +51,11 @@
             <button type="button" class="btn btn-close" data-dismiss="modal">
               <i class="far fa-times-circle"></i>
             </button>
-            <div class="input-group">
+            <div class="input-group" style="width: 95%;">
               <div class="input-group-prepend">
                 <span class="input-group-text">文章標題</span>
               </div>
-              <input type="text" class="form-control" placeholder="文章標題" v-model="post_title" />
+              <input type="text" class="form-control" placeholder="文章標題" v-model="postTitle" />
             </div>
             <div class="input-group">
               <div class="input-group-prepend">
@@ -97,7 +97,6 @@
     <div
       class="messageModal-modal modal fade"
       ref="messageModal"
-      tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
@@ -129,14 +128,13 @@ let articleRow = Vue.extend({
           <button class="btn btn-danger btn-sm" @click="vm.delete(index)">刪除</button>
         </div>
     </li>
-  `,
-  methods: {}
+  `
 });
 
 export default {
   data: () => ({
     fliter: "",
-    post_title: "",
+    postTitle: "",
     status: "publish",
     order: "0",
     post_content: "",
@@ -145,10 +143,11 @@ export default {
     ID: "",
     upLoadImg: "./Image/default-image.png",
     rowData: [],
-    filterData: [],
+    filtedData: [],
     imageData: new FormData()
   }),
   created() {
+    $("title").text(`後臺系統 - inFlux普匯金融科技`);
     this.getknowledgeData();
   },
   mounted() {
@@ -158,10 +157,10 @@ export default {
   },
   watch: {
     fliter(newVal) {
-      this.filterData = [];
+      this.filtedData = [];
       this.rowData.forEach((row, index) => {
         if (row.post_title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
-          this.filterData.push(row);
+          this.filtedData.push(row);
         }
       });
       this.pagination();
@@ -173,7 +172,7 @@ export default {
         .post("getKnowledge")
         .then(res => {
           this.rowData = res.data;
-          this.filterData = res.data;
+          this.filtedData = res.data;
           this.pagination();
         })
         .catch(error => {
@@ -184,7 +183,7 @@ export default {
       let $this = this;
       $this.$nextTick(() => {
         $($this.$refs.pagination).pagination({
-          dataSource: $this.filterData,
+          dataSource: $this.filtedData,
           pageSize: 8,
           callback(data, pagination) {
             $($this.$refs.container).html("");
@@ -208,35 +207,37 @@ export default {
       this.upLoadImg = `./upload/${res.data}`;
     },
     create() {
-      this.post_title = "";
+      this.postTitle = "";
       this.status = "publish";
       this.order = "0";
-      this.post_content = "";
+      this.postContent = "";
       this.ID = "";
       this.actionType = "insert";
       this.upLoadImg = "./Image/default-image.png";
 
-      CKEDITOR.instances.editor.setData(this.post_content);
+      CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.articleModal).modal("show");
     },
     edit(index) {
-      this.post_title = this.filterData[index].post_title;
-      this.status = this.filterData[index].status;
-      this.order = this.filterData[index].order;
-      this.post_content = this.filterData[index].post_content;
-      this.ID = this.filterData[index].ID;
-      this.upLoadImg = this.filterData[index].media_link ? this.filterData[index].media_link : "./Image/default-image.png";
+      this.postTitle = this.filtedData[index].post_title;
+      this.status = this.filtedData[index].status;
+      this.order = this.filtedData[index].order;
+      this.postContent = this.filtedData[index].post_content;
+      this.ID = this.filtedData[index].ID;
+      this.upLoadImg = this.filtedData[index].media_link
+        ? this.filtedData[index].media_link
+        : "./Image/default-image.png";
       this.actionType = "update";
 
-      CKEDITOR.instances.editor.setData(this.post_content);
+      CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.articleModal).modal("show");
     },
     delete(index) {
       axios
         .post("deleteKonwledge", {
-          ID: this.filterData[index].ID
+          ID: this.filtedData[index].ID
         })
         .then(res => {
           this.message = `刪除成功`;
@@ -253,11 +254,11 @@ export default {
           actionType: this.actionType,
           ID: this.ID,
           data: {
-            post_title: this.post_title,
+            post_title: this.postTitle,
             post_content: CKEDITOR.instances.editor.getData(),
             status: this.status,
             order: this.order,
-            media_link:this.upLoadImg
+            media_link: this.upLoadImg
           }
         })
         .then(res => {
@@ -283,8 +284,9 @@ export default {
   }
 };
 </script>
+
 <style lang="scss">
-.bk-video-wrapper {
+.bk-knowledge-wrapper {
   padding: 10px;
 
   .action-bar {

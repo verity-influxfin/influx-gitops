@@ -120,3 +120,5 @@ Route::post('/deleteKonwledge', 'Backendcontroller@deleteKonwledge');
 Route::post('/uploadKnowledgeImg', 'Backendcontroller@uploadKnowledgeImg');
 
 Route::post('/uploadFile', 'Backendcontroller@uploadFile');
+
+Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');

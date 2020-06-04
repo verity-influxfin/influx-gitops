@@ -1,32 +1,40 @@
 <template>
   <div class="news-page-wrapper">
     <h1>最新消息</h1>
-    <ul class="news-content">
-      <li v-for="(item,index) in this.news" class="card" :key="index">
-        <router-link :to="item.link" style="text-align: center;">
-          <img :src="item.imageSrc" class="img-custom" />
-        </router-link>
-        <span>{{item.title}}</span>
-        <p>
-          <span class="gray">Posted by</span>
-          {{item.author}}
-          <span class="gray">Comments:</span>
-        </p>
-        <p class="gray">{{item.content}}…</p>
-        <router-link class="btn btn-info" :to="item.link">Read More</router-link>
-      </li>
-    </ul>
+
+    <ul class="news-content" ref="content"></ul>
     <div class="pagination" ref="pagination"></div>
   </div>
 </template>
 
 <script>
+let newsRow = Vue.extend({
+  props: ["item"],
+  template: `
+      <li class="card">
+        <a :href="'#'+item.link" style="text-align: center;">
+          <img :src="item.media_link" class="img-custom" />
+        </a>
+        <span>{{item.post_title}}</span>
+        <p>
+          <span class="gray">Posted by</span>
+          {{item.author}}
+          <span class="gray">Comments:</span>
+        </p>
+        <p class="gray">{{item.post_content}}…</p>
+        <a class="btn btn-info" :href="'#'+item.link">Read More</a>
+      </li>
+  `
+});
+
 export default {
   computed: {
     news() {
       let $this = this;
       $.each($this.$store.getters.NewsData, (index, row) => {
-        $this.$store.getters.NewsData[index].content = `${row.content
+        $this.$store.getters.NewsData[
+          index
+        ].post_content = `${row.post_content
           .replace(/<[^>]*>/g, "")
           .substr(0, 10)}...`;
       });
@@ -52,16 +60,15 @@ export default {
         $($this.$refs.pagination).pagination({
           dataSource: $this.news,
           callback(data, pagination) {
+            $($this.$refs.content).html("");
             data.forEach((item, index) => {
-              $this.pageHtml += `
-                                <div class="card">
-                                    <img src="${item.imageSrc}" class="img-fluid">
-                                    <h5>${item.title}</h5>
-                                    <span>${item.date}</span>
-                                    <p class="gray">${item.detail}</p>
-                                    <a href="#${item.link}">閱讀更多》</a>
-                                </div>
-                            `;
+              let component = new newsRow({
+                propsData: {
+                  item
+                }
+              }).$mount();
+
+              $($this.$refs.content).append(component.$el);
             });
           }
         });

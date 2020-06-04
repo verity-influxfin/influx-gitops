@@ -12,30 +12,23 @@ $(() => {
         },
         methods: {
             login() {
-                let $this = this;
-                let account = $this.account;
-                let password = $this.password;
+                let account = this.account;
+                let password = this.password;
 
-                $.ajax({
-                    url: 'baklogin',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { account, password },
-                    success(data) {
-                        location.reload();
-                    },
-                    error(e) {
-                        if (e.responseJSON.message) {
-                            let messages = [];
-                            $.each(e.responseJSON.errors, (key, item) => {
-                                item.forEach((message, k) => {
-                                    messages.push(message);
-                                });
+                axios.post('baklogin', { account, password }).then((res) => {
+                    location.reload();
+                }).catch((error) => {
+                    let errorsData = error.response.data;
+                    if (errorsData.message) {
+                        let messages = [];
+                        $.each(errorsData.errors, (key, item) => {
+                            item.forEach((message, k) => {
+                                messages.push(message);
                             });
-                            $this.message = messages.join('、');
-                        } else {
-                            $this.message = e.responseJSON.join('、')
-                        }
+                        });
+                        this.message = messages.join('、');
+                    } else {
+                        this.message = e.responseJSON.join('、');
                     }
                 });
             }
@@ -49,27 +42,22 @@ $(() => {
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
             next('/index');
-        }else{
+        } else {
             next();
         }
     });
-    
+
     const admin = new Vue({
         el: '#web_admin',
         router,
-        data:{
-            islogin:null
+        data: {
+            islogin: null
         },
         methods: {
             logout() {
-                $.ajax({
-                    url: 'baklogout',
-                    type: 'POST',
-                    dataType: 'json',
-                    success(data) {
-                        location.reload();
-                    }
-                });
+                axios.post('baklogout').then((res) => {
+                    location.reload();
+                })
             }
         }
     });

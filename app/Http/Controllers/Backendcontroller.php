@@ -62,7 +62,7 @@ class Backendcontroller extends BaseController
                     $this->inputs['data']['post_date'] = date('Y-m-d H:i:s');
                     DB::table('knowledge_article')->insert($this->inputs['data']);
                 } else if ($this->inputs['actionType'] === 'update') {
-                    DB::table('knowledge_article')->where('id', $this->inputs['ID'])->update($this->inputs['data']);
+                    DB::table('knowledge_article')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
                 }
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
@@ -94,7 +94,7 @@ class Backendcontroller extends BaseController
                 $file->move('upload', "$filename");
                 return response()->json($filename, 200);
             }
-        }else{
+        } else {
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
@@ -111,5 +111,11 @@ class Backendcontroller extends BaseController
         } else {
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
+    }
+    public function getknowledgeVideoData(Request $request)
+    {
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'video')->orderBy('post_modified', 'desc')->get();
+
+        return response()->json($knowledge, 200);
     }
 }

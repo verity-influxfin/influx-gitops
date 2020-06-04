@@ -3,19 +3,17 @@
     <div v-for="(item,index) in shares" class="video-container" :key="index">
       <div class="video-iframe">
         <iframe
-          :src="item.videoLink"
+          :src="item.video_link"
           frameborder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
       <div class="video-info">
-        <h3>{{item.title}}</h3>
-        <h4>{{item.subTitle}}</h4>
-        <p>{{item.detail}}</p>
+        <h3>{{item.post_title}}</h3>
         <router-link
-          v-if="item.category === 'share'"
-          :to="'/videopage/'+item.id"
+          v-if="item.type === 'video'"
+          :to="'/videopage/'+item.ID"
           class="btn btn-info"
         >了解更多</router-link>
         <a
@@ -59,8 +57,7 @@ export default {
   },
   methods: {
     refresh() {
-      let category =
-        this.$route.params.category === "share" ? "share" : "other";
+      let category = this.$route.params.category;
       this.$store.dispatch("getSharesData", { category });
     }
   }

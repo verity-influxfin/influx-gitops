@@ -41,7 +41,6 @@ export default {
     videoHtml: ""
   }),
   created() {
-    $("title").text(`${this.$route.params.id} - inFlux普匯金融科技`);
     this.getVideoPage();
   },
   methods: {
@@ -49,11 +48,12 @@ export default {
       axios
         .post("getVideoPage", { filter: this.$route.params.id })
         .then(res => {
+          $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
           FB.XFBML.parse();
-          this.videoTitle = res.data.title;
-          this.videoImg = res.data.imageSrc;
-          this.videoLink = res.data.videoLink;
-          this.videoHtml = res.data.content;
+          this.videoTitle = res.data.post_title;
+          this.videoImg = res.data.media_link;
+          this.videoLink = res.data.video_link;
+          this.videoHtml = res.data.post_content;
         });
     }
   }

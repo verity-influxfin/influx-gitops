@@ -1,11 +1,24 @@
 <template>
   <div class="blog-wrapper">
-    <ul class="blog-content" v-html="this.pageHtml"></ul>
+    <ul class="blog-content" ref="content"></ul>
     <div class="pagination" ref="pagination"></div>
   </div>
 </template>
 
 <script>
+let postRow = Vue.extend({
+  props: ["item"],
+  template: `
+    <li class="card">
+        <img :src="item.media_link ? item.media_link : './Image/default-image.png'" class="img-custom">
+        <h5>{{item.post_title}}</h5>
+        <span>{{item.post_modified}}</span>
+        <p class="gray" v-html="item.post_content"></p>
+        <a :href="'#'+item.link">閱讀更多》</a>
+    </li>
+  `
+});
+
 export default {
   data: () => ({
     pageHtml: ""
@@ -16,7 +29,9 @@ export default {
       $.each($this.$store.getters.KnowledgeData, (index, row) => {
         $this.$store.getters.KnowledgeData[
           index
-        ].post_content = `${row.post_content.replace(/(<([^>]+)>)/ig, "").substr(0, 100)}...`;
+        ].post_content = `${row.post_content
+          .replace(/(<([^>]+)>)/gi, "")
+          .substr(0, 80)}...`;
       });
       return $this.$store.getters.KnowledgeData;
     }
@@ -36,17 +51,17 @@ export default {
       $this.$nextTick(() => {
         $($this.$refs.pagination).pagination({
           dataSource: $this.knowledge,
+          pageSize: 8,
           callback(data, pagination) {
+            $($this.$refs.content).html("");
             data.forEach((item, index) => {
-              $this.pageHtml += `
-                <li class="card">
-                    <img src="${item.media_link ? item.media_link : './Image/default-image.png'}" class="img-custom">
-                    <h5>${item.post_title}</h5>
-                    <span>${item.post_modified}</span>
-                    <p class="gray">${item.post_content}</p>
-                    <a href="#${item.link}">閱讀更多》</a>
-                </li>
-              `;
+              let component = new postRow({
+                propsData: {
+                  item
+                }
+              }).$mount();
+
+              $($this.$refs.content).append(component.$el);
             });
           }
         });

@@ -3,12 +3,10 @@
         <h2 v-html="this.$props.title"></h2>
         <div class="share-content" ref="share_content">
             <div v-for="(item,index) in this.$props.data" class="content-row" :key="index">
-                <iframe :src="item.videoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe :src="item.video_link" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <div>
-                    <p v-html="item.type"></p>
-                    <p>{{item.title}}</p>
+                    <p>{{item.post_title}}</p>
                     <br>
-                    <span>{{item.detail}}</span><br>
                     <router-link :to="item.link" class="btn btn-warning">閱讀更多</router-link>
                 </div>
             </div>

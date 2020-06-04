@@ -27,9 +27,8 @@
       <h2>投資理財大補帖</h2>
       <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
         <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
-          <img :src="item.imageSrc" class="img-fluid" />
-          <p>{{item.type}}</p>
-          <p>{{item.title}}</p>
+          <img :src="item.media_link" class="img-fluid" />
+          <p>{{item.post_title}}</p>
           <br />
           <router-link :to="item.link" class="btn btn-danger">觀看大補帖</router-link>
         </div>

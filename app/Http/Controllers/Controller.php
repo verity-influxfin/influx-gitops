@@ -18,7 +18,7 @@ class Controller extends BaseController
     {
         $data = json_decode(file_get_contents('data/listData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getKnowledgeData(Request $request)
@@ -32,37 +32,33 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/articledata.json'), true);
-
         $result = [];
-
-        foreach ($data['video'] as $key => $row) {
-            if ($input['filter'] === 'other') {
-                if ($row['category'] !== 'share') {
-                    $result[] = $row;
-                }
-            } else {
-                if ($row['category'] === $input['filter']) {
+        if ($input['filter'] !== 'share') {
+            $data = json_decode(file_get_contents('data/articledata.json'), true);
+            foreach ($data['video'] as $key => $row) {
+                if ($row['category'] == $input['filter']) {
                     $result[] = $row;
                 }
             }
+        } else {
+            $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
         }
 
-        return response()->json($result);
+        return response()->json($result, 200);
     }
 
     public function getNewsData(Request $request)
     {
         $data = json_decode(file_get_contents('data/articledata.json'), true);
 
-        return response()->json($data['news']);
+        return response()->json($data['news'], 200);
     }
 
     public function getInvestTonicData(Request $request)
     {
         $data = json_decode(file_get_contents('data/articledata.json'), true);
 
-        return response()->json($data['investtonic']);
+        return response()->json($data['investtonic'], 200);
     }
 
     public function getArticleData(Request $request)
@@ -70,8 +66,14 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $id) = explode('-', $input['filter']);
+        $knowledge = [];
+        if ($type === 'knowledge') {
+            $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $id)->orderBy('post_modified', 'desc')->first();
+        } else {
+            $data = json_decode(file_get_contents('data/articledata.json'), true);
+            $knowledge = $data[$type][$id -1];
+        }
 
-        $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $id)->orderBy('post_modified', 'desc')->first();
 
         return response()->json($knowledge, 200);
     }
@@ -82,29 +84,30 @@ class Controller extends BaseController
 
         $data = json_decode(file_get_contents('data/articledata.json'), true);
 
+        $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $input['filter'])->orderBy('post_modified', 'desc')->first();
 
-        return response()->json($data['video'][$input['filter'] - 1]);
+        return response()->json($knowledge, 200);
     }
 
     public function getInterviewData(Request $request)
     {
         $data = json_decode(file_get_contents('data/data.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getExperiencesData(Request $request)
     {
         $data = json_decode(file_get_contents('data/experiencesData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getServiceData(Request $request)
     {
         $data = json_decode(file_get_contents('data/serviceData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getQaData(Request $request)
@@ -113,35 +116,35 @@ class Controller extends BaseController
 
         $data = json_decode(file_get_contents('data/qaData.json'), true);
 
-        return response()->json($data[$input['filter']]);
+        return response()->json($data[$input['filter']], 200);
     }
 
     public function getMobileData(Request $request)
     {
         $data = json_decode(file_get_contents('data/mobileData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getMilestoneData(Request $request)
     {
         $data = json_decode(file_get_contents('data/milestoneData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getMediaData(Request $request)
     {
         $data = json_decode(file_get_contents('data/mediaData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getPartnerData(Request $request)
     {
         $data = json_decode(file_get_contents('data/partnerData.json'), true);
 
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     public function getBannerData(Request $request)
@@ -150,7 +153,7 @@ class Controller extends BaseController
 
         $data = json_decode(file_get_contents('data/bannerData.json'), true);
 
-        return response()->json($data[$input['filter']]);
+        return response()->json($data[$input['filter']], 200);
     }
 
     public function getApplydata(Request $request)
@@ -159,6 +162,6 @@ class Controller extends BaseController
 
         $data = json_decode(file_get_contents('data/applyData.json'), true);
 
-        return response()->json($data[$input['filter']]);
+        return response()->json($data[$input['filter']], 200);
     }
 }

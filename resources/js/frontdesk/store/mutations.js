@@ -15,7 +15,7 @@ export default {
     },
     mutationSharesData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/vlog/${row.category}`;
+            data[index].link = `/vlog/${row.category ? row.category : 'share'}`;
         });
 
         state.shares = data;

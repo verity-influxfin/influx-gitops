@@ -21,18 +21,6 @@
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/backend.css') }}">
-
-    <!-- package -->
-    <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
-
-    <!-- local -->
-    <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
 </head>
 
 <body>
@@ -51,6 +39,19 @@
             <button type="button" class="btn btn-login" @click="login">送出</button>
         </div>
     </div>
+
+    <!-- package -->
+    <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+
+    <!-- local -->
+    <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
 </body>
 
 </html>

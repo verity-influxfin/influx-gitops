@@ -44,7 +44,7 @@ export default {
       return data;
     },
     shares() {
-      return this.$store.getters.SharesData;
+      return this.$store.getters.SharesData.slice(0,4);
     }
   },
   created() {

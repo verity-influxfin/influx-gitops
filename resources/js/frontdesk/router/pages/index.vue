@@ -88,11 +88,11 @@
       <div class="message-content" data-aos="fade-right">
         <div v-for="(item,index) in knowledge" class="content-row" :key="index">
           <router-link :to="item.link">
-            <img :src="item.imageSrc" class="img-fluid" />
+            <img :src="item.media_link" class="img-fluid" />
           </router-link>
           <div>
-            <p>{{item.title}}</p>
-            <span>{{item.content}}</span>
+            <p>{{item.post_title}}</p>
+            <span>{{item.post_content}}</span>
             <br />
             <router-link :to="item.link" class="btn btn-primary">閱讀更多</router-link>
           </div>
@@ -105,7 +105,7 @@
       <div class="news-slick" ref="news_slick">
         <div v-for="(item,index) in news" class="slick-item" :key="index">
           <router-link :to="item.link">
-            <img :src="item.imageSrc" class="img-fluid" />
+            <img :src="item.media_link" class="img-fluid" />
             <p>{{item.title}}</p>
           </router-link>
         </div>
@@ -148,19 +148,19 @@ export default {
       return this.$store.getters.ExperiencesData;
     },
     shares() {
-      return this.$store.getters.SharesData;
+      return this.$store.getters.SharesData.slice(0,4);
     },
     knowledge() {
       let $this = this;
       $.each($this.$store.getters.KnowledgeData, (index, row) => {
         $this.$store.getters.KnowledgeData[
           index
-        ].content = `${row.content.replace(/<[^>]*>/g, "").substr(0, 100)}...`;
+        ].post_content = `${row.post_content.replace(/(<([^>]+)>)/ig, "").substr(0, 80)}...`;
       });
-      return $this.$store.getters.KnowledgeData;
+      return $this.$store.getters.KnowledgeData.slice(0,4);
     },
     news() {
-      return this.$store.getters.NewsData;
+      return this.$store.getters.NewsData.slice(0,4);
     }
   },
   created() {
