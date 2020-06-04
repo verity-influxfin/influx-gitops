@@ -2,8 +2,6 @@
 import routers from './router/router';
 
 $(() => {
-    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-
     const login = new Vue({
         el: '#login',
         delimiters: ['${', '}'],
@@ -55,7 +53,7 @@ $(() => {
             next();
         }
     });
-
+    
     const admin = new Vue({
         el: '#web_admin',
         router,

@@ -8,9 +8,9 @@ export default {
     },
     mutationKnowledgeData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/articlepage/knowledge-${row.id}`;
+            data[index].link = `/articlepage/knowledge-${row.ID}`;
         });
-
+        
         state.knowledge = data;
     },
     mutationSharesData(state, data) {

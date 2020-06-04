@@ -13,14 +13,14 @@
     </div>
     <div class="qaPage-content">
       <div id="loan">
-        <qa :data="this.qaData.loanData" category="loanData" title="借款常見問題" :hideLink="true"></qa>
+        <qa :data="borrow" category="loanData" title="借款常見問題" :hideLink="true"></qa>
       </div>
       <div id="invest">
-        <qa :data="this.qaData.investData" category="invest" title="投資常見問題" :hideLink="true"></qa>
+        <qa :data="invest" category="invest" title="投資常見問題" :hideLink="true"></qa>
       </div>
       <div id="afterLoanData">
         <qa
-          :data="this.qaData.afterLoanData"
+          :data="this.default"
           category="afterLoanData"
           title="貸後常見問題"
           :hideLink="true"
@@ -38,7 +38,9 @@ export default {
     qa: qaComponent
   },
   data: () => ({
-    qaData: {}
+    borrow: [],
+    invest: [],
+    default: []
   }),
   created() {
     this.getQaData();
@@ -46,8 +48,16 @@ export default {
   },
   methods: {
     getQaData() {
-      axios.post("getQaData", { filter: "qa" }).then(res => {
-        this.qaData = res.data;
+      axios.get("https://cors-anywhere.herokuapp.com/https://d3imllwf4as09k.cloudfront.net/json/qa.json").then(res => {
+        res.data.QA.forEach((row,index)=>{
+          if(row.type === 'borrow'){
+            this.borrow.push(row);
+          }else if(row.type === 'invest'){
+            this.invest.push(row);
+          }else if(row.type === 'default'){
+            this.default.push(row);
+          }
+        });
       });
     }
   }

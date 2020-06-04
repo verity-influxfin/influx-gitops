@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -39,5 +41,75 @@ class Backendcontroller extends BaseController
         Session::forget('isLogin');
 
         return response()->json('sucess');
+    }
+
+    public function getKnowledge(Request $request)
+    {
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_modified', 'desc')->get();
+
+        return response()->json($knowledge, 200);
+    }
+
+    public function modifyKnowledge(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                $this->inputs['data']['post_author'] = '1';
+                $this->inputs['data']['post_modified'] = date('Y-m-d H:i:s');
+                if ($this->inputs['actionType'] === 'insert') {
+                    $this->inputs['data']['post_date'] = date('Y-m-d H:i:s');
+                    DB::table('knowledge_article')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('knowledge_article')->where('id', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteKonwledge(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('knowledge_article')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function uploadFile(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload', "$filename");
+                return response()->json($filename, 200);
+            }
+        }else{
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+    public function uploadKnowledgeImg(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload', "$filename");
+                $pic_path = 'upload/' . $filename;
+                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
     }
 }

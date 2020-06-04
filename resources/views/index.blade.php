@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property=”fb:app_id” content=”2194926914163491”>
     <title>inFlux普匯金融科技</title>
-    <link rel="icon" href="{{ asset('image/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('Image/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
@@ -25,28 +25,6 @@
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/web.css') }}">
-
-    <!-- package -->
-    <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
-
-    <!-- local -->
-    <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
 
     <!--Facebook Comments-->
     <script>
@@ -80,7 +58,7 @@
     <div id="web_index" @mousemove="clicked">
         <nav class="page-header navbar navbar-expand-lg">
             <div class="web-logo">
-                <router-link to="/index"><img src=" {{ asset('image/logo.png') }}" class="img-fluid"></router-link>
+                <router-link to="/index"><img src=" {{ asset('Image/logo.png') }}" class="img-fluid"></router-link>
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
@@ -125,7 +103,7 @@
         <div class="page-footer">
             <div class="row footer-content" ref="footer_slick">
                 <div class="col-lg col-md col-sm">
-                    <p class="title"><img src=" {{ asset('image/footer_logo.png') }} " class="img-fluid"></p>
+                    <p class="title"><img src=" {{ asset('Image/footer_logo.png') }} " class="img-fluid"></p>
                     <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化，說聲Hey～普匯！</p>
                 </div>
                 <div class="col-lg col-md col-sm list-row">
@@ -177,15 +155,15 @@
             </div>
         </div>
         <div class="afc_popup hidden-phone" ref="afc_popup">
-            <div><img src="{{ asset('image/message_icon.png') }}" class="img-fluid" @click="display"></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
+            <div><img src="{{ asset('Image/message_icon.png') }}" class="img-fluid" @click="display"></div>
+            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('Image/line_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('Image/loan_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('Image/invest_icon.png') }}" class="img-fluid"></a></div>
         </div>
         <div class="afc_popup hidden-desktop" style="bottom: 150px;">
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('image/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('image/invest_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('image/line_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"><img src="{{ asset('Image/loan_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('Image/invest_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('Image/line_icon.png') }}" class="img-fluid"></a></div>
         </div>
         <a class="back-top" @click="backtotop"><i class="fas fa-arrow-left"></i></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -270,6 +248,28 @@
             </div>
         </div>
     </div>
+
+    <!-- package -->
+    <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
+
+    <!-- local -->
+    <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
 </body>
 
 </html>

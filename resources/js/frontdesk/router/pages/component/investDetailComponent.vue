@@ -400,7 +400,6 @@ export default {
     },
     "$props.investCaseInfo"(newData) {
       this.infoData = newData;
-      console.log(this.infoData);
     },
     orderBy(newVal) {
       let target = ["credit_level", "interest_rate", "loan_date"];
@@ -697,7 +696,7 @@ export default {
           }
         }
       }
-      
+
       @media screen and(max-width:1023px) {
         .invert-deatil-card {
           width: 46%;
@@ -866,12 +865,12 @@ export default {
       font-size: 40px;
     }
   }
-}
 
-.btn-close {
-  position: absolute;
-  top: -9px;
-  right: -7px;
-  font-size: 27px;
+  .btn-close {
+    position: absolute;
+    top: -9px;
+    right: -7px;
+    font-size: 27px;
+  }
 }
 </style>

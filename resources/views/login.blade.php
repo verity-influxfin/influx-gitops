@@ -36,9 +36,9 @@
 </head>
 
 <body>
-    <div class="login-bgcolor">
-        <div id="login" class="login-form">
-            <h2 class="login-title">管理員登入</h2>
+    <div id="login" class="login-bg" :style="`background-image: url('./Image/23832.jpg');`">
+        <div class="login-form">
+            <img src=" {{ asset('Image/logo.png') }}" class="img-fluid" style="max-width: 60%;">
             <div class="input-group">
                 <span class="input-group-addon login-text"><i class="fas fa-user"></i></span>
                 <input type="text" class="form-control login-input" v-model="account" maxlength="10" placeholder="請輸入帳號">

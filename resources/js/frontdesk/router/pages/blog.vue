@@ -16,7 +16,7 @@ export default {
       $.each($this.$store.getters.KnowledgeData, (index, row) => {
         $this.$store.getters.KnowledgeData[
           index
-        ].content = `${row.content.replace(/<[^>]*>/g, "").substr(0, 100)}...`;
+        ].post_content = `${row.post_content.replace(/(<([^>]+)>)/ig, "").substr(0, 100)}...`;
       });
       return $this.$store.getters.KnowledgeData;
     }
@@ -40,10 +40,10 @@ export default {
             data.forEach((item, index) => {
               $this.pageHtml += `
                 <li class="card">
-                    <img src="${item.imageSrc}" class="img-custom">
-                    <h5>${item.title}</h5>
-                    <span>${item.date}</span>
-                    <p class="gray">${item.content}</p>
+                    <img src="${item.media_link ? item.media_link : './Image/default-image.png'}" class="img-custom">
+                    <h5>${item.post_title}</h5>
+                    <span>${item.post_modified}</span>
+                    <p class="gray">${item.post_content}</p>
                     <a href="#${item.link}">閱讀更多》</a>
                 </li>
               `;

@@ -110,3 +110,13 @@ Route::get('/web-admin', function () {
 Route::post('/baklogin', 'Backendcontroller@login');
 
 Route::post('/baklogout', 'Backendcontroller@logout');
+
+Route::post('/getKnowledge', 'Backendcontroller@getKnowledge');
+
+Route::post('/modifyKnowledge', 'Backendcontroller@modifyKnowledge');
+
+Route::post('/deleteKonwledge', 'Backendcontroller@deleteKonwledge');
+
+Route::post('/uploadKnowledgeImg', 'Backendcontroller@uploadKnowledgeImg');
+
+Route::post('/uploadFile', 'Backendcontroller@uploadFile');

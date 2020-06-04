@@ -42,9 +42,9 @@ export default {
         .post("getArticleData", { filter: this.$route.params.id })
         .then(res => {
           FB.XFBML.parse();
-          this.articleTitle = res.data.title;
-          this.articleImg = res.data.imageSrc;
-          this.articleHtml = res.data.content;
+          this.articleTitle = res.data.post_title;
+          this.articleImg = res.data.media_link ? res.data.media_link : '';
+          this.articleHtml = res.data.post_content;
         });
     }
   }

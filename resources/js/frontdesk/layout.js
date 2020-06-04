@@ -57,7 +57,7 @@ $(() => {
             isRememberAccount: $cookies.get('account') ? true : false,
             isReset: false,
             isSended: false,
-            isInvestor : sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0",
+            isInvestor: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0",
             altered: false,
             businessNum: '',
             account: '',
@@ -68,7 +68,7 @@ $(() => {
             code: '',
             message: '',
             pwdMessage: '',
-            investor:'0',
+            investor: '0',
             flag: sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '',
             userData: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
             timer: null,
@@ -178,7 +178,7 @@ $(() => {
                 let password = this.password;
                 let investor = this.investor;
 
-                let params = { phone, password, investor};
+                let params = { phone, password, investor };
 
                 if (this.isCompany) {
                     let tax_id = this.businessNum;
