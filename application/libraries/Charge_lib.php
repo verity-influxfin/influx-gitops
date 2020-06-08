@@ -50,7 +50,6 @@ class Charge_lib
 					$user_to[$value->investment_id]['amount'] += $value->amount;
 				}
 			}
-
 			if($amount>0){
 				$virtual_account = $this->CI->virtual_account_model->get_by([
 					'status'		=> 1,
@@ -589,22 +588,25 @@ class Charge_lib
 				$instalment				= 1;
 				$limit_date				= '';
 				foreach($transaction as $key => $value){
-					if($value->source==SOURCE_AR_PRINCIPAL){
-						if(!isset($user_to_info[$value->investment_id])){
-							$user_to_info[$value->investment_id] 	= [
-								'user_to'				=> $value->user_to,
-								'bank_account_to'		=> $value->bank_account_to,
-								'investment_id'			=> $value->investment_id,
-								'remaining_principal'	=> 0,
-								'delay_interest'		=> 0,
-							];
-						}
+                    if(in_array($value->source, [SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST]) && !isset($user_to_info[$value->investment_id])) {
+                        $user_to_info[$value->investment_id] 	= [
+                            'user_to'				=> $value->user_to,
+                            'bank_account_to'		=> $value->bank_account_to,
+                            'investment_id'			=> $value->investment_id,
+                            'remaining_principal'	=> 0,
+                            'delay_interest'		=> 0,
+                            'ar_interest'		=> 0,
+                        ];
+                    }
+                    if($value->source==SOURCE_AR_PRINCIPAL){
 						$bank_account_from 	= $value->bank_account_from;
 						$user_to_info[$value->investment_id]['remaining_principal']	+= $value->amount;
 						if($value->limit_date < $date){
 							$instalment = $value->instalment_no;
 							$limit_date = $value->limit_date;
 						}
+					}else if($value->limit_date < $date && $value->source==SOURCE_AR_INTEREST){
+                        $user_to_info[$value->investment_id]['ar_interest']	= $value->amount;
 					}else if($value->source==SOURCE_AR_DELAYINTEREST){
 						$settlement = false;
 					}
@@ -645,7 +647,7 @@ class Charge_lib
 								'bank_account_to'	=> $value['bank_account_to'],
 								'status'			=> 1
 							];
-							
+
 							$transaction_param[] = [
 								'source'			=> SOURCE_AR_DELAYINTEREST,
 								'entering_date'		=> $date,
@@ -660,6 +662,18 @@ class Charge_lib
 								'bank_account_to'	=> $value['bank_account_to'],
 								'status'			=> 1
 							];
+
+                            $total = $value['remaining_principal'] + $value['ar_interest'] + $value['delay_interest'];
+                            $ar_fee = $this->CI->financial_lib->get_ar_fee($total);
+                            $this->CI->transaction_model->update_by(
+                                [
+                                    'source' 		=> SOURCE_AR_FEES,
+                                    'investment_id' => $value['investment_id'],
+                                ],
+                                [
+                                    'amount' => $ar_fee
+                                ]
+                            );
 						}
 						
 						if(intval($liquidated_damages)>0){
@@ -700,6 +714,19 @@ class Charge_lib
 									'amount' => $delay_interest
 								]
 							);
+
+                            $total = $value['remaining_principal'] + $value['ar_interest'] + $delay_interest;
+                            $ar_fee = $this->CI->financial_lib->get_ar_fee($total);
+                            $this->CI->transaction_model->update_by(
+                                [
+                                    'source' 		=> SOURCE_AR_FEES,
+                                    'investment_id' => $value['investment_id'],
+                                    'status' => 1,
+                                ],
+                                [
+                                    'amount' => $ar_fee
+                                ]
+                            );
 						}
 					}
 				}
