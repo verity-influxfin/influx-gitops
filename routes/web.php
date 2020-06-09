@@ -127,4 +127,4 @@ Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData')
 // verify mail
 
 
-Route::get('/verifymail', 'Backendcontroller@verifymail');
+Route::get('/verifyemail', 'Backendcontroller@verifyemail');

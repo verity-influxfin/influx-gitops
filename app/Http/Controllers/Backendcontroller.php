@@ -16,7 +16,7 @@ class Backendcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function verifymail(Request $request)
+    public function verifyemail(Request $request)
     {
         $input = $request->all();
 
