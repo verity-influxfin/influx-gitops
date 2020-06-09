@@ -110,7 +110,8 @@ class Profit_and_loss_account
                         $set = true;
                     }
 
-                    if ($key == 'overdue' && $v['repayment_date'] > date('Y-m-d')) {
+                    $nextMonthPayDate = date('Y-m-', time()) . REPAYMENT_DAY;
+                    if ($key == 'overdue' && $v['repayment_date'] > $nextMonthPayDate) {
                         continue;
                     }
                     if (!isset($rows[$key][$v['repayment_date']])) {
