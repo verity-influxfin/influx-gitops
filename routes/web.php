@@ -122,3 +122,9 @@ Route::post('/uploadKnowledgeImg', 'Backendcontroller@uploadKnowledgeImg');
 Route::post('/uploadFile', 'Backendcontroller@uploadFile');
 
 Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');
+
+
+// verify mail
+
+
+Route::get('/verifymail', 'Backendcontroller@verifymail');

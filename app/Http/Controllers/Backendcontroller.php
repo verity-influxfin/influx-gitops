@@ -16,6 +16,32 @@ class Backendcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function verifymail(Request $request)
+    {
+        $input = $request->all();
+
+        $params = urldecode(http_build_query($input));
+
+        $curlScrapedPage = shell_exec('curl -X POST "https://dev-deus-brian.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        if ($data['result'] === 'SUCCESS') {
+            echo '
+            <script type="text/javascript">
+                alert("註冊成功");
+                location.replace("https://event.influxfin.com/R/url?p=webbanner");
+            </script>
+            ';
+        } else {
+            echo '
+            <script type="text/javascript">
+                alert("電子信箱驗證已過期，請重新註冊");
+                window.close();
+            </script>
+            ';
+        }
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [
