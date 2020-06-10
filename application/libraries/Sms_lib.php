@@ -60,7 +60,7 @@ class Sms_lib {
 					$content 	= "親愛的用戶：您好！您申請的標的 $target_no ，核可金額 $amount 元，已成功放款。";
 				}else{
 					$bankaccount = substr($bankaccount, -4, 4);
-					$content = "【普匯inFlux用戶通知】您的借款 $target_no ，借款金額為 $amount 元已發放至您的綁定金融卡帳戶尾號 $bankaccount 內! 立即登入普匯inFlux查看最新資訊 https://borrow.influxfin.com/ ，祝您一切順心。";
+					$content = "【普匯】借款" . $target_no . "已發放至您的綁定金融帳戶,每月10日還款,逾期需繳納全額本金,違約金及延滯息,請準時匯款。";
 				}
 				return $this->send('lending_success',$user_id,$phone,$content);
 			}
