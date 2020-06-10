@@ -19,7 +19,6 @@ class Backendcontroller extends BaseController
     public function verifyemail(Request $request)
     {
         $input = $request->all();
-        $input['email'] = base64_encode($input['email']);
         $params = http_build_query($input);
 
         $curlScrapedPage = shell_exec('curl -X POST "https://dev-deus-brian.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
