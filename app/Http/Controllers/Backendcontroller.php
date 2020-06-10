@@ -19,8 +19,8 @@ class Backendcontroller extends BaseController
     public function verifyemail(Request $request)
     {
         $input = $request->all();
-
-        $params = urldecode(http_build_query($input));
+        $input['email'] = base64_encode($input['email']);
+        $params = http_build_query($input);
 
         $curlScrapedPage = shell_exec('curl -X POST "https://dev-deus-brian.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
         $data = json_decode($curlScrapedPage, true);
@@ -36,7 +36,7 @@ class Backendcontroller extends BaseController
             echo '
             <script type="text/javascript">
                 alert("電子信箱驗證已過期，請重新註冊");
-                window.close();
+                console.log("error:'.$data['error'].'");
             </script>
             ';
         }
