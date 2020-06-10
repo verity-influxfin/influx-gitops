@@ -33,10 +33,16 @@ class Backendcontroller extends BaseController
             </script>
             ';
         } else {
+            $errorList = [
+                '200' => '參數錯誤',
+                '204' => 'Email格式錯誤',
+                '303' => '驗證碼錯誤'
+            ];
+
             echo '
             <script type="text/javascript">
-                alert("電子信箱驗證已過期，請重新註冊");
-                console.log("error:'.$data['error'].'");
+                alert("電子信箱驗證已過期，請重新註冊('.$data['error'].')");
+                console.log("error:'.$errorList[$data['error']].'");
             </script>
             ';
         }
