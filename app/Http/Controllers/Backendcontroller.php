@@ -21,7 +21,7 @@ class Backendcontroller extends BaseController
         $input = $request->all();
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "https://dev-deus-brian.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -X POST "https://stage-api.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
         $data = json_decode($curlScrapedPage, true);
 
         if ($data['result'] === 'SUCCESS') {
