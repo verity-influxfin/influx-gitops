@@ -31,7 +31,7 @@ class Sendemail
             $mail_event = $this->CI->config->item('mail_event');
 			$type	 = 'school';
 			$code	 = md5($email.time());
-			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode($email)."&code=".$code;
+			$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
 			$content = $this->CI->parser->parse('email/verify_email', array("link" => $link, "type"=> 'b01', "mail_event"=> $mail_event),TRUE);
 			$subject = "普匯inFlux - 學校電子郵件認證";
 			$param = array(
