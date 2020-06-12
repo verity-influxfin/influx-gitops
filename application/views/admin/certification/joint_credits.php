@@ -52,6 +52,8 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
+                                        <input type="hidden" name="fail" placeholder="失敗原因" />
+                                        <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									} else {
 										?>
