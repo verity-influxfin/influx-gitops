@@ -575,7 +575,7 @@ class Target extends MY_Admin_Controller {
             'status' => 1
         ]);
 
-		if($target->sub_product_id != 9999){
+		if($target->sub_product_id != STAGE_CER_TARGET || $target->product_id == 3){
             $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->approvalextra->setSkipInsertion(true);
             $this->approvalextra->setExtraPoints($points);
@@ -602,7 +602,7 @@ class Target extends MY_Admin_Controller {
 			$this->credit_model->insert($newCredits);
 		}
 
-		if($target->sub_product_id == 9999){
+		if($target->sub_product_id == STAGE_CER_TARGET && $target->product_id == 1){
             $param['status'] = 1;
             $param['sub_status'] = 10;
             $param['remark'] = $remark;

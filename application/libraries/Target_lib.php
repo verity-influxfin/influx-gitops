@@ -342,7 +342,7 @@ class Target_lib
                                 $this->CI->load->library('Certification_lib');
                               if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
                                     $param['status'] = 1;
-                                    $renew ? $param['sub_status'] = 10 : '';
+
                                     $remark
                                         ? $param['remark'] = (empty($target->remark)
                                             ? $remark
@@ -350,6 +350,10 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
+                                    if($renew) {
+                                        $param['sub_status'] = 10;
+                                        $param['sub_product_id'] = $target->sub_product_id;
+                                    }
                                     if($target->contract_id == null || $target->loan_amount != $loan_amount){
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }
