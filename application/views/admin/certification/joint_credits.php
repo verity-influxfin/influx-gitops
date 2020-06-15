@@ -52,16 +52,16 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-                                        <input type="hidden" name="fail" placeholder="失敗原因" />
+                                        <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									} else {
 										?>
-										<input type="hidden" name="fail" placeholder="失敗原因" />
 										<input type="hidden" name="times" placeholder="被查詢次數" value=<?= isset($times) ? $times : ""; ?> />
-										<input type="hidden" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
-										<input type="hidden" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
-										<button type="submit" class="btn btn-primary">送出</button>
+                                        <input type="hidden" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
+                                        <input type="hidden" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
+                                        <input type="hidden" name="fail" placeholder="備註" />
+                                        <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									}
 									?>
@@ -122,7 +122,7 @@
 		$("#verification-change").submit(function(e) {
 			e.preventDefault();
 
-			var isConfirmed = confirm("確認是否要通過審核？");
+			var isConfirmed = confirm("確認是否要送出審核？");
 			if (!isConfirmed) {
 				return false;
 			}
@@ -158,7 +158,7 @@
 				url: url,
 				data: data,
 				success: function(response) {
-					window.close();
+                    location.reload();
 				},
 				error: function() {
 					alert('審核失敗，請重整頁面後，再試一次。');
