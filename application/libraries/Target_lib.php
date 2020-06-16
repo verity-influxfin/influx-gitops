@@ -254,9 +254,14 @@ class Target_lib
             $product_list = $this->CI->config->item('product_list');
             $user_id = $target->user_id;
             $product_id = $target->product_id;
-            $sub_product_id = $stage_cer == 0
-                ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
-                : STAGE_CER_TARGET;
+            if($renew){
+                $sub_product_id = $target->sub_product_id;
+            }
+            else{
+                $sub_product_id = $stage_cer == 0
+                    ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
+                    : STAGE_CER_TARGET;
+            }
             $product_info = $product_list[$product_id];
             if ($this->is_sub_product($product_info, $sub_product_id)) {
                 $product_info = $this->trans_sub_product($product_info, $sub_product_id);
@@ -350,10 +355,7 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                    if($renew) {
-                                        $param['sub_status'] = 10;
-                                        $param['sub_product_id'] = $target->sub_product_id;
-                                    }
+                                    $renew ? $param['sub_status'] = 10 : '';
                                     if($target->contract_id == null || $target->loan_amount != $loan_amount){
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }

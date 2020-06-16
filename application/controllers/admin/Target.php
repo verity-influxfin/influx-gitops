@@ -586,9 +586,10 @@ class Target extends MY_Admin_Controller {
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
 
-		if ($newCredits && $newCredits["amount"] != $credit->amount
+		if ($newCredits &&
+            ($newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
-			|| $newCredits["level"] != $credit->level
+			|| $newCredits["level"] != $credit->level)
 		) {
             $this->credit_model->update_by(
                 [
