@@ -330,7 +330,7 @@ class Target_lib
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
-
+                        $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if ($product_info['type'] == 1 || $subloan_status) {
                                 $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
@@ -1620,18 +1620,10 @@ class Target_lib
                             }
 
                             if (count($finish_stage_cer) != 0) {
-                                asort($finish_stage_cer);
-                                $implode = implode('', $finish_stage_cer);
-                                if ($implode == '89') {
-                                    $stage_cer = 2;
-                                } elseif ($implode == '9') {
-                                    $stage_cer = 3;
-                                } elseif ($implode == '8') {
-                                    $stage_cer = 4;
-                                }else{
-                                    $finish = false;
-                                }
+                                $stage_cer = $this->stageCerLevel($finish_stage_cer);
+                                !$stage_cer ? $finish = false : '';
                             }
+
                             if ($finish) {
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
@@ -1759,5 +1751,20 @@ class Target_lib
             'multi_target' => $sub_product['multi_target'],
             'status' => $sub_product['status'],
         );
+    }
+
+    public function stageCerLevel($cer){
+        asort($cer);
+        $implode = implode('', $cer);
+        if ($implode == '89') {
+            $stage_cer = 2;
+        } elseif ($implode == '9') {
+            $stage_cer = 3;
+        } elseif ($implode == '8') {
+            $stage_cer = 4;
+        }else{
+            $stage_cer = false;
+        }
+        return $stage_cer;
     }
 }

@@ -524,7 +524,7 @@ class Target extends MY_Admin_Controller {
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
 
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, 4);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -581,7 +581,7 @@ class Target extends MY_Admin_Controller {
             $this->approvalextra->setExtraPoints($points);
 
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, 4);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
