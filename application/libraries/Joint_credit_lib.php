@@ -91,23 +91,33 @@ class Joint_credit_lib{
 			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
 			$content_data= explode(" ", $content_data);
 			foreach($content_data as $key => $value){
-				if (preg_match("/分行/", $value)) {
-					$getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
-					$getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
-					$getLongTermLoanBankname= $this->get_long_term_loan_bankname($value,$content_data[$key + 3]);
+				if (preg_match("/分行|營業部/", $value)) {
+                    $getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
+                    $getStudentLoanStatus = $this->get_student_loan($content_data[$key + 2], $content_data[$key + 3]);
+                    $getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
+                    $getMidTermLoan= $this->get_mid_term_loan($content_data[$key + 2],$content_data[$key + 3]);
+                    $getLongTermLoanBankname= $this->get_long_term_loan_bankname($value,$content_data[$key + 3]);
 					if(!empty($getProportion)){
 						$get_proportion[]=$getProportion;
 					}
 					if(!empty($getBankname)){
 						$get_bankname[]=$getBankname;
 					}
+					if(!empty($getStudentLoanStatus)){
+						$get_student_loan[]=$getStudentLoanStatus;
+					}
+					if(!empty($getMidTermLoan)){
+						$get_mid_term_loan[]=$getMidTermLoan;
+					}
 					if(!empty($getLongTermLoanBankname)){
 						$get_long_term_loan_bankname[]=$getLongTermLoanBankname;
 					}
 				}
 			}
-			$getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
-			$getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
+            $getStudentLoan = isset($get_student_loan) ? array_sum($get_student_loan) : 0;
+            $getCountALLMidTermLoan = isset($get_mid_term_loan) ? array_sum($get_mid_term_loan) : 0;
+            $getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
+            $getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
 
 
 			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
@@ -127,14 +137,16 @@ class Joint_credit_lib{
 					]
 				];
 			} else {
-				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank, $result);
+				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank,$getCountALLMidTermLoan,$getStudentLoan, $result);
 			}
 		}
 	}
-	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, &$result)
+	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, $getCountALLMidTermLoan, $getStudentLoan, &$result)
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
+        $getStudentLoanStatusMsg = $getStudentLoan == 0 ? '是否有助學貸款 : 無' : '助學貸款餘額 ( 千元 ) 合計 : ' . $getStudentLoan;
+        $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
 
 		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
 			$result["status"]= "failure";
@@ -143,7 +155,9 @@ class Joint_credit_lib{
 				"status" => "failure",
 				"message" => [
 					"有無延遲還款 : 無",
+					"是否有助學貸款 : ".$getStudentLoanStatusMsg,
 					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                    $getCountALLMidTermLoanMsg,
 					$longTermLoan
 				],
 				"rejected_message" => [
@@ -157,7 +171,9 @@ class Joint_credit_lib{
 				"status" => "pending",
 				"message" => [
 					"有無延遲還款 : 無",
-					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                    $getStudentLoanStatusMsg,
+                    "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                    $getCountALLMidTermLoanMsg,
 					$longTermLoan
 				]
 			];
@@ -169,7 +185,9 @@ class Joint_credit_lib{
 					"status" => "failure",
 					"message" => [
 						"有無延遲還款 : 無",
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getStudentLoanStatusMsg,
+                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getCountALLMidTermLoanMsg,
 						$longTermLoan
 					],
 					"rejected_message" => [
@@ -189,7 +207,9 @@ class Joint_credit_lib{
 					"status" => "success",
 					"message" => [
 						"有無延遲還款 : 無",
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getStudentLoanStatusMsg,
+                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getCountALLMidTermLoanMsg,
 						"長期放款家數 : $getCountALLLongTermLoanBank",
 					]
 				];
@@ -203,7 +223,9 @@ class Joint_credit_lib{
 					"status" => "pending",
 					"message" => [
 						"有無延遲還款 : 無",
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getStudentLoanStatusMsg,
+                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
+                        $getCountALLMidTermLoanMsg,
 						"長期放款家數 : $getCountALLLongTermLoanBank",
 					]
 				];
@@ -214,11 +236,27 @@ class Joint_credit_lib{
 			}
 		}
 	}
+	private function get_student_loan($value,$subject)
+	{
+		if ($subject == '助學貸款') {
+            $totalAmount = preg_replace('/\D+/', '', $value);;
+            return	$totalAmount;
+		}
+	}
+
 	private function get_loan_bankname($value,$subject)
 	{
 		if ($subject !== '助學貸款') {
 			$bankname = $value;
 			return	$bankname;
+		}
+	}
+
+	private function get_mid_term_loan($value,$subject)
+	{
+		if (($subject == '中期放款')||($subject == '中期擔保放款')) {
+			$totalAmount = preg_replace('/\D+/', '', $value);;
+			return	$totalAmount;
 		}
 	}
 
@@ -500,8 +538,13 @@ class Joint_credit_lib{
 				if ($count_credit_cards > 0) {
 					$used = explode("使用中", $content[0]);
 					$size = count($used);
+					$banks = [];
 					for ($i = 0; $i < $size - 1; $i++) {
-						$amount[] = substr($used[$i], -26, 5);
+                        $bank = $i == 0 ? preg_replace('/\\n/','',explode(' ', explode('使用狀態', $used[$i])[1])[0]) : preg_replace('/\\n/','',explode(' ', $used[$i])[0]);
+						if(!in_array($bank,$banks) && mb_strlen($bank) <= 4){
+                            $amount[] = substr($used[$i], -26, 5);
+                            $banks[] = $bank;
+                        }
 					}
 					$allowedAmount = (int)array_sum($amount);
 					(!(preg_match("/其他/", $content['0'])||preg_match("/側錄/", $content['0'])||preg_match("/掛失/", $content['0'])||preg_match("/不明/", $content['0'])||preg_match("/偽冒/", $content['0'])))?$status='success':$status='pending';
