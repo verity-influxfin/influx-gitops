@@ -250,7 +250,8 @@ class Product extends REST_Controller {
             $type_list = [];
             $designate = [];
             $allow_visul_list = [];
-            $hiddenList = [9999];
+            $showed_list = [];
+            $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
@@ -259,8 +260,8 @@ class Product extends REST_Controller {
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
-                                    if(isset($sub_product_list[$t4]) && !in_array($t4,$hiddenList)){
-                                        $allow_visul_list[] = $sub_product_list[$t4]['visul_id'];
+                                    if(isset($sub_product_list[$t4]) && !in_array($t4, $hiddenList) && !in_array($sub_product_list[$t4]['visul_id'], $showed_list)){
+                                        $allow_visul_list[] = $showed_list[] = $sub_product_list[$t4]['visul_id'];
                                         $sub_product_list[$t4]['name'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['name'];
                                         $sub_product_list[$t4]['description'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['description'];
                                         $sub_product_list[$t4]['status'] = $visul_id_des[$sub_product_list[$t4]['visul_id']]['status'];
