@@ -524,7 +524,12 @@ class Target extends MY_Admin_Controller {
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
 
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, 4);
+        $level = false;
+        if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
+            $this->load->library('Certification_lib');
+            $level = $this->certification_lib->get_certification_info($userId, 8, 0)->status == 1 ? 3 : 4 ;
+        }
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -580,8 +585,13 @@ class Target extends MY_Admin_Controller {
             $this->approvalextra->setSkipInsertion(true);
             $this->approvalextra->setExtraPoints($points);
 
+            $level = false;
+            if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
+                $this->load->library('Certification_lib');
+                $level = $this->certification_lib->get_certification_info($userId, 8, 0)->status == 1 ? 3 : 4 ;
+            }
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, 4);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
