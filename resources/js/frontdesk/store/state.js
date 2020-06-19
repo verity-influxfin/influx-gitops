@@ -1,7 +1,7 @@
 export default {
     experiences: [],
     knowledge: [],
-    shares: [],
+    video: [],
     interview: [],
     news: [],
     userData: {},

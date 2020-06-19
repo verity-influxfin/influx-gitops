@@ -5,7 +5,7 @@
     <applyDescribe :data="this.applyData" ref="apply"></applyDescribe>
     <join href="./Image/child_banner.jpg" :isShowLoan="true" subTitle="加入普匯完成你的目標吧！"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
-    <videoShare ref="videoShare" title="Follow普匯小學堂<br>增進科普金融知識" :data="this.shares"></videoShare>
+    <videoShare ref="videoShare" title="Follow普匯小學堂<br>增進科普金融知識" :data="this.video"></videoShare>
   </div>
 </template>
 
@@ -43,13 +43,13 @@ export default {
 
       return data;
     },
-    shares() {
-      return this.$store.getters.SharesData.slice(0,4);
+    video() {
+      return this.$store.getters.VideoData.slice(0,4);
     }
   },
   created() {
     this.$store.dispatch("getExperiencesData");
-    this.$store.dispatch("getSharesData", { category: "share" });
+    this.$store.dispatch("getVideoData", { category: "share" });
     this.getApplydata();
     this.getBannerData();
     this.getQaData();

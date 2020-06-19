@@ -24,7 +24,7 @@ Route::post('/getExperiencesData', 'Controller@getExperiencesData');
 
 Route::post('/getKnowledgeData', 'Controller@getKnowledgeData');
 
-Route::post('/getSharesData', 'Controller@getSharesData');
+Route::post('/getVideoData', 'Controller@getVideoData');
 
 Route::post('/getInterviewData', 'Controller@getInterviewData');
 
@@ -128,3 +128,11 @@ Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData')
 
 
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
+
+
+// event
+
+
+Route::get('/event', function () {
+    return view('event');
+});

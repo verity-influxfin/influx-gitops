@@ -1,9 +1,51 @@
 body {
     cursor: default;
+    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+a {
+    color: #000000;
+}
+
+.banner {
+    position: relative;
+    overflow: hidden;
+
+    .puhey-banner {
+        position: relative;
+
+        .content {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bolder;
+            text-shadow: 0 0 7px #001bff;
+        }
+
+        .app-entrance {
+            position: absolute;
+            top: 85%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 25%;
+
+            .btn-go {
+                background: linear-gradient(180deg, #ff994b, #ff7600);
+                color: #ffffff;
+                font-weight: bolder;
+                box-shadow: 0 0 0px black;
+                border: 1px solid #828282;
+            }
+        }
+    }
 }
 
 .page-header {
-    font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     box-shadow: 0px 0px 5px 0px #404040;
     background-color: #f9f9f9;
     z-index: 1;
@@ -70,8 +112,13 @@ body {
     }
 }
 
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
 .content-wrapper {
-    font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     width: 100%;
 }
 
@@ -79,99 +126,99 @@ body {
     background-color: #353535;
     width: 100%;
     color: #bfbfbf;
-    font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
     font-size: 18px;
     font-weight: 400;
     padding: 15px;
     cursor: default;
 
-    .row {
-        margin: 0px !important;
+    ul {
+        padding: 0px;
+        margin-right: 15px;
+
+        li {
+            list-style: none;
+            margin-right: 10px;
+        }
     }
 
-    .google-map-iframe {
-        border: 0px;
-        width: 100%;
-        height: 222px;
-    }
+    .footer-content {
+        display: flex;
 
-    .horizontal-line {
-        width: 100%;
-        border-top: 1px solid #7a7a7a;
-    }
+        a {
+            color: #bfbfbf;
+        }
 
-    .list-row,
-    .contact-row,
-    .map-row {
-        color: #ffffff;
-    }
+        .list-card,
+        .contact-card,
+        .cooperation-card {
+            margin: 0px 20px;
 
-    .list-row {
-        .list-column {
-            padding: 0px;
-            list-style-type: none;
-            float: left;
-            width: 50%;
+            .card-content {
+                font-size: 14px;
+                display: flex;
+                width: max-content;
+            }
+        }
 
-            li {
-                font-size: 16px;
-                padding: 10px 0px;
+        .follow-card {
+            .quick-link {
+                font-size: 26px;
+                margin: 0px 5px;
+            }
+        }
 
-                i {
-                    margin-right: 5px;
-                }
+        .download-card {
+            margin: 0px 20px;
 
-                a {
-                    color: #ffffff;
-                    &:hover {
-                        text-decoration: none;
+            .card-content {
+                margin: 0px 20px 10px 20px;
+                padding: 10px;
+                border: 2px solid;
+                border-radius: 10px;
+
+                .down-pic {
+                    width: 100%;
+                    display: flex;
+
+                    img {
+                        width: 130px;
+                        &:first-child {
+                            margin-right: 10px;
+                        }
                     }
                 }
             }
         }
     }
 
-    .contact-row {
-        .contact-item {
-            padding-top: 1rem;
-
-            i {
-                margin-right: 15px;
-            }
-        }
+    .horizontal-line {
+        width: 100%;
+        border-top: 1px solid #bfbfbf;
+        margin: 5px 0px;
     }
 
-    .icon-warpper {
-        text-align: end;
-        .quick-link {
-            padding: 0.2em;
-            font-size: 33px;
-            color: #ffffff;
+    .footer-license {
+        text-align: center;
+        margin: 0px !important;
 
-            &:hover,
-            &:active,
-            &:focus {
-                color: #ffffff;
+        p {
+            font-size: 14px;
+            width: 100%;
+            margin: 0px !important;
+
+            a {
+                color: #bfbfbf;
             }
-        }
-    }
 
-    .footer-content {
-        padding: 15px 30px;
-
-        .title {
-            font-size: 24px;
-            font-weight: 900;
+            .gap {
+                margin: 0px 5px;
+            }
         }
     }
 
     @media (max-width: 767px) {
-        .footer-content {
+        .footer-license {
             padding: 15px 0px;
-        }
-
-        .icon-warpper {
-            text-align: center;
         }
     }
 }
@@ -188,6 +235,27 @@ body {
     }
 }
 
+.blog-quiklink {
+    width: 50px;
+    height: 50px;
+    float: right;
+    margin-top: 150px;
+    z-index: 2;
+    position: absolute;
+    right: 24px;
+    color: #ff5151;
+    display: flex;
+
+    i{
+        cursor: pointer;
+    }
+
+    &:hover {
+        text-decoration: none;
+        color: #ff5151;
+    }
+}
+
 #loginForm {
     .modal-dialog {
         top: 40%;
@@ -196,7 +264,7 @@ body {
 }
 
 %modal-style {
-    font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
+    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
 
     %basic {
         border-radius: 50px;
@@ -387,20 +455,20 @@ body {
 
 .back-top {
     display: none;
-    background: #0000005c;
     position: fixed;
-    top: 20%;
+    top: 35%;
     right: 10px;
-    transform: rotate(90deg);
-    padding: 0px 8px;
-    font-size: 25px;
+    padding: 8px;
     border-radius: 30px;
     z-index: 10;
-    color: #ffffffb5 !important;
     cursor: pointer;
+    width: 46px;
+    background: #d2d2d2;
+    box-shadow: 0 0 5px #787878;
+    opacity: 0.5;
 }
 
-.alert-danger{
+.alert-danger {
     font-weight: bolder;
     text-align: center;
 }

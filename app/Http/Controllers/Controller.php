@@ -28,7 +28,7 @@ class Controller extends BaseController
         return response()->json($knowledge, 200);
     }
 
-    public function getSharesData(Request $request)
+    public function getVideoData(Request $request)
     {
         $input = $request->all();
 

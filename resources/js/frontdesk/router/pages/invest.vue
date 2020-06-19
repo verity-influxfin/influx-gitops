@@ -20,7 +20,7 @@
     </div>
     <join href="./Image/child_banner.jpg" :isShowInvest="true" subTitle="加入普匯完成你的財富目標吧！"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
-    <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.shares"></videoShare>
+    <videoShare ref="videoShare" title="聽聽投資人怎麼說" :data="this.video"></videoShare>
   </div>
 </template>
 
@@ -47,12 +47,12 @@ export default {
     ]
   }),
   computed: {
-    shares() {
-      return this.$store.getters.SharesData;
+    video() {
+      return this.$store.getters.VideoData;
     }
   },
   created() {
-    this.$store.dispatch("getSharesData", { category: "invest" });
+    this.$store.dispatch("getVideoData", { category: "invest" });
     this.getQaData();
     this.getBannerData();
     $("title").text(`債權投資 - inFlux普匯金融科技`);

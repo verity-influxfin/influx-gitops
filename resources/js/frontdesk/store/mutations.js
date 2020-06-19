@@ -13,12 +13,12 @@ export default {
         
         state.knowledge = data;
     },
-    mutationSharesData(state, data) {
+    mutationVideoData(state, data) {
         $.each(data, (index, row) => {
             data[index].link = `/vlog/${row.category ? row.category : 'share'}`;
         });
 
-        state.shares = data;
+        state.video = data;
     },
     mutationInterviewData(state, data) {
         state.interview = data;

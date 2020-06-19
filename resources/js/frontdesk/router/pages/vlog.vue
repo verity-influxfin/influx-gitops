@@ -1,6 +1,6 @@
 <template>
   <div class="video-wrapper">
-    <div v-for="(item,index) in shares" class="video-container" :key="index">
+    <div v-for="(item,index) in video" class="video-container" :key="index">
       <div class="video-iframe">
         <iframe
           :src="item.video_link"
@@ -42,8 +42,8 @@
 <script>
 export default {
   computed: {
-    shares() {
-      return this.$store.getters.SharesData;
+    video() {
+      return this.$store.getters.VideoData;
     }
   },
   watch: {
@@ -58,7 +58,7 @@ export default {
   methods: {
     refresh() {
       let category = this.$route.params.category;
-      this.$store.dispatch("getSharesData", { category });
+      this.$store.dispatch("getVideoData", { category });
     }
   }
 };

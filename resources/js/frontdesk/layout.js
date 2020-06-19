@@ -51,7 +51,6 @@ $(() => {
         router,
         data: {
             menuList: [],
-            infoList: [],
             actionList: [],
             isCompany: false,
             isRememberAccount: $cookies.get('account') ? true : false,
@@ -82,8 +81,9 @@ $(() => {
             this.getListData();
         },
         mounted() {
-            this.createFooterSlick();
+            this.createBannerSlick();
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
+
             AOS.init();
         },
         watch: {
@@ -106,37 +106,20 @@ $(() => {
                 axios.post('getListData')
                     .then((res) => {
                         this.menuList = res.data.menuList;
-                        this.infoList = res.data.infoList;
                         this.actionList = res.data.actionList;
                     })
                     .catch((error) => {
                         console.error('getListData 發生錯誤，請稍後再試');
                     });
             },
-            createFooterSlick() {
-                $(this.$refs.footer_slick).slick({
+            createBannerSlick() {
+                $(this.$refs.banner).slick({
                     infinite: true,
-                    slidesToShow: 4,
+                    slidesToShow: 1,
                     slidesToScroll: 1,
                     autoplay: true,
                     prevArrow: '<i></i>',
                     nextArrow: '<i></i>',
-                    responsive: [
-                        {
-                            breakpoint: 1023,
-                            settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 1
-                            }
-                        },
-                        {
-                            breakpoint: 767,
-                            settings: {
-                                slidesToShow: 1,
-                                slidesToScroll: 1
-                            }
-                        }
-                    ]
                 });
             },
             display() {
@@ -297,6 +280,9 @@ $(() => {
     });
 
     $('.back-top').fadeOut();
+
+    let offset = $('.blog-quiklink').offset();
+
     $(document).scroll(function () {
         AOS.refresh();
         var y = $(this).scrollTop();
@@ -304,6 +290,22 @@ $(() => {
             $('.back-top').fadeIn();
         } else {
             $('.back-top').fadeOut();
+        }
+
+        if (window.pageYOffset > 568) {
+            $('.page-header').addClass("sticky");
+        } else {
+            $('.page-header').removeClass("sticky");
+        }
+
+        if ($(window).scrollTop() > offset.top) {
+            $('.blog-quiklink').stop().animate({
+                marginTop: $(window).scrollTop() + 150
+            });
+        } else {
+            $('.blog-quiklink').stop().animate({
+                marginTop: 150
+            });
         }
     });
 });

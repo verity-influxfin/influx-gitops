@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset('css/package/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/web.css') }}">
@@ -56,6 +57,24 @@
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
+        <div class="blog-quiklink" ref="quiklink">
+            <i class="far fa-times-circle" @click="$($refs.quiklink).remove()"></i>
+            <router-link to="blog"><img src="{{ asset('Image/ah-pu.svg') }}"></router-link>
+        </div>
+        <div class="banner" ref="banner">
+            <div class="puhey-banner">
+                <img src="{{ asset('Image/index-banner.jpg') }}" style="width:100%" />
+                <div class="content">
+                    <p>全線上AI無人干擾，隨時滿足你的資金需求</p>
+                    <span>普匯·你的手機ATM</span>
+                </div>
+                <div class="app-entrance">
+                    <router-link class="btn btn-go float-left" to="freshGraduateLoan">我是上班族</router-link>
+                    <router-link class="btn btn-go float-right" to="collegeLoan">我是大學生</router-link>
+                </div>
+            </div>
+            <img src="{{ asset('Image/index-banner.jpg') }}" style="width:100%" />
+        </div>
         <nav class="page-header navbar navbar-expand-lg">
             <div class="web-logo">
                 <router-link to="/index"><img src=" {{ asset('Image/logo.png') }}" class="img-fluid"></router-link>
@@ -101,57 +120,74 @@
             <router-view></router-view>
         </div>
         <div class="page-footer">
-            <div class="row footer-content" ref="footer_slick">
-                <div class="col-lg col-md col-sm">
-                    <p class="title"><img src=" {{ asset('Image/footer_logo.png') }} " class="img-fluid"></p>
-                    <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化，說聲Hey～普匯！</p>
+            <div class="footer-content">
+                <div class="list-card">
+                    <h4>選單列表</h4>
+                    <div class="card-content">
+                        <ul v-for="row in menuList" class="list-column">
+                            <template v-if="row.href">
+                                <li>
+                                    <router-link :to="row.href">${row.title}</router-link>
+                                </li>
+                            </template>
+                            <template v-else>
+                                <li v-for="item in row.subMenu">
+                                    <router-link :to="item.href">${item.name}</router-link>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-lg col-md col-sm list-row">
-                    <p class="title">選單列表</p>
-                    <ul class="list-column">
-                        <li v-for="item in infoList"><i class="fas fa-check"></i>
-                            <router-link :to="item.href">${item.text}</router-link>
-                        </li>
-                    </ul>
-                    <ul class="list-column">
-                        <li v-for="item in actionList">
-                            <i class="fas fa-check"></i>
-                            <router-link :to="item.href">${item.text}</router-link>
-                        </li>
-                    </ul>
+                <div class="cooperation-card">
+                    <h4>我想合作</h4>
+                    <div class="card-content">
+                        <ul class="list-column">
+                            <li v-for="item in actionList">
+                                <router-link :to="item.href">${item.text}</router-link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-lg col-md col-sm contact-row">
-                    <p class="title">聯絡我們</p>
-                    <p class="contact-item"><i class="fas fa-map-marker-alt"></i>
-                        <span>台北市松江路111號11樓-2<span>
-                    </p>
-                    <div class="horizontal-line"></div>
-                    <p class="contact-item"><i class="fas fa-phone"></i>
-                        <span>02-2507-9990<span>
-                    </p>
-                    <div class="horizontal-line"></div>
-                    <p class="contact-item"><i class="far fa-envelope"></i>
-                        <span>service@influxfin.com<span>
-                    </p>
-                    <div class="horizontal-line"></div>
-                    <p class="contact-item"><i class="fas fa-globe"></i>
-                        <span>www.influxfin.com<span>
-                    </p>
+                <div class="contact-card">
+                    <h4>聯絡我們</h4>
+                    <div class="card-content">
+                        <div>
+                            <a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a>
+                            <div class="horizontal-line"></div>
+                            <span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span>
+                            <div class="horizontal-line"></div>
+                            <span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg col-md col-sm map-row">
-                    <p class="title">公司地址</p><iframe class="google-map-iframe" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7228.974640579589!2d121.533252!3d25.051467!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xdc99c2d5e98dbe12!2z5pmu5Yyv6YeR6J6N56eR5oqA6IKh5Lu95pyJ6ZmQ5YWs5Y-4!5e0!3m2!1szh-TW!2sus!4v1586930878876!5m2!1szh-TW!2sus"></iframe></iframe>
+                <div class="follow-card">
+                    <h4>Follow us</h4>
+                    <a class="quick-link" target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
+                    <a class="quick-link" target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook-square"></i></a>
+                    <a class="quick-link" target="_blank" href="https://www.instagram.com/influxfin/"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="download-card">
+                    <div class="card-content">
+                        <h5>申貸</h5>
+                        <div class="down-pic">
+                            <a href="https://event.influxfin.com/R/url?p=17K5591Q" target="_blank"><img src="{{ asset('Image/google-play-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/R/url?p=17K5591Q" target="_blank"></a><img src="{{ asset('Image/app-store-badge.png') }}" class="img-fluid"></a>
+                        </div>
+                        <h5>投資</h5>
+                        <div class="down-pic">
+                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('Image/google-play-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('Image/app-store-badge.png') }}" class="img-fluid"></a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="horizontal-line"></div>
-            <div class="row footer-content">
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <p>「會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡」<br>Copyright ©2018 普匯金融科技股份有限公司</p>
-                </div>
-                <div class="icon-warpper col-lg-6 col-md-6 col-sm-6">
-                    <a class="quick-link" target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
-                    <a class="quick-link" target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
-                    <a class="quick-link" target="_blank" href="https://www.instagram.com/influxfin/"><i class="fab fa-instagram"></i></a>
-                </div>
+            <div class="row footer-license">
+                <p>Copyright ©2018 普匯金融科技股份有限公司<i class="gap fas fa-grip-lines-vertical"></i>
+                    <router-link to="userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
+                    <router-link to="privacyTerms">隱私條款政策</router-link><i class="gap fas fa-grip-lines-vertical"></i>
+                    <router-link to="loanerTerms">借款人服務條款</router-link><br>會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡
+                </p>
             </div>
         </div>
         <div class="afc_popup hidden-phone" ref="afc_popup">
@@ -165,7 +201,7 @@
             <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('Image/invest_icon.png') }}" class="img-fluid"></a></div>
             <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('Image/line_icon.png') }}" class="img-fluid"></a></div>
         </div>
-        <a class="back-top" @click="backtotop"><i class="fas fa-arrow-left"></i></a>
+        <a class="back-top" @click="backtotop"><img src="{{ asset('Image/top.svg') }}" class="img-fluid" /></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">
@@ -249,27 +285,28 @@
         </div>
     </div>
 
-    <!-- package -->
-    <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
-
-    <!-- local -->
-    <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
 </body>
+
+<!-- package -->
+<script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/aos.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
+
+<!-- local -->
+<script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
 
 </html>

@@ -91,30 +91,6 @@
             "subMenu": []
         }
     ],
-    "infoList":[
-        {
-            "text":"學生貸款",
-            "href":"/collegeLoan"
-        },{
-            "text":"債權投資",
-            "href":"/invest"
-        },{
-            "text":"債權轉讓",
-            "href":"/transfer"
-        },{
-            "text":"公司介紹",
-            "href":"/company"
-        },{
-            "text":"活動資訊",
-            "href":"/news"
-        },{
-            "text":"inFlux小學堂",
-            "href":"/blog"
-        },{
-            "text":"會員專訪",
-            "href":"/vlog/invest"
-        }
-    ],
     "actionList": [
         {
             "text":"徵才服務",
@@ -131,15 +107,6 @@
         },{
             "text":"企業合作",
             "href":""
-        },{
-            "text":"使用者條款",
-            "href":"/userTerms"
-        },{
-            "text":"隱私條款政策",
-            "href":"/privacyTerms"
-        },{
-            "text":"借款人服務條款",
-            "href":"/loanerTerms"
         }
     ]
 }
