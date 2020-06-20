@@ -23,6 +23,8 @@ $(() => {
         routes: routers
     });
 
+    let pageHeaderOffset;
+
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
             next('/index');
@@ -76,6 +78,7 @@ $(() => {
             currentTime: 0
         },
         created() {
+            $(this.$root.$refs.banner).show();
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
@@ -83,6 +86,10 @@ $(() => {
         mounted() {
             this.createBannerSlick();
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
+
+            this.$nextTick(()=>{
+                pageHeaderOffset = $('.page-header').offset();
+            });
 
             AOS.init();
         },
@@ -292,7 +299,7 @@ $(() => {
             $('.back-top').fadeOut();
         }
 
-        if (window.pageYOffset > 568) {
+        if (window.pageYOffset > pageHeaderOffset.top) {
             $('.page-header').addClass("sticky");
         } else {
             $('.page-header').removeClass("sticky");

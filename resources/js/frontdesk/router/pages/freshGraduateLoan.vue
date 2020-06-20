@@ -8,7 +8,7 @@
     <applyDescribe :data="this.applyData" ref="apply"></applyDescribe>
     <join href="./Image/child_banner.jpg" :isShowLoan="true"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
-    <videoShare ref="videoShare" title="借款人怎麼說？" :data="this.video"></videoShare>
+    <videoShare ref="videoShare" title="借款人怎麼說？" :data="this.shares"></videoShare>
   </div>
 </template>
 
@@ -33,12 +33,12 @@ export default {
     applyData: {}
   }),
   computed: {
-    video() {
-      return this.$store.getters.VideoData.slice(0,4);
+    shares() {
+      return this.$store.getters.SharesData.slice(0,4);
     }
   },
   created() {
-    this.$store.dispatch("getVideoData", { category: "loan" });
+    this.$store.dispatch("getSharesData", { category: "loan" });
     this.getApplydata();
     this.getBannerData();
     this.getQaData();

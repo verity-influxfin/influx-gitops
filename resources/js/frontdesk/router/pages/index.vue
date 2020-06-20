@@ -43,6 +43,7 @@
         <div class="creditNum">
           <div class="circle">
             <div class="total">
+              <p>最高可達：</p>
               <strong>5,000～</strong>
               <span :class="moneyClass">{{format(tweenedMoney)}}</span>
             </div>
@@ -132,30 +133,30 @@
     <div class="advantage-card">
       <div class="title">以金融為核心，以科技為輔具，普匯給您前所未有的專業金融APP</div>
       <div class="content">
-        <div class="item" data-aos="fade-up" data-aos-duration="1500">
-          <div class="img">
-            <img :src="'./Image/best1.png'" class="img-fluid" />
-          </div>
+        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400">
           <div class="desc">
             <p>最專業的金融專家</p>
+            <div class="img">
+              <img :src="'./Image/best1.png'" class="img-fluid" />
+            </div>
             <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
           </div>
         </div>
-        <div class="item" data-aos="fade-up" data-aos-duration="1500">
+        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="800">
           <div class="desc">
             <p>最先進的AI科技系統</p>
             <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
-          </div>
-          <div class="img">
-            <img :src="'./Image/best2.png'" class="img-fluid" />
+            <div class="img">
+              <img :src="'./Image/best2.png'" class="img-fluid" />
+            </div>
           </div>
         </div>
-        <div class="item" data-aos="fade-up" data-aos-duration="1500">
-          <div class="img">
-            <img :src="'./Image/best3.png'" class="img-fluid" />
-          </div>
+        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1200">
           <div class="desc">
             <p>簡單、快速、安全、隱私</p>
+            <div class="img">
+              <img :src="'./Image/best3.png'" class="img-fluid" />
+            </div>
             <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
           </div>
         </div>
@@ -272,10 +273,9 @@
     </div>
     <div class="slogan-card">
       <div class="logo">
-        <img :src="'./Image/footer_logo.png'" class="img-fluid" />
+        <img :src="'./Image/logo_.png'" class="img-fluid" />
       </div>
       <div class="slogan">
-        <h2 class="title">關於普匯</h2>
         <div class="content">
           <h4>普匯相信每個年輕人，我們致力幫助他們完成人生的夢想</h4>
           <h4>以金融為核心，以科技為輔具，只為給您最好的體驗</h4>
@@ -285,7 +285,6 @@
       </div>
     </div>
     <div class="download-card" :style="`background-image: url('./Image/19366.jpg')`"></div>
-    <join href="./Image/child_banner.jpg" :isShowAll="true"></join>
   </div>
 </template>
 
@@ -1149,6 +1148,7 @@ export default {
 
     .logo {
       width: 40%;
+      filter: drop-shadow(0px 0px 5px white);
     }
 
     .slogan {
@@ -1157,13 +1157,9 @@ export default {
       position: relative;
       width: inherit;
 
-      .title {
-        margin-left: 35px;
-      }
-
       .content {
         position: absolute;
-        top: 62%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: Arial, cursive, Helvetica, sans-serif;
@@ -1198,20 +1194,20 @@ export default {
     }
 
     .content {
+      display: flex;
+
       .item {
         box-shadow: 0 0 5px #293e5d;
         padding: 10px;
-        margin: 10px auto 10% auto;
-        display: flex;
+        margin: 10px;
         background: #ffffff;
-        width: 70%;
 
         &:last-child {
           margin: 10px auto;
         }
 
         .img {
-          width: 50%;
+          width: 100%;
         }
 
         .desc {
