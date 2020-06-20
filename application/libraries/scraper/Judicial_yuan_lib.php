@@ -15,6 +15,8 @@ class Judicial_yuan_lib
 
     public function mappingAddressAndScraperAddress($address)
     {
+        $address = preg_replace('/\(|\).*/',"",$address);
+
         $reference = [
           '宜縣' => '宜蘭', '竹縣' => '新竹', '苗縣' => '苗栗', '中縣' => '臺中', '彰縣' => '彰化', '投縣' => '南投', '雲縣' => '雲林', '嘉縣' => '嘉義',
           '南縣' => '臺南', '高縣' => '高雄', '屏縣' => '屏東', '東縣' => '臺東', '花縣' => '花蓮', '澎縣' => '澎湖', '基市' => '基隆', '竹市' => '新竹',
@@ -34,6 +36,7 @@ class Judicial_yuan_lib
             return substr($address, 0, strpos($address,'縣'));
           }
         }
+
         return $address;
     }
 
@@ -57,11 +60,6 @@ class Judicial_yuan_lib
         }
 
         $url = $this->scraperUrl  . "verdicts";
-
-        $pos = strpos($address, '(');
-        if($pos){
-          $address = substr($address,0,-8);
-        }
 
         $address = $this->mappingAddressAndScraperAddress($address);
 
