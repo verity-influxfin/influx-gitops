@@ -43,7 +43,6 @@
         </div>
       </div>
     </div>
-
     <div class="credit-card">
       <h2>「我的貸款利率是多少？」</h2>
       <p>您的貸款利率由信用評等決定，信用評等則由您的整體信用評估以及收入(財力)狀況決定。</p>
@@ -102,6 +101,18 @@
           <hr />
           <p>4.媒合成功、執行撥款</p>
           <span>線上媒合成功後，24小時款項收到款項，幫助優質新創企業成長茁壯</span>
+        </div>
+      </div>
+      <div class="tips">
+        <p>提醒您，先把下列資料準備好可以加快申貸速度喔！</p>
+        <div class="required">
+          <div class="item" v-for="(item,index) in applyData.requiredDocuments" :key="index">
+            <div class="img">
+              <img class="img-fluid" :src="item.imgSrc" />
+            </div>
+            <p>{{item.text}}</p>
+            <span v-if="item.memo">{{item.memo}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -183,6 +194,7 @@ export default {
     this.getBannerData();
     this.getPartnerData();
     this.getQaData();
+    this.getApplydata();
     $("title").text(`學生貸款 - ${$("title").text()}`);
   },
   mounted() {
@@ -202,9 +214,6 @@ export default {
     getApplydata() {
       axios.post("getApplydata", { filter: "college" }).then(res => {
         this.applyData = res.data;
-        this.$nextTick(() => {
-          this.$refs.apply.createSlick();
-        });
       });
     },
     getQaData() {
@@ -228,8 +237,7 @@ export default {
       this.credit = this.creditList[index].rate;
 
       gsap.to(".pointer", 0.5, {
-        rotate: `${dir}dge`,
-        transformOrigin: "50% 100%"
+        rotate: `${dir}dge`
       });
     }
   }
@@ -392,7 +400,8 @@ export default {
           position: absolute;
           left: 50%;
           top: 45%;
-          transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%) rotate(230deg);
+          transform-origin: 50% 100%;
 
           img {
             transform: translate(0px, 55%);
@@ -485,6 +494,32 @@ export default {
         height: 40px;
         margin: 5px;
         line-height: 213px;
+      }
+    }
+
+    .tips {
+      width: fit-content;
+      margin: 10px auto;
+      padding: 10px;
+      background: #ffffff;
+      box-shadow: 2px 2px 4px black;
+
+      .required {
+        width: fit-content;
+        display: flex;
+        margin: 0px auto;
+        .item {
+          padding: 10px;
+          margin: 10px;
+          border-radius: 10px;
+          box-shadow: 0 0 5px black;
+          background: #ffffff;
+
+          .img {
+            width: 50px;
+            margin: 0px auto;
+          }
+        }
       }
     }
   }

@@ -252,6 +252,7 @@
               :to="item.link"
               :key="index"
             >
+            <div style="width:fit-content;margin:0px auto">
               <iframe
                 :src="item.video_link"
                 frameborder="0"
@@ -259,6 +260,7 @@
                 allowfullscreen
                 style="height:180px;"
               ></iframe>
+            </div>
               <span>{{item.post_date}}</span>
               <hr />
               <p>{{item.post_title}}</p>
@@ -1201,11 +1203,7 @@ export default {
         padding: 10px;
         margin: 10px;
         background: #ffffff;
-
-        &:last-child {
-          margin: 10px auto;
-        }
-
+        
         .img {
           width: 100%;
         }

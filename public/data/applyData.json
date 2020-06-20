@@ -1,7 +1,5 @@
 {
     "college": {
-        "title": "誰可以申請普匯學生貸呢??",
-        "subTitle": "年滿20歲,大學以上在校生",
         "requiredDocuments": [
             {
                 "imgSrc": "./Image/identity.png",
@@ -26,8 +24,6 @@
         ]
     },
     "engineer": {
-        "title": "誰可以申請資訊工程師專案呢？",
-        "subTitle": "年滿20歲相關系所大學以上在校生,或相關職業工程師",
         "requiredDocuments": [
             {
                 "imgSrc": "./Image/identity.png",
@@ -62,8 +58,6 @@
         ]
     },
     "freshgraduate": {
-        "title": "誰可以申請普匯上班族信貸呢？",
-        "subTitle": "年滿20歲，即可申貸",
         "requiredDocuments": [
             {
                 "imgSrc": "./Image/identity.png",
