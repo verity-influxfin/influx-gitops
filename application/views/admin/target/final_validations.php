@@ -853,7 +853,7 @@
 
 		function fillCreditInfo(credit, isReEvaluated = false) {
 			var prefix = '';
-			if(credit.product.sub_product_id == 9999){
+			if(credit.product.id == 1 && credit.product.sub_product_id == 9999){
                 $('#credit-evaluation button').attr('disabled',false);
                 $('#evaluation-complete [type=submit]').text('通過');
                 $('#evaluation-complete [type=submit]').removeClass('btn-warning').addClass('btn-success');

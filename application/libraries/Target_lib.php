@@ -254,9 +254,14 @@ class Target_lib
             $product_list = $this->CI->config->item('product_list');
             $user_id = $target->user_id;
             $product_id = $target->product_id;
-            $sub_product_id = $stage_cer == 0
-                ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
-                : STAGE_CER_TARGET;
+            if($renew){
+                $sub_product_id = $target->sub_product_id;
+            }
+            else{
+                $sub_product_id = $stage_cer == 0
+                    ? ($target->sub_product_id == STAGE_CER_TARGET ? 0 : $target->sub_product_id)
+                    : STAGE_CER_TARGET;
+            }
             $product_info = $product_list[$product_id];
             if ($this->is_sub_product($product_info, $sub_product_id)) {
                 $product_info = $this->trans_sub_product($product_info, $sub_product_id);
@@ -325,7 +330,7 @@ class Target_lib
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
-
+                        $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if ($product_info['type'] == 1 || $subloan_status) {
                                 $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
@@ -342,7 +347,7 @@ class Target_lib
                                 $this->CI->load->library('Certification_lib');
                               if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
                                     $param['status'] = 1;
-                                    $renew ? $param['sub_status'] = 10 : '';
+
                                     $remark
                                         ? $param['remark'] = (empty($target->remark)
                                             ? $remark
@@ -350,6 +355,7 @@ class Target_lib
                                         : '';
                                     $msg = $target->status == 0 ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
+                                    $renew ? $param['sub_status'] = 10 : '';
                                     if($target->contract_id == null || $target->loan_amount != $loan_amount){
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }
@@ -1614,18 +1620,10 @@ class Target_lib
                             }
 
                             if (count($finish_stage_cer) != 0) {
-                                asort($finish_stage_cer);
-                                $implode = implode('', $finish_stage_cer);
-                                if ($implode == '89') {
-                                    $stage_cer = 2;
-                                } elseif ($implode == '9') {
-                                    $stage_cer = 3;
-                                } elseif ($implode == '8') {
-                                    $stage_cer = 4;
-                                }else{
-                                    $finish = false;
-                                }
+                                $stage_cer = $this->stageCerLevel($finish_stage_cer);
+                                !$stage_cer ? $finish = false : '';
                             }
+
                             if ($finish) {
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
@@ -1753,5 +1751,20 @@ class Target_lib
             'multi_target' => $sub_product['multi_target'],
             'status' => $sub_product['status'],
         );
+    }
+
+    public function stageCerLevel($cer){
+        asort($cer);
+        $implode = implode('', $cer);
+        if ($implode == '89') {
+            $stage_cer = 2;
+        } elseif ($implode == '9') {
+            $stage_cer = 3;
+        } elseif ($implode == '8') {
+            $stage_cer = 4;
+        }else{
+            $stage_cer = false;
+        }
+        return $stage_cer;
     }
 }

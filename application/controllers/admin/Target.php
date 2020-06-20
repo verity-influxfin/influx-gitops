@@ -524,7 +524,16 @@ class Target extends MY_Admin_Controller {
 		$this->approvalextra->setSkipInsertion(true);
 		$this->approvalextra->setExtraPoints($points);
 
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+        $level = false;
+        if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
+            $this->load->library('Certification_lib');
+            $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
+            $certificationStatus = isset($certification) && $certification
+                ? ($certification->status == 1 ? true : false)
+                : false;
+            $level = $certificationStatus ? 3 : 4 ;
+        }
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -575,20 +584,30 @@ class Target extends MY_Admin_Controller {
             'status' => 1
         ]);
 
-		if($target->sub_product_id != 9999){
+		if($target->sub_product_id != STAGE_CER_TARGET || $target->product_id == 3){
             $this->load->library('utility/admin/creditapprovalextra', [], 'approvalextra');
             $this->approvalextra->setSkipInsertion(true);
             $this->approvalextra->setExtraPoints($points);
 
+            $level = false;
+            if($target->product_id == 3 && $target->sub_product_id == STAGE_CER_TARGET){
+                $this->load->library('Certification_lib');
+                $certification = $this->certification_lib->get_certification_info($userId, 8, 0);
+                $certificationStatus = isset($certification) && $certification
+                    ? ($certification->status == 1 ? true : false)
+                    : false;
+                $level = $certificationStatus ? 3 : 4 ;
+            }
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
 
-		if ($newCredits && $newCredits["amount"] != $credit->amount
+		if ($newCredits &&
+            ($newCredits["amount"] != $credit->amount
 			|| $newCredits["points"] != $credit->points
-			|| $newCredits["level"] != $credit->level
+			|| $newCredits["level"] != $credit->level)
 		) {
             $this->credit_model->update_by(
                 [
@@ -602,7 +621,7 @@ class Target extends MY_Admin_Controller {
 			$this->credit_model->insert($newCredits);
 		}
 
-		if($target->sub_product_id == 9999){
+		if($target->sub_product_id == STAGE_CER_TARGET && $target->product_id == 1){
             $param['status'] = 1;
             $param['sub_status'] = 10;
             $param['remark'] = $remark;

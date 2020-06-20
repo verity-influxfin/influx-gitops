@@ -306,6 +306,7 @@ class Credit_lib{
         $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
         $param['points'] = intval($total);
 
+        $stage_cer ? $total = 100 : '';
         $param['level'] = $this->get_credit_level($total, $product_id, $stage_cer);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {

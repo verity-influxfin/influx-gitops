@@ -1406,8 +1406,8 @@ class Certification_lib{
             $student_cer = $this->get_certification_info($user_id, 2, 0);
             $diploma_cer = $this->get_certification_info($user_id, 8, 0);
             if ($idcard_cer && $idcard_cer->status == 1
-                && !preg_match('/\(自填\)/', $student_cer->content['school'])
-                && !preg_match('/\(自填\)/', $diploma_cer->content['school'])
+                && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
+                && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {
                 $cer_id = $idcard_cer->id;
                 $this->CI->load->library('Azure_lib');
