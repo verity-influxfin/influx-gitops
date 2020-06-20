@@ -407,22 +407,30 @@ class Certification_lib{
     //    return false;
     //}
 
-    public function social_verify($info = array()){
-        if($info && $info->status ==0 && $info->certification_id==4) {
-            $status 	 = 3;
-            $content     = json_decode($info->content);
-            $media       = $content->instagram->counts->media;
-            $followed_by = $content->instagram->counts->followed_by;
+    public function social_verify($info = array())
+    {
+        if ($info && $info->status == 0 && $info->certification_id == 4) {
+            $status = 3;
+            $content = json_decode($info->content);
+            $media = isset($content->instagram->counts->media) ? $content->instagram->counts->media : false;
+            $followed_by = isset($content->instagram->counts->followed_by) ? $content->instagram->counts->followed_by : false;
             $is_fb_email = isset($content->facebook->email);
             $is_fb_name = isset($content->facebook->name);
-            if($media >= 10 && $followed_by >= 10 && $is_fb_email && $is_fb_name){
-                $status = 1;
-                $this->set_success($info->id, true);
-            }
-            $this->CI->user_certification_model->update($info->id,array(
-                'status'	=> $status,
-                'sys_check'	=> 1,
+            $this->CI->load->model('user/user_meta_model');;
+            $line = $this->CI->user_meta_model->get_by(array(
+                'user_id' => $info->user_id,
+                'meta_key' => 'line_access_token'
             ));
+            if ($media && $followed_by && $is_fb_email && $is_fb_name && isset($line)) {
+                if ($media >= 10 && $followed_by >= 10) {
+                    $status = 1;
+                    $this->set_success($info->id, true);
+                }
+                $this->CI->user_certification_model->update($info->id, array(
+                    'status' => $status,
+                    'sys_check' => 1,
+                ));
+            }
             return true;
         }
         return false;

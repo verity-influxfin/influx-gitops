@@ -287,12 +287,33 @@ class User extends REST_Controller {
 		$data['my_promote_code'] 	= $this->get_promote_code();
 		$data['auth_otp'] 			= get_rand_token();
 
-		$rs = $this->sms_lib->verify_code($data['phone'],$data['code']);
-		if($rs){
-			unset($data['code']);
-			unset($data['access_token']);
+        $rs = $this->sms_lib->verify_code($data['phone'], $data['code']);
+        if ($rs) {
+            unset($data['code']);
+            $access_token = false;
+            if (isset($input['access_token'])) {
+                $access_token = $input['access_token'];
+			    unset($input['access_token']);
+            }
 			$insert = $this->user_model->insert($data);
 			if($insert){
+			    if($access_token){
+                    $this->load->library('facebook_lib');
+                    $info = $this->facebook_lib->get_info($access_token);
+                    $content = [
+                        'facebook' => $info,
+                        'instagram' => '',
+                    ];
+                    $param = [
+                        'user_id' => $insert,
+                        'certification_id' => 4,
+                        'investor' => $input['investor'],
+                        'content' => json_encode($content),
+                    ];
+                    $this->load->model('user/user_certification_model');
+                    $this->user_certification_model->insert($param);
+                }
+
 				$token = (object) [
 					'id'			=> $insert,
 					'phone'			=> $data['phone'],
@@ -312,7 +333,9 @@ class User extends REST_Controller {
 						'expiry_time'	=> $token->expiry_time,
 						'first_time'	=> 1
 					)
-				));
+				))
+
+                ;
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
