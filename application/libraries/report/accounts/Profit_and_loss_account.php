@@ -48,6 +48,7 @@ class Profit_and_loss_account
         $initialInvestmentAt = $this->getInitialInvestmentAt($investmentIds);
         $lastRepaymentAt = $this->getLastRepayment($investmentIds);
 
+        $nextMonthPayDate = date('Y-m-', strtotime(date('Y-m', time()) . ' + 1 month')) . REPAYMENT_DAY;
         foreach ($investments as $key => $value) {
             $target = $this->target_model->get($value->target_id);
             $amortizationTables = $this->target_lib->get_investment_amortization_table_v2($target, $value, $lastRepaymentAt);
@@ -63,6 +64,8 @@ class Profit_and_loss_account
                 $isPrepayment = true;
             }
             $set = false;
+            $delay_occurred_used = false;
+
             foreach ($amortizationTables as $key => $value) {
                 $currentRows = $value['rows'];
 
@@ -106,14 +109,77 @@ class Profit_and_loss_account
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
                         $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
+                        if(!isset($rows[$key][$ndate])){
+                            $rows[$key][$ndate] = $this->initRow();
+                        }
                         $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
                         $set = true;
                     }
 
-                    $nextMonthPayDate = date('Y-m-', time()) . REPAYMENT_DAY;
-                    if ($key == 'overdue' && $v['repayment_date'] > $nextMonthPayDate) {
-                        continue;
+//                    $today = date('Y-m-d', time());
+//                    if(date('Y-m-', time()) . REPAYMENT_DAY == $v['repayment_date']){
+//                        $temp = $v;
+//                        $temp['principal'] = $temp['principal'] - $temp['r_principal'];
+//                        $temp['interest'] = $temp['interest'] - $temp['r_interest'];
+//                        $temp['delay_interest'] = $temp['delay_interest'] - $temp['r_delayinterest'];
+//                        $rows[$key][$today] = $this->sumColumn($temp ,$rows[$key][$today]);
+//                    }
+
+                    if($key == 'overdue'){
+                        if ($v['repayment_date'] > $nextMonthPayDate) {
+                            continue;
+                        }
+
+                        if(!$delay_occurred_used && $v['delay_occurred_at'] != 0){
+                            $temp = $v;
+                            $pay_dates = date('Y-m-',strtotime( $v['delay_occurred_at'])) . REPAYMENT_DAY;
+                            if(isset($rows[$key][$v['delay_occurred_at']])) {//$rows[$key][$pay_dates]['principal']
+                                $temp['principal'] += $rows[$key][$v['delay_occurred_at']]['principal'];
+                                $temp['interest'] += $rows[$key][$v['delay_occurred_at']]['interest'];
+                                $temp['damage'] += $rows[$key][$v['delay_occurred_at']]['damage'];
+                                $temp['delay_interest'] += $rows[$key][$v['delay_occurred_at']]['delay_interest'];
+                                $temp['r_principal'] += $rows[$key][$v['delay_occurred_at']]['r_principal'];
+                                $temp['r_interest'] += $rows[$key][$v['delay_occurred_at']]['r_interest'];
+                                $temp['r_fees'] += $rows[$key][$v['delay_occurred_at']]['r_fees'];
+                                $temp['r_delayinterest'] += $rows[$key][$v['delay_occurred_at']]['r_delayinterest'];
+                                $temp['repayment'] += $rows[$key][$v['delay_occurred_at']]['repayment'];
+//                                $rows[$key][$v['delay_occurred_at']] = $this->sumColumn($temp ,$rows[$key][$v['delay_occurred_at']]);;
+                            }
+
+                            if($v['delay_occurred_at'] != $v['delay_principal_return_at']){
+                                $temp['r_principal'] -= $temp['r_principal'];
+                                $temp['r_interest'] -= $temp['r_interest'];
+                                $temp['r_fees'] -= $temp['r_fees'];
+                                $temp['r_delayinterest'] -= $temp['r_delayinterest'];
+                                $temp['repayment'] -= $temp['repayment'];
+                            }
+                            $rows[$key][$v['delay_occurred_at']] = $temp;
+                            $delay_occurred_used = true;
+                        }
+
+                        if($v['repayment'] != 0 && $v['repayment_principal'] == 0 && $v['delay_principal_return_at'] != 0){
+                            $temp = $v;
+                            if(!$delay_occurred_used && isset($rows[$key][$v['delay_principal_return_at']])) {
+                                $temp['principal'] += $rows[$key][$v['delay_principal_return_at']]['principal'];
+                                $temp['interest'] += $rows[$key][$v['delay_principal_return_at']]['interest'];
+                                $temp['damage'] += $rows[$key][$v['delay_principal_return_at']]['damage'];
+                                $temp['delay_interest'] += $rows[$key][$v['delay_principal_return_at']]['delay_interest'];
+                                $temp['r_principal'] += $rows[$key][$v['delay_principal_return_at']]['r_principal'] - $temp['r_principal'];
+                                $temp['r_interest'] += $rows[$key][$v['delay_principal_return_at']]['r_interest'];
+                                $temp['r_fees'] += $rows[$key][$v['delay_principal_return_at']]['r_fees'];
+                                $temp['r_delayinterest'] += $rows[$key][$v['delay_principal_return_at']]['r_delayinterest'];
+                                $temp['repayment'] += $rows[$key][$v['delay_principal_return_at']]['repayment'];
+//                              $rows[$key][$v['delay_principal_return_at']] = $this->sumColumn($temp ,$rows[$key][$v['delay_principal_return_at']]);;
+                            }
+                            $rows[$key][$v['delay_principal_return_at']] = $temp;
+                            $v['principal'] -= $v['r_principal'];
+                            $v['interest'] -= $v['r_interest'];
+                            $v['delay_interest'] -= $v['r_delayinterest'];
+                            $v['damage'] -= $v['damage'];
+//                          $rows[$key][$v['delay_principal_return_at']]['principal'] = $v['interest'] - $v['r_interest'];
+                        }
                     }
+
                     if (!isset($rows[$key][$v['repayment_date']])) {
                         $rows[$key][$v['repayment_date']] = $this->initRow();
                     }
@@ -160,9 +226,9 @@ class Profit_and_loss_account
     public function getTableHeader($tableName)
     {
         if ($tableName == '逾期案') {
-            return "<table>{$tableName}<thead><tr><th>日期</th><th>尚欠本金</th><th>尚欠利息</th><th>尚欠本息</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+            return "<table>{$tableName}<thead><tr><th>日期</th><th>尚欠本金</th><th>尚欠利息</th><th>尚欠本息</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>當期償還延滯息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
         }
-        return "<table>{$tableName}<thead><tr><th>日期</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
+        return "<table>{$tableName}<thead><tr><th>日期</th><th>當期本金</th><th>當期利息</th><th>本息合計</th><th>本金餘額</th><th>違約金</th><th>延滯息</th><th>當期償還本金</th><th>當期償還利息</th><th>當期償還本息</th><th>當期償還延滯息</th><th>回款手續費</th><th>補貼</th><th>投資回款淨額</th></tr></thead><tbody>";
     }
 
     public function getEndingTable()
@@ -181,8 +247,8 @@ class Profit_and_loss_account
 
     public function toExcel($rows)
     {
-        header('Content-type:application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+//        header('Content-type:application/vnd.ms-excel');
+//        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
         $tables = $this->getSupportedTables();
         foreach ($tables as $type => $tableName) {
             $html = $this->getTableHeader($tableName);
@@ -232,6 +298,7 @@ class Profit_and_loss_account
                 $html .= '<td>' . $value['r_principal'] . '</td>';
                 $html .= '<td>' . $value['r_interest'] . '</td>';
                 $html .= '<td>' . $total . '</td>';
+                $html .= '<td>' . $value['r_delayinterest'] . '</td>';
                 $html .= '<td>' . $value['r_fees'] . '</td>';
                 if ($type == 'prepayment') {
                     $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
@@ -253,8 +320,13 @@ class Profit_and_loss_account
             if (
                 $type != 'prepayment' && substr($key, -2) == '10'
                 || $type == 'prepayment'
+                || $type == 'overdue'
+                || $key == date('Y-m-d', time())
                 || $isFirst
             ) {
+                if($value['principal'] == 0 && $value['r_principal'] == 0 && substr($key, -2) != '10'){
+                    continue;
+                }
                 $total = $value['r_principal'] + $value['r_interest'];
                 $r_fee = $value['r_fees'];
                 $profit = $value['repayment'] - $r_fee;
@@ -268,6 +340,7 @@ class Profit_and_loss_account
                 $html .= '<td>' . $value['r_principal'] . '</td>';
                 $html .= '<td>' . $value['r_interest'] . '</td>';
                 $html .= '<td>' . $total . '</td>';
+                $html .= '<td>' . $value['r_delayinterest'] . '</td>';
                 $html .= '<td>' . $value['r_fees'] . '</td>';
                 if ($type == 'prepayment') {
                     $html .= '<td>' . $value['prepayment_allowance'] . '</td>';
@@ -280,5 +353,12 @@ class Profit_and_loss_account
             }
         }
         return $html;
+    }
+    private function sumColumn($a, $b){
+        $result = [];
+        foreach($a as $key => $value){
+            $result[$key] = array_sum(array_column([$a ,$b],$key));
+        }
+        return $result;
     }
 }

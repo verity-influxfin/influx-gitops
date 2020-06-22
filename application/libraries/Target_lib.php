@@ -939,26 +939,27 @@ class Target_lib
                 $delayInterest = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDays);
                 $row['delay_interest'] = $delayInterest - $overdueAmortizationRows[$i-1]['r_delayinterest'];
 
-                if ($row['r_interest'] > 0) {
-                    $remainingInterest = $row['interest'] - $row['r_interest'];
-                }
+//                if ($row['r_interest'] > 0) {
+//                    $remainingInterest = $row['interest'] - $row['r_interest'];
+//                }
                 $overdueAmortizationRows[$i] = $row;
                 if ($row['r_principal'] > 0) {
                     if ($row['delay_principal_return_at']) {
                         $repaymentDiffFromNow = $this->CI->payment_time_utility->measureMonthGaps($overdueAmortizationRows[$i]["repayment_date"], $row['delay_principal_return_at']);
                         if ($repaymentDiffFromNow > 1) {
-                            $futureInstalment = $repaymentDiffFromNow + $i - 1;
+                            $futureInstalment = $repaymentDiffFromNow + $i;
                             $row['instalment'] = $futureInstalment;
                             $originalRepaymentDate = $overdueAmortizationRows[$futureInstalment]['repayment_date'];
                             $overdueAmortizationRows[$futureInstalment] = $row;
                             $overdueAmortizationRows[$futureInstalment]['repayment_date'] = $originalRepaymentDate;
                             $overdueAmortizationRows[$i]['delay_interest'] = 0;
-                            $overdueAmortizationRows[$i]['damage'] = 0;
+                            $overdueAmortizationRows[$i]['damage'] = $remainingDamage;
                             $overdueAmortizationRows[$i]['r_fees'] = 0;
                             $overdueAmortizationRows[$i]['r_interest'] = 0;
                             $overdueAmortizationRows[$i]['r_damage'] = 0;
                             $overdueAmortizationRows[$i]['r_principal'] = 0;
                             $overdueAmortizationRows[$i]['r_delayinterest'] = 0;
+                            $overdueAmortizationRows[$i]['repayment'] = 0;
                             $delayDaysBeforeReturn = get_range_days($overdueAmortizationRows[$i-1]["repayment_date"], $overdueAmortizationRows[$i]['repayment_date']);
                             $delayInterestAfterReturn = $this->CI->financial_lib->get_delay_interest($remainingPrincipal, $delayDaysBeforeReturn);
                             $overdueAmortizationRows[$i]['delay_interest'] = $delayInterestAfterReturn;
