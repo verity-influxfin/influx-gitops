@@ -2,13 +2,13 @@
   <div class="mobile-wrapper">
     <div class="mobile-header">
       <div class="header-title">
-        <img :src="'./Image/child_banner.jpg'" />
+        <img :src="'./Images/child_banner.jpg'" />
         <div class="title">手機分期</div>
       </div>
       <div class="banner-text">選擇喜歡的手機，無卡也能分期支付，輕鬆購買</div>
       <div class="header-img">
-        <img :src="'./Image/sop_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./Image/sop_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'./Images/sop_web.jpg'" class="img-fluid desktop" />
+        <img :src="'./Images/sop_mobile.jpg'" class="img-fluid mobile" />
       </div>
     </div>
     <div class="mobile-content">
@@ -25,8 +25,8 @@
     </div>
     <div class="banner-text">優良店家推薦</div>
     <div class="mobile-footer">
-      <img :src="'./Image/mobile_banner_web.jpg'" class="img-fluid desktop" />
-      <img :src="'./Image/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
+      <img :src="'./Images/mobile_banner_web.jpg'" class="img-fluid desktop" />
+      <img :src="'./Images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
     </div>
   </div>
 </template>

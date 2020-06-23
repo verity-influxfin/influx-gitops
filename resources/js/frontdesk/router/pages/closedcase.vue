@@ -1,7 +1,7 @@
 <template>
   <div class="closedcase-wrapper">
     <div class="no-data" v-if="groupList.length === 0">
-      <img :src="'./Image/invest_empty.svg'" class="img-fluid" />
+      <img :src="'./Images/invest_empty.svg'" class="img-fluid" />
       <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">目前沒有投資標的，點我立即前往 >></a>
     </div>
     <div id="accordion" role="tablist" v-else>

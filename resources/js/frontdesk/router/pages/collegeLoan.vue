@@ -33,8 +33,11 @@
           <div class="memo">{{item.memo}}</div>
         </div>
       </div>
+      <p
+        style="text-align: center;margin: 10px 0px;font-size: 25px;font-weight: bolder;"
+      >我們服務了超過140所學校的同學</p>
     </div>
-    <div class="partner-card">
+    <!-- <div class="partner-card">
       <h2>「最貼近年輕人的普匯金融科技」</h2>
       <p>我們服務了超過140所學校的同學</p>
       <div class="partner-row">
@@ -42,24 +45,25 @@
           <img class="img-fluid" :src="item.imageSrc" />
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="credit-card">
-      <h2>「我的貸款利率是多少？」</h2>
-      <p>您的貸款利率由信用評等決定，信用評等則由您的整體信用評估以及收入(財力)狀況決定。</p>
-      <p>公開透明的評等，讓您對利率一目了然！</p>
+      <h2>「額度最高12萬，那利率呢？」</h2>
+      <p>利率由AI為您量身打造的信用等級決定!</p>
       <div class="table">
         <div
-          :class="['item','hvr-radial-out',item.class]"
+          :class="['item',item.class]"
           :style="{ transform: rotate(index,'circle') }"
           v-for="(item,index) in creditList"
           @click="turn(index)"
+          @mouseover="transform($event)"
+          @mouseleave="recovery($event)"
           :key="index"
         >
           <div :style="{ transform: rotate(index,'text') }">{{item.level}}</div>
         </div>
         <div class="press">
           <div class="pointer">
-            <img :src="'./Image/pointer.svg'" class="img-fluid" />
+            <img :src="'./Images/pointer.svg'" class="img-fluid" />
           </div>
           <div class="credit">{{credit}}</div>
         </div>
@@ -76,7 +80,7 @@
           <span>提供完整資訊，有助提高額度</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>提供資訊 | 線上AI | 立即審核</h5>
@@ -85,7 +89,7 @@
           <span>AI數據分析審核，全程無人打擾</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>線上媒合投資人</h5>
@@ -94,7 +98,7 @@
           <span>審核成功後，立即上架幫您媒合投資人，最快15分鐘完成媒合</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>媒合成功 | 資金到手</h5>
@@ -116,7 +120,19 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Image/19366.jpg')`"></div>
+    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+      <!-- <div class="zxc">
+        <div class="loan">借款端UI</div>
+        <div class="shakehand">
+          <img :src="'./Images/agreement.svg'" class="img-fluid" />
+        </div>
+        <div class="invest">投資端UI</div>
+      </div>-->
+      <div style="width: 54%;margin: 10px auto;">
+        <h2 style="text-align: center;">「最貼近年輕人的普匯金融科技」</h2>
+        <img :src="'./Images/flow.png'" class="img-fluid" />
+      </div>
+    </div>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
       <div class="row">
@@ -156,6 +172,7 @@ export default {
   },
   data: () => ({
     credit: "--",
+    timeLineMax: "",
     qaData: [],
     partner: [],
     bannerData: {},
@@ -189,7 +206,6 @@ export default {
     }
   },
   created() {
-    $(this.$root.$refs.banner).hide();
     this.$store.dispatch("getExperiencesData");
     this.getBannerData();
     this.getPartnerData();
@@ -198,7 +214,11 @@ export default {
     $("title").text(`學生貸款 - ${$("title").text()}`);
   },
   mounted() {
-    AOS.init();
+    this.$nextTick(() => {
+      $(this.$root.$refs.banner).hide();
+      this.$root.pageHeaderOffsetTop = 0;
+      AOS.init();
+    });
   },
   methods: {
     getBannerData() {
@@ -239,6 +259,14 @@ export default {
       gsap.to(".pointer", 0.5, {
         rotate: `${dir}dge`
       });
+    },
+    transform($event) {
+      this.timeLineMax = new TimelineMax({ paused: true, reversed: true });
+      this.timeLineMax.to($event.target, { scale: 1.2 });
+      this.timeLineMax.play();
+    },
+    recovery($event) {
+      this.timeLineMax.reverse();
     }
   }
 };
@@ -528,6 +556,34 @@ export default {
     background-repeat: no-repeat;
     background-size: 100%;
     height: 500px;
+    overflow: hidden;
+
+    .zxc {
+      display: flex;
+      width: fit-content;
+      margin: 20px auto;
+
+      %bg {
+        width: 300px;
+        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px black;
+        background: #ffffff;
+      }
+
+      .loan {
+        @extend %bg;
+      }
+
+      .shakehand {
+        width: 100px;
+        line-height: 300px;
+      }
+
+      .invest {
+        @extend %bg;
+      }
+    }
   }
 
   .qa-card {

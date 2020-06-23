@@ -26,14 +26,14 @@
             "title": "聯徵資料如何取得完成驗證？",
             "content": "申請聯徵有下列三種方式：<br><br>1.使用自然人憑證線上申請最快<br>直接下載自己的聯徵報告<br>在APP聯徵驗證區上傳聯徵封面<br>完整PDF檔Mail至 普匯金融科技:credit@influxfin.com<br>即可快速完成驗證<br><br>2.聯徵中心現場申請紙本聯徵報告<br>可當場索取,再拍封面上傳APP聯徵驗證區<br>同時將完整紙本寄送到 普匯金融科技: 台北市松江路111號11樓-2<br><br>3.郵局臨櫃申請<br>現場收據拍照上傳APP聯徵驗證區<br>紙本約7個工作天,可請郵局直接寄送至 普匯金融科技: 台北市松江路111號11樓-2<br>普匯收到紙本後即可完成驗證",
             "imgSrc": [
-                "./Image/worker_qa1.png"
+                "./Images/worker_qa1.png"
             ]
         },
         {
             "title": "工作驗證需甚麼資料？",
             "content": "工作驗證必備資料如下<br>1. 近半年勞保異動明細<br>勞保異動明細可親洽勞保局申請，也可使用自然人憑證下載電子檔<br>2.近三個月薪資證明<br薪資證明可提供存摺封面與近三個月薪資轉入的存摺內頁<br>或是網銀包含個人姓名與帳號的畫面,以及近三個月薪資轉入的畫面<br>3.其他選填資料",
             "imgSrc": [
-                "./Image/worker_qa2.png"
+                "./Images/worker_qa2.png"
             ]
         },
         {
@@ -45,7 +45,7 @@
             "title": "上班族貸的申請條件是？",
             "content": "年滿20歲35歲以下，學士學位以上之畢業證明文件均可申請。",
             "imgSrc": [
-                "./Image/worker_qa4.png"
+                "./Images/worker_qa4.png"
             ]
         },
         {
@@ -59,7 +59,7 @@
             "title": "工程師優惠專案的申請資格？",
             "content": "學生 : 年滿20歲資訊軟體相關系所的大學以上在校生。<br>上班族：年滿20以上大學以上，需資訊軟體相關系所畢業上班族，並從事資訊科技類相關的從業人員。",
             "imgSrc": [
-                "./Image/engineer_qa1.png"
+                "./Images/engineer_qa1.png"
             ]
         },
         {
@@ -71,8 +71,8 @@
             "title": "工程師優惠申請金額有上限嗎？",
             "content": "有的，學生申請上限為12萬，上班族為20萬。",
             "imgSrc": [
-                "./Image/engineer_qa3-1.png",
-                "./Image/engineer_qa3-2.png"
+                "./Images/engineer_qa3-1.png",
+                "./Images/engineer_qa3-2.png"
             ]
         },
         {
@@ -86,8 +86,8 @@
             "title": "投資標的逾期該怎麼辦？",
             "content": "若您的債權逾期了，普匯平台會啟動催收機制，協助解決催理困擾；建議同步嘗試使用債權/折價轉讓功能，將原有債權轉讓出售。                    ",
             "imgSrc": [
-                "./Image/invest_qa1-1.png",
-                "./Image/invest_qa1-2.png"
+                "./Images/invest_qa1-1.png",
+                "./Images/invest_qa1-2.png"
             ]
         },
         {
@@ -99,8 +99,8 @@
             "title": "我所投資的對象是誰？",
             "content": "平台的借款人都是經由AI風險控管的案件，對象為年滿20歲以上的公民，包括： 學生、上班族 、企業主。您可以於投標前選擇您想投資的對象。",
             "imgSrc": [
-                "./Image/invest_qa3-1.png",
-                "./Image/invest_qa3-2.png"
+                "./Images/invest_qa3-1.png",
+                "./Images/invest_qa3-2.png"
             ]
         }
     ],

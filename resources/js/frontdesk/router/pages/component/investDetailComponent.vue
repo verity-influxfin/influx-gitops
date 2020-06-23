@@ -40,7 +40,7 @@
             <div class="invert-deatil-container" v-if="investData.length !==0">
               <div class="invert-deatil-card" v-for="(item,index) in investData" :key="index">
                 <div class="card-title">
-                  <img :src="'./Image/icon_step_ok_blue.svg'" />
+                  <img :src="'./Images/icon_step_ok_blue.svg'" />
                   <span>{{item.target.product_name}} - {{category}}</span>
                 </div>
                 <div>
@@ -84,7 +84,7 @@
                 <div style="height:38px">
                   <div class="transfer" v-if="item.transfer_status == 1">
                     <img
-                      :src="item.isLocked ? `./Image/icon_lock.svg` : `./Image/icon_unlock.svg`"
+                      :src="item.isLocked ? `./Images/icon_lock.svg` : `./Images/icon_unlock.svg`"
                       class="img-fluid"
                       style="height: 36px;"
                     />

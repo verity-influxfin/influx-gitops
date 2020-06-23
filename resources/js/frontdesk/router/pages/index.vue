@@ -137,7 +137,7 @@
           <div class="desc">
             <p>最專業的金融專家</p>
             <div class="img">
-              <img :src="'./Image/best1.png'" class="img-fluid" />
+              <img :src="'./Images/best1.png'" class="img-fluid" />
             </div>
             <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
           </div>
@@ -147,7 +147,7 @@
             <p>最先進的AI科技系統</p>
             <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
             <div class="img">
-              <img :src="'./Image/best2.png'" class="img-fluid" />
+              <img :src="'./Images/best2.png'" class="img-fluid" />
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@
           <div class="desc">
             <p>簡單、快速、安全、隱私</p>
             <div class="img">
-              <img :src="'./Image/best3.png'" class="img-fluid" />
+              <img :src="'./Images/best3.png'" class="img-fluid" />
             </div>
             <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
           </div>
@@ -252,15 +252,15 @@
               :to="item.link"
               :key="index"
             >
-            <div style="width:fit-content;margin:0px auto">
-              <iframe
-                :src="item.video_link"
-                frameborder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                style="height:180px;"
-              ></iframe>
-            </div>
+              <div style="width:fit-content;margin:0px auto">
+                <iframe
+                  :src="item.video_link"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  style="height:180px;"
+                ></iframe>
+              </div>
               <span>{{item.post_date}}</span>
               <hr />
               <p>{{item.post_title}}</p>
@@ -275,7 +275,7 @@
     </div>
     <div class="slogan-card">
       <div class="logo">
-        <img :src="'./Image/logo_.png'" class="img-fluid" />
+        <img :src="'./Images/logo_.png'" class="img-fluid" />
       </div>
       <div class="slogan">
         <div class="content">
@@ -286,7 +286,18 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Image/19366.jpg')`"></div>
+    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+      <!-- <div class="zxc">
+        <div class="loan">借款端UI</div>
+        <div class="shakehand">
+          <img :src="'./Images/agreement.svg'" class="img-fluid" />
+        </div>
+        <div class="invest">投資端UI</div>
+      </div>-->
+      <div style="width: 64%;margin: 10px auto;">
+        <img :src="'./Images/flow.png'" class="img-fluid" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -305,55 +316,55 @@ export default {
     creditRatingItem: [
       {
         text: "實名認證",
-        img: "./Image/realname.png",
+        img: "./Images/realname.png",
         checked: false,
         money: 10000
       },
       {
         text: "金融帳號",
-        img: "./Image/account_.png",
+        img: "./Images/account_.png",
         checked: false,
         money: 10000
       },
       {
         text: "社交認證",
-        img: "./Image/soucial.png",
+        img: "./Images/soucial.png",
         checked: false,
         money: 20000
       },
       {
         text: "電子信箱",
-        img: "./Image/email.png",
+        img: "./Images/email.png",
         checked: false,
         money: 10000
       },
       {
         text: "財力證明",
-        img: "./Image/financial.png",
+        img: "./Images/financial.png",
         checked: false,
         money: 20000
       },
       {
         text: "學生身分",
-        img: "./Image/student.png",
+        img: "./Images/student.png",
         checked: false,
         money: 40000
       },
       {
         text: "最高學歷",
-        img: "./Image/education_.png",
+        img: "./Images/education_.png",
         checked: false,
         money: 30000
       },
       {
         text: "工作認證",
-        img: "./Image/work.png",
+        img: "./Images/work.png",
         checked: false,
         money: 40000
       },
       {
         text: "聯合徵信",
-        img: "./Image/credit.png",
+        img: "./Images/credit.png",
         checked: false,
         money: 50000
       }
@@ -393,6 +404,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.createChart();
+      $(this.$root.$refs.banner).show();
+      this.$root.pageHeaderOffsetTop = 568 ;
     });
     AOS.init();
   },
@@ -1178,6 +1191,34 @@ export default {
     background-repeat: no-repeat;
     background-size: 100%;
     height: 500px;
+    overflow: hidden;
+
+    .zxc {
+      display: flex;
+      width: fit-content;
+      margin: 20px auto;
+
+      %bg {
+        width: 300px;
+        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px black;
+        background: #ffffff;
+      }
+
+      .loan {
+        @extend %bg;
+      }
+
+      .shakehand {
+        width: 100px;
+        line-height: 300px;
+      }
+
+      .invest {
+        @extend %bg;
+      }
+    }
   }
 
   .advantage-card {
@@ -1203,7 +1244,7 @@ export default {
         padding: 10px;
         margin: 10px;
         background: #ffffff;
-        
+
         .img {
           width: 100%;
         }

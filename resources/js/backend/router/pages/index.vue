@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :style="`background-image:url(./Image/3661950.jpg)`">
+  <div class="wrapper" :style="`background-image:url(./Images/3661950.jpg)`">
     <div class="header">
       <p class="date">{{date}}</p>
       <h4 class="title">普匯官網後台系統</h4>

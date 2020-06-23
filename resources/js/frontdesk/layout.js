@@ -23,8 +23,6 @@ $(() => {
         routes: routers
     });
 
-    let pageHeaderOffset;
-
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
             next('/index');
@@ -87,11 +85,11 @@ $(() => {
             this.createBannerSlick();
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
 
-            this.$nextTick(()=>{
-                pageHeaderOffset = $('.page-header').offset();
+            this.$nextTick(() => {
+                this.pageHeaderOffset = $('.page-header').offset();
+                AOS.init();
             });
 
-            AOS.init();
         },
         watch: {
             '$store.state.userData'() {
@@ -299,7 +297,7 @@ $(() => {
             $('.back-top').fadeOut();
         }
 
-        if (window.pageYOffset > pageHeaderOffset.top) {
+        if (window.pageYOffset > vue.pageHeaderOffsetTop) {
             $('.page-header').addClass("sticky");
         } else {
             $('.page-header').removeClass("sticky");

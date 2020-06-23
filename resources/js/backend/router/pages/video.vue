@@ -148,7 +148,7 @@ export default {
     actionType: "",
     message: "",
     ID: "",
-    upLoadImg: "./Image/default-image.png",
+    upLoadImg: "./Images/default-image.png",
     videoLink: "",
     rowData: [],
     filtedData: [],
@@ -210,7 +210,7 @@ export default {
       this.postContent = "";
       this.ID = "";
       this.actionType = "insert";
-      this.upLoadImg = "./Image/default-image.png";
+      this.upLoadImg = "./Images/default-image.png";
       this.videoLink = "";
 
       CKEDITOR.instances.editor.setData(this.postContent);
@@ -225,7 +225,7 @@ export default {
       this.ID = this.filtedData[index].ID;
       this.upLoadImg = this.filtedData[index].media_link
         ? this.filtedData[index].media_link
-        : "./Image/default-image.png";
+        : "./Images/default-image.png";
       this.actionType = "update";
       this.videoLink = this.filtedData[index].video_link;
 

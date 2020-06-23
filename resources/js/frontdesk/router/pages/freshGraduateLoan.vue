@@ -5,11 +5,11 @@
       <h2>「普匯・你的手機ATM，隨時online滿足您的資金需求」</h2>
       <p>進入社會工作了，臨時有急缺，礙於面子不好意思跟家人、朋友、同事開口，怎麼辦？</p>
       <p>找銀行，又怕一筆不大不小的小錢，被行員「另眼相看，特別招待」，這時候，找普匯就對了！</p>
-      <p>沒有煩人的「專員」打擾，免抵押免擔保，只需要一隻可以上網的手機，尋找普匯，AI 7days/24hr online滿足您的資金需求，大到買房、買車、裝潢、結婚，小至生活食衣住行育樂，使用「普匯inFlux 」APP享有「高度隱私金融科技」借貸服務，讓你一邊辦著貸款，一邊喝著咖啡，既簡單快速、又安全有隱私！</p>
+      <p>沒有煩人的「專員」打擾，免抵押免擔保，只需要一隻可以上網的手機，尋找普匯，AI 24hr online滿足您的資金需求，大到買房、買車、裝潢、結婚，小至生活食衣住行育樂，使用「普匯inFlux 」APP享有「高度隱私金融科技」借貸服務，讓你一邊辦著貸款，一邊喝著咖啡，既簡單快速、又安全有隱私！</p>
       <p>10分鐘申請、1小時到帳！普匯・你的手機ATM</p>
       <div class="img-wrapper" data-aos="flip-up">
-        <img :src="'./Image/worker_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./Image/worker_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'./Images/worker_web.jpg'" class="img-fluid desktop" />
+        <img :src="'./Images/worker_mobile.jpg'" class="img-fluid mobile" />
       </div>
     </div>
     <div class="experience-card">
@@ -39,22 +39,23 @@
       </div>
     </div>
     <div class="credit-card">
-      <h2>「我的貸款利率是多少？」</h2>
-      <p>您的貸款利率由信用評等決定，信用評等則由您的整體信用評估以及收入(財力)狀況決定。</p>
-      <p>公開透明的評等，讓您對利率一目了然！</p>
+      <h2>「額度最高20萬，那利率呢？」</h2>
+      <p>利率由AI為您量身打造的信用等級決定!</p>
       <div class="table">
         <div
-          :class="['item','hvr-radial-out',item.class]"
+          :class="['item',item.class]"
           :style="{ transform: rotate(index,'circle') }"
           v-for="(item,index) in creditList"
           @click="turn(index)"
+          @mouseover="transform($event)"
+          @mouseleave="recovery($event)"
           :key="index"
         >
           <div :style="{ transform: rotate(index,'text') }">{{item.level}}</div>
         </div>
         <div class="press">
           <div class="pointer">
-            <img :src="'./Image/pointer.svg'" class="img-fluid" />
+            <img :src="'./Images/pointer.svg'" class="img-fluid" />
           </div>
           <div class="credit">{{credit}}</div>
         </div>
@@ -72,7 +73,7 @@
           <span>提供完整資訊，有助提高額度</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>提供資訊 | 線上AI | 立即審核</h5>
@@ -81,7 +82,7 @@
           <span>AI數據分析審核，全程無人打擾</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>線上媒合投資人</h5>
@@ -90,7 +91,7 @@
           <span>審核成功後，立即上架幫您媒合投資人，最快15分鐘完成媒合</span>
         </div>
         <div class="next">
-          <img :src="'./Image/next.svg'" class="img-fluid" />
+          <img :src="'./Images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>媒合成功 | 資金到手</h5>
@@ -112,7 +113,18 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Image/19366.jpg')`"></div>
+    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+      <!-- <div class="zxc">
+        <div class="loan">借款端UI</div>
+        <div class="shakehand">
+          <img :src="'./Images/agreement.svg'" class="img-fluid" />
+        </div>
+        <div class="invest">投資端UI</div>
+      </div>-->
+      <div style="width: 64%;margin: 10px auto;">
+        <img :src="'./Images/flow.png'" class="img-fluid" />
+      </div>
+    </div>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
       <div class="row">
@@ -148,6 +160,7 @@ export default {
   },
   data: () => ({
     credit: "--",
+    timeLineMax: "",
     qaData: [],
     bannerData: {},
     applyData: {},
@@ -169,7 +182,6 @@ export default {
     }
   },
   created() {
-    $(this.$root.$refs.banner).hide();
     this.$store.dispatch("getVideoData", { category: "loan" });
     this.getBannerData();
     this.getApplydata();
@@ -177,7 +189,11 @@ export default {
     $("title").text(`上班族貸款 - inFlux普匯金融科技`);
   },
   mounted() {
-    AOS.init();
+    this.$nextTick(() => {
+      $(this.$root.$refs.banner).hide();
+      this.$root.pageHeaderOffsetTop = 0;
+      AOS.init();
+    });
   },
   methods: {
     getBannerData() {
@@ -213,6 +229,14 @@ export default {
       gsap.to(".pointer", 0.5, {
         rotate: `${dir}dge`
       });
+    },
+    transform($event) {
+      this.timeLineMax = new TimelineMax({ paused: true, reversed: true });
+      this.timeLineMax.to($event.target, { scale: 1.2 });
+      this.timeLineMax.play();
+    },
+    recovery($event) {
+      this.timeLineMax.reverse();
     }
   }
 };
@@ -431,8 +455,36 @@ export default {
     background-repeat: no-repeat;
     background-size: 100%;
     height: 500px;
+    overflow: hidden;
+
+    .zxc {
+      display: flex;
+      width: fit-content;
+      margin: 20px auto;
+
+      %bg {
+        width: 300px;
+        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px black;
+        background: #ffffff;
+      }
+
+      .loan {
+        @extend %bg;
+      }
+
+      .shakehand {
+        width: 100px;
+        line-height: 300px;
+      }
+
+      .invest {
+        @extend %bg;
+      }
+    }
   }
-  
+
   .qa-card {
     padding: 30px;
     background: #ececec;

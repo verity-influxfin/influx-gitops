@@ -1,6 +1,6 @@
 {
     "college": {
-        "bannerHref": "./Image/college_loan_banner.png",
+        "bannerHref": "./Images/college_loan_banner.png",
         "info": [
             "Dcard 熱搜",
             "大學生最愛",
@@ -8,7 +8,7 @@
         ]
     },
     "engineer": {
-        "bannerHref": "./Image/engineer_loan_banner.png",
+        "bannerHref": "./Images/engineer_loan_banner.png",
         "info": [
             "if(“普匯理財 ”= =true)",
             "“缺錢 ”=false",
@@ -16,7 +16,7 @@
         ]
     },
     "freshgraduate": {
-        "bannerHref": "./Image/worker_loan_banner.png",
+        "bannerHref": "./Images/worker_loan_banner.png",
         "info": [
             "憑勞保",
             "免聯徵",
@@ -24,12 +24,19 @@
         ]
     },
     "invest": {
-        "bannerHref": "./Image/invest_banner.png",
+        "bannerHref": "./Images/invest_banner.png",
         "info": [
             "小額分散",
             "穩定報酬首選",
             "1,000元開始投資",
             "創造你的被動收入"
+        ]
+    },
+    "company": {
+        "bannerHref": "./Images/company_banner.png",
+        "info": [
+            "普匯相信每個年輕人",
+            "我們致力幫助他們完成人生的夢想"
         ]
     }
 }

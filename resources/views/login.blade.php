@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    <div id="login" class="login-bg" :style="`background-image: url('./Image/23832.jpg');`">
+    <div id="login" class="login-bg" :style="`background-image: url('./Images/23832.jpg');`">
         <div class="login-form">
             <img src=" {{ asset('Image/logo.png') }}" class="img-fluid" style="max-width: 60%;">
             <div class="input-group">

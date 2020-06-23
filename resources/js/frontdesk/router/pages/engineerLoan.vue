@@ -7,7 +7,7 @@
       </div>
     </div>
     <applyDescribe :data="this.applyData" ref="apply"></applyDescribe>
-    <join href="./Image/child_banner.jpg" :isShowLoan="true"></join>
+    <join href="./Images/child_banner.jpg" :isShowLoan="true"></join>
     <qa :data="this.qaData" title="常見問題"></qa>
   </div>
 </template>
@@ -32,10 +32,10 @@ export default {
     bannerData: {},
     applyData: {},
     dossales: [
-      { imageSrc: "./Image/dossal1.png" },
-      { imageSrc: "./Image/engineer_slick2.png" },
-      { imageSrc: "./Image/dossal3.png" },
-      { imageSrc: "./Image/dossal4.png" }
+      { imageSrc: "./Images/dossal1.png" },
+      { imageSrc: "./Images/engineer_slick2.png" },
+      { imageSrc: "./Images/dossal3.png" },
+      { imageSrc: "./Images/dossal4.png" }
     ]
   }),
   created() {

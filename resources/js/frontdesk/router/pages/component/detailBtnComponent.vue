@@ -1,6 +1,6 @@
 <template>
   <div :class="['btn', btnColor(), 'btn-sm', {'float-left':$props.left},{'col-sm-12':!$props.left}]" @click="send">
-    <img class="img-fluid" :src="`./Image/${btnIcon()}`" />
+    <img class="img-fluid" :src="`./Images/${btnIcon()}`" />
     <span>{{btnText()}}</span>
   </div>
 </template>

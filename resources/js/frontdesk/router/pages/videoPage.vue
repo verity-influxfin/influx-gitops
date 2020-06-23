@@ -1,6 +1,6 @@
 <template>
-  <div class="content-wrapper">
-    <div class="main">
+  <div class="video-wrapper">
+    <div class="contenier">
       <h3 class="title">{{this.videoTitle}}</h3>
       <div class="title-img">
         <img :src="this.videoImg" class="img-fluid" />
@@ -15,13 +15,15 @@
       </div>
       <div class="main-content" v-html="this.videoHtml"></div>
     </div>
-    <fb:comments
-      :href="this.link"
-      num_posts="10"
-      notify="true"
-      :width="(this.width*0.99).toFixed(0)"
-    ></fb:comments>
-    <shareBtn :link="this.link"></shareBtn>
+    <div class="comments">
+      <fb:comments
+        :href="this.link"
+        num_posts="10"
+        notify="true"
+        :width="(this.width*0.99).toFixed(0)"
+      ></fb:comments>
+      <shareBtn :link="this.link"></shareBtn>
+    </div>
   </div>
 </template>
 
@@ -43,6 +45,12 @@ export default {
   created() {
     this.getVideoPage();
   },
+  mounted() {
+    this.$nextTick(() => {
+      $(this.$root.$refs.banner).hide();
+      this.$root.pageHeaderOffsetTop = 0;
+    });
+  },
   methods: {
     getVideoPage() {
       axios
@@ -61,5 +69,72 @@ export default {
 </script>
 
 <style lang="scss">
+.video-wrapper {
+  overflow: hidden;
+  padding: 100px 30px 30px 30px;
+
+  %bg {
+    width: 80%;
+    margin: 0px auto;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 0px 20px black;
+  }
+
+  .contenier {
+    @extend %bg;
+
+    .title,
+    .title-img {
+      text-align: center;
+    }
+
+    .video-container {
+      text-align: center;
+      margin: 20px auto;
+
+      iframe {
+        width: 70%;
+        height: 350px;
+      }
+    }
+
+    .main-content {
+      padding: 20px;
+    }
+  }
+
+  .comments {
+    @extend %bg;
+    margin-top: 50px;
+    position: relative;
+
+    &:before {
+      content: "";
+      transform: rotate(157deg);
+      background-image: url("../../asset/rings.svg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      top: -74px;
+      width: 100px;
+      height: 100px;
+      left: 60px;
+    }
+
+    &:after {
+      content: "";
+      transform: rotate(157deg);
+      background-image: url("../../asset/rings.svg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      top: -74px;
+      width: 100px;
+      height: 100px;
+      right: 60px;
+    }
+  }
+}
 </style>
 

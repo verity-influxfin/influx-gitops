@@ -27,19 +27,19 @@
       <div class="menu-card">
         <div style="width:max-content">
           <router-link class="menu-item" to="/investnotification">
-            <img :src="'./Image/icon_account.svg'" class="img-fluid" />
+            <img :src="'./Images/icon_account.svg'" class="img-fluid" />
             <p>通知</p>
           </router-link>
           <router-link class="menu-item" to="/debt">
-            <img :src="'./Image/icon_moneyback.svg'" class="img-fluid" />
+            <img :src="'./Images/icon_moneyback.svg'" class="img-fluid" />
             <p>債權總覽</p>
           </router-link>
           <router-link class="menu-item" to="/closedcase">
-            <img :src="'./Image/icon_closed.svg'" class="img-fluid" />
+            <img :src="'./Images/icon_closed.svg'" class="img-fluid" />
             <p>結案總覽</p>
           </router-link>
           <router-link class="menu-item" to="/detail">
-            <img :src="'./Image/icon_getmoney.svg'" class="img-fluid" />
+            <img :src="'./Images/icon_getmoney.svg'" class="img-fluid" />
             <p>明細</p>
           </router-link>
         </div>
