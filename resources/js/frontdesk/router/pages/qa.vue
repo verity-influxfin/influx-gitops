@@ -110,6 +110,7 @@ export default {
   padding: 30px;
   overflow: hidden;
   position: relative;
+  width: 100%;
 
   .progress {
     height: 4px;

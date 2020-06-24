@@ -1,50 +1,62 @@
 [
     {
         "imageSrc": "./Images/mobile1.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile2.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile3.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile1.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile2.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile3.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile1.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile2.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile3.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile1.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile2.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     },
     {
         "imageSrc": "./Images/mobile3.png",
+        "name":"ASUS Zenfone Max pro 2019",
         "price": "15000"
     }
 ]

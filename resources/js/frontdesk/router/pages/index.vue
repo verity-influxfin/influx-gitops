@@ -214,7 +214,9 @@
               :key="index"
               :to="item.link"
             >
-              <img :src="item.media_link" class="img-fluid" style="width: 362px;height:180px" />
+              <div class="img">
+                <img :src="item.media_link" class="img-fluid" />
+              </div>
               <span>{{item.post_date}}</span>
               <hr />
               <p>{{item.post_title}}</p>
@@ -233,7 +235,9 @@
               :key="index"
               :to="item.link"
             >
-              <img :src="item.media_link" class="img-fluid" style="width: 362px;height:180px" />
+              <div class="img">
+                <img :src="item.media_link" class="img-fluid" />
+              </div>
               <span>{{item.post_date}}</span>
               <hr />
               <p>{{item.post_title}}</p>
@@ -405,7 +409,7 @@ export default {
     this.$nextTick(() => {
       this.createChart();
       $(this.$root.$refs.banner).show();
-      this.$root.pageHeaderOffsetTop = 568 ;
+      this.$root.pageHeaderOffsetTop = 568;
     });
     AOS.init();
   },
@@ -756,6 +760,8 @@ export default {
 
 <style lang="scss">
 .index-wrapper {
+  width: 100%;
+  
   h2 {
     font-weight: bolder;
   }
@@ -1142,6 +1148,12 @@ export default {
         margin: 0px 10px;
         box-shadow: 0 0 4px black;
         background: #ffffff;
+
+        .img {
+          width: 300px;
+          height: 240px;
+          margin: 0px auto;
+        }
 
         &:hover {
           text-decoration: none;

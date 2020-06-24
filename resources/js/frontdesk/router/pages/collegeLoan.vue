@@ -115,7 +115,7 @@
               <img class="img-fluid" :src="item.imgSrc" />
             </div>
             <p>{{item.text}}</p>
-            <span v-if="item.memo">{{item.memo}}</span>
+            <span v-if="item.memo" v-html="item.memo"></span>
           </div>
         </div>
       </div>
@@ -150,7 +150,7 @@
         </div>
       </div>
       <div class="row">
-        <router-link class="btn btn-primary btn-lg" style="margin:0px auto;" to="qa">
+        <router-link class="btn link" style="margin:0px auto;" to="qa">
           更多問題
           <i class="fas fa-angle-double-right" />
         </router-link>
@@ -161,14 +161,10 @@
 
 <script>
 import bannerComponent from "./component/bannerComponent";
-import applyDescribeComponent from "./component/applyDescribeComponent";
-import qaComponent from "./component/qaComponent";
 
 export default {
   components: {
-    banner: bannerComponent,
-    applyDescribe: applyDescribeComponent,
-    qa: qaComponent
+    banner: bannerComponent
   },
   data: () => ({
     credit: "--",
@@ -274,8 +270,29 @@ export default {
 
 <style lang="scss">
 .college-wrapper {
+  width: 100%;
+
   .progress {
     height: 4px;
+  }
+
+  .link {
+    display: block;
+    background: #006bda;
+    color: #ffffff;
+    width: 20%;
+    margin: 0px auto;
+    font-weight: bolder;
+
+    i {
+      margin-left: 10px;
+    }
+
+    &:hover {
+      border: 2px solid #006bda;
+      background: #ffffff;
+      color: #006bda;
+    }
   }
 
   .text-card {
@@ -509,6 +526,9 @@ export default {
     .flow {
       display: flex;
       text-align: initial;
+      width: fit-content;
+      margin: 0px auto;
+      
       .step {
         border-radius: 10px;
         background: #ffffff;

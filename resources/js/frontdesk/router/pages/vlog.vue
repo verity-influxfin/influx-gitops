@@ -135,6 +135,7 @@ export default {
 .video-wrapper {
   padding: 30px;
   overflow: auto;
+  width: 100%;
 
   .progress {
     height: 4px;

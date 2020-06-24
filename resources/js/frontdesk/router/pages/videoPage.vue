@@ -72,6 +72,7 @@ export default {
 .video-wrapper {
   overflow: hidden;
   padding: 100px 30px 30px 30px;
+  width: 100%;
 
   %bg {
     width: 80%;

@@ -276,6 +276,8 @@ export default {
 
 <style lang="scss">
 .company-wrapper {
+  width: 100%;
+  
   .profile-card {
     background: #006bda;
     padding: 30px;

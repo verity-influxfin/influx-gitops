@@ -145,6 +145,7 @@ export default {
 
 <style lang="scss">
 .news-wrapper {
+  width: 100%;
   padding: 30px;
   overflow: auto;
 

@@ -60,6 +60,7 @@ export default {
 
 <style lang="scss">
 .article-wrapper {
+  width: 100%;
   overflow: hidden;
   background: #dbe6ff;
   padding: 100px 30px 30px 30px;

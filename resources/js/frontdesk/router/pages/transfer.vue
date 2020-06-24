@@ -22,7 +22,29 @@
         </div>
       </div>
     </div>
-    <qa :data="this.qaData" title="常見問題"></qa>
+    <div class="qa-card">
+      <h2>還有其他問題嗎?</h2>
+      <div class="row">
+        <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
+          <p>{{item.title}}</p>
+          <hr />
+          <span v-html="item.content"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
+          <p>Q：{{item.title}}</p>
+          <hr />
+          <span v-html="item.content"></span>
+        </div>
+      </div>
+      <div class="row">
+        <router-link class="btn link" style="margin:0px auto;" to="qa">
+          更多問題
+          <i class="fas fa-angle-double-right" />
+        </router-link>
+      </div>
+    </div>
     <div class="transfer-footer">
       <h2>投資理財大補帖</h2>
       <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
@@ -38,12 +60,7 @@
 </template>
 
 <script>
-import qaComponent from "./component/qaComponent";
-
 export default {
-  components: {
-    qa: qaComponent
-  },
   data: () => ({
     qaData: [],
     transferFlow: [
@@ -62,8 +79,12 @@ export default {
     $("title").text(`債權轉讓 - inFlux普匯金融科技`);
   },
   mounted() {
-    this.createTransferSlick();
-    AOS.init();
+    this.$nextTick(() => {
+      this.createTransferSlick();
+      $(this.$root.$refs.banner).hide();
+      this.$root.pageHeaderOffsetTop = 0;
+      AOS.init();
+    });
   },
   watch: {
     investTonic() {
@@ -83,8 +104,8 @@ export default {
       });
     },
     getQaData() {
-      axios.post("getQaData",{filter: "transfer"}).then(res => {
-          this.qaData = res.data;
+      axios.post("getQaData", { filter: "transfer" }).then(res => {
+        this.qaData = res.data;
       });
     },
     createTransferSlick() {
@@ -151,6 +172,25 @@ export default {
 }
 
 .transfer-wrapper {
+  .link {
+    display: block;
+    background: #006bda;
+    color: #ffffff;
+    width: 20%;
+    margin: 0px auto;
+    font-weight: bolder;
+
+    i {
+      margin-left: 10px;
+    }
+
+    &:hover {
+      border: 2px solid #006bda;
+      background: #ffffff;
+      color: #006bda;
+    }
+  }
+
   .transfer-header {
     .header-title {
       @extend %position;
@@ -202,8 +242,8 @@ export default {
     }
   }
 
-  .transfer-content{
-    img{
+  .transfer-content {
+    img {
       min-width: 100%;
     }
   }
@@ -263,6 +303,43 @@ export default {
       }
       .arrow-right {
         right: 0;
+      }
+    }
+  }
+
+  .qa-card {
+    padding: 30px;
+    background: #ececec;
+    overflow: hidden;
+
+    h2 {
+      text-align: center;
+      color: #006bda;
+    }
+
+    .row {
+      overflow: hidden;
+      display: flex;
+
+      .qa-item {
+        background: #ffffff;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 5px #0069ff;
+        width: 31.5%;
+
+        p {
+          color: #000000;
+        }
+
+        hr {
+          color: #000000;
+        }
+
+        span {
+          color: #000000;
+        }
       }
     }
   }

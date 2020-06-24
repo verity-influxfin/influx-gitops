@@ -109,6 +109,7 @@ export default {
 
 <style lang="scss">
 .blog-wrapper {
+  width: 100%;
   padding: 30px;
   overflow: auto;
 

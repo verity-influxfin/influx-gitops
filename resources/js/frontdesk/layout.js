@@ -305,11 +305,11 @@ $(() => {
 
         if ($(window).scrollTop() > offset.top) {
             $('.blog-quiklink').stop().animate({
-                marginTop: $(window).scrollTop() + 150
+                marginTop: $(window).scrollTop() + 170
             });
         } else {
             $('.blog-quiklink').stop().animate({
-                marginTop: 150
+                marginTop: 170
             });
         }
     });
