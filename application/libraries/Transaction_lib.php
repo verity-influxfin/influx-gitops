@@ -1267,4 +1267,9 @@ class Transaction_lib{
         ]);
         return true;
     }
+
+    public function getDelayUserList()
+    {
+        return $this->CI->transaction_model->getDelayUserList();
+    }
 }
