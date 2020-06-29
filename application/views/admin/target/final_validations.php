@@ -725,7 +725,7 @@
                 var reason = '<p class="form-control-static">' + reasonText + '</p>';
                 var value = '<p class="form-control-static">' + relatedUsers[i].relatedValue + '</p>';
                 var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
-				var userLink = '<a href="' + '/admin/user/edit?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
+				var userLink = '<a href="' + '/admin/user/display?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
                 $("<tr>").append(
                     $('<td class="center-text">').append(reason),
                     $('<td class="center-text">').append(value),

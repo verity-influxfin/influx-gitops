@@ -57,7 +57,7 @@
                             var button = $('<button class="btn btn-default unblockBtn" />').text("解除鎖定");
                         }
 
-                        var userLink = '<a href="/admin/user/edit?id=' + input.user.id + '">' + input.user.id + '</a>'
+                        var userLink = '<a href="/admin/user/display?id=' + input.user.id + '">' + input.user.id + '</a>'
 
                         var trTag = i % 2 == 0 ? '<tr class="even list">' : '<tr class="odd list">';
                         $(trTag).append(
@@ -378,7 +378,7 @@
                                                 $count++;
                                     ?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->id)?$value->id:"" ?>">
-                                            <td><a href="/admin/user/edit?id=<?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?>"><?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?></a></td>
+                                            <td><a href="/admin/user/display?id=<?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?>"><?=isset($value["user"]["id"])?$value["user"]["id"]:"" ?></a></td>
                                             <td><?=isset($value["user"]["name"])?$value["user"]["name"]:"" ?></td>
                                             <td><?=isset($value["user"]["phone"])?$value["user"]["phone"]:"" ?></td>
                                             <td><?=isset($value["admin"]["name"])?$value["admin"]["name"]:"" ?></td>

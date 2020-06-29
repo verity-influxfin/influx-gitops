@@ -61,7 +61,7 @@
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><a href="<?=admin_url('user/edit?id='.$value->user_id) ?>" target="_blank"><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
+                                            <td><a href="<?=admin_url('user/display?id='.$value->user_id) ?>" target="_blank"><?=isset($value->user_id)?$value->user_id:"" ?></a></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
                                             <td><?=$value->admin_id&&isset($name_list[$value->admin_id])?$name_list[$value->admin_id]:"未處理" ?></td>
                                             <td><?=isset($value->status)?$status_list[$value->status]:"" ?></td>

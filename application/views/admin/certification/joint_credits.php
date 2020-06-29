@@ -174,7 +174,7 @@
 
 		function fillUser(user) {
 			$("#user-id").text(user.id);
-			$("#user-id-link").attr("href", "/admin/user/edit?id=" + user.id);
+			$("#user-id-link").attr("href", "/admin/user/display?id=" + user.id);
 			$("#user-id-link").attr("target", "_blank");
 		}
 

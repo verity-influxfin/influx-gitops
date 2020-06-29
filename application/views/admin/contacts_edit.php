@@ -27,7 +27,7 @@
                                         <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 										<div class="form-group">
                                             <label>User ID</label><br>
-                                           <a href="<?=admin_url('user/edit?id='.$data->user_id) ?>" target="_blank" ><?=isset($data->user_id)?$data->user_id:"" ?></a>
+                                           <a href="<?=admin_url('user/display?id='.$data->user_id) ?>" target="_blank" ><?=isset($data->user_id)?$data->user_id:"" ?></a>
                                         </div>
                                         <div class="form-group">
                                             <label>Email</label><br>
