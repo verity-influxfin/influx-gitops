@@ -1571,7 +1571,8 @@ class Certification extends REST_Controller {
 				'user_id'			=> $user_id,
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
-				'content'			=> json_encode($content),
+                'expire_time'		=> strtotime('+20 years'),
+                'content'			=> json_encode($content),
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
