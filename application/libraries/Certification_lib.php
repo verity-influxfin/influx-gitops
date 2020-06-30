@@ -1325,18 +1325,30 @@ class Certification_lib{
     }
 
     public function expire_certification($user_id,$investor=0){
-        if($user_id) {
+        if($user_id && $investor == 0) {
             $certification = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
                 'user_id' => $user_id,
                 'investor' => $investor,
                 'status !=' => 2,
             ]);
+            $expireGraduateDate = false;
             if ($certification) {
                 foreach ($certification as $key => $value) {
-                    if ($investor == 0 && !in_array($value->certification_id, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL])
-                        && $value->expire_time <= time()
-                    || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
-                        && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)) {
+                    if($value->certification_id == CERTIFICATION_STUDENT){
+                        $expireGraduateDate = true;
+                        $content = json_decode($value->content);
+                        if(isset($content->graduate_date) && !empty($content->graduate_date)){
+                            preg_match_all('/\d+/', $content->graduate_date, $matches);
+                            date('Y') < $matches[0][0] && date('m') < $matches[0][1] ? $expireGraduateDate =  false : '';
+                        }
+                    }
+
+                    if (!in_array($value->certification_id, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL, CERTIFICATION_DIPLOMA])
+                                && $value->expire_time <= time()
+                            || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
+                                && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)
+                            || $expireGraduateDate
+                    ) {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }
                 }
