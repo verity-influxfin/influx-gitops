@@ -65,6 +65,13 @@ class User extends MY_Admin_Controller {
 		if(empty($post)){
 			$id = isset($get['id'])?intval($get['id']):0;
 			if($id){
+				$certification_list = array();
+				if($this->certification){
+					foreach($this->certification as $key => $value){
+						$certification_list[$value['alias']] = $value['name'];
+					}
+				}
+
 				$meta_data 			= [];
 				$meta 				= $this->user_meta_model->get_many_by([
 					'user_id'	=> $id,
@@ -80,6 +87,10 @@ class User extends MY_Admin_Controller {
 					'status'	=> 1,
 					//'verify'	=> 1,
 				]);
+				$credit_list		= $this->credit_model->get_many_by(array(
+					'user_id' => $id,
+					'status !=' => 2,
+				));
 
 				$info 			= $this->user_model->get($id);
 				if($info){
@@ -89,9 +100,11 @@ class User extends MY_Admin_Controller {
 					$page_data['school_system'] 		= $this->config->item('school_system');
 					$page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,0,$info->company_status);
 					$page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,1,$info->company_status);
-					$page_data['credit_list'] 			= $this->credit_model->get_many_by(['user_id' => $id, 'status' => 1]);
+					$page_data['credit_list'] 			= $credit_list;
 					$page_data['product_list']			= $this->config->item('product_list');
 					$page_data['bank_account'] 			= $bank_account;
+					$page_data['certification_list'] 	= $certification_list;
+					$page_data['sub_product_list'] = $this->config->item('sub_product_list');
 					$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 					$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
 					//新增設備ID ++
@@ -166,7 +179,10 @@ class User extends MY_Admin_Controller {
 			}
 
 			$meta_data 			= array();
-			$meta 				= $this->user_meta_model->get_many_by(array('user_id'=>$id));
+				$meta 				= $this->user_meta_model->get_many_by([
+					'user_id'	=> $id,
+					'meta_key'	=> ['fb_id']
+				]);
 			if($meta){
 				foreach($meta as $key => $value){
 					$meta_data[$value->meta_key] = $value->meta_value;
@@ -175,7 +191,7 @@ class User extends MY_Admin_Controller {
 			$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
 				'user_id'	=> $id,
 				'status'	=> 1,
-				'verify'	=> 1,
+				//'verify'	=> 1,
 			));
 			$credit_list		= $this->credit_model->get_many_by(array(
 				'user_id' => $id,
@@ -196,6 +212,32 @@ class User extends MY_Admin_Controller {
 				$page_data['bank_account'] 			= $bank_account;
 				$page_data['bank_account_investor'] = $this->user_bankaccount_model->investor_list;
 				$page_data['bank_account_verify'] 	= $this->user_bankaccount_model->verify_list;
+				//新增設備ID ++
+                $login_log_invest 	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+                    'user_id' 		=> $info->id,
+                    'investor' 		=> 1
+                ]);
+                $device_id_invest   = null;
+                if (isset($login_log_invest->client)) {
+                    $device_id_invest = json_decode($login_log_invest->client);
+                }
+
+                if ($device_id_invest) {
+                    $page_data['device_id_invest'] = $device_id_invest->device_id;
+                }
+                $login_log_borrow	= $this->log_userlogin_model->order_by("created_at", "desc")->get_by([
+                    'user_id' 		=> $info->id,
+                    'investor' 		=> 0
+                ]);
+                $device_id_borrow = null;
+                if (isset($login_log_borrow->client)) {
+                    $device_id_borrow = json_decode($login_log_borrow->client);
+                }
+
+                if ($device_id_borrow) {
+                $page_data['device_id_borrow'] = $device_id_borrow->device_id;
+                }
+				//新增設備ID --
 				$this->load->view('admin/_header');
 				$this->load->view('admin/users_edit',$page_data);
 				$this->load->view('admin/_footer');
@@ -346,6 +388,39 @@ class User extends MY_Admin_Controller {
 	        $db->executeBulkWrite('influx_logs.user-login-logs', $bulk, $writeConcern);
 	        $i++;
 	    }
+	}
+
+	public function get_user_notification()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$userId = $input['id'];
+		$investor = $input['investor'];
+		$this->load->model('user/user_notification_model');
+		$notification_list = $this->user_notification_model->get_many_by([
+			'user_id' => $userId,
+			'status !=' => 0,
+			'investor' => $investor
+		]);
+		$cell = [];
+		if (!empty($notification_list)) {
+			foreach ($notification_list as $key => $value) {
+				$cell[] = [
+					date('Y-m-d H:i:s', $value->created_at),
+					$value->title,
+					$value->content,
+				];
+			}
+		}
+		$this->load->library('Phpspreadsheet_lib');
+		$sheetTItle = ['日期','標題','內容'];
+		$contents[] = [
+			'sheet' => '使用者通知信',
+			'title' => $sheetTItle,
+			'content' => $cell,
+		];
+		$file_name = date("YmdHis", time()) . ' user ' . $userId . ' app信件紀錄';
+		$descri = '普匯inFlux 後台管理者 ' . $this->login_info->id . ' [ app信件紀錄 ]';
+		$this->phpspreadsheet_lib->excel($file_name, $contents, 'app信件紀錄', '查核使用', $descri, $this->login_info->id, true);
 	}
 }
 ?>

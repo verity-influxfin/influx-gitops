@@ -131,6 +131,23 @@
 												<input type="text" class="form-control" value="<?= isset($device_id_invest) ? $device_id_invest : "未取得"; ?>">
 											</td>
 										</tr>
+                                        <tr>
+                                            <td>
+                                                <p class="form-control-static">系統通知訊息(Excel)</p>
+                                            </td>
+                                            <td colspan="5">
+                                                <form action="<?=admin_url('user/get_user_notification') ?>" method="get" style="display: inline-block">
+                                                    <input type="submit" class="btn btn-info float-right" value="借款端">
+                                                    <input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
+                                                    <input type="hidden" name="investor" value="0">
+                                                </form>
+                                                <form action="<?=admin_url('user/get_user_notification') ?>" method="get" style="display: inline-block">
+                                                    <input type="submit" class="btn btn-info float-right" value="投資端">
+                                                    <input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
+                                                    <input type="hidden" name="investor" value="1">
+                                                </form>
+                                            </td>
+                                        </tr>
 									</tbody>
 								</table>
 							</div>
