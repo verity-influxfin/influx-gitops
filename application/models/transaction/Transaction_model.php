@@ -36,4 +36,19 @@ class Transaction_model extends MY_Model
         $data['updated_ip'] = get_ip();
         return $data;
     }
+
+    public function getDelayUserList(){
+	    $list = [];
+        $this->db->select('
+                    user_from
+                 ')
+            ->from("p2p_transaction.transactions")
+            ->where('source =', 93);
+        $this->db->group_by('user_from');
+        $query = $this->db->get()->result();
+        foreach ($query as $k => $v){
+            $list[] = $v->user_from;
+        }
+        return $list;
+    }
 }
