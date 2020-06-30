@@ -3,20 +3,15 @@
     <div class="projector">
       <div class="row" ref="projector">
         <div class="slide-item" v-for="(item,index) in fixedTopData" :key="index">
-          <router-link :to="item.link" class="img">
-            <img :src="item.media_link" />
-          </router-link>
+          <a :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url" class="img">
+            <img :src="item.image_url" />
+          </a>
         </div>
       </div>
     </div>
 
     <div class="header">
       <h1>最新消息</h1>
-      <div class="input-custom">
-        <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
-        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-      </div>
 
       <div class="progress">
         <div
@@ -27,6 +22,12 @@
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
+      </div>
+
+      <div class="input-custom">
+        <i class="fas fa-search"></i>
+        <input type="text" class="form-control" v-model="filter" />
+        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
 
@@ -40,10 +41,10 @@ let newsRow = Vue.extend({
   props: ["item"],
   template: `
       <li class="news-card hvr-rotate">
-        <a :href="'#'+item.link">
-          <div class="img"><img :src="item.media_link" class="img-custom" /></div>
-          <span class="date">{{item.post_date}}</span><br>
-          <span class="title">{{item.post_title}}</span>
+        <a :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url">
+          <div class="img"><img :src="item.image_url" class="img-custom" /></div>
+          <span class="date">{{item.updated_at}}</span><br>
+          <span class="title">{{item.title}}</span>
         </a>
       </li>
   `
@@ -59,9 +60,7 @@ export default {
     news() {
       let $this = this;
       $.each($this.$store.getters.NewsData, (index, row) => {
-        $this.$store.getters.NewsData[
-          index
-        ].post_content = `${row.post_content
+        $this.$store.getters.NewsData[index].content = `${row.content
           .replace(/<[^>]*>/g, "")
           .substr(0, 20)}...`;
       });
@@ -85,7 +84,7 @@ export default {
       this.filterNews = newValue;
       this.fixedTopData = [];
       newValue.forEach((item, index) => {
-        if (item.isFixedTop) {
+        if (item.rank == 8 || item.rank == 45) {
           this.fixedTopData.push(item);
         }
       });
@@ -132,11 +131,20 @@ export default {
       $(this.$refs.projector).slick({
         infinite: true,
         centerMode: true,
+        autoplay: true,
         centerPadding: "50px",
         slidesToShow: 1,
         slidesToScroll: 1,
         prevArrow: '<img src="./Images/icon_pre.svg" class="pre">',
-        nextArrow: '<img src="./Images/icon_next.svg" class="next">'
+        nextArrow: '<img src="./Images/icon_next.svg" class="next">',
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              centerPadding: "20px"
+            }
+          }
+        ]
       });
     }
   }
@@ -193,14 +201,15 @@ export default {
         }
 
         .img {
-          height: 330px;
+          height: 300px;
           overflow: hidden;
+          display: block;
+          border: 5px solid #163a74;
+          border-radius: 20px;
 
           img {
             width: 100%;
-            height: 100%;
             border-radius: 20px;
-            border: 5px solid #163a74;
           }
         }
       }
@@ -280,6 +289,11 @@ export default {
         &:hover {
           text-decoration: none;
         }
+
+        .img {
+          max-height: 260px;
+          overflow: hidden;
+        }
       }
     }
   }
@@ -289,22 +303,38 @@ export default {
     width: fit-content;
   }
 
-  @media (max-width: 1023px) {
-    .news-content {
-      width: 95%;
+  @media (max-width: 767px) {
+    padding: 10px;
 
-      .card {
-        width: 46%;
+    .projector {
+      width: 100%;
+
+      .row {
+        width: initial;
+
+        .slide-item {
+          .img {
+            height: 150px;
+          }
+        }
       }
     }
-  }
 
-  @media (max-width: 767px) {
+    .header {
+      width: 100%;
+
+      .input-custom {
+        margin: 10px 0px;
+        position: relative;
+        width: 100%;
+      }
+    }
+
     .news-content {
       width: 100%;
 
-      .card {
-        width: 96%;
+      .news-card {
+        width: initial;
       }
     }
   }

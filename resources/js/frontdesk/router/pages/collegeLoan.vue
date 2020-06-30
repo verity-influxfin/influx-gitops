@@ -33,9 +33,7 @@
           <div class="memo">{{item.memo}}</div>
         </div>
       </div>
-      <p
-        style="text-align: center;margin: 10px 0px;font-size: 25px;font-weight: bolder;"
-      >我們服務了超過140所學校的同學</p>
+      <p>我們服務了超過140所學校的同學</p>
     </div>
     <!-- <div class="partner-card">
       <h2>「最貼近年輕人的普匯金融科技」</h2>
@@ -121,35 +119,28 @@
       </div>
     </div>
     <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
-      <!-- <div class="zxc">
-        <div class="loan">借款端UI</div>
-        <div class="shakehand">
-          <img :src="'./Images/agreement.svg'" class="img-fluid" />
-        </div>
-        <div class="invest">投資端UI</div>
-      </div>-->
-      <div style="width: 54%;margin: 10px auto;">
+      <div>
         <h2 style="text-align: center;">「最貼近年輕人的普匯金融科技」</h2>
         <img :src="'./Images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
           <p>{{item.title}}</p>
           <hr />
           <span v-html="item.content"></span>
         </div>
       </div>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
           <p>Q：{{item.title}}</p>
           <hr />
           <span v-html="item.content"></span>
         </div>
       </div>
-      <div class="row">
+      <div class="qa-row">
         <router-link class="btn link" style="margin:0px auto;" to="qa">
           更多問題
           <i class="fas fa-angle-double-right" />
@@ -238,17 +229,21 @@ export default {
       });
     },
     rotate(index, type) {
-      let rotateFrom = (-22.5 * index) / 18;
+      let angle = window.outerWidth >= 767 ? 22.5 : 42.5;
+      let distense = window.outerWidth >= 767 ? 200 : 100;
+      let rotateFrom = (-angle * index) / 18;
+
       if (type === "circle") {
         return `rotate(${rotateFrom +
-          index * 22.5 -
-          167}deg) translate(200px, 0px)`;
+          index * angle -
+          167}deg) translate(${distense}px, 0px)`;
       } else {
-        return `rotate(${(rotateFrom + index * 22.5 - 167) * -1}deg)`;
+        return `rotate(${(rotateFrom + index * angle - 167) * -1}deg)`;
       }
     },
     turn(index) {
-      let dir = index * 22.5 - 90;
+      let angle = window.outerWidth >= 767 ? 22.5 : 40.5;
+      let dir = index * angle - (window.outerWidth >= 767 ? 90 : 96);
 
       this.credit = this.creditList[index].rate;
 
@@ -318,7 +313,31 @@ export default {
       display: flex;
       align-items: center;
       width: fit-content;
-      animation: carouselAnim 60s infinite alternate linear;
+      animation: collegePcCarouselAnim 60s infinite alternate linear;
+    }
+
+    @media only screen and (max-width: 767px) {
+      .items {
+        animation: collegeMobileCarouselAnim 45s infinite alternate linear;
+      }
+
+      @keyframes collegeMobileCarouselAnim {
+        from {
+          transform: translate(0, 0);
+        }
+        to {
+          transform: translate(calc(-100% + (250px)));
+        }
+      }
+    }
+
+    @keyframes collegePcCarouselAnim {
+      from {
+        transform: translate(0, 0);
+      }
+      to {
+        transform: translate(calc(-100% + (6 * 250px)));
+      }
     }
 
     .entry {
@@ -364,28 +383,11 @@ export default {
       }
     }
 
-    @media only screen and (max-width: 768px) {
-      .items {
-        animation: carouselAnim 45s infinite alternate linear;
-      }
-
-      @keyframes carouselAnim {
-        from {
-          transform: translate(0, 0);
-        }
-        to {
-          transform: translate(calc(-100% + (2 * 300px)));
-        }
-      }
-    }
-
-    @keyframes carouselAnim {
-      from {
-        transform: translate(0, 0);
-      }
-      to {
-        transform: translate(calc(-100% + (5 * 300px)));
-      }
+    p {
+      text-align: center;
+      margin: 10px 0px;
+      font-size: 25px;
+      font-weight: bolder;
     }
   }
 
@@ -439,6 +441,7 @@ export default {
         width: 140px;
         height: 140px;
         filter: drop-shadow(0px 0px 4px black);
+        pointer-events: none;
 
         .pointer {
           height: 140px;
@@ -522,13 +525,13 @@ export default {
     background: #f6f6f6f6;
     padding: 30px;
     text-align: center;
-
+    
     .flow {
       display: flex;
       text-align: initial;
       width: fit-content;
       margin: 0px auto;
-      
+
       .step {
         border-radius: 10px;
         background: #ffffff;
@@ -574,35 +577,12 @@ export default {
 
   .download-card {
     background-repeat: no-repeat;
-    background-size: 100%;
-    height: 500px;
+    background-size: 100% 100%;
     overflow: hidden;
 
-    .zxc {
-      display: flex;
-      width: fit-content;
-      margin: 20px auto;
-
-      %bg {
-        width: 300px;
-        height: 300px;
-        border-radius: 10px;
-        box-shadow: 0 0 8px black;
-        background: #ffffff;
-      }
-
-      .loan {
-        @extend %bg;
-      }
-
-      .shakehand {
-        width: 100px;
-        line-height: 300px;
-      }
-
-      .invest {
-        @extend %bg;
-      }
+    div {
+      width: 54%;
+      margin: 10px auto;
     }
   }
 
@@ -616,7 +596,7 @@ export default {
       color: #006bda;
     }
 
-    .row {
+    .qa-row {
       overflow: hidden;
       display: flex;
 
@@ -638,6 +618,105 @@ export default {
 
         span {
           color: #000000;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .link {
+      width: 50%;
+    }
+
+    .experience-card {
+      padding: 10px;
+
+      h2 {
+        font-size: 25px;
+        line-height: 40px;
+      }
+
+      .comment {
+        top: 10px;
+        right: 10px;
+      }
+
+      p {
+        font-size: 20px;
+      }
+    }
+
+    .credit-card {
+      padding: 10px;
+      
+      h2 {
+        word-break: keep-all;
+        font-size: 25px;
+      }
+
+      .table {
+        width: 100%;
+        height: 370px;
+
+        .item {
+          top: 25%;
+          left: 45.5%;
+        }
+
+        .press {
+          bottom: 50%;
+        }
+      }
+    }
+
+    .applyFlow-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 30px;
+      }
+
+      .flow {
+        display: block;
+
+        .next {
+          line-height: initial;
+          margin: 0px auto;
+          transform: rotate(90deg);
+        }
+      }
+
+      .tips {
+        width: 100%;
+
+        .required {
+          .item {
+            margin: 5px;
+          }
+        }
+      }
+    }
+
+    .download-card {
+      div {
+        width: 90%;
+
+        h2 {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .qa-card {
+      padding: 10px;
+
+      .qa-row {
+        display: block;
+
+        .qa-item {
+          width: 98%;
+          margin: 2px 2px 12px 2px;
         }
       }
     }

@@ -82,28 +82,21 @@
       </div>
     </div>
     <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
-      <!-- <div class="zxc">
-        <div class="loan">借款端UI</div>
-        <div class="shakehand">
-          <img :src="'./Images/agreement.svg'" class="img-fluid" />
-        </div>
-        <div class="invest">投資端UI</div>
-      </div>-->
-      <div style="width: 54%;margin: 10px auto;">
+      <div>
         <img :src="'./Images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <qa :data="this.qaData" title="常見問題"></qa>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
           <p>{{item.title}}</p>
           <hr />
           <span v-html="item.content"></span>
         </div>
       </div>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
           <p>Q：{{item.title}}</p>
           <hr />
@@ -174,17 +167,21 @@ export default {
       });
     },
     rotate(index, type) {
-      let rotateFrom = (-22.5 * index) / 18;
+      let angle = window.outerWidth >= 767 ? 22.5 : 42.5;
+      let distense = window.outerWidth >= 767 ? 200 : 100;
+      let rotateFrom = (-angle * index) / 18;
+
       if (type === "circle") {
         return `rotate(${rotateFrom +
-          index * 22.5 -
-          167}deg) translate(200px, 0px)`;
+          index * angle -
+          167}deg) translate(${distense}px, 0px)`;
       } else {
-        return `rotate(${(rotateFrom + index * 22.5 - 167) * -1}deg)`;
+        return `rotate(${(rotateFrom + index * angle - 167) * -1}deg)`;
       }
     },
     turn(index) {
-      let dir = index * 22.5 - 90;
+      let angle = window.outerWidth >= 767 ? 22.5 : 40.5;
+      let dir = index * angle - (window.outerWidth >= 767 ? 90 : 96);
 
       this.credit = this.creditList[index].rate;
 
@@ -267,6 +264,7 @@ export default {
         width: 140px;
         height: 140px;
         filter: drop-shadow(0px 0px 4px black);
+        pointer-events: none;
 
         .pointer {
           height: 140px;
@@ -381,7 +379,7 @@ export default {
       box-shadow: 2px 2px 4px black;
 
       .required {
-        width: fit-content;
+        width: 100;
         display: flex;
         margin: 0px auto;
         .item {
@@ -400,6 +398,17 @@ export default {
     }
   }
 
+  .download-card {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+
+    div {
+      width: 54%;
+      margin: 10px auto;
+    }
+  }
+
   .qa-card {
     padding: 30px;
     background: #ececec;
@@ -410,7 +419,7 @@ export default {
       color: #006bda;
     }
 
-    .row {
+    .qa-row {
       overflow: hidden;
       display: flex;
 
@@ -432,6 +441,90 @@ export default {
 
         span {
           color: #000000;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .link {
+      width: 50%;
+    }
+
+    .credit-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 25px;
+      }
+
+      .table {
+        width: 100%;
+        height: 370px;
+
+        .item {
+          top: 25%;
+          left: 45.5%;
+        }
+
+        .press {
+          bottom: 50%;
+        }
+      }
+    }
+
+    .applyFlow-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 30px;
+      }
+
+      .flow {
+        display: block;
+
+        .next {
+          line-height: initial;
+          margin: 0px auto;
+          transform: rotate(90deg);
+        }
+      }
+
+      .tips {
+        width: 100%;
+
+        .required {
+          width: 100%;
+          display: block;
+
+          .item {
+            margin: 5px;
+          }
+        }
+      }
+    }
+
+    .download-card {
+      div {
+        width: 90%;
+
+        h2 {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .qa-card {
+      padding: 10px;
+
+      .qa-row {
+        display: block;
+
+        .qa-item {
+          width: 98%;
+          margin: 2px 2px 12px 2px;
         }
       }
     }

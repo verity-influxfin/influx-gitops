@@ -47,7 +47,6 @@ $(() => {
     const vue = new Vue({
         el: '#web_index',
         store,
-        delimiters: ['${', '}'],
         router,
         data: {
             menuList: [],
@@ -73,7 +72,8 @@ $(() => {
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0
+            currentTime: 0,
+            pageHeaderOffsetTop:0
         },
         created() {
             $(this.$root.$refs.banner).show();
@@ -86,10 +86,8 @@ $(() => {
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
 
             this.$nextTick(() => {
-                this.pageHeaderOffset = $('.page-header').offset();
                 AOS.init();
             });
-
         },
         watch: {
             '$store.state.userData'() {
@@ -123,8 +121,7 @@ $(() => {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     autoplay: true,
-                    prevArrow: '<i></i>',
-                    nextArrow: '<i></i>',
+                    arrows:false
                 });
             },
             display() {
@@ -305,11 +302,11 @@ $(() => {
 
         if ($(window).scrollTop() > offset.top) {
             $('.blog-quiklink').stop().animate({
-                marginTop: $(window).scrollTop() + 170
+                marginTop: $(window).scrollTop() + offset.top
             });
         } else {
             $('.blog-quiklink').stop().animate({
-                marginTop: 170
+                marginTop: offset.top
             });
         }
     });

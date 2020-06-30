@@ -40,7 +40,7 @@
             <span>{{item.text}}</span>
           </div>
         </div>
-        <div class="creditNum">
+        <div class="credit-num">
           <div class="circle">
             <div class="total">
               <p>最高可達：</p>
@@ -208,21 +208,21 @@
       <div class="tab-content">
         <div id="news" class="tab-pane fade active show">
           <div class="news-slick" ref="news_slick">
-            <router-link
+            <a
               class="slick-item hvr-float-shadow"
               v-for="(item,index) in news"
+              :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url"
               :key="index"
-              :to="item.link"
             >
               <div class="img">
-                <img :src="item.media_link" class="img-fluid" />
+                <img :src="item.image_url" class="img-fluid" />
               </div>
-              <span>{{item.post_date}}</span>
+              <span>{{item.updated_at}}</span>
               <hr />
-              <p>{{item.post_title}}</p>
-            </router-link>
+              <p>{{item.title}}</p>
+            </a>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="news" style="width: 50%;">
+          <router-link class="btn btn-secondary btn-lg" to="news" style="width: 55%;">
             最新消息&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -243,7 +243,7 @@
               <p>{{item.post_title}}</p>
             </router-link>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="blog" style="width: 50%;">
+          <router-link class="btn btn-secondary btn-lg" to="blog" style="width: 55%;">
             小學堂&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -262,7 +262,6 @@
                   frameborder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
-                  style="height:180px;"
                 ></iframe>
               </div>
               <span>{{item.post_date}}</span>
@@ -270,7 +269,7 @@
               <p>{{item.post_title}}</p>
             </router-link>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="vlog/share" style="width: 50%;">
+          <router-link class="btn btn-secondary btn-lg" to="vlog/share" style="width: 55%;">
             小學堂影音&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -291,14 +290,7 @@
       </div>
     </div>
     <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
-      <!-- <div class="zxc">
-        <div class="loan">借款端UI</div>
-        <div class="shakehand">
-          <img :src="'./Images/agreement.svg'" class="img-fluid" />
-        </div>
-        <div class="invest">投資端UI</div>
-      </div>-->
-      <div style="width: 64%;margin: 10px auto;">
+      <div>
         <img :src="'./Images/flow.png'" class="img-fluid" />
       </div>
     </div>
@@ -409,24 +401,24 @@ export default {
     this.$nextTick(() => {
       this.createChart();
       $(this.$root.$refs.banner).show();
-      this.$root.pageHeaderOffsetTop = 568;
+      this.$root.pageHeaderOffsetTop = $(this.$root.$refs.banner).height();
     });
     AOS.init();
   },
   watch: {
     news(data) {
       this.$nextTick(() => {
-        this.createSlick(this.$refs.news_slick, data);
+        this.createSlick(this.$refs.news_slick);
       });
     },
     knowledge(data) {
       this.$nextTick(() => {
-        this.createSlick(this.$refs.knowledge_slick, data);
+        this.createSlick(this.$refs.knowledge_slick);
       });
     },
     video(data) {
       this.$nextTick(() => {
-        this.createSlick(this.$refs.video_slick, data);
+        this.createSlick(this.$refs.video_slick);
       });
     },
     principal(data) {
@@ -479,7 +471,7 @@ export default {
         this.services = res.data;
       });
     },
-    createSlick(tar, data) {
+    createSlick(tar) {
       $(tar).slick({
         infinite: true,
         slidesToShow: 4,
@@ -640,11 +632,11 @@ export default {
       let title =
         _totalIncome < 0 || _last2Return < 0 || _totalIncome + _cashLast < 0
           ? "領取金額超過每月複投金額"
-          : `投資總額：${this.format(_investAll)} | 回款總額：${this.format(
+          : `投資總額：${this.format(_investAll)} \n 回款總額：${this.format(
               _returnAll
-            )} = ${this.format(_totalIncome)}(期末回款) + ${this.format(
+            )} =  ${this.format(_totalIncome)}(期末回款) + ${this.format(
               _cashLast
-            )}(本金餘額) | 預期獲利：${this.format(_valueTotal)}`;
+            )}(本金餘額) \n 預期獲利：${this.format(_valueTotal)}`;
 
       let line_chart = echarts.init($this.$refs.investChart);
 
@@ -761,7 +753,7 @@ export default {
 <style lang="scss">
 .index-wrapper {
   width: 100%;
-  
+
   h2 {
     font-weight: bolder;
   }
@@ -782,7 +774,7 @@ export default {
       margin: 30px;
       box-shadow: 0 0 6px black;
       display: flex;
-      height: 200px;
+      min-height: 200px;
       background: #ffffff;
 
       &.off {
@@ -868,7 +860,7 @@ export default {
         }
       }
 
-      .creditNum {
+      .credit-num {
         margin: 10px 20px;
 
         .circle {
@@ -988,7 +980,31 @@ export default {
       display: flex;
       align-items: center;
       width: fit-content;
-      animation: carouselAnim 60s infinite alternate linear;
+      animation: indexPcCarouselAnim 60s infinite alternate linear;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .items {
+        animation: indexMobileCarouselAnim 60s infinite alternate linear;
+      }
+
+      @keyframes indexMobileCarouselAnim {
+        from {
+          transform: translate(0, 0);
+        }
+        to {
+          transform: translate(calc(-100%));
+        }
+      }
+    }
+
+    @keyframes indexPcCarouselAnim {
+      from {
+        transform: translate(0, 0);
+      }
+      to {
+        transform: translate(calc(-100% + (3 * 500px)));
+      }
     }
 
     .entry {
@@ -1039,30 +1055,6 @@ export default {
           top: 50px;
           left: -15px;
         }
-      }
-    }
-
-    @media only screen and (max-width: 768px) {
-      .items {
-        animation: carouselAnim 45s infinite alternate linear;
-      }
-
-      @keyframes carouselAnim {
-        from {
-          transform: translate(0, 0);
-        }
-        to {
-          transform: translate(calc(-100% + (2 * 300px)));
-        }
-      }
-    }
-
-    @keyframes carouselAnim {
-      from {
-        transform: translate(0, 0);
-      }
-      to {
-        transform: translate(calc(-100% + (5 * 300px)));
       }
     }
   }
@@ -1148,11 +1140,13 @@ export default {
         margin: 0px 10px;
         box-shadow: 0 0 4px black;
         background: #ffffff;
+        min-height: 307px;
 
         .img {
           width: 300px;
-          height: 240px;
+          height: 185px;
           margin: 0px auto;
+          overflow: hidden;
         }
 
         &:hover {
@@ -1162,6 +1156,11 @@ export default {
         hr {
           border-top: 1px solid #000000;
           margin: 5px 10px;
+        }
+
+        iframe {
+          width: 100%;
+          height: 180px;
         }
       }
     }
@@ -1201,35 +1200,12 @@ export default {
 
   .download-card {
     background-repeat: no-repeat;
-    background-size: 100%;
-    height: 500px;
+    background-size: 100% 100%;
     overflow: hidden;
 
-    .zxc {
-      display: flex;
-      width: fit-content;
-      margin: 20px auto;
-
-      %bg {
-        width: 300px;
-        height: 300px;
-        border-radius: 10px;
-        box-shadow: 0 0 8px black;
-        background: #ffffff;
-      }
-
-      .loan {
-        @extend %bg;
-      }
-
-      .shakehand {
-        width: 100px;
-        line-height: 300px;
-      }
-
-      .invest {
-        @extend %bg;
-      }
+    div {
+      width: 54%;
+      margin: 10px auto;
     }
   }
 
@@ -1270,6 +1246,122 @@ export default {
             text-align: center;
             font-weight: 700;
           }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .product-card {
+      padding: 10px;
+
+      .card-item {
+        margin: 20px 10px;
+        width: initial;
+      }
+    }
+
+    .game-card {
+      %layout {
+        float: none;
+        width: 100%;
+      }
+
+      .loan-game {
+        .option {
+          .item {
+            margin: 5px 18px;
+          }
+        }
+
+        .credit-num {
+          margin: 10px 0px;
+
+          .circle {
+            width: 100%;
+
+            .total {
+              left: 50%;
+            }
+          }
+        }
+      }
+
+      .invest-game {
+        .option {
+          .item {
+            width: 100%;
+            margin: 0px;
+          }
+        }
+
+        .chart {
+          margin: 0px;
+          height: 302px;
+
+          .invest-chart {
+            width: 355px;
+            height: 302px;
+            text-align: start;
+          }
+        }
+      }
+    }
+
+    .advantage-card {
+      padding: 0px;
+
+      .content {
+        display: block;
+
+        .item {
+          transition-delay: 0.4s !important;
+        }
+      }
+    }
+
+    .experience-card {
+      padding: 10px;
+    }
+
+    .information-card {
+      .nav-item {
+        margin: 0px 3px;
+
+        .nav-link {
+          margin: 0px 2px;
+        }
+      }
+
+      .tab-content {
+        .slick-item {
+          .img {
+            width: 270px;
+          }
+
+          iframe {
+            height: 160px;
+          }
+        }
+      }
+    }
+
+    .slogan-card {
+      display: block;
+      overflow: hidden;
+      padding: 25px;
+
+      .logo {
+        width: 100%;
+      }
+
+      .slogan {
+        .content {
+          position: initial;
+          top: 0;
+          left: 0;
+          transform: initial;
+          text-align: justify;
         }
       }
     }

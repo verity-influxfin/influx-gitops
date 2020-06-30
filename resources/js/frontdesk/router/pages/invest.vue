@@ -43,7 +43,7 @@
           aria-valuemax="100"
         ></div>
       </div>
-      <div class="video-row">
+      <div class="video-row" ref="video_slick">
         <div class="item" v-for="(item,index) in video" :key="index">
           <iframe
             :src="item.video_link"
@@ -62,27 +62,20 @@
       </router-link>
     </div>
     <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
-      <!-- <div class="zxc">
-        <div class="loan">借款端UI</div>
-        <div class="shakehand">
-          <img :src="'./Images/agreement.svg'" class="img-fluid" />
-        </div>
-        <div class="invest">投資端UI</div>
-      </div>-->
       <div style="width: 64%;margin: 10px auto;">
         <img :src="'./Images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
           <p>{{item.title}}</p>
           <hr />
           <span v-html="item.content"></span>
         </div>
       </div>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
           <p>Q：{{item.title}}</p>
           <hr />
@@ -125,24 +118,25 @@ export default {
     this.$nextTick(() => {
       $(this.$root.$refs.banner).hide();
       this.$root.pageHeaderOffsetTop = 0;
-      this.createSlick();
       AOS.init();
     });
   },
+  watch: {
+    video() {
+      this.$nextTick(() => {
+        this.createSlick();
+      });
+    }
+  },
   methods: {
     createSlick() {
-      $(this.$refs.invest_slick).slick({
+      $(this.$refs.video_slick).slick({
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         autoplay: true,
-        dots: true,
-        dotsClass: "slick-custom-dots",
-        customPaging(slider, i) {
-          return '<i class="fas fa-circle"></i>';
-        },
-        prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
-        nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
+        dots: false,
+        arrows: false,
         responsive: [
           {
             breakpoint: 767,
@@ -308,7 +302,7 @@ export default {
       color: #006bda;
     }
 
-    .row {
+    .qa-row {
       overflow: hidden;
       display: flex;
 
@@ -337,8 +331,7 @@ export default {
 
   .download-card {
     background-repeat: no-repeat;
-    background-size: 100%;
-    height: 500px;
+    background-size: 100% 100%;
     overflow: hidden;
 
     .zxc {
@@ -365,6 +358,85 @@ export default {
 
       .invest {
         @extend %bg;
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .link {
+      width: 50%;
+    }
+
+    .step-card {
+      padding: 10px;
+
+      h3 {
+        margin-bottom: 20px;
+      }
+
+      h4 {
+        margin-bottom: 15px;
+      }
+
+      .step-list {
+        width: 100%;
+
+        .item {
+          margin: 0px;
+          padding: 0px;
+
+          .content {
+            flex-direction: column;
+            padding: 10px;
+
+            .app-pic {
+              width: 70%;
+              margin: 0px auto !important;
+              order: 1;
+            }
+
+            .directions {
+              width: 90%;
+              margin: 20px auto !important;
+              order: 2;
+            }
+          }
+        }
+      }
+    }
+
+        .experience-card {
+      padding: 10px;
+
+      h2 {
+        text-align: center;
+      }
+
+      .video-row {
+        display: block;
+        width: initial;
+
+        .item {
+          text-align: center;
+
+          p {
+            text-align: initial;
+          }
+        }
+      }
+    }
+
+    
+    .qa-card {
+      padding: 10px;
+
+      .qa-row {
+        display: block;
+
+        .qa-item {
+          width: 98%;
+          margin: 2px 2px 12px 2px;
+        }
       }
     }
   }

@@ -85,11 +85,11 @@
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ml-auto">
                     <li v-for="item in menuList" class="nav-item dropdown">
-                        <router-link v-if="item.subMenu.length === 0" class="nav-link" :to="item.href">${item.title}</router-link>
-                        <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">${item.title}</a>
+                        <router-link v-if="item.subMenu.length === 0" class="nav-link" :to="item.href">@{{item.title}}</router-link>
+                        <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">@{{item.title}}</a>
                         <ul class="dropdown-menu" v-if="item.subMenu.length !== 0">
                             <li v-for="subItem in item.subMenu" :class="[(!subItem.isActive ? 'coming-soon' : '')]">
-                                <router-link class="dropdown-item" :to="subItem.href">${subItem.name}${!subItem.isActive ? '(coming soon)' : ''}</router-link>
+                                <router-link class="dropdown-item" :to="subItem.href">@{{subItem.name}}@{{!subItem.isActive ? '(coming soon)' : ''}}</router-link>
                             </li>
                         </ul>
                     </li>
@@ -100,7 +100,7 @@
                         <router-link class="nav-link" to="/register">註冊</router-link>
                     </li>
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 ${userData.name}</a>
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
                                 <router-link class="dropdown-item loan-link" to="/myloan">借款端</router-link>
@@ -127,12 +127,12 @@
                         <ul v-for="row in menuList" class="list-column">
                             <template v-if="row.href">
                                 <li>
-                                    <router-link :to="row.href">${row.title}</router-link>
+                                    <router-link :to="row.href">@{{row.title}}</router-link>
                                 </li>
                             </template>
                             <template v-else>
                                 <li v-for="item in row.subMenu">
-                                    <router-link :to="item.href">${item.name}</router-link>
+                                    <router-link :to="item.href">@{{item.name}}</router-link>
                                 </li>
                             </template>
                         </ul>
@@ -143,7 +143,7 @@
                     <div class="card-content">
                         <ul class="list-column">
                             <li v-for="item in actionList">
-                                <router-link :to="item.href">${item.text}</router-link>
+                                <router-link :to="item.href">@{{item.text}}</router-link>
                             </li>
                         </ul>
                     </div>
@@ -171,7 +171,7 @@
                         <h5>申貸</h5>
                         <div class="down-pic">
                             <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('Images/google-play-badge.png') }}" class="img-fluid"></a>
-                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"></a><img src="{{ asset('Images/app-store-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('Images/app-store-badge.png') }}" class="img-fluid"></a>
                         </div>
                         <h5>投資</h5>
                         <div class="down-pic">
@@ -183,11 +183,12 @@
             </div>
             <div class="horizontal-line"></div>
             <div class="row footer-license">
-                <p>Copyright ©2018 普匯金融科技股份有限公司<i class="gap fas fa-grip-lines-vertical"></i>
-                    <router-link to="/userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
+                <p>Copyright ©2018 普匯金融科技股份有限公司</p>
+                <p><router-link to="/userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
                     <router-link to="/privacyTerms">隱私條款政策</router-link><i class="gap fas fa-grip-lines-vertical"></i>
-                    <router-link to="/loanerTerms">借款人服務條款</router-link><br>會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡
+                    <router-link to="/loanerTerms">借款人服務條款</router-link>
                 </p>
+                <p>會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡</p>
             </div>
         </div>
         <div class="afc_popup hidden-phone" ref="afc_popup">

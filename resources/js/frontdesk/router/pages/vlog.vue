@@ -1,14 +1,9 @@
 <template>
-  <div class="video-wrapper">
+  <div class="vlog-wrapper">
     <div class="header">
       <h2 v-if="$route.params.category === 'share'">小學堂影音</h2>
       <h2 v-if="$route.params.category === 'invest'">投資人專訪</h2>
       <h2 v-if="$route.params.category === 'loan'">借款人專訪</h2>
-      <div class="input-custom">
-        <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
-        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-      </div>
       <div class="progress">
         <div
           class="progress-bar"
@@ -18,6 +13,11 @@
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
+      </div>
+      <div class="input-custom">
+        <i class="fas fa-search"></i>
+        <input type="text" class="form-control" v-model="filter" />
+        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
     <ul class="video-content" ref="content"></ul>
@@ -101,6 +101,13 @@ export default {
     this.refresh();
     $("title").text(`影音分享 - inFlux普匯金融科技`);
   },
+  mounted() {
+    this.$nextTick(() => {
+      $(this.$root.$refs.banner).hide();
+      this.$root.pageHeaderOffsetTop = 0;
+      AOS.init();
+    });
+  },
   methods: {
     refresh() {
       let category = this.$route.params.category;
@@ -132,7 +139,7 @@ export default {
 </script>
 
 <style lang="scss">
-.video-wrapper {
+.vlog-wrapper {
   padding: 30px;
   overflow: auto;
   width: 100%;
@@ -226,29 +233,32 @@ export default {
           }
         }
       }
+    }
+  }
 
-      @media (max-width: 1025px) {
-        display: block;
+  @media screen and (max-width: 767px) {
+    padding: 10px;
 
-        .video-iframe {
-          iframe {
-            width: 100%;
-            height: 350px;
-          }
-        }
+    .header {
+      width: 100%;
+
+      .input-custom {
+        width: 100%;
+        position: relative;
+        margin: 10px auto;
       }
-      @media (max-width: 767px) {
-        display: block;
+    }
+
+    .video-content {
+      width: 100%;
+
+      .video {
+        width: initial;
 
         .video-iframe {
           iframe {
-            width: auto;
-            height: auto;
+            height: 190px;
           }
-        }
-
-        .video-info {
-          margin: 0px;
         }
       }
     }

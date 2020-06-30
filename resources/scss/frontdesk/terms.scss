@@ -12,4 +12,13 @@
         padding: 20px;
         margin: 0px auto;
     }
+
+    @media screen and (max-width: 767px) {
+        padding: 10px;
+
+        .terms-page {
+            width: 100%;
+            padding: 10px;
+        }
+    }
 }

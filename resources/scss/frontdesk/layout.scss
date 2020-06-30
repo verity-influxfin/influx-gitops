@@ -43,6 +43,19 @@ a {
             }
         }
     }
+
+    @media (max-width: 767px) {
+        .puhey-banner {
+            .content {
+                font-size: 16px;
+            }
+
+            .app-entrance {
+                width: 70%;
+                top: 80%;
+            }
+        }
+    }
 }
 
 .page-header {
@@ -217,8 +230,59 @@ a {
     }
 
     @media (max-width: 767px) {
-        .footer-license {
-            padding: 15px 0px;
+        ul {
+            padding: 0px;
+            margin-right: 0px;
+            margin-bottom: 5px;
+
+            li {
+                list-style: none;
+                margin-right: 0px;
+                margin-bottom: 5px;
+            }
+        }
+
+        .footer-content {
+            display: block;
+            .list-card,
+            .contact-card,
+            .cooperation-card {
+                margin-bottom: 25px;
+                text-align: center;
+
+                .card-content {
+                    display: block;
+                    margin: 0px auto;
+                    font-size: 16px;
+                }
+            }
+
+            .follow-card {
+                text-align: center;
+                .quick-link {
+                    font-size: 35px;
+                    margin: 0px 30px;
+                }
+            }
+
+            .download-card {
+                margin: 20px;
+
+                .down-pic {
+                    margin-bottom: 10px;
+
+                    a {
+                        margin: 0px 10px;
+                    }
+
+                    img {
+                        width: 130px;
+                        &:first-child {
+                            margin-right: 0px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -517,6 +581,14 @@ a {
     }
     .hidden-desktop {
         display: none;
+    }
+
+    .blog-quiklink {
+        margin-top: 260px;
+    }
+
+    .back-top {
+        top: 45%;
     }
 }
 

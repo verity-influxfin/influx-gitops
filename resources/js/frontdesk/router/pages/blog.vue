@@ -2,11 +2,6 @@
   <div class="blog-wrapper">
     <div class="header">
       <h2>金融小學堂</h2>
-      <div class="input-custom">
-        <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
-        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-      </div>
       <div class="progress">
         <div
           class="progress-bar"
@@ -16,6 +11,11 @@
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
+      </div>
+      <div class="input-custom">
+        <i class="fas fa-search"></i>
+        <input type="text" class="form-control" v-model="filter" />
+        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
     <ul class="blog-content" ref="content"></ul>
@@ -40,7 +40,7 @@ export default {
   data: () => ({
     filter: "",
     pageHtml: "",
-    filterKnowledge:[]
+    filterKnowledge: []
   }),
   computed: {
     knowledge() {
@@ -71,7 +71,7 @@ export default {
       this.filterKnowledge = newVal;
       this.pagination();
     },
-    filter(newVal){
+    filter(newVal) {
       this.filterKnowledge = [];
       this.knowledge.forEach((row, index) => {
         if (row.post_title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
@@ -212,22 +212,24 @@ export default {
     width: fit-content;
   }
 
-  @media (max-width: 1023px) {
-    .blog-content {
-      width: 95%;
+  @media (max-width: 767px) {
+    padding: 10px;
 
-      .card {
-        width: 46%;
+    .header {
+      width: 100%;
+
+      .input-custom {
+        position: relative;
+        width: initial;
+        margin: 10px auto;
       }
     }
-  }
 
-  @media (max-width: 767px) {
     .blog-content {
       width: 100%;
 
-      .card {
-        width: 96%;
+      .article {
+        width: initial;
       }
     }
   }

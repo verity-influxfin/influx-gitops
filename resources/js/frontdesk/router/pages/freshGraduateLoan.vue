@@ -24,7 +24,7 @@
           aria-valuemax="100"
         ></div>
       </div>
-      <div class="video-row">
+      <div class="video-row" ref="video_slick">
         <div class="item" v-for="(item,index) in shares" :key="index">
           <iframe
             :src="item.video_link"
@@ -118,27 +118,20 @@
       </div>
     </div>
     <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
-      <!-- <div class="zxc">
-        <div class="loan">借款端UI</div>
-        <div class="shakehand">
-          <img :src="'./Images/agreement.svg'" class="img-fluid" />
-        </div>
-        <div class="invest">投資端UI</div>
-      </div>-->
-      <div style="width: 64%;margin: 10px auto;">
+      <div>
         <img :src="'./Images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">
       <h2>還有其他問題嗎?</h2>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
           <p>{{item.title}}</p>
           <hr />
           <span v-html="item.content"></span>
         </div>
       </div>
-      <div class="row">
+      <div class="qa-row">
         <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
           <p>Q：{{item.title}}</p>
           <hr />
@@ -199,6 +192,13 @@ export default {
       AOS.init();
     });
   },
+  watch: {
+    shares() {
+      this.$nextTick(() => {
+        this.createSlick();
+      });
+    }
+  },
   methods: {
     getBannerData() {
       axios.post("getBannerData", { filter: "freshgraduate" }).then(res => {
@@ -215,18 +215,41 @@ export default {
         this.qaData = res.data;
       });
     },
+    createSlick() {
+      $(this.$refs.video_slick).slick({
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        autoplay: true,
+        dots: false,
+        arrows: false,
+        responsive: [
+          {
+            breakpoint: 767,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+        ]
+      });
+    },
     rotate(index, type) {
-      let rotateFrom = (-22.5 * index) / 18;
+      let angle = window.outerWidth >= 767 ? 22.5 : 42.5;
+      let distense = window.outerWidth >= 767 ? 200 : 100;
+      let rotateFrom = (-angle * index) / 18;
+
       if (type === "circle") {
         return `rotate(${rotateFrom +
-          index * 22.5 -
-          167}deg) translate(200px, 0px)`;
+          index * angle -
+          167}deg) translate(${distense}px, 0px)`;
       } else {
-        return `rotate(${(rotateFrom + index * 22.5 - 167) * -1}deg)`;
+        return `rotate(${(rotateFrom + index * angle - 167) * -1}deg)`;
       }
     },
     turn(index) {
-      let dir = index * 22.5 - 90;
+      let angle = window.outerWidth >= 767 ? 22.5 : 40.5;
+      let dir = index * angle - (window.outerWidth >= 767 ? 90 : 96);
 
       this.credit = this.creditList[index].rate;
 
@@ -249,7 +272,7 @@ export default {
 <style lang="scss">
 .freshGraduate-wrapper {
   width: 100%;
-  
+
   .progress {
     height: 4px;
   }
@@ -346,6 +369,7 @@ export default {
         width: 140px;
         height: 140px;
         filter: drop-shadow(0px 0px 4px black);
+        pointer-events: none;
 
         .pointer {
           height: 140px;
@@ -435,7 +459,7 @@ export default {
       text-align: initial;
       width: fit-content;
       margin: 0px auto;
-      
+
       .step {
         border-radius: 10px;
         background: #ffffff;
@@ -481,35 +505,12 @@ export default {
 
   .download-card {
     background-repeat: no-repeat;
-    background-size: 100%;
-    height: 500px;
+    background-size: 100% 100%;
     overflow: hidden;
 
-    .zxc {
-      display: flex;
-      width: fit-content;
-      margin: 20px auto;
-
-      %bg {
-        width: 300px;
-        height: 300px;
-        border-radius: 10px;
-        box-shadow: 0 0 8px black;
-        background: #ffffff;
-      }
-
-      .loan {
-        @extend %bg;
-      }
-
-      .shakehand {
-        width: 100px;
-        line-height: 300px;
-      }
-
-      .invest {
-        @extend %bg;
-      }
+    div {
+      width: 54%;
+      margin: 10px auto;
     }
   }
 
@@ -523,7 +524,7 @@ export default {
       color: #006bda;
     }
 
-    .row {
+    .qa-row {
       overflow: hidden;
       display: flex;
 
@@ -545,6 +546,98 @@ export default {
 
         span {
           color: #000000;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .link {
+      width: 50%;
+    }
+
+    .experience-card {
+      padding: 10px;
+
+      h2 {
+        text-align: center;
+      }
+
+      .video-row {
+        display: block;
+        width: initial;
+
+        .item {
+          text-align: center;
+
+          p {
+            text-align: initial;
+          }
+        }
+      }
+    }
+
+    .credit-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 25px;
+      }
+
+      .table {
+        width: 100%;
+        height: 370px;
+
+        .item {
+          top: 25%;
+          left: 45.5%;
+        }
+
+        .press {
+          bottom: 50%;
+        }
+      }
+    }
+
+    .applyFlow-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 30px;
+      }
+
+      .flow {
+        display: block;
+
+        .next {
+          line-height: initial;
+          margin: 0px auto;
+          transform: rotate(90deg);
+        }
+      }
+
+      .tips {
+        width: 100%;
+
+        .required {
+          .item {
+            margin: 5px;
+          }
+        }
+      }
+    }
+
+    .qa-card {
+      padding: 10px;
+
+      .qa-row {
+        display: block;
+
+        .qa-item {
+          width: 98%;
+          margin: 2px 2px 12px 2px;
         }
       }
     }

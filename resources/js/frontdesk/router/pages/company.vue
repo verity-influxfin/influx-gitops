@@ -17,7 +17,7 @@
       <div class="content">
         <div v-for="(item,index) in regulations" class="item" :key="index">
           <div class="img">
-            <img :src="item.imageSrc" />
+            <img class="img-fluid" :src="item.imageSrc" />
           </div>
           <div class="text">
             <h3>{{item.title}}</h3>
@@ -58,13 +58,13 @@
             <img :src="item.imageSrc" class="img-fluid" @click="showPartner(index,$event)" />
           </div>
         </div>
-        <div v-if="Object.keys(partnerData).length !==0" class="content">
-          <i class="far fa-times-circle" @click="partnerData = {}"></i>
-          <h2>{{partnerData.title}}</h2>
-          <p>{{partnerData.subTitle}}</p>
-          <hr />
-          <p v-html="partnerData.text"></p>
-        </div>
+      </div>
+      <div v-if="Object.keys(partnerData).length !==0" class="content">
+        <i class="far fa-times-circle" @click="partnerData = {}"></i>
+        <h2>{{partnerData.title}}</h2>
+        <p>{{partnerData.subTitle}}</p>
+        <hr />
+        <p v-html="partnerData.text"></p>
       </div>
     </div>
     <div class="party-card">
@@ -226,6 +226,25 @@ export default {
         this.partner = res.data;
       });
     },
+    createSlick() {
+      $(this.$refs.partner_slick).slick({
+        infinite: true,
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        autoplay: true,
+        dots: false,
+        arrows: false,
+        responsive: [
+          {
+            breakpoint: 767,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+        ]
+      });
+    },
     showPartner(index, $event) {
       let $target = $($event.target);
       this.partnerData = this.partner[index];
@@ -277,7 +296,7 @@ export default {
 <style lang="scss">
 .company-wrapper {
   width: 100%;
-  
+
   .profile-card {
     background: #006bda;
     padding: 30px;
@@ -311,6 +330,7 @@ export default {
     display: flex;
     padding: 30px;
     background: #cacaca;
+    overflow: hidden;
 
     .party {
       width: 32%;
@@ -345,6 +365,11 @@ export default {
         width: 46.5%;
         background: #ffffff;
 
+        .img {
+          width: 170px;
+          height: 170px;
+        }
+
         .text {
           border-left: 1px solid #cecece;
           padding: 10px;
@@ -367,6 +392,7 @@ export default {
     border-bottom: 2px solid #5d5d5d;
     background: #f0ffb2;
     position: relative;
+    overflow: hidden;
 
     %img {
       position: absolute;
@@ -388,7 +414,7 @@ export default {
     .list {
       width: fit-content;
       margin: 0px auto;
-      overflow: hidden;
+      overflow-y: scroll;
       background: #b36b12;
       border-radius: 15px;
       padding: 10px 50px;
@@ -473,10 +499,10 @@ export default {
 
   .partner-card {
     padding: 30px;
-    overflow: hidden;
     text-align: center;
     font-weight: bolder;
     background: #006bda;
+    overflow-x: scroll;
 
     h3 {
       color: #ffffff;
@@ -488,6 +514,10 @@ export default {
       padding: 10px;
       width: fit-content;
       margin: 0px auto;
+
+      .slick-list {
+        overflow: initial;
+      }
 
       .item {
         .photo {
@@ -502,38 +532,38 @@ export default {
           cursor: pointer;
         }
       }
+    }
 
-      .content {
+    .content {
+      position: absolute;
+      width: 300px;
+      z-index: 1;
+      border-radius: 10px;
+      background: #ffffff;
+      filter: drop-shadow(0px 0px 9px black);
+      padding: 10px;
+      transition-duration: 0.5s;
+      text-align: end;
+
+      h2 {
+        text-align: center;
+      }
+
+      p {
+        text-align: justify;
+      }
+
+      &:before {
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-bottom: 20px solid #ffffff;
+        border-right: 15px solid #ffffff00;
+        border-left: 15px solid #ffffff00;
         position: absolute;
-        width: 300px;
-        z-index: 1;
-        border-radius: 10px;
-        background: #ffffff;
-        filter: drop-shadow(0px 0px 9px black);
-        padding: 10px;
-        transition-duration: 0.5s;
-        text-align: end;
-
-        h2 {
-          text-align: center;
-        }
-
-        p {
-          text-align: justify;
-        }
-
-        &:before {
-          content: "";
-          width: 0px;
-          height: 0px;
-          border-bottom: 20px solid #ffffff;
-          border-right: 15px solid #ffffff00;
-          border-left: 15px solid #ffffff00;
-          position: absolute;
-          top: -20px;
-          left: 50%;
-          transform: translate(-50%, 0px);
-        }
+        top: -20px;
+        left: 50%;
+        transform: translate(-50%, 0px);
       }
     }
   }
@@ -640,6 +670,120 @@ export default {
 
     @media (min-width: 567px) {
       max-width: 800px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .profile-card {
+      padding: 10px;
+
+      .puhey {
+        display: block;
+        text-align: justify;
+
+        .img {
+          width: 100%;
+        }
+
+        .text {
+          padding: 10px;
+        }
+      }
+    }
+
+    .advantage-card {
+      padding: 10px;
+
+      .content {
+        width: 100%;
+
+        .item {
+          width: initial;
+          margin: 5px;
+          flex-direction: column;
+
+          .img {
+            text-align: center;
+            width: 50%;
+            margin: 0px auto;
+          }
+
+          .text {
+            border-left: none;
+            display: flex;
+            flex-direction: column;
+
+            hr {
+              order: 1;
+            }
+          }
+        }
+      }
+    }
+
+    .media-card {
+      padding: 10px;
+
+      .list {
+        padding: 10px;
+        height: 355px;
+      }
+
+      %img {
+        bottom: 0%;
+      }
+
+      .left_megaphone {
+        left: -15%;
+      }
+
+      .right_megaphone {
+        right: -15%;
+      }
+    }
+
+    .partner-card {
+      padding: 10px;
+
+      .list {
+        .item {
+          transition-delay: 0.3s !important;
+        }
+      }
+    }
+
+    .party-card {
+      padding: 10px;
+      flex-direction: column;
+
+      .party {
+        width: initial;
+      }
+    }
+
+    .milestone-card {
+      padding: 10px;
+
+      .timeline {
+        .block {
+          width: inherit;
+          margin: 10px;
+
+          &::before {
+            left: 0em;
+          }
+
+          .icon {
+            left: 0em;
+          }
+
+          .event {
+            padding: 2em 0px;
+            left: 1em;
+            width: 90%;
+          }
+        }
+      }
     }
   }
 }

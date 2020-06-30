@@ -33,6 +33,7 @@
       </a>
     </div>
     <div class="applyFlow-card">
+      <h2>「不知道該如何申貸嗎？」</h2>
       <div class="flow">
         <div class="step">
           <span>step1.</span>
@@ -126,7 +127,7 @@ export default {
 .mobile-wrapper {
   width: 100%;
   overflow: auto;
-  
+
   .progress {
     height: 4px;
     width: 80%;
@@ -268,21 +269,61 @@ export default {
         min-width: 100%;
       }
     }
+  }
 
-    @media (max-width: 767px) {
-      .banner-text {
-        font-size: 16px;
-      }
+  @media (max-width: 767px) {
+    .goods-card {
+      width: 100%;
 
-      .desktop {
-        display: none;
+      .item {
+        width: 96%;
+        margin: 10px auto;
+        float: none;
+        display: block;
       }
     }
 
-    @media (min-width: 767px) {
-      .mobile {
-        display: none;
+    .applyFlow-card {
+      padding: 10px;
+
+      h2 {
+        word-break: keep-all;
+        font-size: 30px;
       }
+
+      .flow {
+        display: block;
+
+        .next {
+          line-height: initial;
+          margin: 0px auto;
+          transform: rotate(90deg);
+        }
+      }
+
+      .tips {
+        width: 100%;
+
+        .required {
+          .item {
+            margin: 5px;
+          }
+        }
+      }
+    }
+
+    .banner-text {
+      font-size: 16px;
+    }
+
+    .desktop {
+      display: none;
+    }
+  }
+
+  @media (min-width: 767px) {
+    .mobile {
+      display: none;
     }
   }
 }

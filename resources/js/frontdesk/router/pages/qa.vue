@@ -20,7 +20,7 @@
       <div class="switch">
         <a href="#loan">借款常見問題</a>
         <a href="#invest">投資常見問題</a>
-        <a href="#afterLoanData">貸後常見問題</a>
+        <a href="#afterLoan">貸後常見問題</a>
       </div>
     </div>
     <div class="content">
@@ -28,9 +28,9 @@
         <qa :data="borrow" category="loanData" title="借款常見問題" :hideLink="true"></qa>
       </div>
       <div id="invest">
-        <qa :data="invest" category="invest" title="投資常見問題" :hideLink="true"></qa>
+        <qa :data="invest" category="investData" title="投資常見問題" :hideLink="true"></qa>
       </div>
-      <div id="afterLoanData">
+      <div id="afterLoan">
         <qa :data="this.default" category="afterLoanData" title="貸後常見問題" :hideLink="true"></qa>
       </div>
     </div>
@@ -79,7 +79,10 @@ export default {
       this.default = [];
 
       this.qaData.forEach((row, index) => {
-        if (row.title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1 || row.content.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
+        if (
+          row.title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1 ||
+          row.content.toLowerCase().indexOf(newVal.toLowerCase()) !== -1
+        ) {
           if (row.type === "borrow") {
             this.borrow.push(row);
           } else if (row.type === "invest") {
@@ -161,9 +164,11 @@ export default {
       a {
         padding: 10px 15px;
         border: 2px solid #000000;
-        margin: 0px 20px;
+        margin: 10px auto;
         font-size: 20px;
         transition-duration: 0.5s;
+        display: block;
+        width: 30%;
 
         &:hover {
           text-decoration: none;
@@ -178,6 +183,30 @@ export default {
     width: 75%;
     margin: 0px auto;
     overflow: hidden;
+  }
+
+  @media screen and (max-width: 767px) {
+    padding: 10px;
+
+    .header {
+      width: 95%;
+
+      .input-custom {
+        position: relative;
+        margin: 10px auto;
+        width: initial;
+      }
+
+      .switch {
+        a {
+          width: 90%;
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+    }
   }
 }
 </style>

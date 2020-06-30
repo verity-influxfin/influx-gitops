@@ -4,7 +4,6 @@ import routers from './router/router';
 $(() => {
     const login = new Vue({
         el: '#login',
-        delimiters: ['${', '}'],
         data: {
             account: '',
             password: '',

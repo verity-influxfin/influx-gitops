@@ -35,7 +35,7 @@
                 <span class="input-group-addon login-text"><i class="fas fa-key"></i></span>
                 <input type="password" class="form-control login-input" v-model="password" maxlength="50" placeholder="請輸入密碼">
             </div>
-            <div v-if="message" class="alert alert-danger">${message}</div>
+            <div v-if="message" class="alert alert-danger">@{{message}}</div>
             <button type="button" class="btn btn-login" @click="login">送出</button>
         </div>
     </div>

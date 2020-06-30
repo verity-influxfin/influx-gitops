@@ -49,9 +49,36 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/articledata.json'), true);
 
-        return response()->json($data['news'], 200);
+        $curlScrapedNewsPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/news"');
+        $newsdata = json_decode($curlScrapedNewsPage, true);
+
+        $curlScrapedEventPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/event"');
+        $eventdata = json_decode($curlScrapedEventPage, true);
+
+        $result = array();
+
+        foreach ($newsdata['data']['list'] as $index => $value) {
+            $value['updated_at'] = date('Y-m-d H:i:s', $value['updated_at']);
+            $result[] = $value;
+        }
+
+        foreach ($eventdata['data']['list'] as $index => $value) {
+            $value['updated_at'] = date('Y-m-d H:i:s', $value['updated_at']);
+            $result[] = $value;
+        }
+
+        $num = count($result);
+
+        for ($i = 0; $i < $num; $i++) {
+            for ($j = $num - 1; $j > $i; $j--) {
+                if ($result[$j]['updated_at'] > $result[$j - 1]['updated_at']) {
+                    list($result[$j], $result[$j - 1]) = array($result[$j - 1], $result[$j]);
+                }
+            }
+        }
+
+        return response()->json($result, 200);
     }
 
     public function getInvestTonicData(Request $request)
@@ -65,17 +92,17 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        @list($type, $id) = explode('-', $input['filter']);
-        $knowledge = [];
+        @list($type, $params) = explode('-', $input['filter']);
+        $result = [];
         if ($type === 'knowledge') {
-            $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $id)->orderBy('post_modified', 'desc')->first();
-        } else {
+            $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_modified', 'desc')->first();
+        } else{
             $data = json_decode(file_get_contents('data/articledata.json'), true);
-            $knowledge = $data[$type][$id -1];
+            $result = $data[$type][$params - 1];
         }
 
 
-        return response()->json($knowledge, 200);
+        return response()->json($result, 200);
     }
 
     public function getVideoPage(Request $request)

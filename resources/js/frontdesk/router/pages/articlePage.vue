@@ -7,7 +7,7 @@
       </div>
       <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
     </div>
-    <div class="comments" v-if="$route.params.id.indexOf('news') === -1">
+    <div class="comments" v-if="$route.params.type.indexOf('news') === -1">
       <fb:comments
         :href="this.link"
         num_posts="10"
@@ -43,16 +43,28 @@ export default {
     });
   },
   methods: {
-    getArticleData() {
-      axios
-        .post("getArticleData", { filter: this.$route.params.id })
-        .then(res => {
-          $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
-          FB.XFBML.parse();
-          this.articleTitle = res.data.post_title;
-          this.articleImg = res.data.media_link ? res.data.media_link : "";
-          this.articleHtml = res.data.post_content;
-        });
+    async getArticleData() {
+      let type = this.$route.params.type.split("-");
+      if (type[0] == "news") {
+        await this.$store.dispatch("getNewsData");
+
+        let news = this.$store.getters.NewsData[type[1]];
+            $("title").text(`${news.title} - inFlux普匯金融科技`);
+            FB.XFBML.parse();
+            this.articleTitle = news.title;
+            this.articleImg = news.image_url ? news.image_url : "";
+            this.articleHtml = news.content;
+      } else {
+        axios
+          .post("getArticleData", { filter: this.$route.params.type })
+          .then(res => {
+            $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
+            FB.XFBML.parse();
+            this.articleTitle = res.data.post_title;
+            this.articleImg = res.data.media_link ? res.data.media_link : "";
+            this.articleHtml = res.data.post_content;
+          });
+      }
     }
   }
 };
@@ -83,6 +95,11 @@ export default {
 
     .main-content {
       padding: 20px;
+
+      img {
+        width: 100% !important;
+        height: auto !important;
+      }
     }
   }
 
@@ -115,6 +132,43 @@ export default {
       width: 100px;
       height: 100px;
       right: 60px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    padding: 10px;
+
+    %bg {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .contenier {
+      .main-content {
+        padding: 0px;
+        img {
+          width: 100% !important;
+          height: auto !important;
+        }
+      }
+    }
+
+    .comments {
+      margin-top: 30px;
+
+      &:before {
+        top: -40px;
+        width: 50px;
+        height: 50px;
+        left: 20px;
+      }
+
+      &:after {
+        top: -40px;
+        width: 50px;
+        height: 50px;
+        right: 20px;
+      }
     }
   }
 }

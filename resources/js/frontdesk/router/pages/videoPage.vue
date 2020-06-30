@@ -54,7 +54,7 @@ export default {
   methods: {
     getVideoPage() {
       axios
-        .post("getVideoPage", { filter: this.$route.params.id })
+        .post("getVideoPage", { filter: this.$route.params.type })
         .then(res => {
           $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
           FB.XFBML.parse();
@@ -102,6 +102,11 @@ export default {
 
     .main-content {
       padding: 20px;
+
+      img {
+        width: 100% !important;
+        height: auto !important;
+      }
     }
   }
 
@@ -134,6 +139,45 @@ export default {
       width: 100px;
       height: 100px;
       right: 60px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    padding: 10px;
+
+    %bg {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .contenier {
+      .video-container {
+        iframe {
+          width: 100%;
+          height: 190px;
+        }
+      }
+      .main-content {
+        padding: 0px;
+      }
+    }
+
+    .comments {
+      margin-top: 30px;
+
+      &:before {
+        top: -40px;
+        width: 50px;
+        height: 50px;
+        left: 20px;
+      }
+
+      &:after {
+        top: -40px;
+        width: 50px;
+        height: 50px;
+        right: 20px;
+      }
     }
   }
 }

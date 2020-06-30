@@ -25,7 +25,7 @@ export default {
     },
     mutationNewsData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/articlepage/news-${row.id}`;
+            data[index].link = `/articlepage/news-${index}`;
         });
 
         state.news = data;
