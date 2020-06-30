@@ -49,7 +49,9 @@
       <h2>投資理財大補帖</h2>
       <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
         <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
-          <img :src="item.media_link" class="img-fluid" />
+          <div class="img">
+            <img :src="item.media_link" class="img-fluid" />
+          </div>
           <p>{{item.post_title}}</p>
           <br />
           <router-link :to="item.link" class="btn btn-danger">觀看大補帖</router-link>
@@ -98,7 +100,7 @@ export default {
       axios.post("getInvestTonicData").then(res => {
         let data = res.data;
         $.each(data, (index, row) => {
-          data[index].link = `/articlepage/investtonic-${row.id}`;
+          data[index].link = `/articlepage/investtonic-${row.ID}`;
         });
         this.investTonic = data;
       });
@@ -274,9 +276,15 @@ export default {
     width: 75%;
     margin: 0px auto;
 
-    .slick-item {
+    .content-row {
       margin: 0px 10px;
       cursor: default;
+
+      .img {
+        width: 100%;
+        height: 190px;
+        overflow: hidden;
+      }
     }
 
     .slick-list {

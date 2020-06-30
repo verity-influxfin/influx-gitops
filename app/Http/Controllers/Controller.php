@@ -34,12 +34,7 @@ class Controller extends BaseController
 
         $result = [];
         if ($input['filter'] !== 'share') {
-            $data = json_decode(file_get_contents('data/articledata.json'), true);
-            foreach ($data['video'] as $key => $row) {
-                if ($row['category'] == $input['filter']) {
-                    $result[] = $row;
-                }
-            }
+            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_modified', 'desc')->get();
         } else {
             $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
         }
@@ -83,9 +78,9 @@ class Controller extends BaseController
 
     public function getInvestTonicData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/articledata.json'), true);
+        $result = DB::table('knowledge_article')->select('*')->where('category', '=', 'investtonic')->orderBy('post_modified', 'desc')->get();
 
-        return response()->json($data['investtonic'], 200);
+        return response()->json($result, 200);
     }
 
     public function getArticleData(Request $request)
@@ -93,14 +88,7 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $params) = explode('-', $input['filter']);
-        $result = [];
-        if ($type === 'knowledge') {
-            $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_modified', 'desc')->first();
-        } else{
-            $data = json_decode(file_get_contents('data/articledata.json'), true);
-            $result = $data[$type][$params - 1];
-        }
-
+        $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_modified', 'desc')->first();
 
         return response()->json($result, 200);
     }
@@ -109,18 +97,9 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/articledata.json'), true);
-
         $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $input['filter'])->orderBy('post_modified', 'desc')->first();
 
         return response()->json($knowledge, 200);
-    }
-
-    public function getInterviewData(Request $request)
-    {
-        $data = json_decode(file_get_contents('data/data.json'), true);
-
-        return response()->json($data, 200);
     }
 
     public function getExperiencesData(Request $request)

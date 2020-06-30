@@ -26,8 +26,6 @@ Route::post('/getKnowledgeData', 'Controller@getKnowledgeData');
 
 Route::post('/getVideoData', 'Controller@getVideoData');
 
-Route::post('/getInterviewData', 'Controller@getInterviewData');
-
 Route::post('/getNewsData', 'Controller@getNewsData');
 
 Route::post('/getServiceData', 'Controller@getServiceData');
