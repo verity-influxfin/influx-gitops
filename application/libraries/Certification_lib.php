@@ -1331,9 +1331,9 @@ class Certification_lib{
                 'investor' => $investor,
                 'status !=' => 2,
             ]);
-            $expireGraduateDate = false;
             if ($certification) {
                 foreach ($certification as $key => $value) {
+                    $expireGraduateDate = false;
                     if($value->certification_id == CERTIFICATION_STUDENT){
                         $expireGraduateDate = true;
                         $content = json_decode($value->content);
