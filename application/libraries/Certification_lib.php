@@ -1334,7 +1334,7 @@ class Certification_lib{
             if ($certification) {
                 foreach ($certification as $key => $value) {
                     $expireGraduateDate = false;
-                    if($value->certification_id == CERTIFICATION_STUDENT){
+                    if($value->certification_id == CERTIFICATION_STUDENT && $value->status == 1){
                         $expireGraduateDate = true;
                         $content = json_decode($value->content);
                         if(isset($content->graduate_date) && !empty($content->graduate_date)){
