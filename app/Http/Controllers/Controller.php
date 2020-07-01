@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -169,5 +170,29 @@ class Controller extends BaseController
         $data = json_decode(file_get_contents('data/applyData.json'), true);
 
         return response()->json($data[$input['filter']], 200);
+    }
+
+    public function action(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        $this->inputs['datetime'] = date('Y-m-d H:i:s');
+
+        $this->validate($request, [
+            'email' => 'email',
+            'phone' => 'digits:10',
+        ], [
+            'email.email' => '信箱格式錯誤',
+            'phone.digits' => '電話格式錯誤'
+        ]);
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('cooperation')->insert($this->inputs);
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
     }
 }

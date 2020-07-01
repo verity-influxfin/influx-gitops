@@ -15,6 +15,11 @@ import articlePage from './pages/articlePage';
 import userTerms from './pages/userTerms';
 import privacyTerms from './pages/privacyTerms';
 import loanerTerms from './pages/loanerTerms';
+import recruiting from './pages/recruiting';
+import campusPartner from './pages/campusPartner';
+import clubCooperation from './pages/clubCooperation';
+import firmCooperation from './pages/firmCooperation';
+import companyCooperation from './pages/companyCooperation';
 import register from './pages/register';
 import myInvestment from './pages/myInvestment';
 import debt from './pages/debt';
@@ -57,7 +62,12 @@ let routers = [
             { path: '/closedcase', component: closedcase },
             { path: '/detail', component: detail }
         ]
-    }
+    },
+    { path: '/recruiting', component: recruiting },
+    { path: '/campuspartner', component: campusPartner },
+    { path: '/clubcooperation', component: clubCooperation },
+    { path: '/firmcooperation', component: firmCooperation },
+    { path: '/companycooperation', component: companyCooperation }
 ];
 
 export default routers;

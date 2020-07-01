@@ -52,6 +52,8 @@ Route::post('/getArticleData', 'Controller@getArticleData');
 
 Route::post('/getVideoPage', 'Controller@getVideoPage');
 
+Route::post('/action', 'Controller@action');
+
 
 //Account
 

@@ -401,7 +401,9 @@ export default {
     this.$nextTick(() => {
       this.createChart();
       $(this.$root.$refs.banner).show();
-      this.$root.pageHeaderOffsetTop = $(this.$root.$refs.banner).height();
+      setTimeout(() => {
+        this.$root.pageHeaderOffsetTop = $(this.$root.$refs.banner).height();
+      }, 300);
     });
     AOS.init();
   },

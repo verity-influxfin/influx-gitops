@@ -94,19 +94,19 @@
     "actionList": [
         {
             "text":"徵才服務",
-            "href":""
+            "href":"/recruiting"
         },{
             "text":"校園大使",
-            "href":""
+            "href":"/campuspartner"
         },{
             "text":"社團合作",
-            "href":""
+            "href":"/clubcooperation"
         },{
             "text":"商行合作",
-            "href":""
+            "href":"/firmcooperation"
         },{
             "text":"企業合作",
-            "href":""
+            "href":"/companycooperation"
         }
     ]
 }

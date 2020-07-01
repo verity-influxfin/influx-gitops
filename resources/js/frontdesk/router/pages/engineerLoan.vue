@@ -1,6 +1,6 @@
 <template>
   <div class="engineer-wrapper">
-    <banner :data="this.bannerData" :isShowLoan="true"></banner>
+    <banner :data="this.bannerData"></banner>
     <div class="text-card">
       <h2>「夢想與生活的資金需求，普匯投資借給你！」</h2>
       <p>集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。</p>
