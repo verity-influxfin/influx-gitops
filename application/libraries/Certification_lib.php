@@ -1331,10 +1331,10 @@ class Certification_lib{
                 'investor' => $investor,
                 'status !=' => 2,
             ]);
-            $expireGraduateDate = false;
             if ($certification) {
                 foreach ($certification as $key => $value) {
-                    if($value->certification_id == CERTIFICATION_STUDENT){
+                    $expireGraduateDate = false;
+                    if($value->certification_id == CERTIFICATION_STUDENT && $value->status == 1){
                         $expireGraduateDate = true;
                         $content = json_decode($value->content);
                         if(isset($content->graduate_date) && !empty($content->graduate_date)){
@@ -1492,6 +1492,8 @@ class Certification_lib{
         $list = [];
         $users = [];
         $this->CI->load->model('user/user_model');
+        $this->CI->load->library('Transaction_lib');
+        $delayUserList = $this->CI->transaction_lib->getDelayUserList();
         foreach ($certification_list as $key => $value) {
             if(!in_array($value->user_id, $users)){
                 $users[] = $value->user_id;
@@ -1509,6 +1511,7 @@ class Certification_lib{
                         $list[] = array_merge([
                             $value->user_id,
                             ($user_info->sex == 'M' ? '男' : '女'),
+                            (in_array($value->user_id, $delayUserList) ? 'Y' : 'N'),
                             $content->$ig->counts->media,
                             $content->$ig->counts->followed_by,
                             $content->$ig->counts->follows,
