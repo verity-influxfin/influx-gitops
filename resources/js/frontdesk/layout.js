@@ -30,6 +30,7 @@ $(() => {
             $(".page-header").show();
             $(".page-footer").show();
             $(".back-top").show();
+            $(".blog-quiklink").show();
 
             $(window).scrollTop(0);
             next();
@@ -136,7 +137,6 @@ $(() => {
                 AOS.refresh();
             },
             openLoginModal(message) {
-                this.message = message;
                 $(this.$refs.loginForm).modal("show");
             },
             switchTag(evt) {

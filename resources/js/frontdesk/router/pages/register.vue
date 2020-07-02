@@ -61,10 +61,10 @@
               <button
                 class="btn btn-captcha"
                 @click="getCaptcha('registerphone')"
-                v-if="!IsSended"
+                v-if="!isSended"
               >取得驗證碼</button>
-              <div class="btn btn-disable" v-if="IsSended">{{counter}}S有效</div>
-              <span class="tip" v-if="IsSended">驗證碼已寄出</span>
+              <div class="btn btn-disable" v-if="isSended">{{counter}}S有效</div>
+              <span class="tip" v-if="isSended">驗證碼已寄出</span>
             </div>
           </div>
           <div class="input-group">
@@ -107,11 +107,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="terms-title">{{this.termsTitle}}</div>
+            <div class="terms-title">{{termsTitle}}</div>
             <button type="button" class="close" data-dismiss="modal">✕</button>
           </div>
           <div class="modal-body terms-content">
-            <div v-html="this.termsContent"></div>
+            <div v-html="termsContent"></div>
           </div>
           <div class="modal-footer"></div>
         </div>
@@ -124,7 +124,7 @@
 export default {
   data: () => ({
     isAgree: false,
-    IsSended: false,
+    isSended: false,
     isRegisterSuccess: false,
     phone: "",
     password: "",
@@ -141,10 +141,14 @@ export default {
     $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
   mounted() {
-    $(".page-header").hide();
-    $(".page-footer").hide();
-    $(".back-top").hide();
-    $(".afc_popup").hide();
+    this.$nextTick(() => {
+      $(".page-header").hide();
+      $(".page-footer").hide();
+      $(".back-top").hide();
+      $(".afc_popup").hide();
+      $(".blog-quiklink").hide();
+      $(this.$root.$refs.banner).hide();
+    });
   },
   watch: {
     phone(newdata) {
@@ -156,28 +160,28 @@ export default {
   },
   methods: {
     getCaptcha(type) {
-      let $this = this;
-      let phone = $this.phone;
+      let phone = this.phone;
 
       if (!phone) {
         $this.message = "請輸入手機";
         return;
       }
 
-      $this.counter = 180;
+      this.counter = 180;
 
       axios
         .post("getCaptcha", { phone, type })
         .then(res => {
-          this.IsSended = true;
+          this.isSended = true;
+          this.registerMessage = "";
           this.timer = setInterval(() => {
-            $this.reciprocal();
+            this.reciprocal();
           }, 1000);
         })
         .catch(error => {
           let errorsData = error.response.data;
           this.pwdMessage = `${
-            $this.$store.state.smsErrorCode[errorsData.error]
+            this.$store.state.smsErrorCode[errorsData.error]
           }`;
         });
     },
@@ -198,12 +202,10 @@ export default {
         });
     },
     doRegister() {
-      let $this = this;
-
-      let phone = $this.phone;
-      let password = $this.password;
-      let password_confirmation = $this.confirmPassword;
-      let code = $this.code;
+      let phone = this.phone;
+      let password = this.password;
+      let password_confirmation = this.confirmPassword;
+      let code = this.code;
 
       axios
         .post("doRegister", { phone, password, password_confirmation, code })
@@ -219,10 +221,10 @@ export default {
                 messages.push(message);
               });
             });
-            $this.message = messages.join("、");
+            this.message = messages.join("、");
           } else {
-            $this.message = `${
-              $this.$store.state.pwdErrorCode[errorsData.error]
+            this.message = `${
+              this.$store.state.pwdErrorCode[errorsData.error]
             }`;
           }
         });

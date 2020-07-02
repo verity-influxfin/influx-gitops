@@ -227,13 +227,13 @@
                             <span class="input-group-addon label-text">驗證碼：</span>
                             <div class="captcha-row">
                                 <input type="text" class="form-control label-input" placeholder="請輸入6位數驗證碼" v-model="code" maxlength="6">
-                                <button class="btn btn-captcha" @click="getCaptcha('smsloginphone')" v-if="!IsSended">取得驗證碼</button>
-                                <div class="btn btn-disable" v-if="IsSended">${counter}S有效</div>
-                                <span class="tip" v-if="IsSended">驗證碼已寄出</span>
+                                <button class="btn btn-captcha" @click="getCaptcha('smsloginphone')" v-if="!isSended">取得驗證碼</button>
+                                <div class="btn btn-disable" v-if="isSended">@{{counter}}S有效</div>
+                                <span class="tip" v-if="isSended">驗證碼已寄出</span>
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-danger" v-if="pwdMessage">${pwdMessage}</div>
+                    <div class="alert alert-danger" v-if="pwdMessage">@{{pwdMessage}}</div>
                     <div class="modal-footer">
                         <div v-if="(phone && newPassword && confirmPassword && code) ? false : true" class="btn btn-disable">送出</div>
                         <button type="button" v-else class="btn btn-submit" @click="submit">送出</button>
@@ -277,7 +277,7 @@
                             <button type="button" :class="['btn','btn-password']" @click="switchForm">忘記密碼?</button>
                         </div>
                     </div>
-                    <div class="alert alert-danger" v-if="message">${message}</div>
+                    <div class="alert alert-danger" v-if="message">@{{message}}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
                     </div>

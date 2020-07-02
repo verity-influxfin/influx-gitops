@@ -202,8 +202,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./scss/slick";
-
 .engineer-wrapper {
   width: 100%;
 

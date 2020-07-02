@@ -19,7 +19,7 @@ class Backendcontroller extends BaseController
     public function verifyemail(Request $request)
     {
         $input = $request->all();
-        $input['email'] = strpos($input['email'],'@') ? base64_encode($input['email']) : $input['email'];
+        $input['email'] = strpos($input['email'], '@') ? base64_encode($input['email']) : $input['email'];
         $params = http_build_query($input);
 
         $curlScrapedPage = shell_exec('curl -X POST "https://stage-api.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
@@ -41,8 +41,8 @@ class Backendcontroller extends BaseController
 
             echo '
             <script type="text/javascript">
-                alert("電子信箱驗證已過期，請重新註冊('.$data['error'].')");
-                console.log("error:'.$errorList[$data['error']].'");
+                alert("電子信箱驗證已過期，請重新註冊(' . $data['error'] . ')");
+                console.log("error:' . $errorList[$data['error']] . '");
             </script>
             ';
         }
@@ -68,6 +68,7 @@ class Backendcontroller extends BaseController
             return response()->json('success', 200, ['isLogin' => Session::get('isLogin')]);
         }
     }
+
     public function logout(Request $request)
     {
         Session::forget('isLogin');
@@ -130,6 +131,7 @@ class Backendcontroller extends BaseController
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
+
     public function uploadKnowledgeImg(Request $request)
     {
         if ($request->hasFile('upload')) {
@@ -144,10 +146,77 @@ class Backendcontroller extends BaseController
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
+
     public function getknowledgeVideoData(Request $request)
     {
         $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'video')->orderBy('post_modified', 'desc')->get();
 
         return response()->json($knowledge, 200);
+    }
+
+    public function getRotationData(Request $request)
+    {
+        $data = DB::table('prize')->select('*')->get();
+
+        return response()->json($data, 200);
+    }
+
+    public function ratate(Request $request)
+    {
+        $inputs = $request->all();
+        $key = $this->_lottery($inputs['id']);
+        return response()->json($key, 200);
+    }
+
+    private function _lottery($id)
+    {
+        $data = DB::table('prize')->select('*')->get();
+        $max = 0;
+        $gap = [];
+
+        foreach ($data as $row) {
+            $max += $row->weights * $row->probability;
+            $gap[] = $row->weights * $row->probability;
+        }
+
+        $key = '';
+        foreach ($gap as $k => $proCur) {
+            $randNum = mt_rand(1, $max);
+            if ($randNum <= $proCur) {
+                $key =  $k;
+                break;
+            } else {
+                $max -= $proCur;
+            }
+        }
+        if ($data[$key]->amount > 0) {
+            DB::table('prize')->where('ID', $data[$key]->ID)->update(['amount' => $data[$key]->amount - 1]);
+            DB::table('list')->insert(['prize_id' => $data[$key]->ID, 'user_id' => $id, 'date_time' => date('Y-m-d H:i:s')]);
+
+            return $key;
+        } else {
+            $this->_lottery($id);
+        }
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $userData = Session::get('userData');
+
+        $row = DB::table('list')->select('*')->where('user_id', '=', $userData['id'])->get();
+
+        if (!$userData['name']) {
+            if (count($row) == 0) {
+                return response()->json(['status' => false, 'message' => ''], 200);
+            }else{
+                return response()->json(['status' => true, 'message' => '完成實名可以再一次抽獎機會！'], 200);
+            }
+        }else{
+            if (count($row) < 2) {
+                return response()->json(['status' => false, 'message' => ''], 200);
+            }else{
+                return response()->json(['status' => true, 'message' => '您已抽過獎囉！'], 200);
+            }
+        }
     }
 }

@@ -136,3 +136,10 @@ Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 Route::get('/event', function () {
     return view('event');
 });
+
+
+Route::get('/getRotationData', 'Backendcontroller@getRotationData');
+
+Route::post('/ratate', 'Backendcontroller@ratate');
+
+Route::post('/checkStatus', 'Backendcontroller@checkStatus');

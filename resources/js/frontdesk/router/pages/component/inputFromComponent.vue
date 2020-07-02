@@ -51,6 +51,11 @@ export default {
     phone: "",
     message: ""
   }),
+  watch: {
+    phone(newdata) {
+      this.phone = newdata.replace(/[^\d]/g, "");
+    }
+  },
   methods: {
     submit() {
       let data = {
