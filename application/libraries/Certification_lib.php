@@ -1335,11 +1335,13 @@ class Certification_lib{
                 foreach ($certification as $key => $value) {
                     $expireGraduateDate = false;
                     if($value->certification_id == CERTIFICATION_STUDENT && $value->status == 1){
-                        $expireGraduateDate = true;
                         $content = json_decode($value->content);
                         if(isset($content->graduate_date) && !empty($content->graduate_date)){
                             preg_match_all('/\d+/', $content->graduate_date, $matches);
-                            date('Y') < $matches[0][0] && date('m') < $matches[0][1] ? $expireGraduateDate =  false : '';
+                            $rocYear = date('Y') - 1911;
+                            if($rocYear >= $matches[0][0]){
+                                $rocYear == $matches[0][0] && date('m') > $matches[0][1] ? $expireGraduateDate = true : '';
+                            }
                         }
                     }
 
