@@ -1340,7 +1340,8 @@ class Certification_lib{
                             preg_match_all('/\d+/', $content->graduate_date, $matches);
                             $rocYear = date('Y') - 1911;
                             if($rocYear >= $matches[0][0]){
-                                $rocYear == $matches[0][0] && date('m') > $matches[0][1] ? $expireGraduateDate = true : '';
+                                $expireGraduateDate = true;
+                                $rocYear == $matches[0][0] && date('m') <= $matches[0][1] ? $expireGraduateDate = false : '';
                             }
                         }
                     }
