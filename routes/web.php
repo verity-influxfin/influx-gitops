@@ -132,6 +132,12 @@ Route::post('/modifyPhoneData', 'Backendcontroller@modifyPhoneData');
 
 Route::post('/deletePhoneData', 'Backendcontroller@deletePhoneData');
 
+Route::post('/getMilestoneData', 'Backendcontroller@getMilestoneData');
+
+Route::post('/modifyMilestoneData', 'Backendcontroller@modifyMilestoneData');
+
+Route::post('/deleteMilestoneData', 'Backendcontroller@deleteMilestoneData');
+
 Route::post('/recaptcha', 'Backendcontroller@recaptcha');
 
 

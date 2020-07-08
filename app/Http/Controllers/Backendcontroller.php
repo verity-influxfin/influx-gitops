@@ -221,6 +221,45 @@ class Backendcontroller extends BaseController
         }
     }
 
+    public function getMilestoneData(Request $request)
+    {
+        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date','desc')->get();
+
+        return response()->json($milestone, 200);
+    }
+
+    public function modifyMilestoneData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('milestone')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('milestone')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteMilestoneData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('milestone')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
     public function getRotationData(Request $request)
     {
         $data = DB::table('prize')->select('*')->get();

@@ -105,8 +105,8 @@
         >
           <label class="icon"></label>
           <div class="event">
-            <span class="date" v-html="item.dateTime"></span>
-            <h2 class="title" v-html="item.title"></h2>
+            <span class="date">{{item.hook_date}}</span>
+            <h2 class="title">{{item.title}}</h2>
             <div class="content">{{item.content}}</div>
           </div>
         </div>

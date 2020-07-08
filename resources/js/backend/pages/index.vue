@@ -5,7 +5,7 @@
       <h4 class="title">普匯官網後台系統</h4>
     </div>
     <div class="content">
-      <router-link class="center-high left disabled" to="" v-if="userData.identity == 1">Coming soon</router-link>
+      <router-link class="center-high left" to="milestone" v-if="userData.identity == 1">里程碑</router-link>
       <router-link class="center-low left" to="market" v-if="userData.identity == 1">分期超市</router-link>
       <router-link class="center" to="knowledge">小學堂</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>

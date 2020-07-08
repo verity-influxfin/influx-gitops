@@ -1,5 +1,5 @@
 <template>
-  <div class="market-wrapper">
+  <div class="milestone-wrapper">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -7,10 +7,11 @@
             <i class="fas fa-home"></i>
           </router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">分期超市</li>
+        <li class="breadcrumb-item active" aria-current="page">里程碑</li>
       </ol>
     </nav>
-    <div class="phone-card">
+
+    <div class="milestone-card">
       <div class="action-bar">
         <button class="btn btn-primary float-left" @click="create()">
           <i class="fas fa-plus"></i>
@@ -18,7 +19,7 @@
         </button>
 
         <div class="input-group float-right" style="width: 300px;">
-          <input type="text" class="form-control" placeholder="手機名稱" v-model="fliter.name" />
+          <input type="text" class="form-control" placeholder="里程碑標題" v-model="fliter.title" />
           <div class="input-group-append">
             <span class="input-group-text">
               <i class="fas fa-search"></i>
@@ -26,22 +27,21 @@
           </div>
         </div>
       </div>
-      <div class="phone-list">
-        <div class="phone-tabletitle">
-          <div class="name">手機名稱</div>
-          <div class="price">價錢</div>
-          <div class="phone_img">圖片</div>
-          <div class="status">狀態</div>
+      <div class="milestone-list">
+        <div class="milestone-tabletitle">
+          <div class="title">標題</div>
+          <div class="hook-date">錨點日期</div>
+          <div class="content">內容</div>
           <div class="action-row">操作</div>
         </div>
-        <ul class="phone-container" ref="container"></ul>
+        <ul class="milestone-container" ref="container"></ul>
         <div class="pagination" ref="pagination"></div>
       </div>
     </div>
 
     <div
-      class="phone-modal modal fade"
-      ref="phoneModal"
+      class="milestone-modal modal fade"
+      ref="milestoneModal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
@@ -56,33 +56,21 @@
             </button>
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">手機名稱</span>
+                <span class="input-group-text">標題</span>
               </div>
-              <input type="text" class="form-control" placeholder="手機名稱" v-model="name" />
+              <input type="text" class="form-control" placeholder="標題" v-model="title" />
             </div>
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">手機圖片</span>
+                <span class="input-group-text">錨點日期</span>
               </div>
-              <div style="display: grid;">
-                <img :src="upLoadImg" class="img-fluid" style="width: 300px;" />
-                <input type="file" @change="fileChange" />
-              </div>
+              <v-date-picker v-model="hookDate" :popover="{ visibility: 'click' }" />
             </div>
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">手機價錢</span>
+                <span class="input-group-text">內容</span>
               </div>
-              <input type="text" class="form-control" placeholder="手機價錢" v-model="price" />
-            </div>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">上架</span>
-              </div>
-              <select class="custom-select" v-model="status">
-                <option value="on">公開</option>
-                <option value="off">不公開</option>
-              </select>
+              <textarea type="text" class="form-control" placeholder="內容" v-model="content" />
             </div>
           </div>
           <div class="modal-footer" style="display:block;">
@@ -117,11 +105,10 @@
 let phoneRow = Vue.extend({
   props: ["item", "vm"],
   template: `
-    <li class="phone-row">
-        <div class="name">{{item.name}}</div>
-        <div class="price">{{item.price}}</div>
-        <div class="phone_img"><img :src="'./'+item.phone_img" class="img-fluid"></div>
-        <div class="status">{{item.status === 'on' ? '上架': '下架'}}</div>
+    <li class="milestone-row">
+        <div class="title">{{item.title}}</div>
+        <div class="hook-date">{{item.hook_date}}</div>
+        <div class="content">{{item.content}}</div>
         <div class="action-row">
           <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
           <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
@@ -133,44 +120,31 @@ let phoneRow = Vue.extend({
 export default {
   data: () => ({
     ID: "",
-    name: "",
-    price: "",
-    status: "on",
-    upLoadImg: "",
-    actionType: "",
+    title: "",
+    hookDate: new Date(),
+    content: "",
     message: "",
     rowData: {},
+    filtedData: {},
     fliter: {
-      name: ""
-    },
-    imageData: new FormData()
+      title: ""
+    }
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
-    this.getPhoneData();
-  },
-  watch: {
-    "fliter.name"(newVal) {
-      this.filtedData = [];
-      this.rowData.forEach((row, index) => {
-        if (row.name.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
-          this.filtedData.push(row);
-        }
-      });
-      this.pagination();
-    }
+    this.getMilestoneData();
   },
   methods: {
-    getPhoneData() {
+    getMilestoneData() {
       axios
-        .post("getPhoneData")
+        .post("getMilestoneData")
         .then(res => {
           this.rowData = res.data;
           this.filtedData = res.data;
           this.pagination();
         })
         .catch(error => {
-          console.log("getPhone 發生錯誤，請稍後再試");
+          console.log("getMilestone 發生錯誤，請稍後再試");
         });
     },
     pagination() {
@@ -194,41 +168,32 @@ export default {
         });
       });
     },
-    async fileChange(e) {
-      this.imageData.append("file", e.target.files[0]);
-      let res = await axios.post("uploadPhoneFile", this.imageData);
-      this.upLoadImg = `./upload/phone/${res.data}`;
-    },
     create() {
-      this.name = "";
-      this.status = "on";
-      this.price = "";
+      this.title = "";
+      this.hookDate = new Date();
+      this.content = "";
       this.ID = "";
-      this.upLoadImg = "./Images/default-image.png";
       this.actionType = "insert";
 
-      $(this.$refs.phoneModal).modal("show");
+      $(this.$refs.milestoneModal).modal("show");
     },
     edit(item) {
-      this.name = item.name;
-      this.status = item.status;
-      this.price = item.price;
+      this.title = item.title;
+      this.hookDate = item.hook_date;
+      this.content = item.content;
       this.ID = item.ID;
-      this.upLoadImg = item.phone_img
-        ? item.phone_img
-        : "./Images/default-image.png";
       this.actionType = "update";
 
       $(this.$refs.phoneModal).modal("show");
     },
     delete(item) {
       axios
-        .post("deletePhoneData", {
+        .post("deleteMilestoneData", {
           ID: item.ID
         })
         .then(res => {
           this.message = `刪除成功`;
-          this.getPhoneData();
+          this.getMilestoneData();
           $(this.$refs.messageModal).modal("show");
         })
         .catch(error => {
@@ -236,15 +201,21 @@ export default {
         });
     },
     submit() {
+      let d = new Date(this.hookDate);
+      let date_item = {
+        year: d.getFullYear(),
+        month: (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1),
+        day: (d.getDate() < 10 ? "0" : "") + d.getDate()
+      };
+
       axios
-        .post("modifyPhoneData", {
+        .post("modifyMilestoneData", {
           actionType: this.actionType,
           ID: this.ID,
           data: {
-            name: this.name,
-            status: this.status,
-            price: this.price,
-            phone_img: this.upLoadImg
+            title: this.title,
+            hook_date: `${date_item.year}-${date_item.month}-${date_item.day}`,
+            content: this.content
           }
         })
         .then(res => {
@@ -252,7 +223,7 @@ export default {
             this.actionType === "insert" ? "新增" : "更新"
           }成功`;
 
-          this.getPhoneData();
+          this.getMilestoneData();
           $(this.$refs.messageModal).modal("show");
         })
         .catch(error => {
@@ -264,19 +235,18 @@ export default {
         });
     },
     close() {
-      $(this.$refs.phoneModal).modal("hide");
-      $(this.$refs.messageModal).modal("hide");
-    }
+      $(this.$refs.milestoneModal).modal("hide");
+      $(this.$refs.messageModal).modal("hide");}
   }
 };
 </script>
 
 <style lang="scss">
-.market-wrapper {
+.milestone-wrapper {
   overflow: hidden;
   padding: 10px;
 
-  .phone-card {
+  .milestone-card {
     margin: 15px 5px;
     padding: 10px;
     background: #f5f4ff;
@@ -288,12 +258,12 @@ export default {
       overflow: auto;
     }
 
-    .phone-list {
+    .milestone-list {
       margin: 15px 0px;
       padding: 10px;
       box-shadow: 0 0 2px black;
 
-      .phone-tabletitle {
+      .milestone-tabletitle {
         display: flex;
         overflow: auto;
 
@@ -307,65 +277,55 @@ export default {
         }
       }
 
-      .phone-container {
+      .milestone-container {
         margin-bottom: 20px;
         padding: 0px;
         list-style: none;
 
-        .phone-row {
+        .milestone-row {
           display: flex;
-          height: 100px;
-          line-height: 100px;
 
           .action-row {
             padding: 5px;
           }
 
           div {
-            &:not(:first-child) {
-              text-align: center;
-            }
-
             &:not(:last-child) {
               border-right: 1px solid #bbbbbb;
             }
           }
         }
 
-        .phone-row:not(:last-child) {
+        .milestone-row:not(:last-child) {
           border-bottom: 1px solid #b1b1b1;
         }
       }
 
-      .name {
-        width: 60%;
-        padding: 0px 10px;
-      }
-
-      .price {
-        width: 10%;
-        padding: 0px 10px;
-      }
-
-      .phone_img {
-        width: 15%;
+      .title {
+        width: 20%;
         padding: 10px;
-        overflow: hidden;
       }
 
-      .status {
-        width: 5%;
-        padding: 0px 10px;
+      .hook-date {
+        width: 10%;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .content {
+        width: 75%;
+        padding: 10px;
       }
 
       .action-row {
-        width: 10%;
-        padding: 0px 10px;
+        width: 15%;
+        padding: 10px;
+        text-align: center;
       }
     }
   }
 
-  .phone-modal {
+  .milestone-modal {
     @media (min-width: 576px) {
       .modal-dialog {
         max-width: 70%;

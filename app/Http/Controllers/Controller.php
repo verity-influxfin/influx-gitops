@@ -135,9 +135,9 @@ class Controller extends BaseController
 
     public function getMilestoneData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/milestoneData.json'), true);
+        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date','desc')->get();
 
-        return response()->json($data, 200);
+        return response()->json($milestone, 200);
     }
 
     public function getMediaData(Request $request)
