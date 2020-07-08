@@ -9,8 +9,6 @@ import routers from './router/router';
 $(() => {
     const sessionStoragePlugin = store => {
         store.subscribe((mutation, { userData }) => {
-            console.log(mutation);
-            console.log(userData);
             if (mutation.type === "mutationUserData") {
                 sessionStorage.setItem("userData", JSON.stringify(userData));
             }
@@ -78,8 +76,6 @@ $(() => {
         router,
         data: {
             islogin: null
-        },
-        created(){
         },
         methods: {
             logout() {

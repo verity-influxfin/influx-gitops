@@ -26,10 +26,10 @@
         :key="index"
       >
         <div class="img">
-          <img :src="item.imageSrc" class="img-fluid" />
+          <img :src="item.phone_img" class="img-fluid" />
         </div>
         <h4>{{item.name}}</h4>
-        <span>空機價 ${{item.price}}</span>
+        <span>空機價 ${{format(item.price)}}</span>
       </a>
     </div>
     <div class="applyFlow-card">
@@ -113,6 +113,10 @@ export default {
     }
   },
   methods: {
+    format(data) {
+      let l10nEN = new Intl.NumberFormat("en-US");
+      return l10nEN.format(data.toFixed(0));
+    },
     getMobileData() {
       axios.post("getMobileData").then(res => {
         this.mobileData = res.data;

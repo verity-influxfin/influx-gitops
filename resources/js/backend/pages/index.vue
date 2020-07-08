@@ -5,11 +5,11 @@
       <h4 class="title">普匯官網後台系統</h4>
     </div>
     <div class="content">
-      <a v-if="userData.identity == 1" class="center-high left disabled">Coming soon</a>
-      <a v-if="userData.identity == 1" class="center-low left disabled">Coming soon</a>
+      <router-link class="center-high left disabled" to="" v-if="userData.identity == 1">Coming soon</router-link>
+      <router-link class="center-low left" to="market" v-if="userData.identity == 1">分期超市</router-link>
       <router-link class="center" to="knowledge">小學堂</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
-      <a v-if="userData.identity == 1" class="center-high right disabled">Coming soon</a>
+      <router-link class="center-high right disabled" to="" v-if="userData.identity == 1">Coming soon</router-link>
     </div>
   </div>
 </template>
@@ -18,10 +18,12 @@
 export default {
   data: () => ({
     date: "",
-    userData: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {}
+    userData:
+      sessionStorage.length !== 0
+        ? JSON.parse(sessionStorage.getItem("userData"))
+        : {}
   }),
   created() {
-    console.log(JSON.parse(sessionStorage.getItem("userData")));
     this.timer = setInterval(() => {
       this.date = this.dateToString(new Date().getTime());
     }, 1000);
@@ -89,6 +91,7 @@ export default {
       font-size: 24px;
       cursor: pointer;
       text-decoration: none;
+      transition-duration: 0.5s;
 
       &:hover {
         background: #d37e00;
@@ -103,11 +106,11 @@ export default {
       }
     }
 
-    .disabled{
+    .disabled {
       cursor: default;
       background: gray !important;
-      color:#000000;
-      
+      color: #000000;
+
       &:hover {
         background: gray;
       }

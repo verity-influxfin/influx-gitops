@@ -201,7 +201,7 @@ export default {
     async fileChange(e) {
       this.imageData.append("file", e.target.files[0]);
       let res = await axios.post("uploadFile", this.imageData);
-      this.upLoadImg = `./upload/${res.data}`;
+      this.upLoadImg = `./upload/article/${res.data}`;
     },
     create() {
       this.postTitle = "";

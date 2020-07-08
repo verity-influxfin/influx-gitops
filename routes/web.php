@@ -124,8 +124,15 @@ Route::post('/uploadFile', 'Backendcontroller@uploadFile');
 
 Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');
 
-Route::post('/recaptcha', 'Backendcontroller@recaptcha');
+Route::post('/getPhoneData', 'Backendcontroller@getPhoneData');
 
+Route::post('/uploadPhoneFile', 'Backendcontroller@uploadPhoneFile');
+
+Route::post('/modifyPhoneData', 'Backendcontroller@modifyPhoneData');
+
+Route::post('/deletePhoneData', 'Backendcontroller@deletePhoneData');
+
+Route::post('/recaptcha', 'Backendcontroller@recaptcha');
 
 
 

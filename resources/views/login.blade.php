@@ -12,7 +12,7 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>管理員登入 - inFlux普匯金融科技</title>
-    <link rel="icon" href="{{ asset('image/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('./Images/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">

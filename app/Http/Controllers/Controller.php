@@ -128,9 +128,9 @@ class Controller extends BaseController
 
     public function getMobileData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/mobileData.json'), true);
+        $phone = DB::table('product_phone')->select('*')->where('status', '=', 'on')->get();
 
-        return response()->json($data, 200);
+        return response()->json($phone, 200);
     }
 
     public function getMilestoneData(Request $request)

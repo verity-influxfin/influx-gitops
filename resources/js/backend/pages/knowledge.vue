@@ -136,7 +136,7 @@
 
 <script>
 let articleRow = Vue.extend({
-  props: ["item", "index", "vm"],
+  props: ["item", "vm"],
   data: () => ({
     categoryList: {
       investtonic: "債權轉讓"
@@ -150,8 +150,8 @@ let articleRow = Vue.extend({
         <div class="order">{{item.order === '0' ? '否': '是'}}</div>
         <div class="post_date">{{item.post_date}}</div>
         <div class="action-row">
-          <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(index)">修改</button>
-          <button class="btn btn-danger btn-sm" @click="vm.delete(index)">刪除</button>
+          <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
+          <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
         </div>
     </li>
   `,
@@ -237,7 +237,6 @@ export default {
               let component = new articleRow({
                 propsData: {
                   item,
-                  index,
                   vm: $this
                 }
               }).$mount();
@@ -250,7 +249,7 @@ export default {
     async fileChange(e) {
       this.imageData.append("file", e.target.files[0]);
       let res = await axios.post("uploadFile", this.imageData);
-      this.upLoadImg = `./upload/${res.data}`;
+      this.upLoadImg = `./upload/article/${res.data}`;
     },
     create() {
       this.postTitle = "";
@@ -266,26 +265,26 @@ export default {
 
       $(this.$refs.articleModal).modal("show");
     },
-    edit(index) {
-      this.postTitle = this.filtedData[index].post_title;
-      this.status = this.filtedData[index].status;
-      this.order = this.filtedData[index].order;
-      this.postContent = this.filtedData[index].post_content;
-      this.ID = this.filtedData[index].ID;
-      this.upLoadImg = this.filtedData[index].media_link
-        ? this.filtedData[index].media_link
+    edit(item) {
+      this.postTitle = item.post_title;
+      this.status = item.status;
+      this.order =item.order;
+      this.postContent = item.post_content;
+      this.ID = item.ID;
+      this.upLoadImg = item.media_link
+        ? item.media_link
         : "./Images/default-image.png";
       this.actionType = "update";
-      this.category = this.filtedData[index].category;
+      this.category = item.category;
 
       CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.articleModal).modal("show");
     },
-    delete(index) {
+    delete(item) {
       axios
         .post("deleteKonwledge", {
-          ID: this.filtedData[index].ID
+          ID: item.ID
         })
         .then(res => {
           this.message = `刪除成功`;

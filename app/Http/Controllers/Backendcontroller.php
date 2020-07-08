@@ -137,7 +137,7 @@ class Backendcontroller extends BaseController
             $file = $request->file('file');
             if ($file->isValid()) {
                 $filename = $file->getClientOriginalName();
-                $file->move('upload', "$filename");
+                $file->move('upload/article', "$filename");
                 return response()->json($filename, 200);
             }
         } else {
@@ -151,8 +151,8 @@ class Backendcontroller extends BaseController
             $file = $request->file('upload');
             if ($file->isValid()) {
                 $filename = $file->getClientOriginalName();
-                $file->move('upload', "$filename");
-                $pic_path = 'upload/' . $filename;
+                $file->move('upload/article', "$filename");
+                $pic_path = 'upload/article/' . $filename;
                 echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
             }
         } else {
@@ -165,6 +165,60 @@ class Backendcontroller extends BaseController
         $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'video')->orderBy('post_modified', 'desc')->get();
 
         return response()->json($knowledge, 200);
+    }
+
+    public function getPhoneData(Request $request)
+    {
+        $phone = DB::table('product_phone')->select('*')->get();
+
+        return response()->json($phone, 200);
+    }
+
+    public function uploadPhoneFile(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/phone', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
+    public function modifyPhoneData(Request $request)
+    {
+
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('product_phone')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('product_phone')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deletePhoneData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('product_phone')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
     }
 
     public function getRotationData(Request $request)
