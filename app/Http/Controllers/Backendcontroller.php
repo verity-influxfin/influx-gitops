@@ -51,21 +51,28 @@ class Backendcontroller extends BaseController
     public function login(Request $request)
     {
         $this->validate($request, [
-            'account' => 'required|alpha_dash',
-            'password' => 'required|alpha_dash'
+            'account' => 'required',
+            'password' => 'required'
         ], [
             'account.required' => '請輸入帳號',
             'password.required' => '請輸入密碼',
-            'account.alpha_dash' => '帳號錯誤',
-            'password.alpha_dash' => '密碼錯誤',
         ]);
 
         $input = $request->all();
-        if ($input['account'] !== 'zxc' || $input['password'] !== 'zxc') {
+
+        $userInfo = DB::table('user')->select(['account', 'identity'])->where(
+            [
+                ['account', '=', $input['account']],
+                ['password', '=', sha1($input['password'])]
+            ]
+        )->first();
+
+        if (!$userInfo) {
             return response()->json(['帳號密碼錯誤'], 400);
         } else {
             Session::put('isLogin', true);
-            return response()->json('success', 200, ['isLogin' => Session::get('isLogin')]);
+            Session::put('identity', $userInfo->identity);
+            return response()->json(['isLogin' => Session::get('isLogin'), 'identity' => Session::get('identity')], 200);
         }
     }
 
@@ -78,7 +85,13 @@ class Backendcontroller extends BaseController
 
     public function getKnowledge(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_modified', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_date', 'desc')->get();
+
+        foreach ($knowledge as $index => $value) {
+            if (!$value->category) {
+                $knowledge[$index]->category = "";
+            }
+        }
 
         return response()->json($knowledge, 200);
     }
@@ -208,15 +221,25 @@ class Backendcontroller extends BaseController
         if (!$userData['name']) {
             if (count($row) == 0) {
                 return response()->json(['status' => false, 'message' => ''], 200);
-            }else{
+            } else {
                 return response()->json(['status' => true, 'message' => '完成實名可以再一次抽獎機會！'], 200);
             }
-        }else{
+        } else {
             if (count($row) < 2) {
                 return response()->json(['status' => false, 'message' => ''], 200);
-            }else{
+            } else {
                 return response()->json(['status' => true, 'message' => '您已抽過獎囉！'], 200);
             }
         }
+    }
+
+    public function recaptcha(Request $request)
+    {
+        $inputs = $request->all();
+
+        $curlScrapedPage = shell_exec('curl -X GET "https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode('6LfQla4ZAAAAAHTDVvzN1hnlNQji_CwaR8KArj1v') . '&response=' . urlencode($inputs['token']) . '"');
+        $responseKeys = json_decode($curlScrapedPage, true);
+
+        return response()->json('', $responseKeys['score'] >= 0.5 ? 200 : 400);
     }
 }

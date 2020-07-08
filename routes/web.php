@@ -96,6 +96,7 @@ Route::post('/getRecoveriesFinished', 'Membercentrecontroller@getRecoveriesFinis
 
 Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
+
 // backstage
 
 
@@ -123,6 +124,10 @@ Route::post('/uploadFile', 'Backendcontroller@uploadFile');
 
 Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');
 
+Route::post('/recaptcha', 'Backendcontroller@recaptcha');
+
+
+
 
 // verify mail
 
@@ -143,3 +148,13 @@ Route::get('/getRotationData', 'Backendcontroller@getRotationData');
 Route::post('/ratate', 'Backendcontroller@ratate');
 
 Route::post('/checkStatus', 'Backendcontroller@checkStatus');
+
+
+// feedback
+Route::post('/sendFeedback', 'Controller@sendFeedback');
+
+
+//
+
+
+Route::view('/{path?}', 'index');

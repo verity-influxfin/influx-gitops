@@ -4,13 +4,13 @@
             "title": "我要借款",
             "subMenu": [
                 {
-                    "name": "上班族貸款",
-                    "href": "/freshGraduateLoan",
+                    "name": "學生貸款",
+                    "href": "/collegeLoan",
                     "isActive": true
                 },
                 {
-                    "name": "學生貸款",
-                    "href": "/collegeLoan",
+                    "name": "上班族貸款",
+                    "href": "/freshGraduateLoan",
                     "isActive": true
                 },
                 {
@@ -87,26 +87,30 @@
         },
         {
             "title": "常見問題",
-            "href":"/qa",
+            "href": "/qa",
             "subMenu": []
         }
     ],
     "actionList": [
         {
-            "text":"徵才服務",
-            "href":"/recruiting"
-        },{
-            "text":"校園大使",
-            "href":"/campuspartner"
-        },{
-            "text":"社團合作",
-            "href":"/clubcooperation"
-        },{
-            "text":"商行合作",
-            "href":"/firmcooperation"
-        },{
-            "text":"企業合作",
-            "href":"/companycooperation"
+            "text": "徵才服務",
+            "href": "/recruiting"
+        },
+        {
+            "text": "校園大使",
+            "href": "/campuspartner"
+        },
+        {
+            "text": "社團合作",
+            "href": "/clubcooperation"
+        },
+        {
+            "text": "商行合作",
+            "href": "/firmcooperation"
+        },
+        {
+            "text": "企業合作",
+            "href": "/companycooperation"
         }
     ]
 }

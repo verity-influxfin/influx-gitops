@@ -74,7 +74,7 @@ $(() => {
             counter: 180,
             loginTime: 0,
             currentTime: 0,
-            pageHeaderOffsetTop:0
+            pageHeaderOffsetTop: 0
         },
         created() {
             $(this.$root.$refs.banner).show();
@@ -122,7 +122,7 @@ $(() => {
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     autoplay: true,
-                    arrows:false
+                    arrows: false
                 });
             },
             display() {
@@ -136,7 +136,7 @@ $(() => {
                 $(window).scrollTop('0');
                 AOS.refresh();
             },
-            openLoginModal(message) {
+            openLoginModal() {
                 $(this.$refs.loginForm).modal("show");
             },
             switchTag(evt) {
@@ -150,51 +150,67 @@ $(() => {
                 this.isSended = false;
                 this.isReset = !this.isReset;
             },
-            doLogin() {
-                if (this.isRememberAccount) {
-                    $cookies.set('account', this.account);
-                    $cookies.set('businessNum', this.businessNum);
+            goFeedback() {
+                let { userData, $router } = this;
+
+                if (Object.keys(userData).length === 0) {
+                    $(this.$refs.loginForm).modal("show");
                 } else {
-                    $cookies.remove('account');
-                    $cookies.remove('businessNum');
+                    $router.push("/feedback");
                 }
+            },
+            doLogin(e) {
+                grecaptcha.ready(() => {
+                    grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
+                        axios.post('recaptcha', { token }).then((res) => {
+                            if (this.isRememberAccount) {
+                                $cookies.set('account', this.account);
+                                $cookies.set('businessNum', this.businessNum);
+                            } else {
+                                $cookies.remove('account');
+                                $cookies.remove('businessNum');
+                            }
 
-                let phone = this.account;
-                let password = this.password;
-                let investor = this.investor;
+                            let phone = this.account;
+                            let password = this.password;
+                            let investor = this.investor;
 
-                let params = { phone, password, investor };
+                            let params = { phone, password, investor };
 
-                if (this.isCompany) {
-                    let tax_id = this.businessNum;
-                    Object.assign(params, { tax_id });
-                }
+                            if (this.isCompany) {
+                                let tax_id = this.businessNum;
+                                Object.assign(params, { tax_id });
+                            }
 
-                axios.post('doLogin', params)
-                    .then((res) => {
-                        this.$store.commit('mutationUserData', res.data);
-                        if (this.$router.history.pending) {
-                            $(this.$refs.loginForm).modal("hide");
-                            this.$router.replace(this.$router.history.pending.path);
-                        }
+                            axios.post('doLogin', params)
+                                .then((res) => {
+                                    this.$store.commit('mutationUserData', res.data);
+                                    if (this.$router.history.pending) {
+                                        $(this.$refs.loginForm).modal("hide");
+                                        this.$router.replace(this.$router.history.pending.path);
+                                    }
 
-                        location.reload();
-                    })
-                    .catch((error) => {
-                        let errorsData = error.response.data;
-                        if (errorsData.message) {
-                            let messages = [];
-                            $.each(errorsData.errors, (key, item) => {
-                                item.forEach((message, k) => {
-                                    messages.push(message);
-                                });
-                            });
-                            this.message = messages.join('、');
-                        } else {
-                            this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
+                                    location.reload();
+                                })
+                                .catch((error) => {
+                                    let errorsData = error.response.data;
+                                    if (errorsData.message) {
+                                        let messages = [];
+                                        $.each(errorsData.errors, (key, item) => {
+                                            item.forEach((message, k) => {
+                                                messages.push(message);
+                                            });
+                                        });
+                                        this.message = messages.join('、');
+                                    } else {
+                                        this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
                                                      ${errorsData.data ? `剩餘錯誤次數(${errorsData.data.remind_count})` : ''}`;
-                        }
+                                    }
+                                });
+                        })
                     });
+                });
+
             },
             logout() {
                 axios.post('logout').then((res) => {

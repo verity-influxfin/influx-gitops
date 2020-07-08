@@ -26,7 +26,7 @@
 <body>
     <div id="login" class="login-bg" :style="`background-image: url('./Images/23832.jpg');`">
         <div class="login-form">
-            <img src=" {{ asset('Image/logo.png') }}" class="img-fluid" style="max-width: 60%;">
+            <img src=" {{ asset('./Images/logo.png') }}" class="img-fluid" style="max-width: 60%;">
             <div class="input-group">
                 <span class="input-group-addon login-text"><i class="fas fa-user"></i></span>
                 <input type="text" class="form-control login-input" v-model="account" maxlength="10" placeholder="請輸入帳號">

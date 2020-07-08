@@ -13,8 +13,8 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/frontdesk/layout.js', 'public/js/web.js')
     .js('resources/js/backend/layout.js', 'public/js/backend.js')
-    .js('resources/js/event.js', 'public/js/event.js')
+    .js('resources/js/event/event.js', 'public/js/event.js')
     .sass('resources/scss/frontdesk/layout.scss', 'public/css/web.css')
     .sass('resources/scss/backend/layout.scss', 'public/css/backend.css')
-    .sass('resources/scss/event.scss', 'public/css/event.css')
+    .sass('resources/scss/event/event.scss', 'public/css/event.css')
     .sass('resources/scss/errors.scss', 'public/css/errors.css');

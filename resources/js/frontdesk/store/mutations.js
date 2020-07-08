@@ -15,7 +15,11 @@ export default {
     },
     mutationVideoData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/vlog/${row.category ? row.category : 'share'}`;
+            if(row.category){
+                data[index].link = `/vlog/${row.category}`;
+            }else{
+                data[index].link = `/videopage/${row.ID}`;
+            }
         });
 
         state.video = data;

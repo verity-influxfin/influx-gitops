@@ -55,12 +55,12 @@ class Controller extends BaseController
         $result = array();
 
         foreach ($newsdata['data']['list'] as $index => $value) {
-            $value['updated_at'] = date('Y-m-d H:i:s', $value['updated_at']);
+            $value['updated_at'] = date('Y-m-d', $value['updated_at']);
             $result[] = $value;
         }
 
         foreach ($eventdata['data']['list'] as $index => $value) {
-            $value['updated_at'] = date('Y-m-d H:i:s', $value['updated_at']);
+            $value['updated_at'] = date('Y-m-d', $value['updated_at']);
             $result[] = $value;
         }
 
@@ -189,6 +189,31 @@ class Controller extends BaseController
         try {
             $exception = DB::transaction(function () {
                 DB::table('cooperation')->insert($this->inputs);
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function sendFeedback(Request $request)
+    {
+        $this->inputs = $request->all();
+        $this->inputs['datetime'] = date('Y-m-d H:i:s');
+
+        $this->validate($request, [
+            'name' => 'required',
+            'message' => 'max:100',
+            'type' => 'in:officeWorker,student'
+        ], [
+            'name.required' => '請輸入姓名',
+            'message.max' => '字數太長，請縮短字數',
+            'type.in' => '請選擇身分'
+        ]);
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('feedback')->insert($this->inputs);
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {

@@ -66,7 +66,7 @@
                 <img src="{{ asset('Images/index-banner.jpg') }}" style="width:100%" />
                 <div class="content">
                     <p>全線上AI無人干擾，隨時滿足你的資金需求</p>
-                    <span>普匯·你的手機ATM</span>
+                    <span>普匯．你的手機ATM</span>
                 </div>
                 <div class="app-entrance">
                     <router-link class="btn btn-go float-left" to="freshGraduateLoan">我是上班族</router-link>
@@ -94,7 +94,7 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link" href="#" @click="openLoginModal('')">登入</p>
+                        <p class="nav-link" href="#" @click="openLoginModal()">登入</p>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <router-link class="nav-link" to="/register">註冊</router-link>
@@ -184,7 +184,8 @@
             <div class="horizontal-line"></div>
             <div class="row footer-license">
                 <p>Copyright ©2018 普匯金融科技股份有限公司</p>
-                <p><router-link to="/userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
+                <p>
+                    <router-link to="/userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
                     <router-link to="/privacyTerms">隱私條款政策</router-link><i class="gap fas fa-grip-lines-vertical"></i>
                     <router-link to="/loanerTerms">借款人服務條款</router-link>
                 </p>
@@ -285,8 +286,10 @@
             </div>
         </div>
     </div>
-
 </body>
+
+<!-- recaptcha-->
+<script src="https://www.google.com/recaptcha/api.js?render=6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3"></script>
 
 <!-- package -->
 <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
