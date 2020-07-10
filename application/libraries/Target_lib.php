@@ -277,14 +277,35 @@ class Target_lib
             if ($credit) {
                 $self = false;
                 $self_national = false;
+                $deny = false;
                 $interest_rate = $credit['rate'];
-                $this->CI->load->library('Certification_lib');
-                $student_cer = $this->CI->certification_lib->get_certification_info($target->user_id, 2, 0);
-                if($student_cer){
-                    if(preg_match('/\(自填\)/', $student_cer->content['school'])){
-                        preg_match('/國立/', $student_cer->content['school']) ? $self_national = true : $self = true;
+                if(in_array($product_id, [1, 2])){
+                    $this->CI->load->model('user/user_meta_model');
+                    $school = $this->CI->user_meta_model->get_by(array(
+                        "user_id"	=> $target->user_id,
+                        "meta_key"	=> "school_name"
+                    ));
+                    if($school){
+                        $school = $school->meta_value;
+                        if(preg_match('/\(自填\)/', $school)){
+                            preg_match('/國立/', $school) ? $self_national = true : $self = true;
+                        }
+                        $this->CI->config->load('school_points',TRUE);;
+                        $school_list = $this->CI->config->item('school_points');
+                        foreach($school_list['school_points'] as $k => $v){
+                            if(trim($school)==$v['name']){
+                                $v['points'] == 0 ? $deny = true : '';
+                                break;
+                            }
+                        }
                     }
                 }
+
+                if($deny){
+                    $this->approve_target_fail($user_id, $target, false, '由於您的信用評分不足，很抱歉無法取得申請額度！');
+                    return false;
+                }
+
                 if ($interest_rate && !$self) {
                     $used_amount = 0;
                     $other_used_amount = 0;
@@ -424,9 +445,9 @@ class Target_lib
         return false;
     }
 
-    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false)
+    private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
     {
-        $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務' . ($maxAmountAlarm ? '.' : '。');
+        $remark .= ($maxAmountAlarm ? '.' : '。');
         $param = [
             'loan_amount' => 0,
             'status' => '9',
@@ -434,7 +455,7 @@ class Target_lib
         ];
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
-        $this->CI->notification_lib->approve_target($user_id, '9');
+        $this->CI->notification_lib->approve_target($user_id, '9', 0,false,$remark);
         if ($target->order_id != 0) {
             $this->CI->load->model('transaction/order_model');
             $this->CI->order_model->update($target->order_id, ['status' => 9]);
