@@ -1008,6 +1008,7 @@ class Target_lib
             'XIRR' => 0,
             'date' => $target->loan_date,
             'remaining_principal' => 0,
+            'transferDate' => null,
         ];
 
         $overdueSchedule = $normalSchedule;
@@ -1264,6 +1265,7 @@ class Target_lib
 
         if ($transfer) {
             $total = intval($transfer->principal);
+            $normalSchedule['transferDate'] = $transfer->transfer_date;
         }
 
         if ($overdueStartedAt > 0) {
