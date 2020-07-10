@@ -69,7 +69,7 @@ class Notification_lib{
 		return $rs;
 	}
 	
-	public function approve_target($user_id,$status,$amount=0,$subloan=false){
+	public function approve_target($user_id,$status,$amount=0,$subloan=false,$remark = false){
 		if($status==1){
             $loan_type = $subloan?'產品轉換':'借款';
 			$title = "【".$loan_type."審核】 您的審核已通過";
@@ -87,7 +87,9 @@ class Notification_lib{
 很抱歉的通知，您的借款審核未能通過，
 非常感謝您的申請，
 我們將會對您的申請信息進行嚴格保密，
-感謝您對普匯的信任。";
+感謝您對普匯的信任。
+";
+			$remark ? $content .= '退件原因：' . $remark : '';
             $type = 'b03';
 		}
 		
