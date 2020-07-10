@@ -284,8 +284,8 @@
                                     echo '<br />持證自拍照：' . $remark["face_count"]['person_count'] . ' 人臉';
                                     echo '<br />身分證正面照：' . $remark["face_count"]['front_count'] . ' 人臉';
                                     if(isset($remark["face"]) && count($remark["face"]) >= 2) {
-                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][0] . "% 並可能" . ($remark["face_flag"][0] ? '為本人' : '非本人');
-                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][1] . "% 並可能" . ($remark["face_flag"][1] ? '為本人' : '非本人');
+                                        echo '<br />「身分證正面照」與「持證自拍者」相似度：' . $remark["face"][0];
+                                        echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . $remark["face"][1];
                                         echo '</p>';
                                     }
 
@@ -313,8 +313,11 @@
                                         echo '<br />持證自拍照：' . $remark["face8"]['count'][0] . ' 人臉 ' . ($remark["face8"]['count'][0] >=2 ? ' ( 臉1 ' . liveness($remark["face8"]['liveness'][0][0]) . ' / 臉2 ' . liveness($remark["face8"]['liveness'][0][1]) . ' )' : '');
                                         echo '<br />身分證正面照：' . $remark["face8"]['count'][1] . ' 人臉 ' .($remark["face8"]['count'][1] > 0 ? ' ( ' . liveness($remark["face8"]['liveness'][0][1]). ' )' : '');
                                         if($remark["face8"]['count'][0] >=2){
-                                            echo '<br />「身分證正面照」與「持證自拍者」相似度：' . confidence($remark["face8"]['score'][0]);
-                                            echo '<br />「身分證正面照」與「持證自拍照證件」相似度：' . confidence($remark["face8"]['score'][1]);
+                                            echo '<br />「身分證正面照」與「持證自拍者」：' . $remark["face8"]['score'][0];
+                                            echo '<br />「身分證正面照」與「持證自拍照證件：' . $remark["face8"]['score'][1];
+                                            echo '<br />大於 0.39 即可視為同一人 但有千分之一的錯誤率';
+                                            echo '<br />大於 0.46 即可視為同一人 但有萬分之一的錯誤率';
+                                            echo '<br />大於 0.52 即可視為同一人 但有十萬分之一的錯誤率';
                                         }
                                         echo '</p>';
                                     }
