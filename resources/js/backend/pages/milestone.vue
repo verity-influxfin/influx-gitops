@@ -19,7 +19,7 @@
         </button>
 
         <div class="input-group float-right" style="width: 300px;">
-          <input type="text" class="form-control" placeholder="里程碑標題" v-model="fliter.title" />
+          <input type="text" class="form-control" placeholder="里程碑標題" v-model="filter.title" />
           <div class="input-group-append">
             <span class="input-group-text">
               <i class="fas fa-search"></i>
@@ -124,9 +124,9 @@ export default {
     hookDate: new Date(),
     content: "",
     message: "",
-    rowData: {},
+    rawData: {},
     filtedData: {},
-    fliter: {
+    filter: {
       title: ""
     }
   }),
@@ -139,7 +139,7 @@ export default {
       axios
         .post("getMilestoneData")
         .then(res => {
-          this.rowData = res.data;
+          this.rawData = res.data;
           this.filtedData = res.data;
           this.pagination();
         })

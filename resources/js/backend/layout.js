@@ -5,6 +5,8 @@ import actions from './store/actions';
 import mutations from './store/mutations';
 //vue router
 import routers from './router/router';
+//ckeditor
+import CKEditor from '../../../node_modules/ckeditor4-vue';
 
 $(() => {
     const sessionStoragePlugin = store => {
@@ -15,7 +17,7 @@ $(() => {
         });
     };
 
-    
+
     const store = new Vuex.Store({
         state,
         getters,
@@ -62,13 +64,15 @@ $(() => {
         routes: routers
     });
 
-    router.beforeEach((to, from, next) => {
-        if (to.path === "/") {
-            next('/index');
-        } else {
-            next();
-        }
-    });
+    // router.beforeEach((to, from, next) => {
+    //     if (to.path === "/") {
+    //         next('/index');
+    //     } else {
+    //         next();
+    //     }
+    // });
+
+    Vue.use(CKEditor);
 
     const admin = new Vue({
         el: '#web_admin',

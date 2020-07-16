@@ -18,7 +18,7 @@
         </button>
 
         <div class="input-group float-right" style="width: 300px;">
-          <input type="text" class="form-control" placeholder="手機名稱" v-model="fliter.name" />
+          <input type="text" class="form-control" placeholder="手機名稱" v-model="filter.name" />
           <div class="input-group-append">
             <span class="input-group-text">
               <i class="fas fa-search"></i>
@@ -139,8 +139,8 @@ export default {
     upLoadImg: "",
     actionType: "",
     message: "",
-    rowData: {},
-    fliter: {
+    rawData: {},
+    filter: {
       name: ""
     },
     imageData: new FormData()
@@ -150,9 +150,9 @@ export default {
     this.getPhoneData();
   },
   watch: {
-    "fliter.name"(newVal) {
+    "filter.name"(newVal) {
       this.filtedData = [];
-      this.rowData.forEach((row, index) => {
+      this.rawData.forEach((row, index) => {
         if (row.name.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
           this.filtedData.push(row);
         }
@@ -165,7 +165,7 @@ export default {
       axios
         .post("getPhoneData")
         .then(res => {
-          this.rowData = res.data;
+          this.rawData = res.data;
           this.filtedData = res.data;
           this.pagination();
         })

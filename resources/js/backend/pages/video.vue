@@ -16,7 +16,7 @@
         <span>新增</span>
       </button>
       <div class="input-group float-right" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="文章標題" v-model="fliter" />
+        <input type="text" class="form-control" placeholder="文章標題" v-model="filter" />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-search"></i>
@@ -140,7 +140,7 @@ let videoRow = Vue.extend({
 
 export default {
   data: () => ({
-    fliter: "",
+    filter: "",
     postTitle: "",
     status: "publish",
     order: "0",
@@ -150,7 +150,7 @@ export default {
     ID: "",
     upLoadImg: "./Images/default-image.png",
     videoLink: "",
-    rowData: [],
+    rawData: [],
     filtedData: [],
     imageData: new FormData()
   }),
@@ -168,7 +168,7 @@ export default {
       axios
         .post("getknowledgeVideoData")
         .then(res => {
-          this.rowData = res.data;
+          this.rawData = res.data;
           this.filtedData = res.data;
           this.pagination();
         })

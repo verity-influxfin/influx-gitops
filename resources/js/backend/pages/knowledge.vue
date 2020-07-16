@@ -16,7 +16,7 @@
         <span>新增</span>
       </button>
       <div class="input-group float-right" style="width: 300px;">
-        <select class="form-control" v-model="fliter.category">
+        <select class="form-control" v-model="filter.category">
           <option value>無</option>
           <option value="investtonic">債權轉讓</option>
         </select>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="input-group float-right" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="文章標題" v-model="fliter.title" />
+        <input type="text" class="form-control" placeholder="文章標題" v-model="filter.title" />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-search"></i>
@@ -104,7 +104,7 @@
                 <option value="0">否</option>
               </select>
             </div>
-            <textarea name="editor"></textarea>
+            <ckeditor v-model="postContent" :config="{height: 500}"></ckeditor>
           </div>
           <div class="modal-footer" style="display:block;">
             <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
@@ -175,9 +175,9 @@ export default {
     ID: "",
     type: "none",
     upLoadImg: "./Images/default-image.png",
-    rowData: [],
+    rawData: [],
     filtedData: [],
-    fliter: {
+    filter: {
       title: "",
       category: ""
     },
@@ -187,23 +187,19 @@ export default {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
     this.getknowledgeData();
   },
-  mounted() {
-    CKEDITOR.replace("editor", {
-      height: "500"
-    });
-  },
+  mounted() {},
   watch: {
-    "fliter.title"(newVal) {
-      this.filter(newVal, this.fliter.category);
+    "filter.title"(newVal) {
+      this.doFilter(newVal, this.filter.category);
     },
-    "fliter.category"(newVal) {
-      this.filter(this.fliter.title, newVal);
+    "filter.category"(newVal) {
+      this.doFilter(this.filter.title, newVal);
     }
   },
   methods: {
-    filter(title, category) {
+    doFilter(title, category) {
       this.filtedData = [];
-      this.rowData.forEach((row, index) => {
+      this.rawData.forEach((row, index) => {
         if (
           row.post_title.toLowerCase().indexOf(title.toLowerCase()) !== -1 &&
           row.category.toLowerCase().indexOf(category.toLowerCase()) !== -1
@@ -217,7 +213,7 @@ export default {
       axios
         .post("getKnowledge")
         .then(res => {
-          this.rowData = res.data;
+          this.rawData = res.data;
           this.filtedData = res.data;
           this.pagination();
         })
@@ -261,14 +257,12 @@ export default {
       this.upLoadImg = "./Images/default-image.png";
       this.category = null;
 
-      CKEDITOR.instances.editor.setData(this.postContent);
-
       $(this.$refs.articleModal).modal("show");
     },
     edit(item) {
       this.postTitle = item.post_title;
       this.status = item.status;
-      this.order =item.order;
+      this.order = item.order;
       this.postContent = item.post_content;
       this.ID = item.ID;
       this.upLoadImg = item.media_link
@@ -276,8 +270,6 @@ export default {
         : "./Images/default-image.png";
       this.actionType = "update";
       this.category = item.category;
-
-      CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.articleModal).modal("show");
     },
