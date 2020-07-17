@@ -131,7 +131,7 @@ class Backendcontroller extends BaseController
         }
     }
 
-    public function uploadFile(Request $request)
+    public function uploadKnowledgeIntroImg(Request $request)
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -153,6 +153,36 @@ class Backendcontroller extends BaseController
                 $filename = $file->getClientOriginalName();
                 $file->move('upload/article', "$filename");
                 $pic_path = 'upload/article/' . $filename;
+                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
+    
+    public function uploadVideoIntroImg(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/video', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
+    public function uploadVideoImg(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/video', "$filename");
+                $pic_path = 'upload/video/' . $filename;
                 echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
             }
         } else {

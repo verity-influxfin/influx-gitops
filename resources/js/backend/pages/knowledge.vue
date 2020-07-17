@@ -50,7 +50,6 @@
     <div
       class="article-modal modal fade"
       ref="articleModal"
-      tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
@@ -104,7 +103,7 @@
                 <option value="0">否</option>
               </select>
             </div>
-            <ckeditor v-model="postContent" :config="{height: 500}"></ckeditor>
+            <ckeditor v-model="postContent" :config="editorConfig"></ckeditor>
           </div>
           <div class="modal-footer" style="display:block;">
             <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
@@ -181,7 +180,13 @@ export default {
       title: "",
       category: ""
     },
-    imageData: new FormData()
+    imageData: new FormData(),
+    editorConfig: {
+      height: 500,
+      filebrowserImageUploadUrl: "uploadKnowledgeImg",
+      filebrowserUploadMethod: 'form',
+      image_previewText: ""
+    }
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -244,7 +249,7 @@ export default {
     },
     async fileChange(e) {
       this.imageData.append("file", e.target.files[0]);
-      let res = await axios.post("uploadFile", this.imageData);
+      let res = await axios.post("uploadKnowledgeIntroImg", this.imageData);
       this.upLoadImg = `./upload/article/${res.data}`;
     },
     create() {
@@ -294,7 +299,7 @@ export default {
           ID: this.ID,
           data: {
             post_title: this.postTitle,
-            post_content: CKEDITOR.instances.editor.getData(),
+            post_content: this.postContent,
             status: this.status,
             order: this.order,
             media_link: this.upLoadImg,

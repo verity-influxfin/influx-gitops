@@ -101,9 +101,9 @@ Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
 
 Route::get('/web-admin', function () {
-    if(Session::get('isLogin')){
-        return view('admin',Session::all());
-    }else{
+    if (Session::get('isLogin')) {
+        return view('admin', Session::all());
+    } else {
         return view('login');
     }
 });
@@ -118,11 +118,15 @@ Route::post('/modifyKnowledge', 'Backendcontroller@modifyKnowledge');
 
 Route::post('/deleteKonwledge', 'Backendcontroller@deleteKonwledge');
 
+Route::post('/uploadKnowledgeIntroImg', 'Backendcontroller@uploadKnowledgeIntroImg');
+
 Route::post('/uploadKnowledgeImg', 'Backendcontroller@uploadKnowledgeImg');
 
-Route::post('/uploadFile', 'Backendcontroller@uploadFile');
-
 Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');
+
+Route::post('/uploadVideoIntroImg', 'Backendcontroller@uploadVideoIntroImg');
+
+Route::post('/uploadVideoImg', 'Backendcontroller@uploadVideoImg');
 
 Route::post('/getPhoneData', 'Backendcontroller@getPhoneData');
 

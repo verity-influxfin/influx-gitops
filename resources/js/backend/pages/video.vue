@@ -40,7 +40,6 @@
     <div
       class="video-modal modal fade"
       ref="videoModal"
-      tabindex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
@@ -91,7 +90,7 @@
                 <option value="0">否</option>
               </select>
             </div>
-            <textarea name="editor"></textarea>
+            <ckeditor v-model="postContent" :config="editorConfig"></ckeditor>
           </div>
           <div class="modal-footer" style="display:block;">
             <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
@@ -152,16 +151,17 @@ export default {
     videoLink: "",
     rawData: [],
     filtedData: [],
-    imageData: new FormData()
+    imageData: new FormData(),
+    editorConfig: {
+      height: 500,
+      filebrowserImageUploadUrl: "uploadVideoImg",
+      filebrowserUploadMethod: 'form',
+      image_previewText: ""
+    }
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
     this.getknowledgeVideoData();
-  },
-  mounted() {
-    CKEDITOR.replace("editor", {
-      height: "500"
-    });
   },
   methods: {
     getknowledgeVideoData() {
@@ -200,7 +200,7 @@ export default {
     },
     async fileChange(e) {
       this.imageData.append("file", e.target.files[0]);
-      let res = await axios.post("uploadFile", this.imageData);
+      let res = await axios.post("uploadVideoIntroImg", this.imageData);
       this.upLoadImg = `./upload/article/${res.data}`;
     },
     create() {
@@ -212,8 +212,6 @@ export default {
       this.actionType = "insert";
       this.upLoadImg = "./Images/default-image.png";
       this.videoLink = "";
-
-      CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.videoModal).modal("show");
     },
@@ -228,8 +226,6 @@ export default {
         : "./Images/default-image.png";
       this.actionType = "update";
       this.videoLink = this.filtedData[index].video_link;
-
-      CKEDITOR.instances.editor.setData(this.postContent);
 
       $(this.$refs.videoModal).modal("show");
     },
@@ -254,7 +250,7 @@ export default {
           ID: this.ID,
           data: {
             post_title: this.postTitle,
-            post_content: CKEDITOR.instances.editor.getData(),
+            post_content: this.postContent,
             status: this.status,
             order: this.order,
             media_link: this.upLoadImg,
