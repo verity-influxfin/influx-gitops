@@ -10,6 +10,11 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
+    <meta name="keywords" content="手機ATM、分期、網路借貸、貸款、借貸平台、學生貸款、社團、投資、利率、複利、債權投資、金融科技、打工">
+    <meta name="description" content="普匯．你的手機ATM 幫助年輕人完成夢想 協助打造溫暖家庭小窩 解決社會大眾生活急需">
+    <meta name="site_name" content="inFlux普匯金融科技">
+    <meta name="title" content="inFlux普匯金融科技">
+    <meta name="image" content="{{ asset('Images/logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property=”fb:app_id” content=”2194926914163491”>
     <title>inFlux普匯金融科技</title>

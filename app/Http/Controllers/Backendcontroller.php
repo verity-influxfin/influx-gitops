@@ -160,7 +160,7 @@ class Backendcontroller extends BaseController
         }
     }
 
-    
+
     public function uploadVideoIntroImg(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -253,7 +253,7 @@ class Backendcontroller extends BaseController
 
     public function getMilestoneData(Request $request)
     {
-        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date','desc')->get();
+        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date', 'desc')->get();
 
         return response()->json($milestone, 200);
     }
@@ -364,5 +364,136 @@ class Backendcontroller extends BaseController
         $responseKeys = json_decode($curlScrapedPage, true);
 
         return response()->json('', $responseKeys['score'] >= 0.5 ? 200 : 400);
+    }
+
+    public function getMediaData(Request $request)
+    {
+        $mediaData = DB::table('media')->select('*')->get();
+
+        return response()->json($mediaData, 200);
+    }
+
+    public function modifyMediaData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('media')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('media')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteMediaData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('media')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function getPartnerData(Request $request)
+    {
+        $partnerData = DB::table('partner')->select('*')->get();
+
+        return response()->json($partnerData, 200);
+    }
+
+    public function modifyPartnerData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('partner')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('partner')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deletePartnerData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('partner')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function uploadPartnerImg(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/partner', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+    
+    public function getFeedbackData(Request $request)
+    {
+        $partnerData = DB::table('feedback')->select('*')->get();
+
+        return response()->json($partnerData, 200);
+    }
+
+    public function modifyFeedbackData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('feedback')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteFeedbackData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('feedback')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
     }
 }

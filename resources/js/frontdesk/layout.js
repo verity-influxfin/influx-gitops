@@ -159,7 +159,7 @@ $(() => {
                     $router.push("/feedback");
                 }
             },
-            doLogin(e) {
+            doLogin() {
                 grecaptcha.ready(() => {
                     grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
                         axios.post('recaptcha', { token }).then((res) => {

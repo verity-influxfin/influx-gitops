@@ -6,10 +6,12 @@
     </div>
     <div class="content">
       <router-link class="center-high left" to="milestone" v-if="userData.identity == 1">里程碑</router-link>
+      <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1">心得回饋</router-link>
       <router-link class="center-low left" to="market" v-if="userData.identity == 1">分期超市</router-link>
       <router-link class="center" to="knowledge">小學堂</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
-      <router-link class="center-high right disabled" to="" v-if="userData.identity == 1">Coming soon</router-link>
+      <router-link class="center-mid right" to="partner" v-if="userData.identity == 1">合作夥伴</router-link>
+      <router-link class="center-high right" to="media" v-if="userData.identity == 1">媒體報導</router-link>
     </div>
   </div>
 </template>
@@ -98,9 +100,9 @@ export default {
       }
     }
 
-    $bgcolor: #36a2ff, #4688ff, #106ad9, #0042d5, #003189;
+    $bgcolor: #36a2ff, #23adff, #4688ff, #106ad9, #0042d5, #170bd2, #003189;
 
-    @for $i from 1 through 5 {
+    @for $i from 1 through 7 {
       a:nth-child(#{$i}) {
         background: nth($bgcolor, $i);
       }
@@ -120,7 +122,7 @@ export default {
       width: 250px;
       height: 250px;
       line-height: 250px;
-      top: 70%;
+      top: 65%;
       left: 50%;
       @extend %bg;
     }
@@ -129,7 +131,7 @@ export default {
       width: 200px;
       height: 200px;
       line-height: 200px;
-      top: 60%;
+      top: 55%;
       @extend %bg;
 
       &.right {
@@ -141,11 +143,27 @@ export default {
       }
     }
 
+    .center-mid {
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      top: 75%;
+      @extend %bg;
+
+      &.right {
+        left: 85%;
+      }
+
+      &.left {
+        left: 15%;
+      }
+    }
+
     .center-high {
       width: 200px;
       height: 200px;
       line-height: 200px;
-      top: 50%;
+      top: 45%;
       @extend %bg;
 
       &.right {

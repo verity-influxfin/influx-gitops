@@ -144,7 +144,25 @@ Route::post('/deleteMilestoneData', 'Backendcontroller@deleteMilestoneData');
 
 Route::post('/recaptcha', 'Backendcontroller@recaptcha');
 
+Route::get('/getMediaData','Backendcontroller@getMediaData');
 
+Route::post('/modifyMediaData', 'Backendcontroller@modifyMediaData');
+
+Route::post('/deleteMediaData', 'Backendcontroller@deleteMediaData');
+
+Route::get('/getPartnerData','Backendcontroller@getPartnerData');
+
+Route::post('/modifyPartnerData', 'Backendcontroller@modifyPartnerData');
+
+Route::post('/deletePartnerData', 'Backendcontroller@deletePartnerData');
+
+Route::post('/uploadPartnerImg', 'Backendcontroller@uploadPartnerImg');
+
+Route::get('/getFeedbackData','Backendcontroller@getFeedbackData');
+
+Route::post('/modifyFeedbackData', 'Backendcontroller@modifyFeedbackData');
+
+Route::post('/deleteFeedbackData', 'Backendcontroller@deleteFeedbackData');
 
 // verify mail
 
