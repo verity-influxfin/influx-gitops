@@ -7,11 +7,26 @@
     <div class="content">
       <router-link class="center-high left" to="milestone" v-if="userData.identity == 1">里程碑</router-link>
       <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1">心得回饋</router-link>
+      <router-link class="center-lower-mid left" to="cooperation" v-if="userData.identity == 1">合作訊息</router-link>
       <router-link class="center-low left" to="market" v-if="userData.identity == 1">分期超市</router-link>
       <router-link class="center" to="knowledge">小學堂</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
       <router-link class="center-mid right" to="partner" v-if="userData.identity == 1">合作夥伴</router-link>
       <router-link class="center-high right" to="media" v-if="userData.identity == 1">媒體報導</router-link>
+    </div>
+    <div v-if="userData.identity == 1">
+      <router-link class="notice-cooper" to="cooperation">
+        <div class="img">
+          <img class="img-fluid" src="../asset/images/cooperation.svg" />
+        </div>
+        <span>新合作</span>
+      </router-link>
+      <router-link class="notice-feedback" to="feedback">
+        <div class="img">
+          <img class="img-fluid" src="../asset/images/feedback.svg" />
+        </div>
+        <span>新回饋</span>
+      </router-link>
     </div>
   </div>
 </template>
@@ -31,6 +46,11 @@ export default {
     }, 1000);
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.checkNewMessage();
+    });
+  },
   methods: {
     dateToString(milliseconds) {
       let dateObj = new Date(milliseconds);
@@ -46,6 +66,18 @@ export default {
       };
 
       return `${date_item.year}/${date_item.month}/${date_item.day} ${date_item.hour}:${date_item.min}:${date_item.sec}`;
+    },
+    async checkNewMessage() {
+      let cooRes = await axios.get("checkCooperation");
+      let feedRes = await axios.get("checkFeedback");
+
+      if (cooRes.data > 0) {
+        $(".notice-cooper").addClass("notice-show");
+      }
+
+      if (feedRes.data > 0) {
+        $(".notice-feedback").addClass("notice-show");
+      }
     }
   },
   beforeDestroy() {
@@ -62,7 +94,8 @@ export default {
   height: 92.9vh;
   background-repeat: no-repeat;
   background-size: 100% 100vh;
-  overflow: auto;
+  overflow: hidden;
+  position: relative;
 
   .header {
     overflow: auto;
@@ -100,9 +133,10 @@ export default {
       }
     }
 
-    $bgcolor: #36a2ff, #23adff, #4688ff, #106ad9, #0042d5, #170bd2, #003189;
+    $bgcolor: #36a2ff, #23adff, #1d7ee1, #4688ff, #106ad9, #0042d5, #170bd2,
+      #003189;
 
-    @for $i from 1 through 7 {
+    @for $i from 1 through 8 {
       a:nth-child(#{$i}) {
         background: nth($bgcolor, $i);
       }
@@ -143,6 +177,22 @@ export default {
       }
     }
 
+    .center-lower-mid {
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      top: 85%;
+      @extend %bg;
+
+      &.right {
+        left: 66%;
+      }
+
+      &.left {
+        left: 34%;
+      }
+    }
+
     .center-mid {
       width: 200px;
       height: 200px;
@@ -174,6 +224,46 @@ export default {
         left: 10%;
       }
     }
+  }
+
+  %noticbg {
+    display: flex;
+    color: red;
+    padding: 7px;
+    background: #ffffff;
+    width: fit-content;
+    font-weight: bolder;
+    position: absolute;
+    right: 0px;
+    transform: translateX(105%);
+    box-shadow: 0 0 5px black;
+    transition-duration: 1s;
+
+    .img {
+      width: 30px;
+      filter: drop-shadow(0px 0px 2px white);
+    }
+
+    span {
+      line-height: 30px;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .notice-show {
+    transform: translateX(0%) !important;
+  }
+
+  .notice-cooper {
+    @extend %noticbg;
+    top: 65px;
+  }
+  .notice-feedback {
+    @extend %noticbg;
+    top: 130px;
   }
 }
 </style>

@@ -34,7 +34,7 @@
       <div class="list">
         <div v-for="(item,index) in media" class="report-row" :key="index">
           <div @click="openModel(item)">
-            {{item.datetime}}&emsp;{{item.title}}&emsp;
+            {{item.date}}&emsp;{{item.title}}&emsp;
             <span>({{item.media}})</span>
           </div>
           <a :href="item.link" target="_blank">
@@ -127,7 +127,7 @@
           </div>
           <div class="modal-body">
             <h4 class="report-title" v-html="reportData.title"></h4>
-            <p calss="report-date">{{reportData.datetime}}</p>
+            <p calss="report-date">{{reportData.date}}</p>
             <div class="report-contert" v-html="reportData.content"></div>
           </div>
         </div>

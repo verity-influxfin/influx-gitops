@@ -34,8 +34,11 @@
           <div class="content">內容</div>
           <div class="action-row">操作</div>
         </div>
-        <ul class="milestone-container" ref="container"></ul>
-        <div class="pagination" ref="pagination"></div>
+        <div class="empty" v-if="rawData.length === 0">查無資料！</div>
+        <div v-else>
+          <ul class="milestone-container" ref="container"></ul>
+          <div class="pagination" ref="pagination"></div>
+        </div>
       </div>
     </div>
 
@@ -124,8 +127,7 @@ export default {
     hookDate: new Date(),
     content: "",
     message: "",
-    rawData: {},
-    filtedData: {},
+    rawData: [],
     filter: {
       title: ""
     }
@@ -140,7 +142,6 @@ export default {
         .post("getMilestoneData")
         .then(res => {
           this.rawData = res.data;
-          this.filtedData = res.data;
           this.pagination();
         })
         .catch(error => {
@@ -151,7 +152,7 @@ export default {
       let $this = this;
       $this.$nextTick(() => {
         $($this.$refs.pagination).pagination({
-          dataSource: $this.filtedData,
+          dataSource: $this.rawData,
           pageSize: 8,
           callback(data, pagination) {
             $($this.$refs.container).html("");
@@ -179,12 +180,12 @@ export default {
     },
     edit(item) {
       this.title = item.title;
-      this.hookDate = item.hook_date;
+      this.hookDate = new Date(item.hook_date);
       this.content = item.content;
       this.ID = item.ID;
       this.actionType = "update";
 
-      $(this.$refs.phoneModal).modal("show");
+      $(this.$refs.milestoneModal).modal("show");
     },
     delete(item) {
       axios
@@ -236,7 +237,8 @@ export default {
     },
     close() {
       $(this.$refs.milestoneModal).modal("hide");
-      $(this.$refs.messageModal).modal("hide");}
+      $(this.$refs.messageModal).modal("hide");
+    }
   }
 };
 </script>
@@ -252,6 +254,11 @@ export default {
     background: #f5f4ff;
     border-radius: 10px;
     box-shadow: 0 0 4px black;
+
+    .empty {
+      padding: 10px;
+      text-align: center;
+    }
 
     .action-bar {
       position: relative;

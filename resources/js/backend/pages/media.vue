@@ -26,8 +26,11 @@
         <div class="link">報導連結</div>
         <div class="action-row">操作</div>
       </div>
+      <div class="empty" v-if="rawData.length === 0">查無資料！</div>
+      <div v-else>
       <ul class="media-container" ref="container"></ul>
       <div class="pagination" ref="pagination"></div>
+      </div>
     </div>
 
     <div
@@ -109,7 +112,7 @@ let mediaRow = Vue.extend({
       <div class="media">{{item.media}}</div>
       <div class="date">{{item.date}}</div>
       <div class="title">{{item.title}}</div>
-      <div class="link"><a :href="item.link" target="_blank">{{item.title}}</a></div>
+      <div class="link"><a :href="item.link" target="_blank">點我<i class="fas fa-external-link-alt"></i></a></div>
       <div class="action-row">
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
         <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
@@ -250,6 +253,11 @@ export default {
 .media-wrapper {
   padding: 10px;
 
+  .empty {
+    padding: 10px;
+    text-align: center;
+  }
+
   .action-bar {
     position: relative;
     overflow: auto;
@@ -307,11 +315,11 @@ export default {
     }
 
     .title {
-      width: 32.5%;
+      width: 55%;
     }
 
     .link {
-      width: 32.5%;
+      width: 10%;
     }
 
     .action-row {

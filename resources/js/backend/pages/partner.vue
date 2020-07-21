@@ -26,8 +26,11 @@
         <div class="desc">說明</div>
         <div class="action-row">操作</div>
       </div>
-      <ul class="partner-container" ref="container"></ul>
-      <div class="pagination" ref="pagination"></div>
+      <div class="empty" v-if="rawData.length === 0">查無資料！</div>
+      <div v-else>
+        <ul class="partner-container" ref="container"></ul>
+        <div class="pagination" ref="pagination"></div>
+      </div>
     </div>
 
     <div
@@ -65,14 +68,26 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">標題</span>
               </div>
-              <input type="text" class="form-control" placeholder="標題" v-model="title" />
+              <textarea
+                type="text"
+                class="form-control"
+                placeholder="標題"
+                style="height:200px"
+                v-model="title"
+              />
             </div>
 
             <div class="input-group" style="width: 95%;">
               <div class="input-group-prepend">
                 <span class="input-group-text">說明</span>
               </div>
-              <textarea type="text" class="form-control" style="height:300px" v-model="text" />
+              <textarea
+                type="text"
+                class="form-control"
+                placeholder="標題"
+                style="height:200px"
+                v-model="text"
+              />
             </div>
           </div>
           <div class="modal-footer" style="display:block;">
@@ -246,6 +261,11 @@ export default {
 <style lang="scss">
 .bk-partner-wrapper {
   padding: 10px;
+
+  .empty {
+    padding: 10px;
+    text-align: center;
+  }
 
   .action-bar {
     position: relative;

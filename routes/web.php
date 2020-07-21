@@ -112,6 +112,10 @@ Route::post('/baklogin', 'Backendcontroller@login');
 
 Route::post('/baklogout', 'Backendcontroller@logout');
 
+Route::get('/checkCooperation', 'Backendcontroller@checkCooperation');
+
+Route::get('/checkFeedback', 'Backendcontroller@checkFeedback');
+
 Route::post('/getKnowledge', 'Backendcontroller@getKnowledge');
 
 Route::post('/modifyKnowledge', 'Backendcontroller@modifyKnowledge');
@@ -160,9 +164,18 @@ Route::post('/uploadPartnerImg', 'Backendcontroller@uploadPartnerImg');
 
 Route::get('/getFeedbackData','Backendcontroller@getFeedbackData');
 
+Route::post('/readFeedbackData', 'Backendcontroller@readFeedbackData');
+
 Route::post('/modifyFeedbackData', 'Backendcontroller@modifyFeedbackData');
 
 Route::post('/deleteFeedbackData', 'Backendcontroller@deleteFeedbackData');
+
+Route::get('/getCooperationData','Backendcontroller@getCooperationData');
+
+Route::post('/readCooperationData', 'Backendcontroller@readCooperationData');
+
+Route::post('/deleteCooperationData', 'Backendcontroller@deleteCooperationData');
+
 
 // verify mail
 

@@ -34,8 +34,11 @@
           <div class="status">狀態</div>
           <div class="action-row">操作</div>
         </div>
-        <ul class="phone-container" ref="container"></ul>
-        <div class="pagination" ref="pagination"></div>
+        <div class="empty" v-if="filtedData.length === 0">查無資料！</div>
+        <div v-else>
+          <ul class="phone-container" ref="container"></ul>
+          <div class="pagination" ref="pagination"></div>
+        </div>
       </div>
     </div>
 
@@ -139,7 +142,8 @@ export default {
     upLoadImg: "",
     actionType: "",
     message: "",
-    rawData: {},
+    rawData: [],
+    filtedData: [],
     filter: {
       name: ""
     },
@@ -282,6 +286,11 @@ export default {
     background: #f5f4ff;
     border-radius: 10px;
     box-shadow: 0 0 4px black;
+
+    .empty {
+      padding: 10px;
+      text-align: center;
+    }
 
     .action-bar {
       position: relative;

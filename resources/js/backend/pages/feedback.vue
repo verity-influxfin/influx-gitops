@@ -43,8 +43,11 @@
         <div class="status">是否公開</div>
         <div class="action-row">操作</div>
       </div>
-      <ul class="feedback-container" ref="container"></ul>
-      <div class="pagination" ref="pagination"></div>
+      <div class="empty" v-if="filtedData.length === 0">查無資料！</div>
+      <div v-else>
+        <ul class="feedback-container" ref="container"></ul>
+        <div class="pagination" ref="pagination"></div>
+      </div>
     </div>
 
     <div
@@ -150,6 +153,7 @@ let feedbackRow = Vue.extend({
         <div class="message">{{item.feedback}}</div>
         <div class="status">{{item.isActive ==='on' ? '是' : '否'}}</div>
       <div class="action-row">
+        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === 0" @click="vm.read(item)">已讀</button>
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
         <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
       </div>
@@ -265,6 +269,21 @@ export default {
           alert(`刪除發生錯誤，請稍後再試`);
         });
     },
+    read(item) {
+      axios
+        .post("readFeedbackData", {
+          ID: item.ID,
+          data: {
+            isRead: 1
+          }
+        })
+        .then(res => {
+          this.getFeedbackData();
+        })
+        .catch(error => {
+          alert(`發生錯誤，請稍後再試`);
+        });
+    },
     submit() {
       let d = new Date(this.date);
       let date_item = {
@@ -314,6 +333,11 @@ export default {
 <style lang="scss">
 .bk-feedback-wrapper {
   padding: 10px;
+
+  .empty {
+    padding: 10px;
+    text-align: center;
+  }
 
   .action-bar {
     position: relative;
@@ -380,7 +404,7 @@ export default {
     }
 
     .message {
-      width: 50%;
+      width: 45%;
     }
 
     .status {
@@ -388,7 +412,7 @@ export default {
     }
 
     .action-row {
-      width: 10%;
+      width: 15%;
     }
   }
 

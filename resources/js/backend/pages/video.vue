@@ -16,7 +16,7 @@
         <span>新增</span>
       </button>
       <div class="input-group float-right" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="文章標題" v-model="filter" />
+        <input type="text" class="form-control" placeholder="文章標題" v-model="filter.title" />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-search"></i>
@@ -33,8 +33,11 @@
         <div class="post_modified">修改時間</div>
         <div class="action-row">操作</div>
       </div>
-      <ul class="video-container" ref="container"></ul>
-      <div class="pagination" ref="pagination"></div>
+      <div class="empty" v-if="filtedData.length === 0">查無資料！</div>
+      <div v-else>
+        <ul class="video-container" ref="container"></ul>
+        <div class="pagination" ref="pagination"></div>
+      </div>
     </div>
 
     <div
@@ -151,17 +154,31 @@ export default {
     videoLink: "",
     rawData: [],
     filtedData: [],
+    filter: {
+      title: ""
+    },
     imageData: new FormData(),
     editorConfig: {
       height: 500,
       filebrowserImageUploadUrl: "uploadVideoImg",
-      filebrowserUploadMethod: 'form',
+      filebrowserUploadMethod: "form",
       image_previewText: ""
     }
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
     this.getknowledgeVideoData();
+  },
+  watch: {
+    "filter.title"(newVal) {
+      this.filtedData = [];
+      this.rawData.forEach((row, index) => {
+        if (row.post_title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
+          this.filtedData.push(row);
+        }
+      });
+      this.pagination();
+    }
   },
   methods: {
     getknowledgeVideoData() {
@@ -285,6 +302,11 @@ export default {
 <style lang="scss">
 .bk-video-wrapper {
   padding: 10px;
+
+  .empty {
+    padding: 10px;
+    text-align: center;
+  }
 
   .action-bar {
     position: relative;

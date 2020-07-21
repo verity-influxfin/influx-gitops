@@ -6,6 +6,7 @@ import milestone from "../pages/milestone";
 import partner from "../pages/partner";
 import media from "../pages/media";
 import feedback from "../pages/feedback";
+import cooperation from "../pages/cooperation";
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -16,7 +17,8 @@ let routers = [
     { path: '/milestone', component: milestone },
     { path: '/media', component: media },
     { path: '/partner', component: partner },
-    { path: '/feedback', component: feedback }
+    { path: '/feedback', component: feedback },
+    { path: '/cooperation', component: cooperation }
 ];
 
 export default routers;

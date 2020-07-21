@@ -44,8 +44,11 @@
         <div class="post_date">刊登時間</div>
         <div class="action-row">操作</div>
       </div>
-      <ul class="article-container" ref="container"></ul>
-      <div class="pagination" ref="pagination"></div>
+      <div class="empty" v-if="filtedData.length === 0">查無資料！</div>
+      <div v-else>
+        <ul class="article-container" ref="container"></ul>
+        <div class="pagination" ref="pagination"></div>
+      </div>
     </div>
     <div
       class="article-modal modal fade"
@@ -333,6 +336,11 @@ export default {
 <style lang="scss">
 .bk-knowledge-wrapper {
   padding: 10px;
+
+  .empty {
+    padding: 10px;
+    text-align: center;
+  }
 
   .action-bar {
     position: relative;

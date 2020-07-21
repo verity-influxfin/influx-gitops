@@ -83,6 +83,20 @@ class Backendcontroller extends BaseController
         return response()->json('sucess');
     }
 
+    public function checkCooperation(Request $request)
+    {
+        $cooperation = DB::table('cooperation')->select('*')->where('isRead', '=', '0')->get();
+
+        return response()->json(count($cooperation), 200);
+    }
+
+    public function checkFeedback(Request $request)
+    {
+        $feedback = DB::table('feedback')->select('*')->where('isRead', '=', '0')->get();
+
+        return response()->json(count($feedback), 200);
+    }
+
     public function getKnowledge(Request $request)
     {
         $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_date', 'desc')->get();
@@ -368,7 +382,7 @@ class Backendcontroller extends BaseController
 
     public function getMediaData(Request $request)
     {
-        $mediaData = DB::table('media')->select('*')->get();
+        $mediaData = DB::table('media')->select('*')->orderBy('date', 'desc')->get();
 
         return response()->json($mediaData, 200);
     }
@@ -457,12 +471,27 @@ class Backendcontroller extends BaseController
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
-    
+
     public function getFeedbackData(Request $request)
     {
-        $partnerData = DB::table('feedback')->select('*')->get();
+        $feedbackData = DB::table('feedback')->select('*')->get();
 
-        return response()->json($partnerData, 200);
+        return response()->json($feedbackData, 200);
+    }
+
+    
+    public function readFeedbackData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                    DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
     }
 
     public function modifyFeedbackData(Request $request)
@@ -490,6 +519,41 @@ class Backendcontroller extends BaseController
         try {
             $exception = DB::transaction(function () {
                 DB::table('feedback')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+    
+    public function getCooperationData(Request $request)
+    {
+        $cooperationData = DB::table('cooperation')->select('*')->get();
+
+        return response()->json($cooperationData, 200);
+    }
+
+    public function readCooperationData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                    DB::table('cooperation')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteCooperationData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('cooperation')->where('ID', '=', $this->inputs['ID'])->delete();
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {

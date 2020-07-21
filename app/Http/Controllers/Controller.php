@@ -142,16 +142,16 @@ class Controller extends BaseController
 
     public function getMediaData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/mediaData.json'), true);
+        $media = DB::table('media')->select('*')->orderBy('date','desc')->get();
 
-        return response()->json($data, 200);
+        return response()->json($media, 200);
     }
 
     public function getPartnerData(Request $request)
     {
-        $data = json_decode(file_get_contents('data/partnerData.json'), true);
+        $partner = DB::table('partner')->select('*')->get();
 
-        return response()->json($data, 200);
+        return response()->json($partner, 200);
     }
 
     public function getBannerData(Request $request)
