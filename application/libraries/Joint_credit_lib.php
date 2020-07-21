@@ -160,7 +160,7 @@ class Joint_credit_lib{
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
-        $getStudentLoanStatusMsg = $getStudentLoan == 0 ? '是否有助學貸款 : 無' : '助學貸款訂約金額(千元) / 筆數 : ' . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
+        $getStudentLoanStatusMsg = $getStudentLoan[1] == 0 ? ' 無' : '助學貸款借款餘額 ( 千元 ) 合計 / 筆數 : '  . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
         $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
 		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
 			$result["status"]= "failure";
@@ -502,7 +502,7 @@ class Joint_credit_lib{
             $obj['rejected_message'] = '非七天內';
         }
 		else{
-            $obj['message'] = (isset($obj['message']) ? $obj['message'] . '<br / >' :''). '為七天內';
+            $obj['message'] = (isset($obj['message']) ? $obj['message'] . '<br / >' :''). $getDay[0] . '/' . $getDay[1] . '/' . $getDay[2] .'<br />為七天內';
         }
         $result["messages"][] = $obj;
     }
@@ -540,7 +540,7 @@ class Joint_credit_lib{
 	{
 		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
 		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
-		$credit_date=substr($credit_date[0], 0, 10);
+		$credit_date=substr($credit_date[0], 0, 19);
 		return trim($credit_date);
 	}
 
@@ -1205,7 +1205,7 @@ class Joint_credit_lib{
         ];
         if ($date) {
             $message["status"] = "success";
-            $message["message"] = $result['lastmonth'][0] .'年'. $result['lastmonth'][1] .'月底'.  "<br />符合";
+            $message["message"] = $date[0] .'年'. $date[1] .'月底'.  "<br />符合";
         }
         $result["messages"][] = $message;
 	}
