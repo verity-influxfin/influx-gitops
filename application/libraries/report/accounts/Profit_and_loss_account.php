@@ -64,6 +64,7 @@ class Profit_and_loss_account
                 $isPrepayment = true;
             }
             $set = false;
+            $first = false;
             $delay_occurred_used = false;
 
             foreach ($amortizationTables as $key => $value) {
@@ -100,6 +101,16 @@ class Profit_and_loss_account
                             $rows[$key][$nextMonth] = $this->initRow();
                             $currentMonth = $nextMonth;
                         }
+                    }
+
+                    if( !$first && $key == 'normal' && isset($amortizationTables['normal']['date'])) {
+                        $ndate = $amortizationTables['normal']['transferDate'] != null ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
+
+                        if(!isset($rows[$key][$ndate])){
+                            $rows[$key][$ndate] = $this->initRow();
+                        }
+                        $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
+                        $first = true;
                     }
 
                     if( !$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
