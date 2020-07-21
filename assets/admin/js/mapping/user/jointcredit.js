@@ -69,7 +69,7 @@ class JointCredit
             'extra_messages' : '附加訊息',
             'credit_scores' : '信用評分',
             'report_expirations' : '「調閱日期」應為最近申貸日起算一個月內',
-            'report_range' : '應徵提聯合徵信中心個人所屬「授信最新資訊」以為徵信評估審核參考數據；',
+            'report_range' : '應徵提聯合徵信中心個人所屬「授信最新資訊」以為徵信評估審核參考數據',
         };
     }
 }

@@ -62,7 +62,7 @@ class Joint_credit_lib{
         $this->check_browsed_hits_by_itself($text, $result);
         $this->check_extra_messages($text, $result);
         $this->check_credit_scores($text, $result);
-        $this->check_credit_result($text, $result);
+//        $this->check_credit_result($text, $result);
 		$this->aggregate($result);
 
 		return $result;
@@ -124,7 +124,10 @@ class Joint_credit_lib{
 					}
 				}
 			}
-            $getStudentLoan = isset($get_student_loan) ? array_sum($get_student_loan) : 0;
+            $getStudentLoan = [
+                isset($get_student_loan) ? array_sum($get_student_loan) : 0,
+                count($get_student_loan)
+            ];
             $getCountALLMidTermLoan = isset($get_mid_term_loan) ? array_sum($get_mid_term_loan) : 0;
             $getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
             $getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
@@ -157,7 +160,7 @@ class Joint_credit_lib{
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
-        $getStudentLoanStatusMsg = $getStudentLoan == 0 ? '是否有助學貸款 : 無' : '助學貸款餘額 ( 千元 ) 合計 : ' . $getStudentLoan;
+        $getStudentLoanStatusMsg = $getStudentLoan == 0 ? '是否有助學貸款 : 無' : '助學貸款訂約金額(千元) / 筆數 : ' . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
         $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
 		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
 			$result["status"]= "failure";
@@ -234,7 +237,7 @@ class Joint_credit_lib{
                 $obj = $this->serExpireFailure($obj, $expire);
                 $result["messages"][] = $obj;
 				foreach ($getAllProportion as $value) {
-					$result["messages"][2]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
+					$result["messages"][3]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 				}
 			} else {
                 $obj = [
@@ -252,7 +255,7 @@ class Joint_credit_lib{
                 $obj = $this->serExpireFailure($obj, $expire);
                 $result["messages"][] = $obj;
 				foreach ($getAllProportion as $value) {
-					$result["messages"][2]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
+					$result["messages"][3]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 				}
 			}
 		}
@@ -483,7 +486,10 @@ class Joint_credit_lib{
 
 	public function check_bounced_checks($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【退票資訊】', '【拒絕往來資訊】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
+        $getDay = $this->getDay($content[0]);
+        $sevenDays = strtotime("-7 days", strtotime(($result['appliedTime'][0] + 1911).$result['appliedTime'][1].$result['appliedTime'][2]));
+        $dataTime = strtotime(($getDay[0] + 1911) . $getDay[1] . $getDay[2]);
+		$obj = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bounced_checks",
 			"status" => "success",
 			"message" => "退票資訊：無"
@@ -492,7 +498,14 @@ class Joint_credit_lib{
 			"status" => "pending",
 			"message" => "退票資訊：有"
 		];
-	}
+		if($dataTime <= $sevenDays){
+            $obj['rejected_message'] = '非七天內';
+        }
+		else{
+            $obj['message'] = (isset($obj['message']) ? $obj['message'] . '<br / >' :''). '為七天內';
+        }
+        $result["messages"][] = $obj;
+    }
 
 	public function check_lost_contacts($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【拒絕往來資訊】', '【信用卡資訊】');
@@ -1110,19 +1123,19 @@ class Joint_credit_lib{
 				"message" => "信用評分 : 無"
 			];
 	}
-
-    public function check_credit_result($text, &$result){
-        $content=$this->CI->regex->findPatternInBetween($text, '台端之信用評分位於上述百分位區間之主要原因依序說明如下：', '※本項評分數值係依據本中心資料');
-        $result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
-            "stage" => "credit_result",
-            "status" => "success",
-            "message" => "附加訊息：無"
-        ] : [
-            "stage" => "credit_result",
-            "status" => "failure",
-            "message" => "附加訊息：有",
-        ];
-    }
+//
+//    public function check_credit_result($text, &$result){
+//        $content=$this->CI->regex->findPatternInBetween($text, '台端之信用評分位於上述百分位區間之主要原因依序說明如下：', '※本項評分數值係依據本中心資料');
+//        $result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
+//            "stage" => "credit_result",
+//            "status" => "success",
+//            "message" => "附加訊息：無"
+//        ] : [
+//            "stage" => "credit_result",
+//            "status" => "failure",
+//            "message" => "附加訊息：有",
+//        ];
+//    }
 
     public function get_scores($text, &$result)
 	{
@@ -1156,7 +1169,7 @@ class Joint_credit_lib{
 		}
 	}
 
-	public function check_report_expirations($text, &$result){
+	public function  check_report_expirations($text, &$result){
 		$date = $this->get_credit_date($text);
 		$dateArray = explode("/", $date);
 		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
@@ -1164,6 +1177,11 @@ class Joint_credit_lib{
         $result["lastmonth"] = [
             intval($dateArray[0]),
             intval($dateArray[1] - ($dateArray[2] > 22 ? 1 : 2))
+        ];
+        $result["appliedTime"] = [
+            $dateArray[0],
+            $dateArray[1],
+            $dateArray[2],
         ];
         $message = [
             "stage" => "report_expirations",
@@ -1185,7 +1203,7 @@ class Joint_credit_lib{
             "status" => "failure",
             "message" => $date
         ];
-        if (!$date) {
+        if ($date) {
             $message["status"] = "success";
             $message["message"] = $result['lastmonth'][0] .'年'. $result['lastmonth'][1] .'月底'.  "<br />符合";
         }
@@ -1216,6 +1234,10 @@ class Joint_credit_lib{
 
 	private function getMonth($text){
         return preg_split('/年/',preg_replace('/月底/','',$this->CI->regex->findPatten($text, '\d{3}年\d{2}月底')[0]));
+    }
+
+	private function getDay($text){
+        return preg_split('/\//', $this->CI->regex->findPatten($text, '\d{3}\/\d{2}\/\d{2}')[0]);
     }
 
     private function expire_check($text, $result){
