@@ -13,19 +13,23 @@ export default {
         
         state.knowledge = data;
     },
-    mutationSharesData(state, data) {
+    mutationVideoData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/vlog/${row.category ? row.category : 'share'}`;
+            if(row.category){
+                data[index].link = `/vlog/${row.category}`;
+            }else{
+                data[index].link = `/videopage/${row.ID}`;
+            }
         });
 
-        state.shares = data;
+        state.video = data;
     },
     mutationInterviewData(state, data) {
         state.interview = data;
     },
     mutationNewsData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/articlepage/news-${row.id}`;
+            data[index].link = `/articlepage/news-${index}`;
         });
 
         state.news = data;

@@ -12,7 +12,7 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>管理員登入 - inFlux普匯金融科技</title>
-    <link rel="icon" href="{{ asset('image/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('./Images/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
@@ -24,9 +24,9 @@
 </head>
 
 <body>
-    <div id="login" class="login-bg" :style="`background-image: url('./Image/23832.jpg');`">
+    <div id="login" class="login-bg" :style="`background-image: url('./Images/23832.jpg');`">
         <div class="login-form">
-            <img src=" {{ asset('Image/logo.png') }}" class="img-fluid" style="max-width: 60%;">
+            <img src=" {{ asset('./Images/logo.png') }}" class="img-fluid" style="max-width: 60%;">
             <div class="input-group">
                 <span class="input-group-addon login-text"><i class="fas fa-user"></i></span>
                 <input type="text" class="form-control login-input" v-model="account" maxlength="10" placeholder="請輸入帳號">
@@ -35,7 +35,7 @@
                 <span class="input-group-addon login-text"><i class="fas fa-key"></i></span>
                 <input type="password" class="form-control login-input" v-model="password" maxlength="50" placeholder="請輸入密碼">
             </div>
-            <div v-if="message" class="alert alert-danger">${message}</div>
+            <div v-if="message" class="alert alert-danger">@{{message}}</div>
             <button type="button" class="btn btn-login" @click="login">送出</button>
         </div>
     </div>

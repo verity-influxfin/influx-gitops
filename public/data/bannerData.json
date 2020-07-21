@@ -1,51 +1,66 @@
 {
     "college": {
-        "title": "學生貸款",
-        "bgHref": "./Image/child_banner.jpg",
-        "bannerHref": "./Image/college_loan_banner.png",
+        "bannerHref": "./Images/college_loan_banner.png",
         "info": [
             "Dcard 熱搜",
             "大學生最愛",
             "線上借貸平台"
-        ],
-        "description": "投資人運用普匯平台24小時不間斷支援同學們生活急需與達成夢想",
-        "btnText": "立即借款"
+        ]
     },
     "engineer": {
-        "title": "資訊工程師專案",
-        "bgHref": "./Image/child_banner.jpg",
-        "bannerHref": "./Image/engineer_loan_banner.png",
+        "bannerHref": "./Images/engineer_loan_banner.png",
         "info": [
             "if(“普匯理財 ”= =true)",
             "“缺錢 ”=false",
             "編譯你的程式，也編譯你的財務狀況"
-        ],
-        "description": "免出門 不需排隊 全線上申請<br>3分鐘上傳資料 30分鐘AI審核<br>年化利率最低5%起 最高額度20萬",
-        "btnText": "立即借款"
+        ]
     },
     "freshgraduate": {
-        "title": "上班族信貸",
-        "bgHref": "./Image/child_banner.jpg",
-        "bannerHref": "./Image/worker_loan_banner.png",
+        "bannerHref": "./Images/worker_loan_banner.png",
         "info": [
             "憑勞保",
             "免聯徵",
             "速送速審"
-        ],
-        "description": "最高額度20萬<br>最低年化利率5%起<br>自由選擇3-24期<br>最快一小時到帳",
-        "btnText": "試算可貸額度"
+        ]
     },
     "invest": {
-        "title": "債權投資",
-        "bgHref": "./Image/child_banner.jpg",
-        "bannerHref": "./Image/invest_banner.png",
+        "bannerHref": "./Images/invest_banner.png",
         "info": [
             "小額分散",
             "穩定報酬首選",
             "1,000元開始投資",
             "創造你的被動收入"
-        ],
-        "description": "年化報酬率5~20% 穩定獲利低風險",
-        "btnText": "立即投資"
+        ]
+    },
+    "company": {
+        "bannerHref": "./Images/company_banner.png",
+        "info": [
+            "普匯相信每個年輕人",
+            "我們致力幫助他們完成人生的夢想"
+        ]
+    },
+    "recruiting":{
+        "bannerHref":"./Images/recruiting_banner.jpg",
+        "info":[]
+    },
+    "campuspartner":{
+        "bannerHref":"./Images/campuspartner_banner.jpg",
+        "info":[]
+    },
+    "clubcooperation":{
+        "bannerHref":"./Images/clubcooperation_banner.jpg",
+        "info":[]
+    },
+    "firmcooperation":{
+        "bannerHref":"./Images/firmcooperation_banner.jpg",
+        "info":[]
+    },
+    "companycooperation":{
+        "bannerHref":"./Images/companycooperation_banner.jpg",
+        "info":[]
+    },
+    "feedback":{
+        "bannerHref":"./Images/feedback_banner.jpg",
+        "info":[]
     }
 }

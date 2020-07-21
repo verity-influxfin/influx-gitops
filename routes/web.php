@@ -24,9 +24,7 @@ Route::post('/getExperiencesData', 'Controller@getExperiencesData');
 
 Route::post('/getKnowledgeData', 'Controller@getKnowledgeData');
 
-Route::post('/getSharesData', 'Controller@getSharesData');
-
-Route::post('/getInterviewData', 'Controller@getInterviewData');
+Route::post('/getVideoData', 'Controller@getVideoData');
 
 Route::post('/getNewsData', 'Controller@getNewsData');
 
@@ -53,6 +51,8 @@ Route::post('/getReportData', 'Controller@getReportData');
 Route::post('/getArticleData', 'Controller@getArticleData');
 
 Route::post('/getVideoPage', 'Controller@getVideoPage');
+
+Route::post('/action', 'Controller@action');
 
 
 //Account
@@ -96,13 +96,14 @@ Route::post('/getRecoveriesFinished', 'Membercentrecontroller@getRecoveriesFinis
 
 Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
+
 // backstage
 
 
 Route::get('/web-admin', function () {
-    if(Session::get('isLogin')){
-        return view('admin',Session::all());
-    }else{
+    if (Session::get('isLogin')) {
+        return view('admin', Session::all());
+    } else {
         return view('login');
     }
 });
@@ -111,20 +112,97 @@ Route::post('/baklogin', 'Backendcontroller@login');
 
 Route::post('/baklogout', 'Backendcontroller@logout');
 
+Route::get('/checkCooperation', 'Backendcontroller@checkCooperation');
+
+Route::get('/checkFeedback', 'Backendcontroller@checkFeedback');
+
 Route::post('/getKnowledge', 'Backendcontroller@getKnowledge');
 
 Route::post('/modifyKnowledge', 'Backendcontroller@modifyKnowledge');
 
 Route::post('/deleteKonwledge', 'Backendcontroller@deleteKonwledge');
 
+Route::post('/uploadKnowledgeIntroImg', 'Backendcontroller@uploadKnowledgeIntroImg');
+
 Route::post('/uploadKnowledgeImg', 'Backendcontroller@uploadKnowledgeImg');
 
-Route::post('/uploadFile', 'Backendcontroller@uploadFile');
-
 Route::post('/getknowledgeVideoData', 'Backendcontroller@getknowledgeVideoData');
+
+Route::post('/uploadVideoIntroImg', 'Backendcontroller@uploadVideoIntroImg');
+
+Route::post('/uploadVideoImg', 'Backendcontroller@uploadVideoImg');
+
+Route::post('/getPhoneData', 'Backendcontroller@getPhoneData');
+
+Route::post('/uploadPhoneFile', 'Backendcontroller@uploadPhoneFile');
+
+Route::post('/modifyPhoneData', 'Backendcontroller@modifyPhoneData');
+
+Route::post('/deletePhoneData', 'Backendcontroller@deletePhoneData');
+
+Route::post('/getMilestoneData', 'Backendcontroller@getMilestoneData');
+
+Route::post('/modifyMilestoneData', 'Backendcontroller@modifyMilestoneData');
+
+Route::post('/deleteMilestoneData', 'Backendcontroller@deleteMilestoneData');
+
+Route::post('/recaptcha', 'Backendcontroller@recaptcha');
+
+Route::get('/getMediaData','Backendcontroller@getMediaData');
+
+Route::post('/modifyMediaData', 'Backendcontroller@modifyMediaData');
+
+Route::post('/deleteMediaData', 'Backendcontroller@deleteMediaData');
+
+Route::get('/getPartnerData','Backendcontroller@getPartnerData');
+
+Route::post('/modifyPartnerData', 'Backendcontroller@modifyPartnerData');
+
+Route::post('/deletePartnerData', 'Backendcontroller@deletePartnerData');
+
+Route::post('/uploadPartnerImg', 'Backendcontroller@uploadPartnerImg');
+
+Route::get('/getFeedbackData','Backendcontroller@getFeedbackData');
+
+Route::post('/readFeedbackData', 'Backendcontroller@readFeedbackData');
+
+Route::post('/modifyFeedbackData', 'Backendcontroller@modifyFeedbackData');
+
+Route::post('/deleteFeedbackData', 'Backendcontroller@deleteFeedbackData');
+
+Route::get('/getCooperationData','Backendcontroller@getCooperationData');
+
+Route::post('/readCooperationData', 'Backendcontroller@readCooperationData');
+
+Route::post('/deleteCooperationData', 'Backendcontroller@deleteCooperationData');
 
 
 // verify mail
 
 
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
+
+
+// event
+
+
+Route::get('/event', function () {
+    return view('event');
+});
+
+
+Route::get('/getRotationData', 'Backendcontroller@getRotationData');
+
+Route::post('/ratate', 'Backendcontroller@ratate');
+
+Route::post('/checkStatus', 'Backendcontroller@checkStatus');
+
+
+// feedback
+Route::post('/sendFeedback', 'Controller@sendFeedback');
+
+
+//
+
+
+Route::view('/{path?}', 'index');

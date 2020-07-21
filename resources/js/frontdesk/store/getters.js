@@ -5,8 +5,8 @@ export default {
     KnowledgeData(state,data){
         return state.knowledge;
     },
-    SharesData(state,data){
-        return state.shares;
+    VideoData(state,data){
+        return state.video;
     },
     InterviewData(state,data){
         return state.interview;

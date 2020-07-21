@@ -65,6 +65,10 @@ body {
     }
 }
 
+.a.cke_dialog_tab{
+    display: inline-block !important;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;

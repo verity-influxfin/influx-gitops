@@ -15,20 +15,12 @@ export default {
             console.error('getKnowledgeData 發生錯誤');
         }
     },
-    async getSharesData({ commit },params){
+    async getVideoData({ commit },params){
         try{
-            let res = await axios.post('getSharesData',{filter:params.category});
-            commit('mutationSharesData',res.data);
+            let res = await axios.post('getVideoData',{filter:params.category});
+            commit('mutationVideoData',res.data);
         } catch(error){
-            console.error('getSharesData 發生錯誤');
-        }
-    },
-    async getInterviewData({ commit }){
-        try{
-            let res = await axios.post('getInterviewData');
-            commit('mutationInterviewData',res.data);
-        } catch(error){
-            console.error('getInterviewData 發生錯誤');
+            console.error('getVideoData 發生錯誤');
         }
     },
     async getNewsData({ commit }){

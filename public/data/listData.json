@@ -4,13 +4,13 @@
             "title": "我要借款",
             "subMenu": [
                 {
-                    "name": "上班族貸款",
-                    "href": "/freshGraduateLoan",
+                    "name": "學生貸款",
+                    "href": "/collegeLoan",
                     "isActive": true
                 },
                 {
-                    "name": "學生貸款",
-                    "href": "/collegeLoan",
+                    "name": "上班族貸款",
+                    "href": "/freshGraduateLoan",
                     "isActive": true
                 },
                 {
@@ -87,59 +87,30 @@
         },
         {
             "title": "常見問題",
-            "href":"/qa",
+            "href": "/qa",
             "subMenu": []
-        }
-    ],
-    "infoList":[
-        {
-            "text":"學生貸款",
-            "href":"/collegeLoan"
-        },{
-            "text":"債權投資",
-            "href":"/invest"
-        },{
-            "text":"債權轉讓",
-            "href":"/transfer"
-        },{
-            "text":"公司介紹",
-            "href":"/company"
-        },{
-            "text":"活動資訊",
-            "href":"/news"
-        },{
-            "text":"inFlux小學堂",
-            "href":"/blog"
-        },{
-            "text":"會員專訪",
-            "href":"/vlog/invest"
         }
     ],
     "actionList": [
         {
-            "text":"徵才服務",
-            "href":""
-        },{
-            "text":"校園大使",
-            "href":""
-        },{
-            "text":"社團合作",
-            "href":""
-        },{
-            "text":"商行合作",
-            "href":""
-        },{
-            "text":"企業合作",
-            "href":""
-        },{
-            "text":"使用者條款",
-            "href":"/userTerms"
-        },{
-            "text":"隱私條款政策",
-            "href":"/privacyTerms"
-        },{
-            "text":"借款人服務條款",
-            "href":"/loanerTerms"
+            "text": "徵才服務",
+            "href": "/recruiting"
+        },
+        {
+            "text": "校園大使",
+            "href": "/campuspartner"
+        },
+        {
+            "text": "社團合作",
+            "href": "/clubcooperation"
+        },
+        {
+            "text": "商行合作",
+            "href": "/firmcooperation"
+        },
+        {
+            "text": "企業合作",
+            "href": "/companycooperation"
         }
     ]
 }

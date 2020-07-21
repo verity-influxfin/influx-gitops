@@ -12,7 +12,7 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <title></title>
-    <link rel="icon" href="{{ asset('image/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('./Images/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
@@ -44,8 +44,8 @@
     <script type="text/javascript" src="{{ asset('js/package/vue-cookies.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/package/ckeditor/ckeditor.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/pagination.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/v-calendar.umd.min.js') }}"></script>
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/backend.js') }}"></script>
 </body>

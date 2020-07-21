@@ -1,4 +1,24 @@
-.terms-wrapper{
-    margin: 30px;
-    color:#717171;
+.terms-wrapper {
+    padding: 30px;
+    color: #717171;
+    background: #1a66a7;
+
+    .terms-page {
+        width: 29.7cm;
+        min-height: 48cm;
+        background: #ffffff;
+        box-shadow: 0 0 7px black;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 0px auto;
+    }
+
+    @media screen and (max-width: 767px) {
+        padding: 10px;
+
+        .terms-page {
+            width: 100%;
+            padding: 10px;
+        }
+    }
 }

@@ -30,6 +30,7 @@ $(() => {
             $(".page-header").show();
             $(".page-footer").show();
             $(".back-top").show();
+            $(".blog-quiklink").show();
 
             $(window).scrollTop(0);
             next();
@@ -47,11 +48,9 @@ $(() => {
     const vue = new Vue({
         el: '#web_index',
         store,
-        delimiters: ['${', '}'],
         router,
         data: {
             menuList: [],
-            infoList: [],
             actionList: [],
             isCompany: false,
             isRememberAccount: $cookies.get('account') ? true : false,
@@ -74,17 +73,22 @@ $(() => {
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0
+            currentTime: 0,
+            pageHeaderOffsetTop: 0
         },
         created() {
+            $(this.$root.$refs.banner).show();
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
         },
         mounted() {
-            this.createFooterSlick();
+            this.createBannerSlick();
             timeLineMax.to(this.$refs.afc_popup, { y: -210 });
-            AOS.init();
+
+            this.$nextTick(() => {
+                AOS.init();
+            });
         },
         watch: {
             '$store.state.userData'() {
@@ -106,37 +110,19 @@ $(() => {
                 axios.post('getListData')
                     .then((res) => {
                         this.menuList = res.data.menuList;
-                        this.infoList = res.data.infoList;
                         this.actionList = res.data.actionList;
                     })
                     .catch((error) => {
                         console.error('getListData 發生錯誤，請稍後再試');
                     });
             },
-            createFooterSlick() {
-                $(this.$refs.footer_slick).slick({
+            createBannerSlick() {
+                $(this.$refs.banner).slick({
                     infinite: true,
-                    slidesToShow: 4,
+                    slidesToShow: 1,
                     slidesToScroll: 1,
                     autoplay: true,
-                    prevArrow: '<i></i>',
-                    nextArrow: '<i></i>',
-                    responsive: [
-                        {
-                            breakpoint: 1023,
-                            settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 1
-                            }
-                        },
-                        {
-                            breakpoint: 767,
-                            settings: {
-                                slidesToShow: 1,
-                                slidesToScroll: 1
-                            }
-                        }
-                    ]
+                    arrows: false
                 });
             },
             display() {
@@ -150,8 +136,7 @@ $(() => {
                 $(window).scrollTop('0');
                 AOS.refresh();
             },
-            openLoginModal(message) {
-                this.message = message;
+            openLoginModal() {
                 $(this.$refs.loginForm).modal("show");
             },
             switchTag(evt) {
@@ -165,51 +150,67 @@ $(() => {
                 this.isSended = false;
                 this.isReset = !this.isReset;
             },
-            doLogin() {
-                if (this.isRememberAccount) {
-                    $cookies.set('account', this.account);
-                    $cookies.set('businessNum', this.businessNum);
+            goFeedback() {
+                let { userData, $router } = this;
+
+                if (Object.keys(userData).length === 0) {
+                    $(this.$refs.loginForm).modal("show");
                 } else {
-                    $cookies.remove('account');
-                    $cookies.remove('businessNum');
+                    $router.push("/feedback");
                 }
+            },
+            doLogin() {
+                grecaptcha.ready(() => {
+                    grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
+                        axios.post('recaptcha', { token }).then((res) => {
+                            if (this.isRememberAccount) {
+                                $cookies.set('account', this.account);
+                                $cookies.set('businessNum', this.businessNum);
+                            } else {
+                                $cookies.remove('account');
+                                $cookies.remove('businessNum');
+                            }
 
-                let phone = this.account;
-                let password = this.password;
-                let investor = this.investor;
+                            let phone = this.account;
+                            let password = this.password;
+                            let investor = this.investor;
 
-                let params = { phone, password, investor };
+                            let params = { phone, password, investor };
 
-                if (this.isCompany) {
-                    let tax_id = this.businessNum;
-                    Object.assign(params, { tax_id });
-                }
+                            if (this.isCompany) {
+                                let tax_id = this.businessNum;
+                                Object.assign(params, { tax_id });
+                            }
 
-                axios.post('doLogin', params)
-                    .then((res) => {
-                        this.$store.commit('mutationUserData', res.data);
-                        if (this.$router.history.pending) {
-                            $(this.$refs.loginForm).modal("hide");
-                            this.$router.replace(this.$router.history.pending.path);
-                        }
+                            axios.post('doLogin', params)
+                                .then((res) => {
+                                    this.$store.commit('mutationUserData', res.data);
+                                    if (this.$router.history.pending) {
+                                        $(this.$refs.loginForm).modal("hide");
+                                        this.$router.replace(this.$router.history.pending.path);
+                                    }
 
-                        location.reload();
-                    })
-                    .catch((error) => {
-                        let errorsData = error.response.data;
-                        if (errorsData.message) {
-                            let messages = [];
-                            $.each(errorsData.errors, (key, item) => {
-                                item.forEach((message, k) => {
-                                    messages.push(message);
-                                });
-                            });
-                            this.message = messages.join('、');
-                        } else {
-                            this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
+                                    location.reload();
+                                })
+                                .catch((error) => {
+                                    let errorsData = error.response.data;
+                                    if (errorsData.message) {
+                                        let messages = [];
+                                        $.each(errorsData.errors, (key, item) => {
+                                            item.forEach((message, k) => {
+                                                messages.push(message);
+                                            });
+                                        });
+                                        this.message = messages.join('、');
+                                    } else {
+                                        this.message = `${this.$store.state.loginErrorCode[errorsData.error]}
                                                      ${errorsData.data ? `剩餘錯誤次數(${errorsData.data.remind_count})` : ''}`;
-                        }
+                                    }
+                                });
+                        })
                     });
+                });
+
             },
             logout() {
                 axios.post('logout').then((res) => {
@@ -297,6 +298,9 @@ $(() => {
     });
 
     $('.back-top').fadeOut();
+
+    let offset = $('.blog-quiklink').offset();
+
     $(document).scroll(function () {
         AOS.refresh();
         var y = $(this).scrollTop();
@@ -304,6 +308,22 @@ $(() => {
             $('.back-top').fadeIn();
         } else {
             $('.back-top').fadeOut();
+        }
+
+        if (window.pageYOffset > vue.pageHeaderOffsetTop) {
+            $('.page-header').addClass("sticky");
+        } else {
+            $('.page-header').removeClass("sticky");
+        }
+
+        if ($(window).scrollTop() > offset.top) {
+            $('.blog-quiklink').stop().animate({
+                marginTop: $(window).scrollTop() + offset.top
+            });
+        } else {
+            $('.blog-quiklink').stop().animate({
+                marginTop: offset.top
+            });
         }
     });
 });
