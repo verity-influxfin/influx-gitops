@@ -30,32 +30,39 @@ class Joint_credit_lib{
 					[
 						"stage" => "id_card",
 						"status" => "failure",
-						"message" => "身分證與用戶資料不符"
+						"message" => "非本人"
 					]
 				]
 			];
 		}
-		$this->check_bank_loan($text, $result);
-		$this->check_overdue_and_bad_debts($text, $result);
-		$this->check_main_debts($text, $result);
-		$this->check_extra_debts($text, $result);
-		$this->check_extra_transfer_debts($text,$result);
-		$this->check_bounced_checks($text, $result);
-		$this->check_lost_contacts($text, $result);
-		$creditCardInfo = $this->check_credit_cards($text, $result);
+        $result["messages"][] = [
+            "stage" => "id_card",
+            "status" => "success",
+            "message" => "本人"
+        ];
+        $this->check_report_expirations($text, $result);
+        $this->check_report_range($text, $result);
+        $this->check_bank_loan($text, $result);
+        $this->check_overdue_and_bad_debts($text, $result);
+        $this->check_main_debts($text, $result);
+        $this->check_extra_debts($text, $result);
+        $this->check_extra_transfer_debts($text,$result);
+        $this->check_bounced_checks($text, $result);
+        $this->check_lost_contacts($text, $result);
+        $creditCardInfo = $this->check_credit_cards($text, $result);
 
-		$input = [
+        $input = [
 			'appliedTime' => $this->get_credit_date($text),
 			'allowedAmount' => $creditCardInfo["allowedAmount"]
 		];
-		$this->check_credit_card_accounts($text, $input, $result);
-		$this->check_credit_card_debts($text, $result);
-		$this->check_browsed_hits($text, $result);
-		$this->check_browsed_hits_by_electrical_pay($text, $result);
-		$this->check_browsed_hits_by_itself($text, $result);
-		$this->check_extra_messages($text, $result);
-		$this->check_credit_scores($text, $result);
-		$this->check_report_expirations($text, $result);
+        $this->check_credit_card_accounts($text, $input, $result);
+        $this->check_credit_card_debts($text, $result);
+        $this->check_browsed_hits($text, $result);
+        $this->check_browsed_hits_by_electrical_pay($text, $result);
+        $this->check_browsed_hits_by_itself($text, $result);
+        $this->check_extra_messages($text, $result);
+        $this->check_credit_scores($text, $result);
+        $this->check_credit_result($text, $result);
 		$this->aggregate($result);
 
 		return $result;
@@ -78,12 +85,15 @@ class Joint_credit_lib{
 
 	public function check_bank_loan($text, &$result){
 		$content=$this->CI->regex->findPatternInBetween($text, '【銀行借款資訊】', '【逾期、催收或呆帳資訊】');
+        $expire = $expire = $this->expire_check($text, $result);
 		if ($this->CI->regex->isNoDataFound($content[0])) {
-			$result["messages"][] = [
-				"stage" => "bank_loan",
-				"status" => "success",
-				"message" => "銀行借款家數：無"
-			];
+		    $obj = [
+                "stage" => "bank_loan",
+                "status" => "success",
+                "message" => "銀行借款家數：無"
+            ];
+		    $obj = $this->serExpireFailure($obj, $expire);
+			$result["messages"][] = $obj;
 			return ;
 		}
 
@@ -91,7 +101,7 @@ class Joint_credit_lib{
 			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
 			$content_data= explode(" ", $content_data);
 			foreach($content_data as $key => $value){
-				if (preg_match("/分行|營業部/", $value)) {
+				if (preg_match("/分行|營業部|北分/", $value)) {
                     $getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
                     $getStudentLoanStatus = $this->get_student_loan($content_data[$key + 2], $content_data[$key + 3]);
                     $getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
@@ -125,32 +135,33 @@ class Joint_credit_lib{
 			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
 			$keyword=$this->CI->regex->findPatternInBetween($text, '有無延遲還款', '【逾期、催收或呆帳資訊】');
 			if (preg_match("/有/", $keyword[0])) {
-				$result["messages"][] = [
-					"stage" => "bank_loan",
-					"status" => "failure",
-					"message" => [
-						"有無延遲還款 : 有",
-						"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
-					],
-					"rejected_message" => [
-						"最近十二個月有無延遲還款 : 有"
-					]
-				];
+			    $obj = [
+                    "stage" => "bank_loan",
+                    "status" => "failure",
+                    "message" => [
+                        "有無延遲還款 : 有",
+                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
+                    ],
+                    "rejected_message" => [
+                        "最近十二個月有無延遲還款 : 有"
+                    ]
+                ];
+                $obj = $this->serExpireFailure($obj, $expire);
+                $result["messages"][] = $obj;
 			} else {
-				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank,$getCountALLMidTermLoan,$getStudentLoan, $result);
+				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank,$getCountALLMidTermLoan,$getStudentLoan, $result, $expire);
 			}
 		}
 	}
-	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, $getCountALLMidTermLoan, $getStudentLoan, &$result)
+	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, $getCountALLMidTermLoan, $getStudentLoan, &$result, $expire)
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
         $getStudentLoanStatusMsg = $getStudentLoan == 0 ? '是否有助學貸款 : 無' : '助學貸款餘額 ( 千元 ) 合計 : ' . $getStudentLoan;
         $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
-
 		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
 			$result["status"]= "failure";
-			$result["messages"][] = [
+            $obj = [
 				"stage" => "bank_loan",
 				"status" => "failure",
 				"message" => [
@@ -164,9 +175,11 @@ class Joint_credit_lib{
 					"銀行借款家數超過3家"
 				]
 			];
+            $obj = $this->serExpireFailure($obj, $expire);
+            $result["messages"][] = $obj;
 		} elseif ($getCountAllBanknameWithoutSchoolLoan == 3) {
 			$result["status"]= "pending";
-			$result["messages"][] = [
+            $obj = [
 				"stage" => "bank_loan",
 				"status" => "pending",
 				"message" => [
@@ -177,10 +190,12 @@ class Joint_credit_lib{
 					$longTermLoan
 				]
 			];
+            $obj = $this->serExpireFailure($obj, $expire);
+            $result["messages"][] = $obj;
 		} else {
 			if (in_array(1, $getAllProportion)) {
 				$result["status"]= "failure";
-				$result["messages"][] = [
+                $obj = [
 					"stage" => "bank_loan",
 					"status" => "failure",
 					"message" => [
@@ -194,6 +209,8 @@ class Joint_credit_lib{
 						"長期放款的借款餘額等於訂約金額"
 					]
 				];
+                $obj = $this->serExpireFailure($obj, $expire);
+                $result["messages"][] = $obj;
 				return;
 			}
 
@@ -202,7 +219,7 @@ class Joint_credit_lib{
 			}
 			$is_InStandard=(isset($is_InStandard))?$is_InStandard:0;
 			if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
-				$result["messages"][] = [
+                $obj = [
 					"stage" => "bank_loan",
 					"status" => "success",
 					"message" => [
@@ -214,11 +231,13 @@ class Joint_credit_lib{
 					]
 				];
 				$result["status"]= "success";
+                $obj = $this->serExpireFailure($obj, $expire);
+                $result["messages"][] = $obj;
 				foreach ($getAllProportion as $value) {
-					$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
+					$result["messages"][2]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 				}
 			} else {
-				$result["messages"][] = [
+                $obj = [
 					"stage" => "bank_loan",
 					"status" => "pending",
 					"message" => [
@@ -230,8 +249,10 @@ class Joint_credit_lib{
 					]
 				];
 				$result["status"]= "pending";
+                $obj = $this->serExpireFailure($obj, $expire);
+                $result["messages"][] = $obj;
 				foreach ($getAllProportion as $value) {
-					$result["messages"][0]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
+					$result["messages"][2]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
 				}
 			}
 		}
@@ -280,8 +301,9 @@ class Joint_credit_lib{
 
 	public function check_overdue_and_bad_debts($text, &$result)
 	{
+        $expire = $expire = $this->expire_check($text, $result);
 		$content = $this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
+        $obj = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "bad_debts",
 			"status" => "success",
 			"message" => "逾期、催收或呆帳資訊：無"
@@ -293,11 +315,14 @@ class Joint_credit_lib{
 				"逾期、催收或呆帳"
 			]
 		];
+        $obj = $this->serExpireFailure($obj, $expire);
+        $result["messages"][] = $obj;
 	}
 
 	public function check_main_debts($text, &$result){
+        $expire = $expire = $this->expire_check($text, $result);
 		$content=$this->CI->regex->findPatternInBetween($text, '【主債務債權再轉讓及清償資訊】', '【共同債務\/從債務\/其他債務資訊】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
+		$obj = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "main_debts",
 			"status" => "success",
 			"message" => "主債務債權再轉讓及清償資訊：無"
@@ -309,6 +334,8 @@ class Joint_credit_lib{
 				"逾期、催收或呆帳"
 			]
 		];
+        $obj = $this->serExpireFailure($obj, $expire);
+        $result["messages"][] = $obj;
 	}
 
 	private function initializeEmptyExtraDebtRows(){
@@ -369,13 +396,16 @@ class Joint_credit_lib{
 
 	public function check_extra_debts($text, &$result){
 		//3 15 29
+        $expire = $expire = $this->expire_check($text, $result);
 		$message = ["stage" => "extra_debts", "status" => "success", "message" => []];
 		$matches = $this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務資訊】', '【共同債務\/從債務\/其他債務轉讓資訊】');
 		$content = $matches[0];
 		if ($this->CI->regex->isNoDataFound($content)) {
 			$message["status"] = "success";
 			$message["message"] = self::EXTRA_DEBITS_DATA . "無";
-			$result["messages"][] = $message;
+            $obj = $message;
+            $obj = $this->serExpireFailure($obj, $expire);
+            $result["messages"][] = $obj;
 			return;
 		}
 
@@ -430,12 +460,15 @@ class Joint_credit_lib{
 				$message["message"][] = $row["未逾期餘額"];
 			}
 		}
-		$result["messages"][] = $message;
+        $obj = $message;
+        $obj = $this->serExpireFailure($obj, $expire);
+        $result["messages"][] = $obj;
 	}
 
 	public function check_extra_transfer_debts($text, &$result){
+        $expire = $expire = $this->expire_check($text, $result);
 		$content=$this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務轉讓資訊】', '【退票資訊】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
+        $obj = $this->CI->regex->isNoDataFound($content[0]) ? [
 			"stage" => "transfer_debts",
 			"status" => "success",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：無"
@@ -444,6 +477,8 @@ class Joint_credit_lib{
 			"status" => "pending",
 			"message" => "共同債務/從債務/其他債務轉讓資訊：有"
 		];
+        $obj = $this->serExpireFailure($obj, $expire);
+        $result["messages"][] = $obj;
 	}
 
 	public function check_bounced_checks($text, &$result){
@@ -927,7 +962,7 @@ class Joint_credit_lib{
 	}
 
 	private function readBrowsedByElectricalHitsRow($content, $record){
-		if (count($content) != 2) {
+		if (count($content) <= 2) {
 			return $record;
 		}
 
@@ -1076,7 +1111,20 @@ class Joint_credit_lib{
 			];
 	}
 
-	public function get_scores($text, &$result)
+    public function check_credit_result($text, &$result){
+        $content=$this->CI->regex->findPatternInBetween($text, '台端之信用評分位於上述百分位區間之主要原因依序說明如下：', '※本項評分數值係依據本中心資料');
+        $result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
+            "stage" => "credit_result",
+            "status" => "success",
+            "message" => "附加訊息：無"
+        ] : [
+            "stage" => "credit_result",
+            "status" => "failure",
+            "message" => "附加訊息：有",
+        ];
+    }
+
+    public function get_scores($text, &$result)
 	{
 		if (preg_match("/台端為給予固定評分/", $text)) {
 			$result["messages"][] = [
@@ -1109,17 +1157,39 @@ class Joint_credit_lib{
 	}
 
 	public function check_report_expirations($text, &$result){
-		$message = ["stage" => "report_expirations", "status" => "failure", "message" => "需為31日內申請"];
 		$date = $this->get_credit_date($text);
 		$dateArray = explode("/", $date);
 		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
 		$thirtyOneDays = 86400 * 31;
-
+        $result["lastmonth"] = [
+            intval($dateArray[0]),
+            intval($dateArray[1] - ($dateArray[2] > 22 ? 1 : 2))
+        ];
+        $message = [
+            "stage" => "report_expirations",
+            "status" => "failure",
+            "message" => $date . "<br />文件與申請日超過一個月"
+        ];
 		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
 			$message["status"] = "success";
+			$message["message"] = $date . "<br />符合";
 		}
 
 		$result["messages"][] = $message;
+	}
+
+    public function check_report_range($text, &$result){
+        $date = $dateArray = preg_split('/\//',preg_split('/\s/',$this->CI->regex->findPatten($text, '授信最新資料日期為\s\d{3}\/\d{2}\s底')[0])[1]);
+        $message = [
+            "stage" => "report_range",
+            "status" => "failure",
+            "message" => $date
+        ];
+        if (!$date) {
+            $message["status"] = "success";
+            $message["message"] = $result['lastmonth'][0] .'年'. $result['lastmonth'][1] .'月底'.  "<br />符合";
+        }
+        $result["messages"][] = $message;
 	}
 
 	public function aggregate(&$result){
@@ -1143,4 +1213,21 @@ class Joint_credit_lib{
 	public function setCurrentTime($currentTime){
 		$this->currentTime = $currentTime;
 	}
+
+	private function getMonth($text){
+        return preg_split('/年/',preg_replace('/月底/','',$this->CI->regex->findPatten($text, '\d{3}年\d{2}月底')[0]));
+    }
+
+    private function expire_check($text, $result){
+        $lastAllowMonth = $this->getMonth($text);
+        return $result['lastmonth'][0] < $lastAllowMonth[0] && $result['lastmonth'][1] >= $lastAllowMonth[1] ? '<br / >資料須為' . intval($lastAllowMonth[0]) . '年' . intval($lastAllowMonth[1]) . '月底為最新資訊' : false;
+    }
+
+    private function serExpireFailure($obj, $expire){
+	    if($expire){
+            $obj['status'] = 'failure';
+            $obj['rejected_message'][] = (isset($obj['rejected_message']) ? '<br / >' :''). $expire;
+        }
+        return $obj;
+    }
 }
