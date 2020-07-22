@@ -1895,14 +1895,17 @@ class Certification extends REST_Controller {
 
 			//多個檔案欄位
 			foreach ($file_fields as $field) {
-				$image_ids = explode(',',$input[$field]);
-				if(count($image_ids)>15){
-					$image_ids = array_slice($image_ids,0,15);
-				}
-				$list = $this->log_image_model->get_many_by([
-					'id'		=> $image_ids,
-					'user_id'	=> $user_id,
-				]);
+                $list = false;
+				$image_ids = isset($input[$field]) ? explode(',',$input[$field]) : [];
+				if(count($image_ids) > 0){
+                    if(count($image_ids)>15){
+                        $image_ids = array_slice($image_ids,0,15);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+                }
 
 				if($list && count($list)==count($image_ids)){
 					$content[$field] = [];
