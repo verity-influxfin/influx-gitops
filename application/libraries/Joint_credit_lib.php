@@ -160,7 +160,7 @@ class Joint_credit_lib{
 	{
 		$getAllProportion = array_pad($getAllProportion, 3, 0);
 		$longTermLoan = "長期放款借款餘額比例 : 0%";
-        $getStudentLoanStatusMsg = $getStudentLoan[1] == 0 ? ' 無' : '助學貸款借款餘額 ( 千元 ) 合計 / 筆數 : '  . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
+        $getStudentLoanStatusMsg = $getStudentLoan[1] == 0 ? ' 無' : '<br />助學貸款借款餘額 ( 千元 ) 合計 / 筆數 : '  . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
         $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
 		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
 			$result["status"]= "failure";
@@ -187,7 +187,7 @@ class Joint_credit_lib{
 				"status" => "pending",
 				"message" => [
 					"有無延遲還款 : 無",
-                    $getStudentLoanStatusMsg,
+                    "是否有助學貸款 : ".$getStudentLoanStatusMsg,
                     "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
                     $getCountALLMidTermLoanMsg,
 					$longTermLoan
@@ -203,7 +203,7 @@ class Joint_credit_lib{
 					"status" => "failure",
 					"message" => [
 						"有無延遲還款 : 無",
-                        $getStudentLoanStatusMsg,
+                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
                         "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
                         $getCountALLMidTermLoanMsg,
 						$longTermLoan
@@ -227,7 +227,7 @@ class Joint_credit_lib{
 					"status" => "success",
 					"message" => [
 						"有無延遲還款 : 無",
-                        $getStudentLoanStatusMsg,
+                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
                         "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
                         $getCountALLMidTermLoanMsg,
 						"長期放款家數 : $getCountALLLongTermLoanBank",
@@ -245,7 +245,7 @@ class Joint_credit_lib{
 					"status" => "pending",
 					"message" => [
 						"有無延遲還款 : 無",
-                        $getStudentLoanStatusMsg,
+                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
                         "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
                         $getCountALLMidTermLoanMsg,
 						"長期放款家數 : $getCountALLLongTermLoanBank",
