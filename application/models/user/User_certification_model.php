@@ -10,6 +10,7 @@ class User_certification_model extends MY_Model
 		1 => "驗證成功" ,
 		2 => "驗證失敗" ,
 		3 => "待人工審核" ,
+		4 => "未完成填寫" ,
 	);
 	public $investor_list  	= array(
 		0 =>	"借款端",

@@ -186,81 +186,81 @@
 								<div class="col-lg-6">
                                     <h1>圖片</h1>
 									<fieldset disabled>
+                                        <? if ($data->status!=4) { ?>
+                                            <? if (isset($content['labor_image'])) {
+                                                echo '<h4>【勞保異動明細】</h4><div class="form-group"><label for="disabledSelect">勞保異動明細</label><br>';
+                                                foreach($content['labor_image'] as $key => $value){
+                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                }
+                                                echo '</div><br /><br /><br />';
+                                            }?>
 
-                                        <? if (isset($content['labor_image'])) {
-                                            echo '<h4>【勞保異動明細】</h4><div class="form-group"><label for="disabledSelect">勞保異動明細</label><br>';
-                                            foreach($content['labor_image'] as $key => $value){
-                                                echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
-                                            }
-                                            echo '</div><br /><br /><br />';
-                                        }?>
+                                            <? if (isset($content['income_prove_image'])||isset($content['passbook_image'])||isset($content['passbook_cover_image'])) {
+                                                echo '<h4>【薪資證明】</h4>';
+                                                if (isset($content['income_prove_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect">名片/工作證明</label><br>';
+                                                    foreach($content['income_prove_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    }
+                                                    echo '</div>';
+                                                }
+                                                if (isset($content['passbook_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect">存摺內頁照</label><br>';
+                                                    foreach($content['passbook_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    }
+                                                    echo '</div>';
+                                                }
+                                                if (isset($content['passbook_cover_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect">存摺封面照</label><br>';
+                                                    foreach($content['passbook_cover_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    }
+                                                    echo '</div>';
+                                                }
+                                                echo '<br /><br /><br />';
+                                            }?>
 
-                                        <? if (isset($content['income_prove_image'])||isset($content['passbook_image'])||isset($content['passbook_cover_image'])) {
-                                            echo '<h4>【薪資證明】</h4>';
-                                            if (isset($content['income_prove_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">名片/工作證明</label><br>';
-                                                foreach($content['income_prove_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                            <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])) {
+                                                echo '<h4>【其他輔助證明】</h4>';
+                                                if (isset($content['programming_language'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
+                                                    if (isset($techie_lang)) {
+                                                        echo '程式語言：'.implode('、',$techie_lang).'<br/>';
+                                                    }
+                                                    if (isset($other_lang)) {
+                                                        echo '程式語言(自填)：'.implode('、',$other_lang);
+                                                    }
+                                                    echo '</div>';
                                                 }
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['passbook_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">存摺內頁照</label><br>';
-                                                foreach($content['passbook_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                if (isset($content['business_image'])) {
+                                                    !is_array($content['business_image'])?$content['business_image']=[$content['business_image']]:'';
+                                                    echo '<div class="form-group"><label for="disabledSelect">名片正反面</label><br>';
+                                                    foreach($content['business_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    }
+                                                    echo '</div>';
                                                 }
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['passbook_cover_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">存摺封面照</label><br>';
-                                                foreach($content['passbook_cover_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                if (isset($content['auxiliary_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect">最近年度報稅扣繳憑證</label><br>';
+                                                    foreach($content['auxiliary_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                    }
+                                                    echo '</div>';
                                                 }
-                                                echo '</div>';
-                                            }
-                                            echo '<br /><br /><br />';
-                                        }?>
-
-                                        <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])) {
-                                            echo '<h4>【其他輔助證明】</h4>';
-                                            if (isset($content['programming_language'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
-                                                if (isset($techie_lang)) {
-													echo '程式語言：'.implode('、',$techie_lang).'<br/>';
-												}
-                                                if (isset($other_lang)) {
-													echo '程式語言(自填)：'.implode('、',$other_lang);
-												}
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['business_image'])) {
-                                                !is_array($content['business_image'])?$content['business_image']=[$content['business_image']]:'';
-                                                echo '<div class="form-group"><label for="disabledSelect">名片正反面</label><br>';
-                                                foreach($content['business_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                                if (isset($content['license_image'])) {
+                                                    !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
+                                                    echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
+                                                    $arr_license_desc = explode(',',$content['license_des']);
+                                                    foreach($content['license_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
+                                                    }
+                                                    echo '</div>';
                                                 }
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['auxiliary_image'])) {
-                                                echo '<div class="form-group"><label for="disabledSelect">最近年度報稅扣繳憑證</label><br>';
-                                                foreach($content['auxiliary_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
-                                                }
-                                                echo '</div>';
-                                            }
-                                            if (isset($content['license_image'])) {
-                                                !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
-                                                echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
-                                                $arr_license_desc = explode(',',$content['license_des']);
-                                                foreach($content['license_image'] as $key => $value){
-                                                    echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-                                                     echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
-                                                }
-                                                echo '</div>';
-                                            }
-                                            echo '<br /><br /><br />';
-                                        }?>
-
+                                                echo '<br /><br /><br />';
+                                            }?>
+                                        <? } ?>
 
 									</fieldset>
 								</div>
