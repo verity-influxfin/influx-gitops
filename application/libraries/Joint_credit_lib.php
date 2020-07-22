@@ -498,8 +498,9 @@ class Joint_credit_lib{
 			"status" => "pending",
 			"message" => "退票資訊：有"
 		];
-		if($dataTime <= $sevenDays){
-            $obj['rejected_message'] = '非七天內';
+		if($dataTime <= $sevenDays || $getDay[0] == ''){
+            $obj['rejected_message'] = '非七天內' . ($getDay[0] == '' ? '(資料無日期)' : '');
+            $obj['status'] = 'pending';
         }
 		else{
             $obj['message'] = (isset($obj['message']) ? $obj['message'] . '<br / >' :''). $getDay[0] . '/' . $getDay[1] . '/' . $getDay[2] .'<br />為七天內';
