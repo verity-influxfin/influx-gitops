@@ -1805,6 +1805,11 @@ class Certification extends REST_Controller {
 			$content	= [];
 			$file_fields= [];
 
+            $cer_exists = $this->user_certification_model->get_by([
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'status' => 4,
+            ]);
             if (isset($input['save']) && $input['save']) {
                 $param = [
                     'user_id' => $user_id,
@@ -1813,13 +1818,10 @@ class Certification extends REST_Controller {
                     'content' => json_encode($input),
                     'status' => 4,
                 ];
-                $exists = $this->user_certification_model->get_by([
-                    'user_id' => $user_id,
-                    'certification_id' => $certification_id,
-                    'status' => 4,
-                ]);
-                if ($exists) {
-                    $rs = $this->user_certification_model->update($exists->id, [
+
+                if ($cer_exists) {
+                    $input = (object)array_merge((array)json_decode($cer_exists->content), (array)$input);
+                    $rs = $this->user_certification_model->update($cer_exists->id, [
                         'content' => json_encode($input),
                     ]);
                 } else {
@@ -1831,7 +1833,9 @@ class Certification extends REST_Controller {
             }
 
 			//是否驗證過
-			$this->was_verify($certification_id);
+            if(!$cer_exists || $cer_exists->status != 4){
+                $this->was_verify($certification_id);
+            }
 
 			//必填欄位
 			$fields 	= ['tax_id','industry','salary'];//,'company'
@@ -1916,8 +1920,14 @@ class Certification extends REST_Controller {
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
 			];
-			$insert = $this->user_certification_model->insert($param);
-			if($insert){
+
+            if ($cer_exists) {
+                $param['status'] = 0;
+                $rs = $this->user_certification_model->update($cer_exists->id, $param);
+            }else{
+                $rs = $this->user_certification_model->insert($param);
+            }
+			if($rs){
 			    if($send_mail){
                     $this->notification_lib->notice_cer_job($user_id);
                 }
