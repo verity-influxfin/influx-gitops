@@ -275,6 +275,11 @@ class Certification extends REST_Controller {
 						break;
 				}
 
+				if($data['status'] == 4){
+				    unset($rs->content['save']);
+                    $this->response(array('result' => 'SUCCESS','data' => $rs->content));
+                }
+
 				foreach ($fields as $field) {
 					if (isset($rs->content[$field]) && !empty($rs->content[$field])) {
 						$data[$field] = $rs->content[$field];
@@ -1799,6 +1804,31 @@ class Certification extends REST_Controller {
 			$investor 	= $this->user_info->investor;
 			$content	= [];
 			$file_fields= [];
+
+            if (isset($input['save']) && $input['save']) {
+                $param = [
+                    'user_id' => $user_id,
+                    'certification_id' => $certification_id,
+                    'investor' => $investor,
+                    'content' => json_encode($input),
+                    'status' => 4,
+                ];
+                $exists = $this->user_certification_model->get_by([
+                    'user_id' => $user_id,
+                    'certification_id' => $certification_id,
+                    'status' => 4,
+                ]);
+                if ($exists) {
+                    $rs = $this->user_certification_model->update($exists->id, [
+                        'content' => json_encode($input),
+                    ]);
+                } else {
+                    $rs = $this->user_certification_model->insert($param);
+                }
+                if ($rs) {
+                    $this->response(['result' => 'SUCCESS','msg' => 'SAVED']);
+                }
+            }
 
 			//是否驗證過
 			$this->was_verify($certification_id);
