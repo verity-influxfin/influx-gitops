@@ -22,7 +22,7 @@ class Certification_lib{
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 			);
-            !$get_fail ? $param['status !='] = 2 : '';
+            !$get_fail ? $param['status'] = [0,1,3,4] : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
 			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
