@@ -182,8 +182,8 @@
 												</td>
 												<label>IG 暱稱</label>
 												<p class="form-control-static"><?= isset($content['instagram']['name']) ? $content['instagram']['name'] : "" ?></p>
-												<label>IG token</label>
-												<p class="form-control-static"><?= isset($content['instagram']['access_token']) ? $content['instagram']['access_token'] : "" ?></p>
+												<label>IG token(IG ID)</label>
+												<p class="form-control-static"><?= isset($content['instagram']['access_token']) ? $content['instagram']['access_token'] : $content['instagram'] ?></p>
 												<label>IG 大頭照</label>
 												<p><a href="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>" data-fancybox="images">
 														<img src="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>">

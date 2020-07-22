@@ -222,7 +222,7 @@ class Certification extends REST_Controller {
 						if (isset($rs->content['facebook']['name'])) {
 							$fb_exist = 1;
 						};
-						if (isset($rs->content['instagram']['name'])) {
+						if (isset($rs->content['instagram'])&&$rs->content['instagram'] != null) {
 							$ig_exist = 1;
 						};
 						$fb_bind = isset($fb_exist) ? 1 : 0;

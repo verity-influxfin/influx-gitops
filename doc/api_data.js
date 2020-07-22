@@ -3820,6 +3820,166 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/certification/social",
+            "title": "認證 社交認證資料",
+            "version": "0.2.0",
+            "name": "GetCertificationSocial",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "instagram",
+                                "line",
+                                "facebook"
+                            ],
+                            "optional": false,
+                            "field": "type",
+                            "description": "<p>認證類型</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "user_id",
+                            "description": "<p>User ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "certification_id",
+                            "description": "<p>Certification ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "type",
+                            "description": "<p>認證類型</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>狀態 0:等待驗證 1:驗證成功 2:驗證失敗 3:待人工驗證</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "created_at",
+                            "description": "<p>創建日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "updated_at",
+                            "description": "<p>最近更新日期</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"user_id\": \"1\",\n  \t\"certification_id\": \"8\",\n  \t\"status\": \"0\",     \n  \t\"created_at\": \"1518598432\",     \n  \t\"updated_at\": \"1518598432\",\n  \t\"parttime\": 100,\n  \t\"allowance\": 200,\n  \t\"scholarship\": 300,\n  \t\"other_income\": 400,\n  \t\"restaurant\": 0,\n  \t\"transportation\": 1,\n  \t\"entertainment\": 2,\n  \t\"other_expense\": 3     \n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/social"
+                }
+            ]
+        },
+        {
+            "type": "get",
             "url": "/certification/student",
             "title": "認證 學生身份認證資料",
             "version": "0.1.0",
@@ -23714,7 +23874,7 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "216",                                                                                                                                                                                                                             
+                        "title": "216",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
                     }
