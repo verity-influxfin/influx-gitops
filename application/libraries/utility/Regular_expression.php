@@ -6,6 +6,12 @@ class Regular_expression
 	const SPACES = "[\s\r\n]+";
 	const DIGITS = '[0-9]+';
 
+	public function findPatten(string $text , string $patten)
+    {
+        preg_match("/$patten/s", $text, $match);
+        return $match;
+    }
+
 	public function findPatternInBetween(string $text, string $start, string $end)
 	{
 		$lineBreaks = self::LINE_BREAK;

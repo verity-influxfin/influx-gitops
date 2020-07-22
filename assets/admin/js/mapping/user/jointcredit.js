@@ -52,6 +52,7 @@ class JointCredit
 
     setStageMapping() {
         this.stageMapping = {
+            'id_card' : '核實「身分證號」與申貸戶「實名認證」一致',
             'bank_loan' : '銀行借款資訊',
             'bad_debts' : '逾期、催收或呆帳資訊',
             'main_debts' : '主債務債權轉讓及清償資訊',
@@ -67,7 +68,8 @@ class JointCredit
             'browsed_hits_by_itself' : '當事人查詢紀錄',
             'extra_messages' : '附加訊息',
             'credit_scores' : '信用評分',
-            'report_expirations' : '信用報告上右上方列印的日期',
+            'report_expirations' : '「調閱日期」應為最近申貸日起算一個月內',
+            'report_range' : '應徵提聯合徵信中心個人所屬「授信最新資訊」以為徵信評估審核參考數據',
         };
     }
 }
