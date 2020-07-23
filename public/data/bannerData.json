@@ -1,6 +1,6 @@
 {
     "college": {
-        "bannerHref": "./Images/college_loan_banner.png",
+        "bannerHref": "./images/college_loan_banner.png",
         "info": [
             "Dcard 熱搜",
             "大學生最愛",
@@ -8,7 +8,7 @@
         ]
     },
     "engineer": {
-        "bannerHref": "./Images/engineer_loan_banner.png",
+        "bannerHref": "./images/engineer_loan_banner.png",
         "info": [
             "if(“普匯理財 ”= =true)",
             "“缺錢 ”=false",
@@ -16,7 +16,7 @@
         ]
     },
     "freshgraduate": {
-        "bannerHref": "./Images/worker_loan_banner.png",
+        "bannerHref": "./images/worker_loan_banner.png",
         "info": [
             "憑勞保",
             "免聯徵",
@@ -24,7 +24,7 @@
         ]
     },
     "invest": {
-        "bannerHref": "./Images/invest_banner.png",
+        "bannerHref": "./images/invest_banner.png",
         "info": [
             "小額分散",
             "穩定報酬首選",
@@ -33,34 +33,34 @@
         ]
     },
     "company": {
-        "bannerHref": "./Images/company_banner.png",
+        "bannerHref": "./images/company_banner.png",
         "info": [
             "普匯相信每個年輕人",
             "我們致力幫助他們完成人生的夢想"
         ]
     },
     "recruiting":{
-        "bannerHref":"./Images/recruiting_banner.jpg",
+        "bannerHref":"./images/recruiting_banner.jpg",
         "info":[]
     },
     "campuspartner":{
-        "bannerHref":"./Images/campuspartner_banner.jpg",
+        "bannerHref":"./images/campuspartner_banner.jpg",
         "info":[]
     },
     "clubcooperation":{
-        "bannerHref":"./Images/clubcooperation_banner.jpg",
+        "bannerHref":"./images/clubcooperation_banner.jpg",
         "info":[]
     },
     "firmcooperation":{
-        "bannerHref":"./Images/firmcooperation_banner.jpg",
+        "bannerHref":"./images/firmcooperation_banner.jpg",
         "info":[]
     },
     "companycooperation":{
-        "bannerHref":"./Images/companycooperation_banner.jpg",
+        "bannerHref":"./images/companycooperation_banner.jpg",
         "info":[]
     },
     "feedback":{
-        "bannerHref":"./Images/feedback_banner.jpg",
+        "bannerHref":"./images/feedback_banner.jpg",
         "info":[]
     }
 }

@@ -150,7 +150,7 @@ export default {
     actionType: "",
     message: "",
     ID: "",
-    upLoadImg: "./Images/default-image.png",
+    upLoadImg: "./images/default-image.png",
     videoLink: "",
     rawData: [],
     filtedData: [],
@@ -227,7 +227,7 @@ export default {
       this.postContent = "";
       this.ID = "";
       this.actionType = "insert";
-      this.upLoadImg = "./Images/default-image.png";
+      this.upLoadImg = "./images/default-image.png";
       this.videoLink = "";
 
       $(this.$refs.videoModal).modal("show");
@@ -240,7 +240,7 @@ export default {
       this.ID = this.filtedData[index].ID;
       this.upLoadImg = this.filtedData[index].media_link
         ? this.filtedData[index].media_link
-        : "./Images/default-image.png";
+        : "./images/default-image.png";
       this.actionType = "update";
       this.videoLink = this.filtedData[index].video_link;
 

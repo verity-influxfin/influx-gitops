@@ -142,7 +142,7 @@ export default {
     name: "",
     title: "",
     text: "",
-    upLoadImg: "./Images/default-image.png",
+    upLoadImg: "./images/default-image.png",
     message: "",
     rawData: [],
     imageData: new FormData()
@@ -190,7 +190,7 @@ export default {
       this.name = "";
       this.title = "";
       this.text = "";
-      this.upLoadImg = "./Images/default-image.png";
+      this.upLoadImg = "./images/default-image.png";
       this.actionType = "insert";
 
       $(this.$refs.partnerModal).modal("show");
@@ -202,7 +202,7 @@ export default {
       this.text = item.text;
       this.upLoadImg = item.imageSrc
         ? item.imageSrc
-        : "./Images/default-image.png";
+        : "./images/default-image.png";
       this.actionType = "update";
 
       $(this.$refs.partnerModal).modal("show");

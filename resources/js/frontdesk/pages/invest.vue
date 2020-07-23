@@ -5,13 +5,13 @@
       <h3>年化報酬率5~20% 穩定獲利低風險</h3>
       <p>還有債權轉讓喔</p>
       <div class="zxc">
-        <img class="img-fluid" :src="'./Images/1231.jpg'" />
+        <img class="img-fluid" :src="'./images/1231.jpg'" />
       </div>
     </div>
     <div class="step-card">
       <h3>如何開始投資呢？</h3>
       <div class="zxc">
-        <img class="img-fluid" :src="'./Images/how_to_invest_desktop.png'" />
+        <img class="img-fluid" :src="'./images/how_to_invest_desktop.png'" />
       </div>
       <h4>平台分為三種投資方式</h4>
       <div class="step-list">
@@ -68,9 +68,9 @@
         <i class="fas fa-external-link-alt"></i>
       </router-link>
     </div>
-    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
       <div style="width: 64%;margin: 10px auto;">
-        <img :src="'./Images/flow.png'" class="img-fluid" />
+        <img :src="'./images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">

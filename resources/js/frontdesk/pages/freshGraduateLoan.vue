@@ -8,8 +8,8 @@
       <p>沒有煩人的「專員」打擾，免抵押免擔保，只需要一隻可以上網的手機，尋找普匯，AI 24hr online滿足您的資金需求，大到買房、買車、裝潢、結婚，小至生活食衣住行育樂，使用「普匯inFlux 」APP享有「高度隱私金融科技」借貸服務，讓你一邊辦著貸款，一邊喝著咖啡，既簡單快速、又安全有隱私！</p>
       <p>10分鐘申請、1小時到帳！普匯・你的手機ATM</p>
       <div class="img-wrapper" data-aos="flip-up">
-        <img :src="'./Images/worker_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./Images/worker_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'./images/worker_web.jpg'" class="img-fluid desktop" />
+        <img :src="'./images/worker_mobile.jpg'" class="img-fluid mobile" />
       </div>
     </div>
     <div class="experience-card">
@@ -59,7 +59,7 @@
         </div>
         <div class="press">
           <div class="pointer">
-            <img :src="'./Images/pointer.svg'" class="img-fluid" />
+            <img :src="'./images/pointer.svg'" class="img-fluid" />
           </div>
           <div class="credit">{{credit}}</div>
         </div>
@@ -77,7 +77,7 @@
           <span>提供完整資訊，有助提高額度</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>提供資訊 | 線上AI | 立即審核</h5>
@@ -86,7 +86,7 @@
           <span>AI數據分析審核，全程無人打擾</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>線上媒合投資人</h5>
@@ -95,7 +95,7 @@
           <span>審核成功後，立即上架幫您媒合投資人，最快15分鐘完成媒合</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>媒合成功 | 資金到手</h5>
@@ -117,9 +117,9 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
       <div>
-        <img :src="'./Images/flow.png'" class="img-fluid" />
+        <img :src="'./images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">

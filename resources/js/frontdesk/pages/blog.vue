@@ -28,7 +28,7 @@ let postRow = Vue.extend({
   props: ["item"],
   template: `
     <li class="article">
-        <div class="img"><img :src="item.media_link ? item.media_link : './Images/default-image.png'"></div>
+        <div class="img"><img :src="item.media_link ? item.media_link : './images/default-image.png'"></div>
         <p>{{item.post_modified.substr(0,10)}}</p>
         <h6>{{item.post_title}}</h6>
         <a class="btn link" :href="'#'+item.link">閱讀內容</a>

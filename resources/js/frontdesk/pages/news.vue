@@ -137,8 +137,8 @@ export default {
         centerPadding: "50px",
         slidesToShow: 1,
         slidesToScroll: 1,
-        prevArrow: '<img src="./Images/icon_pre.svg" class="pre">',
-        nextArrow: '<img src="./Images/icon_next.svg" class="next">',
+        prevArrow: '<img src="./images/icon_pre.svg" class="pre">',
+        nextArrow: '<img src="./images/icon_next.svg" class="next">',
         responsive: [
           {
             breakpoint: 768,

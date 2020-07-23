@@ -12,7 +12,7 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <title></title>
-    <link rel="icon" href="{{ asset('./Images/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('./images/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">

@@ -208,7 +208,7 @@ export default {
       this.status = "on";
       this.price = "";
       this.ID = "";
-      this.upLoadImg = "./Images/default-image.png";
+      this.upLoadImg = "./images/default-image.png";
       this.actionType = "insert";
 
       $(this.$refs.phoneModal).modal("show");
@@ -220,7 +220,7 @@ export default {
       this.ID = item.ID;
       this.upLoadImg = item.phone_img
         ? item.phone_img
-        : "./Images/default-image.png";
+        : "./images/default-image.png";
       this.actionType = "update";
 
       $(this.$refs.phoneModal).modal("show");

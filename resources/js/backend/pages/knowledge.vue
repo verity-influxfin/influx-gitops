@@ -176,7 +176,7 @@ export default {
     message: "",
     ID: "",
     type: "none",
-    upLoadImg: "./Images/default-image.png",
+    upLoadImg: "./images/default-image.png",
     rawData: [],
     filtedData: [],
     filter: {
@@ -262,7 +262,7 @@ export default {
       this.postContent = "";
       this.ID = "";
       this.actionType = "insert";
-      this.upLoadImg = "./Images/default-image.png";
+      this.upLoadImg = "./images/default-image.png";
       this.category = null;
 
       $(this.$refs.articleModal).modal("show");
@@ -275,7 +275,7 @@ export default {
       this.ID = item.ID;
       this.upLoadImg = item.media_link
         ? item.media_link
-        : "./Images/default-image.png";
+        : "./images/default-image.png";
       this.actionType = "update";
       this.category = item.category;
 

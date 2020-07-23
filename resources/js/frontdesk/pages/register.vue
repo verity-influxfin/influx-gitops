@@ -3,7 +3,7 @@
     <div class="register-dialog">
       <div class="dialog-header">
         <router-link to="/index" class="header-img">
-          <img :src="'./Images/logo.png'" class="img-fluid" />
+          <img :src="'./images/logo.png'" class="img-fluid" />
         </router-link>
       </div>
       <div v-if="isRegisterSuccess">

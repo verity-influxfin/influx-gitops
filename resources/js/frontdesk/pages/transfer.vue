@@ -2,12 +2,12 @@
   <div class="transfer-wrapper">
     <div class="transfer-header">
       <div class="header-title">
-        <img :src="'./Images/child_banner.jpg'" />
+        <img :src="'./images/child_banner.jpg'" />
         <div class="title">債權轉讓</div>
       </div>
       <div class="header-img">
-        <img :src="'./Images/transfer_banner_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./Images/transfer_banner_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'./images/transfer_banner_web.jpg'" class="img-fluid desktop" />
+        <img :src="'./images/transfer_banner_mobile.jpg'" class="img-fluid mobile" />
       </div>
       <div class="header-footer">
         <p>滾石不生苔 , 隨時靈活轉換您的資金</p>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="transfer-content" data-aos="zoom-in">
-      <img :src="'./Images/transfer_web.png'" class="img-fluid desktop" />
+      <img :src="'./images/transfer_web.png'" class="img-fluid desktop" />
       <div class="transfer-slick mobile" ref="transfer_slick">
         <div v-for="(imgSrc,index) in this.transferFlow" class="slick-item" :key="index">
           <img :src="imgSrc" class="img-fluid" />
@@ -66,12 +66,12 @@ export default {
   data: () => ({
     qaData: [],
     transferFlow: [
-      "./Images/transfer_flow1.png",
-      "./Images/transfer_flow2.png",
-      "./Images/transfer_flow3.png",
-      "./Images/transfer_flow4.png",
-      "./Images/transfer_flow5.png",
-      "./Images/transfer_flow6.png"
+      "./images/transfer_flow1.png",
+      "./images/transfer_flow2.png",
+      "./images/transfer_flow3.png",
+      "./images/transfer_flow4.png",
+      "./images/transfer_flow5.png",
+      "./images/transfer_flow6.png"
     ],
     investTonic: []
   }),

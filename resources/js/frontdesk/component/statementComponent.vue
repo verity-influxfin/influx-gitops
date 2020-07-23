@@ -21,7 +21,7 @@
     </div>
     <div class="no-passbook-table" v-if="passbook.length ===0">
       <div class="no-passbook">
-        <img :src="'./Images/no_passbook.svg'" class="img-fluid" />
+        <img :src="'./images/no_passbook.svg'" class="img-fluid" />
       </div>
     </div>
     <div class="passbook-table" v-else>

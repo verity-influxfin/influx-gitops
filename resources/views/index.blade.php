@@ -14,11 +14,11 @@
     <meta name="description" content="普匯．你的手機ATM 幫助年輕人完成夢想 協助打造溫暖家庭小窩 解決社會大眾生活急需">
     <meta name="site_name" content="inFlux普匯金融科技">
     <meta name="title" content="inFlux普匯金融科技">
-    <meta name="image" content="{{ asset('Images/logo.png') }}">
+    <meta name="image" content="{{ asset('images/logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property=”fb:app_id” content=”2194926914163491”>
     <title>inFlux普匯金融科技</title>
-    <link rel="icon" href="{{ asset('Images/site_icon.png') }}">
+    <link rel="icon" href="{{ asset('images/site_icon.png') }}">
 
     <!-- package -->
     <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
@@ -64,11 +64,11 @@
     <div id="web_index" @mousemove="clicked">
         <div class="blog-quiklink" ref="quiklink">
             <i class="far fa-times-circle" @click="$($refs.quiklink).remove()"></i>
-            <router-link to="blog"><img src="{{ asset('Images/ah-pu.svg') }}"></router-link>
+            <router-link to="blog"><img src="{{ asset('images/ah-pu.svg') }}"></router-link>
         </div>
         <div class="banner" ref="banner">
             <div class="puhey-banner">
-                <img src="{{ asset('Images/index-banner.jpg') }}" style="width:100%" />
+                <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
                 <div class="content">
                     <p>全線上AI無人干擾，隨時滿足你的資金需求</p>
                     <span>普匯．你的手機ATM</span>
@@ -78,11 +78,11 @@
                     <router-link class="btn btn-go float-right" to="collegeLoan">我是大學生</router-link>
                 </div>
             </div>
-            <img src="{{ asset('Images/index-banner.jpg') }}" style="width:100%" />
+            <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
         </div>
         <nav class="page-header navbar navbar-expand-lg">
             <div class="web-logo">
-                <router-link to="/index"><img src=" {{ asset('Images/logo.png') }}" class="img-fluid"></router-link>
+                <router-link to="/index"><img src=" {{ asset('images/logo.png') }}" class="img-fluid"></router-link>
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
@@ -175,13 +175,13 @@
                     <div class="card-content">
                         <h5>申貸</h5>
                         <div class="down-pic">
-                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('Images/google-play-badge.png') }}" class="img-fluid"></a>
-                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('Images/app-store-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('images/google-play-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('images/app-store-badge.png') }}" class="img-fluid"></a>
                         </div>
                         <h5>投資</h5>
                         <div class="down-pic">
-                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('Images/google-play-badge.png') }}" class="img-fluid"></a>
-                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('Images/app-store-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('images/google-play-badge.png') }}" class="img-fluid"></a>
+                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('images/app-store-badge.png') }}" class="img-fluid"></a>
                         </div>
                     </div>
                 </div>
@@ -198,17 +198,17 @@
             </div>
         </div>
         <div class="afc_popup hidden-phone" ref="afc_popup">
-            <div><img src="{{ asset('Images/message_icon.png') }}" class="img-fluid" @click="display"></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('Images/line_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('Images/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('Images/invest_icon.png') }}" class="img-fluid"></a></div>
+            <div><img src="{{ asset('images/message_icon.png') }}" class="img-fluid" @click="display"></div>
+            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('images/line_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('images/loan_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('images/invest_icon.png') }}" class="img-fluid"></a></div>
         </div>
         <div class="afc_popup hidden-desktop" style="bottom: 150px;">
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('Images/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('Images/invest_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('Images/line_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('images/loan_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('images/invest_icon.png') }}" class="img-fluid"></a></div>
+            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('images/line_icon.png') }}" class="img-fluid"></a></div>
         </div>
-        <a class="back-top" @click="backtotop"><img src="{{ asset('Images/top.svg') }}" class="img-fluid" /></a>
+        <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">
@@ -248,7 +248,7 @@
                 <div v-if="!isReset" id="loginModal" class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" @click="clearInterval(timer);">✕</button>
-                        <div class="login-logo"><img src="./Images/logo_puhey.svg" class="img-fluid"></div>
+                        <div class="login-logo"><img src="./images/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
