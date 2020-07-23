@@ -2,22 +2,22 @@
     "college": {
         "requiredDocuments": [
             {
-                "imgSrc": "./Images/identity.png",
+                "imgSrc": "./images/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/account.png",
+                "imgSrc": "./images/account.png",
                 "text": "金融帳號",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/social_media.png",
+                "imgSrc": "./images/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/education.png",
+                "imgSrc": "./images/education.png",
                 "text": "學生身分",
                 "memo": ""
             }
@@ -26,32 +26,32 @@
     "engineer": {
         "requiredDocuments": [
             {
-                "imgSrc": "./Images/identity.png",
+                "imgSrc": "./images/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/account.png",
+                "imgSrc": "./images/account.png",
                 "text": "金融帳號",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/social_media.png",
+                "imgSrc": "./images/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/education.png",
+                "imgSrc": "./images/education.png",
                 "text": "學歷證明",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/license.png",
+                "imgSrc": "./images/license.png",
                 "text": "工程師專業證照",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/extra.png",
+                "imgSrc": "./images/extra.png",
                 "text": "上班族需另提供",
                 "memo": "1.聯徵報告<br>2.工作證明"
             }
@@ -60,22 +60,22 @@
     "freshgraduate": {
         "requiredDocuments": [
             {
-                "imgSrc": "./Images/identity.png",
+                "imgSrc": "./images/identity.png",
                 "text": "身分證件",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/social_media.png",
+                "imgSrc": "./images/social_media.png",
                 "text": "常用社群",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/employment.png",
+                "imgSrc": "./images/employment.png",
                 "text": "工作證明",
                 "memo": ""
             },
             {
-                "imgSrc": "./Images/account.png",
+                "imgSrc": "./images/account.png",
                 "text": "金融帳號",
                 "memo": ""
             }

@@ -23,11 +23,11 @@
       <div class="menu-card">
         <div style="width:max-content">
           <router-link class="menu-item" to="/loannotification">
-            <img :src="'./Images/icon_account.svg'" class="img-fluid" />
+            <img :src="'./images/icon_account.svg'" class="img-fluid" />
             <p>通知</p>
           </router-link>
           <router-link class="menu-item" to="/myrepayment">
-            <img :src="'./Images/icon_moneyback.svg'" class="img-fluid" />
+            <img :src="'./images/icon_moneyback.svg'" class="img-fluid" />
             <p>帳戶資訊</p>
           </router-link>
         </div>

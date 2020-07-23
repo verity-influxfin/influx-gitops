@@ -35,7 +35,7 @@
 
     <div class="repayment-card">
       <div v-if="installment.length === 0" class="no-data">
-        <img :src="'./Images/empty.svg'" class="img-fluid" />
+        <img :src="'./images/empty.svg'" class="img-fluid" />
         <a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q">請往APP了解更多 >></a>
       </div>
       <div v-else>

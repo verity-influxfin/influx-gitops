@@ -61,7 +61,7 @@
         </div>
         <div class="press">
           <div class="pointer">
-            <img :src="'./Images/pointer.svg'" class="img-fluid" />
+            <img :src="'./images/pointer.svg'" class="img-fluid" />
           </div>
           <div class="credit">{{credit}}</div>
         </div>
@@ -78,7 +78,7 @@
           <span>提供完整資訊，有助提高額度</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>提供資訊 | 線上AI | 立即審核</h5>
@@ -87,7 +87,7 @@
           <span>AI數據分析審核，全程無人打擾</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>線上媒合投資人</h5>
@@ -96,7 +96,7 @@
           <span>審核成功後，立即上架幫您媒合投資人，最快15分鐘完成媒合</span>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <h5>媒合成功 | 資金到手</h5>
@@ -118,10 +118,10 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
       <div>
         <h2 style="text-align: center;">「最貼近年輕人的普匯金融科技」</h2>
-        <img :src="'./Images/flow.png'" class="img-fluid" />
+        <img :src="'./images/flow.png'" class="img-fluid" />
       </div>
     </div>
     <div class="qa-card">

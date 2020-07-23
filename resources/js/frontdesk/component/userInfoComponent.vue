@@ -2,7 +2,7 @@
   <div class="info-card">
     <div class="picture">
       <img
-        :src="$props.userData.picture ? $props.userData.picture : `./Images/mug_shot.svg`"
+        :src="$props.userData.picture ? $props.userData.picture : `./images/mug_shot.svg`"
         class="img-fluid"
       />
     </div>

@@ -41,7 +41,7 @@
           <p>進入分期超市</p>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <span>step2.</span>
@@ -49,7 +49,7 @@
           <p>選擇借款的身分</p>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <span>step3.</span>
@@ -57,7 +57,7 @@
           <p>選擇手機型號廠牌</p>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <span>step4.</span>
@@ -65,7 +65,7 @@
           <p>等待系統驗證</p>
         </div>
         <div class="next">
-          <img :src="'./Images/next.svg'" class="img-fluid" />
+          <img :src="'./images/next.svg'" class="img-fluid" />
         </div>
         <div class="step">
           <span>step5.</span>
@@ -77,8 +77,8 @@
     <div class="recommend-card">
       <div class="banner-text">優良店家推薦</div>
       <div class="mobile-footer">
-        <img :src="'./Images/mobile_banner_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./Images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'./images/mobile_banner_web.jpg'" class="img-fluid desktop" />
+        <img :src="'./images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
       </div>
     </div>
   </div>

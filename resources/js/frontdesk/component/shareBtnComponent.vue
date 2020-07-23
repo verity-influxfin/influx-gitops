@@ -2,19 +2,19 @@
   <div class="share-btn-wrapper">
     <div class="add-to">
       <div @click="addToFB">
-        <img :src="'./Images/facebook.svg'" class="img-fluid" />
+        <img :src="'./images/facebook.svg'" class="img-fluid" />
       </div>
       <div @click="addToMessenger" class="postion tiny-color">
-        <img :src="'./Images/messenger.svg'" class="img-fluid" />
+        <img :src="'./images/messenger.svg'" class="img-fluid" />
       </div>
       <div @click="addToLINE">
-        <img :src="'./Images/line.png'" class="img-fluid" />
+        <img :src="'./images/line.png'" class="img-fluid" />
       </div>
       <div @click="addToMail" class="postion heavy-color">
-        <img :src="'./Images/mail.svg'" class="img-fluid" />
+        <img :src="'./images/mail.svg'" class="img-fluid" />
       </div>
       <div @click="showCopyinput" class="postion heavy-color">
-        <img :src="'./Images/link.svg'" class="img-fluid" />
+        <img :src="'./images/link.svg'" class="img-fluid" />
       </div>
     </div>
     <div
@@ -29,7 +29,7 @@
         <div class="modal-content">
           <div class="input-group">
             <span class="input-group-addon heavy-color">
-              <img :src="'./Images/link.svg'" class="img-fluid" />
+              <img :src="'./images/link.svg'" class="img-fluid" />
             </span>
             <input type="text" class="form-control" v-model="this.copyLink" @click="copy()" />
           </div>

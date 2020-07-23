@@ -12,7 +12,7 @@
   <meta http-equiv="pragma" content="no-cache" />
   <meta name="csrf_token" content="{{ csrf_token() }}">
   <title></title>
-  <link rel="icon" href="{{ asset('Images/site_icon.png') }}">
+  <link rel="icon" href="{{ asset('images/site_icon.png') }}">
 
   <!-- package -->
   <link rel="stylesheet" href="{{ asset('css/package/font-awesome.css') }}">
@@ -25,7 +25,7 @@
 
 <body>
   <div id="event_wrapper">
-    <div class="game" style="background-image: url('./Images/3253525.jpg');">
+    <div class="game" style="background-image: url('./images/3253525.jpg');">
       <div id="wheel-content" ref="wheel_content">
         <div class="wheel" :style="`transform: rotate(${wheelDeg}deg)`">
           <div id="prize-box">
@@ -67,8 +67,8 @@
     </div>
     <div class="event-info">主辦單位保有最終修改、變更、活動解釋及取消本活動之權利，若有相關異動將會公告於網站， 恕不另行通知。</div>
     <div class="awards-block" ref="awards_block" @click="hide">
-      <div class="awards-canvas" :style="`background-image: url('./Images/02.jpg');`"></div>
-      <div class="awards-dailog" :style="`background-image: url('./Images/hot_explosion.png');`">
+      <div class="awards-canvas" :style="`background-image: url('./images/02.jpg');`"></div>
+      <div class="awards-dailog" :style="`background-image: url('./images/hot_explosion.png');`">
         恭喜你獲得
         <i :class="awards.image"></i>
         @{{awards.text}}一份！！
@@ -126,7 +126,7 @@
         <div id="loginModal" v-else class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">✕</button>
-            <div class="login-logo"><img src="./Images/logo_puhey.svg" class="img-fluid"></div>
+            <div class="login-logo"><img src="./images/logo_puhey.svg" class="img-fluid"></div>
           </div>
           <div class="modal-body">
             <div class="input-group">

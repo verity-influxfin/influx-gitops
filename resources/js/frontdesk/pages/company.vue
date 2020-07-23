@@ -4,7 +4,7 @@
     <div class="profile-card">
       <div class="puhey">
         <div class="img">
-          <img class="img-fluid" :src="'./Images/logo_.png'" />
+          <img class="img-fluid" :src="'./images/logo_.png'" />
         </div>
         <div class="text">
           <h3>金融服務「普」及大眾，人才「匯」流。</h3>
@@ -29,7 +29,7 @@
     </div>
     <div class="media-card">
       <div class="left_megaphone">
-        <img class="img-fluid" :src="'./Images/left_megaphone.svg'" />
+        <img class="img-fluid" :src="'./images/left_megaphone.svg'" />
       </div>
       <div class="list">
         <div v-for="(item,index) in media" class="report-row" :key="index">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="right_megaphone">
-        <img class="img-fluid" :src="'./Images/right_megaphone.svg'" />
+        <img class="img-fluid" :src="'./images/right_megaphone.svg'" />
       </div>
     </div>
     <div class="partner-card">
@@ -73,19 +73,19 @@
     <div class="party-card">
       <div class="party" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="500">
         <div class="img">
-          <img class="img-fluid" :src="'./Images/partner7.png'" />
+          <img class="img-fluid" :src="'./images/partner7.png'" />
         </div>
         <p>臺灣創新快製媒合中心(Taiwan Rapid Innovation Prototyping League for Entrepreneurs)，英文簡稱TRIPLE，結合SI/ODM、加速器業者與研究機構，期望以臺灣優質軟硬體整合、先進製造與管理能量，提供國內外創新事業快速試製以及其他在設計、行銷、研發等方面的加值服務，協助其加速落實創意，實現市場價值。快製中心以提供快速試製創新商機媒合服務為主，協助媒合新創事業與快製聯盟業者，促成雙方合作。</p>
       </div>
       <div class="party" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
         <div class="img">
-          <img class="img-fluid" :src="'./Images/partner8.png'" />
+          <img class="img-fluid" :src="'./images/partner8.png'" />
         </div>
         <p>立勤國際法律事務所自2014年擴大營運至今，已經橫跨中國、台灣、菲律賓三地，並加入國際環太平洋律師組織IBPA，與各國律師建立國際聯繫。目前在台灣有台北、新竹、高雄三處共四間事務所，擠身台灣前十大事務所，提供全般法律、財務、會計、地政、智慧財產服務等方面的服務。</p>
       </div>
       <div class="party" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="500">
         <div class="img">
-          <img class="img-fluid" :src="'./Images/partner9.png'" />
+          <img class="img-fluid" :src="'./images/partner9.png'" />
         </div>
         <p>
           碁元會計師事務所將每位客戶視為難能可貴的朋友般珍惜，秉持服務、信任、學習的精神為客戶處理大大小小的帳務及稅務問題，並深受客戶肯定與支持。
@@ -149,29 +149,29 @@ export default {
         title: "簡單",
         text:
           "直覺化UIUX介面設計，讓操作使用更簡單便利，第一次開啟使用就能上手",
-        imageSrc: "./Images/company_icon1.png"
+        imageSrc: "./images/company_icon1.png"
       },
       {
         title: "快速",
         text:
           "全程手機線上申請，AI系統24小時不間斷驗證，提升作業速度與效率，加快用戶取得資金",
-        imageSrc: "./Images/company_icon2.png"
+        imageSrc: "./images/company_icon2.png"
       },
       {
         title: "安全",
         text: "使用 Amazon Web Services雲端服務平台，個資絕不外洩",
-        imageSrc: "./Images/company_icon3.png"
+        imageSrc: "./images/company_icon3.png"
       },
       {
         title: "隱私",
         text:
           "全程無人系統驗證操作，從申請到取得款項，資訊完全不外洩，保障投資人與借款人各資隱密與隱私",
-        imageSrc: "./Images/company_icon4.png"
+        imageSrc: "./images/company_icon4.png"
       },
       {
         title: "低風險高報酬",
         text: "小額分散、分期還款、降低風險、複利效果，創造最高報酬",
-        imageSrc: "./Images/company_icon5.png"
+        imageSrc: "./images/company_icon5.png"
       }
     ],
     media: [],

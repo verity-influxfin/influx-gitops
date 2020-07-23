@@ -140,7 +140,7 @@
             <p>最專業的金融專家</p>
             <div class="cnt">
               <div class="img">
-                <img :src="'./Images/best1.png'" class="img-fluid" />
+                <img :src="'./images/best1.png'" class="img-fluid" />
               </div>
               <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
             </div>
@@ -152,7 +152,7 @@
             <div class="cnt">
               <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
               <div class="img">
-                <img :src="'./Images/best2.png'" class="img-fluid" />
+                <img :src="'./images/best2.png'" class="img-fluid" />
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@
             <p>簡單、快速、安全、隱私</p>
             <div class="cnt">
               <div class="img">
-                <img :src="'./Images/best3.png'" class="img-fluid" />
+                <img :src="'./images/best3.png'" class="img-fluid" />
               </div>
               <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
             </div>
@@ -286,7 +286,7 @@
     </div>
     <div class="slogan-card">
       <div class="logo">
-        <img :src="'./Images/logo_.png'" class="img-fluid" />
+        <img :src="'./images/logo_.png'" class="img-fluid" />
       </div>
       <div class="slogan">
         <div class="content">
@@ -297,9 +297,9 @@
         </div>
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./Images/19366.jpg')`">
+    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
       <div>
-        <img :src="'./Images/flow.png'" class="img-fluid" />
+        <img :src="'./images/flow.png'" class="img-fluid" />
       </div>
     </div>
   </div>
@@ -320,55 +320,55 @@ export default {
     creditRatingItem: [
       {
         text: "實名認證",
-        img: "./Images/realname.png",
+        img: "./images/realname.png",
         checked: false,
         money: 10000
       },
       {
         text: "金融帳號",
-        img: "./Images/account_.png",
+        img: "./images/account_.png",
         checked: false,
         money: 10000
       },
       {
         text: "社交認證",
-        img: "./Images/soucial.png",
+        img: "./images/soucial.png",
         checked: false,
         money: 20000
       },
       {
         text: "電子信箱",
-        img: "./Images/email.png",
+        img: "./images/email.png",
         checked: false,
         money: 10000
       },
       {
         text: "財力證明",
-        img: "./Images/financial.png",
+        img: "./images/financial.png",
         checked: false,
         money: 20000
       },
       {
         text: "學生身分",
-        img: "./Images/student.png",
+        img: "./images/student.png",
         checked: false,
         money: 40000
       },
       {
         text: "最高學歷",
-        img: "./Images/education_.png",
+        img: "./images/education_.png",
         checked: false,
         money: 30000
       },
       {
         text: "工作認證",
-        img: "./Images/work.png",
+        img: "./images/work.png",
         checked: false,
         money: 40000
       },
       {
         text: "聯合徵信",
-        img: "./Images/credit.png",
+        img: "./images/credit.png",
         checked: false,
         money: 50000
       }
