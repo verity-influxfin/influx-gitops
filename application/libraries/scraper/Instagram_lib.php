@@ -11,7 +11,6 @@ class Instagram_lib
         if(isset($params['ip'])){
           $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
         }
-        $this->scraperUrl = 'http://127.0.0.1:10000/scraper/api/v1.0/instagram/';
     }
 
     public function autoFollow($reference, $followed_account)
