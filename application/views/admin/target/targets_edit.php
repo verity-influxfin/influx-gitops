@@ -87,7 +87,7 @@
                                                    href="<?= admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account) ?>"><?= $virtual_account->virtual_account ?></a>
                                                 <? if($lawAccount){ ?>
                                                     <br /><a class="fancyframe"
-                                                       href="<?= admin_url('Passbook/display?virtual_account=' . $lawAccount) ?>"><?= $virtual_account->virtual_account ?></a> (法催帳戶)
+                                                       href="<?= admin_url('Passbook/display?virtual_account=' . $lawAccount) ?>"><?= $lawAccount ?></a> (法催帳戶)
                                                 <? } ?>
                                             </p>
                                         </td>

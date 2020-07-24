@@ -96,6 +96,7 @@ class Account extends MY_Admin_Controller {
 		$display 	= isset($get['display'])&&$get['display']?$get['display']:"";
 		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
 		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
+        $targetId 		= isset($get['target'])&&$get['target']?$get['target']:false;
 		$source		= array(
 			SOURCE_AR_FEES,
 			SOURCE_AR_PRINCIPAL,
@@ -122,6 +123,8 @@ class Account extends MY_Admin_Controller {
 				"status <>"			=> 0
 			);
 		}
+
+        $targetId ? $where['target_id'] = $targetId : '';
 
 		$page_data 	= array(
 			"type" 	=> "list",
@@ -199,6 +202,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> $source_type,
 						"user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:0,
 						"bank_account_from"		=> $value->bank_account_from,
@@ -229,6 +233,7 @@ class Account extends MY_Admin_Controller {
                     $list[] = array(
                         "entering_date"			=> $value->entering_date,
                         "target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
                         "source_type"			=> 'transfer_b',
                         "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
                         "bank_account_from"		=> $value->bank_account_from,
@@ -255,6 +260,7 @@ class Account extends MY_Admin_Controller {
                     $list[] = array(
                         "entering_date"			=> $value->entering_date,
                         "target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
                         "source_type"			=> 'bank_wrong_tx',
                         "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
                         "bank_account_from"		=> $value->bank_account_from,
@@ -295,6 +301,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'transfer',
 						"user_from"				=> $user_name[$value->user_from],
 						"bank_account_from"		=> $value->bank_account_from,
@@ -364,6 +371,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'prepayment',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,
@@ -434,6 +442,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'charge_delay',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,
@@ -474,6 +483,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> "lending",
 						"user_to"				=> $user_name[$value->user_to],
 						"bank_account_to"		=> $value->bank_account_to,
@@ -537,6 +547,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+						"target_id"				=> $value->target_id,
 						"source_type"			=> 'charge_normal',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,

@@ -114,15 +114,18 @@
 									?>
                                         <tr <?=$count%2==0?"style='background-color: #DCDCDC;'":""; ?>>
                                             <td rowspan="<?=isset($value["sub_list"])?count($value["sub_list"])+1:""?>"><?=isset($value["entering_date"])?$value["entering_date"]:"" ?></td>
-                                            <td><?=isset($value["target_no"])?$value["target_no"]:"" ?></td>
+                                            <td><a class="fancyframe"
+                                                   href="<?= admin_url('Target/edit?id=' . (isset($value["target_id"])?$value["target_id"]:"")) ?>"><?=isset($value["target_no"])?$value["target_no"]:"" ?></a></td>
                                             <td><?=isset($transaction_type_name[$value["source_type"]])?($value["source_type"]!='bank_wrong_tx'?$transaction_type_name[$value["source_type"]]:(($value["v_bank_account_from"]!=PLATFORM_VIRTUAL_ACCOUNT?$transaction_type_name[$value["source_type"]]:'錯帳匯費支出'))):"" ?></td>
                                             <td><?=isset($value["user_from"])?$value["user_from"]:"" ?></td>
-                                            <td><?=isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:"" ?></td>
+                                            <td><a class="fancyframe"
+                                                   href="<?= admin_url('Passbook/display?virtual_account=' . (isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:'')) ?>"><?=isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:"" ?></a></td>
                                             <td class="num"><?=isset($value["v_amount_from"])&&$value["v_amount_from"]?number_format($value["v_amount_from"]):"" ?></td>
                                             <td><?=isset($value["bank_account_from"])?$value["bank_account_from"]:"" ?></td>
                                             <td class="num"><?=isset($value["amount_from"])&&$value["amount_from"]?number_format($value["amount_from"]):"" ?></td>
 											<td><?=isset($value["user_to"])?$value["user_to"]:"" ?></td>
-                                            <td><?=isset($value["v_bank_account_to"])?$value["v_bank_account_to"]:"" ?></td>
+                                            <td><a class="fancyframe"
+                                                   href="<?= admin_url('Passbook/display?virtual_account=' . (isset($value["v_bank_account_to"])?$value["v_bank_account_to"]:'')) ?>"><?=isset($value["v_bank_account_to"])?$value["v_bank_account_to"]:"" ?></a></td>
                                             <td class="num"><?=isset($value["v_amount_to"])&&$value["v_amount_to"]?number_format($value["v_amount_to"]):"" ?></td>
                                             <td><?=isset($value["bank_account_to"])?$value["bank_account_to"]:"" ?></td>
                                             <td class="num"><?=isset($value["amount_to"])&&$value["amount_to"]?number_format($value["amount_to"]):"" ?></td>
@@ -153,12 +156,14 @@
 												<td><?=isset($v["target_no"])?$v["target_no"]:"" ?></td>
 												<td><?=isset($v["source_type"])?$transaction_type_name[$v["source_type"]]:"" ?></td>
 												<td><?=isset($v["user_from"])?$v["user_from"]:"" ?></td>
-												<td><?=isset($v["v_bank_account_from"])?$v["v_bank_account_from"]:"" ?></td>
+												<td><a class="fancyframe"
+                                                       href="<?= admin_url('Passbook/display?virtual_account=' . (isset($v["v_bank_account_from"])?$v["v_bank_account_from"]:'')) ?>"><?=isset($v["v_bank_account_from"])?$v["v_bank_account_from"]:"" ?></a></td>
 												<td class="num"><?=isset($v["v_amount_from"])&&$v["v_amount_from"]?number_format($v["v_amount_from"]):"" ?></td>
 												<td><?=isset($v["bank_account_from"])?$v["bank_account_from"]:"" ?></td>
 												<td class="num"><?=isset($v["amount_from"])&&$v["amount_from"]?number_format($v["amount_from"]):"" ?></td>
 												<td><?=isset($v["user_to"])?$v["user_to"]:"" ?></td>
-												<td><?=isset($v["v_bank_account_to"])?$v["v_bank_account_to"]:"" ?></td>
+												<td><a class="fancyframe"
+                                                       href="<?= admin_url('Passbook/display?virtual_account=' . (isset($v["v_bank_account_to"])?$v["v_bank_account_to"]:'')) ?>"><?=isset($v["v_bank_account_to"])?$v["v_bank_account_to"]:"" ?></a></td>
 												<td class="num"><?=isset($v["v_amount_to"])&&$v["v_amount_to"]?number_format($v["v_amount_to"]):"" ?></td>
 												<td><?=isset($v["bank_account_to"])?$v["bank_account_to"]:"" ?></td>
 												<td class="num"><?=isset($v["amount_to"])&&$v["amount_to"]?number_format($v["amount_to"]):"" ?></td>
