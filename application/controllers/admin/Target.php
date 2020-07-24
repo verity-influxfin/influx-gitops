@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 
-	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer');
+	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs');
 
 	public function __construct() {
 		parent::__construct();
@@ -281,8 +281,15 @@ class Target extends MY_Admin_Controller {
                     $bank_account_verify = $bank_account ? 1 : 0;
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
+
+                    $lawAccount = false;
+                    if($info->sub_status == 13){
+                        $lawAccount = CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($user_info->id_number, 1, 9);
+                    }
+
                     $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;
+                    $page_data['lawAccount'] = $lawAccount;
                     $page_data['reason'] = $reason;
                     $page_data['order'] = $order;
                     $page_data['user_info'] = $user_info;
@@ -1800,6 +1807,38 @@ class Target extends MY_Admin_Controller {
                 }
             }
             echo "<br>";
+        }
+    }
+
+    public function legalAffairs()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        if(!empty($get['id'])) {
+            $id = $get['id'];
+            $targets = $this->target_model->get($id);
+
+            $userInfo = $this->user_model->get($targets->user_id);
+            if (!$userInfo) {
+                return false;
+            }
+
+            $rs = $this->virtual_account_model->insert([
+                'investor' => 0,
+                'user_id' => $userInfo->id,
+                'virtual_account' => CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($userInfo->id_number, 1, 9),
+            ]);
+            if($rs){
+                $param = [
+                    'sub_status'  => 13,
+                ];
+                $this->target_model->update($id,$param);
+                $this->load->library('Target_lib');
+                $this->target_lib->insert_change_log($id,$param);
+                alert('已建立法催帳戶',admin_url('target/edit?id='.$id));
+            }else{
+                alert('法催帳戶建立失敗',admin_url('target/edit?id='.$id));
+            }
+            return false;
         }
     }
 }

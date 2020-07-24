@@ -85,6 +85,10 @@
 
                                                 <a class="fancyframe"
                                                    href="<?= admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account) ?>"><?= $virtual_account->virtual_account ?></a>
+                                                <? if($lawAccount){ ?>
+                                                    <br /><a class="fancyframe"
+                                                       href="<?= admin_url('Passbook/display?virtual_account=' . $lawAccount) ?>"><?= $virtual_account->virtual_account ?></a> (法催帳戶)
+                                                <? } ?>
                                             </p>
                                         </td>
                                         <td><p class="form-control-static">備註</p></td>
@@ -116,7 +120,13 @@
                                     <tr>
                                         <td><p class="form-control-static">逾期狀態 / 天數</p></td>
                                         <td>
-                                            <p class="form-control-static"><?= isset($data->delay) ? $delay_list[$data->delay] . ' / ' . $data->delay_days : ""; ?></p>
+                                            <p class="form-control-static"><?= isset($data->delay) ? $delay_list[$data->delay] . ' / ' . $data->delay_days : ""; ?>
+                                                <? if($data->delay == 1 && $data->delay_days >= 31 && $data->sub_status !=13){ ?>
+                                                    <a href="/admin/target/legalAffairs?id=<? echo $data->id ?>" style="margin-left: 10px"><button class="btn btn-danger">轉為法催案件</button></a>
+                                                <? }elseif($data->sub_status ==13){ ?>
+                                                    ( 法催案件 )
+                                                <? } ?>
+                                            </p>
                                         </td>
                                         <td><p class="form-control-static">申請日期</p></td>
                                         <td>
