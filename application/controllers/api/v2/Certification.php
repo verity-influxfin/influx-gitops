@@ -1404,8 +1404,31 @@ class Certification extends REST_Controller {
                     }
                     break;
                 case "instagram":
-                    $this->load->library('instagram_lib');
-                    $info         = $input['access_token'];
+                    // $this->load->library('instagram_lib');
+										$this->load->library('scraper/instagram_lib');
+										$user_followed_info = $this->instagram_lib->getUserFollow($id,$account);
+										if($user_followed_info && $user_followed_info->status == 204){
+											$this->instagram_lib->autoFollow($user_id,$input['access_token']);
+											$info['instagram']['username'] = $input['access_token'];
+											$info['instagram']['status'] = 'waitingFollowAccept';
+											$info['instagram']['counts'] = [
+												'media' => '',
+												'follows' => '',
+												'followed_by' => '',
+											];
+										}
+										if($user_followed_info && $user_followed_info->status == 200 && ! empty($user_followed_info->response->result)){
+											$info['instagram'] = [
+												'status' => isset($user_followed_info->response->result->info->followStatus) ? $user_followed_info->response->result->info->followStatus: '',
+												'username' => $input['access_token'],
+												'link' => 'https://www.instagram.com/'.$input['access_token'],
+												'counts' => [
+													'media' => isset($user_followed_info->response->result->info->allPostCount) ? $user_followed_info->response->result->info->allPostCount: '',
+													'follows' => isset($user_followed_info->response->result->info->allFollowingCount) ? $user_followed_info->response->result->info->allFollowingCount: '',
+													'followed_by' => issset($user_followed_info->response->result->info->allFollowerCount) ? $user_followed_info->response->result->info->allFollowerCount: '',
+												]
+											];
+										}
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
