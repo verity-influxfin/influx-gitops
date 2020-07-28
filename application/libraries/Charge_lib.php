@@ -18,6 +18,7 @@ class Charge_lib
 		$date			= get_entering_date();
 		$transaction 	= $this->CI->transaction_model->get_many_by([
 			'target_id'		=> $target->id,
+			'user_from'		=> $target->user_id,
 			'limit_date <=' => $date,
 			'status'		=> 1,
 		]);
@@ -55,7 +56,7 @@ class Charge_lib
                         $transaction_param 	= [];
                         $pass_book			= [];
                         $sourceList = [];
-                        $sort = [91, 13, 93, 11];
+                        $sort = [SOURCE_AR_DAMAGE, SOURCE_AR_FEES, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
                         $fee = 0;
                         $balance = false;
                         foreach($transaction as $key => $value){
@@ -70,7 +71,7 @@ class Charge_lib
                                 ]);
                                 if($rs) {
                                     $amount = intval($source->amount);
-                                    if($svalue == 11 && $amount > $total){
+                                    if($svalue == SOURCE_AR_PRINCIPAL && $amount > $total){
                                         $balance = $amount - $total;
                                         $amount = $total;
                                         $this->CI->transaction_model->update($source->id,[
@@ -94,7 +95,7 @@ class Charge_lib
                                         'status' => 2
                                     ];
                                     $total -= $amount;
-                                    $svalue != 91 ? $fee += $amount : '';
+                                    !in_array($svalue,[SOURCE_AR_DAMAGE,SOURCE_AR_FEES]) ? $fee += $amount : '';
                                     if($balance){
                                         $transaction_param[] = [
                                             'source'			=> SOURCE_AR_PRINCIPAL,
@@ -132,8 +133,15 @@ class Charge_lib
                             }
                         }
                         if($fee > 0){
+                            $transaction = $this->CI->transaction_model->get_by([
+                                'target_id'		=> $target->id,
+                                'user_from !=' => $target->user_id,
+                                'limit_date <=' => $date,
+                                'status'		=> 1,
+                            ]);
+
                             $ar_fee = $this->CI->financial_lib->get_ar_fee($fee);
-                            $source = $sourceList[SOURCE_AR_FEES];
+                            $source = $transaction;
                             $this->CI->transaction_model->update($source->id,[
                                 'status'=>2,
                                 'amount'=>$ar_fee

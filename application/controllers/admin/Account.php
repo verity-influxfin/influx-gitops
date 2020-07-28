@@ -414,8 +414,12 @@ class Account extends MY_Admin_Controller {
 									$damages	+= $v->amount;
 									break;
 								case SOURCE_FEES:
-									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
-									break;
+								    if(!isset($user_to_info[$v->investment_id]["platform_fee"])){
+                                        $user_to_info[$v->investment_id]["platform_fee"] = $v->amount;
+                                    }else{
+                                        $user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
+                                    }
+                                    break;
 								case SOURCE_DELAYINTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["delay_interest"]	+= $v->amount;
@@ -430,11 +434,11 @@ class Account extends MY_Admin_Controller {
 							$sub_list[] = array(
 								"user_to"				=> isset($v['user_to'])?$v['user_to']:'',
 								"v_bank_account_to"		=> isset($v['v_bank_account_to'])?$v['v_bank_account_to']:'',
-								"v_amount_to"			=> $v['principal'] + $v['interest'] + $v['delay_interest'] - $v['platform_fee'],
-								"principal"				=> $v['principal'],
-								"interest"				=> $v['interest'],
+								"v_amount_to"			=> (isset($v['principal'])?$v['principal']:0) + (isset($v['interest'])?$v['interest']:0) + (isset($v['delay_interest'])?$v['delay_interest']:0) - (isset($v['platform_fee'])?$v['platform_fee']:0),
+								"principal"				=> isset($v['principal'])?$v['principal']:0,
+								"interest"				=> isset($v['interest'])?$v['interest']:0,
 								"platform_fee"			=> $v['platform_fee'],
-								"delay_interest"		=> $v['delay_interest'],
+								"delay_interest"		=> isset($v['delay_interest'])?$v['delay_interest']:0,
 							);
 						}
 					}

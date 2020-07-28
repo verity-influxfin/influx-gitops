@@ -282,14 +282,17 @@ class Target extends MY_Admin_Controller {
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
 
-                    $lawAccount = false;
                     if($info->sub_status == 13){
                         $lawAccount = CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($user_info->id_number, 1, 9);
+                        $page_data['lawAccount'] = $lawAccount;
+                         $targetData = json_decode($info->target_data);
+                        if (isset($targetData->legalAffairs)) {
+                            $page_data['legalAffairs'] = $targetData->legalAffairs;
+                        }
                     }
 
                     $page_data['sub_product_list'] = $sub_product_list;
                     $page_data['data'] = $info;
-                    $page_data['lawAccount'] = $lawAccount;
                     $page_data['reason'] = $reason;
                     $page_data['order'] = $order;
                     $page_data['user_info'] = $user_info;
@@ -1813,10 +1816,10 @@ class Target extends MY_Admin_Controller {
     public function legalAffairs()
     {
         $get = $this->input->get(NULL, TRUE);
+        $post = $this->input->post(NULL, TRUE);
         if(!empty($get['id'])) {
             $id = $get['id'];
             $targets = $this->target_model->get($id);
-
             $userInfo = $this->user_model->get($targets->user_id);
             if (!$userInfo) {
                 return false;
@@ -1827,19 +1830,88 @@ class Target extends MY_Admin_Controller {
                 'user_id' => $userInfo->id,
                 'virtual_account' => CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($userInfo->id_number, 1, 9),
             ]);
-            if($rs){
+            if ($rs) {
                 $param = [
-                    'sub_status'  => 13,
+                    'sub_status' => 13,
                 ];
-                $this->target_model->update($id,$param);
+                $this->target_model->update($id, $param);
                 $this->load->library('Target_lib');
-                $this->target_lib->insert_change_log($id,$param);
-                alert('已建立法催帳戶',admin_url('target/edit?id='.$id));
-            }else{
-                alert('法催帳戶建立失敗',admin_url('target/edit?id='.$id));
+                $this->target_lib->insert_change_log($id, $param);
+                alert('已建立法催帳戶', admin_url('target/edit?id=' . $id));
+            } else {
+                alert('法催帳戶建立失敗', admin_url('target/edit?id=' . $id));
             }
-            return false;
+        } elseif (!empty($post['id'])) {
+            if (!empty($post['type'])) {
+                if ($post['type'] == 'set') {
+                    $id = $post['id'];
+                    $targets = $this->target_model->get($id);
+                    $targetData = json_decode($targets->target_data);
+                    if (!isset($targetData->legalAffairs)) {
+                        $list = [];
+                        $fields = ['platformfee','fee','liquidateddamages','liquidateddamagesinterest','delayinterest'];
+                        foreach ($fields as $field) {
+                            if (isset($post[$field]) && is_numeric($post[$field])) {
+                                $list[$field] = $post[$field];
+                            }
+                            else{
+                                alert('輸入不完整', admin_url('target/edit?id=' . $id));
+                            }
+                        }
+                        $targetData->legalAffairs = [
+                            'platformfee' => $list['platformfee'],
+                            'fee' => $list['fee'],
+                            'liquidateddamages' => $list['liquidateddamages'],
+                            'liquidateddamagesinterest' => $list['liquidateddamagesinterest'],
+                            'delayinterest' => $list['delayinterest'],
+                        ];
+                        $param = [
+                            'target_data' => json_encode($targetData),
+                        ];
+                        $this->target_model->update($id, $param);
+
+                        $this->transaction_model->update_by([
+                            'target_id' => $post['id'],
+                            'source' => SOURCE_AR_DELAYINTEREST,
+                            'status' => 1
+                        ],[
+                            'amount' => $list['delayinterest']
+                        ]);
+
+                        $this->transaction_model->update_by([
+                            'target_id' => $post['id'],
+                            'source' => SOURCE_AR_DAMAGE,
+                            'status' => 1
+                        ],[
+                            'amount' => ($list['liquidateddamages'] + $list['liquidateddamagesinterest'])
+                        ]);
+
+                        $transaction = $this->transaction_model->get_by([
+                            'target_id' => $post['id'],
+                            'source' => SOURCE_AR_DAMAGE,
+                            'status' => 1
+                        ]);
+                        $this->transaction_model->insert([
+                            'source' => SOURCE_AR_FEES,
+                            'entering_date' => get_entering_date(),
+                            'user_from' => $transaction->user_from,
+                            'bank_account_from' => $transaction->bank_account_from,
+                            'amount' => ($list['platformfee'] + $list['fee']),
+                            'target_id' => $post['id'],
+                            'instalment_no' => $transaction->instalment_no,
+                            'user_to' => $transaction->user_to,
+                            'bank_account_to' => $transaction->bank_account_to,
+                            'limit_date' => $transaction->limit_date,
+                            'status' => 1,
+                        ]);
+
+                        alert('金額已寫入', admin_url('target/edit?id=' . $id));
+                    }
+                }
+            }
+            admin_url('target/edit?id=' . $id);
         }
+        return false;
     }
 }
 ?>
