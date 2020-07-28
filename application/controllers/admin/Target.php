@@ -1858,6 +1858,7 @@ class Target extends MY_Admin_Controller {
                                 alert('輸入不完整', admin_url('target/edit?id=' . $id));
                             }
                         }
+                        !isset($targetData->legalAffairs) ? $targetData = new stdClass() : '';
                         $targetData->legalAffairs = [
                             'platformfee' => $list['platformfee'],
                             'fee' => $list['fee'],
