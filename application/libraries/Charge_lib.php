@@ -97,10 +97,10 @@ class Charge_lib
                                     $total -= $amount;
                                     !in_array($svalue,[SOURCE_AR_DAMAGE,SOURCE_AR_FEES]) ? $fee += $amount : '';
 
-                                    if(!isset($user_to[$value->investment_id])){
-                                        $user_to[$value->investment_id] = [
+                                    if(!isset($user_to[$source->investment_id])){
+                                        $user_to[$source->investment_id] = [
                                             'amount'	=> 0,
-                                            'user_id'	=> $value->user_to,
+                                            'user_id'	=> $source->user_to,
                                         ];
                                     }
                                     $user_to[$source->investment_id]['amount'] += $source->amount;
