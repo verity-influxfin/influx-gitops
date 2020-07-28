@@ -42,6 +42,7 @@ class Charge_lib
 
 			if($target->sub_status == 13){
                 $userInfo = $this->CI->user_model->get($target->user_id);
+                $targetData = json_decode($target->target_data);
                 $lawAccount = CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($userInfo->id_number, 1, 9);
                 $virtual_account = $this->CI->virtual_account_model->get_by([
                     'status'		=> 1,
@@ -49,7 +50,7 @@ class Charge_lib
                     'user_id'		=> $target->user_id,
                     'virtual_account' => $lawAccount
                 ]);
-                if($virtual_account) {
+                if($virtual_account && isset($targetData->legalAffairs)) {
                     $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
                     $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                     $total = $funds['total'] - $funds['frozen'];
@@ -95,15 +96,18 @@ class Charge_lib
                                         'status' => 2
                                     ];
                                     $total -= $amount;
-                                    !in_array($svalue,[SOURCE_AR_DAMAGE,SOURCE_AR_FEES]) ? $fee += $amount : '';
-
-                                    if(!isset($user_to[$source->investment_id])){
-                                        $user_to[$source->investment_id] = [
-                                            'amount'	=> 0,
-                                            'user_id'	=> $source->user_to,
-                                        ];
+                                    if(!in_array($svalue,[SOURCE_AR_DAMAGE,SOURCE_AR_FEES])){
+                                        $fee += $amount;
+                                        if($source->user_from==$target->user_id && $source->investment_id != 0){
+                                            if(!isset($user_to[$source->investment_id])){
+                                                $user_to[$source->investment_id] = [
+                                                    'amount'	=> 0,
+                                                    'user_id'	=> $source->user_to,
+                                                ];
+                                            }
+                                            $user_to[$source->investment_id]['amount'] += $amount;
+                                        }
                                     }
-                                    $user_to[$source->investment_id]['amount'] += $source->amount;
 
                                     if($balance){
                                         $transaction_param[] = [
