@@ -114,7 +114,7 @@ class Charge_lib
 
                                         $ar_fee = $this->CI->financial_lib->get_ar_fee($balance);
                                         $transaction_param[] = [
-                                            'source'			=> $charge_source_list[SOURCE_AR_FEES],
+                                            'source'			=> SOURCE_AR_FEES,
                                             'entering_date'		=> $date,
                                             'user_from'			=> $source->user_from,
                                             'bank_account_from'	=> $source->bank_account_from,
