@@ -85,6 +85,10 @@
 
                                                 <a class="fancyframe"
                                                    href="<?= admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account) ?>"><?= $virtual_account->virtual_account ?></a>
+                                                <? if(isset($lawAccount)){ ?>
+                                                    <br /><a class="fancyframe"
+                                                       href="<?= admin_url('Passbook/display?virtual_account=' . $lawAccount) ?>"><?= $lawAccount ?></a> (法催帳戶)
+                                                <? } ?>
                                             </p>
                                         </td>
                                         <td><p class="form-control-static">備註</p></td>
@@ -116,7 +120,29 @@
                                     <tr>
                                         <td><p class="form-control-static">逾期狀態 / 天數</p></td>
                                         <td>
-                                            <p class="form-control-static"><?= isset($data->delay) ? $delay_list[$data->delay] . ' / ' . $data->delay_days : ""; ?></p>
+                                            <p class="form-control-static"><?= isset($data->delay) ? $delay_list[$data->delay] . ' / ' . $data->delay_days : ""; ?>
+                                                <? if($data->delay == 1 && $data->delay_days >= 90 && $data->sub_status !=13){ ?>
+                                                    <a href="/admin/target/legalAffairs?id=<? echo $data->id ?>" style="margin-left: 10px"><button class="btn btn-danger">轉為法催案件</button></a>
+                                                <? }elseif($data->sub_status ==13){ ?>
+                                                    ( 法催案件 )
+                                                    <? if($data->sub_status ==13){ ?>
+                                                        <form action="/admin/target/legalAffairs" method="post">
+                                                            <fieldset>
+                                                                <div class="form-group">
+                                                                    執行費：<input type="text" name="platformfee" value="<?=isset($legalAffairs->platformfee)?$legalAffairs->platformfee:''?>" placeholder="（法院申請費）" <?=isset($legalAffairs->platformfee)?' disabled':''?> /><br />
+                                                                    催收手續費：<input type="text" name="fee" value="<?=isset($legalAffairs->fee)?$legalAffairs->fee:''?>" placeholder="（存證信函費用等）" <?=isset($legalAffairs->fee)?' disabled':''?> /><br />
+                                                                    違約金：<input type="text" name="liquidateddamages" value="<?=isset($legalAffairs->liquidateddamages)?$legalAffairs->liquidateddamages:''?>" <?=isset($legalAffairs->liquidateddamages)?' disabled':''?> /><br />
+                                                                    違約金延滯息：<input type="text" name="liquidateddamagesinterest" value="<?=isset($legalAffairs->liquidateddamagesinterest)?$legalAffairs->liquidateddamagesinterest:''?>" <?=isset($legalAffairs->liquidateddamagesinterest)?' disabled':''?> /><br />
+                                                                    延滯息：<input type="text" name="delayinterest" value="<?=isset($legalAffairs->delayinterest)?$legalAffairs->delayinterest:''?>" <?=isset($legalAffairs->delayinterest)?' disabled':''?> />
+                                                                    <input type="hidden" name="id" value="<? echo $data->id ?>" />
+                                                                    <input type="hidden" name="type" value="set" />
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary  <?=isset($legalAffairs->delayinterest)?' hide':''?>">確認執行金額</button>
+                                                            </fieldset>
+                                                        </form>
+                                                    <? } ?>
+                                                <? } ?>
+                                            </p>
                                         </td>
                                         <td><p class="form-control-static">申請日期</p></td>
                                         <td>
@@ -337,7 +363,14 @@
                                                     <td><?= $value['principal'] ?>
                                                         <br><?= $value['interest'] ?></td>
                                                     <td style="color:red;"><?= $value['liquidated_damages'] ?>
-                                                        <br><?= $value['delay_interest'] ?></td>
+                                                        <br><?= $value['delay_interest'] ?>
+                                                        <? if($amortization_table['legal_affairs_fee'] > 0){
+                                                            $value['total_payment'] += $amortization_table['legal_affairs_fee'];
+                                                            $value['repayment'] += $amortization_table['legal_affairs_fee'];
+                                                            ?>
+                                                            <br><?= $amortization_table['legal_affairs_fee'] ?> (法催費用)
+                                                        <? } ?>
+                                                    </td>
 													<td><?=$value['total_payment'] ?></td>
 													<td><?=$value['repayment'] ?></td>
 												</tr>

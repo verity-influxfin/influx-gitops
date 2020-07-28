@@ -762,6 +762,7 @@ class Target_lib
             'end_date' => '',
             'sub_loan_fees' => 0,
             'platform_fees' => 0,
+            'legal_affairs_fee' => 0,
             'list' => [],
 
         ];
@@ -789,28 +790,6 @@ class Target_lib
                         'r_principal' => 0,
                     ];
                 }
-                //if ($value->source == SOURCE_PRINCIPAL) {
-                //    !isset($list[$value->instalment_no]['r_principal'])?$list[$value->instalment_no]['r_principal'] = 0:'';
-                //    $list[$value->instalment_no]['r_principal'] += $value->amount;
-                //}elseif ($value->source == SOURCE_INTEREST) {
-                //    !isset($list[$value->instalment_no]['r_interest'])?$list[$value->instalment_no]['r_interest'] = 0:'';
-                //    $list[$value->instalment_no]['r_interest'] += $value->amount;
-                //}elseif ($value->source == SOURCE_DELAYINTEREST){
-                //    !isset($list[$value->instalment_no]['r_delayinterest'])?$list[$value->instalment_no]['r_delayinterest'] = 0:'';
-                //    $list[$value->instalment_no]['r_delayinterest'] += $value->amount;
-                //}elseif ($value->source == SOURCE_DAMAGE){
-                //    !isset($list[$value->instalment_no]['r_damages'])?$list[$value->instalment_no]['r_damages'] = 0:'';
-                //    $list[$value->instalment_no]['r_damages'] += $value->amount;
-                //}elseif ($value->source == SOURCE_PREPAYMENT_DAMAGE){
-                //    !isset($list[$value->instalment_no]['r_preapymentDamages'])?$list[$value->instalment_no]['r_preapymentDamages'] = 0:'';
-                //    $list[$value->instalment_no]['r_preapymentDamages'] += $value->amount;
-                //}elseif ($value->source == SOURCE_FEES) {
-                //    !isset($list[$value->instalment_no]['r_fees'])?$list[$value->instalment_no]['r_fees'] = 0:'';
-                //    $list[$value->instalment_no]['r_fees'] += $value->amount;
-                //}elseif ($value->source == SOURCE_SUBLOAN_FEE) {
-                //    !isset($list[$value->instalment_no]['r_subloan_fees'])?$list[$value->instalment_no]['r_subloan_fees'] = 0:'';
-                //    $list[$value->instalment_no]['r_subloan_fees'] += $value->amount;
-                //}
                 switch ($value->source) {
                     case SOURCE_AR_PRINCIPAL:
                         $list[$value->instalment_no]['principal'] += $value->amount;
@@ -828,7 +807,7 @@ class Target_lib
                         $schedule['sub_loan_fees'] += $value->amount;
                         break;
                     case SOURCE_FEES:
-                        $schedule['platform_fees'] += $value->amount;
+                        $schedule['date'] == $value->entering_date ? $schedule['platform_fees'] += $value->amount : $schedule['legal_affairs_fee'] += $value->amount;
                         break;
                     case SOURCE_PRINCIPAL:
                         $list[$value->instalment_no]['r_principal'] += $value->amount;

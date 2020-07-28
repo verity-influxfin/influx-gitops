@@ -96,6 +96,7 @@ class Account extends MY_Admin_Controller {
 		$display 	= isset($get['display'])&&$get['display']?$get['display']:"";
 		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
 		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
+        $targetId 		= isset($get['target'])&&$get['target']?$get['target']:false;
 		$source		= array(
 			SOURCE_AR_FEES,
 			SOURCE_AR_PRINCIPAL,
@@ -122,6 +123,8 @@ class Account extends MY_Admin_Controller {
 				"status <>"			=> 0
 			);
 		}
+
+        $targetId ? $where['target_id'] = $targetId : '';
 
 		$page_data 	= array(
 			"type" 	=> "list",
@@ -199,6 +202,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> $source_type,
 						"user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:0,
 						"bank_account_from"		=> $value->bank_account_from,
@@ -229,6 +233,7 @@ class Account extends MY_Admin_Controller {
                     $list[] = array(
                         "entering_date"			=> $value->entering_date,
                         "target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
                         "source_type"			=> 'transfer_b',
                         "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
                         "bank_account_from"		=> $value->bank_account_from,
@@ -255,6 +260,7 @@ class Account extends MY_Admin_Controller {
                     $list[] = array(
                         "entering_date"			=> $value->entering_date,
                         "target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
                         "source_type"			=> 'bank_wrong_tx',
                         "user_from"				=> isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
                         "bank_account_from"		=> $value->bank_account_from,
@@ -295,6 +301,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $item_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'transfer',
 						"user_from"				=> $user_name[$value->user_from],
 						"bank_account_from"		=> $value->bank_account_from,
@@ -364,6 +371,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'prepayment',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,
@@ -406,8 +414,12 @@ class Account extends MY_Admin_Controller {
 									$damages	+= $v->amount;
 									break;
 								case SOURCE_FEES:
-									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
-									break;
+								    if(!isset($user_to_info[$v->investment_id]["platform_fee"])){
+                                        $user_to_info[$v->investment_id]["platform_fee"] = $v->amount;
+                                    }else{
+                                        $user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
+                                    }
+                                    break;
 								case SOURCE_DELAYINTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["delay_interest"]	+= $v->amount;
@@ -420,13 +432,13 @@ class Account extends MY_Admin_Controller {
 					if($user_to_info){
 						foreach($user_to_info as $k =>$v){
 							$sub_list[] = array(
-								"user_to"				=> $user_name[$v['user_to']],
-								"v_bank_account_to"		=> $v['v_bank_account_to'],
-								"v_amount_to"			=> $v['principal'] + $v['interest'] + $v['delay_interest'] - $v['platform_fee'],
-								"principal"				=> $v['principal'],
-								"interest"				=> $v['interest'],
+								"user_to"				=> isset($v['user_to'])?$v['user_to']:'',
+								"v_bank_account_to"		=> isset($v['v_bank_account_to'])?$v['v_bank_account_to']:'',
+								"v_amount_to"			=> (isset($v['principal'])?$v['principal']:0) + (isset($v['interest'])?$v['interest']:0) + (isset($v['delay_interest'])?$v['delay_interest']:0) - (isset($v['platform_fee'])?$v['platform_fee']:0),
+								"principal"				=> isset($v['principal'])?$v['principal']:0,
+								"interest"				=> isset($v['interest'])?$v['interest']:0,
 								"platform_fee"			=> $v['platform_fee'],
-								"delay_interest"		=> $v['delay_interest'],
+								"delay_interest"		=> isset($v['delay_interest'])?$v['delay_interest']:0,
 							);
 						}
 					}
@@ -434,6 +446,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> 'charge_delay',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,
@@ -474,6 +487,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+                        "target_id"				=> $value->target_id,
 						"source_type"			=> "lending",
 						"user_to"				=> $user_name[$value->user_to],
 						"bank_account_to"		=> $value->bank_account_to,
@@ -537,6 +551,7 @@ class Account extends MY_Admin_Controller {
 					$list[] = array(
 						"entering_date"			=> $value->entering_date,
 						"target_no"				=> $value->target_no,
+						"target_id"				=> $value->target_id,
 						"source_type"			=> 'charge_normal',
 						"user_from"				=> $user_name[$value->user_from],
 						"v_bank_account_from"	=> $value->v_bank_account_from,
