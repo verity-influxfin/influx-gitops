@@ -139,6 +139,20 @@
                                             <?}?>
                                         </div>
                                         <div class="form-group">
+                                            <label>競賽作品加分 (最高4級)</label>
+                                            <? if($data->status==1){?>
+                                                <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
+                                            <?}else{?>
+                                                <select name="game_work_level" class="form-control">
+                                                    <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
+                                                    <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
+                                                    <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
+                                                    <option value="3" <?=isset($content['game_work_level'])&&$content['game_work_level']==3?"selected":""?>>3級</option>
+                                                    <option value="4" <?=isset($content['game_work_level'])&&$content['game_work_level']==4?"selected":""?>>4級</option>
+                                                </select>
+                                            <?}?>
+                                        </div>
+                                        <div class="form-group">
                                             <label>專家調整 (最高5級)</label>
                                             <? if($data->status==1){?>
                                                 <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
@@ -221,14 +235,14 @@
                                                 echo '<br /><br /><br />';
                                             }?>
 
-                                            <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])) {
+                                            <? if (isset($content['business_image'])||isset($content['auxiliary_image'])||isset($content['license_image'])||isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
                                                 echo '<h4>【其他輔助證明】</h4>';
                                                 if (isset($content['programming_language'])) {
                                                     echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
-                                                    if (isset($techie_lang)) {
+                                                    if ($techie_lang) {
                                                         echo '程式語言：'.implode('、',$techie_lang).'<br/>';
                                                     }
-                                                    if (isset($other_lang)) {
+                                                    if ($other_lang) {
                                                         echo '程式語言(自填)：'.implode('、',$other_lang);
                                                     }
                                                     echo '</div>';
@@ -255,6 +269,24 @@
                                                     foreach($content['license_image'] as $key => $value){
                                                         echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
                                                          echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
+                                                    }
+                                                    echo '</div>';
+                                                }
+                                                if (isset($content['pro_certificate_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect"><h4>專業證書</h4></label><br>';
+                                                    $arr_pro_certificate = explode(',',$content['pro_certificate']);
+                                                    foreach($content['pro_certificate_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                        echo '圖片說明：'.(isset($arr_pro_certificate[$key])&&!empty($arr_pro_certificate[$key])?$arr_pro_certificate[$key]:'未填寫說明')."<br><br>";
+                                                    }
+                                                    echo '</div><br />';
+                                                }
+                                                if (isset($content['game_work_image'])) {
+                                                    echo '<div class="form-group"><label for="disabledSelect"><h4>競賽作品</h4></label><br>';
+                                                    $arr_game_work = explode(',',$content['game_work']);
+                                                    foreach($content['game_work_image'] as $key => $value){
+                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+                                                        echo '圖片說明：'.(isset($arr_game_work[$key])&&!empty($arr_game_work[$key])?$arr_game_work[$key]:'未填寫說明')."<br><br>";
                                                     }
                                                     echo '</div>';
                                                 }

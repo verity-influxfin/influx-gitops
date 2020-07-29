@@ -318,10 +318,10 @@
                                             echo '<br /><br /><br /><h4>【其他輔助證明】</h4>';
                                             if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
-                                                if (isset($techie_lang)) {
+                                                if ($techie_lang) {
 													echo '程式語言：'.implode('、',$techie_lang).'<br/>';
 												}
-                                                if (isset($other_lang)) {
+                                                if ($other_lang) {
 													echo '程式語言(自填)：'.implode('、',$other_lang);
 												}
 
