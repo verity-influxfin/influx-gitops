@@ -96,7 +96,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['data'] = $info;
 					$page_data['content'] = json_decode($info->content, true);
 				}
-				if($cid == 1006 || $info->certification_id==1006){
+				if($cid == CERTIFICATION_CERCREDITJUDICIAL || $info->certification_id == CERTIFICATION_CERCREDITJUDICIAL){
 					$selltype = isset($get['selltype'])?$get['selltype']:0;
 					$user_id = isset($get['user_id'])?$get['user_id']:0;
 					$new = true;
@@ -130,7 +130,7 @@ class Certification extends MY_Admin_Controller {
 					}
 					alert('此廠商類別無報告樣板',base_url('admin/Judicialperson/cooperation?cooperation=1'));
 				}
-				elseif($info->certification_id==2) {
+				elseif($info->certification_id == CERTIFICATION_STUDENT) {
 					//加入SIP網址++
 					$school_data = trim(file_get_contents(FRONT_CDN_URL.'json/school_with_loaction.json'), "\xEF\xBB\xBF");
 					$school_data = json_decode($school_data, true);
@@ -139,13 +139,13 @@ class Certification extends MY_Admin_Controller {
 					$page_data['content']['sipURL'] = isset($sipURL) ? $sipURL : "";
 					//加入SIP網址--
 
-				}elseif ($info->certification_id == 9) {
+				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
 						$this->joint_credits();
 						return;
 					}
 				}
-				elseif($info->certification_id==10){
+				elseif($info->certification_id == CERTIFICATION_JOB){
 					if(isset(json_decode($info->content)->pdf_file)) {
 						$this->job_credits();
 						return;
@@ -318,28 +318,32 @@ class Certification extends MY_Admin_Controller {
 					if($certification['alias']=='debitcard'){
 						alert('金融帳號認證請至 金融帳號驗證區 操作',$back_url);
 					}else{
-						if($info->certification_id==10){
+						if ($info->certification_id == CERTIFICATION_JOB){
 							$license_status = 0;
+							$game_work_level = 0;
 							$pro_level = 0;
 							$content 					= json_decode($info->content,TRUE);
 							if(isset($post['license_status'])){
 								$license_status = is_numeric($post['license_status'])&&$post['license_status']<=3?$post['license_status']:0;
 							}
+							if(isset($post['game_work_level'])){
+								$game_work_level = is_numeric($post['game_work_level'])&&$post['game_work_level']<=2?$post['game_work_level']:0;
+							}
 							if(isset($post['pro_level'])){
 								$pro_level = is_numeric($post['pro_level'])&&$post['pro_level']<=5?$post['pro_level']:0;
 							}
 							$content['license_status'] 	= $license_status;
+							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
-						}
-						elseif($info->certification_id==9){
+						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 							$content 					= json_decode($info->content,TRUE);
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 
-						}elseif($info->certification_id==2){
+						} elseif ($info->certification_id == CERTIFICATION_STUDENT) {
 							$license_level = 0;
 							$game_work_level = 0;
 							$pro_level = 0;
@@ -357,7 +361,7 @@ class Certification extends MY_Admin_Controller {
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
-						}elseif($info->certification_id==1006){
+						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
 						}
 						$this->load->library('Certification_lib');

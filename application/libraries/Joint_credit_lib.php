@@ -100,6 +100,7 @@ class Joint_credit_lib{
 		if(preg_match("/有無延遲還款/", $content['0'])){
 			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
 			$content_data= explode(" ", $content_data);
+            $get_student_loan = [];
 			foreach($content_data as $key => $value){
 				if (preg_match("/分行|營業部|北分/", $value)) {
                     $getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
@@ -1184,14 +1185,17 @@ class Joint_credit_lib{
             $dateArray[1],
             $dateArray[2],
         ];
+        $result["appliedExpire"] = $appliedTime + $thirtyOneDays;
+        $exp = '<br />(文件有效期限為' . date('Y/m/d', $result["appliedExpire"]) . ')';
+
         $message = [
             "stage" => "report_expirations",
             "status" => "failure",
-            "message" => $date . "<br />文件與申請日超過一個月"
+            "message" => $date . "<br />文件與申請日超過一個月" . $exp
         ];
 		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
 			$message["status"] = "success";
-			$message["message"] = $date . "<br />符合";
+			$message["message"] = $date . "<br />符合" . $exp;
 		}
 
 		$result["messages"][] = $message;
@@ -1238,7 +1242,11 @@ class Joint_credit_lib{
     }
 
 	private function getDay($text){
-        return preg_split('/\//', $this->CI->regex->findPatten($text, '\d{3}\/\d{2}\/\d{2}')[0]);
+        $patten = $this->CI->regex->findPatten($text, '\d{3}\/\d{2}\/\d{2}');
+        if($patten){
+            return preg_split('/\//', $patten[0]);
+        }
+        return false;
     }
 
     private function expire_check($text, $result){

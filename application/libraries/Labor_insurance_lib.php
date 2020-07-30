@@ -83,33 +83,33 @@ class Labor_insurance_lib
 
     public function processDocumentIsValid($text, &$result)
     {
-        $message = [
-            "stage" => "download_time",
-            "status" => self::PENDING,
-            "message" => ""
-        ];
-
         $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "網頁下載時間", "秒");
         if (!$content) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
-
         $downloadTimeText = $content[0];
-
         $downloadTimeArray = $this->CI->regex->extractDownloadTime($downloadTimeText);
         if (!$downloadTimeArray || !is_array($downloadTimeArray[0]) || count($downloadTimeArray[0]) != 6) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
-
         $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
+
+        $expireTime = $downloadTime + 31 * 86400;
+        $exp = '(文件有效期限為' . date('Y/m/d', $expireTime) . ')';
+        $message = [
+            "stage" => "download_time",
+            "status" => self::PENDING,
+            "message" => $exp
+        ];
+
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "勞保異動明細非一個月內";
+            $message["message"] = "勞保異動明細非一個月內" . $exp;
             $message["rejected_message"] = self::REJECT_DUE_TO_OUTDATED_REPORT;
             $result["messages"][] = $message;
             return;
@@ -117,6 +117,7 @@ class Labor_insurance_lib
 
         $message["status"] = self::SUCCESS;
         $result["messages"][] = $message;
+        $result["expireTime"] = $downloadTime;
         return $downloadTime;
     }
 

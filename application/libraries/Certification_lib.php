@@ -67,7 +67,8 @@ class Certification_lib{
 		return false;
 	}
 
-	public function set_success($id,$sys_check=false){
+    public function set_success($id, $sys_check = false, $expire_timestamp = false)
+    {
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 1){
@@ -77,8 +78,8 @@ class Certification_lib{
 				$param = [
                     'sys_check' => ($sys_check==true?1:0),
                 ];
-				if (in_array($id, [9, 10])) {
-				    $param['expire_time'] = strtotime("+1 months", time() );
+				if ($expire_timestamp) {
+				    $param['expire_time'] = $expire_timestamp;
 				}
                 $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
@@ -109,7 +110,7 @@ class Certification_lib{
 		return false;
 	}
 
-	public function set_failed($id,$fail='',$sys_check=false){
+	public function set_failed($id,$fail='',$sys_check=false, $expire_timestamp = false){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
 			if($info && $info->status != 2){
@@ -117,11 +118,15 @@ class Certification_lib{
                 $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
 				$info->remark['fail'] 	= $fail;
 				$certification 	= $this->certification[$info->certification_id];
-				$rs = $this->CI->user_certification_model->update($id,array(
-				    'status'    => 2,
+				$param = [
+                    'status'    => 2,
                     'sys_check' => ($sys_check==true?1:0),
                     'remark'    => json_encode($info->remark)
-                ));
+                ];
+                if ($expire_timestamp) {
+                    $param['expire_time'] = $expire_timestamp;
+                }
+				$rs = $this->CI->user_certification_model->update($id,$param);
 				if($rs){
                     $this->CI->load->library('target_lib');
                     $targets = $this->CI->target_model->get_many_by(array(
@@ -494,19 +499,20 @@ class Certification_lib{
 			$text = $pdf->getText();
 			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
 			switch ($res['status']) {
-				case 'pending': //轉人工
-					$status = 3;
-					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status,
-						'sys_check' => 1,
-						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
-					));
-					break;
-				case 'success':
+                case 'pending': //轉人工
+                    $status = 3;
+                    $this->CI->user_certification_model->update($info->id, array(
+                        'status' => $status,
+                        'sys_check' => 1,
+                        'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res)),
+                        'expire_time' => $res['appliedExpire']
+                    ));
+                    break;
+                case 'success':
 					$status = 1;
-					$get_time=$res['messages'][10]['message'];
-					$get_months=$res['messages'][8]['message'][0];
-					$get_credit_rate=$res['messages'][8]['message'][2];
+					$get_time=$res['messages'][13]['message'];
+					$get_months=$res['messages'][11]['message'][0];
+					$get_credit_rate=$res['messages'][11]['message'][2];
 					$times=preg_replace('/[^\d]/','',$get_time);
 					$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
 					$months=preg_replace('/[^\d]/','',$get_months);
@@ -514,7 +520,7 @@ class Certification_lib{
 						'sys_check' => 1,
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
 					));
-					$this->set_success($info->id,true);
+					$this->set_success($info->id,true,$res['appliedExpire']);
 					$this->CI->user_certification_model->update($info->id, array(
 						'status' => $status
 					));
@@ -526,7 +532,7 @@ class Certification_lib{
 						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
 					));
 					$msg = isset($res['message']) ? $res['message']:'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。';
-					$this->set_failed($info->id,$msg,true);
+					$this->set_failed($info->id,$msg,true,$res['appliedExpire']);
 					break;
 			}
 			return true;
@@ -572,7 +578,8 @@ class Certification_lib{
 						$this->CI->user_certification_model->update($info->id, array(
 							'status' => $status,
 							'sys_check' => 1,
-							'content' => json_encode($content)
+							'content' => json_encode($content),
+							'expire_time' => $res['expireTime']
 						));
 						break;
 					case 'success':
@@ -586,7 +593,7 @@ class Certification_lib{
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
-						$this->set_success($info->id,true);
+						$this->set_success($info->id,true,$res['expireTime']);
 						break;
 					case 'failure':
 						$status = 2;
@@ -604,7 +611,7 @@ class Certification_lib{
 							'sys_check' => 1,
 							'content' => json_encode($content),
 						));
-						$this->set_failed($info->id, $rejectMessage, true);
+						$this->set_failed($info->id, $rejectMessage, true,$res['expireTime']);
 						break;
 				}
 				return true;
