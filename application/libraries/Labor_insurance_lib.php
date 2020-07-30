@@ -98,18 +98,16 @@ class Labor_insurance_lib
         }
         $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
 
-        $expireTime = $downloadTime + 31 * 86400;
-        $exp = '(文件有效期限為' . date('Y/m/d', $expireTime) . ')';
         $message = [
             "stage" => "download_time",
             "status" => self::PENDING,
-            "message" => $exp
+            "message" => ''
         ];
 
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
-            $message["message"] = "勞保異動明細非一個月內" . $exp;
+            $message["message"] = "勞保異動明細非一個月內";
             $message["rejected_message"] = self::REJECT_DUE_TO_OUTDATED_REPORT;
             $result["messages"][] = $message;
             return;

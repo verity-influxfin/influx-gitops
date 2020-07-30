@@ -1186,16 +1186,15 @@ class Joint_credit_lib{
             $dateArray[2],
         ];
         $result["appliedExpire"] = $appliedTime + $thirtyOneDays;
-        $exp = '<br />(文件有效期限為' . date('Y/m/d', $result["appliedExpire"]) . ')';
 
         $message = [
             "stage" => "report_expirations",
             "status" => "failure",
-            "message" => $date . "<br />文件與申請日超過一個月" . $exp
+            "message" => $date . "<br />文件與申請日超過一個月"
         ];
 		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
 			$message["status"] = "success";
-			$message["message"] = $date . "<br />符合" . $exp;
+			$message["message"] = $date . "<br />符合";
 		}
 
 		$result["messages"][] = $message;
