@@ -98,6 +98,7 @@ class Labor_insurance_lib
         }
         $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
 
+        $expireTime = $downloadTime + 31 * 86400;
         $message = [
             "stage" => "download_time",
             "status" => self::PENDING,
@@ -115,7 +116,7 @@ class Labor_insurance_lib
 
         $message["status"] = self::SUCCESS;
         $result["messages"][] = $message;
-        $result["expireTime"] = $downloadTime;
+        $result["expireTime"] = $expireTime;
         return $downloadTime;
     }
 
