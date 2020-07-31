@@ -63,6 +63,13 @@ class Related_user_output
 				$output[] = $this->map("same_ip", $user, $withSensitiveInfo);
 			}
 		}
+		if (isset($this->records->judicialyuan)) {
+		    $output['userName'] = $this->records->judicialyuan['userName'];
+		    $output['userBirthday'] = $this->records->judicialyuan['userBirthday'];
+			foreach ($this->records->judicialyuan['list'] as $user) {
+				$output['judicial_yuan'][] = $this->mapjudicialyuan("judicial_yuan", $user);
+			}
+		}
 		return $output;
 	}
 
@@ -73,6 +80,7 @@ class Related_user_output
 			"related_value" => '',
 			"investor_status" => $user->investor_status,
 			"borrower_status" => $user->status,
+			"judicial_yuan" => $user->status,
 			"id" => $user->id,
 		];
 
@@ -91,6 +99,20 @@ class Related_user_output
 		if ($reason == "introducer") {
 			$output["related_value"] = $user->promote_code;
 		}
+
+		return $output;
+	}
+
+	public function mapjudicialyuan($reason, $list)
+	{
+		$output = [];
+
+        if ($reason == "judicial_yuan") {
+            $output = [
+                'name' => $list['name'],
+                'count' => $list['count']
+            ];
+        }
 
 		return $output;
 	}

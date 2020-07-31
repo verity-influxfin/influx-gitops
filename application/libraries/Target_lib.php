@@ -247,10 +247,10 @@ class Target_lib
         $this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
         $msg = false;
-        if (!empty($target) && ($target->status == 0
+        if (!empty($target) && ($target->status == TARGET_WAITING_APPROVE
                 || $renew
-                || $target->status == 22
-                || $target->status == 1 && $target->sub_product_id == STAGE_CER_TARGET)) {
+                || $target->status == CERTIFICATION_CERCREDITJUDICIAL
+                || $target->status == TARGET_WAITING_SIGNING && $target->sub_product_id == STAGE_CER_TARGET)) {
             $product_list = $this->CI->config->item('product_list');
             $user_id = $target->user_id;
             $product_id = $target->product_id;
@@ -314,7 +314,7 @@ class Target_lib
                     $target_list = $this->CI->target_model->get_many_by([
                         'id !=' => $target->id,
                         'user_id' => $user_id,
-                        'status NOT' => [8, 9, 10]
+                        'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED]
                     ]);
                     if ($target_list) {
                         foreach ($target_list as $key => $value) {
@@ -328,7 +328,7 @@ class Target_lib
                                 "source" => SOURCE_PRINCIPAL,
                                 "user_from" => $user_id,
                                 "target_id" => $value->id,
-                                "status" => 2
+                                "status" => TARGET_WAITING_VERIFY
                             ));
                             //扣除已還款金額
                             foreach ($pay_back_transactions as $key2 => $value2) {
@@ -363,25 +363,29 @@ class Target_lib
                                     'interest_rate' => $interest_rate,
                                     'status' => 0,
                                 ];
-                                $evaluation_status = $target->sub_status == 10;
+                                $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 $newStatus = false;
-                                $this->CI->load->library('Certification_lib');
-                              if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != 9 || $subloan_status || $renew || $evaluation_status) && !$self_national) {
-                                    $param['status'] = 1;
+                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                        || $subloan_status
+                                        || $renew
+                                        || $evaluation_status
+                                    )
+                                    && !$self_national) {
+                                    $param['status'] = TARGET_WAITING_SIGNING;
 
                                     $remark
                                         ? $param['remark'] = (empty($target->remark)
-                                            ? $remark
-                                            : $target->remark . ', ' . $remark)
+                                        ? $remark
+                                        : $target->remark . ', ' . $remark)
                                         : '';
-                                    $msg = $target->status == 0 ? true : false;
-                                    $target->sub_product_id == STAGE_CER_TARGET && $target->status == 1 && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                    $renew ? $param['sub_status'] = 10 : '';
-                                    if($target->contract_id == null || $target->loan_amount != $loan_amount){
+                                    $msg = $target->status == TARGET_WAITING_APPROVE ? true : false;
+                                    $target->sub_product_id == STAGE_CER_TARGET && $target->status == TARGET_WAITING_SIGNING && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
+                                    $renew ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : '';
+                                    if ($target->contract_id == null || $target->loan_amount != $loan_amount) {
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
                                     }
                                 } else {
-                                    $param['sub_status'] = 9;
+                                    $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
                                 }
                                 $curTargetData = json_decode($target->target_data);
@@ -400,16 +404,16 @@ class Target_lib
                                 return true;
                             } else if ($product_info['type'] == 2) {
                                 $allow = true;
-                                $sub_status = 0;
+                                $sub_status = TARGET_SUBSTATUS_NORNAL;
                                 if ($loan_amount < $target->amount) {
-                                    $target->amount < 50000 ? $sub_status = 9 : $allow = false;
+                                    $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
                                 }
                                 if ($allow) {
                                     $param = [
                                         'loan_amount' => $loan_amount,
                                         'credit_level' => $credit['level'],
                                         'interest_rate' => $interest_rate,
-                                        'status' => 23,
+                                        'status' => TARGET_ORDER_WAITING_SHIP,
                                         'sub_status' => $sub_status,
                                     ];
                                     $rs = $this->CI->target_model->update($target->id, $param);
@@ -1567,7 +1571,7 @@ class Target_lib
 
         $this->CI->load->library('Certification_lib');
         $targets = $this->CI->target_model->get_many_by([
-            'status' => [0, 1, 22],
+            'status' => [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_VERIFY],
             'script_status' => 0,
         ]);
         $list = [];
@@ -1604,7 +1608,7 @@ class Target_lib
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
-                                        if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [2, 8, 9, 10]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
+                                        if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_STUDENT, CERTIFICATION_DIPLOMA, CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
                                             $finish = false;
@@ -1628,10 +1632,28 @@ class Target_lib
                             }
 
                             if ($finish) {
-                                !isset($targetData) ? $targetData = new stdClass() : '';
-                                $targetData->certification_id = $cer;
-                                $count++;
-                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status);
+                                $this->CI->load->library('scraper/judicial_yuan_lib.php');
+                                $verdictsStatuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($value->user_id);
+                                if(isset($verdictsStatuses['status'])){
+                                    if($verdictsStatuses['status'] == 204){
+                                        $this->CI->load->model('user/user_model');
+                                        $user_info = $this->CI->user_model->get_by([
+                                            "id"		=> $value->user_id,
+                                            "name !="	=> '',
+                                            "id_card_place !="	=> '',
+                                        ]);
+                                        if($user_info){
+                                            $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($user_info->name, $user_info->address, $user_info->id);
+                                        }
+                                    }elseif($verdictsStatuses['status'] == 200){
+                                        if($verdictsStatuses['response']['status'] == '爬蟲執行完成'){
+                                            !isset($targetData) ? $targetData = new stdClass() : '';
+                                            $targetData->certification_id = $cer;
+                                            $count++;
+                                            $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status);
+                                        }
+                                    }
+                                }
                             } else {
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
@@ -1639,8 +1661,8 @@ class Target_lib
                                 if ($limit_date > $create_date) {
                                     $count++;
                                     $param = [
-                                        'status' => 9,
-                                        'sub_status' => 0,
+                                        'status' => TARGET_FAIL,
+                                        'sub_status' => TARGET_SUBSTATUS_NORNAL,
                                         'remark' => $value->remark . '系統自動取消'
                                     ];
                                     $this->CI->target_model->update($value->id, $param);

@@ -353,6 +353,23 @@ class User extends MY_Admin_Controller {
         $this->json_output->setStatusCode(200)->setResponse(["related_users" => $relatedUsers])->send();
     }
 
+    public function judicialyuan()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $this->load->library('Anti_fraud_lib');
+        $this->load->library('output/json_output');
+        $judicialYuanData = $this->anti_fraud_lib->judicialyuan($input["id"]);
+
+        $this->load->library('output/user/related_user_output', ["data" => $judicialYuanData]);
+
+        $judicialYuan = $this->related_user_output->toMany();
+
+        if (!$judicialYuan) {
+            $this->json_output->setStatusCode(204)->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse($judicialYuan)->send();
+    }
+
 	public function migrateData()
 	{
 	    $input = $this->input->get(NULL, TRUE);

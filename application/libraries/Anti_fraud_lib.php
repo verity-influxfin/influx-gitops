@@ -119,4 +119,41 @@ class Anti_fraud_lib{
 
         return $data;
 	}
+
+    public function judicialyuan($userId)
+    {
+
+        $userWithJudicialYuan = [];
+        $this->CI->load->model('user/user_model');
+        $user_info = $this->CI->user_model->get_by([
+            "id"		=> $userId,
+            "name !="	=> '',
+            "id_card_place !="	=> '',
+        ]);
+        $this->CI->load->library('scraper/judicial_yuan_lib.php');
+        $verdict_count = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCount(urlencode($user_info->name));
+        if(!$verdict_count){
+            $userWithJudicialYuan = ['爬蟲系統連線失敗'];
+        }
+        $response = json_decode(json_encode($verdict_count), true);
+        if($response['status']=='200'){
+            foreach ($response['response']['verdict_count'] as $verdict){
+                $userWithJudicialYuan[] = $verdict;
+            }
+        }
+
+
+        if (!$userWithJudicialYuan) {
+            return [];
+        }
+
+        $data = new stdClass();
+        $data->judicialyuan = [
+            'userName' => $user_info->name,
+            'userBirthday' => $user_info->birthday,
+            'list' => $userWithJudicialYuan
+        ];
+
+        return $data;
+    }
 }
