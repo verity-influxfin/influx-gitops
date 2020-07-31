@@ -1406,19 +1406,20 @@ class Certification extends REST_Controller {
                 case "instagram":
                     // $this->load->library('instagram_lib');
 										$this->load->library('scraper/instagram_lib');
-										$user_followed_info = $this->instagram_lib->getUserFollow($id,$account);
+										$user_followed_info = $this->instagram_lib->getUserFollow($user_id,$account);
 										if($user_followed_info && $user_followed_info->status == 204){
 											$this->instagram_lib->autoFollow($user_id,$input['access_token']);
-											$info['instagram']['username'] = $input['access_token'];
-											$info['instagram']['status'] = 'waitingFollowAccept';
-											$info['instagram']['counts'] = [
+											$this->instagram_lib->updateUserFollow($user_id,$input['access_token']);
+											$info['username'] = $input['access_token'];
+											$info['status'] = 'waitingFollowAccept';
+											$info['counts'] = [
 												'media' => '',
 												'follows' => '',
 												'followed_by' => '',
 											];
 										}
 										if($user_followed_info && $user_followed_info->status == 200 && ! empty($user_followed_info->response->result)){
-											$info['instagram'] = [
+											$info = [
 												'status' => isset($user_followed_info->response->result->info->followStatus) ? $user_followed_info->response->result->info->followStatus: '',
 												'username' => $input['access_token'],
 												'link' => 'https://www.instagram.com/'.$input['access_token'],

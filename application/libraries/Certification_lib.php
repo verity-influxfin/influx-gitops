@@ -418,13 +418,7 @@ class Certification_lib{
 							$user_followed_info = $this->instagram_lib->getUserFollow($info->user_id,$content->instagram->username);
 
 							if($user_followed_info && $user_followed_info->status == 204){
-								$this->instagram_lib->autoFollow($user_id,$input['access_token']);
-								$content->instagram->username = $input['access_token'];
-								$content->instagram->status = 'waitingFollowAccept';
-								$this->CI->user_certification_model->update($info->id,array(
-										'status'	=> 0,
-										'content' => json_encode($content),
-								));
+								$this->instagram_lib->updateUserFollow($info->user_id,$content->instagram->username);
 								return false;
 							}
 
@@ -432,7 +426,7 @@ class Certification_lib{
 
 								if(isset($user_followed_info->response->result->info->followStatus) && ($user_followed_info->response->result->info->followStatus == 'unfollowed' || $user_followed_info->response->result->info->followStatus == 'waitingFollowAccept') ){
 									$update_time = isset($user_followed_info->response->result->updatedAt) ? $user_followed_info->response->result->updatedAt : '';
-									if($update_time && time()-$update_time >= 5){
+									if($update_time && time()-$update_time >= 600000){
 										$user_followed_info = $this->instagram_lib->updateUserFollow($info->user_id,$content->instagram->username);
 									}
 									return false;
@@ -443,7 +437,6 @@ class Certification_lib{
 									$content->instagram->counts->follows = isset($user_followed_info->response->result->info->allFollowingCount) ? $user_followed_info->response->result->info->allFollowingCount : '';
 									$content->instagram->counts->followed_by = isset($user_followed_info->response->result->info->allFollowerCount) ? $content->instagram->counts->allFollowerCount : '';
 									$this->CI->user_certification_model->update($info->id,array(
-											'status'	=> 0,
 											'content' => json_encode($content),
 									));
 								}
