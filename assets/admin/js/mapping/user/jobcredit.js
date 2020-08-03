@@ -150,6 +150,7 @@ class JobCredit
             'job' : '工作',
             'salary' : '月薪',
             'top_company' : '是否為千大企業之員工',
+            'great_job' : '是否為優良職業認定',
             'high_salary' : '是否為高收入族群',
         };
     }

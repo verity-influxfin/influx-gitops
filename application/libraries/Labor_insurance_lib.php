@@ -83,29 +83,28 @@ class Labor_insurance_lib
 
     public function processDocumentIsValid($text, &$result)
     {
-        $message = [
-            "stage" => "download_time",
-            "status" => self::PENDING,
-            "message" => ""
-        ];
-
         $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "網頁下載時間", "秒");
         if (!$content) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
-
         $downloadTimeText = $content[0];
-
         $downloadTimeArray = $this->CI->regex->extractDownloadTime($downloadTimeText);
         if (!$downloadTimeArray || !is_array($downloadTimeArray[0]) || count($downloadTimeArray[0]) != 6) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
-
         $downloadTime = $this->convertDownloadTimeToTimestamp($downloadTimeArray[0]);
+
+        $expireTime = $downloadTime + 31 * 86400;
+        $message = [
+            "stage" => "download_time",
+            "status" => self::PENDING,
+            "message" => ''
+        ];
+
         $mustAfter = $this->currentTime - 31 * 86400;
         if ($downloadTime < $mustAfter || $downloadTime > $this->currentTime) {
             $message["status"] = self::FAILURE;
@@ -117,6 +116,7 @@ class Labor_insurance_lib
 
         $message["status"] = self::SUCCESS;
         $result["messages"][] = $message;
+        $result["expireTime"] = $expireTime;
         return $downloadTime;
     }
 
