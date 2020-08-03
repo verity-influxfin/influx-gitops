@@ -417,15 +417,18 @@ class Certification_lib{
                 $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content->instagram->username);
 
                 if ($user_followed_info && $user_followed_info->status == 204) {
-                    $this->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
+                    $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
                     $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
                     return false;
                 }
                 $param['sys_check'] = 1;
                 if ($user_followed_info && $user_followed_info->status == 200 && !empty($user_followed_info->response->result)) {
                     $update_time = isset($user_followed_info->response->result->updatedAt) ? $user_followed_info->response->result->updatedAt : '';
-                    if ($epxire = $update_time && time() >= ($update_time + 600000) || isset($user_followed_info->response->result->info->followStatus) && ($user_followed_info->response->result->info->followStatus == 'unfollowed' || $user_followed_info->response->result->info->followStatus == 'waitingFollowAccept')) {
-                        !$epxire = $content->instagram->status = 'unfollowed';
+                    if ($epxire = $update_time && time() >= ($update_time + 600000) || isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'waitingFollowAccept') {
+                        !$epxire = $content->instagram->status = $user_followed_info->response->result->info->followStatus;
+                        $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+                    }elseif (isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'unfollowed') {
+                        $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
                         $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
                     }elseif (isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'followed') {
                         $content->instagram->status = 'followed';
@@ -444,7 +447,6 @@ class Certification_lib{
                             'user_id' => $info->user_id,
                             'meta_key' => 'line_access_token'
                         ));
-                        $param['content'] = json_encode($content);
                         if (is_numeric($media) && is_numeric($followed_by) && $is_fb_email && $is_fb_name && isset($line)) {
                             $param['status'] = 3;
                             if ($media >= 10 && $followed_by >= 10) {
@@ -454,6 +456,7 @@ class Certification_lib{
                         }
                     }
                 }
+                $param['content'] = json_encode($content);
                 $this->CI->user_certification_model->update($info->id, $param);
             }
             return true;
