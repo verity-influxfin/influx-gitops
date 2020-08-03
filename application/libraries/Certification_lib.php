@@ -417,6 +417,7 @@ class Certification_lib{
                 $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content->instagram->username);
 
                 if ($user_followed_info && $user_followed_info->status == 204) {
+                    $this->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
                     $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
                     return false;
                 }
