@@ -721,10 +721,6 @@
             });
         }
 
-        $('#load-more').on('click', function() {
-            filljudicialyuanData();
-        });
-
         function hideLoadingAnimation() {
             $(".table-ten p").css('background', 'white');
             $(".table-twenty p").css('background', 'white');
@@ -805,7 +801,7 @@
             var maxNumInPage = 5;
             var start = (judicialyuanDataIndex-1) * maxNumInPage;
             var end = judicialyuanDataIndex * maxNumInPage;
-            if (end > judicialyuanData.length) end = judicialyuanData.length;
+            if (end > judicialyuanData.length) end = judicialyuanData.judicial_yuan.length;
             if (start > end || (end - start < maxNumInPage)) {
                 $("#load-more").hide();
 			} else {
@@ -813,8 +809,8 @@
 			}
 
             for (var i = start; i < end; i++) {
-                var name = '<p class="form-control-static">' + judicialyuanData[i].name + '</p>';
-                var count = '<a target="_blank" href="judicial_yuan_case?name=林郁凱&amp;case=' + judicialyuanData[i].name + '&amp;page=1&amp;count=' + judicialyuanData[i].count + '">' + judicialyuanData[i].count + '</a>';
+                var name = '<p class="form-control-static">' + judicialyuanData.judicial_yuan[i].name + '</p>';
+                var count = '<a target="_blank" href="../certification/judicial_yuan_case?name=林郁凱&amp;case=' + judicialyuanData.judicial_yuan[i].name + '&amp;page=1&amp;count=' + judicialyuanData.judicial_yuan[i].count + '">' + judicialyuanData.judicial_yuan[i].count + '</a>';
                 $("<tr>").append(
                     $('<td class="center-text" style="color:red;">').append(name),
                     $('<td class="center-text" style="color:red;">').append(count),
