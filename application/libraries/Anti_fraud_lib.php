@@ -145,9 +145,9 @@ class Anti_fraud_lib{
                 if($caseList){
                     foreach ($caseList['response']["verdicts"] as $case){
                         $limit = preg_match('/民事/', $case['title']) ? 20 : 18;
-                        if((date('Y',$case['createdAt']) - $limit) < $birthday){
+                        if((date('Y',$case['createdAt']) - $limit) < $birthday && isset($userWithJudicialYuan[$verdict['name']])){
                             $userWithJudicialYuan[$verdict['name']]['count'] != 1 ? $userWithJudicialYuan[$verdict['name']]['count'] -= 1 : '';
-                        }elseif(!in_array($verdict['name'] ,$verdictSet)){
+                        }elseif((date('Y',$case['createdAt']) - $limit) > $birthday && !in_array($verdict['name'] ,$verdictSet)){
                             $verdictSet[] = $verdict['name'];
                             $userWithJudicialYuan[$verdict['name']] = $verdict;
                         }

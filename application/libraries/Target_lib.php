@@ -365,7 +365,9 @@ class Target_lib
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 $newStatus = false;
-                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id) && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                        && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+                                        && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
                                         || $subloan_status
                                         || $renew
                                         || $evaluation_status
