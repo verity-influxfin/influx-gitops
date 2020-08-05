@@ -415,26 +415,54 @@ class Certification_lib{
     public function social_verify($info = array())
     {
         if ($info && $info->status == 0 && $info->certification_id == 4) {
-            $status = 3;
             $content = json_decode($info->content);
-            $media = isset($content->instagram->counts->media) ? $content->instagram->counts->media : false;
-            $followed_by = isset($content->instagram->counts->followed_by) ? $content->instagram->counts->followed_by : false;
-            $is_fb_email = isset($content->facebook->email);
-            $is_fb_name = isset($content->facebook->name);
-            $this->CI->load->model('user/user_meta_model');;
-            $line = $this->CI->user_meta_model->get_by(array(
-                'user_id' => $info->user_id,
-                'meta_key' => 'line_access_token'
-            ));
-            if ($media && $followed_by && $is_fb_email && $is_fb_name && isset($line)) {
-                if ($media >= 10 && $followed_by >= 10) {
-                    $status = 1;
-                    $this->set_success($info->id, true);
+
+            if (isset($content->instagram->username) && isset($info->user_id)) {
+                $this->CI->load->library('scraper/instagram_lib');
+                $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content->instagram->username);
+
+                if ($user_followed_info && $user_followed_info->status == 204) {
+                    $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
+                    $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+                    return false;
                 }
-                $this->CI->user_certification_model->update($info->id, array(
-                    'status' => $status,
-                    'sys_check' => 1,
-                ));
+                $param['sys_check'] = 1;
+                if ($user_followed_info && $user_followed_info->status == 200 && !empty($user_followed_info->response->result)) {
+                    $update_time = isset($user_followed_info->response->result->updatedAt) ? $user_followed_info->response->result->updatedAt : '';
+                    if ($epxire = $update_time && time() >= ($update_time + 600000) || isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'waitingFollowAccept') {
+                        !$epxire = $content->instagram->status = $user_followed_info->response->result->info->followStatus;
+                        $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+                    }elseif (isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'unfollowed') {
+                        $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
+                        $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+                    }elseif (isset($user_followed_info->response->result->info->followStatus) && $user_followed_info->response->result->info->followStatus == 'followed') {
+                        $content->instagram->status = 'followed';
+                        $content->instagram->link = 'https://www.instagram.com/' . $content->instagram->username;
+                        $content->instagram->counts->follows = isset($user_followed_info->response->result->info->allFollowingCount) ? $user_followed_info->response->result->info->allFollowingCount : '';
+                        $content->instagram->counts->media = isset($user_followed_info->response->result->info->allPostCount) ? $user_followed_info->response->result->info->allPostCount : '';
+                        $content->instagram->counts->follows = isset($user_followed_info->response->result->info->allFollowingCount) ? $user_followed_info->response->result->info->allFollowingCount : '';
+                        $content->instagram->counts->followed_by = isset($user_followed_info->response->result->info->allFollowerCount) ? $user_followed_info->response->result->info->allFollowerCount : '';
+
+                        $media = isset($content->instagram->counts->media) ? $content->instagram->counts->media : false;
+                        $followed_by = isset($user_followed_info->response->result->info->allFollowerCount) ? $user_followed_info->response->result->info->allFollowerCount : false;
+                        $is_fb_email = isset($content->facebook->email);
+                        $is_fb_name = isset($content->facebook->name);
+                        $this->CI->load->model('user/user_meta_model');;
+                        $line = $this->CI->user_meta_model->get_by(array(
+                            'user_id' => $info->user_id,
+                            'meta_key' => 'line_access_token'
+                        ));
+                        if (is_numeric($media) && is_numeric($followed_by) && $is_fb_email && $is_fb_name && isset($line)) {
+                            $param['status'] = 3;
+                            if ($media >= 10 && $followed_by >= 10) {
+                                $param['status'] = 1;
+                                $this->set_success($info->id, true);
+                            }
+                        }
+                    }
+                }
+                $param['content'] = json_encode($content);
+                $this->CI->user_certification_model->update($info->id, $param);
             }
             return true;
         }

@@ -1404,8 +1404,21 @@ class Certification extends REST_Controller {
                     }
                     break;
                 case "instagram":
-                    $this->load->library('instagram_lib');
-                    $info         = $input['access_token'];
+                    // $this->load->library('instagram_lib');
+                    $this->load->library('scraper/instagram_lib');
+                    $user_followed_info = $this->instagram_lib->getUserFollow($user_id, $input['access_token']);
+                    $info['username'] = $input['access_token'];
+                    $info['status'] = 'waitingFollowAccept';
+                    $info['counts'] = [
+                        'media' => '',
+                        'follows' => '',
+                        'followed_by' => '',
+                    ];
+                    if ($user_followed_info && $user_followed_info->status == 204) {
+                        $this->instagram_lib->autoFollow($user_id, $input['access_token']);
+                        $this->instagram_lib->updateUserFollow($user_id, $input['access_token']);
+                    }
+
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
