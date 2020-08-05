@@ -16,286 +16,294 @@ class Charge_lib
 	
 	public function charge_normal_target($target=[]){
 		$date			= get_entering_date();
-		$transaction 	= $this->CI->transaction_model->get_many_by([
-			'target_id'		=> $target->id,
-			'user_from'		=> $target->user_id,
-			'limit_date <=' => $date,
-			'status'		=> 1,
-		]);
-		if($transaction){
-			$amount			= 0;
-			$limit_date		= '';
-			$user_to		= [];
-			$source_list 	= [
-				SOURCE_AR_PRINCIPAL,
-				SOURCE_AR_INTEREST,
-				SOURCE_AR_DAMAGE,
-				SOURCE_AR_DELAYINTEREST
-			];
-			$charge_source_list = [
-				SOURCE_AR_PRINCIPAL		=> SOURCE_PRINCIPAL,
-				SOURCE_AR_INTEREST		=> SOURCE_INTEREST,
-				SOURCE_AR_DAMAGE		=> SOURCE_DAMAGE,
-				SOURCE_AR_DELAYINTEREST	=> SOURCE_DELAYINTEREST,
-				SOURCE_AR_FEES			=> SOURCE_FEES,
-			];
-
-			if($target->sub_status == 13){
+        $amount			= 0;
+        $limit_date		= '';
+        $user_to		= [];
+        $source_list 	= [
+            SOURCE_AR_PRINCIPAL,
+            SOURCE_AR_INTEREST,
+            SOURCE_AR_DAMAGE,
+            SOURCE_AR_DELAYINTEREST
+        ];
+        $charge_source_list = [
+            SOURCE_AR_PRINCIPAL		=> SOURCE_PRINCIPAL,
+            SOURCE_AR_INTEREST		=> SOURCE_INTEREST,
+            SOURCE_AR_DAMAGE		=> SOURCE_DAMAGE,
+            SOURCE_AR_DELAYINTEREST	=> SOURCE_DELAYINTEREST,
+            SOURCE_AR_FEES			=> SOURCE_FEES,
+        ];
+        if($target->sub_status == 13){
+            $transaction 	= $this->CI->transaction_model->get_many_by([
+                'target_id'		=> $target->id,
+                'user_from'		=> $target->user_id,
+                'limit_date <=' => $date,
+                'status'		=> 1,
+            ]);
+            if($transaction) {
                 $userInfo = $this->CI->user_model->get($target->user_id);
                 $targetData = json_decode($target->target_data);
                 $lawAccount = CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($userInfo->id_number, 1, 9);
                 $virtual_account = $this->CI->virtual_account_model->get_by([
-                    'status'		=> 1,
-                    'investor'		=> 0,
-                    'user_id'		=> $target->user_id,
+                    'status' => 1,
+                    'investor' => 0,
+                    'user_id' => $target->user_id,
                     'virtual_account' => $lawAccount
                 ]);
-                if($virtual_account && isset($targetData->legalAffairs)) {
+                if ($virtual_account && isset($targetData->legalAffairs)) {
                     $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
                     $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                     $total = $funds['total'] - $funds['frozen'];
-                        $transaction_param 	= [];
-                        $pass_book			= [];
-                        $sourceList = [];
-                        $sort = [SOURCE_AR_DAMAGE, SOURCE_AR_FEES, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
-                        $fee = 0;
-                        $balance = false;
-                        foreach($transaction as $key => $value){
-                            $sourceList[$value->source] = $value;
-                        }
-                        foreach($sort as $skey => $svalue){
-                            $source = $sourceList[$svalue];
-                            if($total > 0){
-                                $rs = $this->CI->transaction_model->update($source->id,[
-                                    'status'=>2,
-                                    'bank_account_from'=>$lawAccount
-                                ]);
-                                if($rs) {
-                                    $amount = intval($source->amount);
-                                    if($svalue == SOURCE_AR_PRINCIPAL && $amount > $total){
-                                        $balance = $amount - $total;
-                                        $amount = $total;
-                                        $this->CI->transaction_model->update($source->id,[
-                                            'status'=>2,
-                                            'amount'=>$amount
-                                        ]);
+                    $transaction_param = [];
+                    $pass_book = [];
+                    $sourceList = [];
+                    $sort = [SOURCE_AR_DAMAGE, SOURCE_AR_FEES, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
+                    $fee = 0;
+                    $balance = false;
+                    foreach ($transaction as $key => $value) {
+                        $sourceList[$value->source] = $value;
+                    }
+                    foreach ($sort as $skey => $svalue) {
+                        $source = $sourceList[$svalue];
+                        if ($total > 0) {
+                            $rs = $this->CI->transaction_model->update($source->id, [
+                                'status' => 2,
+                                'bank_account_from' => $lawAccount
+                            ]);
+                            if ($rs) {
+                                $amount = intval($source->amount);
+                                if ($svalue == SOURCE_AR_PRINCIPAL && $amount > $total) {
+                                    $balance = $amount - $total;
+                                    $amount = $total;
+                                    $this->CI->transaction_model->update($source->id, [
+                                        'status' => 2,
+                                        'amount' => $amount
+                                    ]);
+                                }
+                                $charge_source = $charge_source_list[$source->source];
+                                $pass_book[] = $source->id;
+                                $transaction_param[] = [
+                                    'source' => $charge_source,
+                                    'entering_date' => $date,
+                                    'user_from' => $source->user_from,
+                                    'bank_account_from' => $lawAccount,
+                                    'amount' => $amount,
+                                    'target_id' => $source->target_id,
+                                    'investment_id' => $source->investment_id,
+                                    'instalment_no' => $source->instalment_no,
+                                    'user_to' => $source->user_to,
+                                    'bank_account_to' => $source->bank_account_to,
+                                    'status' => 2
+                                ];
+                                $total -= $amount;
+                                if (!in_array($svalue, [SOURCE_AR_DAMAGE, SOURCE_AR_FEES])) {
+                                    $fee += $amount;
+                                    if ($source->user_from == $target->user_id && $source->investment_id != 0) {
+                                        if (!isset($user_to[$source->investment_id])) {
+                                            $user_to[$source->investment_id] = [
+                                                'amount' => 0,
+                                                'user_id' => $source->user_to,
+                                            ];
+                                        }
+                                        $user_to[$source->investment_id]['amount'] += $amount;
                                     }
-                                    $charge_source = $charge_source_list[$source->source];
-                                    $pass_book[] = $source->id;
+                                }
+
+                                if ($balance) {
                                     $transaction_param[] = [
-                                        'source' => $charge_source,
+                                        'source' => SOURCE_AR_PRINCIPAL,
                                         'entering_date' => $date,
                                         'user_from' => $source->user_from,
                                         'bank_account_from' => $lawAccount,
-                                        'amount' => $amount,
+                                        'amount' => $balance,
                                         'target_id' => $source->target_id,
                                         'investment_id' => $source->investment_id,
                                         'instalment_no' => $source->instalment_no,
                                         'user_to' => $source->user_to,
+                                        'limit_date' => $source->limit_date,
                                         'bank_account_to' => $source->bank_account_to,
-                                        'status' => 2
-                                    ];
-                                    $total -= $amount;
-                                    if(!in_array($svalue,[SOURCE_AR_DAMAGE,SOURCE_AR_FEES])){
-                                        $fee += $amount;
-                                        if($source->user_from==$target->user_id && $source->investment_id != 0){
-                                            if(!isset($user_to[$source->investment_id])){
-                                                $user_to[$source->investment_id] = [
-                                                    'amount'	=> 0,
-                                                    'user_id'	=> $source->user_to,
-                                                ];
-                                            }
-                                            $user_to[$source->investment_id]['amount'] += $amount;
-                                        }
-                                    }
-
-                                    if($balance){
-                                        $transaction_param[] = [
-                                            'source'			=> SOURCE_AR_PRINCIPAL,
-                                            'entering_date'		=> $date,
-                                            'user_from'			=> $source->user_from,
-                                            'bank_account_from'	=> $lawAccount,
-                                            'amount'			=> $balance,
-                                            'target_id'			=> $source->target_id,
-                                            'investment_id'		=> $source->investment_id,
-                                            'instalment_no'		=> $source->instalment_no,
-                                            'user_to'			=> $source->user_to,
-                                            'limit_date'		=> $source->limit_date,
-                                            'bank_account_to'	=> $source->bank_account_to,
-                                            'status'			=> 1
-                                        ];
-
-                                        $ar_fee = $this->CI->financial_lib->get_ar_fee($balance);
-                                        $transaction_param[] = [
-                                            'source'			=> SOURCE_AR_FEES,
-                                            'entering_date'		=> $date,
-                                            'user_from'			=> $source->user_from,
-                                            'bank_account_from'	=> $source->bank_account_from,
-                                            'amount'			=> $ar_fee,
-                                            'target_id'			=> $source->target_id,
-                                            'investment_id'		=> $source->investment_id,
-                                            'instalment_no'		=> $source->instalment_no,
-                                            'user_to'			=> $source->user_to,
-                                            'limit_date'		=> $source->limit_date,
-                                            'bank_account_to'	=> $source->bank_account_to,
-                                            'status'			=> 1
-                                        ];
-                                    }
-
-                                }
-                            }
-                        }
-                        if($fee > 0){
-                            $transaction = $this->CI->transaction_model->get_by([
-                                'target_id'		=> $target->id,
-                                'user_from !=' => $target->user_id,
-                                'limit_date <=' => $date,
-                                'status'		=> 1,
-                            ]);
-
-                            $ar_fee = $this->CI->financial_lib->get_ar_fee($fee);
-                            $source = $transaction;
-                            $this->CI->transaction_model->update($source->id,[
-                                'status'=>2,
-                                'amount'=>$ar_fee
-                            ]);
-                            $pass_book[] = $source->id;
-                            $transaction_param[] = [
-                                'source'			=> $charge_source_list[SOURCE_AR_FEES],
-                                'entering_date'		=> $date,
-                                'user_from'			=> $source->user_from,
-                                'bank_account_from'	=> $source->bank_account_from,
-                                'amount'			=> $ar_fee,
-                                'target_id'			=> $source->target_id,
-                                'investment_id'		=> $source->investment_id,
-                                'instalment_no'		=> $source->instalment_no,
-                                'user_to'			=> $source->user_to,
-                                'limit_date'		=> $source->limit_date,
-                                'bank_account_to'	=> $source->bank_account_to,
-                                'status'			=> 2
-                            ];
-                        }
-                        if($transaction_param){
-                            $rs  = $this->CI->transaction_model->insert_many($transaction_param);
-                            if($rs){
-                                foreach($rs as $key => $value){
-                                    $this->CI->passbook_lib->enter_account($value);
-                                }
-
-                                foreach($pass_book as $key => $value){
-                                    $this->CI->passbook_lib->enter_account($value);
-                                }
-
-                                $this->CI->load->library('Notification_lib');
-                                $this->CI->notification_lib->repay_success($target->user_id,0,$target->target_no,$amount);
-                                foreach($user_to as $investment => $user_to_info){
-                                    $this->CI->notification_lib->repay_success($user_to_info['user_id'],1,$target->target_no,$user_to_info['amount']);
-                                }
-
-                                if($target->delay && $balance == 0){
-                                    $update_data = [
-                                        'delay'		  => 0,
-                                        'delay_days'  => 0
+                                        'status' => 1
                                     ];
 
-                                    $this->CI->load->library('Target_lib');
-                                    $this->CI->target_lib->insert_change_log($target->id,$update_data,0,0);
-                                    $this->CI->target_model->update($target->id,$update_data);
-                                    $this->check_finish($target);
+                                    $ar_fee = $this->CI->financial_lib->get_ar_fee($balance);
+                                    $transaction_param[] = [
+                                        'source' => SOURCE_AR_FEES,
+                                        'entering_date' => $date,
+                                        'user_from' => $source->user_from,
+                                        'bank_account_from' => $source->bank_account_from,
+                                        'amount' => $ar_fee,
+                                        'target_id' => $source->target_id,
+                                        'investment_id' => $source->investment_id,
+                                        'instalment_no' => $source->instalment_no,
+                                        'user_to' => $source->user_to,
+                                        'limit_date' => $source->limit_date,
+                                        'bank_account_to' => $source->bank_account_to,
+                                        'status' => 1
+                                    ];
                                 }
+
                             }
                         }
-                    $this->CI->virtual_account_model->update($virtual_account->id,array('status'=>1));
+                    }
+                    if ($fee > 0) {
+                        $transaction = $this->CI->transaction_model->get_by([
+                            'source' => SOURCE_AR_FEES,
+                            'target_id' => $target->id,
+                            'user_from !=' => $target->user_id,
+                            'limit_date <=' => $date,
+                            'status' => 1,
+                        ]);
+
+                        $ar_fee = $this->CI->financial_lib->get_ar_fee($fee);
+                        $source = $transaction;
+                        $this->CI->transaction_model->update($source->id, [
+                            'status' => 2,
+                            'amount' => $ar_fee
+                        ]);
+                        $pass_book[] = $source->id;
+                        $transaction_param[] = [
+                            'source' => $charge_source_list[SOURCE_AR_FEES],
+                            'entering_date' => $date,
+                            'user_from' => $source->user_from,
+                            'bank_account_from' => $source->bank_account_from,
+                            'amount' => $ar_fee,
+                            'target_id' => $source->target_id,
+                            'investment_id' => $source->investment_id,
+                            'instalment_no' => $source->instalment_no,
+                            'user_to' => $source->user_to,
+                            'limit_date' => $source->limit_date,
+                            'bank_account_to' => $source->bank_account_to,
+                            'status' => 2
+                        ];
+                    }
+                    if ($transaction_param) {
+                        $rs = $this->CI->transaction_model->insert_many($transaction_param);
+                        if ($rs) {
+                            foreach ($rs as $key => $value) {
+                                $this->CI->passbook_lib->enter_account($value);
+                            }
+
+                            foreach ($pass_book as $key => $value) {
+                                $this->CI->passbook_lib->enter_account($value);
+                            }
+
+                            $this->CI->load->library('Notification_lib');
+                            $this->CI->notification_lib->repay_success($target->user_id, 0, $target->target_no, $amount);
+                            foreach ($user_to as $investment => $user_to_info) {
+                                $user_to_info['user_id'] != 0 ? $this->CI->notification_lib->repay_success($user_to_info['user_id'], 1, $target->target_no, $user_to_info['amount']) : '';
+                            }
+
+                            if ($target->delay && $balance == 0) {
+                                $update_data = [
+                                    'delay' => 0,
+                                    'delay_days' => 0
+                                ];
+
+                                $this->CI->load->library('Target_lib');
+                                $this->CI->target_lib->insert_change_log($target->id, $update_data, 0, 0);
+                                $this->CI->target_model->update($target->id, $update_data);
+                                $this->check_finish($target);
+                            }
+                        }
+                    }
+                    $this->CI->virtual_account_model->update($virtual_account->id, array('status' => 1));
                     return true;
                 }
             }
-			else{
-                foreach($transaction as $key => $value){
-                    if(in_array($value->source,$source_list) && $value->user_from==$target->user_id){
+            return false;
+        }
+        else{
+            $transaction 	= $this->CI->transaction_model->get_many_by([
+                'target_id'		=> $target->id,
+                'limit_date <=' => $date,
+                'status'		=> 1,
+            ]);
+            if($transaction) {
+                foreach ($transaction as $key => $value) {
+                    if (in_array($value->source, $source_list) && $value->user_from == $target->user_id) {
                         $amount += $value->amount;
-                        if(!isset($user_to[$value->investment_id])){
+                        if (!isset($user_to[$value->investment_id])) {
                             $user_to[$value->investment_id] = [
-                                'amount'	=> 0,
-                                'user_id'	=> $value->user_to,
+                                'amount' => 0,
+                                'user_id' => $value->user_to,
                             ];
                         }
                         $user_to[$value->investment_id]['amount'] += $value->amount;
                     }
                 }
-                if($amount>0){
+                if ($amount > 0) {
                     $virtual_account = $this->CI->virtual_account_model->get_by([
-                        'status'		=> 1,
-                        'investor'		=> 0,
-                        'user_id'		=> $target->user_id
+                        'status' => 1,
+                        'investor' => 0,
+                        'user_id' => $target->user_id
                     ]);
-                    if($virtual_account){
-                        $this->CI->virtual_account_model->update($virtual_account->id,['status'=>2]);
+                    if ($virtual_account) {
+                        $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
                         $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                         $total = $funds['total'] - $funds['frozen'];
-                        if($total >= $amount){
-                            $transaction_param 	= [];
-                            $pass_book			= [];
-                            foreach($transaction as $key => $value){
-                                $rs = $this->CI->transaction_model->update($value->id,['status'=>2]);
-                                if($rs){
-                                    $charge_source 			= $charge_source_list[$value->source];
-                                    $pass_book[] 			= $value->id;
-                                    $transaction_param[] 	= [
-                                        'source'			=> $charge_source,
-                                        'entering_date'		=> $date,
-                                        'user_from'			=> $value->user_from,
-                                        'bank_account_from'	=> $value->bank_account_from,
-                                        'amount'			=> intval($value->amount),
-                                        'target_id'			=> $value->target_id,
-                                        'investment_id'		=> $value->investment_id,
-                                        'instalment_no'		=> $value->instalment_no,
-                                        'user_to'			=> $value->user_to,
-                                        'bank_account_to'	=> $value->bank_account_to,
-                                        'status'			=> 2
+                        if ($total >= $amount) {
+                            $transaction_param = [];
+                            $pass_book = [];
+                            foreach ($transaction as $key => $value) {
+                                $rs = $this->CI->transaction_model->update($value->id, ['status' => 2]);
+                                if ($rs) {
+                                    $charge_source = $charge_source_list[$value->source];
+                                    $pass_book[] = $value->id;
+                                    $transaction_param[] = [
+                                        'source' => $charge_source,
+                                        'entering_date' => $date,
+                                        'user_from' => $value->user_from,
+                                        'bank_account_from' => $value->bank_account_from,
+                                        'amount' => intval($value->amount),
+                                        'target_id' => $value->target_id,
+                                        'investment_id' => $value->investment_id,
+                                        'instalment_no' => $value->instalment_no,
+                                        'user_to' => $value->user_to,
+                                        'bank_account_to' => $value->bank_account_to,
+                                        'status' => 2
                                     ];
                                 }
                             }
-                            if($transaction_param){
-                                $rs  = $this->CI->transaction_model->insert_many($transaction_param);
-                                if($rs){
-                                    foreach($rs as $key => $value){
+                            if ($transaction_param) {
+                                $rs = $this->CI->transaction_model->insert_many($transaction_param);
+                                if ($rs) {
+                                    foreach ($rs as $key => $value) {
                                         $this->CI->passbook_lib->enter_account($value);
                                     }
 
-                                    foreach($pass_book as $key => $value){
+                                    foreach ($pass_book as $key => $value) {
                                         $this->CI->passbook_lib->enter_account($value);
                                     }
 
-                                    if($target->delay){
+                                    if ($target->delay) {
                                         $update_data = [
-                                            'delay'		  => 0,
-                                            'delay_days'  => 0
+                                            'delay' => 0,
+                                            'delay_days' => 0
                                         ];
 
                                         $this->CI->load->library('Target_lib');
-                                        $this->CI->target_lib->insert_change_log($target->id,$update_data,0,0);
-                                        $this->CI->target_model->update($target->id,$update_data);
+                                        $this->CI->target_lib->insert_change_log($target->id, $update_data, 0, 0);
+                                        $this->CI->target_model->update($target->id, $update_data);
                                     }
 
                                     $this->CI->load->library('Notification_lib');
-                                    $this->CI->notification_lib->repay_success($target->user_id,0,$target->target_no,$amount);
-                                    foreach($user_to as $investment => $user_to_info){
-                                        $this->CI->notification_lib->repay_success($user_to_info['user_id'],1,$target->target_no,$user_to_info['amount']);
+                                    $this->CI->notification_lib->repay_success($target->user_id, 0, $target->target_no, $amount);
+                                    foreach ($user_to as $investment => $user_to_info) {
+                                        $user_to_info['user_id'] != 0 ? $this->CI->notification_lib->repay_success($user_to_info['user_id'], 1, $target->target_no, $user_to_info['amount']) : '';
                                     }
                                 }
                             }
                             $this->check_finish($target);
-                        }else{
+                        } else {
                             $this->notice_delay_target($target);
                         }
 
-                        $this->CI->virtual_account_model->update($virtual_account->id,array('status'=>1));
+                        $this->CI->virtual_account_model->update($virtual_account->id, array('status' => 1));
                         return true;
                     }
                 }
             }
-		}
-		return false;
+            return false;
+        }
 	}
 
 	public function charge_prepayment_target($target,$prepayment){
@@ -552,7 +560,6 @@ class Charge_lib
 		$targets 	= $this->CI->target_model->get_many_by(array(
 			'status'			=> 5,//還款中
 			'script_status'		=> 0,
-			'sub_status'		=> 13
 		));
 		if($targets && !empty($targets)){
             foreach($targets as $key => $value){
