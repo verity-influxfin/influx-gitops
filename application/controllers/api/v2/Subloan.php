@@ -286,12 +286,12 @@ class Subloan extends REST_Controller {
 		isset($input['product_id'])?$param['product_id']=$input['product_id']:1;
 		
 		$target = $this->target_model->get($input['target_id']);
-		if(!empty($target) && $target->status == 5 ){
+		if(!empty($target) && $target->status == TARGET_REPAYMENTING ){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
 
-            if(!in_array($target->sub_status,[0,8])){
+            if(!in_array($target->sub_status,[TARGET_SUBSTATUS_NORNAL,TARGET_SUBSTATUS_SUBLOAN_TARGET,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])){
                 $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
             }
 			
