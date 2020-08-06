@@ -164,14 +164,16 @@ class Certification extends MY_Admin_Controller {
 				if(isset($page_data['content']['programming_language'])){
 					$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
 					$set_lang_level =['入門','參與開發','獨立執行'];
-					foreach($page_data['content']['programming_language'] as $lang_list => $lang){
-						$lang_level = ' ('.$set_lang_level[$lang['level']-1].')';
-						$lang['id']!=''?$techie_lang[]=$languageList->{$lang['id']}.$lang_level:$other_lang[]=$lang['des'].$lang_level;
+					$programming_language = json_decode($page_data['content']['programming_language']);
+					if(count($programming_language) > 0){
+						foreach($programming_language as $lang_list => $lang){
+							$lang_level = ' ('.$set_lang_level[$lang->level-1].')';
+							$lang->id != '' ? $techie_lang[] = $languageList->{$lang->id} . $lang_level : $other_lang[] = $lang->des . $lang_level;
+						}
 					}
-					$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : '';
-					$page_data['other_lang']  = isset($other_lang) ? $other_lang : '';
+					$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : false;
+					$page_data['other_lang']  = isset($other_lang) ? $other_lang : false;
 				}
-
 				$page_data['id'] 					= $id;
 				$page_data['remark'] 				= json_decode($info->remark,true);
 				$page_data['status_list'] 			= $this->user_certification_model->status_list;

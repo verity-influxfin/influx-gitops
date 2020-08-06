@@ -6870,7 +6870,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "passbook_image_type",
-                            "description": "<p>存款證明類型<br />0：紙本，1：網銀 2：薪資證明</p>"
+                            "description": "<p>存款證明類型<br />0：薪資證明 1：紙本，2：網銀</p>"
                         },
                         {
                             "group": "Parameter",
@@ -6906,6 +6906,34 @@ define({
                             "optional": true,
                             "field": "programming_language",
                             "description": "<p>專業語言 Json input</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate",
+                            "description": "<p>專業證書說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "pro_certificate_image",
+                            "description": "<p>專業證書照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "game_work",
+                            "description": "<p>競賽作品說明 ( 對應圖片順序以逗號隔開 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "game_work_image",
+                            "description": "<p>競賽作品照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
                         },
                         {
                             "group": "Parameter",

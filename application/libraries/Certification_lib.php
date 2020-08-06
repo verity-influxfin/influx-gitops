@@ -959,7 +959,9 @@ class Certification_lib{
 				'job_salary'			=> $content['salary'],
 				'job_license'			=> $content['license_status'],
 				'job_pro_level'			=> $content['pro_level'],
+                'game_work_level'=> $content['game_work_level'],
 			];
+
             isset($content['programming_language'])?$data['job_programming_language']=$content['programming_language']:'';
             isset($content['job_title'])?$data['job_title']=$content['job_title']:'';
 
