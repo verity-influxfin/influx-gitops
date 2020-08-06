@@ -119,4 +119,54 @@ class Anti_fraud_lib{
 
         return $data;
 	}
+
+    public function judicialyuan($userId)
+    {
+
+        $userWithJudicialYuan = [];
+        $this->CI->load->model('user/user_model');
+        $user_info = $this->CI->user_model->get_by([
+            "id"		=> $userId,
+            "name !="	=> '',
+            "id_card_place !="	=> '',
+        ]);
+        $birthday = substr($user_info->birthday,0,4);
+
+        $this->CI->load->library('scraper/judicial_yuan_lib.php');
+        $verdict_count = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCount(urlencode($user_info->name));
+        if(!$verdict_count){
+            $userWithJudicialYuan = ['爬蟲系統連線失敗'];
+        }
+        $response = json_decode(json_encode($verdict_count), true);
+        $verdictSet = [];
+        if($response['status']=='200'){
+            foreach ($response['response']['verdict_count'] as $verdict){
+                $caseList = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($user_info->name), urlencode($verdict['name']), 1);
+                if($caseList){
+                    foreach ($caseList['response']["verdicts"] as $case){
+                        $limit = preg_match('/民事/', $case['title']) ? 20 : 18;
+                        if((date('Y',$case['createdAt']) - $limit) < $birthday && isset($userWithJudicialYuan[$verdict['name']])){
+                            $userWithJudicialYuan[$verdict['name']]['count'] != 1 ? $userWithJudicialYuan[$verdict['name']]['count'] -= 1 : '';
+                        }elseif((date('Y',$case['createdAt']) - $limit) > $birthday && !in_array($verdict['name'] ,$verdictSet)){
+                            $verdictSet[] = $verdict['name'];
+                            $userWithJudicialYuan[$verdict['name']] = $verdict;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$userWithJudicialYuan) {
+            return [];
+        }
+
+        $data = new stdClass();
+        $data->judicialyuan = [
+            'userName' => $user_info->name,
+            'userBirthday' => $user_info->birthday,
+            'list' => $userWithJudicialYuan
+        ];
+
+        return $data;
+    }
 }

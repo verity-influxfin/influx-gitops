@@ -368,6 +368,29 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
+					司法院查詢
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="table-responsive">
+								<table id="judicial-yuan" class="table table-bordered table-hover table-striped">
+									<thead>
+									<tr class="odd list">
+										<th width="70%">裁判案由</th>
+										<th width="30%">總數</th>
+									</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
 					關聯戶
 				</div>
 				<div class="panel-body">
@@ -653,6 +676,7 @@
 				},
 				complete: function () {
 					relatedUserAjaxLock = false;
+                    fetchJudicialyuanData(userId);
 				},
 				success: function (response) {
 					fillFakeRelatedUsers(false);
@@ -670,10 +694,32 @@
 			});
 		}
 
-
         $('#load-more').on('click', function() {
             fillRelatedUsers();
         });
+
+        var judicialyuanDataIndex = 1;
+        var judicialyuanData = [];
+        function fetchJudicialyuanData(userId) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/User/judicialyuan" + "?id=" + userId,
+                beforeSend: function () {
+                    judicialyuanDataock = true;
+                },
+                complete: function () {
+                    judicialyuanDataock = false;
+                },
+                success: function (response) {
+                    fillFakejudicialyuanData(false);
+                    if (response.status.code != 200) {
+                        return;
+                    }
+                    judicialyuanData = response.response;
+                    filljudicialyuanData();
+                }
+            });
+        }
 
         function hideLoadingAnimation() {
             $(".table-ten p").css('background', 'white');
@@ -696,7 +742,7 @@
             if (!show) {
                 $("#related-users tr:gt(0)").remove();
                 return;
-			}
+            }
             pTag = '<p class="form-control-static"></p>'
 
             for (var i = 0; i < 3; i++) {
@@ -706,6 +752,21 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                     $('<td class="fake-fields center-text">').append(pTag),
                 ).appendTo("#related-users");
+            }
+        }
+            
+		function fillFakejudicialyuanData(show = true) {
+            if (!show) {
+                $("#judicial-yuan tr:gt(0)").remove();
+                return;
+			}
+            pTag = '<p class="form-control-static"></p>'
+
+            for (var i = 0; i < 3; i++) {
+                $("<tr>").append(
+                    $('<td class="fake-fields center-text">').append(pTag),
+                    $('<td class="fake-fields center-text">').append(pTag),
+                ).appendTo("#judicial-yuan");
 			}
 		}
 
@@ -734,6 +795,28 @@
                 ).appendTo("#related-users");
             }
             relatedUsersIndex+=1;
+		}
+            
+		function filljudicialyuanData() {
+            var maxNumInPage = 5;
+            var start = (judicialyuanDataIndex-1) * maxNumInPage;
+            var end = judicialyuanDataIndex * maxNumInPage;
+            if (end > judicialyuanData.length) end = judicialyuanData.judicial_yuan.length;
+            if (start > end || (end - start < maxNumInPage)) {
+                $("#load-more").hide();
+			} else {
+                $("#load-more").show();
+			}
+
+            for (var i = start; i < end; i++) {
+                var name = '<p class="form-control-static">' + judicialyuanData.judicial_yuan[i].name + '</p>';
+                var count = '<a target="_blank" href="../certification/judicial_yuan_case?name=林郁凱&amp;case=' + judicialyuanData.judicial_yuan[i].name + '&amp;page=1&amp;count=' + judicialyuanData.judicial_yuan[i].count + '">' + judicialyuanData.judicial_yuan[i].count + '</a>';
+                $("<tr>").append(
+                    $('<td class="center-text" style="color:red;">').append(name),
+                    $('<td class="center-text" style="color:red;">').append(count),
+                ).appendTo("#judicial-yuan");
+            }
+            judicialyuanDataIndex+=1;
 		}
 
 		function mapRelatedUsersReasons(reason) {
