@@ -15,7 +15,7 @@ class Labor_insurance_lib
     const REJECT_DUE_TO_OUTDATED_REPORT = "請您提供近一個月內最新的勞工保險異動明細資料。";
     const REJECT_DUE_TO_IDENTITY_NOT_MATCH = "請您提供本人近一個月內最新的勞工保險異動明細資料。";
     const REJECT_DUE_TO_REPORT_NOT_COMPLETE = "請提供歷年勞工保險異動明細資料。";
-    const REJECT_DUE_TO_UNEMPLOYMENT = "系統無法清楚確認您的工作證明，感謝您的支持與愛護，希望下次還有機會為您服務。";
+    const REJECT_DUE_TO_UNEMPLOYMENT = "您提供的工作證明，無法辨識清楚，麻煩您重新操作一次，謝謝配合與協助！";
     const REJECT_DUR_TO_CONSTRAINT_NOT_PASSED = "經本平台綜合評估暫時無法核准您的工作認證，感謝您的支持與愛護，希望下次還有機會為您服務。";
 
     public function __construct()
