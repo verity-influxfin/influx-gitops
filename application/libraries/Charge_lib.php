@@ -563,24 +563,29 @@ class Charge_lib
 		));
 		if($targets && !empty($targets)){
             foreach($targets as $key => $value){
-                if($value->sub_status != 3) {
-                    $this->CI->target_model->update($value->id, array('script_status' => $script));
-                    $transaction = $this->CI->transaction_model->order_by('limit_date', 'ASC')->get_by(array(
-                        'target_id' => $value->id,
-                        'limit_date <=' => $date,
-                        'status' => 1,
-                        'user_from' => $value->user_id
-                    ));
-                    if ($transaction) {
-                        $check = $this->charge_normal_target($value);
-                        if ($check) {
-                            $count++;
+                $ids[] = $value->id;
+            }
+            $update_rs 	= $this->CI->target_model->update_many($ids,array('script_status'=>$script));
+            if($update_rs) {
+                foreach ($targets as $key => $value) {
+                    if ($value->sub_status != 3) {
+                        $transaction = $this->CI->transaction_model->order_by('limit_date', 'ASC')->get_by(array(
+                            'target_id' => $value->id,
+                            'limit_date <=' => $date,
+                            'status' => 1,
+                            'user_from' => $value->user_id
+                        ));
+                        if ($transaction) {
+                            $check = $this->charge_normal_target($value);
+                            if ($check) {
+                                $count++;
+                            }
+                        } else {
+                            $this->notice_normal_target($value);
                         }
-                    } else {
-                        $this->notice_normal_target($value);
-                    }
 
-                    $this->CI->target_model->update($value->id, array('script_status' => 0));
+                        $this->CI->target_model->update($value->id, array('script_status' => 0));
+                    }
                 }
             }
 		}
