@@ -419,43 +419,42 @@ class Credit_lib{
 	public function get_school_point($school_name='',$school_system=0,$school_major='',$school_department = false ){
 		$point = 0;
 		if(!empty($school_name)){
-		    if($school_department){
+			$school_list = $this->CI->config->item('school_points');
+			$school_info = [];
+			foreach($school_list['school_points'] as $key => $value){
+				if(trim($school_name)==$value['name']){
+					$school_info = $value;
+					break;
+				}
+			}
+
+            if(!empty($school_info)){
+                $point = $school_info['points'];
+                if($school_system == 0){
+                    $point += 100;
+                }else if($school_system==1){
+                    $point += 400;
+                }else if($school_system==2){
+                    $point += 500;
+                }
+            }
+
+			if(!empty($school_major)){
+				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
+			}
+
+            if($school_department){
                 $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
                 $school_data = json_decode($school_data, true);
                 if(isset($school_data[$school_name]['score'][$school_department])){
-                    $point = $school_data[$school_name]['score'][$school_department];
+                    $point += $school_data[$school_name]['score'][$school_department];
                 }
                 else{
                     asort($school_data[$school_name]['score']);
                     foreach($school_data[$school_name]['score'] as $s) {
-                        $point = $s;
+                        $point += $s;
                         break;
                     }
-                }
-            }
-		    else{
-                $school_list = $this->CI->config->item('school_points');
-                $school_info = [];
-                foreach($school_list['school_points'] as $key => $value){
-                    if(trim($school_name)==$value['name']){
-                        $school_info = $value;
-                        break;
-                    }
-                }
-
-                if(!empty($school_info)){
-                    $point = $school_info['points'];
-                    if($school_system == 0){
-                        $point += 100;
-                    }else if($school_system==1){
-                        $point += 400;
-                    }else if($school_system==2){
-                        $point += 500;
-                    }
-                }
-
-                if(!empty($school_major)){
-                    $point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
                 }
             }
 		}
