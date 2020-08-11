@@ -422,7 +422,16 @@ class Credit_lib{
 		    if($school_department){
                 $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
                 $school_data = json_decode($school_data, true);
-                $point = isset($school_data[$school_name]['score'][$school_department]) ? $school_data[$school_name]['score'][$school_department] : 0;
+                if(isset($school_data[$school_name]['score'][$school_department])){
+                    $point = $school_data[$school_name]['score'][$school_department];
+                }
+                else{
+                    asort($school_data[$school_name]['score']);
+                    foreach($school_data[$school_name]['score'] as $s) {
+                        $point = $s;
+                        break;
+                    }
+                }
             }
 		    else{
                 $school_list = $this->CI->config->item('school_points');

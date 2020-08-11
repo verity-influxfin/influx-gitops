@@ -279,20 +279,19 @@ class Target_lib
                 $interest_rate = $credit['rate'];
                 if(in_array($product_id, [1, 2])){
                     $this->CI->load->model('user/user_meta_model');
-                    $school = $this->CI->user_meta_model->get_by(array(
+                    $school = $this->CI->user_meta_model->get_many_by(array(
                         "user_id"	=> $target->user_id,
-                        "meta_key"	=> "school_name"
+                        "meta_key"	=> ["school_name",'school_department']
                     ));
                     if($school){
-                        $school = $school->meta_value;
-                        preg_match('/\(自填\)/', $school) ? $deny = true : '';
-                        $this->CI->config->load('school_points',TRUE);;
-                        $school_list = $this->CI->config->item('school_points');
-                        foreach($school_list['school_points'] as $k => $v){
-                            if(trim($school)==$v['name']){
-                                $v['points'] == 0 ? $deny = true : '';
-                                break;
-                            }
+                        $schools = [];
+                        foreach($school as $a => $b){
+                            $schools[$b->meta_key] = $b->meta_value;
+                        }
+                        $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
+                        $school_data = json_decode($school_data, true);
+                        if(!isset($school_data[$schools['school_name']])){
+                            $deny = true;
                         }
                     }
                 }
