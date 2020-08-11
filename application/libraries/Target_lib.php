@@ -275,8 +275,6 @@ class Target_lib
                 }
             }
             if ($credit) {
-                $self = false;
-                $self_national = false;
                 $deny = false;
                 $interest_rate = $credit['rate'];
                 if(in_array($product_id, [1, 2])){
@@ -287,9 +285,7 @@ class Target_lib
                     ));
                     if($school){
                         $school = $school->meta_value;
-                        if(preg_match('/\(自填\)/', $school)){
-                            preg_match('/國立/', $school) ? $self_national = true : $self = true;
-                        }
+                        preg_match('/\(自填\)/', $school) ? $deny = true : '';
                         $this->CI->config->load('school_points',TRUE);;
                         $school_list = $this->CI->config->item('school_points');
                         foreach($school_list['school_points'] as $k => $v){
@@ -305,8 +301,7 @@ class Target_lib
                     $this->approve_target_fail($user_id, $target, false, '由於您的信用評分不足，很抱歉無法取得申請額度！');
                     return false;
                 }
-
-                if ($interest_rate && !$self) {
+                if ($interest_rate) {
                     $used_amount = 0;
                     $other_used_amount = 0;
                     $user_max_credit_amount = $this->CI->credit_lib->get_user_max_credit_amount($user_id);
@@ -365,14 +360,13 @@ class Target_lib
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 $newStatus = false;
-                                if ((!$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
                                         && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                         && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
                                         || $subloan_status
                                         || $renew
                                         || $evaluation_status
-                                    )
-                                    && !$self_national) {
+                                    ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
                                     $remark
