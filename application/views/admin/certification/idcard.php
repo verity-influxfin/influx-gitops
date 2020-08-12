@@ -140,6 +140,11 @@
                           alert('爬蟲執行請求成功送出');
                               return;
                       }
+
+                      if (response.status.code == 201) {
+                          alert('爬蟲執行請求2小時內重複發送');
+                              return;
+                      }
                   },
                   error: function() {
                       alert('爬蟲執行請求未成功送出');

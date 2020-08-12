@@ -1012,6 +1012,10 @@ class Certification extends MY_Admin_Controller {
 				$this->json_output->setStatusCode(400)->send();
 			}
 
+			if($scraper_response['status']=='201'){
+				$this->json_output->setStatusCode(201)->send();
+			}
+
 			$this->json_output->setStatusCode(200)->send();
 		}
 

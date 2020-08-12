@@ -58,7 +58,7 @@ class Judicial_yuan_lib
         if(!$name || !$address || !$reference) {
             return false;
         }
-
+        $response = [];
         $url = $this->scraperUrl  . "verdicts";
 
         $address = $this->mappingAddressAndScraperAddress($address);
@@ -66,13 +66,13 @@ class Judicial_yuan_lib
         $data = ["query" => $name, "location" => $address, "reference" => $reference];
 
         $result = curl_get($url, $data);
-        $response = json_decode($result);
-
-        if (!$result || !isset($response->status) || $response->status != 200) {
+        if($result){
+            $response = json_decode($result,true);
+        }else{
             return false;
         }
 
-        return true;
+        return $response;
     }
 
     public function requestJudicialYuanVerdictsStatuses($reference){
