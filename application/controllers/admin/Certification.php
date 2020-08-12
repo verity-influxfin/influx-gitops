@@ -157,7 +157,8 @@ class Certification extends MY_Admin_Controller {
 					$page_data['job_type_name'] 		= $this->config->item('job_type_name');
 					if (isset($page_data['content']['job_title'])){
 						$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
-						$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
+						$cut  = preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title);
+						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
 				}
 

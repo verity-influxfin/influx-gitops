@@ -48,13 +48,22 @@
                                             <input type="hidden" name="from" value="' . $from . '" >
                                         </div>
                                         <button type="submit" class="btn btn-primary">確認公司名</button>
-                                        </form><br />';
+                                        </form>';
                                     }
                                     else {
-                                        echo '<p class="form-control-static">'.isset($content['company'])?$content['company']:"".'</p>';
+                                        echo '<p class="form-control-static">'.(isset($content['company'])?$content['company']:"").'</p>';
+                                    } ?>
+                                    </div>
+                                    <?
+                                    if(isset($content['company_address'])) {
+                                        echo '<div class="form-group"><label>公司名稱</label><p class="form-control-static"> '.(isset($content['company_address'])?$content['company_address']:"").'</p></div>';
+                                    }
+                                    if(isset($content['company_phone_number'])) {
+                                        echo '<div class="form-group"><label>公司電話</label><p class="form-control-static"> '.(isset($content['company_phone_number'])?$content['company_phone_number']:"").'</p></div>';
                                     }
                                      ?>
-									</div>
+
+
 									<div class="form-group">
 										<label>公司類型</label>
 										<p class="form-control-static"><?=isset($content['industry'])?$industry_name[$content['industry']]:""?></p>
