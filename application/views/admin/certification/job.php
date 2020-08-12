@@ -56,7 +56,7 @@
                                     </div>
                                     <?
                                     if(isset($content['company_address'])) {
-                                        echo '<div class="form-group"><label>公司名稱</label><p class="form-control-static"> '.(isset($content['company_address'])?$content['company_address']:"").'</p></div>';
+                                        echo '<div class="form-group"><label>公司地址</label><p class="form-control-static"> '.(isset($content['company_address'])?$content['company_address']:"").'</p></div>';
                                     }
                                     if(isset($content['company_phone_number'])) {
                                         echo '<div class="form-group"><label>公司電話</label><p class="form-control-static"> '.(isset($content['company_phone_number'])?$content['company_phone_number']:"").'</p></div>';
