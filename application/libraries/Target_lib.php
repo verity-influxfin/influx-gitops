@@ -353,7 +353,7 @@ class Target_lib
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-//                            if($this->judicialyuan($user_id) || $subloan_status){
+                            if($this->judicialyuan($user_id) || $subloan_status){
                                 if ($product_info['type'] == 1 || $subloan_status) {
                                     $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                     $param = [
@@ -437,7 +437,7 @@ class Target_lib
                                         $this->approve_target_fail($user_id, $target);
                                     }
                                 }
-//                            }
+                            }
                         } else {
                             $this->approve_target_fail($user_id, $target);
                         }
