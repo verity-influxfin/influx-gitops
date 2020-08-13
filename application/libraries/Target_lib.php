@@ -279,7 +279,7 @@ class Target_lib
                 $self_national = false;
                 $deny = false;
                 $interest_rate = $credit['rate'];
-                if(in_array($product_id, [1, 2])){
+                if(in_array($product_id, [1, 2]) && !$subloan_status){
                     $this->CI->load->model('user/user_meta_model');
                     $school = $this->CI->user_meta_model->get_by(array(
                         "user_id"	=> $target->user_id,
@@ -353,7 +353,7 @@ class Target_lib
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-                            if($this->judicialyuan($user_id) || $subloan_status){
+                            if($this->judicialyuan($user_id) || $subloan_status || $renew){
                                 if ($product_info['type'] == 1 || $subloan_status) {
                                     $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                     $param = [
