@@ -47,9 +47,6 @@
                       + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
                       $("#verdict_list").html(html);
 
-                      if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
-                        setTimeout(function() { requestVerdictStatuses()}, 5000 );
-                      }
                       if(data_arry.status=='爬蟲執行完成'){
                         requestVerdictCount();
                         if(new Date($.now()-604800000) > data_date){
@@ -141,7 +138,11 @@
 
                       if (response.status.code == 200) {
                           alert('爬蟲執行請求成功送出');
-                          setTimeout(requestVerdictStatuses(),5000);
+                              return;
+                      }
+
+                      if (response.status.code == 201) {
+                          alert('爬蟲執行請求2小時內重複發送');
                               return;
                       }
                   },
@@ -151,10 +152,11 @@
               });
           }
     $(document).ready(function(){
-      requestVerdictStatuses();
       $( '#run-scraper-btn' ).click(function() {
         requestVerdict();
-        $( ".run-scraper-tr" ).hide();
+      });
+      $( '#read-scraper-btn' ).click(function() {
+        requestVerdictStatuses();
       });
     });
 </script>
@@ -248,7 +250,8 @@
                                 <tbody id="verdict_list">
                                 </tbody>
                                 <tbody>
-                                  <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+                                  <tr class="run-scraper-tr"><td colspan="2" style="text-align: -webkit-center;" ><button id="read-scraper-btn">讀取爬蟲案件</button></td></tr>
+                                  <tr class="run-scraper-tr"><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲</button></td></tr>
                                 </tbody>
                               </table>
                             </div>

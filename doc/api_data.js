@@ -1186,6 +1186,20 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": false,
+                            "field": "company_address",
+                            "description": "<p>工作地址</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "company_phone_number",
+                            "description": "<p>公司電話</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
                             "field": "industry",
                             "description": "<p>公司類型 <br>A：農、林、漁、牧業 <br>B：礦業及土石採取業 <br>C：製造業 <br>D：電力及燃氣供應業 <br>E：用水供應及污染整治業 <br>F：營建工程業 <br>G：批發及零售業 <br>H：運輸及倉儲業 <br>I：住宿及餐飲業 <br>J：出版、影音製作、傳播及資通訊服務業 <br>K：金融及保險業 <br>L：不動產業 <br>M：專業、科學及技術服務業 <br>N：支援服務業 <br>O：公共行政及國防；強制性社會安全 <br>P：教育業 <br>Q：醫療保健及社會工作服務業 <br>R：藝術、娛樂及休閒服務業 <br>S：其他服務業</p>"
                         },
@@ -1194,7 +1208,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "employee",
-                            "description": "<p>企業規模\t <br>0：1~20（含） <br>1：20~50（含） <br>2：50~100（含） <br>3：100~500（含） <br>4：500~1000（含） <br>5：1000~5000（含） <br>6：5000以上</p>"
+                            "description": "<p>企業規模\t <br>0：1~20（含） <br>1：20~50（含） <br>2：50~8100（含） <br>3：100~500（含） <br>4：500~1000（含） <br>5：1000~5000（含） <br>6：5000以上</p>"
                         },
                         {
                             "group": "Parameter",

@@ -157,7 +157,8 @@ class Certification extends MY_Admin_Controller {
 					$page_data['job_type_name'] 		= $this->config->item('job_type_name');
 					if (isset($page_data['content']['job_title'])){
 						$job_title = file_get_contents(FRONT_CDN_URL.'json/cert_title.json');
-						$page_data['job_title'] = preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0];
+						$cut  = preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title);
+						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
 				}
 
@@ -541,6 +542,7 @@ class Certification extends MY_Admin_Controller {
 
 				$this->load->library('target_lib');
 				$target = $this->target_model->get_by([
+					'user_id' => $info->user_id,
 					'status' => TARGET_WAITING_VERIFY,
 				]);
 				$product_list = $this->config->item('product_list');
@@ -1010,6 +1012,10 @@ class Certification extends MY_Admin_Controller {
 
 			if(!$scraper_response){
 				$this->json_output->setStatusCode(400)->send();
+			}
+
+			if($scraper_response['status']=='201'){
+				$this->json_output->setStatusCode(201)->send();
 			}
 
 			$this->json_output->setStatusCode(200)->send();

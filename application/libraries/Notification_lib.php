@@ -432,7 +432,7 @@ $name 您好，
 金額 $amount 元
 已發放至您的綁定金融卡賬戶尾號 $bankaccount 內，
 請確認核實。";
-        $type = $investor?'i04':'b04';
+        $type = $investor?'i08':'b08';
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
