@@ -542,6 +542,7 @@ class Certification extends MY_Admin_Controller {
 
 				$this->load->library('target_lib');
 				$target = $this->target_model->get_by([
+					'user_id' => $info->user_id,
 					'status' => TARGET_WAITING_VERIFY,
 				]);
 				$product_list = $this->config->item('product_list');
