@@ -139,7 +139,7 @@ class Credit_lib{
 
             //學校
             if (isset($data['school_name']) && !empty($data['school_name'])) {
-                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major']);
+                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major'], $data['school_department']);
             }
 
             //財務證明
@@ -249,7 +249,7 @@ class Credit_lib{
 
         //畢業學校
         if (isset($data['diploma_name']) && !empty($data['diploma_name'])) {
-            $total += intval($this->get_school_point($data['diploma_name'], $data['diploma_system'], '')) * 0.6;
+            $total += intval($this->get_school_point($data['diploma_name'], $data['diploma_system'], '', $data['diploma_department'])) * 0.6;
         }
 
         if (isset($data['job_type'])) {
@@ -416,7 +416,7 @@ class Credit_lib{
         return $rs;
     }
 
-	public function get_school_point($school_name='',$school_system=0,$school_major=''){
+	public function get_school_point($school_name='',$school_system=0,$school_major='',$school_department = false ){
 		$point = 0;
 		if(!empty($school_name)){
 			$school_list = $this->CI->config->item('school_points');
@@ -442,6 +442,21 @@ class Credit_lib{
 			if(!empty($school_major)){
 				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
 			}
+
+            if($school_department){
+                $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
+                $school_data = json_decode($school_data, true);
+                if(isset($school_data[$school_name]['score'][$school_department])){
+                    $point += $school_data[$school_name]['score'][$school_department];
+                }
+                else{
+                    asort($school_data[$school_name]['score']);
+                    foreach($school_data[$school_name]['score'] as $s) {
+                        $point += $s;
+                        break;
+                    }
+                }
+            }
 		}
 		return $point;
 	}
