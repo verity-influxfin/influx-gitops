@@ -248,7 +248,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['return_type'];
 						break;
 					case 10:
-						$fields 	= ['tax_id','company','industry','employee','position','type','seniority','job_seniority','salary'];
+						$fields 	= ['tax_id','company','company_address','company_phone_number','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
 					case 1000:
                         $fields 	= ['businesstax'];
@@ -1860,6 +1860,8 @@ class Certification extends REST_Controller {
 				}
 			}
             $content['company'] 	  = isset($input['company'])?$input['company']:"";
+            $content['company_address'] 	  = isset($input['company_address'])?$input['company_address']:"";
+            $content['company_phone_number'] 	  = isset($input['company_phone_number'])?$input['company_phone_number']:"";
             isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
             isset($input['license_des'])?$content['license_des']=$input['license_des']:"";
 
