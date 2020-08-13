@@ -279,7 +279,7 @@ class Target_lib
                 $self_national = false;
                 $deny = false;
                 $interest_rate = $credit['rate'];
-                if(in_array($product_id, [1, 2])){
+                if(in_array($product_id, [1, 2]) && !$subloan_status){
                     $this->CI->load->model('user/user_meta_model');
                     $school = $this->CI->user_meta_model->get_by(array(
                         "user_id"	=> $target->user_id,
