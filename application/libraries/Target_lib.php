@@ -249,6 +249,7 @@ class Target_lib
         $msg = false;
         if (!empty($target) && ($target->status == TARGET_WAITING_APPROVE
                 || $renew
+                || $target->status == TARGET_ORDER_WAITING_VERIFY && $target->sub_status == TARGET_SUBSTATUS_NORNAL
                 || $target->status == CERTIFICATION_CERCREDITJUDICIAL
                 || $target->status == TARGET_WAITING_SIGNING && $target->sub_product_id == STAGE_CER_TARGET)) {
             $product_list = $this->CI->config->item('product_list');
@@ -275,31 +276,7 @@ class Target_lib
                 }
             }
             if ($credit) {
-                $deny = false;
                 $interest_rate = $credit['rate'];
-                if(in_array($product_id, [1, 2]) && !$subloan_status){
-                    $this->CI->load->model('user/user_meta_model');
-                    $school = $this->CI->user_meta_model->get_many_by(array(
-                        "user_id"	=> $target->user_id,
-                        "meta_key"	=> ["school_name",'school_department']
-                    ));
-                    if($school){
-                        $schools = [];
-                        foreach($school as $a => $b){
-                            $schools[$b->meta_key] = $b->meta_value;
-                        }
-                        $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
-                        $school_data = json_decode($school_data, true);
-                        if(!isset($school_data[$schools['school_name']])){
-                            $deny = true;
-                        }
-                    }
-                }
-
-                if($deny){
-                    $this->approve_target_fail($user_id, $target, false, '由於您的信用評分不足，很抱歉無法取得申請額度！');
-                    return false;
-                }
                 if ($interest_rate) {
                     $used_amount = 0;
                     $other_used_amount = 0;
@@ -404,7 +381,9 @@ class Target_lib
                                     if ($loan_amount < $target->amount) {
                                         $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
                                     }
-                                    if ($allow) {
+                                    if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                        && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+                                        && $allow) {
                                         $param = [
                                             'loan_amount' => $loan_amount,
                                             'credit_level' => $credit['level'],
