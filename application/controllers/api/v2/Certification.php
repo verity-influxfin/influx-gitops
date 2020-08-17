@@ -1461,6 +1461,7 @@ class Certification extends REST_Controller {
                             $rs  = $this->user_meta_model->update_by($param, array('meta_value'    => $value));
                         }
                     } else {
+                        $param = [];
                         foreach ($data as $key => $value) {
                             $param[] = array(
                                 'user_id'        => $user_id,
