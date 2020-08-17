@@ -434,32 +434,30 @@ class Certification_lib{
                     $content->instagram->counts->follows = $user_followed_info->response->result->info->allFollowingCount;
                     $content->instagram->counts->followed_by = $user_followed_info->response->result->info->allFollowerCount;
                     $update_time = $user_followed_info->response->result->updatedAt;
-                    if ($content->instagram->status == 'unfollowed' && $update_time && time() >= ($update_time + 86400)) {
-                        $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
+                    if ($content->instagram->status == 'unfollowed' && $update_time && time() >= ($update_time + rand(5,30)*137)) {
                         $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
                     }else {
                         if($content->instagram->counts->media != ''){
                             if ($update_time && time() >= ($update_time + 86400)) {
                                 $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
-                            }else{
-                                $media = $content->instagram->counts->media;
-                                $followed_by = $content->instagram->counts->followed_by;
-                                $is_fb_email = isset($content->facebook->email);
-                                $is_fb_name = isset($content->facebook->name);
-                                $this->CI->load->model('user/user_meta_model');;
-                                $line = $this->CI->user_meta_model->get_by(array(
-                                    'user_id' => $info->user_id,
-                                    'meta_key' => 'line_access_token'
-                                ));
-                                if (is_numeric($media) && is_numeric($followed_by) && $is_fb_email && $is_fb_name && isset($line)) {
-                                    $param['status'] = 3;
-                                    if ($media >= 10 && $followed_by >= 10) {
-                                        $param['status'] = 1;
-                                        $this->set_success($info->id, true);
-                                    }
-                                }
                             }
                         }
+                    }
+                }
+                $media = $content->instagram->counts->media;
+                $followed_by = $content->instagram->counts->followed_by;
+                $is_fb_email = isset($content->facebook->email);
+                $is_fb_name = isset($content->facebook->name);
+                $this->CI->load->model('user/user_meta_model');;
+                $line = $this->CI->user_meta_model->get_by(array(
+                    'user_id' => $info->user_id,
+                    'meta_key' => 'line_access_token'
+                ));
+                if ((is_numeric($media) && is_numeric($followed_by) || $is_fb_email && $is_fb_name) && isset($line)) {
+                    $param['status'] = 3;
+                    if ($media >= 10 && $followed_by >= 10 || is_numeric($media) && is_numeric($followed_by) ) {
+                        $param['status'] = 1;
+                        $this->set_success($info->id, true);
                     }
                 }
                 $param['content'] = json_encode($content);
