@@ -324,7 +324,6 @@ class Target_lib
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-                            if ($this->judicialyuan($user_id) || $subloan_status || $renew) {
                                 if ($product_info['type'] == 1 || $subloan_status) {
                                     $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
                                     $param = [
@@ -339,6 +338,7 @@ class Target_lib
                                     $newStatus = false;
                                     if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
                                         && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+                                        && $this->judicialyuan($user_id)
                                         && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
                                         || $subloan_status
                                         || $renew
@@ -409,7 +409,6 @@ class Target_lib
                                         $this->approve_target_fail($user_id, $target);
                                     }
                                 }
-                            }
                         } else {
                             $this->approve_target_fail($user_id, $target);
                         }
@@ -1549,6 +1548,7 @@ class Target_lib
         $targets = $this->CI->target_model->get_many_by([
             'status' => [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_VERIFY],
             'script_status' => 0,
+            'user_id' => 48459,
         ]);
         $list = [];
         $ids = [];
