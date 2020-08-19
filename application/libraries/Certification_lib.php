@@ -578,7 +578,7 @@ class Certification_lib{
 
 	public function job_verify($info = array(),$url=null) {
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
+		if($user_certification==false || !in_array($user_certification->status , [1,4])){
 			return false;
 		}
 
