@@ -137,6 +137,36 @@ class Repayment extends REST_Controller {
     {
 		$input 		 			= $this->input->get();
 		$user_id 	 			= $this->user_info->id;
+        $company = isset($this->user_info->company)?$this->user_info->company:false;
+        $virtual = CATHAY_VIRTUAL_CODE;
+        $account = array(
+            'bank_code'			=> CATHAY_BANK_CODE,
+            'branch_code'		=> CATHAY_BRANCH_CODE,
+            'bank_name'			=> CATHAY_BANK_NAME,
+            'branch_name'		=> CATHAY_BRANCH_NAME,
+        );
+
+        if($company){
+            $this->load->model('user/judicial_person_model');
+            $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
+            if($selling_type == FOREX_CAR_DEALER){
+                $virtual = TAISHIN_VIRTUAL_CODE;
+                $account = [
+                    'bank_code'			=> TAISHIN_BANK_CODE,
+                    'branch_code'		=> TAISHIN_BRANCH_CODE,
+                    'bank_name'			=> TAISHIN_BANK_NAME,
+                    'branch_name'		=> TAISHIN_BRANCH_NAME,
+                ];
+            }
+        }
+        $virtualAcount = $this->virtual_account_model->get_by([
+            'investor'	=> 0,
+            'user_id'	=> $user_id,
+            'virtual_account like' => $virtual . '%'
+        ]);
+
+        $account['virtual_account'] = $virtualAcount->virtual_account;
+        $virtual_account	= $account;
 
 		$next_repayment = [
 			'date'	 => '',
@@ -168,7 +198,7 @@ class Repayment extends REST_Controller {
 					case SOURCE_AR_PRINCIPAL: 
 						$accounts_payable['principal'] 			+= $value->amount;
 						break;
-					case SOURCE_AR_INTEREST: 
+					case SOURCE_AR_INTEREST:
 						$accounts_payable['interest'] 			+= $value->amount;
 						break;
 					case SOURCE_AR_DELAYINTEREST: 
@@ -187,19 +217,9 @@ class Repayment extends REST_Controller {
 			}
 		}
 		
-		$virtual 	= $this->virtual_account_model->get_by([
-			'investor'	=> 0,
-			'user_id'	=> $user_id
-		]);
+
 		if($virtual){
-			$virtual_account	= array(
-				'bank_code'			=> CATHAY_BANK_CODE,
-				'branch_code'		=> CATHAY_BRANCH_CODE,
-				'bank_name'			=> CATHAY_BANK_NAME,
-				'branch_name'		=> CATHAY_BRANCH_NAME,
-				'virtual_account'	=> $virtual->virtual_account,
-			);
-			$funds 			 = $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
+			$funds = $this->transaction_lib->get_virtual_funds($virtualAcount->virtual_account);
 		}else{
 			$funds			 = array(
 				'total'					=> 0,

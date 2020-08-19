@@ -231,10 +231,12 @@ class Charge_lib
                     }
                 }
                 if ($amount > 0) {
+                    $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
                     $virtual_account = $this->CI->virtual_account_model->get_by([
+                        'user_id'	=> $target->user_id,
+                        'investor'	=> 0,
                         'status' => 1,
-                        'investor' => 0,
-                        'user_id' => $target->user_id
+                        'virtual_account like' => $virtual . '%'
                     ]);
                     if ($virtual_account) {
                         $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
@@ -583,9 +585,8 @@ class Charge_lib
                         } else {
                             $this->notice_normal_target($value);
                         }
-
-                        $this->CI->target_model->update($value->id, array('script_status' => 0));
                     }
+                    $this->CI->target_model->update($value->id, array('script_status' => 0));
                 }
             }
 		}
@@ -736,16 +737,17 @@ class Charge_lib
 				}
 			}
 			$this->CI->target_model->update($target->id,$update_data);
-			if($delay_days > GRACE_PERIOD){
-				$this->handle_delay_target($target,$delay_days);
+            $gracePeriod = $target->product_id == PRODUCT_FOREX_CAR_VEHICLE ? 0 : GRACE_PERIOD;
+			if($delay_days > $gracePeriod){
+				$this->handle_delay_target($target,$delay_days,$gracePeriod);
 			}
 			return true;
 		}
 		return false;
 	}
 	
-	public function handle_delay_target($target=[],$delay_days=0){
-		if($target->status == 5 && $delay_days > GRACE_PERIOD){
+	public function handle_delay_target($target=[],$delay_days=0,$gracePeriod){
+		if($target->status == 5 && $delay_days > $gracePeriod){
 			if(in_array($delay_days,[8,31,61])){
 				$this->CI->load->library('credit_lib');
 				$level = $this->CI->credit_lib->delay_credit($target->user_id,$delay_days);

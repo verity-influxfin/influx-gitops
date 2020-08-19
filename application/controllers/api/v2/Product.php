@@ -254,7 +254,7 @@ class Product extends REST_Controller {
             $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
-                    if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
+                    if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0) {
                         $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;

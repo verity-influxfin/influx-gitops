@@ -333,11 +333,13 @@ class Transaction_lib{
 		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 4 && $target->loan_status == 3){
-				$target_account 	= $this->CI->virtual_account_model->get_by([
-					'user_id'	=> $target->user_id,
-					'investor'	=> 0,
-					'status'	=> 1
-				]);
+                $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
+                $target_account = $this->CI->virtual_account_model->get_by([
+                    'user_id'	=> $target->user_id,
+                    'investor'	=> 0,
+                    'status' => 1,
+                    'virtual_account like' => $virtual . '%'
+                ]);
 				if($target_account){
 
 					$this->CI->load->model('user/user_bankaccount_model');
