@@ -219,8 +219,8 @@
                                             <td><?
                                                 $productId = isset($value->product_id) ? $value->product_id : 1;
                                                 $subproductId = isset($sub_product_list[$value->sub_product_id]) ? $value->sub_product_id : 0;
-                                                echo isset($product_list[$productId])?$product_list[$productId]['name']:'' ?><? echo $subproductId!=0?' / '.$sub_product_list[$subproductId]['identity'][$product_list[$productId]['identity']]['name']:''
-                                                ?></td>
+                                                $subloan_list = $this->config->item('subloan_list');
+                                                echo isset($product_list[$productId])?$product_list[$productId]['name']:''; ?><? echo $subproductId!=0?' / '.$sub_product_list[$subproductId]['identity'][$product_list[$productId]['identity']]['name']:''; ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
 											<td>
 												<? 
 													if($value->status==2){

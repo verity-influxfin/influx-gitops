@@ -1548,7 +1548,6 @@ class Target_lib
         $targets = $this->CI->target_model->get_many_by([
             'status' => [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_VERIFY],
             'script_status' => 0,
-            'user_id' => 48459,
         ]);
         $list = [];
         $ids = [];
