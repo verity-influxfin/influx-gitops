@@ -277,11 +277,9 @@ class Target extends MY_Admin_Controller {
                     $credit_list = $this->credit_model->get_many_by(array('user_id' => $user_id));
                     $user_info = $this->user_model->get($user_id);
 
-                    $virtual = $info->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
-                    $virtual_account = $this->virtual_account_model->get_by([
+                    $virtual_accounts = $this->virtual_account_model->get_many_by([
                         'user_id'	=> $user_id,
                         'investor'	=> 0,
-                        'virtual_account like' => $virtual . '%'
                     ]);
 
                     if($info->sub_status == 13){
@@ -308,7 +306,7 @@ class Target extends MY_Admin_Controller {
                     $page_data['product_list'] = $this->config->item('product_list');
                     $page_data['sub_product_list'] = $this->config->item('sub_product_list');
                     $page_data['bank_account_verify'] = $bank_account_verify;
-                    $page_data['virtual_account'] = $virtual_account;
+                    $page_data['virtual_accounts'] = $virtual_accounts;
                     $page_data['instalment_list'] = $this->config->item('instalment');
                     $page_data['repayment_type'] = $this->config->item('repayment_type');
                     $page_data['delay_list'] 		= $delay_list;

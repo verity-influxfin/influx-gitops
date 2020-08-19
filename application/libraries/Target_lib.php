@@ -324,90 +324,90 @@ class Target_lib
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
-                            if ($this->judicialyuan($user_id) || $subloan_status || $renew) {
-                                if ($product_info['type'] == 1 || $subloan_status) {
-                                    $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
+                            if ($product_info['type'] == 1 || $subloan_status) {
+                                $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
+                                $param = [
+                                    'sub_product_id' => $sub_product_id,
+                                    'loan_amount' => $loan_amount,
+                                    'credit_level' => $credit['level'],
+                                    'platform_fee' => $platform_fee,
+                                    'interest_rate' => $interest_rate,
+                                    'status' => 0,
+                                ];
+                                $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
+                                $newStatus = false;
+                                if (!$product_info['secondInstance']
+                                    && !$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+                                    && $this->judicialyuan($user_id)
+                                    && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                    || $subloan_status
+                                    || $renew
+                                    || $evaluation_status
+                                ) {
+                                    $param['status'] = TARGET_WAITING_SIGNING;
+
+                                    $remark
+                                        ? $param['remark'] = (empty($target->remark)
+                                        ? $remark
+                                        : $target->remark . ', ' . $remark)
+                                        : '';
+                                    $msg = $target->status == TARGET_WAITING_APPROVE ? true : false;
+                                    $target->sub_product_id == STAGE_CER_TARGET && $target->status == TARGET_WAITING_SIGNING && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
+                                    $renew ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : '';
+                                    if ($target->contract_id == null || $target->loan_amount != $loan_amount) {
+                                        $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
+                                    }
+                                } else {
+                                    $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
+                                    $msg = false;
+                                }
+                                $curTargetData = json_decode($target->target_data);
+                                $curTargetData && !$targetData ? $targetData = $curTargetData : '';
+                                !$targetData ? $targetData = new stdClass() : '';
+                                $targetData->credit_level = $credit['level'];
+                                $targetData->original_interest_rate = $interest_rate;
+                                $param['target_data'] = json_encode($targetData);
+                                $rs = $this->CI->target_model->update($target->id, $param);
+                                if ($rs && $msg) {
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
+                                }
+                                if ($newStatus) {
+                                    $this->insert_change_log($target->id, $param);
+                                }
+                                return true;
+                            } else if ($product_info['type'] == 2) {
+                                $allow = true;
+                                $sub_status = TARGET_SUBSTATUS_NORNAL;
+                                if ($loan_amount < $target->amount) {
+                                    $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
+                                }
+                                if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
+                                    && $allow) {
                                     $param = [
-                                        'sub_product_id' => $sub_product_id,
                                         'loan_amount' => $loan_amount,
                                         'credit_level' => $credit['level'],
-                                        'platform_fee' => $platform_fee,
                                         'interest_rate' => $interest_rate,
-                                        'status' => 0,
+                                        'status' => TARGET_ORDER_WAITING_SHIP,
+                                        'sub_status' => $sub_status,
                                     ];
-                                    $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-                                    $newStatus = false;
-                                    if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
-                                        && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
-                                        && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
-                                        || $subloan_status
-                                        || $renew
-                                        || $evaluation_status
-                                    ) {
-                                        $param['status'] = TARGET_WAITING_SIGNING;
-
-                                        $remark
-                                            ? $param['remark'] = (empty($target->remark)
-                                            ? $remark
-                                            : $target->remark . ', ' . $remark)
-                                            : '';
-                                        $msg = $target->status == TARGET_WAITING_APPROVE ? true : false;
-                                        $target->sub_product_id == STAGE_CER_TARGET && $target->status == TARGET_WAITING_SIGNING && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
-                                        $renew ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : '';
-                                        if ($target->contract_id == null || $target->loan_amount != $loan_amount) {
-                                            $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
-                                        }
-                                    } else {
-                                        $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
-                                        $msg = false;
-                                    }
-                                    $curTargetData = json_decode($target->target_data);
-                                    $curTargetData && !$targetData ? $targetData = $curTargetData : '';
-                                    !$targetData ? $targetData = new stdClass() : '';
-                                    $targetData->credit_level = $credit['level'];
-                                    $targetData->original_interest_rate = $interest_rate;
-                                    $param['target_data'] = json_encode($targetData);
                                     $rs = $this->CI->target_model->update($target->id, $param);
-                                    if ($rs && $msg) {
-                                        $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
-                                    }
-                                    if ($newStatus) {
-                                        $this->insert_change_log($target->id, $param);
-                                    }
-                                    return true;
-                                } else if ($product_info['type'] == 2) {
-                                    $allow = true;
-                                    $sub_status = TARGET_SUBSTATUS_NORNAL;
-                                    if ($loan_amount < $target->amount) {
-                                        $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
-                                    }
-                                    if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
-                                        && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
-                                        && $allow) {
-                                        $param = [
-                                            'loan_amount' => $loan_amount,
-                                            'credit_level' => $credit['level'],
-                                            'interest_rate' => $interest_rate,
-                                            'status' => TARGET_ORDER_WAITING_SHIP,
-                                            'sub_status' => $sub_status,
-                                        ];
-                                        $rs = $this->CI->target_model->update($target->id, $param);
-                                        $this->insert_change_log($target->id, $param);
-                                        if ($rs) {
-                                            $this->CI->load->model('user/user_bankaccount_model');
-                                            $bank_account = $this->CI->user_bankaccount_model->get_by([
-                                                'status' => 1,
-                                                'investor' => 0,
-                                                'verify' => 0,
-                                                'user_id' => $user_id
-                                            ]);
-                                            if ($bank_account) {
-                                                $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-                                            }
+                                    $this->insert_change_log($target->id, $param);
+                                    if ($rs) {
+                                        $this->CI->load->model('user/user_bankaccount_model');
+                                        $bank_account = $this->CI->user_bankaccount_model->get_by([
+                                            'status' => 1,
+                                            'investor' => 0,
+                                            'verify' => 0,
+                                            'user_id' => $user_id
+                                        ]);
+                                        if ($bank_account) {
+                                            $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
                                         }
-                                    } else {
-                                        $this->approve_target_fail($user_id, $target);
                                     }
+                                } else {
+                                    $this->approve_target_fail($user_id, $target);
                                 }
                             }
                         } else {
@@ -1730,6 +1730,7 @@ class Target_lib
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],
+            'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
             'status' => $sub_product['status'],

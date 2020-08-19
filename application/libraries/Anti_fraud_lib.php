@@ -130,7 +130,11 @@ class Anti_fraud_lib{
             "name !="	=> '',
             "id_card_place !="	=> '',
         ]);
+        if(!$user_info){
+            return false;
+        }
         $birthday = substr($user_info->birthday,0,4);
+
 
         $this->CI->load->library('scraper/judicial_yuan_lib.php');
         $verdict_count = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCount(urlencode($user_info->name));

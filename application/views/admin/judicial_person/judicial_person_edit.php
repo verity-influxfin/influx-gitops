@@ -181,7 +181,8 @@
 							</div>
 							<div class="form-group">
 								<label>法人 User ID</label><p>
-								<? echo $data->cooperation == 1 ? '<a class="fancyframe" href="' . admin_url('User/display?id=' . $data->company_user_id) . '"</a>' : '尚未開通經銷商' ?></p>
+								    <? echo $data->cooperation == 1 ? '<a class="fancyframe" href="' . admin_url('User/display?id=' . $data->company_user_id) . '">' . $data->company_user_id . '</a>' : '尚未開通經銷商' ?>
+                                </p>
 
 							</div>
 							<div class="form-group">
