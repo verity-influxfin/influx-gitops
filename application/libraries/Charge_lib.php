@@ -312,14 +312,19 @@ class Charge_lib
 		if($target->status == 5 && $prepayment){
 			$settlement_date = $prepayment->settlement_date;
 			$date 			 = get_entering_date();
+            $get_data 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_by([
+                'target_id' => $target->id,
+                'source' => SOURCE_AR_PRINCIPAL,
+                'status'	=> 1
+            ]);
 			$virtual_account = $this->CI->virtual_account_model->get_by([
 				'status'	=> 1,
 				'investor'	=> 0,
-				'user_id'	=> $target->user_id
+				'user_id'	=> $target->user_id,
+				'virtual_account'	=> $get_data->bank_account_from
 			]);
 			if($virtual_account){
 				$this->CI->virtual_account_model->update($virtual_account->id,['status'=>2]);
-				
 				$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 				$total = $funds['total'] - $funds['frozen'];
 				if($total >= $prepayment->amount){

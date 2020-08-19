@@ -630,7 +630,7 @@ $config['sub_product_list'] = [
                     'car_title_image' => ['Picture', '車輛所有權狀 ( title )', '6'],
                     'car_import_proof_image' => ['Picture', '海關進口證明/進口報單', '6'],
                     'car_artc_image' => ['Picture', '交通部核發合格證明、環保驗車證明(ARTC)', '6'],
-                    'car_others_image' => ['Picture', '協力廠商鑑定報告', '6'],
+                    'car_others_image' => ['Picture', '協力廠商鑑定報告', '6', true],//index3 true = option
                     'car_photo_front_image' => ['Picture', '車輛外觀照片-前側', '6'],
                     'car_photo_back_image' => ['Picture', '車輛外觀照片-後側', '6'],
                     'car_photo_all_image' => ['Picture', '車輛外觀照片-全車', '6'],
