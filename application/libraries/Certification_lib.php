@@ -889,10 +889,10 @@ class Certification_lib{
 				$data['fb_access_token'] = $content['facebook']['access_token'];
 			}
 			if (isset($content['instagram'])) {
-				$data['ig_id'] = isset($content['instagram']['id']) ? $content['instagram']['id'] : '';
-				$data['ig_username'] = $content['instagram']['username'];
-				$data['ig_name'] = isset($content['instagram']['id']) ? $content['instagram']['name'] : '';
-				$data['ig_access_token'] = isset($content['instagram']['id']) ? $content['instagram']['access_token'] : '';
+				isset($content['instagram']['id']) ? $data['ig_id'] = $content['instagram']['id'] : '';
+				isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
+				isset($content['instagram']['name']) ? $data['ig_name'] = $content['instagram']['name'] : '';
+				isset($content['instagram']['access_token']) ? $data['ig_access_token'] = $content['instagram']['access_token'] : '';
 			}
 
 
