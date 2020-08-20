@@ -179,7 +179,6 @@ class Product extends REST_Controller {
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21,30],
-                        'sub_status' => 0,
                         'user_id' => $this->user_info->id,
                         'product_id' => $value['id']
                     ));
@@ -192,6 +191,7 @@ class Product extends REST_Controller {
                                 'sub_product_id' => intval($tar->sub_product_id),
                                 'target_no' => $tar->target_no,
                                 'status' => intval($tar->status),
+                                'sub_status' => intval($tar->sub_status),
                                 'amount' => intval($tar->amount),
                                 'loan_amount' => intval($tar->loan_amount),
                                 'created_at' => intval($tar->created_at),
@@ -238,8 +238,6 @@ class Product extends REST_Controller {
                     }
                 }
 
-                $list[] = $parm;
-
                 //reformat Product for layer2
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
             }
@@ -251,6 +249,8 @@ class Product extends REST_Controller {
             $designate = [];
             $allow_visul_list = [];
             $showed_list = [];
+            $listData = [];
+            $targetStatus = [];
             $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
@@ -280,7 +280,10 @@ class Product extends REST_Controller {
                                                 }
                                                 $sub_product_list[$t4]['identity'][$idekey]['certifications'] = $certification;
                                             }
-                                            $sub_product_list[$t4]['identity'][$idekey]['target'] = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
+                                            $targetInfo = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
+                                            $sub_product_list[$t4]['identity'][$idekey]['target'] = $targetInfo;
+                                            $listData[$sub_product_list[$t4]['visul_id']] = $sub_product_list[$t4]['identity'];
+                                            $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? 1 : 0;
                                         }
                                         isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
                                     }
@@ -303,13 +306,15 @@ class Product extends REST_Controller {
             $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id){
 //                if(in_array($id,$allow_visul_list)){
+                    $getStatus = is_array($targetStatus[$id]) ? 0 : $targetStatus[$id];
                     $total_list[] = [
                         'visul'        => $id,
                         'name'         => $visul_id_des[$id]['name'],
                         'icon'         => $visul_id_des[$id]['icon'],
+                        'identity'       => $listData[$id],
                         'description'  => $visul_id_des[$id]['description'],
                         'url' => $visul_id_des[$id]['url'],
-                        'status'       => $visul_id_des[$id]['status'],
+                        'status'       => $getStatus,
                     ];
 //                }
             }
@@ -321,7 +326,6 @@ class Product extends REST_Controller {
         }
 
         $this->response(array('result' => 'SUCCESS','data' => [
-            'list'  => $list,
             'list2' => $list2,
         ]));
     }
