@@ -53,7 +53,6 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-        gtag('config', 'UA-117279688-9');
     </script>
 </head>
 
@@ -66,21 +65,7 @@
             <i class="far fa-times-circle" @click="$($refs.quiklink).remove()"></i>
             <router-link to="blog"><img src="{{ asset('images/ah-pu.svg') }}"></router-link>
         </div>
-        <div class="banner" ref="banner">
-            <div class="puhey-banner">
-                <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
-                <div class="content">
-                    <p>全線上AI無人干擾，隨時滿足你的資金需求</p>
-                    <span>普匯．你的手機ATM</span>
-                </div>
-                <div class="app-entrance">
-                    <router-link class="btn btn-go float-left" to="freshGraduateLoan">我是上班族</router-link>
-                    <router-link class="btn btn-go float-right" to="collegeLoan">我是大學生</router-link>
-                </div>
-            </div>
-            <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
-        </div>
-        <nav class="page-header navbar navbar-expand-lg">
+        <nav class="page-header navbar navbar-expand-lg sticky">
             <div class="web-logo">
                 <router-link to="/index"><img src=" {{ asset('images/logo.png') }}" class="img-fluid"></router-link>
             </div>
@@ -99,10 +84,10 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link" href="#" @click="openLoginModal()">登入</p>
+                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>會員登入</p>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <router-link class="nav-link" to="/register">註冊</router-link>
+                        <router-link class="nav-link l" to="/register"><i class="fas fa-user-plus"></i>會員註冊</router-link>
                     </li>
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
@@ -121,93 +106,103 @@
                 </ul>
             </div>
         </nav>
+        <div class="banner" ref="banner">
+            <div class="puhey-banner">
+                <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
+                <div class="content">
+                    <p>最貼近年輕人的金融科技平台</p>
+                    <span>普匯．你的手機ATM</span>
+                </div>
+            </div>
+            <div class="puhey-banner" v-for="item in bannerPic">
+                <img :src="item.img" style="width:100%" />
+            </div>
+        </div>
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
         <div class="page-footer">
-            <div class="footer-content">
-                <div class="list-card">
-                    <h4>選單列表</h4>
-                    <div class="card-content">
-                        <ul v-for="row in menuList" class="list-column">
-                            <template v-if="row.href">
-                                <li>
-                                    <router-link :to="row.href">@{{row.title}}</router-link>
-                                </li>
-                            </template>
-                            <template v-else>
-                                <li v-for="item in row.subMenu">
-                                    <router-link :to="item.href">@{{item.name}}</router-link>
-                                </li>
-                            </template>
-                        </ul>
+            <div class="top-content">
+                <div class="desc-card">
+                    <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
+                    <div class="text">
+                        <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化，說聲Hey～普匯！</p>
+                        <p><i class="fas fa-phone"></i> 02-2507-9990</p>
+                        <p><i class="far fa-envelope"></i> service@influxfin.com</p>
+                        <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i> 台北市松江路111號11樓-2</span></a></p>
                     </div>
                 </div>
-                <div class="cooperation-card">
-                    <h4>我想合作</h4>
-                    <div class="card-content">
-                        <ul class="list-column">
-                            <li v-for="item in actionList">
-                                <router-link :to="item.href">@{{item.text}}</router-link>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="loan-card">
+                    <ul class="list-column">
+                        <li>
+                            <router-link to="/collegeLoan">學生貸款</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/freshGraduateLoan">上班族貸款</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/engineerLoan">資訊工程師專案</router-link>
+                        </li>
+                        <li>
+                            <router-link to="">外匯車貸</router-link>
+                        </li>
+                        <li>
+                            <router-link to="">新創企業主貸</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/mobileLoan">手機分期</router-link>
+                        </li>
+                    </ul>
                 </div>
-                <div class="contact-card">
-                    <h4>聯絡我們</h4>
-                    <div class="card-content">
-                        <div>
-                            <a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a>
-                            <div class="horizontal-line"></div>
-                            <span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span>
-                            <div class="horizontal-line"></div>
-                            <span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span>
-                        </div>
-                    </div>
+                <div class="invest-card">
+                    <ul class="list-column">
+                        <li>
+                            <router-link to="/invest">債權投資</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/transfer">債權轉讓</router-link>
+                        </li>
+                    </ul>
                 </div>
-                <div class="follow-card">
-                    <h4>Follow us</h4>
-                    <a class="quick-link" target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
-                    <a class="quick-link" target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook-square"></i></a>
-                    <a class="quick-link" target="_blank" href="https://www.instagram.com/influxfin/"><i class="fab fa-instagram"></i></a>
-                </div>
-                <div class="download-card">
-                    <div class="card-content">
-                        <h5>申貸</h5>
-                        <div class="down-pic">
-                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('images/google-play-badge.png') }}" class="img-fluid"></a>
-                            <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank"><img src="{{ asset('images/app-store-badge.png') }}" class="img-fluid"></a>
-                        </div>
-                        <h5>投資</h5>
-                        <div class="down-pic">
-                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('images/google-play-badge.png') }}" class="img-fluid"></a>
-                            <a href="https://event.influxfin.com/r/iurl?p=webinvest" target="_blank"><img src="{{ asset('images/app-store-badge.png') }}" class="img-fluid"></a>
-                        </div>
-                    </div>
+                <div class="about-card">
+                    <ul class="list-column">
+                        <li>
+                            <router-link to="/company">關於我們</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/news">最新消息</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/blog">小學堂金融科技</router-link>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="horizontal-line"></div>
-            <div class="row footer-license">
-                <p>Copyright ©2018 普匯金融科技股份有限公司</p>
-                <p>
-                    <router-link to="/userTerms">使用者條款</router-link><i class="gap fas fa-grip-lines-vertical"></i>
-                    <router-link to="/privacyTerms">隱私條款政策</router-link><i class="gap fas fa-grip-lines-vertical"></i>
-                    <router-link to="/loanerTerms">借款人服務條款</router-link>
-                </p>
-                <p>會員應依規定申報利息所得，投資人可考量借款人利息支出申報情況，視個人情況衡量申報金額多寡</p>
+            <hr />
+            <div class="bottom-content">
+                <div class="community">
+                    <a target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
+                    <a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
+                    <a target="_blank" href=" https://www.instagram.com/pop.finance/"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="contact">
+                    <router-link to="/recruiting">徵才服務</router-link>|
+                    <router-link to="/campuspartner">校園大使</router-link>|
+                    <router-link to="/clubcooperation">社團合作</router-link>|
+                    <router-link to="/firmcooperation">商行合作</router-link>|
+                    <router-link to="/companycooperation">企業合作</router-link>
+                </div>
+                <div class="license">
+                    <p>Copyright ©2020 普匯金融科技股份有限公司 All rights reserved. </p>
+                    <p>
+                        <router-link to="/userTerms">使用者條款</router-link>|
+                        <router-link to="/privacyTerms">隱私條款政策</router-link>|
+                        <router-link to="/loanerTerms">借款人服務條款</router-link>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="afc_popup hidden-phone" ref="afc_popup">
-            <div><img src="{{ asset('images/message_icon.png') }}" class="img-fluid" @click="display"></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('images/line_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('images/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('images/invest_icon.png') }}" class="img-fluid"></a></div>
-        </div>
-        <div class="afc_popup hidden-desktop" style="bottom: 150px;">
-            <div><a target="_blank" href="https://event.influxfin.com/R/url?p=webbanner"><img src="{{ asset('images/loan_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"><img src="{{ asset('images/invest_icon.png') }}" class="img-fluid"></a></div>
-            <div><a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><img src="{{ asset('images/line_icon.png') }}" class="img-fluid"></a></div>
-        </div>
+
         <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">

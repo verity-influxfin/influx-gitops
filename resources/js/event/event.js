@@ -48,7 +48,6 @@ $(() => {
             $(".page-header").hide();
             $(".page-footer").hide();
             $(".back-top").hide();
-            $(".afc_popup").hide();
         },
         computed: {
             prizeList() {

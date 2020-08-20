@@ -25,8 +25,10 @@ $(() => {
 
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
+            gtag("config", "UA-117279688-9", { page_path: '/index' });
             next('/index');
         } else {
+            gtag("config", "UA-117279688-9", { page_path: to.path });
             $(".page-header").show();
             $(".page-footer").show();
             $(".back-top").show();
@@ -50,6 +52,7 @@ $(() => {
         store,
         router,
         data: {
+            bannerPic: [],
             menuList: [],
             actionList: [],
             isCompany: false,
@@ -73,19 +76,16 @@ $(() => {
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0,
-            pageHeaderOffsetTop: 0
+            currentTime: 0
         },
         created() {
             $(this.$root.$refs.banner).show();
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
+            this.getBannerPic();
         },
         mounted() {
-            this.createBannerSlick();
-            timeLineMax.to(this.$refs.afc_popup, { y: -210 });
-
             this.$nextTick(() => {
                 AOS.init();
             });
@@ -103,9 +103,18 @@ $(() => {
             },
             account() {
                 this.account = this.account.replace(/[^\d]/g, '');
+            },
+            bannerPic() {
+                this.$nextTick(() => {
+                    this.createBannerSlick();
+                });
             }
         },
         methods: {
+            async getBannerPic() {
+                let res = await axios.get('getBannerPic');
+                this.bannerPic = res.data;
+            },
             getListData() {
                 axios.post('getListData')
                     .then((res) => {
@@ -308,12 +317,6 @@ $(() => {
             $('.back-top').fadeIn();
         } else {
             $('.back-top').fadeOut();
-        }
-
-        if (window.pageYOffset > vue.pageHeaderOffsetTop) {
-            $('.page-header').addClass("sticky");
-        } else {
-            $('.page-header').removeClass("sticky");
         }
 
         if ($(window).scrollTop() > offset.top) {

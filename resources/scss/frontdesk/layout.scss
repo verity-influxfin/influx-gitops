@@ -7,86 +7,36 @@ a {
     color: #000000;
 }
 
-.banner {
-    position: relative;
-    overflow: hidden;
-
-    .puhey-banner {
-        position: relative;
-
-        .content {
-            position: absolute;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #ffffff;
-            font-size: 36px;
-            font-weight: bolder;
-            text-shadow: 0 0 7px #001bff;
-        }
-
-        .app-entrance {
-            position: absolute;
-            top: 85%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            width: 25%;
-
-            .btn-go {
-                background: linear-gradient(180deg, #ff994b, #ff7600);
-                color: #ffffff;
-                font-weight: bolder;
-                box-shadow: 0 0 0px black;
-                border: 1px solid #828282;
-            }
-        }
-    }
-
-    @media (max-width: 767px) {
-        .puhey-banner {
-            .content {
-                font-size: 16px;
-            }
-
-            .app-entrance {
-                width: 70%;
-                top: 80%;
-            }
-        }
-    }
-}
+$ci-color: #083a6e;
 
 .page-header {
     box-shadow: 0px 0px 5px 0px #404040;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     z-index: 11;
 
     .web-logo {
-        width: 227px;
-        height: 76px;
-        margin: 0px 30px;
+        width: 200px;
+        margin: 5px 30px;
     }
 
     .nav-item {
         a,
         p {
             white-space: nowrap;
-            color: #7a7a7a;
+            color: $ci-color;
             font-weight: 900;
-            margin: 0px;
+            width: initial;
+            margin: 0px 5px;
             cursor: pointer;
-            &:hover {
-                color: #000000;
-            }
         }
-    }
 
-    .dropdown-menu {
-        li {
+        .l {
+            border-radius: 21px;
+            border: solid 1px #083a6e;
+
             &:hover {
-                background-color: #55595c;
+                background-color: #083a6e;
+                color: #ffffff;
             }
         }
     }
@@ -119,8 +69,49 @@ a {
     }
 
     @media (max-width: 767px) {
+        .nav-item {
+            .l {
+                padding: 10px;
+                margin: 5px;
+            }
+        }
         .web-logo {
             margin: 0px;
+        }
+    }
+}
+
+.banner {
+    position: relative;
+    overflow: hidden;
+    margin-top: 84px;
+
+    .puhey-banner {
+        position: relative;
+
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: $ci-color;
+            font-size: 36px;
+            font-weight: bolder;
+            text-shadow: 0 0 7px #ffffff;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .puhey-banner {
+            .content {
+                font-size: 16px;
+            }
+
+            .app-entrance {
+                width: 70%;
+                top: 80%;
+            }
         }
     }
 }
@@ -136,166 +127,164 @@ a {
 }
 
 .page-footer {
-    background-color: #353535;
+    $font-color: #ffffff;
+
+    background-color: $ci-color;
     width: 100%;
-    color: #bfbfbf;
-    font-size: 18px;
+    color: $font-color;
     font-weight: 400;
-    padding: 15px;
+    padding: 5rem;
     cursor: default;
 
-    ul {
-        padding: 0px;
-        margin-right: 15px;
-
-        li {
-            list-style: none;
-            margin-right: 10px;
-        }
-    }
-
-    .footer-content {
+    .top-content {
         display: flex;
 
         a {
-            color: #bfbfbf;
+            color: $font-color;
         }
 
-        .list-card,
-        .contact-card,
-        .cooperation-card {
+        %card {
             margin: 0px 20px;
 
-            .card-content {
-                font-size: 14px;
-                display: flex;
-                width: max-content;
-            }
-        }
+            ul {
+                padding: 0px;
+                margin: 0px;
 
-        .follow-card {
-            .quick-link {
-                font-size: 26px;
-                margin: 0px 5px;
-            }
-        }
-
-        .download-card {
-            margin: 0px 20px;
-
-            .card-content {
-                margin: 0px 20px 10px 20px;
-                padding: 10px;
-                border: 2px solid;
-                border-radius: 10px;
-
-                .down-pic {
-                    width: 100%;
-                    display: flex;
-
-                    img {
-                        width: 130px;
-                        &:first-child {
-                            margin-right: 10px;
-                        }
-                    }
+                li {
+                    list-style: none;
+                    margin-right: 0px;
+                    margin-bottom: 10px;
                 }
             }
         }
-    }
 
-    .horizontal-line {
-        width: 100%;
-        border-top: 1px solid #bfbfbf;
-        margin: 5px 0px;
-    }
+        .desc-card {
+            @extend %card;
+            width: 33%;
+            display: flex;
 
-    .footer-license {
-        text-align: center;
-        margin: 0px !important;
-
-        p {
-            font-size: 14px;
-            width: 100%;
-            margin: 0px !important;
-
-            a {
-                color: #bfbfbf;
+            .img {
+                width: 25%;
+                margin-right: 10px;
             }
 
-            .gap {
+            .text {
+                width: 75%;
+
+                p {
+                    line-height: 30px;
+                }
+            }
+        }
+
+        .loan-card {
+            @extend %card;
+            width: 10%;
+        }
+
+        .invest-card {
+            @extend %card;
+            width: 10%;
+        }
+
+        .about-card {
+            @extend %card;
+            width: 10%;
+        }
+    }
+
+    hr {
+        width: 100%;
+        border-top: 1px solid #ffffff;
+        margin: 30px auto;
+    }
+
+    .bottom-content {
+        font-size: 18px;
+        position: relative;
+        text-align: center;
+
+        a {
+            color: $font-color;
+        }
+
+        .community {
+            font-size: 27px;
+            margin-bottom: 10px;
+
+            a {
                 margin: 0px 5px;
+            }
+        }
+
+        .contact {
+            a {
+                margin: 0px 10px;
+            }
+        }
+
+        .license {
+            margin: 0px !important;
+            text-align: left;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+
+            p {
+                font-size: 11px;
+                width: 100%;
+                margin: 0px !important;
+
+                a {
+                    color: $font-color;
+                }
             }
         }
     }
 
     @media (max-width: 767px) {
-        ul {
-            padding: 0px;
-            margin-right: 0px;
-            margin-bottom: 5px;
+        padding: 10px;
 
-            li {
-                list-style: none;
-                margin-right: 0px;
-                margin-bottom: 5px;
-            }
-        }
-
-        .footer-content {
+        .top-content {
             display: block;
-            .list-card,
-            .contact-card,
-            .cooperation-card {
-                margin-bottom: 25px;
-                text-align: center;
 
-                .card-content {
-                    display: block;
-                    margin: 0px auto;
-                    font-size: 16px;
+            %card {
+                width: initial;
+            }
+
+            .desc-card {
+                display: block;
+
+                .img {
+                    width: 100%;
+                }
+
+                .text {
+                    width: 100%;
                 }
             }
 
-            .follow-card {
+            .loan-card,
+            .invest-card,
+            .about-card {
                 text-align: center;
-                .quick-link {
-                    font-size: 35px;
-                    margin: 0px 30px;
-                }
-            }
-
-            .download-card {
-                margin: 20px;
-
-                .down-pic {
-                    margin-bottom: 10px;
-
-                    a {
-                        margin: 0px 10px;
-                    }
-
-                    img {
-                        width: 130px;
-                        &:first-child {
-                            margin-right: 0px;
-                        }
-                    }
-                }
             }
         }
-    }
-}
 
-.afc_popup {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
-    z-index: 3;
-    div {
-        margin-bottom: 10px;
+        .bottom-content {
+            .contact {
+                font-size: 14px;
+                margin-bottom: 10px;
+                a {
+                    margin: 0px 4px;
+                }
+            }
+
+            .license {
+                position: relative;
+                text-align: center;
+            }
+        }
     }
 }
 

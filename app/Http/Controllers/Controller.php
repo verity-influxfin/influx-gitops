@@ -135,14 +135,14 @@ class Controller extends BaseController
 
     public function getMilestoneData(Request $request)
     {
-        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date','desc')->get();
+        $milestone = DB::table('milestone')->select('*')->orderBy('hook_date', 'desc')->get();
 
         return response()->json($milestone, 200);
     }
 
     public function getMediaData(Request $request)
     {
-        $media = DB::table('media')->select('*')->orderBy('date','desc')->get();
+        $media = DB::table('media')->select('*')->orderBy('date', 'desc')->get();
 
         return response()->json($media, 200);
     }
@@ -219,5 +219,18 @@ class Controller extends BaseController
         } catch (Exception $e) {
             return response()->json($e, 400);
         }
+    }
+
+    public function getBannerPic(Request $request)
+    {
+
+        return [
+            [
+                "img" => 'images/index-banner.jpg'
+            ],
+            [
+                "img" => 'images/index-banner.jpg'
+            ]
+        ];
     }
 }
