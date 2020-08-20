@@ -1235,3 +1235,5 @@ $config['allow_fast_verify_product'] = [1, 3];
 $config['allow_changeRate_product'] = [1, 3];
 
 $config['social_patten'] = '全球|財經|數位|兩岸';
+
+$config['no_prepayment_allowance'] = [1000];
