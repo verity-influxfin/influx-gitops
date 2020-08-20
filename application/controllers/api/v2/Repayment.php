@@ -823,7 +823,7 @@ class Repayment extends REST_Controller {
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
 
-			$data = $this->prepayment_lib->get_prepayment_info($target);
+			$data = $this->prepayment_lib->get_prepayment_info($target,true,isset($input['certified_documents'])&&!empty($input['certified_documents']));
 			$this->response(['result' => 'SUCCESS','data' => $data]);
 		}
 		$this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);

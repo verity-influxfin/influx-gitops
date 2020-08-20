@@ -12,7 +12,7 @@ class Prepayment_lib{
 		$this->CI->load->library('Transaction_lib');
     }
  
-	public function get_prepayment_info($target=[],$set=true){
+	public function get_prepayment_info($target=[],$set=true,$documents=false){
 		if($target->status == 5 && $target->delay_days==0){
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
@@ -102,9 +102,9 @@ class Prepayment_lib{
                             !empty($targetData->certified_documents)?$certified_documents = true:'';
                         }
 
-                        $amortization_schedule = $this->CI->financial_lib->get_amortization_schedule($target->loan_amount,$target,$last_settlement_date,[
-                            'days' =>  $days,
-                            'sold' =>  $certified_documents?2:5,
+                        $amortization_schedule = $this->CI->financial_lib->get_amortization_schedule($target->loan_amount, $target, $last_settlement_date, [
+                            'days' => $days,
+                            'sold' => $certified_documents || $documents ? 2 : 5,
                         ])['total'];
                         $remaining_principal = $amortization_schedule['principal'];
                         $interest_payable = $amortization_schedule['interest'];
