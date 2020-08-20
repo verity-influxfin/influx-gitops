@@ -179,6 +179,7 @@ class Product extends REST_Controller {
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21,30],
+                        'sub_status' => 0,
                         'user_id' => $this->user_info->id,
                         'product_id' => $value['id']
                     ));
@@ -254,7 +255,7 @@ class Product extends REST_Controller {
             $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
-                    if ($company == 1 && isset($t2[3]) && $selling_type == $t2[3]['sealler'] || $company == 0 && !isset($t2[3])) {
+                    if ($company == 1 && isset($t2[3]) && in_array($selling_type,$t2[3]['sealler']) || $company == 0) {
                         $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
@@ -304,19 +305,18 @@ class Product extends REST_Controller {
             }
             $total_list = [];
             $identity = $company?'company':'nature';
-            foreach ($app_product_totallist[$identity] as $id){
-//                if(in_array($id,$allow_visul_list)){
-                    $getStatus = is_array($targetStatus[$id]) ? 0 : $targetStatus[$id];
+            foreach ($app_product_totallist[$identity] as $id) {
+                if (isset($visul_id_des[$id])) {
                     $total_list[] = [
-                        'visul'        => $id,
-                        'name'         => $visul_id_des[$id]['name'],
-                        'icon'         => $visul_id_des[$id]['icon'],
-                        'identity'       => $listData[$id],
-                        'description'  => $visul_id_des[$id]['description'],
+                        'visul' => $id,
+                        'name' => $visul_id_des[$id]['name'],
+                        'icon' => $visul_id_des[$id]['icon'],
+                        'identity' => $listData[$id],
+                        'description' => $visul_id_des[$id]['description'],
                         'url' => $visul_id_des[$id]['url'],
-                        'status'       => $getStatus,
+                        'status' => $targetStatus[$id],
                     ];
-//                }
+                }
             }
             $parm2 = array(
                 'total_list' 					=> $total_list,
