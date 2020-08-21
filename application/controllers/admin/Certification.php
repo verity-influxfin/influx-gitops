@@ -344,7 +344,11 @@ class Certification extends MY_Admin_Controller {
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
-							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
+							$expiretime = isset($post['expiretime']) ? strtotime($post['expiretime']) : 0;
+							$this->user_certification_model->update($post['id'],[
+								'content'=>json_encode($content),
+								'expire_time'=>$expiretime,
+							]);
 
 						} elseif ($info->certification_id == CERTIFICATION_STUDENT) {
 							$license_level = 0;
@@ -796,6 +800,7 @@ class Certification extends MY_Admin_Controller {
 			$page_data['credit_rate'] 				= isset((json_decode($info->content, true))['credit_rate'])?(json_decode($info->content, true))['credit_rate']:0;
 			$page_data['months'] 				= isset((json_decode($info->content, true))['months'])?(json_decode($info->content, true))['months']:0;
 			$page_data['status'] 				= ($info->status);
+			$page_data['expiretime'] = ($info->expire_time);
 		}
 
 	    if ($this->input->is_ajax_request()) {
