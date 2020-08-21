@@ -140,6 +140,7 @@ class Certification extends MY_Admin_Controller {
 					//加入SIP網址--
 
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
+					$page_data['expiretime'] = ($info->expire_time);
 					if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
 						$this->joint_credits();
 						return;

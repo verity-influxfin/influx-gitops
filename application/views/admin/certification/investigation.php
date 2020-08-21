@@ -80,6 +80,10 @@
                                             <label>信用記錄幾個月</label>
                                             <input type="number" class="form-control" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
                                         </div>
+                                        <div class="form-group">
+                                            <label>聯徵有效期限</label>
+                                            <input type="test" class="form-control" name="expiretime" value="<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?>">
+                                        </div>
                                     <? } ?>
                                     <div class="form-group">
                                         <label>備註</label>
