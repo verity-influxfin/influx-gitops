@@ -82,7 +82,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>聯徵有效期限</label>
-                                            <input type="test" class="form-control" name="expiretime" value="<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?>">
+                                            <input type="test" class="form-control" name="expiretime" data-toggle="datepicker" style="width: 182px;" value="<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?>">
                                         </div>
                                     <? } ?>
                                     <div class="form-group">
