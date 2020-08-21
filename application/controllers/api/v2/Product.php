@@ -179,7 +179,7 @@ class Product extends REST_Controller {
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21,30],
-                        'sub_status' => 0,
+                        'sub_status' => [0,9,10],
                         'user_id' => $this->user_info->id,
                         'product_id' => $value['id']
                     ));
@@ -284,7 +284,7 @@ class Product extends REST_Controller {
                                             $targetInfo = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
                                             $sub_product_list[$t4]['identity'][$idekey]['target'] = $targetInfo;
                                             $listData[$sub_product_list[$t4]['visul_id']] = $sub_product_list[$t4]['identity'];
-                                            $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? 1 : 0;
+                                            $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? $targetInfo['status'] : -1;
                                         }
                                         isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
                                     }
