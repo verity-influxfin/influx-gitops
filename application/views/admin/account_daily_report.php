@@ -116,7 +116,16 @@
                                             <td rowspan="<?=isset($value["sub_list"])?count($value["sub_list"])+1:""?>"><?=isset($value["entering_date"])?$value["entering_date"]:"" ?></td>
                                             <td><a class="fancyframe"
                                                    href="<?= admin_url('Target/edit?id=' . (isset($value["target_id"])?$value["target_id"]:"")) ?>"><?=isset($value["target_no"])?$value["target_no"]:"" ?></a></td>
-                                            <td><?=isset($transaction_type_name[$value["source_type"]])?($value["source_type"]!='bank_wrong_tx'?$transaction_type_name[$value["source_type"]]:(($value["v_bank_account_from"]!=PLATFORM_VIRTUAL_ACCOUNT?$transaction_type_name[$value["source_type"]]:'錯帳匯費支出'))):"" ?></td>
+                                            <td><?
+                                                $source_type = isset($transaction_type_name[$value["source_type"]])?
+                                                    ($value["source_type"]!='bank_wrong_tx'?$transaction_type_name[$value["source_type"]]:(($value["v_bank_account_from"]!=PLATFORM_VIRTUAL_ACCOUNT?$transaction_type_name[$value["source_type"]]:'錯帳匯費支出')))
+                                                    :"";
+                                                if(isset($value["v_bank_account_from"])){
+                                                    substr($value["v_bank_account_from"],0,5) == CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE ? $source_type = '法催清償' : '';
+                                                }
+                                                echo $source_type;
+                                                ?>
+                                            </td>
                                             <td><?=isset($value["user_from"])?$value["user_from"]:"" ?></td>
                                             <td><a class="fancyframe"
                                                    href="<?= admin_url('Passbook/display?virtual_account=' . (isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:'')) ?>"><?=isset($value["v_bank_account_from"])?$value["v_bank_account_from"]:"" ?></a></td>
