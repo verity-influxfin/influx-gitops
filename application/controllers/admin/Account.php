@@ -333,7 +333,7 @@ class Account extends MY_Admin_Controller {
 								case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
-									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
+									$user_to_info[$v->investment_id]["user_to"]				= $user_name[$v->user_to];
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
 								case SOURCE_INTEREST:
@@ -403,7 +403,7 @@ class Account extends MY_Admin_Controller {
 								case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
-									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
+									$user_to_info[$v->investment_id]["user_to"]				= $user_name[$v->user_to];
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
 								case SOURCE_INTEREST:
