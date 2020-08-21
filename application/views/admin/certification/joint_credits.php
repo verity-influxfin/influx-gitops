@@ -52,7 +52,7 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-										<td>聯徵有效期限：<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?></td>
+										<td>聯徵有效期限：<?= isset($printDate) ? $printDate : 0 ?></td>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
@@ -63,8 +63,8 @@
                                         <input type="text" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
                                         <input type="text" name="fail" placeholder="備註" />
                                         <input type="text"
-                                               value="<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?>"
-                                               name="expiretime" data-toggle="datepicker" style="width: 182px;" placeholder="聯徵有效期限"/>
+                                               value=""
+                                               name="printDate" data-toggle="datepicker" style="width: 182px;" placeholder="<?= isset($printDate) ? $printDate : 0 ?>"/>
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									}
@@ -138,7 +138,7 @@
 			var times = form.find('input[name="times"]').val();
 			var rate = form.find('input[name="credit_rate"]').val();
 			var months = form.find('input[name="months"]').val();
-			var expiretime = form.find('input[name="expiretime"]').val();
+			var printDate = form.find('input[name="printDate"]').val();
 
 
 			var data = {
@@ -157,8 +157,8 @@
 			if (rate) {
 				data.credit_rate = rate;
 			}
-			if (expiretime) {
-				data.expiretime = expiretime;
+			if (printDate) {
+				data.printDate = printDate;
 			}
 
 			$.ajax({

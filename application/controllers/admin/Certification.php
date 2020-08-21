@@ -140,7 +140,6 @@ class Certification extends MY_Admin_Controller {
 					//加入SIP網址--
 
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
-					$page_data['expiretime'] = ($info->expire_time);
 					if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
 						$this->joint_credits();
 						return;
@@ -345,7 +344,8 @@ class Certification extends MY_Admin_Controller {
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
-							$expiretime = isset($post['expiretime']) ? strtotime($post['expiretime']) : 0;
+							$content['printDate'] = isset($post['printDate'])?$post['printDate']:0;
+							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : 0;
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
@@ -801,7 +801,7 @@ class Certification extends MY_Admin_Controller {
 			$page_data['credit_rate'] 				= isset((json_decode($info->content, true))['credit_rate'])?(json_decode($info->content, true))['credit_rate']:0;
 			$page_data['months'] 				= isset((json_decode($info->content, true))['months'])?(json_decode($info->content, true))['months']:0;
 			$page_data['status'] 				= ($info->status);
-			$page_data['expiretime'] = ($info->expire_time);
+			$page_data['printDate'] = isset((json_decode($info->content, true))['printDate'])?(json_decode($info->content, true))['printDate']:0;
 		}
 
 	    if ($this->input->is_ajax_request()) {

@@ -55,17 +55,18 @@
                                         <div class="form-group">
                                             <label>查詢次數</label>
                                             <p><?= isset($content['times']) ? $content['times'] : 0 ?></p>
-                                            <input type="hidden" name="times" value="<?= isset($content['times']) ? $content['times'] : 0 ?>">
                                         </div>
                                         <div class="form-group">
                                             <label>信用卡使用率%</label>
                                             <p><?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?></p>
-                                            <input type="hidden" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
                                         </div>
                                         <div class="form-group">
                                             <label>信用記錄幾個月</label>
                                             <p><?= isset($content['months']) ? $content['months'] : 0 ?></p>
-                                            <input type="hidden" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>信用記錄幾個月</label>
+                                            <p><?= isset($content['printDate']) ? $content['printDate'] : 0 ?></p>
                                         </div>
                                     <? } else { ?>
                                         <div class="form-group">
@@ -78,11 +79,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label>信用記錄幾個月</label>
-                                            <input type="number" class="form-control" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
+                                            <input type="number" class="form-control" name="months" value="<?= isset($content['printDate']) ? $content['printDate'] : 0 ?>">
                                         </div>
                                         <div class="form-group">
-                                            <label>聯徵有效期限</label>
-                                            <input type="test" class="form-control" name="expiretime" data-toggle="datepicker" style="width: 182px;" value="<?= isset($expiretime) ? date("Y-m-d",$expiretime) : '' ?>">
+                                            <label>聯徵調閱日期</label>
+                                            <input type="text" class="form-control" name="printDate" data-toggle="datepicker" style="width: 182px;" value="" placeholder="<?= isset($content['printDate']) ? $content['printDate'] : 0 ?>">
                                         </div>
                                     <? } ?>
                                     <div class="form-group">
