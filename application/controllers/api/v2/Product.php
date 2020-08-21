@@ -1038,7 +1038,7 @@ class Product extends REST_Controller {
                     'factory_time' => $targetData->factory_time,
                     'product_description' => $targetData->product_description,
                 ];
-                $cer_file = ['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'];
+                $cer_file = ['car_history_image','car_title_image','car_import_proof_image','car_artc_image'];
                 $car_pic = ['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'];
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,array_merge($cer_file,$car_pic))){
