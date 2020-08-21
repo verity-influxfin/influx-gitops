@@ -1948,7 +1948,9 @@ class Product extends REST_Controller {
                 }
                 $targetData = json_decode($target->target_data);
                 foreach ($product['targetData'] as $key => $value) {
-                    $list = array_merge($list,[$key => !empty($targetData->$key)]);
+                    $res = !empty($targetData->$key);
+                    isset($value[3]) && $value[3] ? $res = true : '';
+                    $list = array_merge($list,[$key => $res]);
                 }
                 $this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
             }
