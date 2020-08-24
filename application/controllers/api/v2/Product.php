@@ -2115,7 +2115,7 @@ class Product extends REST_Controller {
                     'user_id' => $param['user_id'],
                     'certification_id' => ($product['identity'] == 1 ? 2 : 10),
                     'investor' => 0,
-                    'status' => 1,
+                    'status' => [0,1,3],
                 ]);
                 if ($certification && $param['sub_product_id'] == 1) {
                     $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
