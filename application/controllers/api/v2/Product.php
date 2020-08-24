@@ -179,7 +179,7 @@ class Product extends REST_Controller {
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
                         'status' => [0, 1, 20, 21,30],
-                        'sub_status' => 0,
+                        'sub_status' => [0,9,10],
                         'user_id' => $this->user_info->id,
                         'product_id' => $value['id']
                     ));
@@ -192,6 +192,7 @@ class Product extends REST_Controller {
                                 'sub_product_id' => intval($tar->sub_product_id),
                                 'target_no' => $tar->target_no,
                                 'status' => intval($tar->status),
+                                'sub_status' => intval($tar->sub_status),
                                 'amount' => intval($tar->amount),
                                 'loan_amount' => intval($tar->loan_amount),
                                 'created_at' => intval($tar->created_at),
@@ -254,7 +255,7 @@ class Product extends REST_Controller {
             $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
-                    if ($company == 1 && isset($t2[3]) && in_array($selling_type,$t2[3]['sealler']) || $company == 0) {
+                    if ($company == 1 && isset($t2[3]) || $company == 0) {
                         $sub_product_info = [];
                         foreach ($t2 as $key3 => $t3) {
                             $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
@@ -280,7 +281,10 @@ class Product extends REST_Controller {
                                                 }
                                                 $sub_product_list[$t4]['identity'][$idekey]['certifications'] = $certification;
                                             }
-                                            $sub_product_list[$t4]['identity'][$idekey]['target'] = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
+                                            $targetInfo = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
+                                            $sub_product_list[$t4]['identity'][$idekey]['target'] = $targetInfo;
+                                            $listData[$sub_product_list[$t4]['visul_id']] = $sub_product_list[$t4]['identity'];
+                                            $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? $targetInfo['status'] : -1;
                                         }
                                         isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
                                     }
@@ -301,17 +305,18 @@ class Product extends REST_Controller {
             }
             $total_list = [];
             $identity = $company?'company':'nature';
-            foreach ($app_product_totallist[$identity] as $id){
-//                if(in_array($id,$allow_visul_list)){
+            foreach ($app_product_totallist[$identity] as $id) {
+                if (isset($visul_id_des[$id])) {
                     $total_list[] = [
-                        'visul'        => $id,
-                        'name'         => $visul_id_des[$id]['name'],
-                        'icon'         => $visul_id_des[$id]['icon'],
-                        'description'  => $visul_id_des[$id]['description'],
+                        'visul' => $id,
+                        'name' => $visul_id_des[$id]['name'],
+                        'icon' => $visul_id_des[$id]['icon'],
+                        'identity' => $listData[$id],
+                        'description' => $visul_id_des[$id]['description'],
                         'url' => $visul_id_des[$id]['url'],
-                        'status'       => $visul_id_des[$id]['status'],
+                        'status' => $targetStatus[$id],
                     ];
-//                }
+                }
             }
             $parm2 = array(
                 'total_list' 					=> $total_list,
@@ -321,7 +326,6 @@ class Product extends REST_Controller {
         }
 
         $this->response(array('result' => 'SUCCESS','data' => [
-            'list'  => $list,
             'list2' => $list2,
         ]));
     }
@@ -2117,7 +2121,7 @@ class Product extends REST_Controller {
                     'user_id' => $param['user_id'],
                     'certification_id' => ($product['identity'] == 1 ? 2 : 10),
                     'investor' => 0,
-                    'status' => 1,
+                    'status' => [0,1,3],
                 ]);
                 if ($certification && $param['sub_product_id'] == 1) {
                     $this->certification_lib->set_failed($certification->id, '申請新產品。', true);

@@ -408,7 +408,6 @@ class Target_lib
                                     }
                                 } else {
                                     $this->approve_target_fail($user_id, $target);
-                                }
                             }
                         } else {
                             $this->approve_target_fail($user_id, $target);

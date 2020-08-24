@@ -52,15 +52,19 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
+										<td>聯徵調閱日期：<?= isset($printDate) ? $printDate : 0 ?></td>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									} else {
 										?>
-										<input type="hidden" name="times" placeholder="被查詢次數" value=<?= isset($times) ? $times : ""; ?> />
-                                        <input type="hidden" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
-                                        <input type="hidden" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
-                                        <input type="hidden" name="fail" placeholder="備註" />
+										<input type="text" name="times" placeholder="被查詢次數" value=<?= isset($times) ? $times : ""; ?> />
+                                        <input type="text" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
+                                        <input type="text" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
+                                        <input type="text" name="fail" placeholder="備註" />
+                                        <input type="text"
+                                               value=""
+                                               name="printDate" data-toggle="datepicker" style="width: 182px;" placeholder="<?= isset($printDate) ? $printDate : 0 ?>"/>
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									}
@@ -134,6 +138,7 @@
 			var times = form.find('input[name="times"]').val();
 			var rate = form.find('input[name="credit_rate"]').val();
 			var months = form.find('input[name="months"]').val();
+			var printDate = form.find('input[name="printDate"]').val();
 
 
 			var data = {
@@ -151,6 +156,9 @@
 			}
 			if (rate) {
 				data.credit_rate = rate;
+			}
+			if (printDate) {
+				data.printDate = printDate;
 			}
 
 			$.ajax({
@@ -226,14 +234,7 @@
 				$('input[name="credit_rate"]').prop('type', 'text');
 				$('input[name="months"]').prop('type', 'text');
 			} else {
-				$('input[name="fail"]').prop('type', 'hidden');
-				$('input[name="fail"]').val('');
-				$('input[name="times"]').prop('type', 'hidden');
-				$('input[name="times"]').val('');
-				$('input[name="credit_rate"]').prop('type', 'hidden');
-				$('input[name="credit_rate"]').val('');
-				$('input[name="months"]').prop('type', 'hidden');
-				$('input[name="months"]').val('');
+
 			}
 		});
 	});

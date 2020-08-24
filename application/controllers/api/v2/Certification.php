@@ -608,7 +608,7 @@ class Certification extends REST_Controller {
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
             isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
-            isset($input['game_work_image'])?$file_fields[]='game_work_image':'';
+            isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$input[$field]);
@@ -1461,6 +1461,7 @@ class Certification extends REST_Controller {
                             $rs  = $this->user_meta_model->update_by($param, array('meta_value'    => $value));
                         }
                     } else {
+                        $param = [];
                         foreach ($data as $key => $value) {
                             $param[] = array(
                                 'user_id'        => $user_id,
@@ -1912,7 +1913,7 @@ class Certification extends REST_Controller {
             isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
             isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
-            isset($input['game_work_image'])?$file_fields[]='game_work_image':'';
+            isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
 			foreach ($file_fields as $field) {
                 $list = false;
 				$image_ids = isset($input[$field]) ? explode(',',$input[$field]) : [];
