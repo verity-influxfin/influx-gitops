@@ -283,7 +283,8 @@ class Product extends REST_Controller {
                                             }
                                             $targetInfo = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
                                             $sub_product_list[$t4]['identity'][$idekey]['target'] = $targetInfo;
-                                            $listData[$sub_product_list[$t4]['visul_id']] = $sub_product_list[$t4]['identity'];
+                                            $listData[$sub_product_list[$t4]['visul_id']][$idekey] = $sub_product_list[$t4]['identity'][$idekey];
+                                            $listData[$sub_product_list[$t4]['visul_id']][$idekey]['status'] = count($listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']) > 0 ? $listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']['status'] : -1;
                                             $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? $targetInfo['status'] : -1;
                                         }
                                         isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
