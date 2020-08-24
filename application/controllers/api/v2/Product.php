@@ -252,6 +252,8 @@ class Product extends REST_Controller {
             $designate = [];
             $allow_visul_list = [];
             $showed_list = [];
+            $listData = [];
+            $targetStatus = [];
             $hiddenList = [STAGE_CER_TARGET];
             foreach ($temp as $key => $t){
                 foreach ($t as $key2 => $t2) {
