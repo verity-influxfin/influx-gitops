@@ -14,6 +14,7 @@ class Credit_lib{
 		$this->CI->config->load('school_points',TRUE);
 		$this->CI->config->load('credit',TRUE);
 		$this->credit = $this->CI->config->item('credit');
+		$this->scoreHistory = [];
     }
 	
 	//信用評比
@@ -95,10 +96,12 @@ class Credit_lib{
                             $three_month_ago = strtotime("-3 months", time());
                             if (count($data->instagram->meta) >= 10) {
                                 $three_month_ago < $data->instagram->meta[9]->created_time ? $total += 100 : '';
+                                $this->scoreHistory[] = '3個月內發文次數大於10次 = 100\n';
                             }
                             foreach ($data->instagram->meta as $igKey => $igValue) {
                                 if (preg_match_all('/' . $this->CI->config->item('social_patten') . '/', $igValue->text)) {
                                     $total += 200;
+                                    $this->scoreHistory[] = '發文關鍵字/全球、財經、數位、兩岸 = 200\n';
                                     break;
                                 }
                             }
@@ -112,6 +115,7 @@ class Credit_lib{
                                         $all_contents = json_decode($lastIgValue->content);
                                         $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
                                         $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '';
+                                        $this->scoreHistory[] = '好友數>100且較3個月前增加10%以上 = 100\n';
                                         break;
                                     }
                                 }
@@ -131,47 +135,62 @@ class Credit_lib{
                 if ($sub_product && $sub_product_id == 1) {
                     //系所加分
                     $total += in_array($data['school_department'], $sub_product->majorList) ? 200 : 0;
+                    $this->scoreHistory[] = ' = 200\n';
                     $total += isset($data['student_game_work_level']) ? $data['student_game_work_level'] * 50 : 0;
+                    $this->scoreHistory[] = ' = 50\n';
                     $total += isset($data['student_license_level']) ? $data['student_license_level'] * 50 : 0;
+                    $this->scoreHistory[] = ' = 50\n';
                     $total += isset($data['student_pro_level']) ? $data['student_pro_level'] * 100 : 0;
+                    $this->scoreHistory[] = ' = 100\n';
                 }
             }
 
             //學校
             if (isset($data['school_name']) && !empty($data['school_name'])) {
-                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major'], $data['school_department']);
+                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major'], $data['school_department']) ;
             }
 
             //財務證明
             if (isset($data['financial_status']) && !empty($data['financial_status'])) {
-                $total += 100;
+                $total += 50;
+                $this->scoreHistory[] = '借款人提供個人財務數據表(自填) = 50\n';
                 if (isset($data['financial_passbook']) && !empty($data['financial_passbook'])) {
-                    $total += 150;
+                    $total += 100;
+                    $this->scoreHistory[] = '近3個月存摺內頁/收入證明 = 100\n';
                 }
                 if (isset($data['financial_bill_phone']) && !empty($data['financial_bill_phone'])) {
-                    $total += 150;
+                    $total += 100;
+                    $this->scoreHistory[] = '提供電話費帳單 = 100\n';
                 }
                 if (isset($data['financial_creditcard']) && !empty($data['financial_creditcard'])) {
-                    $total += 50;
+                    $total += 100;
+                    $this->scoreHistory[] = '近期信用卡帳單 = 100\n';
                 }
             }
 
             if (isset($data['line_access_token']) && !empty($data['line_access_token'])) {
                 $total += 50;
+                $this->scoreHistory[] = '提供社交帳戶認證LINE = 50\n';
             }
 
             //聯徵
             if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
                 if (isset($data['investigation_times'])) {
-                    $total += round($this->get_investigation_times_point(intval($data['investigation_times']))/3);
+                    $investigationTimes = round($this->get_investigation_times_point(intval($data['investigation_times']))/3);
+                    $total += $investigationTimes;
+                    $this->scoreHistory[] = '提供聯徵(使用次數) = '.$investigationTimes;
                 }
 
                 if (isset($data['investigation_credit_rate'])) {
-                    $total += round($this->get_investigation_rate_point(intval($data['investigation_credit_rate']))/3);
+                    $investigationCreditRate = round($this->get_investigation_rate_point(intval($data['investigation_credit_rate']))/3);
+                    $total += $investigationCreditRate;
+                    $this->scoreHistory[] = '提供聯徵(使用額度) = '.$investigationCreditRate;
                 }
 
                 if (isset($data['investigation_months'])) {
-                    $total += round($this->get_investigation_months_point(intval($data['investigation_months']))/3);
+                    $investigationMonths = round($this->get_investigation_months_point(intval($data['investigation_months']))/3);
+                    $total += $investigationMonths;
+                    $this->scoreHistory[] = '提供聯徵(使用紀錄月份) = '.$investigationMonths;
                 }
             }
 
@@ -180,11 +199,13 @@ class Credit_lib{
             //$total += 150;
             //}
             if (isset($data['transcript_front']) && !empty($data['transcript_front']) || $transcript) {
-                $total += 100;
+                $total += 50;
+                $this->scoreHistory[] = '提供成績單 = 50';
             }
             //緊急聯絡人
             if (isset($data['emergency_relationship']) && $data['emergency_relationship'] == '監護人') {
                 $total = $total - 400;//mantis 0000003
+                $this->scoreHistory[] = '緊急聯絡人為監護人 = 400';
             }
 
             if ($approvalExtra && $approvalExtra->getExtraPoints()) {
@@ -192,6 +213,7 @@ class Credit_lib{
             }
 
             $total = $user_info->sex == 'M' ? round($total * 0.95) : $total;
+            $this->scoreHistory[] = '性別:'.($user_info->sex == 'M' ? '男 * 0.95' : '女 * 1');
             $param['points'] = intval($total);
 
         }
@@ -208,6 +230,7 @@ class Credit_lib{
             }
         }
         $param['expire_time'] = $expire_time;
+//        $param['scoreHistory'] = $this->scoreHistory;
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
@@ -429,30 +452,41 @@ class Credit_lib{
 			}
 
             if(!empty($school_info)){
-                $point = $school_info['points'];
+                $schoolPoing = $school_info['points'];
+                $point = $schoolPoing;
+                $this->scoreHistory[] = '學校得分:'.$school_name.' = '.$schoolPoing;
                 if($school_system == 0){
                     $point += 100;
+                    $this->scoreHistory[] = '學制:學士 = 100';
                 }else if($school_system==1){
                     $point += 400;
+                    $this->scoreHistory[] = '學制:碩士 = 400';
                 }else if($school_system==2){
                     $point += 500;
+                    $this->scoreHistory[] = '學制:博士 = 500';
                 }
             }
 
 			if(!empty($school_major)){
-				$point += isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
-			}
+			    $schoolMajorPoint = isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
+				$point += $schoolMajorPoint;
+                $this->scoreHistory[] = '大學學門分類:'.$school_major.' = '.$schoolMajorPoint;
+            }
 
             if($school_department){
                 $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
                 $school_data = json_decode($school_data, true);
+                $schoolDepartmentPoint = 0;
                 if(isset($school_data[$school_name]['score'][$school_department])){
-                    $point += $school_data[$school_name]['score'][$school_department];
+                    $schoolDepartmentPoint = $school_data[$school_name]['score'][$school_department];
+                    $point += $schoolDepartmentPoint;
+                    $this->scoreHistory[] = '大學科系加分:'.$school_department.' = '.$schoolDepartmentPoint;
                 }
                 else{
                     asort($school_data[$school_name]['score']);
                     foreach($school_data[$school_name]['score'] as $s) {
                         $point += $s;
+                        $this->scoreHistory[] = '大學科系加分:'.$school_department.'(不在列表取該校科系最低加分) = '.$schoolDepartmentPoint;
                         break;
                     }
                 }
