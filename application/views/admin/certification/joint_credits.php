@@ -52,7 +52,7 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-										<td>聯徵有效期限：<?= isset($printDate) ? $printDate : 0 ?></td>
+										<td>聯徵調閱日期：<?= isset($printDate) ? $printDate : 0 ?></td>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
