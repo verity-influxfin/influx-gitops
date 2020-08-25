@@ -25,7 +25,7 @@ class Version extends REST_Controller {
             $data = array(
                 'version'     => $version -> version,
                 'description' => $version -> description,
-                'events'      => "linePointBox,193101,stepProduct"
+                'events'      => "linePointBox,193101,stepProduct,oppo"
             );
         }
         $this->response(array('result' => 'SUCCESS','data' => $data ));
