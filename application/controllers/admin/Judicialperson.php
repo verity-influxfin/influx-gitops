@@ -307,9 +307,8 @@ class Judicialperson extends MY_Admin_Controller {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
 						$data['msg'] = $rs?'變更成功':'變更失敗';
 					}
-					alert($data['msg'], admin_url('judicialperson/cooperation_edit?id='.$post['id']));
-					//print(json_encode($data));
-					return true;
+					$data['redirect'] = admin_url('judicialperson/cooperation_edit?id='.$post['id']);
+					echo json_encode($data);
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));
                 }
@@ -327,6 +326,15 @@ class Judicialperson extends MY_Admin_Controller {
 			$info = $this->judicial_person_model->get($id);
 			if($info && $info->status==1 && $info->cooperation==2){
 				$this->judicialperson_lib->cooperation_success($id,$this->login_info->id);
+				$account = $this->get_taishinAccount($info);
+				if(!$account){
+					$rs = $this->virtual_account_model->insert([
+						'investor'			=> 0,
+						'user_id'			=> $info->company_user_id,
+						'virtual_account'	=> TAISHIN_VIRTUAL_CODE.'0'.substr($info->tax_id,0,8),
+					]);
+					$data['msg'] = $rs?'建立成功':'建立失敗';
+				}
 				echo '更新成功';die();
 			}else{
 				echo '查無此ID';die();

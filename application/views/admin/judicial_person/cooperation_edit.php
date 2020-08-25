@@ -25,7 +25,6 @@
                     var res = JSON.parse(e);
                     alert(res.msg);
                     window.location.href = res.redirect;
-
                 }
             });
         }
@@ -66,7 +65,7 @@
                                 <label>銷售類別</label>
                                 <p class="form-control-static"><?=isset($data->selling_type)?$selling_type[$data->selling_type]:"" ?></p>
                                 <?
-                                if($data->no_taishin && $selling_type[$data->selling_type] == 2){
+                                if($data->no_taishin && $data->selling_type == 2){
                                     echo '<p class="form-control-static">尚未建立台新帳號</p><button class="btn btn-danger create" style="width: 80px;" onclick="create('.(isset($data->id) ? $data->id : "").')">建立</button>';
                                 }
                                 ?>
