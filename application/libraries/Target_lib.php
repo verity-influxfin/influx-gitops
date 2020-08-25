@@ -1584,7 +1584,7 @@ class Target_lib
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
-                                        if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_STUDENT, CERTIFICATION_DIPLOMA, CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
+                                        if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
                                             $finish = false;
