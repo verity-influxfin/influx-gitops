@@ -912,7 +912,7 @@
 
         function fillCompanyUserInfo(user) {
             $(".company #id").text(user.id);
-            $(".company #name").html(user.name+" - <a target='_blank' href='../admin/judicialperson/edit?id="+user.judicial_id+"'>法人申請資料</a> / <a target='_blank' href='../admin/judicialperson/edit?id="+user.judicial_id+"'>經銷商申請資料</a>");
+            $(".company #name").html(user.name+" - <a target='_blank' href='.././judicialperson/edit?id="+user.judicial_id+"'>法人申請資料</a> / <a target='_blank' href='.././judicialperson/cooperation_edit?id="+user.judicial_id+"'>經銷商申請資料</a>");
             $(".company #gender").text(user.gender);
             $(".company #birthday").text(user.birthday);
             $(".company #email").text(user.contact.email);

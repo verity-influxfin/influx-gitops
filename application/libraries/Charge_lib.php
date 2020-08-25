@@ -231,10 +231,12 @@ class Charge_lib
                     }
                 }
                 if ($amount > 0) {
+                    $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
                     $virtual_account = $this->CI->virtual_account_model->get_by([
+                        'user_id'	=> $target->user_id,
+                        'investor'	=> 0,
                         'status' => 1,
-                        'investor' => 0,
-                        'user_id' => $target->user_id
+                        'virtual_account like' => $virtual . '%'
                     ]);
                     if ($virtual_account) {
                         $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
@@ -310,14 +312,19 @@ class Charge_lib
 		if($target->status == 5 && $prepayment){
 			$settlement_date = $prepayment->settlement_date;
 			$date 			 = get_entering_date();
+            $get_data 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_by([
+                'target_id' => $target->id,
+                'source' => SOURCE_AR_PRINCIPAL,
+                'status'	=> 1
+            ]);
 			$virtual_account = $this->CI->virtual_account_model->get_by([
 				'status'	=> 1,
 				'investor'	=> 0,
-				'user_id'	=> $target->user_id
+				'user_id'	=> $target->user_id,
+				'virtual_account'	=> $get_data->bank_account_from
 			]);
 			if($virtual_account){
 				$this->CI->virtual_account_model->update($virtual_account->id,['status'=>2]);
-				
 				$funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
 				$total = $funds['total'] - $funds['frozen'];
 				if($total >= $prepayment->amount){
@@ -396,7 +403,7 @@ class Charge_lib
 									$user_to_info[$investment_id]['interest_payable'] = $this->CI->financial_lib->get_interest_by_days($days,$value['remaining_principal'],$target->instalment,$target->interest_rate,$target->loan_date);
 								}
 							}
-							$liquidated_damages = $this->CI->financial_lib->get_liquidated_damages($total_remaining_principal,$target->damage_rate);
+							$liquidated_damages = $prepayment->damage;
 
 							$project_source = [
 								'interest_payable'			=> [SOURCE_AR_INTEREST,SOURCE_INTEREST],
@@ -452,22 +459,27 @@ class Charge_lib
 										'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 										'status'			=> 2
 									];
-									$prepayment_allowance	= intval(round($value['remaining_principal']/100*PREPAYMENT_ALLOWANCE_FEES,0));//提還補貼金
-									$transaction_param[] = [
-										'source'			=> SOURCE_PREPAYMENT_ALLOWANCE,
-										'entering_date'		=> $date,
-										'user_from'			=> 0,
-										'bank_account_from'	=> PLATFORM_VIRTUAL_ACCOUNT,
-										'amount'			=> $prepayment_allowance,
-										'target_id'			=> $target->id,
-										'investment_id'		=> $value['investment_id'],
-										'instalment_no'		=> $instalment,
-										'user_to'			=> $user_to_info[$investment_id]['user_to'],
-										'bank_account_to'	=> $value['bank_account_to'],
-										'status'			=> 2
-									];
+
+                                    $prepayment_allowance = 0;
+                                    $no_prepayment_allowance = $this->CI->config->item('no_prepayment_allowance');
+                                    if(!in_array($target->product_id, $no_prepayment_allowance)){
+                                        $prepayment_allowance	= intval(round($value['remaining_principal']/100*PREPAYMENT_ALLOWANCE_FEES,0));//提還補貼金
+                                        $transaction_param[] = [
+                                            'source'			=> SOURCE_PREPAYMENT_ALLOWANCE,
+                                            'entering_date'		=> $date,
+                                            'user_from'			=> 0,
+                                            'bank_account_from'	=> PLATFORM_VIRTUAL_ACCOUNT,
+                                            'amount'			=> $prepayment_allowance,
+                                            'target_id'			=> $target->id,
+                                            'investment_id'		=> $value['investment_id'],
+                                            'instalment_no'		=> $instalment,
+                                            'user_to'			=> $user_to_info[$investment_id]['user_to'],
+                                            'bank_account_to'	=> $value['bank_account_to'],
+                                            'status'			=> 2
+                                        ];
+                                    }
 								}
-								$msg[$user_to_info[$investment_id]['user_to']] = $value['total_amount']+$prepayment_allowance;
+                                $msg[$user_to_info[$investment_id]['user_to']] = $value['total_amount'] + $prepayment_allowance;
 							}
 
 							if(intval($liquidated_damages)>0){
@@ -583,9 +595,8 @@ class Charge_lib
                         } else {
                             $this->notice_normal_target($value);
                         }
-
-                        $this->CI->target_model->update($value->id, array('script_status' => 0));
                     }
+                    $this->CI->target_model->update($value->id, array('script_status' => 0));
                 }
             }
 		}
@@ -736,16 +747,17 @@ class Charge_lib
 				}
 			}
 			$this->CI->target_model->update($target->id,$update_data);
-			if($delay_days > GRACE_PERIOD){
-				$this->handle_delay_target($target,$delay_days);
+            $gracePeriod = $target->product_id == PRODUCT_FOREX_CAR_VEHICLE ? 0 : GRACE_PERIOD;
+			if($delay_days > $gracePeriod){
+				$this->handle_delay_target($target,$delay_days,$gracePeriod);
 			}
 			return true;
 		}
 		return false;
 	}
 	
-	public function handle_delay_target($target=[],$delay_days=0){
-		if($target->status == 5 && $delay_days > GRACE_PERIOD){
+	public function handle_delay_target($target=[],$delay_days=0,$gracePeriod){
+		if($target->status == 5 && $delay_days > $gracePeriod){
 			if(in_array($delay_days,[8,31,61])){
 				$this->CI->load->library('credit_lib');
 				$level = $this->CI->credit_lib->delay_credit($target->user_id,$delay_days);

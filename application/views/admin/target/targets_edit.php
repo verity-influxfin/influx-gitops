@@ -83,12 +83,11 @@
                                         <td>
                                             <p class="form-control-static">
 
-                                                <a class="fancyframe"
-                                                   href="<?= admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account) ?>"><?= $virtual_account->virtual_account ?></a>
-                                                <? if(isset($lawAccount)){ ?>
-                                                    <br /><a class="fancyframe"
-                                                       href="<?= admin_url('Passbook/display?virtual_account=' . $lawAccount) ?>"><?= $lawAccount ?></a> (法催帳戶)
-                                                <? } ?>
+                                                <?
+                                                    foreach($virtual_accounts as $k => $virtual_account){
+                                                        echo '<p><a class="fancyframe" href="'.admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account).'">'. $virtual_account->virtual_account.'</a></p>';
+                                                    }
+                                                ?>
                                             </p>
                                         </td>
                                         <td><p class="form-control-static">備註</p></td>

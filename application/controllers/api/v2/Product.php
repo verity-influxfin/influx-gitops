@@ -239,6 +239,8 @@ class Product extends REST_Controller {
                     }
                 }
 
+                $list[] = $parm;
+
                 //reformat Product for layer2
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
             }
@@ -283,7 +285,8 @@ class Product extends REST_Controller {
                                             }
                                             $targetInfo = isset($target[$exp_product[0]][$exp_product[1]]) ? $target[$exp_product[0]][$exp_product[1]] : [];
                                             $sub_product_list[$t4]['identity'][$idekey]['target'] = $targetInfo;
-                                            $listData[$sub_product_list[$t4]['visul_id']] = $sub_product_list[$t4]['identity'];
+                                            $listData[$sub_product_list[$t4]['visul_id']][$idekey] = $sub_product_list[$t4]['identity'][$idekey];
+                                            $listData[$sub_product_list[$t4]['visul_id']][$idekey]['status'] = count($listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']) > 0 ? $listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']['status'] : -1;
                                             $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? $targetInfo['status'] : -1;
                                         }
                                         isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
@@ -1042,7 +1045,7 @@ class Product extends REST_Controller {
                     'factory_time' => $targetData->factory_time,
                     'product_description' => $targetData->product_description,
                 ];
-                $cer_file = ['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image'];
+                $cer_file = ['car_history_image','car_title_image','car_import_proof_image','car_artc_image'];
                 $car_pic = ['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'];
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,array_merge($cer_file,$car_pic))){
@@ -1952,7 +1955,9 @@ class Product extends REST_Controller {
                 }
                 $targetData = json_decode($target->target_data);
                 foreach ($product['targetData'] as $key => $value) {
-                    $list = array_merge($list,[$key => !empty($targetData->$key)]);
+                    $res = !empty($targetData->$key);
+                    isset($value[3]) && $value[3] ? $res = true : '';
+                    $list = array_merge($list,[$key => $res]);
                 }
                 $this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
             }

@@ -253,6 +253,13 @@ defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
 
 
+defined('MOBILE_PHONE_VENDOR') or define('MOBILE_PHONE_VENDOR', 0); //手機商
+defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
+
+
+defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
+
+
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額 
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE'	, '9'); //virtual_account
 defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //virtual_account
@@ -372,9 +379,9 @@ defined('CATHAY_COMPANY_ACCOUNT')   OR define('CATHAY_COMPANY_ACCOUNT'	, '015035
 defined('TAISHIN_VIRTUAL_CODE') OR define('TAISHIN_VIRTUAL_CODE', getenv('ENV_TAISHIN_VIRTUAL_CODE'));
 defined('TAISHIN_CUST_ACCNO') OR define('TAISHIN_CUST_ACCNO', getenv('ENV_TAISHIN_CUST_ACCNO'));
 defined('TAISHIN_BANK_CODE') OR define('TAISHIN_BANK_CODE', '812');
-defined('TAISHIN_BRANCH_CODE') OR define('TAISHIN_BRANCH_CODE', '');
+defined('TAISHIN_BRANCH_CODE') OR define('TAISHIN_BRANCH_CODE', ' - ');
 defined('TAISHIN_BANK_NAME') OR define('TAISHIN_BANK_NAME', '台新國際商業銀行');
-defined('TAISHIN_BRANCH_NAME') OR define('TAISHIN_BRANCH_NAME', '');
+defined('TAISHIN_BRANCH_NAME') OR define('TAISHIN_BRANCH_NAME', ' - ');
 defined('TAISHIN_COMPANY_NAME') OR define('TAISHIN_COMPANY_NAME', '普匯金融科技股份有限公司');
 defined('TAISHIN_COMPANY_ACCOUNT') OR define('TAISHIN_COMPANY_ACCOUNT', '20680100217837');
 
