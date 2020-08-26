@@ -31,7 +31,7 @@
 									<p id="overal-status" style="color:red;"></p>
 								</div>
 								<div class="col-lg-4">
-									<a id="job-credit-file">勞保檔案</a>
+									<a id="job-credit-file"> - </a>
                                     <span id="scan_status"></span>
 								</div>
 							</div><br/>
@@ -213,10 +213,14 @@
             $(this).find(':selected').attr('value') == 'other' ? $('#fail').show() : $('#fail').hide();
         });
 
-		function fillJobCreditFile(jobCredit) {
-            if (!jobCredit.file) return;
-			$("#job-credit-file").attr("href", jobCredit.file);
+        function fillJobCreditFile(jobCredit) {
+            if (!jobCredit.file){
+                $("#job-credit-file").text('系統未收到勞保檔案');
+                return;
+            }
+            $("#job-credit-file").attr("href", jobCredit.file);
 			$("#job-credit-file").attr("target", "_blank");
+			$("#job-credit-file").text('勞保檔案');
 		}
 
 		function fillUser(user) {
