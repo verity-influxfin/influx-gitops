@@ -171,7 +171,7 @@
 													<p><label>IG 認證 </label></p>
 												</h3>
 												<label>IG 帳號</label>
-												<a href="<?= isset($content['instagram']['link']) ? $content['instagram']['link'] : "" ?>" target="_blank">
+												<a href="https://www.instagram.com/<?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?>" target="_blank">
 													<h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
 												</a>
 												<td>
