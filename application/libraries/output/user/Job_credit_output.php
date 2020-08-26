@@ -42,6 +42,8 @@ class Job_credit_output
             }
         }
 
+        $output['scan_status'] = $job_credits ? 'finished' : 'wait_scan';
+
         if (isset($this->certification->content->license_status)) {
             $output["license_status"] = $this->certification->content->license_status;
         } else {

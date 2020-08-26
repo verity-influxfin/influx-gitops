@@ -32,6 +32,7 @@
 								</div>
 								<div class="col-lg-4">
 									<a id="job-credit-file">勞保檔案</a>
+                                    <span id="scan_status"></span>
 								</div>
 							</div><br/>
                             <div id="container">
@@ -125,7 +126,7 @@
 				fillLicenseStatusMenu();
                 fillProLevelMenu();
                 var jobCredits = new JobCredit(response.response.job_credits);
-                fillJobCredits(jobCredits);
+                fillJobCredits(jobCredits,response.response);
                 fillJobCreditFile(jobCredits);
                 var user = new User(response.response.user);
                 fillUser(user);
@@ -253,7 +254,7 @@
 			}
 		}
 
-		function fillJobCredits(jobCredits) {
+		function fillJobCredits(jobCredits,response) {
 			$("#overal-status").text(jobCredits.status);
 			if (jobCredits.status == "驗證成功") {
 				$("#verification").val(1).change();
@@ -265,6 +266,7 @@
 			$("#license_status").val(jobCredits.licenseStatus).change();
 			$("#pro_level").val(jobCredits.proLevel).change();
             $("#tax_id").text(jobCredits.tax_id);
+            $("#tax_id").text(jobCredits.tax_id);
             $("#company").text(jobCredits.company);
             $("#industry").text(jobCredits.industry);
             $("#job_title").text(jobCredits.job_title);
@@ -274,6 +276,9 @@
             $("#seniority").text(jobCredits.seniority);
             $("#job_seniority").text(jobCredits.job_seniority);
             $("#salary").val(jobCredits.salary).change();
+            if(response.job_credits.scan_status == 'wait_scan'){
+                $("#scan_status").text('(待掃描)');
+            }
 			for (var i = 0; i < jobCredits.messages.length; i++) {
 				var message = jobCredits.messages[i];
 

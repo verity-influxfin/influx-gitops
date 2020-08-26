@@ -21,6 +21,7 @@ class JobCredit
 		this.setAuxiliaryImages(jobCredit);
 		this.setLicenseImages(jobCredit);
 		this.setBusinessImages(jobCredit);
+		this.setWaitScan(jobCredit);
 	}
 	setLicenseStatus(jobCredit) {
         if (!jobCredit.license_status) this.licenseStatus= "";
@@ -77,6 +78,10 @@ class JobCredit
 
     setStatus(jobCredit) {
         this.status = this.mapStatus(jobCredit.status);
+    }
+
+    setWaitScan(jobCredit) {
+        this.scan_status = this.mapStatus(jobCredit.scan_status);
     }
 
     setMessages(jobCredit) {
