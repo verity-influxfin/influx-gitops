@@ -19,18 +19,18 @@ class Job_credit_output
 
     public function toOne()
     {
-        if (!$this->job_credits) {
-            return [];
-        }
         return $this->map($this->job_credits);
     }
 
     public function map($job_credits, $withSensitiveInfo = false)
     {
         $output = [
-            "status" => $job_credits->status,
-            "messages" => $this->mapMessages($job_credits->messages),
+            "status" => '',
+            "messages" => '',
         ];
+
+        $output['status'] = $job_credits ? $job_credits->status : '';
+        $output['messages'] = $job_credits ? $this->mapMessages($job_credits->messages) : '';
 
         if (isset($this->certification->status)) {
             if ($this->certification->status == 1) {
