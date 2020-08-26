@@ -329,6 +329,7 @@ class Product extends REST_Controller {
         }
 
         $this->response(array('result' => 'SUCCESS','data' => [
+            'list' => $list,
             'list2' => $list2,
         ]));
     }
