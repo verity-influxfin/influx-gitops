@@ -159,14 +159,6 @@ class Repayment extends REST_Controller {
                 ];
             }
         }
-        $virtualAcount = $this->virtual_account_model->get_by([
-            'investor'	=> 0,
-            'user_id'	=> $user_id,
-            'virtual_account like' => $virtual . '%'
-        ]);
-
-        $account['virtual_account'] = $virtualAcount->virtual_account;
-        $virtual_account	= $account;
 
 		$next_repayment = [
 			'date'	 => '',
@@ -216,9 +208,15 @@ class Repayment extends REST_Controller {
 				}
 			}
 		}
-		
 
-		if($virtual){
+        $virtualAcount = $this->virtual_account_model->get_by([
+            'investor'	=> 0,
+            'user_id'	=> $user_id,
+            'virtual_account like' => $virtual . '%'
+        ]);
+		if($virtualAcount){
+            $account['virtual_account'] = $virtualAcount->virtual_account;
+            $virtual_account = $account;
 			$funds = $this->transaction_lib->get_virtual_funds($virtualAcount->virtual_account);
 		}else{
 			$funds			 = array(
