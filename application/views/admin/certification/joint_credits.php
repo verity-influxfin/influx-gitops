@@ -52,7 +52,7 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-										<td>聯徵調閱日期：<?= isset($printDate) ? $printDate : 0 ?></td>
+                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : 0 ?>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
@@ -204,8 +204,13 @@
 			}
 			for (var i = 0; i < jointCredits.messages.length; i++) {
 				var message = jointCredits.messages[i];
-
 				var splitedMessage = "";
+
+                if(jointCredits.messages[i].status == '驗證成功' && jointCredits.messages[i].stage == '「調閱日期」應為最近申貸日起算一個月內'){
+                    $('input[name="printDate"]').attr('disabled',true);
+                    $('input[name="printDate"]').hide();
+                }
+
 				for (var j = 0; j < message.message.length; j++) {
 					splitedMessage += message.message[j] + "<br>";
 				}
