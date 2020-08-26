@@ -760,10 +760,6 @@ class Certification extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->model('user/user_meta_model');
 
-			$salary             = $this->user_meta_model->get_by([
-				'user_id'   => $certification->user_id,
-				'meta_key'  => ['job_salary']
-			]);
 
 			$job_credits = json_decode($certification->content);
 			$certification->content = $job_credits;
@@ -773,8 +769,10 @@ class Certification extends MY_Admin_Controller {
 			$certification->content->position = $this->config->item('position_name')[$certification->content->position];
 			$certification->content->type = $this->config->item('job_type_name')[$certification->content->type];
 
-			$job_credits->job_salary = $salary->meta_value;
-			$this->load->library('output/user/job_credit_output', ["data" => $job_credits->result, "certification" => $certification]);
+			$this->load->library('output/user/job_credit_output', [
+				"data" => (isset($job_credits->result) ? $job_credits->result : false),
+				"certification" => $certification
+			]);
 			$response = [
 				"user" => $this->user_output->toOne(),
 				"job_credits" => $this->job_credit_output->toOne(),
