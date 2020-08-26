@@ -204,8 +204,13 @@
 			}
 			for (var i = 0; i < jointCredits.messages.length; i++) {
 				var message = jointCredits.messages[i];
-
 				var splitedMessage = "";
+
+                if(jointCredits.messages[i].status == '驗證成功' && jointCredits.messages[i].stage == '「調閱日期」應為最近申貸日起算一個月內'){
+                    $('input[name="printDate"]').attr('disabled',true);
+                    $('input[name="printDate"]').hide();
+                }
+
 				for (var j = 0; j < message.message.length; j++) {
 					splitedMessage += message.message[j] + "<br>";
 				}
@@ -233,7 +238,6 @@
 				$('input[name="times"]').prop('type', 'text');
 				$('input[name="credit_rate"]').prop('type', 'text');
 				$('input[name="months"]').prop('type', 'text');
-				$('input[name="printDate"]').hide();
 			} else {
 
 			}
