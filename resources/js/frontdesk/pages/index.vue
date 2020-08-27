@@ -1075,11 +1075,12 @@ export default {
     background-position: 0 0;
     background-repeat: no-repeat;
     background-size: 100%;
+    padding: 70px 30px;
 
     .pattern {
       display: flex;
       width: 78%;
-      margin: 3rem auto;
+      margin: 0px auto 40px auto;
       color: #ffffff;
       position: relative;
 
@@ -1116,7 +1117,7 @@ export default {
 
           &:hover {
             filter: drop-shadow(0px 0px 8px black);
-            transition-duration: .3s;
+            transition-duration: 0.3s;
           }
 
           %img {
@@ -1237,7 +1238,7 @@ export default {
 
     .product {
       width: 80%;
-      margin: 30px auto;
+      margin: 40px auto;
 
       h2 {
         text-align: center;
@@ -1884,6 +1885,7 @@ export default {
 
     .product-card {
       background-size: initial;
+      padding: 0px;
 
       .pattern {
         width: 100%;
