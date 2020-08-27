@@ -1,216 +1,387 @@
 <template>
   <div class="index-wrapper">
-    <div class="product-card">
-      <h2>產品列表</h2>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 75%"
-          aria-valuenow="75"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
+    <div class="banner" ref="banner">
+      <div class="puhey-banner">
+        <img :src="'images/index-banner.jpg'" style="width:100%" />
+        <div class="content">
+          <p>最貼近年輕人的金融科技平台</p>
+          <span>普匯．你的手機ATM</span>
+        </div>
       </div>
-      <router-link
-        v-for="(item,index) in this.services"
-        :to="item.link"
-        :class="['card-item',{'hvr-sweep-to-left':item.isActive,'off':!item.isActive}]"
-        :key="index"
-      >
-        <div class="img">
-          <img :src="item.imageSrc" />
-        </div>
-        <div class="cv">
-          <h3>{{item.title}}</h3>
-          <hr />
-          <p v-html="item.desc"></p>
-        </div>
-        <div class="cover" v-if="!item.isActive">
-          <span>coming soon</span>
-        </div>
-      </router-link>
+      <div class="puhey-banner" v-for="(item,index) in bannerPic" :key="index">
+        <img :src="item.img" style="width:100%" />
+      </div>
     </div>
-    <div class="game-card">
-      <div class="loan-game">
-        <h2>額度試算</h2>
-        <div class="option">
-          <div class="item" v-for="(item,index) in creditRatingItem" :key="index">
-            <div class="circle" @click="item.checked = !item.checked;changeCredit(index);">
-              <img :src="item.img" :class="['img-fluid',{'gary':!item.checked} ]" />
+    <div class="count-card">
+      <div class="content">
+        <div class="item">
+          <label>成功交易筆數：</label>
+          <div class="count">${{format(parseInt(tweenedTransactionCount))}}</div>
+        </div>
+        <div class="item">
+          <label>交易金額：</label>
+          <div class="count">${{format(parseInt(tweenedTransactionAmount))}}</div>
+        </div>
+        <div class="item">
+          <label>APP下載次數：</label>
+          <div class="count">{{format(parseInt(tweenedDownloadCount))}}次</div>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="pattern">
+        <div class="p-i">
+          <h5>投資</h5>
+          <p>
+            提供資金幫他人圓夢
+            <br />並獲得合理報酬
+          </p>
+          <div class="imagery hvr-float">
+            <div class="img">
+              <img src="../asset/images/invest_pu.png" class="img-fluid" />
             </div>
-            <span>{{item.text}}</span>
+            <span>
+              投資人
+              <br />每月定期回收本息
+            </span>
           </div>
         </div>
-        <div class="credit-num">
-          <div class="circle">
-            <div class="total">
-              <p>最高可達：</p>
-              <strong>5,000～</strong>
-              <span :class="moneyClass">{{format(tweenedMoney)}}</span>
+        <div class="circle">
+          <div class="cnt hvr-grow">
+            <div class="invest-dot-up">
+              <investUp />
+            </div>
+            <div class="l-img">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 220 100">
+                <defs>
+                  <linearGradient id="L" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="0%" stop-color="#B3FAFF">
+                      <animate
+                        attributeName="stop-color"
+                        values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
+                        dur="5s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                    <stop offset="50%" stop-color="#6ad1de">
+                      <animate
+                        attributeName="stop-color"
+                        values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de"
+                        dur="2s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                    <stop offset="100%" stop-color="#2bafc3">
+                      <animate
+                        attributeName="stop-color"
+                        values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3"
+                        dur="2s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                  </linearGradient>
+                </defs>
+                <path
+                  fill="url(#L)"
+                  d="M 5 50 L 50 10 L 45 40 L 215 40 L 215 60 L 45 60 L 50 90 Z"
+                />
+              </svg>
+            </div>
+            <div class="pu-img">
+              <img src="../asset/images/logo_puhey.svg" class="img-fluid" />
+            </div>
+            <div class="r-img">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 220 100">
+                <defs>
+                  <linearGradient id="R" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="0%" stop-color="#2bafc3">
+                      <animate
+                        attributeName="stop-color"
+                        values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3;"
+                        dur="2s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                    <stop offset="50%" stop-color="#6ad1de">
+                      <animate
+                        attributeName="stop-color"
+                        values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de;"
+                        dur="2s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                    <stop offset="100%" stop-color="#B3FAFF">
+                      <animate
+                        attributeName="stop-color"
+                        values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
+                        dur="2s"
+                        repeatCount="indefinite"
+                      />
+                    </stop>
+                  </linearGradient>
+                </defs>
+                <path
+                  fill="url(#R)"
+                  d="M 215 50 L 170 90 L 175 60 L 5 60 L 5 40 L 175 40 L 170 10 Z"
+                />
+              </svg>
+            </div>
+            <div class="invest-dot-down">
+              <investDown />
+            </div>
+          </div>
+        </div>
+        <div class="p-l">
+          <h5>借款</h5>
+          <p>
+            取得投資人資金
+            <br />解決生活所需及實夢想
+          </p>
+          <div class="imagery hvr-float">
+            <span>
+              借款人
+              <br />每月定期還款
+            </span>
+            <div class="img">
+              <img src="../asset/images/loan_pu.png" class="img-fluid" />
             </div>
           </div>
         </div>
       </div>
-      <div class="invest-game">
-        <h2>投報試算</h2>
-        <div class="option">
-          <div class="item">
-            <label>期初投入金額：{{format(parseInt(principal))}}</label>
-            <div>
-              <i
-                class="fas fa-minus-circle pointer"
-                @click="principal > 0 ? principal -= 5000 : ''"
-              ></i>
-              <input
-                type="range"
-                step="5000"
-                min="0"
-                max="5000000"
-                class="slider"
-                v-model="principal"
-              />
-              <i
-                class="fas fa-plus-circle pointer"
-                @click="principal < 5000000 ? principal -= -5000 : ''"
-              ></i>
+      <div class="product">
+        <h2>貸款方案</h2>
+        <div class="hr"></div>
+        <div class="product-list">
+          <router-link
+            :class="['card-item',{'hvr-grow-shadow':item.isActive}]"
+            v-for="(item,index) in this.services"
+            :to="item.link"
+            :key="index"
+          >
+            <div class="img">
+              <img :src="item.imageSrc" />
+            </div>
+            <div class="cv">
+              <h3>{{item.title}}</h3>
+              <p v-html="item.desc"></p>
+            </div>
+            <div class="cover" v-if="!item.isActive">
+              <span>coming soon</span>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <div class="game-card" id="game-card">
+      <div style="z-index:2;position: relative;">
+        <h2>額度試算</h2>
+        <div class="hr"></div>
+        <div class="loan-game">
+          <div class="option">
+            <div
+              class="item"
+              data-aos="fade-down"
+              :data-aos-delay="100 * index"
+              v-for="(item,index) in creditRatingItem"
+              :key="index"
+            >
+              <div
+                :class="['circle',{'gary':!item.checked}]"
+                @click="item.checked = !item.checked;changeCredit(index);"
+              >
+                <img :src="item.img" class="img-fluid" />
+              </div>
+              <span>{{item.text}}</span>
             </div>
           </div>
-          <div class="item">
-            <label>每期{{amount >= 0 ? `投入` :`領出`}}金額：{{format(parseInt(amount))}}</label>
-            <div>
-              <i
-                class="fas fa-minus-circle pointer"
-                @click="amount > -100000 ? amount -= 1000 : ''"
-              ></i>
-              <input
-                type="range"
-                step="1000"
-                min="-100000"
-                max="100000"
-                class="slider"
-                v-model="amount"
-              />
-              <i class="fas fa-plus-circle pointer" @click="amount < 100000 ? amount -= -1000 :''"></i>
-            </div>
-          </div>
-          <div class="item">
-            <label>投資操作時間(年)：{{format(parseInt(time))}}</label>
-            <div>
-              <i class="fas fa-minus-circle pointer" @click="time > 1 ? time -= 1 : ''"></i>
-              <input type="range" step="1" min="1" max="20" class="slider" v-model="time" />
-              <i class="fas fa-plus-circle pointer" @click="time < 20 ? time -= -1 : ''"></i>
-            </div>
-          </div>
-          <div class="item">
-            <label>標的期數：{{format(parseInt(instalment))}}</label>
-            <div>
-              <i class="fas fa-minus-circle pointer" @click="instalment > 3 ? instalment -= 3 :''"></i>
-              <input type="range" step="3" min="3" max="24" class="slider" v-model="instalment" />
-              <i class="fas fa-plus-circle pointer" @click="instalment < 24 ? instalment -= -3 :''"></i>
-            </div>
-          </div>
-          <div class="item">
-            <label>標的年利率：{{format(parseInt(rate))}}%</label>
-            <div>
-              <i class="fas fa-minus-circle pointer" @click="rate > 2 ? rate -= 1 : ''"></i>
-              <input type="range" step="1" min="2" max="20" class="slider" v-model="rate" />
-              <i class="fas fa-plus-circle pointer" @click="rate < 20 ? rate -= -1 : ''"></i>
-            </div>
-          </div>
-          <div class="item">
-            <label>平台回款手續費：{{format(parseInt(handlingFee))}}%</label>
-            <div>
-              <i class="fas fa-minus-circle pointer" @click="handlingFee> 0? handlingFee -= 1 : ''"></i>
-              <input type="range" step="1" min="0" max="3" class="slider" v-model="handlingFee" />
-              <i class="fas fa-plus-circle pointer" @click="handlingFee< 3 ? handlingFee -= -1 :''"></i>
+          <div class="credit-num">
+            <div class="circle">
+              <div class="total">
+                <p>最高可達：</p>
+                <strong>5,000～</strong>
+                <span :class="moneyClass">{{format(tweenedMoney)}}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="chart" ref="chart">
-          <div class="invest-chart" ref="investChart"></div>
+        <h2>投報試算</h2>
+        <div class="hr"></div>
+        <div class="invest-game">
+          <div class="chart" ref="chart">
+            <div class="invest-chart" ref="investChart"></div>
+          </div>
+          <div class="option">
+            <div class="item">
+              <label>期初投入金額：{{format(parseInt(principal))}}</label>
+              <div>
+                <i
+                  class="fas fa-minus-circle pointer"
+                  @click="principal > 0 ? principal -= 5000 : ''"
+                ></i>
+                <input
+                  type="range"
+                  step="5000"
+                  min="0"
+                  max="5000000"
+                  class="slider"
+                  v-model="principal"
+                />
+                <i
+                  class="fas fa-plus-circle pointer"
+                  @click="principal < 5000000 ? principal -= -5000 : ''"
+                ></i>
+              </div>
+            </div>
+            <div class="item">
+              <label>每期{{amount >= 0 ? `投入` :`領出`}}金額：{{format(parseInt(amount))}}</label>
+              <div>
+                <i
+                  class="fas fa-minus-circle pointer"
+                  @click="amount > -100000 ? amount -= 1000 : ''"
+                ></i>
+                <input
+                  type="range"
+                  step="1000"
+                  min="-100000"
+                  max="100000"
+                  class="slider"
+                  v-model="amount"
+                />
+                <i
+                  class="fas fa-plus-circle pointer"
+                  @click="amount < 100000 ? amount -= -1000 :''"
+                ></i>
+              </div>
+            </div>
+            <div class="item">
+              <label>投資操作時間(年)：{{format(parseInt(time))}}</label>
+              <div>
+                <i class="fas fa-minus-circle pointer" @click="time > 1 ? time -= 1 : ''"></i>
+                <input type="range" step="1" min="1" max="20" class="slider" v-model="time" />
+                <i class="fas fa-plus-circle pointer" @click="time < 20 ? time -= -1 : ''"></i>
+              </div>
+            </div>
+            <div class="item">
+              <label>標的期數：{{format(parseInt(instalment))}}</label>
+              <div>
+                <i
+                  class="fas fa-minus-circle pointer"
+                  @click="instalment > 3 ? instalment -= 3 :''"
+                ></i>
+                <input type="range" step="3" min="3" max="24" class="slider" v-model="instalment" />
+                <i
+                  class="fas fa-plus-circle pointer"
+                  @click="instalment < 24 ? instalment -= -3 :''"
+                ></i>
+              </div>
+            </div>
+            <div class="item">
+              <label>標的年利率：{{format(parseInt(rate))}}%</label>
+              <div>
+                <i class="fas fa-minus-circle pointer" @click="rate > 2 ? rate -= 1 : ''"></i>
+                <input type="range" step="1" min="2" max="20" class="slider" v-model="rate" />
+                <i class="fas fa-plus-circle pointer" @click="rate < 20 ? rate -= -1 : ''"></i>
+              </div>
+            </div>
+            <div class="item">
+              <label>平台回款手續費：{{format(parseInt(handlingFee))}}%</label>
+              <div>
+                <i
+                  class="fas fa-minus-circle pointer"
+                  @click="handlingFee> 0? handlingFee -= 1 : ''"
+                ></i>
+                <input type="range" step="1" min="0" max="3" class="slider" v-model="handlingFee" />
+                <i
+                  class="fas fa-plus-circle pointer"
+                  @click="handlingFee< 3 ? handlingFee -= -1 :''"
+                ></i>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="advantage-card">
-      <div class="title">以金融為核心，以科技為輔具，普匯給您前所未有的專業金融APP</div>
-      <div class="content">
-        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="400">
-          <div class="desc">
-            <p>最專業的金融專家</p>
-            <div class="cnt">
-              <div class="img">
-                <img :src="'./images/best1.png'" class="img-fluid" />
-              </div>
-              <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
-            </div>
-          </div>
+      <div class="header">
+        <div class="slg">
+          <p class="title">
+            以金融為核心，以科技為輔具，
+            <br />普匯給您前所未有的專業金融APP
+          </p>
+          <p class="l-btn">為什麼選擇普匯金融科技?</p>
         </div>
-        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="800">
-          <div class="desc">
-            <p>最先進的AI科技系統</p>
-            <div class="cnt">
-              <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
-              <div class="img">
-                <img :src="'./images/best2.png'" class="img-fluid" />
-              </div>
-            </div>
+      </div>
+      <div class="content" ref="advantage_slick">
+        <div class="item">
+          <div class="img">
+            <img :src="'./images/expert.svg'" class="img-fluid" />
           </div>
+          <p>最專業的金融專家</p>
+          <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
         </div>
-        <div class="item" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1200">
-          <div class="desc">
-            <p>簡單、快速、安全、隱私</p>
-            <div class="cnt">
-              <div class="img">
-                <img :src="'./images/best3.png'" class="img-fluid" />
-              </div>
-              <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
-            </div>
+        <div class="item">
+          <div class="img">
+            <img :src="'./images/ai.svg'" class="img-fluid" />
           </div>
+          <p>最先進的AI科技系統</p>
+          <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
+        </div>
+        <div class="item">
+          <div class="img">
+            <img :src="'./images/safe.svg'" class="img-fluid" />
+          </div>
+          <p>簡單、快速、安全、隱私</p>
+          <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
         </div>
       </div>
     </div>
     <div class="experience-card">
       <h2>用戶回饋</h2>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 75%"
-          aria-valuenow="75"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
-      <button class="btn btn-info comment" @click="$root.goFeedback">
-        <i class="fas fa-comments"></i>我要回饋
-      </button>
-      <div class="items">
-        <div class="entry" v-for="(item,index) in experiences" :key="index">
-          <div class="member">
-            <div class="img">
-              <img :src="item.imageSrc" class="img-fluid" />
-            </div>
-            <label>
-              {{item.name}}
-              <br />
-              {{item.unit}}
-            </label>
+      <div class="hr"></div>
+      <div class="comment-box" ref="comment_slick">
+        <div class="item" v-for="(item,index) in experiences" :key="index">
+          <div
+            :class="['memo',{'laod-s-b':item.type === 'loan'} , {'invset-s-b':item.type === 'invset'}]"
+          >
+            <h5
+              :class="[{'laod-s':item.type === 'loan'} , {'invset-s':item.type === 'invset'}]"
+            >{{item.type === 'loan' ? "借款" : "投資"}}回饋</h5>
+            <span>{{item.memo}}</span>
           </div>
-          <div class="memo">{{item.memo}}</div>
+          <div class="img">
+            <img :src="item.imageSrc" class="img-fluid" />
+          </div>
+          <label class="c-pel">
+            {{item.name}}
+            <br />
+            {{item.unit}}
+          </label>
         </div>
       </div>
+      <button class="btn btn-primary comment" @click="$root.goFeedback">
+        <i class="fas fa-comments"></i>我要回饋
+      </button>
     </div>
     <div class="information-card">
-      <ul class="nav" role="tablist">
+      <ul class="nav" role="tablist" @click="reSlick">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#news">最新消息</a>
+          <a
+            class="nav-link active"
+            data-toggle="tab"
+            href="#news"
+            @click="reSlick('news_slick')"
+          >最新消息</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#knowledge">小學堂</a>
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#knowledge"
+            @click="reSlick('knowledge_slick')"
+          >小學堂</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#video">小學堂影音</a>
+          <a class="nav-link" data-toggle="tab" href="#video" @click="reSlick('video_slick')">小學堂影音</a>
         </li>
       </ul>
       <div class="tab-content">
@@ -225,12 +396,11 @@
               <div class="img">
                 <img :src="item.image_url" class="img-fluid" />
               </div>
-              <span>{{item.updated_at}}</span>
-              <hr />
               <p>{{item.title}}</p>
+              <span>{{item.updated_at}}</span>
             </a>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="news" style="width: 55%;">
+          <router-link class="btn btn-warning btn-to" to="news">
             最新消息&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -246,12 +416,11 @@
               <div class="img">
                 <img :src="item.media_link" class="img-fluid" />
               </div>
-              <span>{{item.post_date}}</span>
-              <hr />
               <p>{{item.post_title}}</p>
+              <span>{{item.post_date}}</span>
             </router-link>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="blog" style="width: 55%;">
+          <router-link class="btn btn-warning btn-to" to="blog">
             小學堂&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -272,12 +441,11 @@
                   allowfullscreen
                 ></iframe>
               </div>
-              <span>{{item.post_date}}</span>
-              <hr />
               <p>{{item.post_title}}</p>
+              <span>{{item.post_date}}</span>
             </router-link>
           </div>
-          <router-link class="btn btn-secondary btn-lg" to="vlog/share" style="width: 55%;">
+          <router-link class="btn btn-warning btn-to" to="vlog/share">
             小學堂影音&ensp;
             <i class="fas fa-external-link-alt"></i>
           </router-link>
@@ -285,95 +453,133 @@
       </div>
     </div>
     <div class="slogan-card">
-      <div class="logo">
-        <img :src="'./images/logo_.png'" class="img-fluid" />
-      </div>
-      <div class="slogan">
-        <div class="content">
-          <h4>普匯相信每個年輕人，我們致力幫助他們完成人生的夢想</h4>
-          <h4>以金融為核心，以科技為輔具，只為給您最好的體驗</h4>
-          <h4>最貼近年輕人的金融科技平台</h4>
-          <h4>普匯．你的手機ATM</h4>
-        </div>
+      <p class="content">
+        普匯相信每個年輕人，我們致力幫助他們完成人生的夢想
+        <br />以金融為核心，以科技為輔具，只為給您最好的體驗
+        <br />最貼近年輕人的金融科技平台
+      </p>
+      <div class="slogan">普匯．你的手機ATM</div>
+      <div class="img">
+        <img :src="'./images/846.png'" class="img-fluid" />
       </div>
     </div>
-    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
-      <div>
-        <img :src="'./images/flow.png'" class="img-fluid" />
+    <div class="download-card">
+      <div class="d-desc">
+        <h5>Get APP</h5>
+        <hr />
+        <p>選擇適合的平台下載APP</p>
+        <div class="d-apps">
+          <div class="d-loan">
+            <p>借款</p>
+            <a class="d-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+              <appleApp type="loan" />
+            </a>
+            <a class="d-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+              <googleApp type="loan" />
+            </a>
+          </div>
+          <div class="d-invest">
+            <p>投資</p>
+            <a class="d-link" target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">
+              <appleApp type="invest" />
+            </a>
+            <a class="d-link" target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">
+              <googleApp type="invest" />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="img">
+        <img :src="'./images/phone.png'" class="img-fluid" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import investUp from "../component/investDotUpComponent";
+import investDown from "../component/investDotDownComponent";
+import googleApp from "../component/googleAppComponent";
+import appleApp from "../component/appleAppComponent";
+
 export default {
+  components: {
+    investUp,
+    investDown,
+    googleApp,
+    appleApp,
+  },
   data: () => ({
-    principal: 0,
-    amount: 0,
+    principal: 30000,
+    amount: 10000,
     time: 1,
-    instalment: 3,
+    instalment: 12,
     rate: 2,
-    money: 0,
-    tweenedMoney: 0,
+    money: 100000,
+    tweenedMoney: 100000,
+    tweenedTransactionCount: 0,
+    tweenedTransactionAmount: 0,
+    tweenedDownloadCount: 0,
     handlingFee: 1,
-    moneyClass: "default",
+    moneyClass: "ordinary",
     creditRatingItem: [
       {
         text: "實名認證",
-        img: "./images/realname.png",
-        checked: false,
-        money: 10000
+        img: "./images/icon_cert_rev2_identity.svg",
+        checked: true,
+        money: 10000,
       },
       {
         text: "金融帳號",
-        img: "./images/account_.png",
+        img: "./images/icon_cert_rev2_bank.svg",
         checked: false,
-        money: 10000
+        money: 10000,
       },
       {
         text: "社交認證",
-        img: "./images/soucial.png",
+        img: "./images/icon_cert_rev2_social.svg",
         checked: false,
-        money: 20000
+        money: 20000,
       },
       {
         text: "電子信箱",
-        img: "./images/email.png",
+        img: "./images/icon_cert_rev2_mail.svg",
         checked: false,
-        money: 10000
+        money: 10000,
       },
       {
         text: "財力證明",
-        img: "./images/financial.png",
+        img: "./images/icon_cert_rev2_income.svg",
         checked: false,
-        money: 20000
+        money: 20000,
       },
       {
         text: "學生身分",
-        img: "./images/student.png",
-        checked: false,
-        money: 40000
+        img: "./images/icon_cert_rev2_student.svg",
+        checked: true,
+        money: 40000,
       },
       {
         text: "最高學歷",
-        img: "./images/education_.png",
+        img: "./images/icon_cert_rev2_diploma.svg",
         checked: false,
-        money: 30000
+        money: 30000,
       },
       {
         text: "工作認證",
-        img: "./images/work.png",
+        img: "./images/icon_cert_rev2_worker.svg",
         checked: false,
-        money: 40000
+        money: 40000,
       },
       {
         text: "聯合徵信",
-        img: "./images/credit.png",
-        checked: false,
-        money: 50000
-      }
+        img: "./images/icon_cert_rev2_icri.svg",
+        checked: true,
+        money: 50000,
+      },
     ],
-    services: []
+    bannerPic: [],
+    services: [],
   }),
   computed: {
     experiences() {
@@ -395,7 +601,7 @@ export default {
     },
     news() {
       return this.$store.getters.NewsData.slice(0, 8);
-    }
+    },
   },
   created() {
     this.$store.dispatch("getExperiencesData");
@@ -403,32 +609,45 @@ export default {
     this.$store.dispatch("getNewsData");
     this.$store.dispatch("getVideoData", { category: "share" });
     this.getServiceData();
+    this.getBannerPic();
     $("title").text(`首頁 - inFlux普匯金融科技`);
   },
   mounted() {
-    $(this.$root.$refs.banner).show();
     this.$nextTick(() => {
       this.createChart();
-      setTimeout(() => {
-        this.$root.pageHeaderOffsetTop = $(this.$root.$refs.banner).height();
-      }, 300);
+      particlesJS.load("game-card", "data/game.json");
+      this.createSlick(this.$refs.advantage_slick, 3, false);
     });
     AOS.init();
+
+    gsap.to(this.$data, { duration: 0.5, tweenedTransactionCount: 10000 });
+    gsap.to(this.$data, { duration: 0.5, tweenedTransactionAmount: 50000000 });
+    gsap.to(this.$data, { duration: 0.5, tweenedDownloadCount: 20000 });
   },
   watch: {
-    news(data) {
+    news() {
       this.$nextTick(() => {
         this.createSlick(this.$refs.news_slick);
       });
     },
-    knowledge(data) {
+    knowledge() {
       this.$nextTick(() => {
         this.createSlick(this.$refs.knowledge_slick);
       });
     },
-    video(data) {
+    video() {
       this.$nextTick(() => {
         this.createSlick(this.$refs.video_slick);
+      });
+    },
+    experiences() {
+      this.$nextTick(() => {
+        this.createSlick(this.$refs.comment_slick, 3, false);
+      });
+    },
+    bannerPic() {
+      this.$nextTick(() => {
+        this.createSlick(this.$refs.banner, 1, false);
       });
     },
     principal(data) {
@@ -457,7 +676,7 @@ export default {
     },
     money(data) {
       if (data < 50000) {
-        this.moneyClass = "defluat";
+        this.moneyClass = "default";
       } else if (50000 <= data && data < 100000) {
         this.moneyClass = "soso";
       } else if (100000 <= data && data < 150000) {
@@ -469,27 +688,32 @@ export default {
       }
 
       gsap.to(this.$data, { duration: 0.5, tweenedMoney: data });
-    }
+    },
   },
   methods: {
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
+    async getBannerPic() {
+      let res = await axios.get("getBannerPic");
+      this.bannerPic = res.data;
+    },
     getServiceData() {
-      axios.post("getServiceData").then(res => {
+      axios.post("getServiceData").then((res) => {
         this.services = res.data;
       });
     },
-    createSlick(tar) {
+    createSlick(tar, toShow = 4, arrows = true) {
       $(tar).slick({
         infinite: true,
-        slidesToShow: 4,
+        slidesToShow: toShow,
         slidesToScroll: 1,
         autoplay: true,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
+        arrows,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
         nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
         responsive: [
@@ -497,17 +721,17 @@ export default {
             breakpoint: 1023,
             settings: {
               slidesToShow: 2,
-              slidesToScroll: 1
-            }
+              slidesToScroll: 1,
+            },
           },
           {
             breakpoint: 767,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
+              slidesToScroll: 1,
+            },
+          },
+        ],
       });
     },
     changeCredit(index) {
@@ -553,7 +777,7 @@ export default {
           amount: _amount,
           principle: _principle,
           intrest: _intrest,
-          principleRemind: 0
+          principleRemind: 0,
         };
         for (k = 0; k < i; k++) {
           _currentRepamentSchedule.push(_p);
@@ -590,7 +814,7 @@ export default {
             amount: _amount,
             principle: _principle,
             intrest: _intrest,
-            principleRemind: _principleRemind
+            principleRemind: _principleRemind,
           };
           _currentRepamentSchedule.push(_p);
         }
@@ -639,14 +863,14 @@ export default {
         listIntrest[listIntrest.length - 2] +
         $this.amount;
 
-      let title =
+      let subtext =
         _totalIncome < 0 || _last2Return < 0 || _totalIncome + _cashLast < 0
           ? "領取金額超過每月複投金額"
-          : `投資總額：${this.format(_investAll)} \n 回款總額：${this.format(
+          : `投資總額：${this.format(_investAll)} \n回款總額：${this.format(
               _returnAll
             )} =  ${this.format(_totalIncome)}(期末回款) + ${this.format(
               _cashLast
-            )}(本金餘額) \n 預期獲利：${this.format(_valueTotal)}`;
+            )}(本金餘額) \n預期獲利：${this.format(_valueTotal)}`;
 
       $($this.$refs.investChart)
         .css("width", `${$($this.$refs.chart).innerWidth()}px`)
@@ -657,20 +881,21 @@ export default {
       let option = {
         grid: {
           left: 30,
-          top: 60,
+          top: 70,
           right: 30,
-          bottom: 60
+          bottom: 60,
         },
         title: {
-          subtext: title,
+          subtext,
           subtextStyle: {
-            color: "#000000",
-            fontSize: 14
+            color: "#083a6e",
+            fontSize: 14,
           },
-          left: "center"
+          left: "20",
+          top: "0",
         },
         dataZoom: {
-          type: "slider"
+          type: "slider",
         },
         tooltip: {
           trigger: "axis",
@@ -687,21 +912,21 @@ export default {
               params[2].seriesName
             }：</span>${$this.format(params[2].value)}</div>
             `;
-          }
+          },
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: xAxisData
+          data: xAxisData,
         },
         yAxis: {
           type: "value",
           axisTick: {
-            show: false
+            show: false,
           },
           axisLabel: {
-            show: false
-          }
+            show: false,
+          },
         },
         series: [
           {
@@ -710,16 +935,16 @@ export default {
             symbol: "circle",
             symbolSize: 1,
             itemStyle: {
-              color: "orange"
+              color: "#9F9ADB",
             },
             lineStyle: {
-              color: "orange"
+              color: "#9F9ADB",
             },
             hoverAnimation: false,
             legendHoverLink: false,
             legendHoverLink: false,
             data: listPrinciple,
-            type: "line"
+            type: "line",
           },
           {
             name: "每期投入",
@@ -727,16 +952,16 @@ export default {
             symbol: "green",
             symbolSize: 1,
             itemStyle: {
-              color: "green"
+              color: "#98F0E2",
             },
             lineStyle: {
-              color: "green"
+              color: "#98F0E2",
             },
             hoverAnimation: false,
             legendHoverLink: false,
             legendHoverLink: false,
             data: listEveryFlow,
-            type: "line"
+            type: "line",
           },
           {
             name: "本期回款利息",
@@ -744,23 +969,28 @@ export default {
             symbol: "circle",
             symbolSize: 1,
             itemStyle: {
-              color: "lightblue"
+              color: "orange",
             },
             lineStyle: {
-              color: "lightblue"
+              color: "orange",
             },
             hoverAnimation: false,
             legendHoverLink: false,
             legendHoverLink: false,
             data: listIntrest,
-            type: "line"
-          }
-        ]
+            type: "line",
+          },
+        ],
       };
 
       line_chart.setOption(option);
-    }
-  }
+    },
+    reSlick(target) {
+      this.$nextTick(() => {
+        $(this.$refs[target]).slick("refresh");
+      });
+    },
+  },
 };
 </script>
 
@@ -772,103 +1002,360 @@ export default {
     font-weight: bolder;
   }
 
-  .progress {
-    height: 4px;
+  .hr {
+    width: 130px;
+    height: 2px;
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
+    margin: 0px auto;
+  }
+
+  .banner {
+    position: relative;
+    overflow: hidden;
+
+    .puhey-banner {
+      position: relative;
+
+      .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #083a6e;
+        font-size: 36px;
+        font-weight: bolder;
+        text-shadow: 0 0 7px #ffffff;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .puhey-banner {
+        .content {
+          font-size: 16px;
+        }
+
+        .app-entrance {
+          width: 70%;
+          top: 80%;
+        }
+      }
+    }
+  }
+
+  .count-card {
+    background-color: #083a6e;
+    color: #ffffff;
+    overflow: hidden;
+
+    .content {
+      display: flex;
+      width: fit-content;
+      margin: 20px auto;
+
+      .item {
+        padding: 0px 20px;
+
+        &:not(:last-of-type) {
+          border-right: 1px solid #ffffff;
+        }
+
+        .count {
+          font-size: 26px;
+          font-weight: bold;
+          line-height: 25px;
+        }
+      }
+    }
   }
 
   .product-card {
-    overflow: auto;
-    padding: 30px;
-    background: #f5f5f5;
+    overflow: hidden;
+    background-image: url("../asset/images/105.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 100%;
 
-    .card-item {
-      position: relative;
-      float: left;
-      width: 45%;
-      margin: 30px;
-      box-shadow: 0 0 6px black;
+    .pattern {
       display: flex;
-      height: 200px;
-      background: #ffffff;
+      width: 78%;
+      margin: 3rem auto;
+      color: #ffffff;
+      position: relative;
 
-      &.off {
-        cursor: default;
-        &:hover {
-          color: #000000;
-        }
-      }
-
-      .img {
-        height: inherit;
-        width: 30%;
-        overflow: hidden;
-      }
-
-      .cv {
-        padding: 10px;
-        width: 70%;
-
-        hr {
-          border-top: 2px solid #465671;
-        }
-      }
-
-      .cover {
+      .circle {
         position: absolute;
-        width: 100%;
-        height: -webkit-fill-available;
-        background: #7075afb3;
+        top: 61%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
 
-        span {
+        %invest-dot {
+          width: 400px;
           position: absolute;
-          transform: translate(-50%, -50%) rotate(-15deg);
-          top: 50%;
           left: 50%;
-          font-size: 45px;
+          transform: translateX(-50%);
+        }
+
+        .invest-dot-up {
+          @extend %invest-dot;
+          top: -20%;
+        }
+
+        .invest-dot-down {
+          @extend %invest-dot;
+          bottom: -20%;
+        }
+
+        .cnt {
+          background: #ffffff;
+          border-radius: 50%;
+          height: 250px;
+          width: 250px;
+          padding: 27px 0px;
+
+          &:hover {
+            filter: drop-shadow(0px 0px 8px black);
+            transition-duration: .3s;
+          }
+
+          %img {
+            width: 60%;
+            text-align: center;
+            margin: 0px auto;
+
+            svg {
+              width: 100%;
+            }
+          }
+
+          .l-img {
+            @extend %img;
+
+            path {
+              // animation: l-flash 4s ease-in-out infinite;
+
+              @keyframes l-flash {
+                0% {
+                  fill: red;
+                }
+                50% {
+                  fill: blue;
+                }
+                100% {
+                  fill: red;
+                }
+              }
+            }
+          }
+          .pu-img {
+            @extend %img;
+          }
+          .r-img {
+            @extend %img;
+
+            path {
+              // animation: r-flash 4s ease-in-out infinite;
+
+              @keyframes r-flash {
+                0% {
+                  fill: blue;
+                }
+                50% {
+                  fill: red;
+                }
+                100% {
+                  fill: blue;
+                }
+              }
+            }
+          }
         }
       }
 
-      &:hover {
-        text-decoration: none;
+      %p-bg {
+        width: 50%;
+        text-align: center;
+        z-index: 1;
+
+        h5 {
+          font-size: 24px;
+          font-weight: bold;
+        }
+
+        p {
+          font-weight: bold;
+        }
+
+        .imagery {
+          display: flex;
+          background: #083a6ec7;
+          padding: 2rem;
+          height: 345px;
+
+          .img {
+            width: 30%;
+            position: relative;
+
+            img {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              filter: drop-shadow(3px 3px 3px black);
+            }
+          }
+
+          span {
+            width: 70%;
+            height: fit-content;
+            position: relative;
+            top: 50%;
+            transform: translatey(-50%);
+            font-weight: bold;
+            padding: 0px 4rem;
+            font-size: 20px;
+          }
+        }
+      }
+
+      .p-i {
+        @extend %p-bg;
+        margin-right: 5rem;
+        span {
+          text-align: left;
+        }
+      }
+
+      .p-l {
+        @extend %p-bg;
+        margin-left: 5rem;
+        span {
+          text-align: right;
+        }
+      }
+    }
+
+    .product {
+      width: 80%;
+      margin: 30px auto;
+
+      h2 {
+        text-align: center;
+      }
+
+      .product-list {
+        padding: 20px;
+
+        .card-item {
+          position: relative;
+          float: left;
+          width: 50%;
+          display: flex;
+          padding: 20px;
+          color: #ffffff;
+
+          $bgColor: #2e639b, #00def8, #3c73f5, #00b7cc, #1b558e;
+
+          @for $i from 1 through 5 {
+            &:nth-of-type(#{$i}) {
+              background: nth($bgColor, $i);
+            }
+          }
+
+          &:hover {
+            z-index: 2;
+          }
+
+          .img {
+            height: 190px;
+            width: 190px;
+            overflow: hidden;
+            position: relative;
+
+            img {
+              height: 180px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              filter: drop-shadow(3px 3px 3px black);
+            }
+          }
+
+          .cv {
+            padding: 0px 20px;
+            width: calc(100% - 175px);
+          }
+
+          .cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: -webkit-fill-available;
+            background: #7075afb3;
+
+            span {
+              position: absolute;
+              transform: translate(-50%, -50%) rotate(-15deg);
+              top: 50%;
+              left: 50%;
+              font-size: 45px;
+            }
+          }
+
+          &:hover {
+            color: #ffffff;
+            text-decoration: none;
+          }
+        }
       }
     }
   }
 
   .game-card {
-    overflow: auto;
+    overflow: hidden;
+    background: #e3e3e3;
+    padding: 40px 0px;
+    position: relative;
+
+    .particles-js-canvas-el {
+      position: absolute;
+      top: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2b0c5a;
+    }
 
     %layout {
-      float: left;
-      width: 50%;
       text-align: center;
-      color: #ffffff;
-      padding: 10px;
+      background-color: #ffffff;
+      padding: 20px 10px;
+      width: 60%;
+      margin: 20px auto 30px auto;
     }
 
     .loan-game {
-      background: #3697c2;
       @extend %layout;
 
       .option {
-        overflow: auto;
+        display: flex;
+        justify-content: space-around;
 
         .item {
-          float: left;
-          margin: 5px 10px;
+          margin: 5px 5px;
 
           .circle {
             background: #ffffff;
             border-radius: 50%;
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             position: relative;
-            box-shadow: 0 0 8px black;
+            border: 10px solid #00d3dc;
             margin: 5px;
             cursor: pointer;
-
-            .gary {
-              filter: grayscale(1);
-            }
 
             img {
               position: absolute;
@@ -876,7 +1363,16 @@ export default {
               left: 50%;
               transform: translate(-50%, -50%);
               border-radius: 50%;
+              width: 85%;
             }
+          }
+
+          .gary {
+            border-color: #f1f1f1;
+          }
+
+          span {
+            font-size: 14px;
           }
         }
       }
@@ -885,14 +1381,13 @@ export default {
         margin: 10px 20px;
 
         .circle {
-          background: #ffffff;
+          background-image: linear-gradient(129deg, #00aeff 3%, #00d9d5 102%);
           border-radius: 26px;
           width: 500px;
           height: 170px;
           position: relative;
-          box-shadow: 0 0 8px black;
+          color: #ffffff;
           margin: 5px auto;
-          color: #909090;
 
           .total {
             position: absolute;
@@ -932,41 +1427,6 @@ export default {
 
     .invest-game {
       @extend %layout;
-      background: #4056c2;
-
-      .option {
-        overflow: auto;
-
-        .item {
-          width: 48%;
-          float: left;
-          text-align: end;
-          margin: 0px 5px;
-          position: relative;
-
-          label {
-            text-align: initial;
-            width: 200px;
-            float: left;
-          }
-
-          div {
-            position: absolute;
-            right: 0;
-
-            .pointer {
-              cursor: pointer;
-            }
-
-            .slider {
-              height: 3px;
-              outline: none;
-              transition: opacity 0.2s;
-              transform: translate(0%, -4px);
-            }
-          }
-        }
-      }
 
       .chart {
         color: #000000;
@@ -975,10 +1435,113 @@ export default {
         box-shadow: 0 0 8px #ffffff;
         margin: 10px 5px;
         width: 100%;
-        height: 302px;
+        height: 500px;
 
         .invest-chart {
           text-align: start;
+        }
+      }
+
+      .option {
+        overflow: auto;
+
+        .item {
+          width: calc(50% - 10px);
+          float: left;
+          text-align: start;
+          margin: 0px 5px;
+          padding: 0px 30px;
+          position: relative;
+
+          div {
+            .pointer {
+              cursor: pointer;
+              color: #00d3dc;
+            }
+
+            .slider {
+              width: calc(100% - 42px);
+              height: 3px;
+              outline: none;
+              transition: opacity 0.2s;
+              transform: translate(0%, -4px);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .advantage-card {
+    .header {
+      background-image: url("../asset/images/why_bg.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      font-size: 17px;
+      font-weight: bold;
+      overflow: hidden;
+      min-height: 500px;
+      position: relative;
+
+      .slg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .title {
+          color: #ffffff;
+          margin: 35px auto;
+          width: fit-content;
+          text-align: center;
+          font-size: 30px;
+          font-weight: bolder;
+        }
+
+        .l-btn {
+          background-color: #fbd900;
+          color: #083a6e;
+          font-size: 22px;
+          font-weight: bold;
+          width: 100%;
+          margin: 0px auto;
+          padding: 8px 15px;
+          border-radius: 25px;
+          text-align: center;
+        }
+      }
+    }
+
+    .content {
+      .item {
+        padding: 3rem;
+
+        $bgColor: #005ec1, #16528f, #083a6e;
+
+        @for $i from 1 through 3 {
+          &:nth-of-type(#{$i}) {
+            background: nth($bgColor, $i);
+          }
+        }
+
+        .img {
+          width: fit-content;
+          margin: 20px auto;
+
+          img {
+            height: 90px;
+          }
+        }
+
+        p {
+          color: #fbd900;
+          font-size: 31px;
+          text-align: center;
+          font-weight: 700;
+        }
+
+        span {
+          color: #ffffff;
         }
       }
     }
@@ -988,7 +1551,12 @@ export default {
     padding: 30px;
     overflow: hidden;
     position: relative;
-    background: #d6d6d6;
+    background: #f5f5f5;
+
+    h2 {
+      text-align: center;
+      color: #083a6e;
+    }
 
     .comment {
       position: absolute;
@@ -996,123 +1564,109 @@ export default {
       right: 30px;
     }
 
-    .items {
-      display: flex;
-      align-items: center;
-      width: fit-content;
-      animation: indexPcCarouselAnim 60s infinite alternate linear;
-    }
+    .comment-box {
+      .item {
+        margin: 20px;
 
-    @media only screen and (max-width: 768px) {
-      .items {
-        animation: indexMobileCarouselAnim 60s infinite alternate linear;
-      }
-
-      @keyframes indexMobileCarouselAnim {
-        from {
-          transform: translate(0, 0);
+        .laod-s-b {
+          border: solid 1.5px #880ca2;
         }
-        to {
-          transform: translate(calc(-100%));
+
+        .invest-s-b {
+          border: solid 1.5px #0ca283;
         }
-      }
-    }
 
-    @keyframes indexPcCarouselAnim {
-      from {
-        transform: translate(0, 0);
-      }
-      to {
-        transform: translate(calc(-100% + (3 * 500px)));
-      }
-    }
+        .laod-s {
+          color: #880ca2;
+        }
 
-    .entry {
-      display: flex;
-      position: relative;
-      width: 500px;
-      background: #fff;
-      margin: 1em;
-      padding: 0.5em;
-      border-radius: 10px;
-      box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.5);
+        .invest-s {
+          color: #0ca283;
+        }
 
-      .member {
-        text-align: center;
-        padding: 5px;
-        width: 500px;
+        .memo {
+          h5 {
+            text-align: center;
+            font-weight: bold;
+          }
 
-        label {
-          font-weight: bolder;
+          box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+          background-color: #ffffff;
+          line-height: 1.83;
+          padding: 41px 20px;
+          text-align: justify;
+          min-height: 235px;
         }
 
         .img {
-          width: 100px;
-          margin: 0px auto;
+          overflow: hidden;
           border-radius: 50%;
+          width: fit-content;
+          margin: -40px auto 0px auto;
 
           img {
-            border-radius: 50%;
+            width: 80px;
           }
         }
-      }
 
-      .memo {
-        padding: 10px;
-        background: #3b81ff;
-        border-radius: 10px;
-        position: relative;
-        color: #ffffff;
-
-        &:after {
-          content: "";
-          height: 0;
-          width: 0;
-          border-right: 15px solid #3b81ff;
-          border-top: 10px solid #ffffff00;
-          border-bottom: 10px solid #ffffff00;
-          position: absolute;
-          top: 50px;
-          left: -15px;
+        .c-pel {
+          text-align: center;
+          margin: 12px auto;
+          display: block;
         }
       }
+    }
+    .slick-active {
+      opacity: 0.5;
+      transform: translateY(10%);
+    }
+
+    .slick-active + .slick-active {
+      transform: translateY(2%);
+      opacity: 1;
+    }
+
+    .slick-active + .slick-active + .slick-active {
+      opacity: 0.5;
+      transform: translateY(10%);
     }
   }
 
   .information-card {
-    padding: 10px 0px;
-    background: #a7caff;
+    overflow: hidden;
+    padding-bottom: 30px;
 
-    .nav-item {
-      width: 31.5%;
-      margin: 0px 10px;
-      text-align: center;
-      font-weight: bolder;
+    .nav {
+      width: 60%;
+      margin: 0px auto;
+      .nav-item {
+        width: calc(100% / 3);
+        text-align: center;
+        font-weight: bolder;
 
-      .nav-link {
-        width: 100%;
-        margin: 0px 10px;
-        border-radius: 10px;
-        position: relative;
-        border: 1px solid #00548c75;
-        background: #ffffff;
+        .nav-link {
+          width: 100%;
+          position: relative;
+          background: #ffffff;
+          padding: 15px 0px;
+          cursor: pointer;
 
-        &.active {
-          background: #1547ff;
-          color: #ffffff;
-          border: 0px;
+          &.active {
+            background: #fbd900;
+            border: 0px;
 
-          &:after {
-            content: "";
-            height: 0;
-            width: 0;
-            border-top: 15px solid #1547ff;
-            border-left: 15px solid #ffffff00;
-            border-right: 15px solid #ffffff00;
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translate(-50%, 0);
+            &:after {
+              content: "";
+              height: 0;
+              width: 0;
+              border-top: 15px solid #fbd900;
+              border-left: 15px solid #ffffff00;
+              border-right: 15px solid #ffffff00;
+              position: absolute;
+              bottom: -15px;
+              left: 50%;
+              transform: translate(-50%, 0);
+            }
           }
         }
       }
@@ -1125,8 +1679,13 @@ export default {
       .news-slick,
       .knowledge-slick,
       .video-slick {
-        margin: 25px 10px;
+        margin: 25px 10px 10px 10px;
         position: relative;
+      }
+
+      .btn-to {
+        font-weight: bold;
+        width: 30%;
       }
 
       .slick-arrow {
@@ -1151,31 +1710,35 @@ export default {
       }
 
       .slick-item {
-        width: 25%;
-        border: 1px solid #000000;
         padding: 10px;
         text-align: initial;
         font-size: 16px;
         font-weight: bolder;
         margin: 0px 10px;
-        box-shadow: 0 0 4px black;
-        background: #ffffff;
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+        background-color: #ffffff;
         min-height: 307px;
 
         .img {
-          width: 300px;
-          height: 185px;
+          width: 100%;
+          height: 200px;
           margin: 0px auto;
           overflow: hidden;
         }
 
-        &:hover {
-          text-decoration: none;
+        p {
+          text-align: center;
+          color: #083a6e;
+          font-size: 15px;
+          margin: 0.5rem 0px;
         }
 
-        hr {
-          border-top: 1px solid #000000;
-          margin: 5px 10px;
+        span {
+          float: right;
+        }
+
+        &:hover {
+          text-decoration: none;
         }
 
         iframe {
@@ -1187,116 +1750,246 @@ export default {
   }
 
   .slogan-card {
-    width: 100%;
-    padding: 25px 15%;
-    background: #2f82ff;
-    display: flex;
+    padding: 25px 0px;
+    background: #0b58a8;
+    position: relative;
 
-    .logo {
-      width: 40%;
-      filter: drop-shadow(0px 0px 5px white);
+    .content {
+      width: fit-content;
+      margin: 0px auto;
+      text-align: center;
+      color: #ffffff;
+      font-weight: bold;
+      line-height: 1.96;
     }
 
     .slogan {
+      background-color: #1c0073;
+      width: 25%;
+      margin: 10px auto;
+      padding: 5px;
+      font-weight: bold;
       color: #ffffff;
-      padding: 10px;
-      position: relative;
-      width: inherit;
+      text-align: center;
+      border-radius: 25px;
+    }
 
-      .content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-family: Arial, cursive, Helvetica, sans-serif;
-        width: fit-content;
-
-        h4 {
-          margin-bottom: 20px;
-        }
-      }
+    .img {
+      position: absolute;
+      bottom: 0px;
+      right: 18%;
+      width: 200px;
     }
   }
 
   .download-card {
+    position: relative;
+    background-image: url("../asset/images/3013240.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
+    display: flex;
 
-    div {
-      width: 54%;
-      margin: 10px auto;
+    .d-desc {
+      width: 70%;
+      padding: 4rem;
+      h5 {
+        font-size: 36.5px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      hr {
+        border-top: 2px solid #ffffff;
+        width: 10%;
+        margin: 2rem auto;
+      }
+
+      p {
+        line-height: 1.8;
+        letter-spacing: 1.74px;
+        text-align: center;
+        color: #ffffff;
+      }
     }
-  }
 
-  .advantage-card {
-    background: #f5f5f5;
-    padding: 15px 10px;
-
-    .title {
-      background-color: #002e58;
-      color: #ffffff;
-      margin: 10px auto;
-      padding: 20px;
-      width: fit-content;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bolder;
-    }
-
-    .content {
+    .d-apps {
       display: flex;
+      width: 70%;
+      margin: 0px auto;
 
-      .item {
-        box-shadow: 0 0 5px #293e5d;
-        padding: 10px;
-        margin: 10px;
-        background: #ffffff;
+      %font {
+        width: 50%;
 
-        .img {
-          width: 100%;
+        p {
+          font-size: 18px;
+          font-weight: bold;
+          line-height: 1.55;
+          letter-spacing: 2.02px;
+          text-align: center;
         }
 
-        .desc {
-          padding: 20px 9%;
-
-          p {
-            color: #002e58;
-            font-size: 31px;
-            text-align: center;
-            font-weight: 700;
-          }
+        .d-link {
+          width: 50%;
+          display: block;
+          margin: 20px auto;
         }
+      }
+
+      .d-loan {
+        @extend %font;
+
+        p {
+          color: #08deb1;
+        }
+      }
+
+      .d-invest {
+        @extend %font;
+
+        p {
+          color: #fbd900;
+        }
+      }
+    }
+
+    .img {
+      width: 30%;
+      animation: i-float 4s ease-in-out infinite;
+
+      img {
+        transform: translateY(10px);
       }
     }
   }
 
-  @media screen and (max-width: 767px) {
-    .product-card {
-      padding: 10px;
+  @keyframes i-float {
+    0% {
+      transform: translatey(0px);
+    }
 
-      .card-item {
-        margin: 20px 10px;
-        height: 250px;
+    50% {
+      transform: translatey(-10px);
+    }
+
+    100% {
+      transform: translatey(0px);
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .count-card {
+      display: none;
+    }
+
+    .product-card {
+      background-size: initial;
+
+      .pattern {
+        width: 100%;
+        margin: 10px 0px;
+        overflow: hidden;
+
+        .circle {
+          top: 37%;
+
+          %invest-dot {
+            display: none;
+          }
+
+          .cnt {
+            height: 100px;
+            width: 100px;
+            padding: 8px 0px;
+          }
+        }
+
+        %p-bg {
+          width: calc(50% - 15px);
+
+          .imagery {
+            display: block;
+            padding: 10px;
+            margin-top: -70px;
+            position: relative;
+            z-index: -1;
+
+            .img {
+              width: 100%;
+              position: initial;
+
+              img {
+                width: 65%;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 10px;
+              }
+            }
+
+            span {
+              display: none;
+            }
+          }
+        }
+
+        .p-i {
+          @extend %p-bg;
+          margin-right: 5px;
+          margin-left: 10px;
+        }
+
+        .p-l {
+          @extend %p-bg;
+          margin-left: 5px;
+          margin-right: 10px;
+        }
+      }
+
+      .product {
         width: initial;
 
-        .img {
-          height: inherit;
+        .product-list {
+          padding: 10px;
+          .card-item {
+            width: calc(100%);
+            padding: 10px;
+            margin: 5px 0px;
+
+            .img {
+              height: 160px;
+              width: 120px;
+
+              img {
+                height: 100px;
+              }
+            }
+
+            .cv {
+              padding: 0px 10px;
+              width: calc(100% - 120px);
+            }
+          }
         }
       }
     }
 
     .game-card {
       %layout {
-        float: none;
-        width: 100%;
+        text-align: center;
+        background-color: #ffffff;
+        padding: 20px 10px;
+        width: initial;
+        margin: 10px;
       }
 
       .loan-game {
         .option {
+          display: block;
+          overflow: hidden;
+
           .item {
-            margin: 5px 10px;
-            width: calc(33% - 20px);
+            width: calc(100% / 3 - 10px);
+            float: left;
 
             .circle {
               margin: 5px auto;
@@ -1305,10 +1998,8 @@ export default {
         }
 
         .credit-num {
-          margin: 10px 0px;
-
           .circle {
-            width: 100%;
+            width: initial;
 
             .total {
               left: 50%;
@@ -1318,51 +2009,54 @@ export default {
       }
 
       .invest-game {
-        .option {
-          .item {
-            width: 100%;
-            margin: 0px;
-          }
+        padding: 10px;
+        .chart {
+          height: 300px;
+          margin: 0px;
         }
 
-        .chart {
-          margin: 0px;
-
-          .invest-chart {
-            text-align: start;
+        .option {
+          .item {
+            float: initial;
+            width: calc(100% - 10px);
           }
         }
       }
     }
 
     .advantage-card {
-      padding: 0px;
+      .header {
+        padding: 10px;
+        min-height: auto;
+
+        .slg {
+          position: relative;
+          transform: initial;
+          top: 0%;
+          left: 0%;
+          margin: 35px 10px;
+
+          .title {
+            font-size: 22px;
+          }
+        }
+      }
 
       .content {
-        display: block;
-
         .item {
-          transition-delay: 0.4s !important;
+          padding: 1rem;
+          height: 315px;
 
-          .desc {
-            padding: 5px;
+          $bgColor: #005ec1, #16528f, #083a6e;
 
-            p {
-              font-size: 25px;
+          @for $i from 1 through 3 {
+            &:nth-of-type(#{$i + 1}) {
+              background: nth($bgColor, $i);
             }
+          }
 
-            .cnt {
-              display: flex;
-
-              .img {
-                order: 1;
-              }
-
-              span {
-                order: 2;
-                font-size: 13px;
-              }
-            }
+          p {
+            font-size: 28px;
           }
         }
       }
@@ -1371,51 +2065,87 @@ export default {
     .experience-card {
       padding: 10px;
 
+      .comment-box {
+        .item {
+          margin: 10px;
+        }
+      }
+
       .comment {
-        top: 10px;
-        right: 10px;
+        position: initial;
+        margin: 0px auto;
+        display: block;
+        width: 50%;
+      }
+
+      .slick-active {
+        opacity: 1;
+        transform: translateY(0%);
+      }
+
+      .slick-active + .slick-active {
+        opacity: 1;
+        transform: translateY(0%);
+      }
+
+      .slick-active + .slick-active + .slick-active {
+        opacity: 1;
+        transform: translateY(0%);
       }
     }
 
     .information-card {
-      .nav-item {
-        margin: 0px 3px;
-
-        .nav-link {
-          margin: 0px 2px;
-          font-size: 14px;
-        }
+      .nav {
+        width: 100%;
       }
 
       .tab-content {
-        .slick-item {
-          .img {
-            width: 270px;
-          }
-
-          iframe {
-            height: 160px;
-          }
+        .btn-to {
+          width: 70%;
         }
       }
     }
 
     .slogan-card {
-      display: block;
       overflow: hidden;
-      padding: 25px;
+      padding: 25px 10px;
 
-      .logo {
-        width: 100%;
+      .content {
+        width: 75%;
+        text-align: left;
       }
 
       .slogan {
-        .content {
-          position: initial;
-          top: 0;
-          left: 0;
-          transform: initial;
-          text-align: justify;
+        width: 80%;
+      }
+
+      .img {
+        display: none;
+      }
+    }
+
+    .download-card {
+      background-size: auto 100%;
+
+      .d-desc {
+        width: 100%;
+        padding: 2rem;
+      }
+
+      .img {
+        display: none;
+      }
+
+      .d-apps {
+        width: 100%;
+
+        %font {
+          width: 100%;
+
+          .d-link {
+            width: 80%;
+            margin: 10px auto;
+          }
         }
       }
     }

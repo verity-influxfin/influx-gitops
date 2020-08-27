@@ -123,8 +123,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
+      
       AOS.init();
     });
   },

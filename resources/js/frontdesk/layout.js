@@ -52,7 +52,6 @@ $(() => {
         store,
         router,
         data: {
-            bannerPic: [],
             menuList: [],
             actionList: [],
             isCompany: false,
@@ -79,11 +78,9 @@ $(() => {
             currentTime: 0
         },
         created() {
-            $(this.$root.$refs.banner).show();
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
-            this.getBannerPic();
         },
         mounted() {
             this.$nextTick(() => {
@@ -103,18 +100,9 @@ $(() => {
             },
             account() {
                 this.account = this.account.replace(/[^\d]/g, '');
-            },
-            bannerPic() {
-                this.$nextTick(() => {
-                    this.createBannerSlick();
-                });
             }
         },
         methods: {
-            async getBannerPic() {
-                let res = await axios.get('getBannerPic');
-                this.bannerPic = res.data;
-            },
             getListData() {
                 axios.post('getListData')
                     .then((res) => {
@@ -124,15 +112,6 @@ $(() => {
                     .catch((error) => {
                         console.error('getListData 發生錯誤，請稍後再試');
                     });
-            },
-            createBannerSlick() {
-                $(this.$refs.banner).slick({
-                    infinite: true,
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    autoplay: true,
-                    arrows: false
-                });
             },
             display() {
                 if (timeLineMax.reversed()) {

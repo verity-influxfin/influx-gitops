@@ -106,18 +106,6 @@
                 </ul>
             </div>
         </nav>
-        <div class="banner" ref="banner">
-            <div class="puhey-banner">
-                <img src="{{ asset('images/index-banner.jpg') }}" style="width:100%" />
-                <div class="content">
-                    <p>最貼近年輕人的金融科技平台</p>
-                    <span>普匯．你的手機ATM</span>
-                </div>
-            </div>
-            <div class="puhey-banner" v-for="item in bannerPic">
-                <img :src="item.img" style="width:100%" />
-            </div>
-        </div>
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
@@ -309,6 +297,7 @@
 <script type="text/javascript" src="{{ asset('js/package/echarts.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/ecStat.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/dataTool.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/particles.min.js') }}"></script>
 
 <!-- local -->
 <script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
