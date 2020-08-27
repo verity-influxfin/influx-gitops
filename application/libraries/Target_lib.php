@@ -787,7 +787,9 @@ class Target_lib
                         $schedule['sub_loan_fees'] += $value->amount;
                         break;
                     case SOURCE_FEES:
-                        $schedule['date'] == $value->entering_date ? $schedule['platform_fees'] += $value->amount : $schedule['legal_affairs_fee'] += $value->amount;
+                        //判斷法催
+                        $value->user_from == $target->user_id && $value->instalment_no > 0 && $target->sub_status == 13
+                            ? $schedule['legal_affairs_fee'] += $value->amount : $schedule['platform_fees'] += $value->amount;
                         break;
                     case SOURCE_PRINCIPAL:
                         $list[$value->instalment_no]['r_principal'] += $value->amount;
