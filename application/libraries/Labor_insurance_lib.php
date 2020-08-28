@@ -685,11 +685,13 @@ class Labor_insurance_lib
         $currentJob = null;
         $totalJob = null;
         foreach ($result['messages'] as $each) {
-            if ($each['stage'] == "current_job") {
-                $currentJob = $each;
-            }
-            if ($each['stage'] == "total_job") {
-                $totalJob = $each;
+            if(isset($each['stage'])){
+                if ($each['stage'] == "current_job") {
+                    $currentJob = $each;
+                }
+                if ($each['stage'] == "total_job") {
+                    $totalJob = $each;
+                }
             }
         }
 
@@ -890,14 +892,16 @@ class Labor_insurance_lib
             $result = ["status" => "pending", "messages" => []];
         }
         foreach ($result["messages"] as $stage) {
-            if (!$result["status"]) {
-                $result["status"] = "success";
-            }
-            if ($stage["status"] == "failure") {
-                $result["status"] = "failure";
-            }
-            if ($stage["status"] == "pending" && $result["status"] == "success") {
-                $result["status"] = "pending";
+            if(isset($each['stage'])){
+                if (!$result["status"]) {
+                    $result["status"] = "success";
+                }
+                if ($stage["status"] == "failure") {
+                    $result["status"] = "failure";
+                }
+                if ($stage["status"] == "pending" && $result["status"] == "success") {
+                    $result["status"] = "pending";
+                }
             }
         }
 

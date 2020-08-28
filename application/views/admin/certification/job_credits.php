@@ -75,6 +75,20 @@
                                     <select id="pro_level"></select>
                                     <br/>
                                     <br/>
+                                    <?
+                                    if ($status == 1) {
+                                        ?>
+                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : 0 ?><br/><br/>
+                                        <?
+                                    } else {
+                                        ?>
+                                        <input type="text"
+                                               value=""
+                                               name="printDate" data-toggle="datepicker" style="width: 182px;"
+                                               placeholder="<?= isset($printDate) ? $printDate : '查詢日期' ?>"/><br/><br/>
+                                        <?
+                                    }
+                                    ?>
                                     <span>審核: </span>
                                     <select id="verification"></select>
                                     <select id="failMsg" style="display: none;"></select>
@@ -181,19 +195,21 @@
 			var license_status = $("#license_status").val();
 			var pro_level = $("#pro_level").val();
 			var fail = $("#fail").val();
+            var printDate = form.find('input[name="printDate"]').val();
 			var data = {
 				'id': certificationId,
 				'status': status,
 				'license_status':license_status,
 				'pro_level':pro_level,
 				'fail':fail,
-			}
+                'printDate':printDate
+            }
 			$.ajax({
 				type: "POST",
 				url: url,
 				data: data,
 				success: function(response) {
-					window.close();
+                    location.reload();
 				},
 				error: function() {
 					alert('審核失敗，請重整頁面後，再試一次。');
@@ -270,7 +286,6 @@
 			$("#license_status").val(jobCredits.licenseStatus).change();
 			$("#pro_level").val(jobCredits.proLevel).change();
             $("#tax_id").text(jobCredits.tax_id);
-            $("#tax_id").text(jobCredits.tax_id);
             $("#company").text(jobCredits.company);
             $("#industry").text(jobCredits.industry);
             $("#job_title").text(jobCredits.job_title);
@@ -285,6 +300,11 @@
             }
 			for (var i = 0; i < jobCredits.messages.length; i++) {
 				var message = jobCredits.messages[i];
+
+                if(jobCredits.messages[i].status == '驗證成功' && jobCredits.messages[i].stage == '查詢日期起訖'){
+                    $('input[name="printDate"]').attr('disabled',true);
+                    $('input[name="printDate"]').hide();
+                }
 
 				var splitedMessage = "";
 				for (var j = 0; j < message.message.length; j++) {
