@@ -1074,7 +1074,7 @@ export default {
     background-image: url("../asset/images/105.png");
     background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 100% 100%;
     padding: 70px 30px;
 
     .pattern {
@@ -1286,6 +1286,10 @@ export default {
           .cv {
             padding: 0px 20px;
             width: calc(100% - 175px);
+
+            p {
+              font-size: 13px;
+            }
           }
 
           .cover {
@@ -1334,7 +1338,7 @@ export default {
       text-align: center;
       background-color: #ffffff;
       padding: 20px 10px;
-      width: 60%;
+      width: fit-content;
       margin: 20px auto 30px auto;
     }
 
@@ -1428,6 +1432,7 @@ export default {
 
     .invest-game {
       @extend %layout;
+      width: 918px;
 
       .chart {
         color: #000000;
@@ -1435,7 +1440,6 @@ export default {
         border-radius: 20px;
         box-shadow: 0 0 8px #ffffff;
         margin: 10px 5px;
-        width: 100%;
         height: 500px;
 
         .invest-chart {
@@ -1516,6 +1520,7 @@ export default {
     .content {
       .item {
         padding: 3rem;
+        height: 380px;
 
         $bgColor: #005ec1, #16528f, #083a6e;
 
@@ -1536,7 +1541,7 @@ export default {
 
         p {
           color: #fbd900;
-          font-size: 31px;
+          font-size: 29px;
           text-align: center;
           font-weight: 700;
         }
@@ -1857,9 +1862,12 @@ export default {
     .img {
       width: 30%;
       animation: i-float 4s ease-in-out infinite;
+      position: relative;
 
       img {
         transform: translateY(10px);
+        position: absolute;
+        bottom: 0px;
       }
     }
   }
