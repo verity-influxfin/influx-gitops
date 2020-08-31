@@ -212,27 +212,6 @@
           </div>
           <div class="option">
             <div class="item">
-              <label>期初投入金額：{{format(parseInt(principal))}}</label>
-              <div>
-                <i
-                  class="fas fa-minus-circle pointer"
-                  @click="principal > 0 ? principal -= 5000 : ''"
-                ></i>
-                <input
-                  type="range"
-                  step="5000"
-                  min="0"
-                  max="5000000"
-                  class="slider"
-                  v-model="principal"
-                />
-                <i
-                  class="fas fa-plus-circle pointer"
-                  @click="principal < 5000000 ? principal -= -5000 : ''"
-                ></i>
-              </div>
-            </div>
-            <div class="item">
               <label>每期{{amount >= 0 ? `投入` :`領出`}}金額：{{format(parseInt(amount))}}</label>
               <div>
                 <i
@@ -259,42 +238,6 @@
                 <i class="fas fa-minus-circle pointer" @click="time > 1 ? time -= 1 : ''"></i>
                 <input type="range" step="1" min="1" max="20" class="slider" v-model="time" />
                 <i class="fas fa-plus-circle pointer" @click="time < 20 ? time -= -1 : ''"></i>
-              </div>
-            </div>
-            <div class="item">
-              <label>標的期數：{{format(parseInt(instalment))}}</label>
-              <div>
-                <i
-                  class="fas fa-minus-circle pointer"
-                  @click="instalment > 3 ? instalment -= 3 :''"
-                ></i>
-                <input type="range" step="3" min="3" max="24" class="slider" v-model="instalment" />
-                <i
-                  class="fas fa-plus-circle pointer"
-                  @click="instalment < 24 ? instalment -= -3 :''"
-                ></i>
-              </div>
-            </div>
-            <div class="item">
-              <label>標的年利率：{{format(parseInt(rate))}}%</label>
-              <div>
-                <i class="fas fa-minus-circle pointer" @click="rate > 2 ? rate -= 1 : ''"></i>
-                <input type="range" step="1" min="2" max="20" class="slider" v-model="rate" />
-                <i class="fas fa-plus-circle pointer" @click="rate < 20 ? rate -= -1 : ''"></i>
-              </div>
-            </div>
-            <div class="item">
-              <label>平台回款手續費：{{format(parseInt(handlingFee))}}%</label>
-              <div>
-                <i
-                  class="fas fa-minus-circle pointer"
-                  @click="handlingFee> 0? handlingFee -= 1 : ''"
-                ></i>
-                <input type="range" step="1" min="0" max="3" class="slider" v-model="handlingFee" />
-                <i
-                  class="fas fa-plus-circle pointer"
-                  @click="handlingFee< 3 ? handlingFee -= -1 :''"
-                ></i>
               </div>
             </div>
           </div>
@@ -510,17 +453,13 @@ export default {
     appleApp,
   },
   data: () => ({
-    principal: 30000,
     amount: 10000,
     time: 1,
-    instalment: 12,
-    rate: 2,
     money: 100000,
     tweenedMoney: 100000,
     tweenedTransactionCount: 0,
     tweenedTransactionAmount: 0,
     tweenedDownloadCount: 0,
-    handlingFee: 1,
     moneyClass: "ordinary",
     creditRatingItem: [
       {
@@ -650,28 +589,12 @@ export default {
         this.createSlick(this.$refs.banner, 1, false);
       });
     },
-    principal(data) {
-      this.principal = parseInt(data);
-      this.createChart();
-    },
     amount(data) {
       this.amount = parseInt(data);
       this.createChart();
     },
     time(data) {
       this.time = parseInt(data);
-      this.createChart();
-    },
-    instalment(data) {
-      this.instalment = parseInt(data);
-      this.createChart();
-    },
-    rate(data) {
-      this.rate = parseInt(data);
-      this.createChart();
-    },
-    handlingFee(data) {
-      this.handlingFee = parseInt(data);
       this.createChart();
     },
     money(data) {
@@ -763,7 +686,7 @@ export default {
         _totalFlow.push({ principle: 0, intrest: 0, principleRemind: 0 });
       }
       for (i = 0; i < $this.time * 12; i++) {
-        let _pv = 0 === i ? $this.principal : $this.amount;
+        let _pv = 0 === i ? 0 : $this.amount;
         for (j = 0; j < i; j++) {
           if (_arrayAll[j].length >= i) {
             _pv += _arrayAll[j][i - 1].amount;
@@ -782,14 +705,11 @@ export default {
         for (k = 0; k < i; k++) {
           _currentRepamentSchedule.push(_p);
         }
-        let _pmt = $this.pmt(_pv, $this.rate, $this.instalment);
+        let _pmt = $this.pmt(_pv, 12, 12);
         let _principleRemind = _pv;
-        for (l = 0; l < $this.instalment; l++) {
-          _intrest = Math.round(
-            ((_principleRemind * $this.rate) / 100 / 360) * 30
-          );
-          _principle =
-            l < $this.instalment ? _pmt - _intrest : _principleRemind;
+        for (l = 0; l < 12; l++) {
+          _intrest = Math.round(((_principleRemind * 12) / 100 / 360) * 30);
+          _principle = l < 12 ? _pmt - _intrest : _principleRemind;
           _amount = _principle + _intrest;
           _principleRemind -= _principle;
           if (_principleRemind <= 0) {
@@ -834,12 +754,8 @@ export default {
             : `${Math.floor(q / 12) + 1}/${(q % 12) + 1}`
         );
         listEveryFlow.push(q < _totalFlow.length - 1 ? $this.amount : 0);
-        listPrinciple.push(
-          Math.round((temp["principle"] * 1 * (100 - $this.handlingFee)) / 100)
-        );
-        listIntrest.push(
-          Math.round((temp["intrest"] * 1 * (100 - $this.handlingFee)) / 100)
-        );
+        listPrinciple.push(Math.round((temp["principle"] * 1 * 100) / 100));
+        listIntrest.push(Math.round((temp["intrest"] * 1 * 100) / 100));
       }
 
       let _totalIncome =
@@ -847,16 +763,12 @@ export default {
         listIntrest[listIntrest.length - 1];
 
       let _investAll =
-        $this.principal +
-        ($this.amount > 0 ? $this.amount * ($this.time * 12 - 1) : 0);
+        $this.amount > 0 ? $this.amount * ($this.time * 12 - 1) : 0;
 
       let _returnAll = _totalIncome + _cashLast;
 
       let _valueTotal =
-        _totalIncome +
-        _cashLast -
-        $this.principal -
-        $this.amount * ($this.time * 12 - 1); //期末回款+本金餘額-期初投入-每期投入總額
+        _totalIncome + _cashLast - $this.amount * ($this.time * 12 - 1); //期末回款+本金餘額-期初投入-每期投入總額
 
       let _last2Return =
         listPrinciple[listPrinciple.length - 2] +
@@ -866,11 +778,9 @@ export default {
       let subtext =
         _totalIncome < 0 || _last2Return < 0 || _totalIncome + _cashLast < 0
           ? "領取金額超過每月複投金額"
-          : `投資總額：${this.format(_investAll)} \n回款總額：${this.format(
-              _returnAll
-            )} =  ${this.format(_totalIncome)}(期末回款) + ${this.format(
-              _cashLast
-            )}(本金餘額) \n預期獲利：${this.format(_valueTotal)}`;
+          : `每期投資${$this.amount}元，${
+              $this.time
+            }年後預計可回收${$this.format(_returnAll)}元`;
 
       $($this.$refs.investChart)
         .css("width", `${$($this.$refs.chart).innerWidth()}px`)
@@ -881,7 +791,7 @@ export default {
       let option = {
         grid: {
           left: 30,
-          top: 70,
+          top: 80,
           right: 30,
           bottom: 60,
         },
@@ -891,7 +801,7 @@ export default {
             color: "#083a6e",
             fontSize: 14,
           },
-          left: "20",
+          left: "10",
           top: "0",
         },
         dataZoom: {
@@ -1269,12 +1179,12 @@ export default {
 
           .img {
             height: 190px;
-            width: 190px;
+            width: 150px;
             overflow: hidden;
             position: relative;
 
             img {
-              height: 180px;
+              height: 135px;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -1285,7 +1195,7 @@ export default {
 
           .cv {
             padding: 0px 20px;
-            width: calc(100% - 175px);
+            width: calc(100% - 150px);
 
             p {
               font-size: 13px;
