@@ -52,7 +52,7 @@
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : 0 ?>
+                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : '' ?>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
@@ -64,7 +64,7 @@
                                         <input type="text" name="fail" placeholder="備註" />
                                         <input type="text"
                                                value=""
-                                               name="printDate" data-toggle="datepicker" style="width: 182px;" placeholder="<?= isset($printDate) ? $printDate : 0 ?>"/>
+                                               name="printDate" data-toggle="datepicker" style="width: 182px;" placeholder="<?= isset($printDate) ? $printDate : '聯徵調閱日期' ?>"/>
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									}

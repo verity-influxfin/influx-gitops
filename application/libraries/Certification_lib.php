@@ -525,6 +525,10 @@ class Certification_lib{
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
 			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
+			if(isset($res['appliedTime']) && $res['appliedTime'] != null){
+                $res['printDate'] =  mktime(0, 0, 0, intval($res['appliedTime'][1]), intval($res['appliedTime'][2]), 1911 + intval($res['appliedTime'][0]));
+            }
+
 			switch ($res['status']) {
                 case 'pending': //轉人工
                     $status = 3;
@@ -532,7 +536,7 @@ class Certification_lib{
                         'status' => $status,
                         'sys_check' => 1,
                         'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res)),
-                        'expire_time' => $res['appliedExpire']
+                        'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
                     ));
                     break;
                 case 'success':
