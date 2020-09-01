@@ -49,22 +49,22 @@
 									<?
 									if ($status == 1) {
 										?>
+                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : '' ?>
 										<td>被查詢次數：<?= isset($times) ? $times : ""; ?></td>
 										<td>信用卡使用率%：<?= isset($credit_rate) ? $credit_rate : ""; ?></td>
 										<td>信用記錄幾個月：<?= isset($months) ? $months : ""; ?></td>
-                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : '' ?>
                                         <input type="hidden" name="fail" placeholder="退件原因" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									} else {
 										?>
-										<input type="text" name="times" placeholder="被查詢次數" value=<?= isset($times) ? $times : ""; ?> />
-                                        <input type="text" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
-                                        <input type="text" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
-                                        <input type="text" name="fail" placeholder="備註" />
                                         <input type="text"
                                                value=""
                                                name="printDate" data-toggle="datepicker" style="width: 182px;" placeholder="<?= isset($printDate) ? $printDate : '聯徵調閱日期' ?>"/>
+                                        <input type="text" name="times" placeholder="被查詢次數" value=<?= isset($times) ? $times : ""; ?> />
+                                        <input type="text" name="credit_rate" placeholder="信用卡使用率%" value=<?= isset($credit_rate) ? $credit_rate : ""; ?> />
+                                        <input type="text" name="months" placeholder="信用記錄幾個月" value=<?= isset($months) ? $months : ""; ?> />
+                                        <input type="text" name="fail" placeholder="備註" />
                                         <button type="submit" class="btn btn-primary">送出</button>
 									<?
 									}
