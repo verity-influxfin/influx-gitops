@@ -339,7 +339,7 @@ class Certification extends MY_Admin_Controller {
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
 							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
-							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 10 days',time());
+							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
@@ -350,7 +350,7 @@ class Certification extends MY_Admin_Controller {
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
 							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
-							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 10 days',time());
+							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
