@@ -610,7 +610,7 @@ class Certification_lib{
 							'status' => $status,
 							'sys_check' => 1,
 							'content' => json_encode($content),
-							'expire_time' => isset($res['expireTime']) ? $res['expireTime'] : strtotime('+ 3 days',time())
+							'expire_time' => isset($res['expireTime']) ? $res['expireTime'] : null
 						));
 						break;
 					case 'success':
