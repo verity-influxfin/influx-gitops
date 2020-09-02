@@ -78,14 +78,14 @@
                                     <?
                                     if ($status == 1) {
                                         ?>
-                                        <?= isset($printDate) ? '<td>聯徵調閱日期：' . $printDate . '</td>' : 0 ?><br/><br/>
+                                        <?= isset($printDate) ? '<td>勞保異動明細調閱日期：' . $printDate . '</td>' : 0 ?><br/><br/>
                                         <?
                                     } else {
                                         ?>
                                         <input type="text"
                                                value=""
                                                name="printDate" data-toggle="datepicker" style="width: 182px;"
-                                               placeholder="<?= isset($printDate) ? $printDate : '查詢日期' ?>"/><br/><br/>
+                                               placeholder="<?= isset($printDate) ? $printDate : '勞保異動明細調閱日期' ?>"/><br/><br/>
                                         <?
                                     }
                                     ?>
