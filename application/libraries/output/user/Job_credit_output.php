@@ -157,8 +157,8 @@ class Job_credit_output
     public function mapMessage($message)
     {
         $output = [
-            "stage" => $message->stage,
-            "status" => $message->status,
+            "stage" => isset($message->stage) ? $message->stage : '',
+            "status" => isset($message->status) ? $message->status : '',
             "message" => is_array($message->message) ? $message->message : [$message->message],
         ];
 

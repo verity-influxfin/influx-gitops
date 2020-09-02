@@ -338,14 +338,21 @@ class Certification extends MY_Admin_Controller {
 							$content['license_status'] 	= $license_status;
 							$content['game_work_level'] = $game_work_level;
 							$content['pro_level'] 		= $pro_level;
-							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
+							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
+							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
+							$expiretime < time() ? $post['status'] = 2 : '';
+							$this->user_certification_model->update($post['id'],[
+								'content'=>json_encode($content),
+								'expire_time'=>$expiretime,
+							]);
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 							$content 					= json_decode($info->content,TRUE);
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;
 							$content['credit_rate'] 	= isset($post['credit_rate'])?floatval($post['credit_rate']):0;
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
-							$content['printDate'] = isset($post['printDate'])?$post['printDate']:0;
-							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : 0;
+							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
+							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
+							$expiretime < time() ? $post['status'] = 2 : '';
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
@@ -743,7 +750,10 @@ class Certification extends MY_Admin_Controller {
 		isset($get['id'])?intval($get['id']):0;
 		$id = isset($get["id"]) ? intval($get["id"]) : 0;
 		$info = $this->user_certification_model->get($id);
-
+		if ($info) {
+			$page_data['status'] = ($info->status);
+			isset((json_decode($info->content, true))['printDate']) ? $page_data['printDate'] = (json_decode($info->content, true))['printDate']:0;
+		}
 		if ($this->input->is_ajax_request()) {
 			$this->load->library('output/json_output');
 			if ($id <= 0) {
@@ -785,7 +795,7 @@ class Certification extends MY_Admin_Controller {
 		}
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/certification/job_credits');
+		$this->load->view('admin/certification/job_credits',$page_data);
 		$this->load->view('admin/_footer');
 	}
 
@@ -799,7 +809,7 @@ class Certification extends MY_Admin_Controller {
 			$page_data['credit_rate'] 				= isset((json_decode($info->content, true))['credit_rate'])?(json_decode($info->content, true))['credit_rate']:0;
 			$page_data['months'] 				= isset((json_decode($info->content, true))['months'])?(json_decode($info->content, true))['months']:0;
 			$page_data['status'] 				= ($info->status);
-			$page_data['printDate'] = isset((json_decode($info->content, true))['printDate'])?(json_decode($info->content, true))['printDate']:0;
+			isset((json_decode($info->content, true))['printDate']) ? $page_data['printDate'] = (json_decode($info->content, true))['printDate']:0;
 		}
 
 	    if ($this->input->is_ajax_request()) {
