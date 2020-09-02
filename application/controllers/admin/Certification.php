@@ -340,7 +340,7 @@ class Certification extends MY_Admin_Controller {
 							$content['pro_level'] 		= $pro_level;
 							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
 							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
-							$expiretime > time() ? $post['status'] = 2 : '';
+							$expiretime < time() ? $post['status'] = 2 : '';
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
@@ -352,7 +352,7 @@ class Certification extends MY_Admin_Controller {
 							$content['months'] 			= isset($post['months'])?intval($post['months']):0;
 							isset($post['printDate']) && !empty($post['printDate'])?$content['printDate'] = $post['printDate'] : '';
 							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
-							$expiretime > time() ? $post['status'] = 2 : '';
+							$expiretime < time() ? $post['status'] = 2 : '';
 							$this->user_certification_model->update($post['id'],[
 								'content'=>json_encode($content),
 								'expire_time'=>$expiretime,
