@@ -28,7 +28,7 @@ class Instagram_output
 			"username" => $instagram->username,
 		];
 
-		if ($instagram->image) {
+		if (isset($instagram->image)) {
 			$output["profile_image"] = $instagram->image;
 		}
 

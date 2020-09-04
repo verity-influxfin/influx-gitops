@@ -309,7 +309,7 @@ class Product extends REST_Controller {
             $total_list = [];
             $identity = $company?'company':'nature';
             foreach ($app_product_totallist[$identity] as $id) {
-                if (isset($visul_id_des[$id])) {
+                if (isset($visul_id_des['TO'.$id])) {
                     $total_list[] = [
                         'visul' => $id,
                         'name' => $visul_id_des[$id]['name'],

@@ -434,7 +434,23 @@ $config['visul_id_des'] = [
         'url' => '',
         'status' => 1
     ],
+    'TOLS1' => [
+        'name' => '學生貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>資金小幫手生活超easy</span><br><span style=\'font-size:14px;color:#4a4a4a\'>全台大學生與碩博士均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'url' => '',
+        'status' => 1
+    ],
     'LF1' => [
+        'name' => '上班族貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>隨時線上照顧您的需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOLF1' => [
         'name' => '上班族貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>隨時線上照顧您的需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
@@ -445,6 +461,14 @@ $config['visul_id_des'] = [
     'NS1' => [
         'name' => '資訊工程師專案',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#4a4a4a\'>資訊相關學生或職場專業人員均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TONS1' => [
+        'name' => '<span color:white\'>資訊工程師專案</span>',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#ccccde\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'url' => '',
@@ -482,22 +506,14 @@ $config['visul_id_des'] = [
         'url' => '',
         'status' => 1
     ],
-    'NS1P1' => [
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    'TODS2' => [
+        'name' => '<span color:white\'>在庫車融資專案</span>',
+        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#ccccde\'>外匯車商可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
+        'url' => '',
+        'status' => 1
     ],
-    'NS1P2' => [
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-    ],
-    'LS1P1' => [
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-    ],
-    'LF1P1' => [
-        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
-    ]
 ];
 $config['sub_product_mapping'] = [
     1 => 'config_techi',
