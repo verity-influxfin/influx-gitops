@@ -23,7 +23,18 @@ class Joint_credit_lib{
 
 	public function check_join_credits($userId, $text, &$result){
 		$this->setCurrentTime(time());
-		if (!$this->is_id_match($userId, $text)) {
+		if ($text == '') {
+            return [
+                "status" => "pending",
+                "messages" => [
+                    [
+                        "stage" => "id_card",
+                        "status" => "failure",
+                        "message" => "PDF掃描失敗"
+                    ]
+                ]
+            ];
+		}elseif (!$this->is_id_match($userId, $text)) {
 			return [
 				"status" => "pending",
 				"messages" => [
