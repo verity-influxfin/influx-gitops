@@ -312,11 +312,11 @@ class Product extends REST_Controller {
                 if (isset($visul_id_des['TO'.$id])) {
                     $total_list[] = [
                         'visul' => $id,
-                        'name' => $visul_id_des[$id]['name'],
-                        'icon' => $visul_id_des[$id]['icon'],
+                        'name' => $visul_id_des['TO'.$id]['name'],
+                        'icon' => $visul_id_des['TO'.$id]['icon'],
                         'identity' => $listData[$id],
-                        'description' => $visul_id_des[$id]['description'],
-                        'url' => $visul_id_des[$id]['url'],
+                        'description' => $visul_id_des['TO'.$id]['description'],
+                        'url' => $visul_id_des['TO'.$id]['url'],
                         'status' => $targetStatus[$id],
                     ];
                 }
