@@ -467,7 +467,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TONS1' => [
-        'name' => '<span color:white\'>資訊工程師專案</span>',
+        'name' => '<span  style=\'color:white\'>資訊工程師專案</span>',
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#ccccde\'>資訊相關學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
@@ -507,7 +507,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TODS2' => [
-        'name' => '<span color:white\'>在庫車融資專案</span>',
+        'name' => '<span style=\'color:white\'>在庫車融資專案</span>',
         'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#ccccde\'>外匯車商可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
