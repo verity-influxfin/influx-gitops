@@ -619,7 +619,7 @@
 
                 let userJson = response.response.user;
                 user = new User(userJson);
-                if(response.response.user.company == 1){
+                if(Object.keys(response.response.target.productTargetData).length > 0){
                     $('.natual').css('display','none');
                     $('.company').css('display','block');
                     $('#targetDatas').removeClass('hide');
@@ -802,15 +802,15 @@
             var start = (judicialyuanDataIndex-1) * maxNumInPage;
             var end = judicialyuanDataIndex * maxNumInPage;
             if (end > judicialyuanData.length) end = judicialyuanData.judicial_yuan.length;
-            if (start > end || (end - start < maxNumInPage)) {
+            if (start > end) {
                 $("#load-more").hide();
 			} else {
                 $("#load-more").show();
 			}
 
-            for (var i = start; i < end; i++) {
+            for (var i = start; i < (end - 1); i++) {
                 var name = '<p class="form-control-static">' + judicialyuanData.judicial_yuan[i].name + '</p>';
-                var count = '<a target="_blank" href="../certification/judicial_yuan_case?name=林郁凱&amp;case=' + judicialyuanData.judicial_yuan[i].name + '&amp;page=1&amp;count=' + judicialyuanData.judicial_yuan[i].count + '">' + judicialyuanData.judicial_yuan[i].count + '</a>';
+                var count = '<a target="_blank" href="../certification/judicial_yuan_case?name=' + judicialyuanData.userName + '&amp;case=' + judicialyuanData.judicial_yuan[i].name + '&amp;page=1&amp;count=' + judicialyuanData.judicial_yuan[i].count + '">' + judicialyuanData.judicial_yuan[i].count + '</a>';
                 $("<tr>").append(
                     $('<td class="center-text" style="color:red;">').append(name),
                     $('<td class="center-text" style="color:red;">').append(count),

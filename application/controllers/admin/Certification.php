@@ -140,7 +140,8 @@ class Certification extends MY_Admin_Controller {
 					//加入SIP網址--
 
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
-					if((json_decode($info->content)->return_type!==0)&&isset(json_decode($info->content)->pdf_file)){
+					$content = json_decode($info->content);
+					if ($content->return_type !== 0 && isset($content->pdf_file) && isset($content->result)) {
 						$this->joint_credits();
 						return;
 					}
