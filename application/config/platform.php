@@ -435,8 +435,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TOLS1' => [
-        'name' => '學生貸',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>資金小幫手生活超easy</span><br><span style=\'font-size:14px;color:#4a4a4a\'>全台大學生與碩博士均可申請</span>',
+        'name' => '<span style=\'font-size:18px;color:#1f232c\'>學生貸</span>',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>不論是夢想實現，還是生活急需，<br/>我們集結了各大學校友、老師，<br/>專門投資借貸同學在學期間的資金需求。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'url' => '',
@@ -451,8 +451,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TOLF1' => [
-        'name' => '上班族貸',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>隨時線上照顧您的需求</span><br><span style=\'font-size:14px;color:#4a4a4a\'>年滿20歲的工作人士均可申請</span>',
+        'name' => '<span style=\'font-size:18px;color:white\'>上班族貸</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>進入社會工作了，臨時有急缺？<br/>沒有煩人的「專員」打擾，<br/>只有AI 24小時online滿足您的資金需求！</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_worker.jpg',
         'url' => '',
@@ -467,8 +467,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TONS1' => [
-        'name' => '<span  style=\'color:white\'>資訊工程師專案</span>',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>為您的金錢問題debug</span><br><span style=\'font-size:14px;color:#ccccde\'>資訊相關學生或職場專業人員均可申請</span>',
+        'name' => '<span style=\'font-size:18px;color:white\'>工程師貸</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>不論是學生/上班族，<br/>只要是資訊/資工/資管相關科系，<br/>我們特別提供給您優惠利率，<br/>隨時隨地，只要打開APP，資金到手。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_programer.jpg',
         'url' => '',
@@ -507,8 +507,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TODS2' => [
-        'name' => '<span style=\'color:white\'>在庫車融資專案</span>',
-        'description' => '<span style=\'font-size:16px;color:white;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#ccccde\'>外匯車商可申請</span>',
+        'name' => '<span style=\'font-size:18px;color:white\'>外匯車貸</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>不論是夢想實現，還是生活急需，<br/>我們集結了各大學校友、老師，<br/>專門投資借貸同學在學期間的資金需求。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
