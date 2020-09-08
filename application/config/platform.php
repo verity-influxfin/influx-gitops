@@ -499,8 +499,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'DS2' => [
-        'name' => '在庫車融資專案',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
+        'name' => '車輛融資專案',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>提供便利資金融通</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
@@ -508,7 +508,7 @@ $config['visul_id_des'] = [
     ],
     'TODS2' => [
         'name' => '<span style=\'font-size:18px;color:white\'>外匯車貸</span>',
-        'description' => '<span style=\'font-size:14px;color:white\'>不論是夢想實現，還是生活急需，<br/>我們集結了各大學校友、老師，<br/>專門投資借貸同學在學期間的資金需求。</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>車輛融資專案<br/>提供便利資金融通</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
