@@ -59,5 +59,24 @@ class AUTHORIZATION
 		}
         return $data;
     }
-	
+
+    public static function validateLoneManagerToken($token ="") {
+        $CI =& get_instance();
+        return JWT::decode($token, $CI->config->item('jwt_lonemanager_key'));
+    }
+
+    public static function generateLoneManagerToken($data = array()) {
+        $CI =& get_instance();
+        return JWT::encode($data, $CI->config->item('jwt_lonemanager_key'));
+    }
+
+    public static function getLoneManagerInfoByToken($token="") {
+        $CI 	=& get_instance();
+        $data 	= new stdClass;
+        if(!empty($token)){
+            $data 		= AUTHORIZATION::validateLoneManagerToken($token);
+        }
+
+        return $data;
+    }
 }
