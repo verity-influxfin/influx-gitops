@@ -119,7 +119,15 @@ class Profit_and_loss_account
                         $odate = $ndate = $amortizationTables['normal']['date'];
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
-                        $ndate = $odate > $pay_date ? date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY : $pay_date;
+                        $ndate = $pay_date;
+                        if($odate > $pay_date){
+                            $ndate = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
+                            if(!isset($rows[$key][$pay_date])){
+                                $rows[$key][$pay_date] = $this->initRow();
+                            }
+                            $rows[$key][$pay_date]['remaining_principal'] += $amortizationTables['normal']['amount'];
+                        }
+
                         if(!isset($rows[$key][$ndate])){
                             $rows[$key][$ndate] = $this->initRow();
                         }
