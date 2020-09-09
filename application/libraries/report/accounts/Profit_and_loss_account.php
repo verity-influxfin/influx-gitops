@@ -103,8 +103,9 @@ class Profit_and_loss_account
                         }
                     }
 
-                    if( !$first && $key == 'normal' && isset($amortizationTables['normal']['date'])) {
-                        $ndate = $amortizationTables['normal']['transferDate'] != null ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
+                    if( !$first && $key == 'normal' && isset($amortizationTables['normal']['date'])
+                    ) {
+                        $ndate = isset($amortizationTables['normal']['transferDate'])  ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
 
                         if(!isset($rows[$key][$ndate])){
                             $rows[$key][$ndate] = $this->initRow();
@@ -131,8 +132,8 @@ class Profit_and_loss_account
                             if (!isset($rows[$key][$pay_date])) {
                                 $rows[$key][$pay_date] = $this->initRow();
                             }
+                            !isset($amortizationTables['normal']['transferDate']) ? $rows[$key][$pay_date]['remaining_principal'] += $amortizationTables['normal']['amount'] : '';
                         }
-
                         if(!isset($rows[$key][$ndate])){
                             $rows[$key][$ndate] = $this->initRow();
                         }
