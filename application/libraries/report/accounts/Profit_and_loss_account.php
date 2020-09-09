@@ -114,7 +114,8 @@ class Profit_and_loss_account
                     }
 
                     if( !$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
-                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
+                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10
+                        && !isset($amortizationTables['normal']['transferDate']))
                     {
                         $odate = $ndate = $amortizationTables['normal']['date'];
                         $ym = date('Y-m', strtotime($odate));
