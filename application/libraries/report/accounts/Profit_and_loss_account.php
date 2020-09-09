@@ -114,16 +114,21 @@ class Profit_and_loss_account
                     }
 
                     if( !$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
-                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10
-                        && !isset($amortizationTables['normal']['transferDate']))
+                        && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
                     {
-                        $odate = $ndate = $amortizationTables['normal']['date'];
+                        $odate = $ndate = isset($amortizationTables['normal']['transferDate']) ? $amortizationTables['normal']['transferDate'] : $ndate = $amortizationTables['normal']['date'];
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
                         $ndate = $pay_date;
-                        if($odate > $pay_date){
+                        if($odate > $pay_date && !isset($amortizationTables['normal']['transferDate'])){
                             $ndate = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
                             if(!isset($rows[$key][$pay_date])){
+                                $rows[$key][$pay_date] = $this->initRow();
+                            }
+                            $rows[$key][$pay_date]['remaining_principal'] += $amortizationTables['normal']['amount'];
+                        } elseif ($odate < $pay_date) {
+                            $ndate = date('Y-m-', strtotime($ym . ' - 1 month')) . REPAYMENT_DAY;
+                            if (!isset($rows[$key][$pay_date])) {
                                 $rows[$key][$pay_date] = $this->initRow();
                             }
                             $rows[$key][$pay_date]['remaining_principal'] += $amortizationTables['normal']['amount'];
@@ -267,8 +272,8 @@ class Profit_and_loss_account
 
     public function toExcel($rows)
     {
-        header('Content-type:application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+//        header('Content-type:application/vnd.ms-excel');
+//        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
         $tables = $this->getSupportedTables();
         foreach ($tables as $type => $tableName) {
             $html = $this->getTableHeader($tableName);
