@@ -116,7 +116,7 @@ class Profit_and_loss_account
                     if( !$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
                         && date('d', strtotime($amortizationTables['normal']['date'])) != 10)
                     {
-                        $odate = $ndate = isset($amortizationTables['normal']['transferDate']) ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
+                        $odate = isset($amortizationTables['normal']['transferDate']) ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
                         $ym = date('Y-m', strtotime($odate));
                         $pay_date = date('Y-m-', strtotime($ym )) . REPAYMENT_DAY;
                         $ndate = $pay_date;
@@ -131,7 +131,6 @@ class Profit_and_loss_account
                             if (!isset($rows[$key][$pay_date])) {
                                 $rows[$key][$pay_date] = $this->initRow();
                             }
-                            $rows[$key][$pay_date]['remaining_principal'] += $amortizationTables['normal']['amount'];
                         }
 
                         if(!isset($rows[$key][$ndate])){
