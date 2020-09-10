@@ -1,6 +1,6 @@
 <?php
 
-class Log_user_model extends MY_Model
+class Log_lonemanager_user_model extends MY_Model
 {
     public $_table = 'user_log';
     public $before_create = array('before_data_c');

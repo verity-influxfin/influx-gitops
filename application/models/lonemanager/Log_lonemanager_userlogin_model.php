@@ -1,6 +1,6 @@
 <?php
 
-class Log_userlogin_model extends MY_Model
+class Log_lonemanager_userlogin_model extends MY_Model
 {
     public $_table = 'user_login_log';
     public $before_create = array('before_data_c');
@@ -33,5 +33,12 @@ class Log_userlogin_model extends MY_Model
         ]);
 
         return $data;
+    }
+
+    public function getCurrentInstance($data)
+    {
+        $convertedData = $this->before_data_c($data);
+        $convertedData["client"] = json_decode($convertedData["client"]);
+        return $convertedData;
     }
 }
