@@ -54,6 +54,8 @@ Route::post('/getVideoPage', 'Controller@getVideoPage');
 
 Route::post('/action', 'Controller@action');
 
+Route::get('/getBannerPic', 'Controller@getBannerPic');
+
 
 //Account
 

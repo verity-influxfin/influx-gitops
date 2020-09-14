@@ -1,55 +1,134 @@
 <template>
   <div class="invest-wrapper">
-    <banner :data="bannerData" :isShowInvest="true"></banner>
+    <banner :data="bannerData"></banner>
+    <div class="text-card">
+      <div class="a-hr">
+        <div class="a-s">
+          <p>年化報酬率5~20% 穩定獲利低風險</p>
+        </div>
+      </div>
+    </div>
+    <div id="step-card" class="step-card">
+      <h2>我要如何投資?</h2>
+      <div class="hr"></div>
+      <p>普匯平台分為三種投資方式</p>
+      <div class="cnt">
+        <div class="box">
+          <div class="i-box">
+            <div class="icon">
+              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="optional" patternUnits="userSpaceOnUse" width="60" height="60">
+                    <image
+                      x="10"
+                      y="10"
+                      href="../asset/images/invest_choose_optional.svg"
+                      width="40"
+                      height="40"
+                    />
+                  </pattern>
+                </defs>
+                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                  fill="url(#optional)"
+                  stroke-width="2"
+                  stroke="#08deb1"
+                />
+              </svg>
+            </div>
+            <div class="text">
+              <h4>自選標的</h4>
+              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+            </div>
+          </div>
+          <div class="i-m-pic">
+            <img src="../asset/images/optional _invset.png" class="img-fluid" />
+          </div>
+        </div>
+        <div class="box">
+          <div class="i-m-pic">
+            <img src="../asset/images/smart_invest.png" class="img-fluid" />
+          </div>
+          <div class="i-box">
+            <div class="icon">
+              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="smart" patternUnits="userSpaceOnUse" width="60" height="60">
+                    <image
+                      x="10"
+                      y="10"
+                      href="../asset/images/invest_choose_smart.svg"
+                      width="40"
+                      height="40"
+                    />
+                  </pattern>
+                </defs>
+                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                  fill="url(#smart)"
+                  stroke-width="2"
+                  stroke="#08deb1"
+                />
+              </svg>
+            </div>
+            <div class="text">
+              <h4>智能投資</h4>
+              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="i-box">
+            <div class="icon">
+              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="quick" patternUnits="userSpaceOnUse" width="60" height="60">
+                    <image
+                      x="10"
+                      y="10"
+                      href="../asset/images/invest_choose_quick.svg"
+                      width="40"
+                      height="40"
+                    />
+                  </pattern>
+                </defs>
+                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                  fill="url(#quick)"
+                  stroke-width="2"
+                  stroke="#08deb1"
+                />
+              </svg>
+            </div>
+            <div class="text">
+              <h4>檢審速貸</h4>
+              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+            </div>
+          </div>
+          <div class="i-m-pic">
+            <img src="../asset/images/quick_invest.png" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="advantage-card">
-      <h3>年化報酬率5~20% 穩定獲利低風險</h3>
-      <p>還有債權轉讓喔</p>
-      <div class="zxc">
-        <img class="img-fluid" :src="'./images/1231.jpg'" />
+      <div class="web hidden-desktop">
+        <img src="../asset/images/web_invest_type.png" class="img-fluid" />
       </div>
+      <div class="hidden-phone" ref="type_slick">
+        <img src="../asset/images/web_invest_type_puhey.png" class="img-fluid" />
+        <img src="../asset/images/web_invest_type_fund.png" class="img-fluid" />
+        <img src="../asset/images/web_invest_type_stock.png" class="img-fluid" />
+      </div>
+      <!--加債轉連結-->
     </div>
-    <div class="step-card">
-      <h3>如何開始投資呢？</h3>
-      <div class="zxc">
-        <img class="img-fluid" :src="'./images/how_to_invest_desktop.png'" />
-      </div>
-      <h4>平台分為三種投資方式</h4>
-      <div class="step-list">
-        <div class="item">
-          <h5>自選標的</h5>
-          <div class="content">
-            <div class="app-pic"></div>
-            <div class="directions"></div>
-          </div>
-        </div>
-        <div class="item">
-          <h5>智能投資</h5>
-          <div class="content">
-            <div class="directions"></div>
-            <div class="app-pic"></div>
-          </div>
-        </div>
-        <div class="item">
-          <h5>檢審速貸</h5>
-          <div class="content">
-            <div class="app-pic"></div>
-            <div class="directions"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="experience-card">
+    <experience :experiences="experiences" />
+    <div class="video-card">
       <h2>聽聽投資人怎麼說</h2>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 75%"
-          aria-valuenow="75"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+      <div class="hr" />
       <div class="video-row" ref="video_slick">
         <div class="item" v-for="(item,index) in video" :key="index">
           <iframe
@@ -63,59 +142,40 @@
           <p>{{item.post_title}}</p>
         </div>
       </div>
-      <router-link class="btn link" to="/vlog/invest">
-        影音列表
-        <i class="fas fa-external-link-alt"></i>
-      </router-link>
+      <router-link class="btn link" to="/vlog/invest">影音列表</router-link>
     </div>
-    <div class="download-card" :style="`background-image: url('./images/19366.jpg')`">
-      <div style="width: 64%;margin: 10px auto;">
-        <img :src="'./images/flow.png'" class="img-fluid" />
-      </div>
-    </div>
-    <div class="qa-card">
-      <h2>還有其他問題嗎?</h2>
-      <div class="qa-row">
-        <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
-          <p>{{item.title}}</p>
-          <hr />
-          <span v-html="item.content"></span>
-        </div>
-      </div>
-      <div class="qa-row">
-        <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
-          <p>Q：{{item.title}}</p>
-          <hr />
-          <span v-html="item.content"></span>
-        </div>
-      </div>
-      <div class="row">
-        <router-link class="btn link" style="margin:0px auto;" to="qa">
-          更多問題
-          <i class="fas fa-angle-double-right" />
-        </router-link>
-      </div>
-    </div>
+    <download :isLoan="false" :isInvest="true" />
+    <qa :qaData="qaData" />
   </div>
 </template>
 
 <script>
-import bannerComponent from "../component/bannerComponent";
+import banner from "../component/bannerComponent";
+import download from "../component/downloadComponent";
+import experience from "../component/experienceComponent";
+import qa from "../component/qaComponent";
 
 export default {
   components: {
-    banner: bannerComponent
+    banner,
+    experience,
+    download,
+    qa,
   },
   data: () => ({
     qaData: [],
-    bannerData: {}
+    bannerData: {},
   }),
   computed: {
+    experiences() {
+      return this.$store.getters.ExperiencesData;
+    },
     video() {
       return this.$store.getters.VideoData;
-    }
+    },
   },
   created() {
+    this.$store.dispatch("getExperiencesData", "invest");
     this.$store.dispatch("getVideoData", { category: "invest" });
     this.getQaData();
     this.getBannerData();
@@ -123,21 +183,21 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
       AOS.init();
+      this.createSlick(this.$refs.type_slick);
+      particlesJS.load("step-card", "data/invest.json");
     });
   },
   watch: {
     video() {
       this.$nextTick(() => {
-        this.createSlick();
+        this.createSlick(this.$refs.video_slick);
       });
-    }
+    },
   },
   methods: {
-    createSlick() {
-      $(this.$refs.video_slick).slick({
+    createSlick(target) {
+      $(target).slick({
         infinite: true,
         slidesToShow: 4,
         slidesToScroll: 1,
@@ -149,28 +209,28 @@ export default {
             breakpoint: 767,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
+              slidesToScroll: 1,
+            },
+          },
+        ],
       });
     },
     getBannerData() {
       axios
         .post("getBannerData", { filter: "invest" })
-        .then(res => {
+        .then((res) => {
           this.bannerData = res.data;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("getBannerData 發生錯誤，請稍後再試");
         });
     },
     getQaData() {
-      axios.post("getQaData", { filter: "invest" }).then(res => {
+      axios.post("getQaData", { filter: "invest" }).then((res) => {
         this.qaData = res.data;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -178,8 +238,17 @@ export default {
 .invest-wrapper {
   width: 100%;
 
-  .progress {
-    height: 4px;
+  h2 {
+    font-weight: bolder;
+    text-align: center;
+    color: #083a6e;
+  }
+
+  .hr {
+    width: 130px;
+    height: 2px;
+    background-image: linear-gradient(to right, #71008b, #ffffff);
+    margin: 0px auto;
   }
 
   .link {
@@ -201,84 +270,177 @@ export default {
     }
   }
 
-  .advantage-card {
-    padding: 30px;
-    background: #2170ff;
-    text-align: center;
-    color: #ffffff;
+  .text-card {
+    .a-hr {
+      height: 125px;
+      background-color: #6591be;
+      position: relative;
 
-    .zxc {
+      .a-s {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 214px;
+        width: 80%;
+        background-color: #083a6e;
+        font-size: 29.5px;
+        font-weight: bold;
+        color: #ffffff;
+
+        h3 {
+          color: #ffffff;
+          text-align: center;
+          font-weight: bold;
+          margin: 25px auto;
+        }
+
+        p {
+          line-height: 1.7;
+          position: absolute;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          left: 50%;
+        }
+      }
+    }
+  }
+
+  .advantage-card {
+    .web {
       width: 80%;
       margin: 0px auto;
     }
   }
 
   .step-card {
-    padding: 30px;
-    background: #f3f3f3;
-    text-align: center;
-    color: #310071;
+    background: #4296ba;
+    position: relative;
+    padding: 20px;
+    overflow: hidden;
+    z-index: 0;
 
-    h3 {
+    .particles-js-canvas-el {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+
+    h2 {
       font-weight: bolder;
+      text-align: center;
+      color: #ffffff;
     }
 
-    .zxc {
-      width: 80%;
-      margin: 0px auto 60px auto;
+    .hr {
+      width: 130px;
+      height: 3px;
+      background-image: linear-gradient(to right, #fbd900, #ffffff);
+      margin: 0px auto;
     }
 
-    .step-list {
-      padding: 10px;
-      background: #ffffff;
-      color: #000000;
-      border-radius: 20px;
-      box-shadow: 0px 0px 5px black;
+    p {
+      margin: 15px auto;
+      font-size: 14px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .cnt {
       width: 80%;
       margin: 0px auto;
 
-      .item {
-        padding: 10px;
-        margin: 30px 10px;
-        h5 {
-          color: #2170ff;
-          font-weight: bolder;
-          font-size: 35px;
-        }
+      .box {
+        display: flex;
 
-        .content {
+        .i-box {
+          width: 60%;
           display: flex;
-          padding: 10px 50px;
-          .app-pic {
-            height: 400px;
+
+          %center {
+            position: relative;
+            top: 50%;
+            height: fit-content;
+            transform: translateY(-50%);
+            margin: 0px 20px;
+          }
+
+          .icon {
             width: 20%;
-            background: #bbbbbb;
-            box-shadow: inset 0px 0px 0px 20px black;
-            border-radius: 20px;
+            @extend %center;
 
-            &:nth-of-type(odd) {
-              margin-left: 5%;
-            }
-
-            &:nth-of-type(even) {
-              margin-right: 5%;
+            .poly-fill {
+              fill: #ffffff;
             }
           }
 
-          .directions {
-            border-radius: 20px;
-            background: #e4e4e4;
-            padding: 10px;
-            width: 60%;
-            height: 400px;
-            box-shadow: 0px 0px 20px #909090;
+          .text {
+            width: 80%;
+            @extend %center;
 
-            &:nth-of-type(odd) {
-              margin-right: 10%;
+            h4 {
+              color: #ffffff;
+              font-weight: bold;
             }
 
-            &:nth-of-type(even) {
-              margin-left: 10%;
+            p {
+              text-align: left;
+            }
+          }
+        }
+
+        .i-m-pic {
+          width: 40%;
+        }
+
+        &:hover {
+          .i-box {
+            .icon {
+              .poly-fill {
+                transition-duration: 0.5s;
+                fill: #ffeb6d;
+              }
+            }
+
+            .text {
+              h4 {
+                transition-duration: 0.5s;
+                color: #fbd900;
+              }
+            }
+          }
+
+          .i-m-pic {
+            animation: phone-waving 2s infinite alternate linear;
+
+            &:before {
+              pointer-events: none;
+              position: absolute;
+              z-index: -1;
+              content: "";
+              top: 100%;
+              left: 5%;
+              height: 10px;
+              width: 90%;
+              background: radial-gradient(
+                ellipse at center,
+                rgba(0, 0, 0, 0.35) 0,
+                rgba(0, 0, 0, 0) 80%
+              );
+            }
+          }
+
+          @keyframes phone-waving {
+            0% {
+              transform: translateY(-10px);
+            }
+
+            50% {
+              transform: translateY(0px);
+            }
+
+            100% {
+              transform: translateY(10px);
             }
           }
         }
@@ -286,19 +448,19 @@ export default {
     }
   }
 
-  .experience-card {
+  .video-card {
     padding: 30px;
     overflow: hidden;
     position: relative;
-    background: #f9f9f9;
+    background: #ffffff;
 
     .video-row {
-      display: flex;
-      margin: 10px auto;
-      width: fit-content;
+      margin: 30px auto;
+      width: 80%;
 
       .item {
         margin: 0px 10px;
+        overflow: hidden;
 
         hr {
           margin: 5px 0px;
@@ -308,150 +470,54 @@ export default {
     }
   }
 
-  .qa-card {
-    padding: 30px;
-    background: #ececec;
-    overflow: hidden;
-
-    h2 {
-      text-align: center;
-      color: #006bda;
-    }
-
-    .qa-row {
-      overflow: hidden;
-      display: flex;
-
-      .qa-item {
-        background: #ffffff;
-        padding: 10px;
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 5px #0069ff;
-        width: 31.5%;
-
-        p {
-          color: #000000;
-        }
-
-        hr {
-          color: #000000;
-        }
-
-        span {
-          color: #000000;
-        }
-      }
-    }
-  }
-
-  .download-card {
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    overflow: hidden;
-
-    .zxc {
-      display: flex;
-      width: fit-content;
-      margin: 20px auto;
-
-      %bg {
-        width: 300px;
-        height: 300px;
-        border-radius: 10px;
-        box-shadow: 0 0 8px black;
-        background: #ffffff;
-      }
-
-      .loan {
-        @extend %bg;
-      }
-
-      .shakehand {
-        width: 100px;
-        line-height: 300px;
-      }
-
-      .invest {
-        @extend %bg;
-      }
-    }
-  }
-
   @media screen and (max-width: 767px) {
+    h2 {
+      font-size: 25px;
+      margin-bottom: 20px;
+    }
+
     .link {
       width: 50%;
     }
 
+    .text-card {
+      display: none;
+    }
+
     .step-card {
-      padding: 10px;
-
-      h3 {
-        margin-bottom: 20px;
-      }
-
-      h4 {
-        margin-bottom: 15px;
-      }
-
-      .step-list {
+      .cnt {
         width: 100%;
 
-        .item {
-          margin: 0px;
-          padding: 0px;
+        .box {
+          margin: 30px auto;
 
-          .content {
-            flex-direction: column;
-            padding: 10px;
+          .i-box {
+            width: 100%;
 
-            .app-pic {
+            %center {
+              margin: 0px 10px;
+            }
+
+            .icon {
+              width: 30%;
+            }
+            .text {
               width: 70%;
-              margin: 0px auto !important;
-              order: 1;
             }
+          }
 
-            .directions {
-              width: 90%;
-              margin: 20px auto !important;
-              order: 2;
-            }
+          .i-m-pic {
+            display: none;
           }
         }
       }
     }
 
-    .experience-card {
+    .video-card {
       padding: 10px;
-
-      h2 {
-        text-align: center;
-      }
 
       .video-row {
-        display: block;
-        width: initial;
-
-        .item {
-          text-align: center;
-
-          p {
-            text-align: initial;
-          }
-        }
-      }
-    }
-
-    .qa-card {
-      padding: 10px;
-
-      .qa-row {
-        display: block;
-
-        .qa-item {
-          width: 98%;
-          margin: 2px 2px 12px 2px;
-        }
+        width: 100%;
       }
     }
   }

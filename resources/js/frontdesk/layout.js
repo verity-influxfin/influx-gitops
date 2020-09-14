@@ -25,8 +25,10 @@ $(() => {
 
     router.beforeEach((to, from, next) => {
         if (to.path === "/") {
+            gtag("config", "UA-117279688-9", { page_path: '/index' });
             next('/index');
         } else {
+            gtag("config", "UA-117279688-9", { page_path: to.path });
             $(".page-header").show();
             $(".page-footer").show();
             $(".back-top").show();
@@ -34,6 +36,10 @@ $(() => {
 
             $(window).scrollTop(0);
             next();
+        }
+        
+        if($('.navbar-toggler').attr('aria-expanded') === 'true'){
+            $('.navbar-toggler').click();
         }
     });
 
@@ -73,19 +79,14 @@ $(() => {
             timer: null,
             counter: 180,
             loginTime: 0,
-            currentTime: 0,
-            pageHeaderOffsetTop: 0
+            currentTime: 0
         },
         created() {
-            $(this.$root.$refs.banner).show();
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
         },
         mounted() {
-            this.createBannerSlick();
-            timeLineMax.to(this.$refs.afc_popup, { y: -210 });
-
             this.$nextTick(() => {
                 AOS.init();
             });
@@ -115,15 +116,6 @@ $(() => {
                     .catch((error) => {
                         console.error('getListData 發生錯誤，請稍後再試');
                     });
-            },
-            createBannerSlick() {
-                $(this.$refs.banner).slick({
-                    infinite: true,
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    autoplay: true,
-                    arrows: false
-                });
             },
             display() {
                 if (timeLineMax.reversed()) {
@@ -308,12 +300,6 @@ $(() => {
             $('.back-top').fadeIn();
         } else {
             $('.back-top').fadeOut();
-        }
-
-        if (window.pageYOffset > vue.pageHeaderOffsetTop) {
-            $('.page-header').addClass("sticky");
-        } else {
-            $('.page-header').removeClass("sticky");
         }
 
         if ($(window).scrollTop() > offset.top) {

@@ -33,7 +33,7 @@
     <div class="input-group">
       <textarea type="textArea" class="form-control" placeholder="Your Message" v-model="message" />
     </div>
-    <p class="error-message">{{$props.errorMessage}}</p>
+    <p v-if="$props.errorMessage" class="alter alert-danger error-message">{{$props.errorMessage}}</p>
     <p class="memo">* 填寫完報名資料之後，將會有普匯金融科技公司同仁與您聯繫</p>
     <button class="btn btn-submit" @click="submit">
       送出&emsp;
@@ -49,12 +49,12 @@ export default {
     name: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
   }),
   watch: {
     phone(newdata) {
       this.phone = newdata.replace(/[^\d]/g, "");
-    }
+    },
   },
   methods: {
     submit() {
@@ -62,23 +62,20 @@ export default {
         name: this.name,
         email: this.email,
         phone: this.phone,
-        message: this.message
+        message: this.message,
       };
 
       this.$emit("submit", data);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .input-from {
-  width: 80%;
+  width: 100%;
   margin: 0px auto;
   padding: 10px;
-  border-radius: 10px;
-  background: #ffedc6;
-  box-shadow: 0 0 6px black;
 
   .input-group {
     margin-bottom: 15px;
@@ -89,30 +86,28 @@ export default {
   }
 
   .error-message {
-    text-align: center;
-    color: red;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 10px;
   }
 
   .memo {
-    color: #ffffff;
     font-size: 15px;
     font-weight: bolder;
-    text-shadow: 0 0 3px black;
   }
 
   .btn-submit {
     display: block;
     margin: 0px auto;
-    background: #002bff;
+    background-image: linear-gradient(to right, #fc3a3e, #f09d5d);
     color: #ffffff;
     font-weight: bold;
     width: 150px;
+    border: 2px solid #ffffff;
 
     &:hover {
-      border: 2px solid #002bff;
+      border: 2px solid #fc3a3e;
       background: #ffffff;
-      color: #002bff;
+      color: #fc3a3e;
     }
   }
 

@@ -1,66 +1,50 @@
 {
     "college": {
-        "bannerHref": "./images/college_loan_banner.png",
-        "info": [
-            "Dcard 熱搜",
-            "大學生最愛",
-            "線上借貸平台"
-        ]
+        "bannerHref": "./images/college_banner.png",
+        "bannerPhone": "./images/student_phone.png",
+        "productName": "學生貸"
     },
     "engineer": {
-        "bannerHref": "./images/engineer_loan_banner.png",
-        "info": [
-            "if(“普匯理財 ”= =true)",
-            "“缺錢 ”=false",
-            "編譯你的程式，也編譯你的財務狀況"
-        ]
+        "bannerHref": "./images/engineer_banner.png",
+        "bannerPhone": "./images/worker_phone.png",
+        "productName": "工程師貸"
     },
     "freshgraduate": {
-        "bannerHref": "./images/worker_loan_banner.png",
-        "info": [
-            "憑勞保",
-            "免聯徵",
-            "速送速審"
-        ]
+        "bannerHref": "./images/worker_banner.png",
+        "bannerPhone": "./images/worker_phone.png",
+        "productName": "上班族貸"
     },
     "invest": {
         "bannerHref": "./images/invest_banner.png",
-        "info": [
-            "小額分散",
-            "穩定報酬首選",
-            "1,000元開始投資",
-            "創造你的被動收入"
-        ]
+        "productName": "債權投資"
+    },
+    "mobile": {
+        "bannerHref": "./images/mobile_banner.png",
+        "productName": ""
+    },
+    "transfer": {
+        "bannerHref": "./images/transfer_banner.png",
+        "productName": ""
     },
     "company": {
-        "bannerHref": "./images/company_banner.png",
-        "info": [
-            "普匯相信每個年輕人",
-            "我們致力幫助他們完成人生的夢想"
-        ]
+        "bannerHref": "./images/company_banner.png"
     },
-    "recruiting":{
-        "bannerHref":"./images/recruiting_banner.jpg",
-        "info":[]
+    "recruiting": {
+        "bannerHref": "./images/recruiting_banner.jpg"
     },
-    "campuspartner":{
-        "bannerHref":"./images/campuspartner_banner.jpg",
-        "info":[]
+    "campuspartner": {
+        "bannerHref": "./images/campuspartner_banner.jpg"
     },
-    "clubcooperation":{
-        "bannerHref":"./images/clubcooperation_banner.jpg",
-        "info":[]
+    "clubcooperation": {
+        "bannerHref": "./images/clubcooperation_banner.jpg"
     },
-    "firmcooperation":{
-        "bannerHref":"./images/firmcooperation_banner.jpg",
-        "info":[]
+    "firmcooperation": {
+        "bannerHref": "./images/firmcooperation_banner.jpg"
     },
-    "companycooperation":{
-        "bannerHref":"./images/companycooperation_banner.jpg",
-        "info":[]
+    "companycooperation": {
+        "bannerHref": "./images/companycooperation_banner.jpg"
     },
-    "feedback":{
-        "bannerHref":"./images/feedback_banner.jpg",
-        "info":[]
+    "feedback": {
+        "bannerHref": "./images/feedback_banner.jpg"
     }
 }

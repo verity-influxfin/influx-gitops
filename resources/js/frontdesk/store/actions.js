@@ -1,7 +1,7 @@
 export default {
-    async getExperiencesData({ commit }){
+    async getExperiencesData({ commit },type =''){
         try{
-            let res = await axios.post('getExperiencesData');
+            let res = await axios.post('getExperiencesData',{type});
             commit('mutationExperiencesData',res.data);
         } catch(error){
             console.error('getExperiencesData 發生錯誤');

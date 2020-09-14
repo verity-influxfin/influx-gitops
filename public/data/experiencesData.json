@@ -4,69 +4,103 @@
         "unit": "台北大學",
         "memo": "覺得普匯是一個很安心的平台，個資都很安全，不會有其他人打電話來，也不用讓學生冒著生命危險，很像是海裡面找到一塊浮木吧!",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_-1.jpg",
-        "type":"college"
+        "type": "loan",
+        "category": "college"
     },
     {
         "name": "宋同學",
         "unit": "國立台灣科技大學",
         "memo": "有比較過其他平台，普匯不管是在審核，或到最後的放款，我覺得跟其他平台相對來說是最快的，平台的手續費也收最低，真的是很仁慈的一件事!",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_2.jpg",
-        "type":"college"
+        "type": "invest",
+        "category": "college"
+    },
+    {
+        "name": "宋同學",
+        "unit": "國立台灣科技大學",
+        "memo": "有比較過其他平台，普匯不管是在審核，或到最後的放款，我覺得跟其他平台相對來說是最快的，平台的手續費也收最低，真的是很仁慈的一件事!",
+        "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_2.jpg",
+        "type": "loan",
+        "category": "college"
     },
     {
         "name": "洪同學",
         "unit": "東南科技大學",
         "memo": "這次借款是為了繳交校外的房租，看到廣告就決定來申請看看，我覺得對於學生非常方便也輕鬆還，謝謝有普匯這個平台。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_3.jpg",
-        "type":"college"
+        "type": "loan",
+        "category": "college"
+    },
+    {
+        "name": "宋同學",
+        "unit": "國立台灣科技大學",
+        "memo": "有比較過其他平台，普匯不管是在審核，或到最後的放款，我覺得跟其他平台相對來說是最快的，平台的手續費也收最低，真的是很仁慈的一件事!",
+        "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_2.jpg",
+        "type": "invest",
+        "category": "college"
     },
     {
         "name": "康同學",
         "unit": "國立台北藝術大學",
         "memo": "先前有比較過各個P2P借貸，覺得普匯不僅撥款速度快，使用介面及流程也很清楚好用，尤其有貼心又專業的客服可以詢問，謝謝普匯的貼心服務。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_4.jpg",
-        "type":"college"
+        "type": "loan",
+        "category": "college"
     },
     {
         "name": "羅同學",
         "unit": "國立台灣大學",
         "memo": "我覺得平台對於像我這種臨時急需用錢的人很方便，而且不用面對太多的人，整個借款流程讓我很放心。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_5.jpg",
-        "type":"college"
+        "type": "loan",
+        "category": "college"
+    },
+    {
+        "name": "宋同學",
+        "unit": "國立台灣科技大學",
+        "memo": "有比較過其他平台，普匯不管是在審核，或到最後的放款，我覺得跟其他平台相對來說是最快的，平台的手續費也收最低，真的是很仁慈的一件事!",
+        "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/學生_2.jpg",
+        "type": "invest",
+        "category": "college"
     },
     {
         "name": "王小姐",
         "unit": "新店-上班族",
         "memo": "謝謝普匯和投資人，讓我即時取得貸款解決急需,對於不方便上班跑銀行的人真的很便利,過程迅速,也不會有人知道,還款方便，對於急需用錢的人來說是一大福音。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/上班族_1.jpg",
-        "type":"worker"
+        "type": "loan",
+        "category": "worker"
     },
     {
         "name": "李小姐",
         "unit": "台中-上班族",
         "memo": "畢業不到一年的新鮮人，在銀行根本貸不到款，到台北工作生活大不易,普匯讓我貸到足夠的錢安置生活,很感謝普匯。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/上班族_2.jpg",
-        "type":"worker"
+        "type": "loan",
+        "category": "worker"
     },
     {
         "name": "張先生",
         "unit": "高雄-上班族",
         "memo": "為了給老婆一個完美的婚禮，需要多點錢才能應付得來,在Dcard看到大家推薦普匯,就來試試看,真的很快就拿到款項了!美好的婚禮讓我終身難忘~!",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/上班族_3.jpg",
-        "type":"worker"
+        "type": "loan",
+        "category": "worker"
     },
     {
         "name": "古小姐",
         "unit": "彰化-上班族",
         "memo": "在銀行工作大概三年，一直有出國留學的夢想。銀行雖然有優惠利率,但時間來不及申請,且同事嘴雜也很煩人,用普匯隱私沒人知道又快,真的很便利又好用~以後銀行員要失業了O-O",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/上班族_4.jpg",
-        "type":"worker"
+        "type": "loan",
+        "category": "worker"
     },
     {
         "name": "趙小姐",
         "unit": "台中-上班族",
         "memo": "機車故障維修費需現金,等薪水下來,最近的交通問題很麻煩,到普匯申請雖然整理需要的資料花了一兩天,但上傳成功到撥款一天就完成,真的太厲害了!以後有需求還會使用。",
         "imageSrc": "https://www.influxfin.com/wp-content/uploads/2019/11/上班族_5.jpg",
-        "type":"worker"
+        "type": "loan",
+        "category": "worker"
     }
 ]
