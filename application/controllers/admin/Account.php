@@ -627,48 +627,31 @@ class Account extends MY_Admin_Controller {
 	}
 
 	function passbook_report(){
-		$page_data 	= array("type"=>"list");
-		$where		= array(
-			"status" 		=> array(4,5),
-		);
-
 		$get 		= $this->input->get(NULL, TRUE);
 		$date 		= isset($get['date'])&&$get['date']?$get['date']:get_entering_date();
 		$page_data 	= array("type"=>"list","date"=>$date);
-		$date_range	= entering_date_range($date);
-		$edatetime	= $date_range?$date_range["edatetime"]:"";
-		$list		= array();
-		$info		= array();
-		if($edatetime){
-			$virtual_passbook = $this->virtual_passbook_model->order_by("virtual_account","ASC")->get_many_by(array(
-				"virtual_account <>" 	=> PLATFORM_VIRTUAL_ACCOUNT,
-				"tx_datetime <=" 		=> $edatetime,
-			));
-			if(!empty($virtual_passbook)){
-				foreach($virtual_passbook as $key => $value){
-					if(!isset($list[$value->virtual_account])){
-						$list[$value->virtual_account] = 0;
-						$info[$value->virtual_account] = $this->virtual_account_model->get_by(array(
-							"virtual_account" => $value->virtual_account
-						));
-						if(isset($info[$value->virtual_account])){
-                            $info[$value->virtual_account]->user_info = $this->user_model->get($info[$value->virtual_account]->user_id);
-                        }
-					}
-					$list[$value->virtual_account] += $value->amount;
-				}
+		$date_range     = entering_date_range($date);
+		$edatetime      = $date_range?$date_range["edatetime"]:"";
+		// TODO: query with codeigniter orm
+		// sql - inner join
+		$sql = <<<TEMP
+			SELECT T1.`virtual_account`, T2.`name`, T2.`investor_status`, SUM(T1.`amount`) AS total_amount
+			FROM p2p_transaction.`virtual_passbook` T1
+			INNER JOIN p2p_user.`users` T2
+			INNER JOIN p2p_user.`virtual_account` T3
+			WHERE T1.`virtual_account` = T3.`virtual_account`
+			AND T3.`user_id` = T2.`id`
+			AND T1.`virtual_account` != '{PLATFORM_VIRTUAL_ACCOUNT}'
+			AND T1.`tx_datetime` <= '{$edatetime}'
+			GROUP BY T1.`virtual_account`
+			ORDER BY T1.`virtual_account` ASC
+TEMP;
 
-				foreach($list as $key => $value){
-					if($value==0){
-						unset($list[$key]);
-					}
-				}
-			}
-		}
 
+		$query_script = $this->db->query($sql);
+		$result_data = $query_script->result();
+		$page_data['list'] = $result_data;
 		$page_data['investor_list'] = $this->virtual_account_model->investor_list;
-		$page_data['list'] 			= $list;
-		$page_data['info'] 			= $info;
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/account_passbook_report',$page_data);
