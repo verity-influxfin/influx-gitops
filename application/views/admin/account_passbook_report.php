@@ -1,4 +1,4 @@
-<script   src="<?=base_url()?>assets/admin/js/jquery.table2excel.js"></script>
+﻿<script   src="<?=base_url()?>assets/admin/js/jquery.table2excel.js"></script>
        <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -65,14 +65,14 @@
 									<?php 
 										if(isset($list) && !empty($list)){
 											$count = 0;
-											foreach($list as $key => $value){
+											foreach($list as $row){
 												$count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($key)?$key:"" ?></td>
-                                            <td><?=isset($info[$key])?$info[$key]->user_info->name:"" ?></td>
-                                            <td><?=isset($info[$key])?$investor_list[$info[$key]->investor]:"" ?></td>
-                                            <td style="text-align:right;"><?=isset($value)?number_format($value):"" ?></td>
+                                            <td><?= $row->virtual_account ?></td>
+                                            <td><?= $row->name ?></td>
+                                            <td><?= $investor_list[$row->investor_status] ?></td>
+                                            <td style="text-align:right;"><?=isset($row->total_amount)?number_format($row->total_amount):"" ?></td>
                                         </tr>                                        
 									<?php 
 										}}
