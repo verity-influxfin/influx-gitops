@@ -42,45 +42,40 @@ import bannerComponent from "../component/bannerComponent";
 
 export default {
   components: {
-    banner: bannerComponent
+    banner: bannerComponent,
   },
   data: () => ({
-    bannerData: ""
+    bannerData: "",
   }),
   created() {
     this.getBannerData();
     $("title").text(`徵才服務 - inFlux普匯金融科技`);
   },
   mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-    });
+    this.$nextTick(() => {});
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "recruiting" }).then(res => {
+      axios.post("getBannerData", { filter: "recruiting" }).then((res) => {
         this.bannerData = res.data;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .recruiting-wrapper {
   .product-banner {
-    img {
-      bottom: 0%;
-    }
+    z-index: -1;
   }
 
   .content {
     padding: 30px;
-
-    h4 {
-      text-align: center;
-    }
+    width: 80%;
+    margin: -35% auto 0px auto;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background: #ffffff;
 
     .jobs-card {
       display: flex;
@@ -91,19 +86,23 @@ export default {
       }
 
       .jobs-item {
-        background: #ffffff;
+        background: #efefef;
         margin: 10px;
-        border: 2px solid #cdd2ff;
-        width: 35%;
-        padding: 30px;
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+        width: calc(33% - 20px);
+        padding: 10px;
 
         .title {
           font-size: 20px;
           font-weight: bolder;
         }
 
-        .list li {
-          list-style: decimal;
+        .list {
+          padding-left: 20px;
+          
+          li {
+            list-style: decimal;
+          }
         }
       }
     }
@@ -120,6 +119,8 @@ export default {
   @media screen and (max-width: 767px) {
     .content {
       padding: 10px;
+      margin: -36rem auto 0px auto;
+      width: 95%;
 
       .jobs-card {
         flex-direction: column;

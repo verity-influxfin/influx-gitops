@@ -37,6 +37,10 @@ $(() => {
             $(window).scrollTop(0);
             next();
         }
+        
+        if($('.navbar-toggler').attr('aria-expanded') === 'true'){
+            $('.navbar-toggler').click();
+        }
     });
 
     const store = new Vuex.Store({

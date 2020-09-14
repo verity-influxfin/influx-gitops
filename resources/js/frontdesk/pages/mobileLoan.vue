@@ -1,79 +1,53 @@
 <template>
   <div class="mobile-wrapper">
+    <banner :data="this.bannerData"></banner>
+    <div class="hr"></div>
     <div class="search-line">
-      <div class="input-custom">
+      <div class="filter-i float-left">
+        <div class="scroll left" @click="scroll('left')">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="option-row" ref="option_row">
+          <button
+            :class="['btn',{'btn-secondary' : now === index},{'btn-outline-secondary' : now !== index} ]"
+            v-for="(make,index) in makes"
+            @click="filter.make = make;now = index"
+            :key="index"
+          >{{make ? make : 'ALL'}}</button>
+        </div>
+        <div class="scroll right" @click="scroll('right')">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+      <div class="input-custom float-right">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
-        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
+        <input type="text" class="form-control" placeholder="手機型號" v-model="filter.mobileName" />
+        <i class="fas fa-times" v-if="filter.mobileName" @click="filter.mobileName = ''"></i>
       </div>
     </div>
-    <div class="progress">
-      <div
-        class="progress-bar"
-        role="progressbar"
-        style="width: 75%"
-        aria-valuenow="75"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
-    </div>
-    <div class="goods-card">
-      <a
-        href="https://event.influxfin.com/R/url?p=webbanner"
-        target="_blank"
-        class="item"
-        v-for="(item,index) in this.filterMobileData"
-        :key="index"
-      >
-        <div class="img">
-          <img :src="item.phone_img" class="img-fluid" />
-        </div>
-        <h4>{{item.name}}</h4>
-        <span>空機價 ${{format(item.price)}}</span>
-      </a>
-    </div>
-    <div class="applyFlow-card">
-      <h2>「不知道該如何申貸嗎？」</h2>
-      <div class="flow">
-        <div class="step">
-          <span>step1.</span>
-          <hr />
-          <p>進入分期超市</p>
-        </div>
-        <div class="next">
-          <img :src="'./images/next.svg'" class="img-fluid" />
-        </div>
-        <div class="step">
-          <span>step2.</span>
-          <hr />
-          <p>選擇借款的身分</p>
-        </div>
-        <div class="next">
-          <img :src="'./images/next.svg'" class="img-fluid" />
-        </div>
-        <div class="step">
-          <span>step3.</span>
-          <hr />
-          <p>選擇手機型號廠牌</p>
-        </div>
-        <div class="next">
-          <img :src="'./images/next.svg'" class="img-fluid" />
-        </div>
-        <div class="step">
-          <span>step4.</span>
-          <hr />
-          <p>等待系統驗證</p>
-        </div>
-        <div class="next">
-          <img :src="'./images/next.svg'" class="img-fluid" />
-        </div>
-        <div class="step">
-          <span>step5.</span>
-          <hr />
-          <p>申請成功</p>
-        </div>
+    <div class="hr"></div>
+    <div id="list">
+      <div class="goods-card" id="goods-card">
+        <template v-if="filterMobileData.length === 0">
+          <div class="empty">
+            <div class="empty-img">
+              <img src="../asset/images/empty.svg" class="img-fluid" />
+            </div>
+            <h3>沒有結果</h3>
+            <p>根據您的搜索，我們似乎找不到結果</p>
+          </div>
+        </template>
+        <template v-else>
+          <ul class="mobile-content" ref="content"></ul>
+          <div class="pagination" ref="pagination"></div>
+        </template>
       </div>
     </div>
+    <apply
+      title="選擇喜歡的手機，無卡也能分期支付，輕鬆購買"
+      :requiredDocuments="applyData.requiredDocuments"
+      :step="applyData.step"
+    />
     <div class="recommend-card">
       <div class="banner-text">優良店家推薦</div>
       <div class="mobile-footer">
@@ -85,45 +59,147 @@
 </template>
 
 <script>
-export default {
-  data: () => ({
-    filter: "",
-    filterMobileData: [],
-    mobileData: []
-  }),
-  created() {
-    this.getMobileData();
-    $("title").text(`手機分期 - inFlux普匯金融科技`);
-  },
-  mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-      AOS.init();
-    });
-  },
-  watch: {
-    filter(newVal) {
-      this.filterMobileData = [];
-      this.mobileData.forEach((row, index) => {
-        if (row.name.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
-          this.filterMobileData.push(row);
-        }
-      });
-    }
-  },
+let productRow = Vue.extend({
+  props: ["item", "index"],
+  template: `
+     <li class="item">
+      <div class="text">
+        <h5>{{item.name}}</h5>
+        <span>空機價 {{format(item.price)}}$</span>
+      </div>
+      <div class="img">
+        <img :src="item.image" class="img-fluid" />
+      </div>
+      <div style="overflow: auto;margin-top: 15px;">
+        <a
+          class="btn btn-outline-warning btn-sm float-right"
+          href="https://event.influxfin.com/R/url?p=webbanner"
+          target="_blank"
+        >立即申請分期</a>
+      </div>
+    </li>
+  `,
   methods: {
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
-    getMobileData() {
-      axios.post("getMobileData").then(res => {
-        this.mobileData = res.data;
-        this.filterMobileData = this.mobileData;
+  },
+});
+
+import banner from "../component/bannerComponent";
+import apply from "../component/applyComponent";
+
+export default {
+  components: {
+    banner,
+    apply,
+  },
+  data: () => ({
+    now: 0,
+    filterMobileData: [],
+    mobileData: [],
+    makes: [""],
+    bannerData: {},
+    applyData: {},
+    filter: {
+      mobileName: "",
+      make: "",
+    },
+  }),
+  created() {
+    this.getMobileData();
+    this.getBannerData();
+    this.getApplydata();
+    $("title").text(`手機分期 - inFlux普匯金融科技`);
+  },
+  mounted() {
+    this.$nextTick(() => {
+      AOS.init();
+      particlesJS.load("list", "data/mobile.json");
+    });
+  },
+  watch: {
+    filterMobileData() {
+      this.$nextTick(() => {
+        window.dispatchEvent(new Event("resize"));
+        this.pagination();
       });
-    }
-  }
+    },
+    "filter.mobileName"(newVal) {
+      this.doFilter(newVal, this.filter.make);
+    },
+    "filter.make"(newVal) {
+      this.doFilter(this.filter.mobileName, newVal);
+    },
+  },
+  methods: {
+    doFilter(name, make) {
+      this.filterMobileData = [];
+      this.mobileData.forEach((row, index) => {
+        if (
+          row.brand.toLowerCase().indexOf(make.toLowerCase()) !== -1 &&
+          row.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        ) {
+          this.filterMobileData.push(row);
+        }
+      });
+    },
+    getBannerData() {
+      axios.post("getBannerData", { filter: "mobile" }).then((res) => {
+        this.bannerData = res.data;
+      });
+    },
+    async getMobileData() {
+      let res = await axios.post("getMobileData");
+
+      this.mobileData = res.data.data.list.reverse();
+      this.filterMobileData = res.data.data.list.reverse();
+
+      this.mobileData.forEach((item) => {
+        if (!this.makes.includes(item.brand)) {
+          this.makes.push(item.brand);
+        }
+      });
+      this.makes.sort();
+    },
+    async getApplydata() {
+      let res = await axios.post("getApplydata", { filter: "mobile" });
+      this.applyData = res.data;
+    },
+    pagination() {
+      let $this = this;
+      $this.$nextTick(() => {
+        $($this.$refs.pagination).pagination({
+          pageSize: 12,
+          dataSource: $this.filterMobileData,
+          callback(data, pagination) {
+            $($this.$refs.content).html("");
+            data.forEach((item, index) => {
+              let component = new productRow({
+                propsData: {
+                  item,
+                  index,
+                },
+              }).$mount();
+
+              $($this.$refs.content).append(component.$el);
+            });
+          },
+        });
+
+        window.dispatchEvent(new Event("resize"));
+      });
+    },
+    scroll(direction) {
+      let scrollLeft = $(this.$refs.option_row).scrollLeft();
+      if (direction === "left") {
+        $(this.$refs.option_row).scrollLeft(scrollLeft - 280);
+      } else {
+        $(this.$refs.option_row).scrollLeft(scrollLeft + 280);
+      }
+    },
+  },
 };
 </script>
 
@@ -132,24 +208,71 @@ export default {
   width: 100%;
   overflow: auto;
 
-  .progress {
-    height: 4px;
-    width: 80%;
+  h2 {
+    font-weight: bolder;
+    text-align: center;
+    color: #083a6e;
+  }
+
+  .hr {
+    border-top: 1px solid #eaeaea;
     margin: 0px auto;
+    width: 100%;
   }
 
   .search-line {
     width: 80%;
-    margin: 10px auto;
-    position: relative;
+    margin: 20px auto;
     overflow: hidden;
-    height: 40px;
+
+    .filter-i {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+      margin-bottom: 10px;
+
+      .option-row {
+        display: flex;
+        overflow: auto;
+        margin: 0px 15px;
+        scroll-behavior: smooth;
+
+        button {
+          margin-right: 10px;
+          word-break: keep-all;
+        }
+      }
+
+      .scroll {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 44px;
+        width: 30px;
+        line-height: 44px;
+        text-align: center;
+        box-shadow: 0px 0px 11px 0px #ffffff99;
+        cursor: pointer;
+
+        &.left {
+          left: 0px;
+          background-image: linear-gradient(to right, #ffffff, #ffffff40);
+        }
+
+        &.right {
+          right: 0px;
+          background-image: linear-gradient(to left, #ffffff, #ffffff40);
+        }
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    }
 
     .input-custom {
       width: 300px;
-      position: absolute;
-      top: 0;
-      right: 0;
+      position: relative;
 
       .form-control {
         padding: 5px 35px;
@@ -160,8 +283,8 @@ export default {
         top: 50%;
         transform: translate(0, -50%);
         font-size: 20px;
-        color: #002bff;
-        text-shadow: 0 0 4px #002bff;
+        color: #083a6e;
+        text-shadow: 0 0 4px #083a6e;
       }
 
       .fa-search {
@@ -177,85 +300,80 @@ export default {
     }
   }
 
-  .goods-card {
-    width: 80%;
-    margin: 0px auto;
-    overflow: hidden;
+  #list {
+    position: relative;
+    overflow: auto;
 
-    .item {
-      width: 31%;
-      float: left;
-      border: 1px solid #2098d1;
-      padding: 10px;
-      margin: 10px;
-      transition-duration: 0.5s;
+    .particles-js-canvas-el {
+      position: absolute;
+      top: 0;
+      z-index: -1;
+    }
 
-      &:hover {
-        color: #000000;
-        text-decoration: none;
-        box-shadow: inset 0 0 7px 3px #2098d1;
+    .goods-card {
+      width: 80%;
+      margin: 20px auto;
+      overflow: hidden;
+
+      .item {
+        width: calc(33.3% - 20px);
+        float: left;
+        border: 1px solid #083a6e;
+        padding: 10px;
+        margin: 10px;
+        transition-duration: 0.5s;
+        background: #ffffff;
+
+        &:hover {
+          color: #000000;
+          text-decoration: none;
+          box-shadow: inset 0 0 5px 2px #083a6e;
+        }
+
+        .img {
+          width: 250px;
+          height: 250px;
+          margin: 5px auto;
+          line-height: 250px;
+          overflow: hidden;
+        }
+
+        .text {
+          h5 {
+            font-weight: bold;
+          }
+
+          span {
+            color: #087d01;
+            font-weight: bold;
+          }
+        }
       }
 
-      .img {
-        width: 300px;
-        height: 300px;
-        margin: 0px auto;
-        line-height: 300px;
+      .mobile-content {
+        overflow: auto;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      .pagination {
+        margin: 20px auto;
+        width: fit-content;
       }
     }
   }
 
-  .applyFlow-card {
-    background: #f6f6f6f6;
-    padding: 30px;
+  .empty {
     text-align: center;
+    margin: 30px auto;
 
-    .flow {
-      display: flex;
-      text-align: initial;
-      width: fit-content;
-      margin: 0px auto;
-
-      .step {
-        border-radius: 10px;
-        background: #ffffff;
-        box-shadow: 0 0 5px #0074ff;
-        padding: 10px;
-        margin: 10px;
-      }
-
-      .next {
-        width: 40px;
-        height: 40px;
-        margin: 5px;
-        line-height: 117px;
-      }
+    .empty-img {
+      width: 200px;
+      margin: 20px auto;
     }
 
-    .tips {
-      width: fit-content;
-      margin: 10px auto;
-      padding: 10px;
-      background: #ffffff;
-      box-shadow: 2px 2px 4px black;
-
-      .required {
-        width: fit-content;
-        display: flex;
-        margin: 0px auto;
-        .item {
-          padding: 10px;
-          margin: 10px;
-          border-radius: 10px;
-          box-shadow: 0 0 5px black;
-          background: #ffffff;
-
-          .img {
-            width: 50px;
-            margin: 0px auto;
-          }
-        }
-      }
+    h3 {
+      font-weight: bold;
     }
   }
 
@@ -265,7 +383,8 @@ export default {
       font-weight: bolder;
       text-align: center;
       padding: 30px 0px;
-      background-color: #f7f7f7;
+      background: #492f78;
+      color: #ffffff;
     }
 
     .mobile-footer {
@@ -276,42 +395,40 @@ export default {
   }
 
   @media (max-width: 767px) {
-    .goods-card {
-      width: 100%;
-
-      .item {
-        width: 96%;
-        margin: 10px auto;
-        float: none;
-        display: block;
-      }
+    h2 {
+      font-size: 25px;
+      margin-bottom: 20px;
     }
 
-    .applyFlow-card {
-      padding: 10px;
+    .search-line {
+      width: 100%;
+      margin: 10px auto;
 
-      h2 {
-        word-break: keep-all;
-        font-size: 30px;
-      }
+      .input-custom,
+      .filter-i {
+        width: 95%;
+        margin: 10px auto;
 
-      .flow {
-        display: block;
-
-        .next {
-          line-height: initial;
-          margin: 0px auto;
-          transform: rotate(90deg);
+        button {
+          margin: 7px;
         }
       }
 
-      .tips {
+      .float-right,
+      .float-left {
+        float: initial !important;
+      }
+    }
+
+    #list {
+      .goods-card {
         width: 100%;
 
-        .required {
-          .item {
-            margin: 5px;
-          }
+        .item {
+          width: calc(100% - 20px);
+          margin: 10px auto;
+          float: none;
+          display: block;
         }
       }
     }

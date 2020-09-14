@@ -1,115 +1,112 @@
 <template>
-  <div class="qa-wrapper">
-    <h2>{{this.$props.title}}</h2>
-    <div class="qa-accordion" :id="'qa_content' + (category ? category:'' )">
-      <div class="card" v-for="(item,index) in this.$props.data" :key="index">
-        <div
-          class="card-header collapsed"
-          data-toggle="collapse"
-          :data-target="'#collapse' + (category ? category:'' ) + index"
-          aria-expanded="true"
-        >
-          <span class="accicon">
-            <i class="fas fa-angle-down rotate-icon"></i>
-          </span>
-          <span class="title">Q{{index+1}}：{{item.title}}</span>
+  <div class="qa-card">
+    <h2>還有其他問題嗎?</h2>
+    <div class="hr" />
+    <div class="qa-row" ref="qa_slick">
+      <div class="qa-item" v-for="(item,index) in $props.qaData" :key="index">
+        <div class="qa-title">
+          <strong>{{index > 10 ? index+1 : `0${index+1}`}}</strong>
+          <label>{{item.title}}</label>
         </div>
-        <div
-          :id="'collapse' + (category ? category:'' ) + index"
-          class="collapse"
-          :data-parent="'#qa_content' + (category ? category:'' )"
-        >
-          <div class="card-body">
-            <div>
-              A{{index+1}}：
-              <br />
-              <p v-html="item.content"></p>
-            </div>
-            <img
-              v-for="(src,index) in item.imgSrc"
-              :src="src"
-              :key="index"
-              :width="1/item.imgSrc.length*75+'%'"
-            />
-          </div>
-        </div>
+        <div class="qa-content" v-html="item.content"></div>
       </div>
+    </div>
+    <div class="row">
+      <router-link class="btn link" style="margin:0px auto;" to="qa">
+        更多問題
+        <i class="fas fa-angle-double-right" />
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["filter", "data", "title", "hideLink", "category"]
+  props: ["qaData"],
+  watch: {
+    qaData() {
+      this.$nextTick(() => {
+         this.createSlick(this.$refs.qa_slick);
+      });
+    },
+  },
+  methods: {
+    createSlick(target) {
+      $(target).slick({
+        infinite: true,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        autoplay: true,
+        dots: false,
+        arrows: false,
+        responsive: [
+          {
+            breakpoint: 767,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+            },
+          },
+        ],
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-.qa-wrapper {
-  background-color: #f7f7f7;
-  padding: 2%;
+.qa-card {
+  padding: 30px;
+  background: #ffffff;
+  overflow: hidden;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-  }
+  .qa-row {
+    margin: 30px 0px;
+    overflow: auto;
 
-  .qa-accordion {
-    padding-bottom: 10px;
-    width: 50%;
-    margin: 0px auto;
+    .qa-item {
+      margin: 0px 20px;
+      
+      .qa-title {
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+        background-color: #ffffff;
+        padding: 30px 15px;
+        position: relative;
+        text-align: center;
 
-    .card {
-      border: 1px solid #ddd;
-
-      .card-header {
-        cursor: pointer;
-        border-bottom: none;
-        color: #777777;
-
-        .title {
-          font-size: 17px;
-          margin-right: 10px;
-          font-weight: bolder;
-        }
-
-        .accicon {
-          float: right;
+        strong {
+          box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+          background-color: #ffffff;
+          color: #083a6e;
           font-size: 20px;
-          width: 1.2em;
+          padding: 7px 11px;
+          border-radius: 50%;
+          position: absolute;
+          top: 50%;
+          left: 0%;
+          transform: translate(-50%, -50%);
         }
 
-        &:not(.collapsed) {
-          .rotate-icon {
-            transform: rotate(180deg);
-          }
-        }
-
-        &:hover {
-          color: #000000;
+        label {
+          margin: 0px;
+          font-weight: 600;
+          font-size: 15px;
         }
       }
 
-      .card-body {
-        border-top: 1px solid #ddd;
-
-        img {
-          max-height: 400px;
-        }
+      .qa-content {
+        margin-top: 20px;
+        line-height: 1.5;
+        font-weight: 600;
+        font-size: 15px;
       }
     }
   }
+}
 
-  @media (max-width: 1023px) {
-    .qa-accordion {
-      width: 90%;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .qa-accordion {
-      width: 100%;
-    }
+@media screen and (max-width: 767px) {
+  .qa-card {
+    padding: 10px;
   }
 }
 </style>

@@ -17,7 +17,7 @@
         </ul>
       </div>
       <h4>《報名方式》</h4>
-      <inputFrom @submit="submitData" :errorMessage="errorMessage" :key="componentKey"/>
+      <inputFrom @submit="submitData" :errorMessage="errorMessage" :key="componentKey" />
     </div>
   </div>
 </template>
@@ -29,40 +29,37 @@ import inputFromComponent from "../component/inputFromComponent";
 export default {
   components: {
     banner: bannerComponent,
-    inputFrom: inputFromComponent
+    inputFrom: inputFromComponent,
   },
   data: () => ({
     componentKey: 0,
     bannerData: "",
-    errorMessage: ""
+    errorMessage: "",
   }),
   created() {
     this.getBannerData();
     $("title").text(`社團合作 - inFlux普匯金融科技`);
   },
   mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-    });
+    this.$nextTick(() => {});
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "clubcooperation" }).then(res => {
+      axios.post("getBannerData", { filter: "clubcooperation" }).then((res) => {
         this.bannerData = res.data;
       });
     },
     submitData(data) {
       data["type"] = "club";
-      
+
       axios
         .post("action", data)
-        .then(res => {
+        .then((res) => {
           this.componentKey += 1;
           this.errorMessage = "";
           alert("登錄成功，敬請等待專員連繫您！");
         })
-        .catch(error => {
+        .catch((error) => {
           let errorsData = error.response.data;
           let messages = [];
 
@@ -74,21 +71,23 @@ export default {
 
           this.errorMessage = messages.join("、");
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .clubcooperation-wrapper {
   .product-banner {
-    img {
-      bottom: 0%;
-    }
+    z-index: -1;
   }
 
   .content {
     padding: 30px;
+    width: 80%;
+    margin: -35% auto 15px auto;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background: #ffffff;
 
     h4 {
       font-weight: bolder;
@@ -99,11 +98,13 @@ export default {
     }
   }
 
-  @media screen and (max-width: 767px){
-    .content{
+  @media screen and (max-width: 767px) {
+    .content {
       padding: 10px;
+      margin: -36rem auto 0px auto;
+      width: 95%;
 
-      .text-card{
+      .text-card {
         padding: 10px;
       }
     }

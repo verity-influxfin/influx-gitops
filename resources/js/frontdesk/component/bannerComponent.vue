@@ -1,75 +1,65 @@
 <template>
-  <div class="product-wrapper">
-    <div class="product-banner">
-      <img :src="this.$props.data.bannerHref" />
-      <div class="banner-content">
-        <p v-for="(text,index) in this.$props.data.info" :key="index">{{text}}</p>
-      </div>
+  <div class="product-banner" :style="`background-image:url(${$props.data.bannerHref})`">
+    <div class="phone-img">
+      <img :src="$props.data.bannerPhone" class="img-fluid" />
     </div>
+    <h1 class="banner-title">{{$props.data.productName}}</h1>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["data"]
+  props: ["data"],
 };
 </script>
 
 <style lang="scss">
-
 .product-banner {
   width: 100%;
+  height: 590px;
   overflow: hidden;
   position: relative;
-  height: 435px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 0px 10%;
 
-  img {
-    min-width: 100%;
-    position: absolute;
-    bottom: -50%;
-  }
-
-  .banner-content {
+  .banner-title {
+    color: #ffffff;
+    font-weight: bolder;
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    left: 7%;
-    text-align: center;
-    width: fit-content;
-
-    p {
-      color: #ffffff;
-      text-shadow: 0 0 8px black;
-      font-size: 37px;
-      font-weight: bolder;
-    }
-
-    .btn-loan {
-      border-radius: 30px;
-      font-weight: 600;
-      padding: 10px 25px;
-      color: #ffffff;
-      opacity: 0.8;
-      width: 200px;
-      background-color: #ffeb01;
-      font-size: 19px;
-
-      &:hover {
-        background-color: #ff6a00;
-      }
-    }
+    left: 30%;
+    transform: translate(-50%, -50%);
   }
 
-  @media (max-width: 767px) {
+  .phone-img {
+    float: right;
+    width: fit-content;
+    margin-bottom: 5rem;
+
     img {
-      bottom: -5%;
-      height: 110%;
-      left: -57%;
+      width: 60%;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .product-banner {
+    background-size: cover;
+    background-position: 50% 50%;
+
+    .phone-img {
+      display: none;
+    }
+
+    .banner-title {
+      left: 50%;
     }
 
     .banner-content {
-      transform: translate(-50%, -50%);
-      left: 50%;
+      position: initial;
+      transform: initial;
+      margin: 20px auto;
     }
   }
 }

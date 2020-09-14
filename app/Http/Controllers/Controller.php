@@ -105,7 +105,17 @@ class Controller extends BaseController
 
     public function getExperiencesData(Request $request)
     {
+        $input = $request->all();
+
         $data = json_decode(file_get_contents('data/experiencesData.json'), true);
+
+        if ($input['type']) {
+            foreach ($data as $index => $row) {
+                if ($row['type'] !== $input['type']) {
+                    unset($data[$index]);
+                }
+            }
+        }
 
         return response()->json($data, 200);
     }
@@ -128,9 +138,11 @@ class Controller extends BaseController
 
     public function getMobileData(Request $request)
     {
-        $phone = DB::table('product_phone')->select('*')->where('status', '=', 'on')->get();
 
-        return response()->json($phone, 200);
+        $curlScrapedMobilePage = shell_exec('curl -X GET "https://coop.influxfin.com/api/product/list?type=0"');
+        $mobileData = json_decode($curlScrapedMobilePage, true);
+
+        return response()->json($mobileData, 200);
     }
 
     public function getMilestoneData(Request $request)
