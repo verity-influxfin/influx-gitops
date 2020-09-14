@@ -66,6 +66,8 @@ class Profit_and_loss_account
             $set = false;
             $first = false;
             $delay_occurred_used = false;
+            $lastrRmainingPrincipal = 0;
+            $lastMonth = 0;
 
             foreach ($amortizationTables as $key => $value) {
                 $currentRows = $value['rows'];
@@ -88,6 +90,7 @@ class Profit_and_loss_account
                     ) {
                         if ($v["remaining_principal"] == 0) {
                             $key = 'prepayment';
+//                            $rows['normal'][$lastMonth]['remaining_principal'] -= $lastrRmainingPrincipal;
                         } else {
                             //the prepayment is not associated with current investor as the loan was transfered to other
                             $v["prepayment_damage"] = 0;
@@ -154,6 +157,7 @@ class Profit_and_loss_account
                         if ($v['repayment_date'] > $nextMonthPayDate) {
                             continue;
                         }
+//                        $rows['normal'][$lastMonth]['remaining_principal'] -= $lastrRmainingPrincipal;
 
                         if(!$delay_occurred_used && $v['delay_occurred_at'] != 0){
                             $temp = $v;
@@ -208,6 +212,9 @@ class Profit_and_loss_account
                     if (!isset($rows[$key][$v['repayment_date']])) {
                         $rows[$key][$v['repayment_date']] = $this->initRow();
                     }
+
+                    $lastMonth = $v['repayment_date'];
+                    $lastrRmainingPrincipal = $v['remaining_principal'];
 
                     $rows[$key][$v['repayment_date']]['remaining_principal'] += $v['remaining_principal'];
                     $rows[$key][$v['repayment_date']]['r_principal'] += $v['r_principal'];
@@ -272,8 +279,8 @@ class Profit_and_loss_account
 
     public function toExcel($rows)
     {
-        header('Content-type:application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+//        header('Content-type:application/vnd.ms-excel');
+//        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
         $tables = $this->getSupportedTables();
         foreach ($tables as $type => $tableName) {
             $html = $this->getTableHeader($tableName);
