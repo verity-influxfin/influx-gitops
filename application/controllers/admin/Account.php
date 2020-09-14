@@ -632,6 +632,7 @@ class Account extends MY_Admin_Controller {
 		$page_data 	= array("type"=>"list","date"=>$date);
 		$date_range     = entering_date_range($date);
 		$edatetime      = $date_range?$date_range["edatetime"]:"";
+		
 		// TODO: query with codeigniter orm
 		// sql - inner join
 		$sql = <<<TEMP
@@ -646,10 +647,18 @@ class Account extends MY_Admin_Controller {
 			GROUP BY T1.`virtual_account`
 			ORDER BY T1.`virtual_account` ASC
 TEMP;
-
-
+		
+		
 		$query_script = $this->db->query($sql);
 		$result_data = $query_script->result();
+		
+		$row_length = count($result_data);
+		for ($i = 0; $i < $row_length; $i++) {
+			if ($result_data[$i]->total_amount == "0") {
+				unset($result_data[$i]);
+			}
+		}
+
 		$page_data['list'] = $result_data;
 		$page_data['investor_list'] = $this->virtual_account_model->investor_list;
 		$this->load->view('admin/_header');
