@@ -150,13 +150,13 @@ Route::post('/deleteMilestoneData', 'Backendcontroller@deleteMilestoneData');
 
 Route::post('/recaptcha', 'Backendcontroller@recaptcha');
 
-Route::get('/getMediaData','Backendcontroller@getMediaData');
+Route::get('/getMediaData', 'Backendcontroller@getMediaData');
 
 Route::post('/modifyMediaData', 'Backendcontroller@modifyMediaData');
 
 Route::post('/deleteMediaData', 'Backendcontroller@deleteMediaData');
 
-Route::get('/getPartnerData','Backendcontroller@getPartnerData');
+Route::get('/getPartnerData', 'Backendcontroller@getPartnerData');
 
 Route::post('/modifyPartnerData', 'Backendcontroller@modifyPartnerData');
 
@@ -164,7 +164,7 @@ Route::post('/deletePartnerData', 'Backendcontroller@deletePartnerData');
 
 Route::post('/uploadPartnerImg', 'Backendcontroller@uploadPartnerImg');
 
-Route::get('/getFeedbackData','Backendcontroller@getFeedbackData');
+Route::get('/getFeedbackData', 'Backendcontroller@getFeedbackData');
 
 Route::post('/readFeedbackData', 'Backendcontroller@readFeedbackData');
 
@@ -172,7 +172,7 @@ Route::post('/modifyFeedbackData', 'Backendcontroller@modifyFeedbackData');
 
 Route::post('/deleteFeedbackData', 'Backendcontroller@deleteFeedbackData');
 
-Route::get('/getCooperationData','Backendcontroller@getCooperationData');
+Route::get('/getCooperationData', 'Backendcontroller@getCooperationData');
 
 Route::post('/readCooperationData', 'Backendcontroller@readCooperationData');
 
@@ -205,6 +205,10 @@ Route::post('/sendFeedback', 'Controller@sendFeedback');
 
 
 //
+// Route::get('/zxc', 'Controller@zxc');
+Route::get('/openaccount', function () {
+    return view('openaccount');
+});
 
 
 Route::view('/{path?}', 'index');
