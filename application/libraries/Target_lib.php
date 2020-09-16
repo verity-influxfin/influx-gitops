@@ -1059,6 +1059,7 @@ class Target_lib
             'status' => 10,
             'investment_id' => $investment->id
         ]);
+        $normalSchedule['transferOut'] = $transferOut->transfer_date;
 
         //correct some prepayment instalment numbers as those are incorrect
         if ($target->sub_status == 4 && !$transferOut) {
@@ -1254,12 +1255,21 @@ class Target_lib
             $normalAmortizationRows[$overdueStartedAt] = $this->init_amortization_row(0, $normalAmortizationRows[$overdueStartedAt]['repayment_date']);
         }
 
+        $tempValue = 0;
         foreach ($normalAmortizationRows as $key => $value) {
             $normalAmortizationRows[$key]['days'] = isset($value['repayment_date'])?get_range_days($oldDate, $value['repayment_date']):null;
             $oldDate = isset($value['repayment_date'])?$value['repayment_date']:null;
-            $total -= $normalAmortizationRows[$key]['principal'];
-            $normalAmortizationRows[$key]['remaining_principal'] = $total;
 
+            //判斷當期實際還款，如當期未還將暫存$tempValue供後期補上
+            $pay_date = date('Y-m-', time()) . REPAYMENT_DAY;
+            if($value['r_principal'] != $value['principal'] && $normalAmortizationRows[$key]['repayment_date'] == $pay_date){
+                $tempValue = $normalAmortizationRows[$key]['principal'];
+            }else{
+                $total -= $normalAmortizationRows[$key]['principal'] + $tempValue;
+                $tempValue = 0;
+            }
+
+            $normalAmortizationRows[$key]['remaining_principal'] = $total;
             $normalSchedule['total_payment'] += $value['total_payment'];
             $xirrDates[] = isset($value['repayment_date'])?$value['repayment_date']:null;
             $xirrValue[] = $value['total_payment'];
