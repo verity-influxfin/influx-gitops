@@ -94,7 +94,10 @@ class Profit_and_loss_account
                                 $rows['normal'][$amortizationTables['normal']['date']]['remaining_principal'] += $amortizationTables['normal']['amount'];
 
                                 $ym = date('Y-m', strtotime($amortizationTables['normal']['date']));
+                                //還款日
                                 $pay_date = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
+
+                                //$amortizationTables['normal']['date'] -> 放款日、$amortizationTables['normal']['rows'][1]['repayment_date'] -> 提前還款發生日
                                 if( $pay_date > $amortizationTables['normal']['date'] && $amortizationTables['normal']['rows'][1]['repayment_date'] > $pay_date ){
                                     if(!isset($rows['normal'][$pay_date])){
                                         $rows['normal'][$pay_date] = $this->initRow();
