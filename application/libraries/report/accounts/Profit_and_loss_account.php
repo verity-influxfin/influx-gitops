@@ -292,8 +292,8 @@ class Profit_and_loss_account
 
     public function toExcel($rows)
     {
-//        header('Content-type:application/vnd.ms-excel');
-//        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
+        header('Content-type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename=repayment_schedule_' . date('Ymd') . '.xls');
         $tables = $this->getSupportedTables();
         foreach ($tables as $type => $tableName) {
             $html = $this->getTableHeader($tableName);
