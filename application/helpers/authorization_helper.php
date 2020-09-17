@@ -60,21 +60,21 @@ class AUTHORIZATION
         return $data;
     }
 
-    public static function validateLoneManagerToken($token ="") {
+    public static function validateLoanManagerToken($token ="") {
         $CI =& get_instance();
-        return JWT::decode($token, $CI->config->item('jwt_lonemanager_key'));
+        return JWT::decode($token, $CI->config->item('jwt_loanmanager_key'));
     }
 
-    public static function generateLoneManagerToken($data = array()) {
+    public static function generateLoanManagerToken($data = array()) {
         $CI =& get_instance();
-        return JWT::encode($data, $CI->config->item('jwt_lonemanager_key'));
+        return JWT::encode($data, $CI->config->item('jwt_loanmanager_key'));
     }
 
-    public static function getLoneManagerInfoByToken($token="") {
+    public static function getLoanManagerInfoByToken($token="") {
         $CI 	=& get_instance();
         $data 	= new stdClass;
         if(!empty($token)){
-            $data 		= AUTHORIZATION::validateLoneManagerToken($token);
+            $data 		= AUTHORIZATION::validateLoanManagerToken($token);
         }
 
         return $data;
