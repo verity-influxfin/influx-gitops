@@ -1303,7 +1303,7 @@ class Certification_lib{
 		$count 			= 0;
 		$date			= get_entering_date();
 		$ids			= array();
-		$user_certifications 	= $this->CI->user_certification_model->get_many_by(array(
+		$user_certifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')->get_many_by(array(
 			'status'				=> 0,
 			'certification_id !='	=> 3,
 		));
